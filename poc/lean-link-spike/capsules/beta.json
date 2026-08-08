@@ -4,7 +4,7 @@
   "runtime": {
     "abiVersion": 1,
     "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
-    "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
     "profiles": ["side-startup", "side-lazy", "final-static"],
     "sharedRuntime": true
   },
@@ -15,13 +15,13 @@
         "sideModule": {
           "file": "beta.so.wasm",
           "mediaType": "application/wasm",
-          "sha256": "7f36961d6ee36765e5ff926a94f6a41375fd151e5fb61f28ebc46c0c1c2af252"
+        "sha256": "aaee59f1ec973e56275e46f7f7dab4f08642b0a4e0c088297a319c4f695071e8"
         },
         "staticObjects": [
           {
             "file": "beta.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "61d182c8ea62ef8f160334f9800f52111935d5c17821abad6cf9a90c3ecd0c34"
+            "sha256": "467f35782cf0c5fe5a4941466d8e76f0f50c1b01ccce5151a75bc83223663c21"
           },
           {
             "file": "beta.shim.o",
@@ -35,13 +35,13 @@
         "sideModule": {
           "file": "beta.so.wasm",
           "mediaType": "application/wasm",
-          "sha256": "d0efd8912bdcf9387857d31e645fa2a0ae5bc1031f2f1f894579d859a3ee9405"
+        "sha256": "c677d1c7f1ff1057ac13678a0f04fe21b380f53b40893bf4b5ef45f20114415c"
         },
         "staticObjects": [
           {
             "file": "beta.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "f7c1462e5680bd04f2a0c75c4187dade6f5887225f4abd5a6004c964845f515a"
+            "sha256": "42dfe225223f1030060449d474f976fbf9b43bd3a041024239c5eb3b6cbbbc68"
           },
           {
             "file": "beta.shim.o",

@@ -4,12 +4,12 @@
   "runtime": {
     "abiVersion": 1,
     "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
-    "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde"
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3"
   },
   "roots": [
     {
       "id": "poc/lean-gamma@0.0.0",
-      "sha256": "c159d2f51a03bd03a2eeb54c8f18e6ce9c692685d9f47836d64555b677abe266"
+      "sha256": "d1deb8afaccdc405f731f1c8162b4455eef51e3dddcca11ff74d24bec27a7c4c"
     }
   ],
   "libraries": [
@@ -18,7 +18,7 @@
       "module": "Alpha",
       "capsule": {
         "path": "capsules/alpha.json",
-        "sha256": "d941dfe1be1b292b18d05acb1ee04feb620ed0da11521a8c70240d3edff32848"
+        "sha256": "0ca41a450578be9a915d2dc7e05808bf18bb4afefe29ac39fd6f98925a173be0"
       },
       "dependencies": [],
       "source": {
@@ -35,12 +35,12 @@
       "module": "Beta",
       "capsule": {
         "path": "capsules/beta.json",
-        "sha256": "88782bdb10935ac2d5bb4f848bb523d074da67e4dc3082372836bbf0f60a98f3"
+        "sha256": "9061cb023f904d4f0555dd3a52fcf1435e989d725736e7611c61fce191101936"
       },
       "dependencies": [
         {
           "id": "poc/lean-alpha@0.0.0",
-          "sha256": "d941dfe1be1b292b18d05acb1ee04feb620ed0da11521a8c70240d3edff32848"
+            "sha256": "0ca41a450578be9a915d2dc7e05808bf18bb4afefe29ac39fd6f98925a173be0"
         }
       ],
       "source": {
@@ -57,12 +57,12 @@
       "module": "Gamma",
       "capsule": {
         "path": "capsules/gamma.json",
-        "sha256": "c159d2f51a03bd03a2eeb54c8f18e6ce9c692685d9f47836d64555b677abe266"
+        "sha256": "d1deb8afaccdc405f731f1c8162b4455eef51e3dddcca11ff74d24bec27a7c4c"
       },
       "dependencies": [
         {
           "id": "poc/lean-beta@0.0.0",
-          "sha256": "88782bdb10935ac2d5bb4f848bb523d074da67e4dc3082372836bbf0f60a98f3"
+            "sha256": "9061cb023f904d4f0555dd3a52fcf1435e989d725736e7611c61fce191101936"
         }
       ],
       "source": {

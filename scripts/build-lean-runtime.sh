@@ -8,14 +8,16 @@ source "$LEAN_WASM_PROJECT_ROOT/scripts/env.sh"
 # shellcheck source=lean-runtime-config.sh
 source "$LEAN_WASM_PROJECT_ROOT/scripts/lean-runtime-config.sh"
 
-LEAN_SOURCE="$LEAN_WASM_PROJECT_ROOT/.toolchains/lean4-src"
+LEAN_SOURCE=${LEAN_WASM_LEAN_SOURCE:-$LEAN_WASM_PROJECT_ROOT/.toolchains/lean4-src}
 
-if [[ ! -d "$LEAN_SOURCE/.git" ]]; then
-  echo "Missing pinned Lean source checkout; run npm run bootstrap first." >&2
+if [[ -d "$LEAN_SOURCE/.git" ]]; then
+  actual_lean_commit=$(git -C "$LEAN_SOURCE" rev-parse HEAD)
+elif [[ -f "$LEAN_SOURCE/.lean-wasm-source-commit" ]]; then
+  actual_lean_commit=$(<"$LEAN_SOURCE/.lean-wasm-source-commit")
+else
+  echo "Missing pinned Lean source identity; run npm run bootstrap or supply LEAN_WASM_LEAN_SOURCE." >&2
   exit 1
 fi
-
-actual_lean_commit=$(git -C "$LEAN_SOURCE" rev-parse HEAD)
 if [[ "$actual_lean_commit" != "$LEAN_WASM_LEAN_COMMIT" ]]; then
   echo "Lean source commit mismatch: expected $LEAN_WASM_LEAN_COMMIT, got $actual_lean_commit" >&2
   exit 1
@@ -28,7 +30,13 @@ PREPARED_STAMP="$PATCHED_SOURCE/.lean-wasm-patched"
 
 if [[ ! -f "$PREPARED_STAMP" ]]; then
   mkdir -p "$PATCHED_SOURCE"
-  git -C "$LEAN_SOURCE" archive "$LEAN_WASM_LEAN_COMMIT" | tar -x -C "$PATCHED_SOURCE"
+  if [[ -d "$LEAN_SOURCE/.git" ]]; then
+    git -C "$LEAN_SOURCE" archive "$LEAN_WASM_LEAN_COMMIT" | tar -x -C "$PATCHED_SOURCE"
+  else
+    cp -a "$LEAN_SOURCE/." "$PATCHED_SOURCE/"
+    chmod -R u+w "$PATCHED_SOURCE"
+    rm "$PATCHED_SOURCE/.lean-wasm-source-commit"
+  fi
   for lean_patch in "${LEAN_WASM_LEAN_PATCHES[@]}"; do
     patch --batch --forward -d "$PATCHED_SOURCE" -p1 < "$lean_patch"
   done
@@ -42,7 +50,12 @@ if [[ "$actual_stamp" != "$expected_stamp" ]]; then
   exit 1
 fi
 
-HOST_LEAN_PREFIX=$(lean --print-prefix)
+HOST_LEAN_PREFIX=${LEAN_WASM_HOST_LEAN_PREFIX:-$(lean --print-prefix)}
+
+LIBUV_SOURCE_ARGS=()
+if [[ -n "${LEAN_WASM_LIBUV_SOURCE:-}" ]]; then
+  LIBUV_SOURCE_ARGS+=("-DLEAN_WASM_LIBUV_SOURCE=$LEAN_WASM_LIBUV_SOURCE")
+fi
 
 emcmake cmake \
   -S "$PATCHED_SOURCE/src" \
@@ -57,9 +70,10 @@ emcmake cmake \
   -DMMAP=OFF \
   -DCCACHE=OFF \
   -DUSE_GITHASH=OFF \
-  "-DCMAKE_C_FLAGS=-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
-  "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
-  "-DLEANC_INTERNAL_FLAGS=${LEAN_WASM_PROFILE_CC_FLAGS[*]}" \
+  "${LIBUV_SOURCE_ARGS[@]}" \
+  "-DCMAKE_C_FLAGS=-ffile-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fdebug-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fmacro-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
+  "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fdebug-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fmacro-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
+  "-DLEANC_INTERNAL_FLAGS=-ffile-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fdebug-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current -fmacro-prefix-map=$BUILD_ROOT=/workspace/build/lean-runtime/current ${LEAN_WASM_PROFILE_CC_FLAGS[*]}" \
   -DINSTALL_CADICAL=OFF \
   -DINSTALL_LEANTAR=OFF \
   -DWFAIL=OFF
@@ -86,7 +100,14 @@ if [[ ! -f "$LEAN_INIT_ARCHIVE" ]]; then
   exit 1
 fi
 
-actual_libuv_commit=$(git -C "$CMAKE_BUILD/libuv/src/libuv" rev-parse HEAD)
+if [[ -d "$CMAKE_BUILD/libuv/src/libuv/.git" ]]; then
+  actual_libuv_commit=$(git -C "$CMAKE_BUILD/libuv/src/libuv" rev-parse HEAD)
+elif [[ -f "$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit" ]]; then
+  actual_libuv_commit=$(<"$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit")
+else
+  echo "Missing libuv source identity." >&2
+  exit 1
+fi
 if [[ "$actual_libuv_commit" != "$LEAN_WASM_LIBUV_COMMIT" ]]; then
   echo "libuv commit mismatch: expected $LEAN_WASM_LIBUV_COMMIT, got $actual_libuv_commit" >&2
   exit 1

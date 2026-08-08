@@ -23,14 +23,14 @@ system.cpp: conflicting types for 'lean_uv_os_get_group'
 
 The header/generated ABI expects `uint8_t lean_uv_event_loop_alive()` and `lean_obj_res lean_uv_os_get_group(uint64_t gid)`. The Emscripten definitions used `lean_obj_res` and omitted `gid`, respectively. The minimal signature patch is SHA-256 `f867026310111fd4ec084eb88dd93afb03ad10959a6f33b91476870d18648190`.
 
-Lean's Emscripten CMake branch also placed `-pthread` in its common settings before consulting `MULTI_THREAD`, so `MULTI_THREAD=OFF` still emitted shared-memory artifacts. Patch `a4fe93f423c1de73cfd1d42aefd22010290a56f0927dc7ef071a382376611bc4` makes that flag conditional on the existing option. It introduces no new option or runtime branch. The ordered, path-independent patch set is SHA-256 `9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde`; build copies and artifacts are keyed by Lean commit, patch set, and `browser` or `threaded` profile.
+Lean's Emscripten CMake branch also placed `-pthread` in its common settings before consulting `MULTI_THREAD`, so `MULTI_THREAD=OFF` still emitted shared-memory artifacts. Patch `a4fe93f423c1de73cfd1d42aefd22010290a56f0927dc7ef071a382376611bc4` makes that flag conditional on the existing option. It introduces no new option or runtime branch. A third build-only patch, `dea7a934b9812d93e5be1be2a39c9e9798d4287e55c3b9535b03574c48f31562`, lets the existing libuv external-project step copy an already pinned source tree rather than requiring a Git fetch in a network-disabled Nix builder. It does not change runtime code. The complete ordered, path-independent patch set is SHA-256 `743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3`; build copies, graph contracts, and artifacts are keyed by Lean commit, patch set, and `browser` or `threaded` profile.
 
 After the patch, all 34 runtime archive members compiled. The archives contain
 1,123 defined-symbol records. Their profile-specific evidence is:
 
 ```text
-browser:  1,061,060 bytes, sha256 1df56cc60fe8d17ece7541dc733d3cb2649315495e58bf88603f4b9b01020176
-threaded: 1,109,340 bytes, sha256 d169ac24e70d6b993b9e79f80047b7b32db6e69821d2340ee77b2e1a640bcdde
+browser:  1,060,184 bytes, sha256 923f1e36d5fc5fc535e4259d470ed9564efc7341ffadce434e882c9e93faa6dd
+threaded: 1,108,496 bytes, sha256 9dadef87e7f865f664ebe2124e12b32124a9f779f1fafc2fc836c6a522bdf117
 ```
 
 The audit uses the pinned emsdk LLVM tools; Debian LLVM 14 cannot read Emscripten LLVM 24 LTO bitcode.
@@ -43,8 +43,8 @@ The resulting archives contain 601 members, including `initialize_Init` and
 its runtime/meta initialization closures:
 
 ```text
-browser:  22,621,510 bytes, sha256 9782f4ae402a8544e1223c5f36463fe36c0d658b54b15a082cb5fd1b4667dc64
-threaded: 22,662,818 bytes, sha256 d8c18a6b6191b5260a6f4e4dc6686b4659b651ff382fc454cf25e9b042792738
+browser:  22,621,442 bytes, sha256 49564fd3841536c1e6a23dec6309bbd16e22547d41d34f80a29edbd330157077
+threaded: 22,662,910 bytes, sha256 810aafa876804e60387e3a26eff87146765670f8cdf9b184e4056ae89a9eefd7
 ```
 
 Main performs the actual Lean startup sequence once: `lean_initialize_runtime_module()`, `initialize_Init(1)`, registered library initializers, successful `IO` result consumption, then `lean_io_mark_end_initialization()`. The state machine is cold → initializing → ready, failed, or shut down. Alpha's real initializer runs through this one registry. Beta and Gamma explicitly declare no initializer because their POC identity/read definitions have no initialization work; retaining their generated dependency initializers exposed an unresolved side-to-side `initialize_Alpha` limitation in Emscripten's startup link. A production graph initializer must order and resolve nontrivial transitive initializers rather than enabling undefined-symbol stubs. Repeated initialization while ready succeeds without rerunning either initializer. Shutdown refuses while a retained handle exists, calls Lean's runtime finalizers only after the ownership counter reaches zero, and is terminal because generated module guards are intentionally not reset.
@@ -102,14 +102,14 @@ Artifacts from this run:
 |---|---:|---|
 | browser startup main | 1,289,844 | `20545285cf10b6690213f8cb34460e667098c8ac1e9a90b1926427fcf6c839d2` |
 | browser lazy main | 1,289,759 | `ad6b73edca8493cbaedff3f854a6513253f92f8f0dfe44be4b1d6f9740fbe5b6` |
-| browser final-static main | 1,288,402 | `6590d3ae0db82f76738d28e11459317107b0c5d22febb3f6d35ce04af492784a` |
-| browser Alpha side module | 1,135 | `6825fc4b0411315d6fe4338e25124054c96e4e8c531ce8df0c497942ea67441a` |
+| browser final-static main | 1,288,288 | `f64a48d82cbdf5f049f8187d6ba8478b4498c9d7d34b9c537e665bf86e0bfefc` |
+| browser Alpha side module | 1,029 | `e98111b14c3effbe9b1e0d72b8bbe1e0fa44d79254171bcb08c3e2c3d0fd8853` |
 | browser Beta side module | 713 | `7f36961d6ee36765e5ff926a94f6a41375fd151e5fb61f28ebc46c0c1c2af252` |
 | browser Gamma side module | 714 | `8dd69c40e3373355ff3779b9e5844b0dd1924af052013710ea6cfd4a87bc089a` |
 | threaded startup main | 1,323,826 | `f04eb6bd5bf67f0c640794fd05799665b834cfab93732d73f869eb1ecece4f6b` |
 | threaded lazy main | 1,323,741 | `4c77cb594467f7d722d680f072c1d983c2b44f2aea2db2b76d7303cfc638cd34` |
-| threaded final-static main | 1,316,000 | `ca7decb961454bded809a3ddd1a39ff2bf029249925ba45272f04e13da3a7396` |
-| threaded Alpha side module | 1,356 | `00e2291d30e84b1f0f85bbc5d56345d8f419158370c66580e1310530c6656e4a` |
+| threaded final-static main | 1,315,888 | `6066e4e2eefaa3f2698651884730749e520f808a3ef2215e375749188c14ce71` |
+| threaded Alpha side module | 1,249 | `44b5f3390e7fde4e2ce0aaa77ad30c447942b275f36c23901f30d4676b16d748` |
 | threaded Beta side module | 941 | `d0efd8912bdcf9387857d31e645fa2a0ae5bc1031f2f1f894579d859a3ee9405` |
 | threaded Gamma side module | 942 | `19cb369ff0b7c07968e7c90fa9c9849903d0215abd418cf0d7a296ef2cdca982` |
 
@@ -123,15 +123,16 @@ The explicit `threaded` profile sets `MULTI_THREAD=ON`, passes `-pthread` throug
 
 The real `Init` closure increases the current main artifact by approximately 1.14 MiB over the earlier narrow stub. That is paid once per application, not once per Lean library. Libraries that import `Std` or other roots will require their exact cross-compiled initialization closure in the main graph; this milestone proves `Init` and core `IO`, not every future standard-library profile.
 
-For this three-library slice, browser final-static is 4,004 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 11,065 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
+For this three-library slice, browser final-static is 3,794 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 10,850 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
 
-Compiler prefix maps now normalize the source root to `/workspace`, and static
-capsule objects compile from relative source paths. A clean browser rebuild in
-an independent `/tmp/lean-wasm-repro.*` checkout produced byte-identical output
-for all 23 shipped and composition-evidence files. See
-[`capsule-graph.md`](capsule-graph.md). The threaded artifact hashes are locked
-and verified in `/app`; a second-root threaded build remains a production
-hardening check.
+Compiler prefix maps normalize the source root to `/workspace`, normalize every
+content-addressed runtime build directory to
+`/workspace/build/lean-runtime/current`, and compile static capsule objects from
+relative source paths. Clean browser and threaded rebuilds in an independent
+`/tmp/lean-wasm-repro.*` checkout each produced byte-identical output for all
+23 shipped and composition-evidence files. The complete x86-64 closure also
+builds and tests inside Nix with fixed Lean, libuv, Emscripten, and Node inputs.
+See [`capsule-graph.md`](capsule-graph.md).
 
 ## Reproduction
 
@@ -141,4 +142,5 @@ npm run test:lean-link-spike
 npm run build:lean-link-spike:threaded
 npm test
 npm run test:reproducibility
+npm run test:nix
 ```

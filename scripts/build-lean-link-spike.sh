@@ -81,6 +81,9 @@ INCLUDES=(
 
 TARGET_FLAGS=(
   -O2
+  "-ffile-prefix-map=$RUNTIME_ROOT=/workspace/build/lean-runtime/current"
+  "-fdebug-prefix-map=$RUNTIME_ROOT=/workspace/build/lean-runtime/current"
+  "-fmacro-prefix-map=$RUNTIME_ROOT=/workspace/build/lean-runtime/current"
   "${LEAN_WASM_PROFILE_CC_FLAGS[@]}"
 )
 

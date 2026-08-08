@@ -1,6 +1,6 @@
 # Canonical capsule graph evidence
 
-Status: verified POC evidence for Phase 8 WP3. The Nix derivation packages and validates the canonical graph metadata; the complete Lean/Emscripten Wasm build is still driven by the pinned bootstrap shell and is not yet a pure Nix build.
+Status: verified POC evidence for Phase 8 WP3. The canonical graph is enforced by the shell/bootstrap path and by a complete x86-64 Nix-sandbox build of both runtime profiles. The metadata-only graph derivation remains portable to x86-64 and AArch64 Linux.
 
 ## Contract and resolver
 
@@ -20,16 +20,18 @@ The browser and threaded capsules have distinct artifact hashes. Both runtime-lo
 
 ## Reproducibility result
 
-Clang file, debug, and macro prefix maps normalize the checkout root to `/workspace`. Final-static capsule objects are compiled from project-relative source paths so their LLVM module identifiers are also root-independent. Shipped side modules, static objects, and final Wasm artifacts contain no `/app` source path.
+Clang file, debug, and macro prefix maps normalize the checkout root to `/workspace` and every content-addressed runtime build directory to `/workspace/build/lean-runtime/current`. Final-static capsule objects are compiled from project-relative source paths so their LLVM module identifiers are also root-independent. Shipped side modules, static objects, and final Wasm artifacts contain neither `/app` nor a cache-key-specific runtime path.
 
-`npm run test:reproducibility` copies the current tracked and untracked source closure to a fresh `mktemp` checkout, shares only the pinned toolchain installation, rebuilds the browser Lean runtime and `Init` archive from extracted source, rebuilds the complete three-library graph, and compares 23 files byte-for-byte. The verified set includes main `.mjs`/Wasm files, Alpha/Beta/Gamma startup and lazy side modules, all six final-static library objects, all three canonical resolution outputs, the artifact manifest, and the relative-path SHA manifest.
+`npm run test:reproducibility` copies the current tracked and untracked source closure to a fresh `mktemp` checkout, shares only the pinned toolchain installation, rebuilds the browser and threaded Lean runtimes and `Init` archives from extracted source, rebuilds the complete three-library graph, and compares 23 files per profile byte-for-byte. The verified set includes main `.mjs`/Wasm files, Alpha/Beta/Gamma startup and lazy side modules, all six final-static library objects, all three canonical resolution outputs, the artifact manifest, and the relative-path SHA manifest.
 
-Result on 2026-08-08: **23 of 23 files were byte-identical across `/app` and `/tmp/lean-wasm-repro.*` checkouts.**
+Result on 2026-08-08: **23 of 23 browser files and 23 of 23 threaded files were byte-identical across independent checkout roots.**
 
-The previous high-severity gotcha about an absolute `lean.h` include path is therefore fixed for the browser POC artifact closure. A second-root threaded run and a pure Nix derivation of the full Lean/Emscripten build remain production-hardening work.
+The previous high-severity gotcha about an absolute `lean.h` include path is therefore fixed for both POC artifact closures. The same gate also caught and eliminated a subtler leak of the content-addressed runtime build ID through `__FILE__` strings before the artifacts were relocked.
 
 ## Nix composition boundary
 
-`nix build .#capsule-graph` produces a Nix store artifact containing the schemas, resolver, locked capsules, and canonical resolved output for all three composition profiles. This demonstrates that discovery/composition metadata has a reproducible Nix distribution unit without making JavaScript consumers learn Nix.
+`nix build .#capsule-graph` produces a platform-portable Nix store artifact containing the schemas, resolver, locked capsules, and canonical resolved output for all three composition profiles. This demonstrates that discovery/composition metadata has a reproducible Nix distribution unit without making JavaScript consumers learn Nix.
 
-It does not yet claim that the 22 MB Lean `Init` archive and final Wasm artifacts are built inside the Nix sandbox. That requires a production derivation for the pinned Lean source, Emscripten SDK, patched runtime, and both runtime profiles; the shell build remains the evidence-producing POC until that derivation exists.
+On x86-64 Linux, `npm run test:nix` builds the full architecture POC in the Nix sandbox. Fixed-output inputs pin the Lean 4.32.2 host release, exact Lean and libuv source commits, Emscripten 6.0.6 binary release, and its Node 24.19.0 host. The derivation applies the admitted Lean patches, copies the immutable Emscripten base cache into a derivation-local writable cache, builds any missing system-library variants offline, compiles both browser and threaded runtime/`Init` closures, links startup/lazy/final-static graphs, validates locked artifact hashes, and runs the test suite. Its output contains the browser and threaded artifact/evidence trees plus the canonical contracts.
+
+The fixed Emscripten release archive carries a development version marker; the derivation reproduces `emsdk install 6.0.6` by normalizing that marker to the selected release identity. Nix does not mutate the project, user cache, or immutable toolchain store path. A full AArch64 toolchain build remains open because the current exact upstream host binaries are x86-64; the host-neutral `capsule-graph` output already evaluates there.

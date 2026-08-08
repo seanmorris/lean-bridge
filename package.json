@@ -16,8 +16,10 @@
     "build:lean-link-spike": "bash scripts/build-lean-link-spike.sh",
     "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
     "build:link-spike": "bash scripts/build-link-spike.sh",
+    "build:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
+    "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"

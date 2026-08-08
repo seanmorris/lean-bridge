@@ -19,11 +19,6 @@ mkdir -p "$REPRO_CHECKOUT"
 ) | tar -xf - -C "$REPRO_CHECKOUT"
 ln -s "$LEAN_WASM_PROJECT_ROOT/.toolchains" "$REPRO_CHECKOUT/.toolchains"
 
-(
-  cd "$REPRO_CHECKOUT"
-  bash scripts/build-lean-link-spike.sh
-)
-
 ARTIFACTS=(
   startup/main.mjs
   startup/main.wasm
@@ -50,10 +45,30 @@ ARTIFACTS=(
   audit/sha256.txt
 )
 
-for artifact in "${ARTIFACTS[@]}"; do
-  cmp \
-    "$LEAN_WASM_PROJECT_ROOT/build/lean-link-spike/$artifact" \
-    "$REPRO_CHECKOUT/build/lean-link-spike/$artifact"
-done
+PROFILES=(browser threaded)
 
-printf 'Cross-root browser artifacts are byte-identical (%s files).\n' "${#ARTIFACTS[@]}"
+for profile in "${PROFILES[@]}"; do
+  case "$profile" in
+    browser)
+      build_directory=lean-link-spike
+      ;;
+    threaded)
+      build_directory=lean-link-spike-threaded
+      ;;
+  esac
+
+  (
+    cd "$REPRO_CHECKOUT"
+    LEAN_WASM_RUNTIME_PROFILE="$profile" bash scripts/build-lean-link-spike.sh
+  )
+
+  for artifact in "${ARTIFACTS[@]}"; do
+    cmp \
+      "$LEAN_WASM_PROJECT_ROOT/build/$build_directory/$artifact" \
+      "$REPRO_CHECKOUT/build/$build_directory/$artifact"
+  done
+
+  printf 'Cross-root %s artifacts are byte-identical (%s files).\n' \
+    "$profile" \
+    "${#ARTIFACTS[@]}"
+done
