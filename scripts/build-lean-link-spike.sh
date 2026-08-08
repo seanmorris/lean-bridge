@@ -108,10 +108,14 @@ BRIDGE_EXPORTS=(
   _bridge_has_lean_gamma
   _bridge_lean_alpha_make
   _bridge_lean_alpha_read
+  _bridge_lean_alpha_round_trip
+  _bridge_lean_active_frames
   _bridge_lean_handle_identity
   _bridge_lean_cross_library_identity
   _bridge_lean_release
   _bridge_lean_live_handles
+  _malloc
+  _free
 )
 
 build_side() {

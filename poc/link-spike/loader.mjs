@@ -1,5 +1,48 @@
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
+const VALUE_FRAME_V1_BYTES = 60;
+const valueFrameOffsets = Object.freeze({
+  abiVersion: 0,
+  byteSize: 4,
+  status: 8,
+  detail: 12,
+  enabled: 16,
+  count: 20,
+  labelPointer: 24,
+  labelLength: 28,
+  labelCapacity: 32,
+  bytesPointer: 36,
+  bytesLength: 40,
+  bytesCapacity: 44,
+  valuesPointer: 48,
+  valuesLength: 52,
+  valuesCapacity: 56,
+});
+const frameErrorCodes = Object.freeze([
+  "ok",
+  "abi-version-mismatch",
+  "frame-size-mismatch",
+  "runtime-not-ready",
+  "invalid-bool",
+  "copy-limit-exceeded",
+  "pointer-out-of-range",
+  "output-capacity-exceeded",
+  "internal-frame-error",
+]);
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder("utf-8", { fatal: true });
+
+export class LeanBridgeError extends Error {
+  constructor(message, { code, library, operation, details = {} }) {
+    super(message);
+    this.name = "LeanBridgeError";
+    this.code = code;
+    this.library = library;
+    this.operation = operation;
+    this.details = Object.freeze({ ...details });
+  }
+}
+
 const bytesFrom = value =>
   value instanceof Uint8Array
     ? value
@@ -46,6 +89,337 @@ const assertPublicName = name => {
   if (name.startsWith("_")) {
     throw new Error(`public binding names cannot start with _: ${name}`);
   }
+};
+
+const bridgeError = (descriptor, binding, code, message, details) =>
+  new LeanBridgeError(message, {
+    code,
+    library: descriptor.id,
+    operation: binding.name,
+    details,
+  });
+
+const initializeBinding = (module, descriptor, binding) => {
+  if (!binding.initialize) return;
+  const initialize = resolvePrivateFunction(
+    module,
+    descriptor,
+    binding.initialize,
+  );
+  if (!initialize()) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "runtime-not-ready",
+      `failed to initialize the Lean runtime for ${descriptor.id}`,
+    );
+  }
+};
+
+const validateUInt32 = (descriptor, binding, field, value) => {
+  if (!Number.isInteger(value) || value < 0 || value > 0xffff_ffff) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name}.${field} must be an unsigned 32-bit integer`,
+      { field, expected: "uint32" },
+    );
+  }
+  return value;
+};
+
+const validateValueFrameInput = (descriptor, binding, adapter, value) => {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name} expects a record value`,
+      { expected: "record" },
+    );
+  }
+  if (typeof value.enabled !== "boolean") {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name}.enabled must be a boolean`,
+      { field: "enabled", expected: "boolean" },
+    );
+  }
+  validateUInt32(descriptor, binding, "count", value.count);
+  if (typeof value.label !== "string") {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name}.label must be a string`,
+      { field: "label", expected: "string" },
+    );
+  }
+  if (!(value.bytes instanceof Uint8Array)) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name}.bytes must be a Uint8Array`,
+      { field: "bytes", expected: "Uint8Array" },
+    );
+  }
+  if (!Array.isArray(value.values) && !(value.values instanceof Uint32Array)) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument",
+      `${binding.name}.values must be an array of unsigned 32-bit integers`,
+      { field: "values", expected: "readonly uint32[]" },
+    );
+  }
+  for (const item of value.values) {
+    validateUInt32(descriptor, binding, "values[]", item);
+  }
+
+  const label = textEncoder.encode(value.label);
+  if (
+    label.byteLength > adapter.maxCopyBytes ||
+    value.bytes.byteLength > adapter.maxCopyBytes ||
+    value.values.length > adapter.maxArrayLength
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "copy-limit-exceeded",
+      `${binding.name} input exceeds the declared copied-value limit`,
+      {
+        labelBytes: label.byteLength,
+        byteArrayBytes: value.bytes.byteLength,
+        arrayLength: value.values.length,
+        maxCopyBytes: adapter.maxCopyBytes,
+        maxArrayLength: adapter.maxArrayLength,
+      },
+    );
+  }
+  return { label, bytes: value.bytes, values: value.values };
+};
+
+const assertValueFrameAdapter = (descriptor, binding, adapter) => {
+  if (
+    adapter.abiVersion !== 1 ||
+    adapter.byteSize !== VALUE_FRAME_V1_BYTES
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} requests an unsupported value-frame layout`,
+      {
+        abiVersion: adapter.abiVersion,
+        byteSize: adapter.byteSize,
+      },
+    );
+  }
+};
+
+const projectValueFrameFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+) => {
+  const adapter = binding.adapter;
+  assertValueFrameAdapter(descriptor, binding, adapter);
+  const allocate = resolvePrivateFunction(module, descriptor, "_malloc");
+  const free = resolvePrivateFunction(module, descriptor, "_free");
+
+  return value => {
+    const copied = validateValueFrameInput(
+      descriptor,
+      binding,
+      adapter,
+      value,
+    );
+    initializeBinding(module, descriptor, binding);
+    const allocations = [];
+    const reserve = byteLength => {
+      const pointer = allocate(Math.max(1, byteLength));
+      if (!pointer) {
+        throw bridgeError(
+          descriptor,
+          binding,
+          "allocation-failed",
+          `${binding.name} could not allocate ${byteLength} boundary bytes`,
+          { byteLength },
+        );
+      }
+      allocations.push(pointer);
+      return pointer;
+    };
+
+    try {
+      const labelPointer = reserve(copied.label.byteLength);
+      const bytesPointer = reserve(copied.bytes.byteLength);
+      const valuesPointer = reserve(copied.values.length * Uint32Array.BYTES_PER_ELEMENT);
+      const framePointer = reserve(VALUE_FRAME_V1_BYTES);
+
+      let heapBytes = new Uint8Array(module.HEAP8.buffer);
+      heapBytes.set(copied.label, labelPointer);
+      heapBytes.set(copied.bytes, bytesPointer);
+      let heapView = new DataView(module.HEAP8.buffer);
+      for (let index = 0; index < copied.values.length; index += 1) {
+        heapView.setUint32(valuesPointer + index * 4, copied.values[index], true);
+      }
+
+      heapView.setUint32(
+        framePointer + valueFrameOffsets.abiVersion,
+        adapter.abiVersion,
+        true,
+      );
+      heapView.setUint32(
+        framePointer + valueFrameOffsets.byteSize,
+        VALUE_FRAME_V1_BYTES,
+        true,
+      );
+      heapView.setUint32(framePointer + valueFrameOffsets.status, 0, true);
+      heapView.setUint32(framePointer + valueFrameOffsets.detail, 0, true);
+      heapView.setUint32(
+        framePointer + valueFrameOffsets.enabled,
+        value.enabled ? 1 : 0,
+        true,
+      );
+      heapView.setUint32(
+        framePointer + valueFrameOffsets.count,
+        value.count,
+        true,
+      );
+      for (const [pointerOffset, lengthOffset, capacityOffset, pointer, length] of [
+        [
+          valueFrameOffsets.labelPointer,
+          valueFrameOffsets.labelLength,
+          valueFrameOffsets.labelCapacity,
+          labelPointer,
+          copied.label.byteLength,
+        ],
+        [
+          valueFrameOffsets.bytesPointer,
+          valueFrameOffsets.bytesLength,
+          valueFrameOffsets.bytesCapacity,
+          bytesPointer,
+          copied.bytes.byteLength,
+        ],
+        [
+          valueFrameOffsets.valuesPointer,
+          valueFrameOffsets.valuesLength,
+          valueFrameOffsets.valuesCapacity,
+          valuesPointer,
+          copied.values.length,
+        ],
+      ]) {
+        heapView.setUint32(framePointer + pointerOffset, pointer, true);
+        heapView.setUint32(framePointer + lengthOffset, length, true);
+        heapView.setUint32(framePointer + capacityOffset, length, true);
+      }
+
+      const status = implementation(framePointer) >>> 0;
+      heapView = new DataView(module.HEAP8.buffer);
+      const frameStatus = heapView.getUint32(
+        framePointer + valueFrameOffsets.status,
+        true,
+      );
+      const detail = heapView.getUint32(
+        framePointer + valueFrameOffsets.detail,
+        true,
+      );
+      if (status !== 0) {
+        const code = frameErrorCodes[status] ?? "unknown-frame-error";
+        throw bridgeError(
+          descriptor,
+          binding,
+          code,
+          `${binding.name} failed at the typed Lean boundary: ${code}`,
+          { status, frameStatus, detail },
+        );
+      }
+      if (frameStatus !== 0) {
+        throw bridgeError(
+          descriptor,
+          binding,
+          "inconsistent-frame-status",
+          `${binding.name} returned inconsistent frame status`,
+          { status, frameStatus, detail },
+        );
+      }
+
+      const labelLength = heapView.getUint32(
+        framePointer + valueFrameOffsets.labelLength,
+        true,
+      );
+      const bytesLength = heapView.getUint32(
+        framePointer + valueFrameOffsets.bytesLength,
+        true,
+      );
+      const valuesLength = heapView.getUint32(
+        framePointer + valueFrameOffsets.valuesLength,
+        true,
+      );
+      heapBytes = new Uint8Array(module.HEAP8.buffer);
+      const label = textDecoder.decode(
+        heapBytes.slice(labelPointer, labelPointer + labelLength),
+      );
+      const bytes = heapBytes.slice(bytesPointer, bytesPointer + bytesLength);
+      heapView = new DataView(module.HEAP8.buffer);
+      const values = [];
+      for (let index = 0; index < valuesLength; index += 1) {
+        values.push(heapView.getUint32(valuesPointer + index * 4, true));
+      }
+
+      return Object.freeze({
+        enabled:
+          heapView.getUint32(
+            framePointer + valueFrameOffsets.enabled,
+            true,
+          ) !== 0,
+        count: heapView.getUint32(
+          framePointer + valueFrameOffsets.count,
+          true,
+        ),
+        label,
+        bytes,
+        values: Object.freeze(values),
+      });
+    } finally {
+      for (const pointer of allocations.reverse()) free(pointer);
+    }
+  };
+};
+
+const projectFunction = (module, descriptor, binding) => {
+  const implementation = resolvePrivateFunction(
+    module,
+    descriptor,
+    binding.symbol,
+  );
+  if (!binding.adapter) {
+    return (...args) => {
+      initializeBinding(module, descriptor, binding);
+      return implementation(...args);
+    };
+  }
+  if (binding.adapter.kind === "value-frame-v1") {
+    return projectValueFrameFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+    );
+  }
+  throw bridgeError(
+    descriptor,
+    binding,
+    "unsupported-adapter",
+    `unsupported binding adapter ${binding.adapter.kind}`,
+    { kind: binding.adapter.kind },
+  );
 };
 
 const projectClass = (module, descriptor, binding) => {
@@ -113,14 +487,9 @@ const projectBindings = (module, descriptor) => {
     assertPublicName(binding.name);
 
     if (binding.kind === "function") {
-      const implementation = resolvePrivateFunction(
-        module,
-        descriptor,
-        binding.symbol,
-      );
       Object.defineProperty(api, binding.name, {
         enumerable: true,
-        value: (...args) => implementation(...args),
+        value: projectFunction(module, descriptor, binding),
       });
     } else if (binding.kind === "class") {
       Object.defineProperty(api, binding.name, {

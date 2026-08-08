@@ -21,9 +21,9 @@ The run used a warm filesystem cache. No browser, network, bundler, or compresse
 
 | Artifact | SHA-256 |
 |---|---|
-| lazy main Wasm | `ad6b73edca8493cbaedff3f854a6513253f92f8f0dfe44be4b1d6f9740fbe5b6` |
-| Alpha lazy side module | `e98111b14c3effbe9b1e0d72b8bbe1e0fa44d79254171bcb08c3e2c3d0fd8853` |
-| canonical graph lock | `dacd0fc5b4a3698cd322577f6e3b382ff2c90e8c3bcee626179e673691c820e4` |
+| lazy main Wasm | `1e866f7ba5447da504612b95859f7dd65925e3637ec537cc3762c778b5a1678e` |
+| Alpha lazy side module | `bfa12d7b6869c1eba84606ab8bb5f1c804836b2384c14186e6e9654f66f96f09` |
+| canonical graph lock | `5559812f095c992b6c87f4b7917af8a6eea4eca832a52b3b931c9f5f24025a54` |
 
 ## Method
 
@@ -37,11 +37,11 @@ Warm measurements perform 10,000 complete lifecycle operations before sampling. 
 
 | Operation | Samples | Median | p95 | Minimum | Maximum |
 |---|---:|---:|---:|---:|---:|
-| main module factory | 12 | 8.10 ms | 19.52 ms | 6.57 ms | 19.52 ms |
-| Alpha integrity check and lazy load | 12 | 1.17 ms | 6.85 ms | 0.85 ms | 6.85 ms |
-| first `Box` lifecycle, including deferred initialization | 12 | 1.44 ms | 38.61 ms | 1.22 ms | 38.61 ms |
-| warm `box.read()` | 60 batches | 29.4 ns | 88.6 ns | 15.5 ns | 96.2 ns |
-| warm `Box` construct, read, and dispose | 60 batches | 0.221 µs | 0.411 µs | 0.144 µs | 0.483 µs |
+| main module factory | 12 | 8.56 ms | 16.12 ms | 5.22 ms | 16.12 ms |
+| Alpha integrity check and lazy load | 12 | 1.16 ms | 5.65 ms | 0.74 ms | 5.65 ms |
+| first `Box` lifecycle, including deferred initialization | 12 | 1.26 ms | 39.16 ms | 1.16 ms | 39.16 ms |
+| warm `box.read()` | 60 batches | 16.4 ns | 65.7 ns | 15.7 ns | 91.4 ns |
+| warm `Box` construct, read, and dispose | 60 batches | 0.218 µs | 0.264 µs | 0.144 µs | 0.402 µs |
 
 The 12-sample p95 is the maximum sample. More cold samples and separate process runs are required before setting a production p95 budget.
 
@@ -49,14 +49,14 @@ The 12-sample p95 is the maximum sample. More cold samples and separate process 
 
 | Artifact | Bytes |
 |---|---:|
-| browser startup main | 1,289,844 |
-| browser lazy main | 1,289,759 |
-| browser Alpha side module | 1,029 |
+| browser startup main | 1,292,186 |
+| browser lazy main | 1,292,101 |
+| browser Alpha side module | 3,778 |
 | browser Beta side module | 604 |
 | browser Gamma side module | 605 |
-| browser final-static three-library main | 1,288,288 |
-| threaded startup main | 1,323,826 |
-| threaded final-static three-library main | 1,315,888 |
+| browser final-static three-library main | 1,293,376 |
+| threaded startup main | 1,326,087 |
+| threaded final-static three-library main | 1,322,585 |
 
 The application pays for the Lean runtime and `Init` once. Side modules remain runtime-free. This result covers three small libraries, so it does not establish the size slope for realistic libraries or a 50-library graph.
 

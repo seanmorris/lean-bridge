@@ -15,18 +15,18 @@
         "sideModule": {
           "file": "alpha.so.wasm",
           "mediaType": "application/wasm",
-        "sha256": "e98111b14c3effbe9b1e0d72b8bbe1e0fa44d79254171bcb08c3e2c3d0fd8853"
+        "sha256": "bfa12d7b6869c1eba84606ab8bb5f1c804836b2384c14186e6e9654f66f96f09"
         },
         "staticObjects": [
           {
             "file": "alpha.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "7286e30da04e3997758fb35502c02b2b6977d9aa059ba451488c939998818126"
+            "sha256": "670799acdaa2fa565a88988f7d41feadbe292d234469ed10c4f8e1095401abdf"
           },
           {
             "file": "alpha.shim.o",
             "mediaType": "application/wasm-object",
-            "sha256": "b023cd5b4bb6cecf05a88d6df9b4b2473e28505212548f3ad13667bc124c9617"
+            "sha256": "8068847c731b305ac5d18c8050db511a87fca89114026401e9aad41304327547"
           }
         ]
       },
@@ -35,25 +35,35 @@
         "sideModule": {
           "file": "alpha.so.wasm",
           "mediaType": "application/wasm",
-        "sha256": "44b5f3390e7fde4e2ce0aaa77ad30c447942b275f36c23901f30d4676b16d748"
+        "sha256": "5fd500f8869bd4dd201663959641a5199ece2dfc9a86e6a1b864865c738c88bf"
         },
         "staticObjects": [
           {
             "file": "alpha.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "29ac355460d4cd291f4188831fac31a99294eb89119d328111c5019fb6e9a11b"
+            "sha256": "09cfcef781ebdaad278c524c266e7cf24e77508830c9e1d9fa1619d2b220bfe7"
           },
           {
             "file": "alpha.shim.o",
             "mediaType": "application/wasm-object",
-            "sha256": "ec6fd2e3516dbfc64261c01f07b54e4d9fb8a31f4bcbdee4b04df829d252b8a9"
+            "sha256": "d75ffc909769314d9670edc3ed07228de2e95466c5f42d56a84c314e6d3a0c07"
           }
         ]
       }
     ]
   },
   "symbols": {
-    "exports": ["lean_link_alpha_box", "lean_link_alpha_read"],
+    "exports": [
+      "lean_link_alpha_box",
+      "lean_link_alpha_read",
+      "lean_link_alpha_payload",
+      "lean_link_alpha_round_trip",
+      "lean_link_alpha_payload_enabled",
+      "lean_link_alpha_payload_count",
+      "lean_link_alpha_payload_label",
+      "lean_link_alpha_payload_bytes",
+      "lean_link_alpha_payload_values"
+    ],
     "requires": []
   },
   "initializer": { "mode": "required", "symbol": "initialize_Alpha" },

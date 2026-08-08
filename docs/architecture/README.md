@@ -21,6 +21,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Implementation approval checkpoint](approval.md)
 - [Historical synthesis](../vision.md)
 - [Native API performance evidence](../evidence/performance.md)
+- [Typed copied-value frame evidence](../evidence/typed-value-frame.md)
 
 ## Permanent review lenses
 

@@ -24,11 +24,29 @@ test("threaded lazy side module loads into the existing shared memory", async ()
 
   assert.equal(libraries.loaded.size, 1);
   assert.equal(Object.isFrozen(alpha), true);
-  assert.deepEqual(Object.keys(alpha), ["Box"]);
+  assert.deepEqual(Object.keys(alpha), ["Box", "roundTrip"]);
   const box = new alpha.Box(73);
   assert.equal(box.read(), 73);
   assert.equal("handle" in box, false);
   box.dispose();
+
+  assert.deepEqual(
+    alpha.roundTrip({
+      enabled: false,
+      count: 72,
+      label: "threaded",
+      bytes: new Uint8Array([7, 3]),
+      values: new Uint32Array([11, 13]),
+    }),
+    {
+      enabled: true,
+      count: 73,
+      label: "threaded",
+      bytes: new Uint8Array([7, 3]),
+      values: [11, 13],
+    },
+  );
+  assert.equal(module._bridge_lean_active_frames(), 0);
 });
 
 test("threaded side modules bind the main shared memory and runtime", async () => {

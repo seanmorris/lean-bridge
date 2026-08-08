@@ -52,6 +52,33 @@ export const createAlphaDescriptor = ({
         }),
       ]),
     }),
+    Object.freeze({
+      kind: "function",
+      name: "roundTrip",
+      initialize: "_bridge_lean_runtime_init",
+      symbol: "_bridge_lean_alpha_round_trip",
+      adapter: Object.freeze({
+        kind: "value-frame-v1",
+        abiVersion: 1,
+        byteSize: 60,
+        maxCopyBytes: 1024 * 1024,
+        maxArrayLength: 64 * 1024,
+        input: Object.freeze({
+          kind: "record",
+          fields: Object.freeze([
+            Object.freeze({ name: "enabled", type: "bool" }),
+            Object.freeze({ name: "count", type: "uint32" }),
+            Object.freeze({ name: "label", type: "string" }),
+            Object.freeze({ name: "bytes", type: "bytes" }),
+            Object.freeze({
+              name: "values",
+              type: Object.freeze({ kind: "array", element: "uint32" }),
+            }),
+          ]),
+        }),
+        output: "same-as-input",
+      }),
+    }),
   ]),
 });
 

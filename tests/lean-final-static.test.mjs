@@ -11,11 +11,28 @@ import {
 
 const exerciseBox = api => {
   assert.equal(Object.isFrozen(api), true);
-  assert.deepEqual(Object.keys(api), ["Box"]);
+  assert.deepEqual(Object.keys(api), ["Box", "roundTrip"]);
   const box = new api.Box(2718);
   assert.equal(box.read(), 2718);
   assert.equal("handle" in box, false);
   box.dispose();
+
+  assert.deepEqual(
+    api.roundTrip({
+      enabled: true,
+      count: 6,
+      label: "same contract",
+      bytes: new Uint8Array([2, 4, 8]),
+      values: [16, 32],
+    }),
+    {
+      enabled: false,
+      count: 7,
+      label: "same contract",
+      bytes: new Uint8Array([2, 4, 8]),
+      values: [16, 32],
+    },
+  );
 };
 
 test("dynamic and final-static graphs project the same native Alpha contract", async () => {

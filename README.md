@@ -171,6 +171,28 @@ Copied values and retained objects use different protocols. A copied record beco
 
 The current POC exercises the retained-object path with a Lean `Box` containing a `UInt32` and a persistent `String`. Three independently compiled libraries observe the same object identity while the public JavaScript API exposes only `new Box(42)`, `box.read()`, and `box.dispose()`.
 
+It also sends a copied Lean record containing `Bool`, `UInt32`, `String`, `ByteArray`, and `Array UInt32` through a private typed frame. Lean changes the boolean and count, then JavaScript receives a new native record:
+
+```ts
+const output = alpha.roundTrip({
+  enabled: true,
+  count: 41,
+  label: "Lean λ",
+  bytes: new Uint8Array([0, 128, 255]),
+  values: [0, 1, 0xffff_ffff],
+});
+
+// {
+//   enabled: false,
+//   count: 42,
+//   label: "Lean λ",
+//   bytes: Uint8Array(3) [0, 128, 255],
+//   values: [0, 1, 4294967295]
+// }
+```
+
+The wrapper checks numeric ranges and copy limits, allocates a temporary boundary arena, copies each typed field directly, and frees every allocation before returning. [The typed-value evidence](docs/evidence/typed-value-frame.md) records the ABI and failure behavior.
+
 ## One runtime for the application
 
 Fifty libraries should not create fifty Lean heaps and fifty copies of the runtime. An application owns one Lean runtime, one heap, one WebAssembly memory, one function table, one symbol space, and one initialization domain.
@@ -206,11 +228,11 @@ The current POC passes this gate for 23 browser artifacts and 23 threaded artifa
 
 | Operation | Median | p95 |
 |---|---:|---:|
-| create the browser-profile main module | 8.10 ms | 19.52 ms |
-| verify and lazy-load Alpha | 1.17 ms | 6.85 ms |
-| first `Box` construct, read, and dispose | 1.44 ms | 38.61 ms |
-| warm `box.read()` | 29.4 ns | 88.6 ns |
-| warm construct, read, and dispose | 0.221 µs | 0.411 µs |
+| create the browser-profile main module | 8.56 ms | 16.12 ms |
+| verify and lazy-load Alpha | 1.16 ms | 5.65 ms |
+| first `Box` construct, read, and dispose | 1.26 ms | 39.16 ms |
+| warm `box.read()` | 16.4 ns | 65.7 ns |
+| warm construct, read, and dispose | 0.218 µs | 0.264 µs |
 
 The first `Box` operation includes deferred Lean runtime initialization. The benchmark uses a warm filesystem cache under Node and does not measure browser download or compilation. Alpha's descriptor and class projection are hand-authored POC stand-ins for generated output. [The benchmark record](docs/evidence/performance.md) includes artifact hashes, method, size results, and limitations.
 
@@ -218,11 +240,11 @@ Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
 |---|---:|
-| lazy main module with one Lean runtime and `Init` | 1,289,759 |
-| Alpha lazy side module | 1,029 |
+| lazy main module with one Lean runtime and `Init` | 1,292,101 |
+| Alpha lazy side module | 3,778 |
 | Beta lazy side module | 604 |
 | Gamma lazy side module | 605 |
-| final-static three-library application | 1,288,288 |
+| final-static three-library application | 1,293,376 |
 
 These measurements establish a POC baseline. The production suite will add primitive and structured-value marshaling, callbacks, promises, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
 
@@ -236,11 +258,11 @@ The architecture-testing POC has established:
 - a native JavaScript class projection with hidden handles and deterministic disposal;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 35 passing behavioral and structural tests;
+- 38 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The remaining product work includes the general binding generator, the full primitive and rich-value matrix, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The remaining product work includes the general binding generator, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

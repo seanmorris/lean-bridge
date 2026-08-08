@@ -49,6 +49,13 @@ const SIDE_LIBRARIES = Object.freeze([
     definitions: Object.freeze([
       "lean_link_alpha_box",
       "lean_link_alpha_read",
+      "lean_link_alpha_payload",
+      "lean_link_alpha_round_trip",
+      "lean_link_alpha_payload_enabled",
+      "lean_link_alpha_payload_count",
+      "lean_link_alpha_payload_label",
+      "lean_link_alpha_payload_bytes",
+      "lean_link_alpha_payload_values",
       "lean_link_alpha_register",
     ]),
   }),
