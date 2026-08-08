@@ -26,6 +26,10 @@ The default experience is install, import, call, and dispose using the host ecos
 
 Acceptance tests measure time to first successful call, install and configuration steps, unfamiliar concepts exposed, handwritten integration code, diagnostic quality, manual Wasm/Nix/Lean interaction, migration effort from an ordinary package, and the number of escape hatches required. “Verified” software that imposes a parallel package or runtime world has failed the developer-experience requirement.
 
+Accessibility is part of correctness, not release polish. The supported JavaScript and Python fixtures must be installable, discoverable, callable, debuggable, and disposable using familiar package-manager and language conventions. Generated documentation, declarations, diagnostics, examples, assurance views, and command-line output must work with keyboard-only and screen-reader workflows; proof or trust state may never be conveyed by color alone. Failures must identify the consumer action, package, declaration, violated contract, and safe next step without requiring the user to decode a Wasm trap, mangled symbol, ownership flag, or Lean runtime detail.
+
+These are release gates with measured budgets. Production readiness requires clean-room usability tests for a JavaScript developer and a Python developer who have not learned Lean, Nix, Emscripten, or this bridge. If ordinary consumption requires a manual wrapper, generic dispatch call, raw handle, special loader knowledge, or inaccessible assurance UI, the corresponding projection is incomplete.
+
 ## Shared Lean runtime and Unix-style library loading
 
 The runtime-loaded profile shall mirror PHP-Wasm's extension architecture deliberately, not merely claim to be “Unix-like.” An application loads one Emscripten main module containing the Lean runtime and bridge kernel. Independently compiled Lean libraries are Emscripten side modules—distributed as WebAssembly shared objects, conventionally named like `.so.wasm`—that leave Lean runtime and bridge symbols unresolved. When loaded, every side module binds those symbols to the main module and therefore executes against the same memory, table, Lean heap, registries, and object identities. A side module is a separately cacheable binary asset, but it is not a separately instantiated Lean application or a second runtime island.
@@ -115,6 +119,16 @@ The baseline is a generated typed API over a small shared handle runtime. Handle
 
 Before implementation of each boundary category, the design must include a complete call-cycle sequence showing allocation, conversion, ownership transfer, re-entry, success or failure, and cleanup.
 
+## Native host-language projection and ownership
+
+The public boundary is a generated semantic projection, never a generic foreign-function interface. Every exported Lean declaration appears as a direct, named host-language callable. `ccall`, `cwrap`, frame/opcode dispatchers, raw ABI exports, numeric pointers or handles, and calling-convention details remain private runtime machinery and must not appear in public exports, type declarations, examples, diagnostics, benchmarks, or ordinary extension APIs. Argument adaptation, validation, marshalling, frame construction, handle conversion, callback adaptation, async settlement, error translation, initialization, and cleanup are generated. The consumer experience is import, call, done.
+
+Projection is symmetrical and preserves the distinction between copied values and identity-bearing resources. Copied Lean records and inductives become idiomatic immutable interfaces, records, structs, dataclasses, or discriminated unions. Identity-bearing values become canonical JavaScript/TypeScript or Python classes/resources with generated constructors or factories, properties, methods, static methods, equality and identity behavior, iterators and async iterators, and the target language's deterministic disposal convention. Lean-side projections of host objects and classes use the same declared object model rather than opaque tokens plus loose helper functions.
+
+The generator derives ownership behavior from the canonical binding contract. Borrowed, copied, transferred, retained, leased, weak, and host-owned values have explicit generated behavior; consumers do not pass ownership flags or balance reference counts. One host wrapper represents one live foreign identity within an application. Explicit disposal or structured scope is authoritative, finalization is only a fallback, stale generations fail deterministically, live borrows prevent unsafe release, and runtime shutdown reports the resources preventing closure. A class projection is incomplete until its constructor, method receiver, returned aliases, exceptions, async work, iterators, callbacks, and disposal paths all satisfy the ownership matrix.
+
+Native wrappers are an architectural prerequisite, including for performance work. Benchmarks must measure the API developers are promised—not a privileged raw `ccall` or dispatcher path—and may report an internal ABI baseline only as a separately labelled diagnostic.
+
 ## Generated package contract
 
 Lean declarations and bridge annotations generate, as one atomic artifact set:
@@ -130,7 +144,7 @@ Lean declarations and bridge annotations generate, as one atomic artifact set:
 
 Generation must be deterministic. CI fails if checked-in generated output differs from a clean regeneration, if descriptors disagree with binaries, or if separately composed libraries declare incompatible symbols, types, runtime versions, or proof metadata.
 
-Generated bindings expose direct named functions and idiomatic value types/classes. Generic `ccall`/frame dispatch, raw ABI symbols, Wasm objects, numeric handles, ownership flags, marshalling and calling conventions remain private. Copied records become native value types; identity-bearing Lean values become canonical classes/resources with generated constructors/factories, properties, methods, async/iterator behavior and host-language disposal conventions. No ordinary consumer writes a wrapper function.
+Generated bindings must satisfy the native projection and ownership contract above. No ordinary consumer writes a wrapper function, invokes generic dispatch, or learns the bridge calling convention.
 
 ## Required proof of concept
 
@@ -166,13 +180,14 @@ The architecture is ready for production implementation only when:
 
 - independent libraries demonstrably share one runtime and one heap;
 - runtime-loaded and static composition consume one canonical locked graph;
-- the TypeScript API is fully generated and passes drift checks;
+- the TypeScript API is fully generated, exposes direct native callables/classes with generated ownership, and passes drift and forbidden-surface checks;
 - JavaScript consumers need no routine Wasm configuration;
+- clean-room JavaScript and Python consumers pass the accessibility and adoption-effort budgets;
 - proof and trust metadata survives compilation and composition;
 - the ABI leaves room for a WASI adapter;
 - ownership counters return to baseline after stress tests;
 - bundler, Node, worker, and React validation passes; and
-- every exception to the three invariants is explicit, measured, and approved.
+- every exception to the architecture invariants is explicit, measured, and approved.
 
 ## Primary references
 

@@ -14,7 +14,12 @@ const call = (module, name, args = []) => module.ccall(
 );
 
 const exerciseBox = module => {
+  assert.equal(call(module, "bridge_lean_runtime_status"), 0);
   assert.equal(call(module, "bridge_lean_runtime_init"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_status"), 2);
+  assert.equal(call(module, "bridge_lean_runtime_init_runs"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_init"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_init_runs"), 1);
   assert.equal(call(module, "bridge_has_lean_alpha"), 1);
 
   const handle = call(module, "bridge_lean_alpha_make", [42]);
@@ -23,8 +28,16 @@ const exerciseBox = module => {
   assert.equal(call(module, "bridge_lean_alpha_read", [handle]), 42);
   assert.equal(call(module, "bridge_lean_alpha_read", [handle]), 42);
   assert.equal(call(module, "bridge_lean_live_handles"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_shutdown"), 0);
+  assert.equal(call(module, "bridge_lean_runtime_status"), 2);
   assert.equal(call(module, "bridge_lean_release", [handle]), 0);
   assert.equal(call(module, "bridge_lean_live_handles"), 0);
+  assert.equal(call(module, "bridge_lean_runtime_shutdown"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_status"), 4);
+  assert.equal(call(module, "bridge_lean_runtime_shutdown"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_init"), 0);
+  assert.equal(call(module, "bridge_lean_alpha_make", [43]), 0);
+  assert.equal(call(module, "bridge_lean_alpha_read", [handle]), -1);
 };
 
 test("Lean-generated startup side module allocates in the main Lean runtime", async () => {
@@ -40,4 +53,18 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   await libraries.load(alpha);
   assert.equal(libraries.loaded.size, 1);
   exerciseBox(module);
+});
+
+test("Init failure makes the application instance terminal", async () => {
+  const module = await createLazyModule();
+
+  assert.equal(call(module, "bridge_lean_runtime_status"), 0);
+  assert.equal(call(module, "bridge_test_lean_runtime_force_init_error"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_init"), 0);
+  assert.equal(call(module, "bridge_lean_runtime_status"), 3);
+  assert.equal(call(module, "bridge_lean_runtime_init_runs"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_init"), 0);
+  assert.equal(call(module, "bridge_lean_runtime_init_runs"), 1);
+  assert.equal(call(module, "bridge_lean_runtime_shutdown"), 0);
+  assert.equal(call(module, "bridge_lean_alpha_make", [42]), 0);
 });

@@ -28,6 +28,15 @@ const inspectProfile = async profile => {
   assert.deepEqual(byKind(alphaExports, "memory"), []);
   assert.deepEqual(byKind(alphaExports, "table"), []);
 
+  const unresolvedLeanInitializers = byKind(mainImports, "function")
+    .map(entry => entry.name)
+    .filter(name => /^(?:lean_|initialize_|runtime_initialize_|meta_initialize_)/.test(name));
+  assert.deepEqual(
+    unresolvedLeanInitializers,
+    [],
+    `${profile} main must resolve the complete Lean runtime and Init closure`,
+  );
+
   const mainFunctionExports = new Set(
     byKind(mainExports, "function").map(entry => entry.name),
   );
@@ -49,6 +58,19 @@ const inspectProfile = async profile => {
       mainFunctionExports.has(runtimeSymbol),
       true,
       `${profile} main must own ${runtimeSymbol}`,
+    );
+  }
+
+  for (const lifecycleSymbol of [
+    "bridge_lean_runtime_init",
+    "bridge_lean_runtime_status",
+    "bridge_lean_runtime_init_runs",
+    "bridge_lean_runtime_shutdown",
+  ]) {
+    assert.equal(
+      mainFunctionExports.has(lifecycleSymbol),
+      true,
+      `${profile} main must export ${lifecycleSymbol}`,
     );
   }
 };

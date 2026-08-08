@@ -57,6 +57,7 @@ emcmake cmake \
   -DMMAP=OFF \
   -DCCACHE=OFF \
   -DUSE_GITHASH=OFF \
+  "-DLEANC_INTERNAL_FLAGS=-pthread -fwasm-exceptions -flto -fPIC -ffp-contract=off" \
   -DINSTALL_CADICAL=OFF \
   -DINSTALL_LEANTAR=OFF \
   -DWFAIL=OFF
@@ -66,6 +67,20 @@ cmake --build "$CMAKE_BUILD" --target leanrt --parallel "$(nproc)"
 LEAN_RUNTIME_ARCHIVE="$CMAKE_BUILD/lib/lean/libleanrt.a"
 if [[ ! -f "$LEAN_RUNTIME_ARCHIVE" ]]; then
   echo "Lean runtime archive was not produced: $LEAN_RUNTIME_ARCHIVE" >&2
+  exit 1
+fi
+
+# Build only Init's target static facet. The generated stdlib makefile exports
+# LEAN_CC=emcc; invoking Lake directly would silently produce host objects.
+make \
+  -C "$PATCHED_SOURCE/src" \
+  -f "$CMAKE_BUILD/stdlib.make" \
+  Init \
+  LAKE_EXTRA_ARGS=Init:static
+
+LEAN_INIT_ARCHIVE="$CMAKE_BUILD/lib/lean/libInit.a"
+if [[ ! -f "$LEAN_INIT_ARCHIVE" ]]; then
+  echo "Lean Init archive was not produced: $LEAN_INIT_ARCHIVE" >&2
   exit 1
 fi
 
@@ -79,9 +94,27 @@ AUDIT_DIR="$BUILD_ROOT/audit"
 mkdir -p "$AUDIT_DIR"
 "$LEAN_WASM_EMSDK/upstream/bin/llvm-ar" t "$LEAN_RUNTIME_ARCHIVE" > "$AUDIT_DIR/libleanrt-members.txt"
 "$LEAN_WASM_EMSDK/upstream/bin/llvm-nm" --defined-only "$LEAN_RUNTIME_ARCHIVE" > "$AUDIT_DIR/libleanrt-defined-symbols.txt"
-sha256sum "$LEAN_PATCH" "$LEAN_RUNTIME_ARCHIVE" > "$AUDIT_DIR/sha256.txt"
+"$LEAN_WASM_EMSDK/upstream/bin/llvm-ar" t "$LEAN_INIT_ARCHIVE" > "$AUDIT_DIR/libInit-members.txt"
+"$LEAN_WASM_EMSDK/upstream/bin/llvm-nm" --defined-only "$LEAN_INIT_ARCHIVE" > "$AUDIT_DIR/libInit-defined-symbols.txt"
+first_init_member=$(head -n 1 "$AUDIT_DIR/libInit-members.txt")
+"$LEAN_WASM_EMSDK/upstream/bin/llvm-ar" p "$LEAN_INIT_ARCHIVE" "$first_init_member" > "$AUDIT_DIR/libInit-first-member.o"
+# Init uses LTO, so archive members are LLVM bitcode. Force one representative
+# member through the pinned target linker and inspect the resulting object.
+emcc \
+  -r \
+  -flto \
+  -pthread \
+  -fwasm-exceptions \
+  "$AUDIT_DIR/libInit-first-member.o" \
+  -o "$AUDIT_DIR/libInit-first-member-linked.o"
+if ! file "$AUDIT_DIR/libInit-first-member-linked.o" | grep -q 'WebAssembly'; then
+  echo "Lean Init archive cannot produce wasm32 objects" >&2
+  exit 1
+fi
+sha256sum "$LEAN_PATCH" "$LEAN_RUNTIME_ARCHIVE" "$LEAN_INIT_ARCHIVE" > "$AUDIT_DIR/sha256.txt"
 
 printf 'lean_runtime_archive=%s\n' "$LEAN_RUNTIME_ARCHIVE"
+printf 'lean_init_archive=%s\n' "$LEAN_INIT_ARCHIVE"
 printf 'lean_source_commit=%s\n' "$LEAN_COMMIT"
 printf 'lean_patch_sha256=%s\n' "$patch_sha"
 printf 'libuv_commit=%s\n' "$actual_libuv_commit"

@@ -13,6 +13,7 @@ RUNTIME_ROOT="$LEAN_WASM_PROJECT_ROOT/build/lean-runtime/$LEAN_COMMIT-$patch_sha
 RUNTIME_BUILD="$RUNTIME_ROOT/cmake"
 RUNTIME_SOURCE="$RUNTIME_ROOT/source"
 LEAN_RUNTIME="$RUNTIME_BUILD/lib/lean/libleanrt.a"
+LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
 
 "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
 
@@ -43,6 +44,10 @@ SIDE_FLAGS=(
 
 BRIDGE_EXPORTS=(
   _bridge_lean_runtime_init
+  _bridge_lean_runtime_status
+  _bridge_lean_runtime_init_runs
+  _bridge_lean_runtime_shutdown
+  _bridge_test_lean_runtime_force_init_error
   _bridge_has_lean_alpha
   _bridge_lean_alpha_make
   _bridge_lean_alpha_read
@@ -63,11 +68,20 @@ build_side() {
 build_main() {
   local output_dir=$1
   shift
-  emcc -O2 -fwasm-exceptions -pthread -flto "${INCLUDES[@]}" \
+  emcc -O2 -fwasm-exceptions -pthread -flto \
+    -DBRIDGE_LEAN_RUNTIME_TEST_HOOKS=1 \
+    "${INCLUDES[@]}" \
     -c "$SOURCE_DIR/main.c" -o "$output_dir/main.o"
+  em++ -O2 -fwasm-exceptions -pthread -flto "${INCLUDES[@]}" \
+    -I"$RUNTIME_SOURCE/src" \
+    -c "$SOURCE_DIR/runtime_lifecycle.cpp" -o "$output_dir/runtime_lifecycle.o"
   em++ \
     "$output_dir/main.o" \
+    "$output_dir/runtime_lifecycle.o" \
+    -Wl,--start-group \
+    "$LEAN_INIT" \
     "$LEAN_RUNTIME" \
+    -Wl,--end-group \
     "$@" \
     "${MAIN_FLAGS[@]}" \
     -o "$output_dir/main.mjs"

@@ -19,6 +19,8 @@ No Emscripten patch is currently required. The rest of the design uses existing 
 - Emscripten main/side modules, exported symbols, preload/locator hooks, and JS libraries or `EM_JS` where appropriate;
 - generated ESM descriptors and application-level registries.
 
+The cross-compiled `Init` build requires target flags to be supplied through `LEANC_INTERNAL_FLAGS` when configuring Lean's stage CMake directly. This is configuration, not a source patch. The build invokes the generated `stdlib.make` so `LEAN_CC=emcc` is authoritative, and it audits one linked archive member as wasm32. Direct Lake invocation is forbidden because it can silently emit host objects.
+
 ## Patch admission test
 
 A proposed upstream or fork patch is admitted only after a minimal reproducible experiment proves that existing hooks cannot meet a required invariant. The patch record must include:
