@@ -69,6 +69,7 @@ build_side() {
     "$GENERATED_DIR/Alpha.c" \
     "$SOURCE_DIR/alpha_shim.c" \
     "${SIDE_FLAGS[@]}" \
+    -Wl,-Map="$output_dir/alpha.link.map" \
     -o "$output_dir/alpha.so.wasm"
 }
 

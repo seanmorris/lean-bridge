@@ -74,11 +74,18 @@ bindings, not an accepted manual-wrapper architecture.
 
 The structural and profile tests pass:
 
-- the browser main module defines and exports exactly one unshared growable memory;
-- the threaded opt-in main imports exactly one growable shared memory;
-- the main Wasm module defines/exports exactly one indirect function table;
+- direct Wasm section counting proves the browser main contains exactly one
+  total memory, which it defines and exports as unshared and growable;
+- direct section counting proves the threaded opt-in main contains exactly one
+  total memory, which it imports as shared and growable;
+- both main modules contain exactly one total indirect function table, which
+  they define and export;
 - Alpha imports `env.memory` and `env.__indirect_function_table` and defines/exports neither;
 - Alpha imports its Lean RC/allocation support and bridge registration symbols from `env`;
+- startup and lazy link maps in both profiles contain no `libleanrt.a` or
+  `libInit.a` input and define exactly Alpha's `lean_link_alpha_box`,
+  `lean_link_alpha_read`, and registration symbols—no private Lean runtime
+  domain;
 - the locked `MAIN_MODULE=2` export manifest makes every Alpha function import available from main;
 - Alpha contains no Lean runtime or `Init` archive; and
 - main has no unresolved `lean_*`, `initialize_*`, `runtime_initialize_*`, or `meta_initialize_*` function import;
