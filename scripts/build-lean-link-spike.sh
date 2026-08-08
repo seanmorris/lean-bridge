@@ -17,14 +17,50 @@ LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
 "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
 
 SOURCE_DIR="$LEAN_WASM_PROJECT_ROOT/poc/lean-link-spike"
+GRAPH_LOCK="$SOURCE_DIR/graph-lock.json"
 BUILD_DIR="$LEAN_WASM_LINK_SPIKE_DIR"
 GENERATED_DIR="$BUILD_DIR/generated"
 STARTUP_DIR="$BUILD_DIR/startup"
 LAZY_DIR="$BUILD_DIR/lazy"
+FINAL_STATIC_DIR="$BUILD_DIR/final-static"
 AUDIT_DIR="$BUILD_DIR/audit"
-mkdir -p "$GENERATED_DIR" "$STARTUP_DIR" "$LAZY_DIR" "$AUDIT_DIR"
+mkdir -p \
+  "$GENERATED_DIR" \
+  "$STARTUP_DIR" \
+  "$LAZY_DIR" \
+  "$FINAL_STATIC_DIR" \
+  "$AUDIT_DIR"
 
-lean -c "$GENERATED_DIR/Alpha.c" "$SOURCE_DIR/Alpha.lean"
+locked_lean_commit=$(jq -er '.runtime.leanCommit' "$GRAPH_LOCK")
+locked_patch_set=$(jq -er '.runtime.patchSetSha256' "$GRAPH_LOCK")
+if [[ "$locked_lean_commit" != "$LEAN_WASM_LEAN_COMMIT" ]]; then
+  echo "Graph lock Lean commit mismatch: $locked_lean_commit" >&2
+  exit 1
+fi
+if [[ "$locked_patch_set" != "$LEAN_WASM_PATCH_SET_SHA" ]]; then
+  echo "Graph lock patch-set mismatch: $locked_patch_set" >&2
+  exit 1
+fi
+
+while IFS=$'\t' read -r relative_path expected_sha; do
+  actual_sha=$(sha256sum "$SOURCE_DIR/$relative_path" | awk '{print $1}')
+  if [[ "$actual_sha" != "$expected_sha" ]]; then
+    echo "Graph lock content mismatch for $relative_path" >&2
+    exit 1
+  fi
+done < <(
+  jq -r '.libraries[] | .source, .shim | [.path, .sha256] | @tsv' \
+    "$GRAPH_LOCK"
+)
+
+mapfile -t LEAN_LIBRARIES < <(jq -er '.libraries[].module' "$GRAPH_LOCK")
+for library in "${LEAN_LIBRARIES[@]}"; do
+  LEAN_PATH="$GENERATED_DIR${LEAN_PATH:+:$LEAN_PATH}" lean \
+    -R "$SOURCE_DIR" \
+    -o "$GENERATED_DIR/$library.olean" \
+    -c "$GENERATED_DIR/$library.c" \
+    "$SOURCE_DIR/$library.lean"
+done
 
 INCLUDES=(
   -I"$RUNTIME_BUILD/include"
@@ -51,31 +87,36 @@ BRIDGE_EXPORTS=(
   _bridge_lean_runtime_init
   _bridge_lean_runtime_status
   _bridge_lean_runtime_init_runs
+  _bridge_lean_library_init_runs
   _bridge_lean_runtime_shutdown
   _bridge_test_lean_runtime_force_init_error
   _bridge_test_lean_heap_size
   _bridge_test_lean_grow_heap
   _bridge_has_lean_alpha
+  _bridge_has_lean_beta
+  _bridge_has_lean_gamma
   _bridge_lean_alpha_make
   _bridge_lean_alpha_read
   _bridge_lean_handle_identity
+  _bridge_lean_cross_library_identity
   _bridge_lean_release
   _bridge_lean_live_handles
 )
 
 build_side() {
   local output_dir=$1
+  local library=$2
+  local module_name=${library,,}
   emcc \
-    "$GENERATED_DIR/Alpha.c" \
-    "$SOURCE_DIR/alpha_shim.c" \
+    "$GENERATED_DIR/$library.c" \
+    "$SOURCE_DIR/${module_name}_shim.c" \
     "${SIDE_FLAGS[@]}" \
-    -Wl,-Map="$output_dir/alpha.link.map" \
-    -o "$output_dir/alpha.so.wasm"
+    -Wl,-Map="$output_dir/$module_name.link.map" \
+    -o "$output_dir/$module_name.so.wasm"
 }
 
-build_main() {
+compile_main_objects() {
   local output_dir=$1
-  shift
   emcc "${TARGET_FLAGS[@]}" \
     -DBRIDGE_LEAN_RUNTIME_TEST_HOOKS=1 \
     "${INCLUDES[@]}" \
@@ -83,6 +124,12 @@ build_main() {
   em++ "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
     -I"$RUNTIME_SOURCE/src" \
     -c "$SOURCE_DIR/runtime_lifecycle.cpp" -o "$output_dir/runtime_lifecycle.o"
+}
+
+build_main() {
+  local output_dir=$1
+  shift
+  compile_main_objects "$output_dir"
   em++ \
     "$output_dir/main.o" \
     "$output_dir/runtime_lifecycle.o" \
@@ -95,20 +142,35 @@ build_main() {
     -o "$output_dir/main.mjs"
 }
 
-build_side "$STARTUP_DIR"
-build_side "$LAZY_DIR"
+for library in "${LEAN_LIBRARIES[@]}"; do
+  build_side "$STARTUP_DIR" "$library"
+  build_side "$LAZY_DIR" "$library"
+done
 
-SIDE_IMPORTS="$AUDIT_DIR/alpha-function-imports.txt"
+SIDE_IMPORTS="$AUDIT_DIR/side-function-imports.txt"
+SIDE_PROVIDED_SYMBOLS="$AUDIT_DIR/side-provided-symbols.txt"
 EXPORT_MANIFEST="$AUDIT_DIR/main-export-manifest.txt"
-wasm-objdump -x "$LAZY_DIR/alpha.so.wasm" \
+for library in "${LEAN_LIBRARIES[@]}"; do
+  module_name=${library,,}
+  wasm-objdump -x "$LAZY_DIR/$module_name.so.wasm"
+done \
   | sed -n '/ - func\[/s/.*<env\.\([^>]*\)>.*/_\1/p' \
-  | sort -u \
-  > "$SIDE_IMPORTS"
+  | sort -u > "$SIDE_IMPORTS"
+
+for library in "${LEAN_LIBRARIES[@]}"; do
+  module_name=${library,,}
+  awk 'NR > 1 { print "_" $NF }' "$LAZY_DIR/$module_name.link.map"
+done \
+  | sed -n '/^_[A-Za-z_][A-Za-z0-9_]*$/p' \
+  | sort -u > "$SIDE_PROVIDED_SYMBOLS"
 
 {
   printf '%s\n' "${BRIDGE_EXPORTS[@]}"
   sed -n '/^_/p' "$SIDE_IMPORTS"
-} | sort -u > "$EXPORT_MANIFEST"
+} \
+  | sort -u \
+  | grep -Fvx -f "$SIDE_PROVIDED_SYMBOLS" \
+  > "$EXPORT_MANIFEST"
 mapfile -t MAIN_EXPORTS < "$EXPORT_MANIFEST"
 
 MAIN_FLAGS=(
@@ -127,25 +189,76 @@ if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
   MAIN_FLAGS+=(-sPTHREAD_POOL_SIZE=0)
 fi
 
-build_main "$STARTUP_DIR" "$STARTUP_DIR/alpha.so.wasm"
+build_main \
+  "$STARTUP_DIR" \
+  "$STARTUP_DIR/alpha.so.wasm" \
+  "$STARTUP_DIR/beta.so.wasm" \
+  "$STARTUP_DIR/gamma.so.wasm"
 build_main "$LAZY_DIR"
 
-for module in \
-  "$STARTUP_DIR/main.wasm" \
-  "$STARTUP_DIR/alpha.so.wasm" \
-  "$LAZY_DIR/main.wasm" \
-  "$LAZY_DIR/alpha.so.wasm"; do
+compile_main_objects "$FINAL_STATIC_DIR"
+FINAL_STATIC_OBJECTS=()
+for library in "${LEAN_LIBRARIES[@]}"; do
+  module_name=${library,,}
+  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -c "$GENERATED_DIR/$library.c" \
+    -o "$FINAL_STATIC_DIR/$module_name.generated.o"
+  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -c "$SOURCE_DIR/${module_name}_shim.c" \
+    -o "$FINAL_STATIC_DIR/$module_name.shim.o"
+  FINAL_STATIC_OBJECTS+=(
+    "$FINAL_STATIC_DIR/$module_name.generated.o"
+    "$FINAL_STATIC_DIR/$module_name.shim.o"
+  )
+done
+
+FINAL_STATIC_FLAGS=(
+  "${TARGET_FLAGS[@]}"
+  -sMODULARIZE=1
+  -sEXPORT_ES6=1
+  -sENVIRONMENT=node
+  -sALLOW_MEMORY_GROWTH=1
+  -sEXPORTED_RUNTIME_METHODS=HEAP8
+  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${BRIDGE_EXPORTS[*]}")"
+  -Wl,--export-table
+  -Wl,--no-entry
+  -Wl,-Map="$FINAL_STATIC_DIR/main.link.map"
+  "${INCLUDES[@]}"
+)
+if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
+  FINAL_STATIC_FLAGS+=(-sPTHREAD_POOL_SIZE=0)
+fi
+
+em++ \
+  "$FINAL_STATIC_DIR/main.o" \
+  "$FINAL_STATIC_DIR/runtime_lifecycle.o" \
+  "${FINAL_STATIC_OBJECTS[@]}" \
+  -Wl,--start-group \
+  "$LEAN_INIT" \
+  "$LEAN_RUNTIME" \
+  -Wl,--end-group \
+  "${FINAL_STATIC_FLAGS[@]}" \
+  -o "$FINAL_STATIC_DIR/main.mjs"
+
+MODULES=(
+  "$STARTUP_DIR/main.wasm"
+  "$LAZY_DIR/main.wasm"
+  "$FINAL_STATIC_DIR/main.wasm"
+)
+for profile_dir in "$STARTUP_DIR" "$LAZY_DIR"; do
+  for library in "${LEAN_LIBRARIES[@]}"; do
+    module_name=${library,,}
+    MODULES+=("$profile_dir/$module_name.so.wasm")
+  done
+done
+
+for module in "${MODULES[@]}"; do
   # Lean's pinned Emscripten path currently emits legacy exception opcodes.
   wasm-tools validate --features all "$module"
   name=$(basename "$(dirname "$module")")-$(basename "$module")
   wasm-objdump -x "$module" > "$AUDIT_DIR/$name.objdump.txt"
 done
 
-sha256sum \
-  "$STARTUP_DIR/main.wasm" \
-  "$STARTUP_DIR/alpha.so.wasm" \
-  "$LAZY_DIR/main.wasm" \
-  "$LAZY_DIR/alpha.so.wasm" \
-  > "$AUDIT_DIR/sha256.txt"
+sha256sum "${MODULES[@]}" > "$AUDIT_DIR/sha256.txt"
 
 printf 'Built Lean link spike profile %s in %s\n' "$LEAN_WASM_RUNTIME_PROFILE" "$BUILD_DIR"

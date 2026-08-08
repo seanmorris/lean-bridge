@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "runtime": {
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde"
+  },
+  "libraries": [
+    {
+      "id": "poc/lean-alpha@0.0.0",
+      "module": "Alpha",
+      "dependencies": [],
+      "source": {
+        "path": "Alpha.lean",
+        "sha256": "fa31581b31b12d8b1e7b41c1278e54e1c04d1d16394baf3e268e0f26f713fde0"
+      },
+      "shim": {
+        "path": "alpha_shim.c",
+        "sha256": "e1e832d017dbefe57d01edc4b6babfe4906636a8bfdeb0960c1153ecc5226910"
+      },
+      "initializer": "required"
+    },
+    {
+      "id": "poc/lean-beta@0.0.0",
+      "module": "Beta",
+      "dependencies": ["poc/lean-alpha@0.0.0"],
+      "source": {
+        "path": "Beta.lean",
+        "sha256": "7ff9bf428f9ab744f5a4c3027b9d50435660a145b6ba0d0eb785edc1be7cb916"
+      },
+      "shim": {
+        "path": "beta_shim.c",
+        "sha256": "ae9f0cc9652216a0573f491a86d25abd352c45aa98ef5d37db04879160d9ffab"
+      },
+      "initializer": "none-poc-pure"
+    },
+    {
+      "id": "poc/lean-gamma@0.0.0",
+      "module": "Gamma",
+      "dependencies": ["poc/lean-beta@0.0.0"],
+      "source": {
+        "path": "Gamma.lean",
+        "sha256": "4428dc43e41cd8de4ace63e48170ba48553d4ba913d2e092a10fff48e8f76d56"
+      },
+      "shim": {
+        "path": "gamma_shim.c",
+        "sha256": "88167f1c9dfc0e9328575177674214a470171edb6d731b3f68c90fca8d80fecf"
+      },
+      "initializer": "none-poc-pure"
+    }
+  ]
+}

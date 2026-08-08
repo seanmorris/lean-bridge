@@ -43,30 +43,107 @@ const sectionVectorCount = (bytes, wantedSection) => {
 const definedTableCount = bytes => sectionVectorCount(bytes, 4);
 const definedMemoryCount = bytes => sectionVectorCount(bytes, 5);
 
-const inspectSideLinkMap = async (root, profile) => {
-  const path = `${root}/${profile}/alpha.link.map`;
+const SIDE_LIBRARIES = Object.freeze([
+  Object.freeze({
+    name: "alpha",
+    definitions: Object.freeze([
+      "lean_link_alpha_box",
+      "lean_link_alpha_read",
+      "lean_link_alpha_register",
+    ]),
+  }),
+  Object.freeze({
+    name: "beta",
+    definitions: Object.freeze([
+      "lean_link_beta_identity",
+      "lean_link_beta_read",
+      "lean_link_beta_register",
+    ]),
+  }),
+  Object.freeze({
+    name: "gamma",
+    definitions: Object.freeze([
+      "lean_link_gamma_identity",
+      "lean_link_gamma_read",
+      "lean_link_gamma_register",
+    ]),
+  }),
+]);
+
+const plainLinkSymbols = linkMap =>
+  linkMap
+    .split("\n")
+    .slice(1)
+    .map(line => line.trim().split(/\s+/).at(-1))
+    .filter(Boolean);
+
+const inspectSideLinkMap = async (root, profile, library) => {
+  const path = `${root}/${profile}/${library.name}.link.map`;
   const linkMap = await readFile(path, "utf8");
 
   assert.doesNotMatch(linkMap, /(?:^|[/\\])libleanrt\.a(?:\W|$)/m);
   assert.doesNotMatch(linkMap, /(?:^|[/\\])libInit\.a(?:\W|$)/m);
 
-  const symbols = linkMap
-    .split("\n")
-    .slice(1)
-    .map(line => line.trim().split(/\s+/).at(-1))
-    .filter(Boolean);
-  const leanDefinitions = symbols.filter(symbol =>
+  const leanDefinitions = plainLinkSymbols(linkMap).filter(symbol =>
     /^(?:lean_|_ZN4lean)/.test(symbol),
   );
 
   assert.deepEqual(
     leanDefinitions,
-    [
-      "lean_link_alpha_box",
-      "lean_link_alpha_read",
-      "lean_link_alpha_register",
-    ],
-    `${path} must contain Alpha declarations but no private Lean runtime domain`,
+    library.definitions,
+    `${path} must contain only its declared Lean library domain`,
+  );
+};
+
+const inspectMainMemoryAndTable = ({
+  artifact,
+  imports,
+  exports,
+  mainMemoryMode,
+  label,
+}) => {
+  const memoryImports = byKind(imports, "memory");
+  const memoryExports = byKind(exports, "memory");
+  const tableImports = byKind(imports, "table");
+  const tableExports = byKind(exports, "table");
+  assert.equal(
+    memoryImports.length + definedMemoryCount(artifact.bytes),
+    1,
+    `${label} must contain exactly one total memory`,
+  );
+  assert.equal(
+    tableImports.length + definedTableCount(artifact.bytes),
+    1,
+    `${label} must contain exactly one total table`,
+  );
+  if (mainMemoryMode === "defined") {
+    assert.deepEqual(memoryImports, []);
+    assert.equal(definedMemoryCount(artifact.bytes), 1);
+    assert.deepEqual(memoryExports, [{ name: "memory", kind: "memory" }]);
+  } else {
+    assert.deepEqual(memoryImports, [
+      { module: "env", name: "memory", kind: "memory" },
+    ]);
+    assert.equal(definedMemoryCount(artifact.bytes), 0);
+    assert.deepEqual(memoryExports, []);
+  }
+  assert.deepEqual(tableImports, []);
+  assert.equal(definedTableCount(artifact.bytes), 1);
+  assert.deepEqual(tableExports, [
+    { name: "__indirect_function_table", kind: "table" },
+  ]);
+};
+
+const assertNoLeanRuntimeImports = (imports, label) => {
+  const unresolved = byKind(imports, "function")
+    .map(entry => entry.name)
+    .filter(name =>
+      /^(?:lean_|initialize_|runtime_initialize_|meta_initialize_)/.test(name),
+    );
+  assert.deepEqual(
+    unresolved,
+    [],
+    `${label} must resolve the complete Lean runtime and Init closure`,
   );
 };
 
@@ -76,75 +153,50 @@ export const inspectLeanLinkProfile = async ({
   mainMemoryMode,
 }) => {
   const main = await loadWasm(`${root}/${profile}/main.wasm`);
-  const alpha = await loadWasm(`${root}/${profile}/alpha.so.wasm`);
   const mainImports = WebAssembly.Module.imports(main.module);
   const mainExports = WebAssembly.Module.exports(main.module);
-  const alphaImports = WebAssembly.Module.imports(alpha.module);
-  const alphaExports = WebAssembly.Module.exports(alpha.module);
-
-  const mainMemoryImports = byKind(mainImports, "memory");
-  const mainMemoryExports = byKind(mainExports, "memory");
-  const mainTableImports = byKind(mainImports, "table");
-  const mainTableExports = byKind(mainExports, "table");
-  assert.equal(
-    mainMemoryImports.length + definedMemoryCount(main.bytes),
-    1,
-    `${root}/${profile} main must contain exactly one total memory`,
-  );
-  assert.equal(
-    mainTableImports.length + definedTableCount(main.bytes),
-    1,
-    `${root}/${profile} main must contain exactly one total table`,
-  );
-  if (mainMemoryMode === "defined") {
-    assert.deepEqual(mainMemoryImports, []);
-    assert.equal(definedMemoryCount(main.bytes), 1);
-    assert.deepEqual(mainMemoryExports, [{ name: "memory", kind: "memory" }]);
-  } else {
-    assert.deepEqual(mainMemoryImports, [
-      { module: "env", name: "memory", kind: "memory" },
-    ]);
-    assert.equal(definedMemoryCount(main.bytes), 0);
-    assert.deepEqual(mainMemoryExports, []);
-  }
-  assert.deepEqual(mainTableImports, []);
-  assert.equal(definedTableCount(main.bytes), 1);
-  assert.deepEqual(mainTableExports, [
-    { name: "__indirect_function_table", kind: "table" },
-  ]);
-
-  assert.deepEqual(byKind(alphaImports, "memory"), [
-    { module: "env", name: "memory", kind: "memory" },
-  ]);
-  assert.deepEqual(byKind(alphaImports, "table"), [
-    { module: "env", name: "__indirect_function_table", kind: "table" },
-  ]);
-  assert.equal(definedMemoryCount(alpha.bytes), 0);
-  assert.equal(definedTableCount(alpha.bytes), 0);
-  assert.deepEqual(byKind(alphaExports, "memory"), []);
-  assert.deepEqual(byKind(alphaExports, "table"), []);
-
-  const unresolvedLeanInitializers = byKind(mainImports, "function")
-    .map(entry => entry.name)
-    .filter(name => /^(?:lean_|initialize_|runtime_initialize_|meta_initialize_)/.test(name));
-  assert.deepEqual(
-    unresolvedLeanInitializers,
-    [],
-    `${root}/${profile} main must resolve the complete Lean runtime and Init closure`,
-  );
+  const label = `${root}/${profile} main`;
+  inspectMainMemoryAndTable({
+    artifact: main,
+    imports: mainImports,
+    exports: mainExports,
+    mainMemoryMode,
+    label,
+  });
+  assertNoLeanRuntimeImports(mainImports, label);
 
   const mainFunctionExports = new Set(
     byKind(mainExports, "function").map(entry => entry.name),
   );
-  const alphaFunctionImports = byKind(alphaImports, "function")
-    .filter(entry => entry.module === "env")
-    .map(entry => entry.name);
-
-  for (const symbol of alphaFunctionImports) {
-    assert.ok(
-      mainFunctionExports.has(symbol),
-      `${root}/${profile} main must export ${symbol}`,
+  for (const library of SIDE_LIBRARIES) {
+    const side = await loadWasm(
+      `${root}/${profile}/${library.name}.so.wasm`,
     );
+    const sideImports = WebAssembly.Module.imports(side.module);
+    const sideExports = WebAssembly.Module.exports(side.module);
+
+    assert.deepEqual(byKind(sideImports, "memory"), [
+      { module: "env", name: "memory", kind: "memory" },
+    ]);
+    assert.deepEqual(byKind(sideImports, "table"), [
+      { module: "env", name: "__indirect_function_table", kind: "table" },
+    ]);
+    assert.equal(definedMemoryCount(side.bytes), 0);
+    assert.equal(definedTableCount(side.bytes), 0);
+    assert.deepEqual(byKind(sideExports, "memory"), []);
+    assert.deepEqual(byKind(sideExports, "table"), []);
+
+    const functionImports = byKind(sideImports, "function")
+      .filter(entry => entry.module === "env")
+      .map(entry => entry.name);
+    for (const symbol of functionImports) {
+      assert.ok(
+        mainFunctionExports.has(symbol),
+        `${root}/${profile} main must export ${symbol} for ${library.name}`,
+      );
+    }
+
+    await inspectSideLinkMap(root, profile, library);
   }
 
   for (const runtimeSymbol of [
@@ -164,6 +216,7 @@ export const inspectLeanLinkProfile = async ({
     "bridge_lean_runtime_init",
     "bridge_lean_runtime_status",
     "bridge_lean_runtime_init_runs",
+    "bridge_lean_library_init_runs",
     "bridge_lean_runtime_shutdown",
   ]) {
     assert.equal(
@@ -172,6 +225,35 @@ export const inspectLeanLinkProfile = async ({
       `${root}/${profile} main must export ${lifecycleSymbol}`,
     );
   }
+};
 
-  await inspectSideLinkMap(root, profile);
+export const inspectFinalStaticProfile = async ({ root, mainMemoryMode }) => {
+  const path = `${root}/final-static/main.wasm`;
+  const main = await loadWasm(path);
+  const imports = WebAssembly.Module.imports(main.module);
+  const exports = WebAssembly.Module.exports(main.module);
+  inspectMainMemoryAndTable({
+    artifact: main,
+    imports,
+    exports,
+    mainMemoryMode,
+    label: path,
+  });
+  assertNoLeanRuntimeImports(imports, path);
+
+  const linkMap = await readFile(`${root}/final-static/main.link.map`, "utf8");
+  const symbols = plainLinkSymbols(linkMap);
+  for (const symbol of [
+    "initialize_Init",
+    "lean_dec_ref_cold",
+    "lean_notify_assert",
+    "lean_internal_panic_out_of_memory",
+    ...SIDE_LIBRARIES.flatMap(library => library.definitions),
+  ]) {
+    assert.equal(
+      symbols.filter(candidate => candidate === symbol).length,
+      1,
+      `${path} must define ${symbol} exactly once`,
+    );
+  }
 };

@@ -1,6 +1,6 @@
 # Lean Runtime and Generated Side-Module Spike
 
-Status: verified for the exact narrow scope below. Multiple Lean libraries, cross-library identity, and real browser/bundler packaging remain open; the browser-default memory profile itself is now non-threaded.
+Status: verified for the exact narrow scope below. Three Lean libraries, cross-library identity, startup/lazy/final-static composition, and both memory profiles pass. JavaScript callbacks/re-entry and real browser/bundler packaging remain open.
 
 Date: 2026-08-08 UTC.
 
@@ -8,9 +8,9 @@ Date: 2026-08-08 UTC.
 
 The pinned Lean 4.32.2 sources were configured through their existing Emscripten CMake path with Emscripten 6.0.6. GMP, mimalloc, Lean multithreading, mmap, ccache, and nonessential installation targets were disabled for this first architecture probe.
 
-The resulting `libleanrt.a` and a wasm32/LTO build of Lean's complete `Init` closure were linked only into an Emscripten `MAIN_MODULE=2`. A Lean-authored Alpha module was compiled by the pinned host Lean compiler to generated C, then linked without either archive as `alpha.so.wasm` with `SIDE_MODULE=2`. A small C shim registers Alpha's generated box/read functions into the main module. Both startup and lazy loading use the same side binary.
+The resulting `libleanrt.a` and a wasm32/LTO build of Lean's complete `Init` closure were linked only into an Emscripten `MAIN_MODULE=2`. Lean-authored Alpha, Beta, and Gamma modules were compiled independently by the pinned host Lean compiler to generated C, then linked without either archive as `SIDE_MODULE=2` artifacts. Beta and Gamma compile against Alpha's `.olean`, so all three use the same nominal `Box` type rather than relying on compatible layouts. Small C shims register each module's generated entry points into the main-owned registry. A tracked graph lock content-addresses all six Lean/shim inputs, pins their dependency order and runtime/patch identities, and drives both modes. Startup and lazy loading use the same three side binaries; final-static links the same locked generated sources into one non-dynamic application.
 
-Alpha allocates a non-scalar Lean structure containing a `UInt32` and persistent `String`. The main bridge retains its raw object identity, reads it twice using explicit retain/consume balancing, then decrements the final reference and verifies its ownership counter returns to zero.
+Alpha allocates a non-scalar Lean structure containing a `UInt32` and persistent `String`. Alpha, Beta, and Gamma each read that same object through independently generated code. The main bridge then passes one retained reference through Beta's and Gamma's identity functions, checks that the returned pointer is unchanged, balances every consume/retain, and verifies the ownership counter returns to zero.
 
 ## Stock-source failures and admitted patches
 
@@ -47,7 +47,7 @@ browser:  22,621,510 bytes, sha256 9782f4ae402a8544e1223c5f36463fe36c0d658b54b15
 threaded: 22,662,818 bytes, sha256 d8c18a6b6191b5260a6f4e4dc6686b4659b651ff382fc454cf25e9b042792738
 ```
 
-Main performs the actual Lean startup sequence once: `lean_initialize_runtime_module()`, `initialize_Init(1)`, successful `IO` result consumption, then `lean_io_mark_end_initialization()`. The state machine is cold → initializing → ready, failed, or shut down. Repeated initialization while ready succeeds without rerunning either initializer. Shutdown refuses while a retained handle exists, calls Lean's runtime finalizers only after the ownership counter reaches zero, and is terminal because generated module guards are intentionally not reset.
+Main performs the actual Lean startup sequence once: `lean_initialize_runtime_module()`, `initialize_Init(1)`, registered library initializers, successful `IO` result consumption, then `lean_io_mark_end_initialization()`. The state machine is cold → initializing → ready, failed, or shut down. Alpha's real initializer runs through this one registry. Beta and Gamma explicitly declare no initializer because their POC identity/read definitions have no initialization work; retaining their generated dependency initializers exposed an unresolved side-to-side `initialize_Alpha` limitation in Emscripten's startup link. A production graph initializer must order and resolve nontrivial transitive initializers rather than enabling undefined-symbol stubs. Repeated initialization while ready succeeds without rerunning either initializer. Shutdown refuses while a retained handle exists, calls Lean's runtime finalizers only after the ownership counter reaches zero, and is terminal because generated module guards are intentionally not reset.
 
 A POC-only Wasm test hook constructs a typed Lean `IO.Error` result before `initialize_Init` to exercise containment. That instance moves to the terminal failed state, never allocates through Alpha, never retries initialization, and cannot be shut down as though it were healthy. This hook is raw test instrumentation and is not eligible for generated public bindings.
 
@@ -55,8 +55,9 @@ A POC-only Wasm test hook constructs a typed Lean `IO.Error` result before `init
 
 The behavioral tests pass:
 
-- startup-linked Alpha allocates and releases a Lean object through the main runtime;
-- lazy-loaded Alpha binds into the already-running main runtime and performs the same lifecycle;
+- startup-linked Alpha/Beta/Gamma read and preserve one Lean object through the main runtime;
+- requesting lazy Gamma recursively loads Beta then Alpha exactly once before performing the same cross-library lifecycle;
+- final-static composition preserves the same value, identity, initialization count, and ownership baseline;
 - repeated initialization runs the real runtime/`Init` sequence exactly once;
 - shutdown is rejected with a live handle, succeeds after release, finalizes the runtime, and forbids reinitialization; and
 - an injected `IO.Error` poisons only that application instance and prevents Lean calls.
@@ -80,17 +81,17 @@ The structural and profile tests pass:
   total memory, which it imports as shared and growable;
 - both main modules contain exactly one total indirect function table, which
   they define and export;
-- Alpha imports `env.memory` and `env.__indirect_function_table` and defines/exports neither;
-- Alpha imports its Lean RC/allocation support and bridge registration symbols from `env`;
+- Alpha, Beta, and Gamma each import `env.memory` and `env.__indirect_function_table` and define/export neither;
+- every side module imports its Lean RC/allocation support and bridge registration symbols from `env`;
 - startup and lazy link maps in both profiles contain no `libleanrt.a` or
-  `libInit.a` input and define exactly Alpha's `lean_link_alpha_box`,
-  `lean_link_alpha_read`, and registration symbols—no private Lean runtime
-  domain;
-- the locked `MAIN_MODULE=2` export manifest makes every Alpha function import available from main;
-- Alpha contains no Lean runtime or `Init` archive; and
+  `libInit.a` input and define exactly that library's declared `lean_link_*`
+  functions—no private Lean runtime domain;
+- the locked `MAIN_MODULE=2` export manifest makes every side-module function import available from main;
+- no side module contains a Lean runtime or `Init` archive;
 - main has no unresolved `lean_*`, `initialize_*`, `runtime_initialize_*`, or `meta_initialize_*` function import;
+- final-static contains exactly one memory, table, `initialize_Init`, representative runtime symbols, registry symbol set, and copy of every Alpha/Beta/Gamma definition;
 - browser and threaded memory growth succeeds, after which Alpha still allocates, reads, and releases a Lean object; and
-- threaded lazy loading binds the side module into the already-running shared memory and runtime.
+- threaded lazy loading binds the side modules into the already-running shared memory and runtime; and
 - generated modules do not export `ccall`/`cwrap`; remaining `_bridge_*` probes
   are temporary internal lifecycle/profile instrumentation, while consumer
   assertions call the projected native functions and classes.
@@ -99,22 +100,36 @@ Artifacts from this run:
 
 | Profile and artifact | Bytes | SHA-256 |
 |---|---:|---|
-| browser startup main | 1,289,819 | `9b08e7012ebb72beee18ef8318baea3ef3dd40427100077b0c211ec6df463688` |
-| browser lazy main | 1,289,761 | `cfda66f2cb63c360ec7de947b84e86419cfd2b0a6651c5af6ad2d40ae565eeb4` |
-| browser Alpha side module | 886 | `720bdc73fac8db0d1bb92ba47b551515c53aea97d7dc2201de4553a914de3af5` |
-| threaded startup main | 1,325,357 | `86a437e22be501c5f29fa9345df4627b33e6d0a51d2a63339930943c3bc6709d` |
-| threaded lazy main | 1,325,299 | `290fc30b07a3e24391a0b294584f2d2481b2b900af8fce6ad9289bc72f5da241` |
-| threaded Alpha side module | 1,114 | `cc6a46f4d1415eae3099c77c6b055bbe98e5e11a6e1d458b350df2f6fbec0198` |
+| browser startup main | 1,289,844 | `20545285cf10b6690213f8cb34460e667098c8ac1e9a90b1926427fcf6c839d2` |
+| browser lazy main | 1,289,759 | `ad6b73edca8493cbaedff3f854a6513253f92f8f0dfe44be4b1d6f9740fbe5b6` |
+| browser final-static main | 1,288,394 | `81ab51d3be356153582a367fe78ab0a3e760ae54a9885c29803a5dc555aa1ce4` |
+| browser Alpha side module | 1,129 | `64d307d72fc46359bfd9396fe5a173161d898fe6dd262e0ebfcda6b45b2bbe0f` |
+| browser Beta side module | 707 | `6fa4d2f1ccfeaaf9112e8f5277e958d8805f98dae6ab9b979e65f40541910275` |
+| browser Gamma side module | 708 | `03203c9754b9dd3f678de176a85351ca46d595675be1f93591b11dbf1489824d` |
+| threaded startup main | 1,323,826 | `f04eb6bd5bf67f0c640794fd05799665b834cfab93732d73f869eb1ecece4f6b` |
+| threaded lazy main | 1,323,741 | `4c77cb594467f7d722d680f072c1d983c2b44f2aea2db2b76d7303cfc638cd34` |
+| threaded final-static main | 1,316,000 | `88633d231d3e13c374a6d8cc000ab3e5a4b45a2d547f2eb1b3f2ccf7cc375832` |
+| threaded Alpha side module | 1,350 | `50739eb4e06ba145503b6e52904d57173812828c50e7b8f7905e52f8279a5985` |
+| threaded Beta side module | 935 | `0f5359c6bb618476a03377490576bfca535eab8f15771cb53557f23abff0c5fb` |
+| threaded Gamma side module | 936 | `b73296da6b1fcf3a4957808b4480ef5e0f22c65a65cf9aaaa21ab45a66993ed6` |
 
 ## Architectural consequences
 
 `MAIN_MODULE=1` is unsuitable as the default because it preserves the entire dynamic symbol universe and pulled runtime subsystems whose Lean `Init` implementations were not linked. `MAIN_MODULE=2` plus a generated symbol-export manifest derived from the canonical side-module graph works for the narrow slice and makes symbol compatibility explicit.
 
-The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 35,538 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. Actual browser, worker, and bundler validation remains a later work package; this experiment ran under Node.
+The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 33,982 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. Actual browser, worker, and bundler validation remains a later work package; this experiment ran under Node.
 
 The explicit `threaded` profile sets `MULTI_THREAD=ON`, passes `-pthread` through the runtime, generated `Init`, side modules, and final link, and imports one shared memory. It retains Emscripten's warnings that dynamic linking with pthreads is experimental and that shared-memory growth may execute non-Wasm support code slowly. Browser deployments of this profile require SharedArrayBuffer availability and the corresponding cross-origin-isolation policy. Thread selection is therefore an application/runtime-profile decision, never a per-library choice; all libraries in one graph must use the same profile.
 
 The real `Init` closure increases the current main artifact by approximately 1.14 MiB over the earlier narrow stub. That is paid once per application, not once per Lean library. Libraries that import `Std` or other roots will require their exact cross-compiled initialization closure in the main graph; this milestone proves `Init` and core `IO`, not every future standard-library profile.
+
+For this three-library slice, browser final-static is 3,994 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 11,047 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
+
+The artifact hashes above are evidence for this exact `/app` build, not yet a
+claim of path-independent reproducibility. Lean-generated assertion data in the
+side modules currently embeds the absolute `lean.h` include path. A clean build
+under another root therefore needs a stable sandbox root or compiler prefix-map
+strategy before bit-for-bit comparison can become a CI contract.
 
 ## Reproduction
 

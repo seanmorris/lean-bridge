@@ -103,6 +103,9 @@ const projectBindings = (module, descriptor) => {
   return Object.freeze(api);
 };
 
+export const createLibrarySurface = (module, descriptor) =>
+  projectBindings(module, descriptor);
+
 export const createLibraryLoader = module => {
   const loaded = new Map();
   const pending = new Map();
@@ -134,7 +137,7 @@ export const createLibraryLoader = module => {
         loadAsync: true,
         nodelete: true,
       });
-      const api = projectBindings(module, descriptor);
+      const api = createLibrarySurface(module, descriptor);
       loaded.set(key, api);
       return api;
     })();

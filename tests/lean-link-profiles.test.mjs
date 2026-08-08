@@ -3,7 +3,10 @@ import test from "node:test";
 
 import createThreadedLazyModule from "../build/lean-link-spike-threaded/lazy/main.mjs";
 import { createAlphaDescriptor } from "../poc/lean-link-spike/descriptors.mjs";
-import { inspectLeanLinkProfile } from "./helpers/lean-link-structure.mjs";
+import {
+  inspectFinalStaticProfile,
+  inspectLeanLinkProfile,
+} from "./helpers/lean-link-structure.mjs";
 import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
 
 const threadedAlpha = createAlphaDescriptor({
@@ -38,6 +41,10 @@ test("threaded side modules bind the main shared memory and runtime", async () =
   await inspectLeanLinkProfile({
     root: "build/lean-link-spike-threaded",
     profile: "lazy",
+    mainMemoryMode: "imported",
+  });
+  await inspectFinalStaticProfile({
+    root: "build/lean-link-spike-threaded",
     mainMemoryMode: "imported",
   });
 });
