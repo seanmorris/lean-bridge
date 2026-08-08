@@ -146,6 +146,15 @@ Generation must be deterministic. CI fails if checked-in generated output differ
 
 Generated bindings must satisfy the native projection and ownership contract above. No ordinary consumer writes a wrapper function, invokes generic dispatch, or learns the bridge calling convention.
 
+Dynamic loading returns that same generated surface. The ordinary convention is
+`const beta = await libraries.load("beta"); beta.chain(9)`: no linker handle,
+underscore-prefixed symbol, or follow-up wrapper step. Loading is demand-driven
+and idempotent. It links only the minimum required transitive graph, shares one
+in-flight operation across concurrent callers, and returns the same frozen API
+object thereafter. Unrelated packages, optional capabilities, and the threaded
+runtime stay unloaded; runtime initialization and optional resources defer until
+their first semantic use wherever the declared behavior permits.
+
 ## Required proof of concept
 
 The first proof of concept is not “hello world.” It must demonstrate the architecture's hardest invariant:

@@ -3,6 +3,13 @@ export const alpha = Object.freeze({
   buildHash: "link-spike-alpha",
   dependencies: [],
   sideModule: new URL("../../build/link-spike/lazy/alpha.so.wasm", import.meta.url),
+  bindings: Object.freeze([
+    Object.freeze({
+      kind: "function",
+      name: "add",
+      symbol: "_bridge_call_alpha",
+    }),
+  ]),
 });
 
 export const beta = Object.freeze({
@@ -10,4 +17,11 @@ export const beta = Object.freeze({
   buildHash: "link-spike-beta",
   dependencies: [alpha],
   sideModule: new URL("../../build/link-spike/lazy/beta.so.wasm", import.meta.url),
+  bindings: Object.freeze([
+    Object.freeze({
+      kind: "function",
+      name: "chain",
+      symbol: "_bridge_call_beta",
+    }),
+  ]),
 });

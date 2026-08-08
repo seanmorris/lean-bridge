@@ -27,7 +27,7 @@ MAIN_FLAGS=(
   -sEXPORT_ES6=1
   -sENVIRONMENT=node
   -sALLOW_MEMORY_GROWTH=1
-  -sEXPORTED_RUNTIME_METHODS=ccall,loadDynamicLibrary
+  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary
   -sEXPORTED_FUNCTIONS=_bridge_increment,_bridge_get_counter,_bridge_reset,_bridge_register_alpha,_bridge_register_beta,_bridge_has_alpha,_bridge_has_beta,_bridge_call_alpha,_bridge_call_beta
   -Wl,--no-entry
 )

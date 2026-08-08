@@ -5,11 +5,10 @@ set -euo pipefail
 LEAN_WASM_PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 # shellcheck source=env.sh
 source "$LEAN_WASM_PROJECT_ROOT/scripts/env.sh"
+# shellcheck source=lean-runtime-config.sh
+source "$LEAN_WASM_PROJECT_ROOT/scripts/lean-runtime-config.sh"
 
-LEAN_COMMIT=f3b06c705e6c85f5314019d5d3baab0fec5b580c
-LEAN_PATCH="$LEAN_WASM_PROJECT_ROOT/patches/lean4-4.32.2-emscripten-runtime-signatures.patch"
-patch_sha=$(sha256sum "$LEAN_PATCH" | awk '{print $1}')
-RUNTIME_ROOT="$LEAN_WASM_PROJECT_ROOT/build/lean-runtime/$LEAN_COMMIT-$patch_sha"
+RUNTIME_ROOT="$LEAN_WASM_PROJECT_ROOT/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID"
 RUNTIME_BUILD="$RUNTIME_ROOT/cmake"
 RUNTIME_SOURCE="$RUNTIME_ROOT/source"
 LEAN_RUNTIME="$RUNTIME_BUILD/lib/lean/libleanrt.a"
@@ -18,7 +17,7 @@ LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
 "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
 
 SOURCE_DIR="$LEAN_WASM_PROJECT_ROOT/poc/lean-link-spike"
-BUILD_DIR="$LEAN_WASM_PROJECT_ROOT/build/lean-link-spike"
+BUILD_DIR="$LEAN_WASM_LINK_SPIKE_DIR"
 GENERATED_DIR="$BUILD_DIR/generated"
 STARTUP_DIR="$BUILD_DIR/startup"
 LAZY_DIR="$BUILD_DIR/lazy"
@@ -32,11 +31,17 @@ INCLUDES=(
   -I"$RUNTIME_SOURCE/src/include"
 )
 
-SIDE_FLAGS=(
+TARGET_FLAGS=(
   -O2
   -fwasm-exceptions
-  -pthread
   -flto
+)
+if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
+  TARGET_FLAGS+=(-pthread)
+fi
+
+SIDE_FLAGS=(
+  "${TARGET_FLAGS[@]}"
   -sSIDE_MODULE=2
   -Wl,--no-entry
   "${INCLUDES[@]}"
@@ -48,6 +53,8 @@ BRIDGE_EXPORTS=(
   _bridge_lean_runtime_init_runs
   _bridge_lean_runtime_shutdown
   _bridge_test_lean_runtime_force_init_error
+  _bridge_test_lean_heap_size
+  _bridge_test_lean_grow_heap
   _bridge_has_lean_alpha
   _bridge_lean_alpha_make
   _bridge_lean_alpha_read
@@ -68,11 +75,11 @@ build_side() {
 build_main() {
   local output_dir=$1
   shift
-  emcc -O2 -fwasm-exceptions -pthread -flto \
+  emcc "${TARGET_FLAGS[@]}" \
     -DBRIDGE_LEAN_RUNTIME_TEST_HOOKS=1 \
     "${INCLUDES[@]}" \
     -c "$SOURCE_DIR/main.c" -o "$output_dir/main.o"
-  em++ -O2 -fwasm-exceptions -pthread -flto "${INCLUDES[@]}" \
+  em++ "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
     -I"$RUNTIME_SOURCE/src" \
     -c "$SOURCE_DIR/runtime_lifecycle.cpp" -o "$output_dir/runtime_lifecycle.o"
   em++ \
@@ -104,21 +111,20 @@ wasm-objdump -x "$LAZY_DIR/alpha.so.wasm" \
 mapfile -t MAIN_EXPORTS < "$EXPORT_MANIFEST"
 
 MAIN_FLAGS=(
-  -O2
-  -fwasm-exceptions
-  -pthread
-  -flto
+  "${TARGET_FLAGS[@]}"
   -sMAIN_MODULE=2
   -sMODULARIZE=1
   -sEXPORT_ES6=1
   -sENVIRONMENT=node
   -sALLOW_MEMORY_GROWTH=1
-  -sPTHREAD_POOL_SIZE=0
-  -sEXPORTED_RUNTIME_METHODS=ccall,loadDynamicLibrary
+  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8
   -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")"
   -Wl,--no-entry
   "${INCLUDES[@]}"
 )
+if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
+  MAIN_FLAGS+=(-sPTHREAD_POOL_SIZE=0)
+fi
 
 build_main "$STARTUP_DIR" "$STARTUP_DIR/alpha.so.wasm"
 build_main "$LAZY_DIR"
@@ -141,4 +147,4 @@ sha256sum \
   "$LAZY_DIR/alpha.so.wasm" \
   > "$AUDIT_DIR/sha256.txt"
 
-printf 'Built Lean link spike in %s\n' "$BUILD_DIR"
+printf 'Built Lean link spike profile %s in %s\n' "$LEAN_WASM_RUNTIME_PROFILE" "$BUILD_DIR"

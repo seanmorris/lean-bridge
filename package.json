@@ -12,11 +12,13 @@
     "bootstrap": "bash scripts/bootstrap-toolchains.sh",
     "env:check": "bash scripts/inventory.sh",
     "build:lean-runtime": "bash scripts/build-lean-runtime.sh",
+    "build:lean-runtime:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-runtime.sh",
     "build:lean-link-spike": "bash scripts/build-lean-link-spike.sh",
+    "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
     "build:link-spike": "bash scripts/build-link-spike.sh",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
-    "test": "npm run build:link-spike && npm run build:lean-link-spike && node --test tests/**/*.test.mjs",
+    "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   }
 }

@@ -1,4 +1,5 @@
 #include <emscripten/emscripten.h>
+#include <emscripten/heap.h>
 #include <lean/lean.h>
 #include <stdint.h>
 
@@ -30,6 +31,19 @@ uint32_t bridge_test_lean_runtime_force_init_error(void) {
   if (runtime_state != BRIDGE_LEAN_RUNTIME_COLD) return 0;
   force_init_error = 1;
   return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_test_lean_heap_size(void) {
+  return (uint32_t)emscripten_get_heap_size();
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_test_lean_grow_heap(void) {
+  size_t before = emscripten_get_heap_size();
+  size_t requested = before + (64u * 1024u);
+  if (!emscripten_resize_heap(requested)) return 0;
+  return (uint32_t)emscripten_get_heap_size();
 }
 #endif
 

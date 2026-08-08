@@ -23,6 +23,27 @@ with Sample([1, 2, 3]) as sample:
 
 The exact APIs are generated from Lean declarations and binding metadata; these examples state the experience, not a handwritten wrapper contract.
 
+Dynamic loading follows the same rule. Loading resolves and links the package,
+then returns its generated native surface—not a linker handle or generic call
+object:
+
+```ts
+const beta = await libraries.load("beta");
+beta.chain(9);
+```
+
+The returned object contains ordinary named functions, classes and values. Any
+underscore-prefixed ABI symbol and the dynamic-link handle remain private to the
+loader.
+
+Loading is demand-driven and idempotent. A request loads only the selected
+package and the minimum transitive dependency graph required to link it;
+concurrent requests share one in-flight operation and completed packages reuse
+one projected API object. Unrelated packages, optional capabilities and the
+threaded runtime are not preloaded. Lean runtime initialization and optional
+resources are deferred until their first semantic use wherever doing so
+preserves the declared API behavior.
+
 ## Complete generation boundary
 
 The binding generator owns:
