@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-wasm.invalid/schema/bridge-config.schema.json",
+  "title": "Lean WebAssembly bridge POC configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project", "status", "toolchains", "composition", "assuranceStates"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "project": { "type": "string", "minLength": 1 },
+    "status": { "const": "architecture-testing-poc" },
+    "toolchains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["elan", "lean", "emsdk", "emscripten"],
+      "properties": {
+        "elan": { "$ref": "#/$defs/versionedArchive" },
+        "lean": { "$ref": "#/$defs/versionedCommit" },
+        "emsdk": { "$ref": "#/$defs/versionedCommit" },
+        "emscripten": { "$ref": "#/$defs/versionedCommit" }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtimeBoundary", "requiredProfiles", "standaloneIsComposable", "sideModuleUnload"],
+      "properties": {
+        "runtimeBoundary": { "const": "application" },
+        "requiredProfiles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["side-startup", "side-lazy", "final-static"] },
+          "allOf": [
+            { "contains": { "const": "side-startup" } },
+            { "contains": { "const": "side-lazy" } },
+            { "contains": { "const": "final-static" } }
+          ]
+        },
+        "standaloneIsComposable": { "const": false },
+        "sideModuleUnload": { "const": false }
+      }
+    },
+    "assuranceStates": {
+      "const": ["proved", "trusted-boundary", "unverified"]
+    }
+  },
+  "$defs": {
+    "versionedCommit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "commit"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "versionedArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "sha256"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

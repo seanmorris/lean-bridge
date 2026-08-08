@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema/bridge-config.schema.json",
+  "project": "lean-wasm-bridge-poc",
+  "status": "architecture-testing-poc",
+  "toolchains": {
+    "elan": {
+      "version": "v4.2.3",
+      "sha256": "df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2"
+    },
+    "lean": {
+      "version": "v4.32.2",
+      "commit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
+    },
+    "emsdk": {
+      "version": "6.0.6",
+      "commit": "9981799f744be74ac67b1c1813ff172f63be0630"
+    },
+    "emscripten": {
+      "version": "6.0.6",
+      "commit": "ce75e06884093bcefb86a6b8fd56a5d62a4cc245"
+    }
+  },
+  "composition": {
+    "runtimeBoundary": "application",
+    "requiredProfiles": ["side-startup", "side-lazy", "final-static"],
+    "standaloneIsComposable": false,
+    "sideModuleUnload": false
+  },
+  "assuranceStates": ["proved", "trusted-boundary", "unverified"]
+}

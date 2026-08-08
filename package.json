@@ -1,0 +1,19 @@
+{
+  "name": "@lean-wasm/bridge-poc",
+  "version": "0.0.0-poc",
+  "private": true,
+  "type": "module",
+  "description": "Architecture-testing POC for a Vrzno-inspired Lean WebAssembly bridge",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "bootstrap": "bash scripts/bootstrap-toolchains.sh",
+    "env:check": "bash scripts/inventory.sh",
+    "build:link-spike": "bash scripts/build-link-spike.sh",
+    "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
+    "test": "npm run build:link-spike && node --test tests/**/*.test.mjs",
+    "check": "npm run env:check && npm test"
+  }
+}
