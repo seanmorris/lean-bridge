@@ -4,7 +4,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 
 | ADR | Decision | Status |
 |---|---|---|
-| 01 | Generated typed bindings over a narrow runtime ABI; dynamic values are an explicit escape hatch | Accepted for POC |
+| 01 | Generated native callables and idiomatic objects over a private narrow runtime ABI; generic dispatch is internal | Revised; accepted for POC |
 | 02 | Upstream Lean generated C plus Emscripten is the primary substrate; alternate backends require isolated evidence | Accepted for POC |
 | 03 | Every public type explicitly chooses copy or handle semantics | Accepted for POC |
 | 04 | Handles use side, nominal kind, slot, generation, and private runtime identity | Accepted for POC |
@@ -20,6 +20,12 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 14 | Nix-locked reproducible graph and proof-to-artifact identity | Accepted for POC |
 | 15 | JavaScript-first generated adapter over a host-neutral core with future WASI projection | Accepted for POC |
 | 16 | Preserve AI-native semantic discovery and verified reuse as an ecosystem north star | Directional; implementation deferred |
+| 17 | Accessibility, zero-friction host conventions, and progressive optional learning are architecture gates | Accepted for POC |
+| 18 | Universal composition contracts and independent-component CI evidence at every layer | Accepted for POC |
+
+## ADR 1 — Generated native binding surface
+
+The narrow frame/symbol ABI and generic dispatcher are private implementation details. Every public Lean declaration projects to a direct named host callable with fully generated validation, marshalling, handle conversion, ownership, cleanup, async/iterator and error adaptation. Copied values project as idiomatic value types; identity-bearing values project as canonical classes/resources with constructors/factories, properties, methods and host-language lifecycle conventions. JavaScript and Python consumers require no manual wrappers or calling-convention knowledge. CI rejects raw dispatch, Wasm, ABI symbols, pointers, numeric handles, public `any`, or ownership flags in ordinary exports, declarations/stubs and docs.
 
 ## ADR 13 — Shared runtime and library loading
 
@@ -39,6 +45,14 @@ TypeScript is the first-class initial projection, not the only canonical interfa
 
 Near-term implementation does not build a component search engine. It does preserve semantic specifications, theorem/assumption graphs, ABI/target compatibility, reproducible closures, benchmarks, licenses, and content identities so an AI or human can search for and compose an existing verified component before generating new code.
 
+## ADR 17 — Accessibility and gradual adoption
+
+JavaScript and Python consumers use ordinary ecosystem installation and language conventions. Lean, Nix, Wasm, proof, ABI, loader, and ownership mechanics remain generated/internal on the happy path. Assurance and implementation depth are progressively disclosed rather than prerequisites. The POC measures install-to-first-call time, commands, configuration, unfamiliar concepts, handwritten glue, diagnostics, migration effort, and escape-hatch use. Accessibility is required in human documentation and machine/agent output and cannot rely on color alone.
+
+## ADR 18 — Universal composition contract
+
+Every supported abstraction layer defines compatibility identities and composition rules for semantics, types/effects, ABI, runtime/ownership, errors/async, proofs/trust, metadata, packages, locks, and target projections. CI composes at least two independently built components at every claimed layer. Startup-side, lazy-side, and final-static profiles consume the same canonical graph and expose equivalent contracts. A composition claim without independent evidence is unverified and blocks production approval.
+
 ## Amendment rule
 
-An ADR may change only with evidence, consequences for all six permanent lenses, migration effects on generated artifacts and lock data, and an explicit update to the risk register and POC gates.
+An ADR may change only with evidence, consequences for all eight permanent lenses, migration effects on generated artifacts and lock data, and an explicit update to the risk register and POC gates.

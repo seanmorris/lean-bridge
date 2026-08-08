@@ -12,12 +12,13 @@
     "toolchains": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["elan", "lean", "emsdk", "emscripten"],
+      "required": ["elan", "lean", "emsdk", "emscripten", "libuv"],
       "properties": {
         "elan": { "$ref": "#/$defs/versionedArchive" },
-        "lean": { "$ref": "#/$defs/versionedCommit" },
+        "lean": { "$ref": "#/$defs/versionedPatchedCommit" },
         "emsdk": { "$ref": "#/$defs/versionedCommit" },
-        "emscripten": { "$ref": "#/$defs/versionedCommit" }
+        "emscripten": { "$ref": "#/$defs/versionedCommit" },
+        "libuv": { "$ref": "#/$defs/versionedCommit" }
       }
     },
     "composition": {
@@ -61,6 +62,21 @@
       "properties": {
         "version": { "type": "string", "minLength": 1 },
         "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "versionedPatchedCommit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "commit", "patches"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "patches": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^patches/.+\\.patch$" }
+        }
       }
     }
   }

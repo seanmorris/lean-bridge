@@ -15,8 +15,16 @@ These are decision lenses and veto gates for every subsystem, ADR, generated art
 1. **One composed application, one Lean runtime.** All libraries in an application instance share one Lean runtime, reference-counting heap, WebAssembly memory and table, symbol space, handle registry, pending-operation registry, initialization domain, and failure domain. A normal Lean library must never embed a private copy of the runtime.
 2. **Generated TypeScript and a boring npm experience.** Lean declarations and bridge metadata are the source of truth for runtime wrappers, `.d.ts` files, validators, documentation, schemas, tests, and assurance metadata. JavaScript developers install, import, and call a package without configuring WebAssembly internals or maintaining handwritten types that can drift.
 3. **Assurance must remain explainable.** Generated metadata must distinguish machine-checked claims, trusted-boundary assumptions, and unverified behavior. Every architectural choice must preserve enough provenance to explain what is proved, what is merely assumed, and which artifact the proof describes.
+4. **Adoption friction is an architectural metric.** JavaScript and Python developers install an ordinary package, import it using familiar language conventions, and make a call. The bridge absorbs Lean, Nix, Wasm, loader, ownership, proof, and ABI mechanics. Learning is optional and progressive; diagnostics and assurance details become available when requested.
+5. **Every abstraction composes or it is a dead end.** Semantics, types and effects, ABI, runtime and ownership, errors and async behavior, proofs and assumptions, metadata, packages, locks, and static/dynamic graphs must all declare compatibility and compose in CI across independently built components.
 
-Any design that violates one of these invariants must be rejected or isolated behind an explicitly named compatibility profile.
+Any design that violates one of these invariants must be rejected or isolated behind an explicitly named compatibility profile. Unix-style composition, Nix-style reproducibility, and Lean-based correctness are invisible pillars for ordinary consumers, not new subjects they must learn.
+
+## Gradual adoption and measurable practicality
+
+The default experience is install, import, call, and dispose using the host ecosystem's normal tools. A developer may progressively inspect generated types, structured errors, performance/resource claims, proof coverage, assumptions, dependency locks, or Lean source, but none of that knowledge is required to receive the default benefit.
+
+Acceptance tests measure time to first successful call, install and configuration steps, unfamiliar concepts exposed, handwritten integration code, diagnostic quality, manual Wasm/Nix/Lean interaction, migration effort from an ordinary package, and the number of escape hatches required. “Verified” software that imposes a parallel package or runtime world has failed the developer-experience requirement.
 
 ## Shared Lean runtime and Unix-style library loading
 
@@ -121,6 +129,8 @@ Lean declarations and bridge annotations generate, as one atomic artifact set:
 - conformance tests and hashes that detect drift.
 
 Generation must be deterministic. CI fails if checked-in generated output differs from a clean regeneration, if descriptors disagree with binaries, or if separately composed libraries declare incompatible symbols, types, runtime versions, or proof metadata.
+
+Generated bindings expose direct named functions and idiomatic value types/classes. Generic `ccall`/frame dispatch, raw ABI symbols, Wasm objects, numeric handles, ownership flags, marshalling and calling conventions remain private. Copied records become native value types; identity-bearing Lean values become canonical classes/resources with generated constructors/factories, properties, methods, async/iterator behavior and host-language disposal conventions. No ordinary consumer writes a wrapper function.
 
 ## Required proof of concept
 

@@ -14,6 +14,26 @@ A `LeanWasmApplication` is the isolation and ownership boundary. It owns one:
 
 Creating another application deliberately creates another isolated runtime. Installing another library into the same application does not.
 
+## Invisible pillars and gradual adoption
+
+Unix-style composition, Nix-style reproducibility, and Lean-based correctness are implementation pillars, not consumer prerequisites. JavaScript and Python packages follow their host ecosystems' ordinary install, import, call, error, resource, and documentation conventions. Generated packages absorb runtime selection, Wasm assets, dependency locking, proof/artifact binding, initialization, and ownership bookkeeping.
+
+The learning curve is progressive: call a typed API first; inspect structured diagnostics next; inspect guarantees, assumptions, dependency locks, or Lean sources only when useful. Accessibility includes clear language, actionable errors, keyboard/screen-reader-compatible documentation and tools, deterministic machine output, and no color-only assurance signal.
+
+Success is measured with clean consumer fixtures: commands and configuration before first call, elapsed setup time, concepts exposed, handwritten glue, migration edits from an ordinary package, diagnostic recovery time, and manual Wasm/Nix/Lean escape hatches.
+
+## Universal composition contract
+
+Composition is a tested relation, not a packaging claim. Every layer publishes compatibility identities and rules:
+
+- semantic contracts, types, effects, errors, and async protocols;
+- ABI version, symbols, value/handle ownership, runtime identity, memory/table and initialization;
+- theorem subjects, assumptions, trust roots, proof/artifact hashes, and residual obligations;
+- schema/metadata vocabulary, package coordinates, features, licenses, dependency lock and initialization order; and
+- startup-side, lazy-side, final-static, WASI/native/Python host projections where supported.
+
+CI must compose at least two independently built components through each supported layer. Runtime-loaded and final-static profiles consume the same canonical graph and expose equivalent contracts. A layer without independent composition evidence is unverified and blocks production approval.
+
 ## Components
 
 ### Library capsule
@@ -47,6 +67,10 @@ Lean declarations and explicit bridge annotations produce:
 - proof, assumption, trust, source, build, and artifact provenance.
 
 Generated outputs are deterministic and carry input hashes. CI regenerates from a clean tree and rejects drift.
+
+The generated host surface contains direct named functions and idiomatic value types/classes only. `ccall`, `cwrap`, a generic frame dispatcher, raw symbols, Wasm objects, calling-convention flags and numeric handles are private runtime machinery. The generator performs all validation, lowering/lifting, handle and wrapper conversion, ownership, callback, async/iterator, error and cleanup adaptation.
+
+Copied Lean records/inductives become target value types. Identity-bearing values become canonical classes/resources with generated constructors or factories, properties, methods, identity behavior and host-native lifecycle. The same declared model projects host classes and objects into Lean. JavaScript and Python surfaces follow their own conventions while retaining one canonical declaration, semantic, proof and artifact identity.
 
 ## Value model
 

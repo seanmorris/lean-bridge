@@ -1,6 +1,6 @@
 # Architecture Design Package
 
-Status: **readying for human architecture review; implementation not yet approved**.
+Status: **architecture approved for the falsification-driven POC; production hardening remains unapproved**.
 
 This directory materializes the Virtual Office design package for the Vrzno-inspired Lean WebAssembly bridge. The governing decision is “yes, with constraints”: a useful bridge is feasible, but production work begins only after the shared-runtime side-module model, lifecycle protocol, generated contract, and reproducible artifact identity have been accepted.
 
@@ -10,6 +10,8 @@ This directory materializes the Virtual Office design package for the Vrzno-insp
 - [Vrzno and PHP-Wasm mapping](vrzno-lean-mapping.md)
 - [Existing-work comparison](existing-work.md)
 - [Recommended architecture](architecture.md)
+- [Accessibility and universal composition contract](accessibility-composition.md)
+- [Generated native binding contract](native-bindings.md)
 - [Component and lifecycle diagrams](diagrams.md)
 - [Architecture decisions](adr/README.md)
 - [Proof-of-concept plan](poc-plan.md)
@@ -27,6 +29,8 @@ Every conclusion is reviewed for:
 3. explainable proof, trust, and artifact identity;
 4. Nix-style reproducible graph composition;
 5. a JavaScript-first but host-neutral core with a future WASI projection; and
-6. preservation of metadata for AI-native verified component discovery and reuse.
+6. preservation of metadata for AI-native verified component discovery and reuse;
+7. accessible, ergonomic, zero-friction host-language adoption with optional progressive learning; and
+8. universal, independently tested composition across semantics, ABI, runtime, proof/trust metadata, packages, locks, and target profiles.
 
 These are veto gates, not features scheduled for later cleanup.

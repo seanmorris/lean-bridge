@@ -9,6 +9,7 @@ Status: installed and pinned for the architecture-testing POC on 2026-08-08 UTC.
 | elan | v4.2.3 archive, SHA-256 `df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2` | project-local Lean toolchain manager |
 | emsdk | 6.0.6 tag, `9981799f744be74ac67b1c1813ff172f63be0630` | project-local Emscripten SDK manager |
 | Emscripten | 6.0.6, `ce75e06884093bcefb86a6b8fd56a5d62a4cc245` | Wasm compilation and main/side linking |
+| libuv | v1.48.0, `e9f29cb984231524e3931aa0ae2c5dae1a32884e` | Lean runtime dependency built by its pinned CMake path |
 | Node | 22.23.1 system; emsdk also carries 24.19.0 | POC host and test runner |
 | Nix | Debian 2.8.0 | derivation/closure experiments; flake input is separately locked |
 | WABT | Debian 1.0.32 | Wasm structural inspection |
@@ -18,3 +19,5 @@ Status: installed and pinned for the architecture-testing POC on 2026-08-08 UTC.
 Reference host: Linux x86_64, 8 logical CPUs, approximately 24 GiB RAM. Exact inventory is printed by `npm run env:check` and must accompany benchmark evidence.
 
 The APT package versions are environment conveniences. Lean and Emscripten correctness claims use the project-owned pinned toolchains under `.toolchains`, which is ignored and reproducible through `scripts/bootstrap-toolchains.sh`.
+
+Lean 4.32.2's stock Emscripten runtime sources fail on two ABI signature mismatches. The admitted, content-addressed patch and unmodified-source failure are documented in [the Lean runtime link spike](lean-runtime-link-spike.md) and [patch policy](../architecture/patches.md).

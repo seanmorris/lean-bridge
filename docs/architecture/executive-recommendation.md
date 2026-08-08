@@ -33,6 +33,10 @@ const mean = await lean.statistics.mean([1, 2, 3]);
 
 The consumer does not manage Wasm URLs, memories, tables, symbols, handles, reference counts, or loader order. Advanced locator and lazy-loading controls remain available outside the normal path.
 
+The same portable subset must project into an ordinary Python package rather than requiring Python developers to learn a JavaScript/Wasm workflow. Host-specific capabilities remain explicit, but Lean, Nix, proof, ABI, loader, and ownership machinery stays behind generated host conventions. Learning and assurance inspection are progressive and optional.
+
+Developer-experience acceptance measures install-to-first-call time, commands and configuration, unfamiliar concepts, handwritten glue, diagnostic recovery, migration effort, and manual escape-hatch use. Composition acceptance requires CI evidence across independently built components at semantic, ABI, runtime, proof/trust metadata, package, lock, and static/dynamic graph layers.
+
 ## Highest risks
 
 1. Full Lean runtime compatibility under Emscripten side-module dynamic linking.

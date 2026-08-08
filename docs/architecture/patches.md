@@ -2,7 +2,16 @@
 
 ## Current decision
 
-**No Lean or Emscripten patch is currently required by the recommended baseline.** The design first uses existing extension points:
+**The pinned Lean 4.32.2 runtime requires one minimal Emscripten-only source patch to compile.** The architecture-testing POC proved this after first using the existing CMake extension point unchanged. The version-locked patch is [`patches/lean4-4.32.2-emscripten-runtime-signatures.patch`](../../patches/lean4-4.32.2-emscripten-runtime-signatures.patch).
+
+The stock build reaches the runtime's Emscripten stubs and fails because two definitions disagree with their headers and generated Lean ABI:
+
+- `lean_uv_event_loop_alive` is declared as returning `uint8_t` for `BaseIO Bool`, but its Emscripten definition returns `lean_obj_res`;
+- `lean_uv_os_get_group` is declared and called with a `uint64_t gid`, but its Emscripten definition accepts no argument.
+
+The patch changes only those two Emscripten stubs. It is applied to a content-addressed build copy; the pinned toolchain checkout remains pristine. The same mismatches were still present on upstream `master` commit `f29e9e488ea8242c875806e4b0564820c2d553b2` when checked on 2026-08-08, so there is not yet an accepted upstream equivalent to prefer.
+
+No Emscripten patch is currently required. The rest of the design uses existing extension points:
 
 - Lean-generated C and the public runtime/FFI surface;
 - explicit C/C++ adapter code and generated module initializers;
