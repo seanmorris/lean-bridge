@@ -57,6 +57,8 @@ emcmake cmake \
   -DMMAP=OFF \
   -DCCACHE=OFF \
   -DUSE_GITHASH=OFF \
+  "-DCMAKE_C_FLAGS=-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
+  "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace" \
   "-DLEANC_INTERNAL_FLAGS=${LEAN_WASM_PROFILE_CC_FLAGS[*]}" \
   -DINSTALL_CADICAL=OFF \
   -DINSTALL_LEANTAR=OFF \

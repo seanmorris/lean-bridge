@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "poc/lean-gamma@0.0.0",
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde",
+    "profiles": ["side-startup", "side-lazy", "final-static"],
+    "sharedRuntime": true
+  },
+  "artifacts": {
+    "targets": [
+      {
+        "target": "browser",
+        "sideModule": {
+          "file": "gamma.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "8dd69c40e3373355ff3779b9e5844b0dd1924af052013710ea6cfd4a87bc089a"
+        },
+        "staticObjects": [
+          {
+            "file": "gamma.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "d0ed56435b28aa2f9825292c3b23f53d0f273895c831c5bd91e94988ff2904fb"
+          },
+          {
+            "file": "gamma.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "ecf20bd16d84345f3c956bff521a6bc749d81b27403e78b9e5bae398583fe77a"
+          }
+        ]
+      },
+      {
+        "target": "threaded",
+        "sideModule": {
+          "file": "gamma.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "19cb369ff0b7c07968e7c90fa9c9849903d0215abd418cf0d7a296ef2cdca982"
+        },
+        "staticObjects": [
+          {
+            "file": "gamma.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "d2796b9f426d1de4b2ee4c436cfc876f2b1be531929edc1d269b7f8c52ec82b9"
+          },
+          {
+            "file": "gamma.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "546e108cd7295294ebd9593d60146465216324180a66f32d7e2a789b3773f9a4"
+          }
+        ]
+      }
+    ]
+  },
+  "symbols": {
+    "exports": ["lean_link_gamma_identity", "lean_link_gamma_read"],
+    "requires": []
+  },
+  "initializer": { "mode": "none" },
+  "dependencies": [{ "id": "poc/lean-beta@0.0.0" }],
+  "fragments": { "bindings": null, "schema": null, "assurance": null },
+  "capabilities": {
+    "hosts": ["javascript", "host-neutral-abi"],
+    "threads": ["single", "shared"],
+    "effects": []
+  }
+}

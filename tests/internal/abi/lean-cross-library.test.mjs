@@ -15,16 +15,14 @@ import {
 import { createLibraryLoader } from "../../../poc/link-spike/loader.mjs";
 
 const threadedAlpha = createAlphaDescriptor({
-  id: "poc/lean-alpha-threaded@0.0.0",
-  buildHash: "lean-link-spike-alpha-threaded",
+  target: "threaded",
   sideModule: new URL(
     "../../../build/lean-link-spike-threaded/lazy/alpha.so.wasm",
     import.meta.url,
   ),
 });
 const threadedBeta = createBetaDescriptor({
-  id: "poc/lean-beta-threaded@0.0.0",
-  buildHash: "lean-link-spike-beta-threaded",
+  target: "threaded",
   sideModule: new URL(
     "../../../build/lean-link-spike-threaded/lazy/beta.so.wasm",
     import.meta.url,
@@ -32,8 +30,7 @@ const threadedBeta = createBetaDescriptor({
   alpha: threadedAlpha,
 });
 const threadedGamma = createGammaDescriptor({
-  id: "poc/lean-gamma-threaded@0.0.0",
-  buildHash: "lean-link-spike-gamma-threaded",
+  target: "threaded",
   sideModule: new URL(
     "../../../build/lean-link-spike-threaded/lazy/gamma.so.wasm",
     import.meta.url,

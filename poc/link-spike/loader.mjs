@@ -1,5 +1,39 @@
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
+const bytesFrom = value =>
+  value instanceof Uint8Array
+    ? value
+    : new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+
+const readArtifact = async url => {
+  if (url.protocol === "file:") {
+    const { readFile } = await import("node:fs/promises");
+    return bytesFrom(await readFile(url));
+  }
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`failed to read ${url}: HTTP ${response.status}`);
+  }
+  return new Uint8Array(await response.arrayBuffer());
+};
+
+const sha256 = async bytes => {
+  const result = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+  return [...new Uint8Array(result)]
+    .map(byte => byte.toString(16).padStart(2, "0"))
+    .join("");
+};
+
+const verifyIntegrity = async (descriptor, read) => {
+  if (!descriptor.integrity) return;
+  const actual = await sha256(await read(descriptor.sideModule));
+  if (actual !== descriptor.integrity) {
+    throw new Error(
+      `library artifact integrity mismatch for ${descriptor.id}: expected ${descriptor.integrity}, received ${actual}; restore the locked artifact or review and relock the package`,
+    );
+  }
+};
+
 const resolvePrivateFunction = (module, descriptor, symbol) => {
   const implementation = module[symbol];
   if (typeof implementation !== "function") {
@@ -106,9 +140,10 @@ const projectBindings = (module, descriptor) => {
 export const createLibrarySurface = (module, descriptor) =>
   projectBindings(module, descriptor);
 
-export const createLibraryLoader = module => {
+export const createLibraryLoader = (module, options = {}) => {
   const loaded = new Map();
   const pending = new Map();
+  const read = options.readArtifact ?? readArtifact;
 
   const load = async (descriptor, ancestry = []) => {
     const key = identity(descriptor);
@@ -132,6 +167,7 @@ export const createLibraryLoader = module => {
         descriptor.sideModule.pathname.split("/").at(-1),
       );
 
+      await verifyIntegrity(descriptor, read);
       await module.loadDynamicLibrary(path, {
         global: true,
         loadAsync: true,

@@ -49,11 +49,23 @@ while IFS=$'\t' read -r relative_path expected_sha; do
     exit 1
   fi
 done < <(
-  jq -r '.libraries[] | .source, .shim | [.path, .sha256] | @tsv' \
+  jq -r '.libraries[] | .capsule, .source, .shim | [.path, .sha256] | @tsv' \
     "$GRAPH_LOCK"
 )
 
-mapfile -t LEAN_LIBRARIES < <(jq -er '.libraries[].module' "$GRAPH_LOCK")
+mapfile -t LEAN_LIBRARIES < <(
+  node "$LEAN_WASM_PROJECT_ROOT/scripts/resolve-lean-graph.mjs" \
+    --lock "$GRAPH_LOCK" \
+    --profile side-lazy \
+    --format modules
+)
+for composition_profile in side-startup side-lazy final-static; do
+  node "$LEAN_WASM_PROJECT_ROOT/scripts/resolve-lean-graph.mjs" \
+    --lock "$GRAPH_LOCK" \
+    --profile "$composition_profile" \
+    --format json \
+    > "$AUDIT_DIR/resolved-$composition_profile.json"
+done
 for library in "${LEAN_LIBRARIES[@]}"; do
   LEAN_PATH="$GENERATED_DIR${LEAN_PATH:+:$LEAN_PATH}" lean \
     -R "$SOURCE_DIR" \
@@ -69,12 +81,8 @@ INCLUDES=(
 
 TARGET_FLAGS=(
   -O2
-  -fwasm-exceptions
-  -flto
+  "${LEAN_WASM_PROFILE_CC_FLAGS[@]}"
 )
-if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
-  TARGET_FLAGS+=(-pthread)
-fi
 
 SIDE_FLAGS=(
   "${TARGET_FLAGS[@]}"
@@ -198,14 +206,19 @@ build_main "$LAZY_DIR"
 
 compile_main_objects "$FINAL_STATIC_DIR"
 FINAL_STATIC_OBJECTS=()
+PROJECT_GENERATED_DIR=${GENERATED_DIR#"$LEAN_WASM_PROJECT_ROOT/"}
+PROJECT_SOURCE_DIR=${SOURCE_DIR#"$LEAN_WASM_PROJECT_ROOT/"}
 for library in "${LEAN_LIBRARIES[@]}"; do
   module_name=${library,,}
-  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
-    -c "$GENERATED_DIR/$library.c" \
-    -o "$FINAL_STATIC_DIR/$module_name.generated.o"
-  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
-    -c "$SOURCE_DIR/${module_name}_shim.c" \
-    -o "$FINAL_STATIC_DIR/$module_name.shim.o"
+  (
+    cd "$LEAN_WASM_PROJECT_ROOT"
+    emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+      -c "$PROJECT_GENERATED_DIR/$library.c" \
+      -o "$FINAL_STATIC_DIR/$module_name.generated.o"
+    emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+      -c "$PROJECT_SOURCE_DIR/${module_name}_shim.c" \
+      -o "$FINAL_STATIC_DIR/$module_name.shim.o"
+  )
   FINAL_STATIC_OBJECTS+=(
     "$FINAL_STATIC_DIR/$module_name.generated.o"
     "$FINAL_STATIC_DIR/$module_name.shim.o"
@@ -259,6 +272,18 @@ for module in "${MODULES[@]}"; do
   wasm-objdump -x "$module" > "$AUDIT_DIR/$name.objdump.txt"
 done
 
-sha256sum "${MODULES[@]}" > "$AUDIT_DIR/sha256.txt"
+(
+  cd "$BUILD_DIR"
+  RELATIVE_MODULES=()
+  for module in "${MODULES[@]}"; do
+    RELATIVE_MODULES+=("${module#"$BUILD_DIR/"}")
+  done
+  sha256sum "${RELATIVE_MODULES[@]}"
+) > "$AUDIT_DIR/sha256.txt"
+node "$LEAN_WASM_PROJECT_ROOT/scripts/verify-lean-artifacts.mjs" \
+  --lock "$GRAPH_LOCK" \
+  --build-root "$BUILD_DIR" \
+  --target "$LEAN_WASM_RUNTIME_PROFILE" \
+  > "$AUDIT_DIR/artifact-manifest.json"
 
 printf 'Built Lean link spike profile %s in %s\n' "$LEAN_WASM_RUNTIME_PROFILE" "$BUILD_DIR"

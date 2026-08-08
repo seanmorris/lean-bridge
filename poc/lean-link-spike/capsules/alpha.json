@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "poc/lean-alpha@0.0.0",
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde",
+    "profiles": ["side-startup", "side-lazy", "final-static"],
+    "sharedRuntime": true
+  },
+  "artifacts": {
+    "targets": [
+      {
+        "target": "browser",
+        "sideModule": {
+          "file": "alpha.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "6825fc4b0411315d6fe4338e25124054c96e4e8c531ce8df0c497942ea67441a"
+        },
+        "staticObjects": [
+          {
+            "file": "alpha.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "bda39158a8254003e98032f7eeb6fd7d936d529d7574a9121ec049240a31fded"
+          },
+          {
+            "file": "alpha.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "b023cd5b4bb6cecf05a88d6df9b4b2473e28505212548f3ad13667bc124c9617"
+          }
+        ]
+      },
+      {
+        "target": "threaded",
+        "sideModule": {
+          "file": "alpha.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "00e2291d30e84b1f0f85bbc5d56345d8f419158370c66580e1310530c6656e4a"
+        },
+        "staticObjects": [
+          {
+            "file": "alpha.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "99cc222c5aed925a2e3a4c0c602cad7d7b235e5ec5da0a9b9e63685442f95bc2"
+          },
+          {
+            "file": "alpha.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "ec6fd2e3516dbfc64261c01f07b54e4d9fb8a31f4bcbdee4b04df829d252b8a9"
+          }
+        ]
+      }
+    ]
+  },
+  "symbols": {
+    "exports": ["lean_link_alpha_box", "lean_link_alpha_read"],
+    "requires": []
+  },
+  "initializer": { "mode": "required", "symbol": "initialize_Alpha" },
+  "dependencies": [],
+  "fragments": { "bindings": null, "schema": null, "assurance": null },
+  "capabilities": {
+    "hosts": ["javascript", "host-neutral-abi"],
+    "threads": ["single", "shared"],
+    "effects": []
+  }
+}

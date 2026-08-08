@@ -1,8 +1,9 @@
 # Lean WebAssembly Bridge
 
-> Preliminary architecture brief. This is the first project artifact; implementation follows the review gates below.
+> Architecture brief and active falsification-driven proof of concept.
 
 The review-ready documents are indexed in [the architecture design package](docs/architecture/README.md).
+Current implementation evidence covers the [shared Lean runtime](docs/evidence/lean-runtime-link-spike.md) and the [canonical content-addressed capsule graph](docs/evidence/capsule-graph.md).
 
 This project will make compiled Lean libraries feel ordinary to JavaScript and TypeScript developers while preserving Lean's runtime semantics, proof information, and ability to target environments beyond JavaScript.
 
@@ -216,4 +217,4 @@ The architecture is ready for production implementation only when:
 
 ## Repository status
 
-`/app` is a shared workspace containing pre-existing directories and files. They are not part of this project and must not be modified or removed. This root README is the preliminary project artifact requested before code; the eventual source layout must use clearly named new paths and preserve the existing workspace.
+`/app` is the project root. The architecture is approved for the Phase 8 POC, not for production hardening. The current implementation proves one shared Lean runtime across three independently compiled libraries, lazy native JavaScript projections, a canonical locked graph shared by dynamic and final-static composition, target-specific artifact integrity, and byte-identical browser artifacts across two checkout roots. Generated production bindings, the complete ownership/async surface, bundler/browser applications, scaling benchmarks, and a pure-Nix Wasm toolchain derivation remain later work packages.

@@ -1,13 +1,25 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "graphId": "poc/lean-link-spike@1",
   "runtime": {
+    "abiVersion": 1,
     "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
     "patchSetSha256": "9dad2670a48daa972e5469673c5d6499785a8f186426c8d7b611ff40b9778bde"
   },
+  "roots": [
+    {
+      "id": "poc/lean-gamma@0.0.0",
+      "sha256": "c159d2f51a03bd03a2eeb54c8f18e6ce9c692685d9f47836d64555b677abe266"
+    }
+  ],
   "libraries": [
     {
       "id": "poc/lean-alpha@0.0.0",
       "module": "Alpha",
+      "capsule": {
+        "path": "capsules/alpha.json",
+        "sha256": "d941dfe1be1b292b18d05acb1ee04feb620ed0da11521a8c70240d3edff32848"
+      },
       "dependencies": [],
       "source": {
         "path": "Alpha.lean",
@@ -16,13 +28,21 @@
       "shim": {
         "path": "alpha_shim.c",
         "sha256": "e1e832d017dbefe57d01edc4b6babfe4906636a8bfdeb0960c1153ecc5226910"
-      },
-      "initializer": "required"
+      }
     },
     {
       "id": "poc/lean-beta@0.0.0",
       "module": "Beta",
-      "dependencies": ["poc/lean-alpha@0.0.0"],
+      "capsule": {
+        "path": "capsules/beta.json",
+        "sha256": "88782bdb10935ac2d5bb4f848bb523d074da67e4dc3082372836bbf0f60a98f3"
+      },
+      "dependencies": [
+        {
+          "id": "poc/lean-alpha@0.0.0",
+          "sha256": "d941dfe1be1b292b18d05acb1ee04feb620ed0da11521a8c70240d3edff32848"
+        }
+      ],
       "source": {
         "path": "Beta.lean",
         "sha256": "7ff9bf428f9ab744f5a4c3027b9d50435660a145b6ba0d0eb785edc1be7cb916"
@@ -30,13 +50,21 @@
       "shim": {
         "path": "beta_shim.c",
         "sha256": "ae9f0cc9652216a0573f491a86d25abd352c45aa98ef5d37db04879160d9ffab"
-      },
-      "initializer": "none-poc-pure"
+      }
     },
     {
       "id": "poc/lean-gamma@0.0.0",
       "module": "Gamma",
-      "dependencies": ["poc/lean-beta@0.0.0"],
+      "capsule": {
+        "path": "capsules/gamma.json",
+        "sha256": "c159d2f51a03bd03a2eeb54c8f18e6ce9c692685d9f47836d64555b677abe266"
+      },
+      "dependencies": [
+        {
+          "id": "poc/lean-beta@0.0.0",
+          "sha256": "88782bdb10935ac2d5bb4f848bb523d074da67e4dc3082372836bbf0f60a98f3"
+        }
+      ],
       "source": {
         "path": "Gamma.lean",
         "sha256": "4428dc43e41cd8de4ace63e48170ba48553d4ba913d2e092a10fff48e8f76d56"
@@ -44,8 +72,7 @@
       "shim": {
         "path": "gamma_shim.c",
         "sha256": "88167f1c9dfc0e9328575177674214a470171edb6d731b3f68c90fca8d80fecf"
-      },
-      "initializer": "none-poc-pure"
+      }
     }
   ]
 }

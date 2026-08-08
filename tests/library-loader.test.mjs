@@ -1,13 +1,15 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 
 import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
 
-const descriptor = ({ id, dependencies = [], bindings = [] }) =>
+const descriptor = ({ id, dependencies = [], bindings = [], integrity }) =>
   Object.freeze({
     id: `poc/${id}@0.0.0`,
     buildHash: `${id}-hash`,
     dependencies,
+    integrity,
     bindings: Object.freeze(bindings.map(binding => Object.freeze(binding))),
     sideModule: new URL(`file:///artifacts/${id}.so.wasm`),
   });
@@ -119,4 +121,32 @@ test("native resource classes defer initialization and hide numeric handles", as
   assert.equal(releasedHandle, 1042);
   box.dispose();
   assert.throws(() => box.read(), /Box has been disposed/);
+});
+
+test("artifact integrity is checked before a side module is linked", async () => {
+  const bytes = new Uint8Array([0, 97, 115, 109]);
+  const expected = createHash("sha256").update(bytes).digest("hex");
+  const events = [];
+  const module = {
+    async loadDynamicLibrary() {
+      events.push("linked");
+    },
+  };
+  const library = descriptor({ id: "integrity", integrity: expected });
+  const loader = createLibraryLoader(module, {
+    readArtifact: async () => {
+      events.push("verified");
+      return bytes;
+    },
+  });
+
+  await loader.load(library);
+  assert.deepEqual(events, ["verified", "linked"]);
+
+  const corrupt = descriptor({ id: "corrupt", integrity: "0".repeat(64) });
+  await assert.rejects(
+    loader.load(corrupt),
+    /library artifact integrity mismatch.*restore the locked artifact/,
+  );
+  assert.deepEqual(events, ["verified", "linked", "verified"]);
 });

@@ -23,6 +23,9 @@ LEAN_WASM_PROFILE_CC_FLAGS=(
   -flto
   -fPIC
   -ffp-contract=off
+  "-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"
+  "-fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"
+  "-fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"
 )
 
 case "$LEAN_WASM_RUNTIME_PROFILE" in

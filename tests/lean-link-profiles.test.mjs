@@ -10,8 +10,7 @@ import {
 import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
 
 const threadedAlpha = createAlphaDescriptor({
-  id: "poc/lean-alpha-threaded@0.0.0",
-  buildHash: "lean-link-spike-alpha-threaded",
+  target: "threaded",
   sideModule: new URL(
     "../build/lean-link-spike-threaded/lazy/alpha.so.wasm",
     import.meta.url,

@@ -29,8 +29,8 @@ After the patch, all 34 runtime archive members compiled. The archives contain
 1,123 defined-symbol records. Their profile-specific evidence is:
 
 ```text
-browser:  1,061,016 bytes, sha256 1f07813b37b2641d95840388c3ac5b6881838da1753cfa93121327d57b7e486e
-threaded: 1,109,292 bytes, sha256 f981272e9b3f9ee9b420cbf6cbfad1486d840e116d87bbf0f1429ca58d1eb411
+browser:  1,061,060 bytes, sha256 1df56cc60fe8d17ece7541dc733d3cb2649315495e58bf88603f4b9b01020176
+threaded: 1,109,340 bytes, sha256 d169ac24e70d6b993b9e79f80047b7b32db6e69821d2340ee77b2e1a640bcdde
 ```
 
 The audit uses the pinned emsdk LLVM tools; Debian LLVM 14 cannot read Emscripten LLVM 24 LTO bitcode.
@@ -102,16 +102,16 @@ Artifacts from this run:
 |---|---:|---|
 | browser startup main | 1,289,844 | `20545285cf10b6690213f8cb34460e667098c8ac1e9a90b1926427fcf6c839d2` |
 | browser lazy main | 1,289,759 | `ad6b73edca8493cbaedff3f854a6513253f92f8f0dfe44be4b1d6f9740fbe5b6` |
-| browser final-static main | 1,288,394 | `81ab51d3be356153582a367fe78ab0a3e760ae54a9885c29803a5dc555aa1ce4` |
-| browser Alpha side module | 1,129 | `64d307d72fc46359bfd9396fe5a173161d898fe6dd262e0ebfcda6b45b2bbe0f` |
-| browser Beta side module | 707 | `6fa4d2f1ccfeaaf9112e8f5277e958d8805f98dae6ab9b979e65f40541910275` |
-| browser Gamma side module | 708 | `03203c9754b9dd3f678de176a85351ca46d595675be1f93591b11dbf1489824d` |
+| browser final-static main | 1,288,402 | `6590d3ae0db82f76738d28e11459317107b0c5d22febb3f6d35ce04af492784a` |
+| browser Alpha side module | 1,135 | `6825fc4b0411315d6fe4338e25124054c96e4e8c531ce8df0c497942ea67441a` |
+| browser Beta side module | 713 | `7f36961d6ee36765e5ff926a94f6a41375fd151e5fb61f28ebc46c0c1c2af252` |
+| browser Gamma side module | 714 | `8dd69c40e3373355ff3779b9e5844b0dd1924af052013710ea6cfd4a87bc089a` |
 | threaded startup main | 1,323,826 | `f04eb6bd5bf67f0c640794fd05799665b834cfab93732d73f869eb1ecece4f6b` |
 | threaded lazy main | 1,323,741 | `4c77cb594467f7d722d680f072c1d983c2b44f2aea2db2b76d7303cfc638cd34` |
-| threaded final-static main | 1,316,000 | `88633d231d3e13c374a6d8cc000ab3e5a4b45a2d547f2eb1b3f2ccf7cc375832` |
-| threaded Alpha side module | 1,350 | `50739eb4e06ba145503b6e52904d57173812828c50e7b8f7905e52f8279a5985` |
-| threaded Beta side module | 935 | `0f5359c6bb618476a03377490576bfca535eab8f15771cb53557f23abff0c5fb` |
-| threaded Gamma side module | 936 | `b73296da6b1fcf3a4957808b4480ef5e0f22c65a65cf9aaaa21ab45a66993ed6` |
+| threaded final-static main | 1,316,000 | `ca7decb961454bded809a3ddd1a39ff2bf029249925ba45272f04e13da3a7396` |
+| threaded Alpha side module | 1,356 | `00e2291d30e84b1f0f85bbc5d56345d8f419158370c66580e1310530c6656e4a` |
+| threaded Beta side module | 941 | `d0efd8912bdcf9387857d31e645fa2a0ae5bc1031f2f1f894579d859a3ee9405` |
+| threaded Gamma side module | 942 | `19cb369ff0b7c07968e7c90fa9c9849903d0215abd418cf0d7a296ef2cdca982` |
 
 ## Architectural consequences
 
@@ -123,13 +123,15 @@ The explicit `threaded` profile sets `MULTI_THREAD=ON`, passes `-pthread` throug
 
 The real `Init` closure increases the current main artifact by approximately 1.14 MiB over the earlier narrow stub. That is paid once per application, not once per Lean library. Libraries that import `Std` or other roots will require their exact cross-compiled initialization closure in the main graph; this milestone proves `Init` and core `IO`, not every future standard-library profile.
 
-For this three-library slice, browser final-static is 3,994 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 11,047 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
+For this three-library slice, browser final-static is 4,004 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 11,065 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
 
-The artifact hashes above are evidence for this exact `/app` build, not yet a
-claim of path-independent reproducibility. Lean-generated assertion data in the
-side modules currently embeds the absolute `lean.h` include path. A clean build
-under another root therefore needs a stable sandbox root or compiler prefix-map
-strategy before bit-for-bit comparison can become a CI contract.
+Compiler prefix maps now normalize the source root to `/workspace`, and static
+capsule objects compile from relative source paths. A clean browser rebuild in
+an independent `/tmp/lean-wasm-repro.*` checkout produced byte-identical output
+for all 23 shipped and composition-evidence files. See
+[`capsule-graph.md`](capsule-graph.md). The threaded artifact hashes are locked
+and verified in `/app`; a second-root threaded build remains a production
+hardening check.
 
 ## Reproduction
 
@@ -138,4 +140,5 @@ npm run build:lean-runtime
 npm run test:lean-link-spike
 npm run build:lean-link-spike:threaded
 npm test
+npm run test:reproducibility
 ```
