@@ -25,6 +25,6 @@ Scores are provisional before the POC. `L` is likelihood and `I` is impact on a 
 | Host-neutral schema weakens JavaScript object semantics | M | M | Separate portable types from JS capability types; WIT projection is a test, not a lowest-common-denominator mandate. |
 | Unsafe dynamic/global host access expands attack surface | M | H | Capability-first safe API, decoder budgets, explicit unsafe escape hatch, integrity-checked descriptors. |
 | Private runtime sneaks into a convenience dependency | M | H | Capsule symbol audit, package export policy, runtime-count tests, standalone entries excluded from resolver. |
-| Existing `/app` workspace content is overwritten | L | H | Create only named new paths, preserve dirty repositories, stop on path conflict, never treat root as disposable. |
+| Unrelated work in a dirty checkout is overwritten | L | H | Change only named project paths, inspect the worktree before editing, preserve unrelated modifications, and stop on an overlapping conflict. |
 
 No risk may be closed by documentation alone when the POC can measure it. Passing runtime tests are evidence, not machine-checked proof.

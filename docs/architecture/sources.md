@@ -9,7 +9,7 @@ Retrieved and reviewed on 2026-08-08 unless otherwise noted.
 - [PHP-Wasm extension loading](https://php-wasm.seanmorr.is/extensions/using-php-extensions.html)
 - [PHP-Wasm build modes](https://php-wasm.seanmorr.is/compiling/php-wasm-rc.html)
 - [Vrzno documentation](https://php-wasm.seanmorr.is/extensions/vrzno.html)
-- Local evidence: `/app/php-wasm/source/resolveDependencies.mjs`, `/app/php-wasm/source/PhpBase.mjs`, and `/app/php-wasm/packages/*`. These paths belong to an existing dirty repository and are read-only inputs to this project.
+- Code-level evidence: `source/resolveDependencies.mjs`, `source/PhpBase.mjs`, and representative `packages/*` descriptors in the pinned PHP-Wasm revision above.
 
 The key observed PHP-Wasm shape is version-aware ESM descriptors exposing `getLibs/getFiles`; the runtime normalizes library definitions, maps names to URLs through its locator, preloads support files, writes startup extension configuration for `sharedLibs`, and stages `dynamicLibs` without auto-registration.
 
@@ -35,6 +35,17 @@ Emscripten documents one main module with side modules, static object/archive li
 - lean4-wasm-in-browser: [`cauli/lean4-wasm-in-browser@2655455848091557c8457b6a3b03c291859890e6`](https://github.com/cauli/lean4-wasm-in-browser/tree/2655455848091557c8457b6a3b03c291859890e6)
 - lean2wasm: [`leanprover/lean2wasm@28620e1f33e0772e90b036db12ed099a734b4b19`](https://github.com/leanprover/lean2wasm/tree/28620e1f33e0772e90b036db12ed099a734b4b19)
 - Wasm.lean: [`leanprover-community/Wasm.lean@454172e1219ce648732211a7804829809dffd64d`](https://github.com/leanprover-community/Wasm.lean/tree/454172e1219ce648732211a7804829809dffd64d)
+
+## Historical foundations
+
+- [Proof-carrying code, POPL 1997](https://doi.org/10.1145/263699.263712)
+- [WebAssembly Component Model and WIT](https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md)
+- [SLSA provenance](https://slsa.dev/spec/v1.2/provenance)
+- [in-toto](https://in-toto.io/)
+- [Reproducible Builds definition](https://reproducible-builds.org/docs/definition/)
+- [CompCert semantic-preservation overview](https://compcert.org/man/manual001.html)
+- [seL4 proof statements and assumptions](https://sel4.systems/Verification/proofs.html)
+- [Project Everest](https://project-everest.github.io/)
 
 ## Evidence classification
 

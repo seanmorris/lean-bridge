@@ -17,6 +17,7 @@
     "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
     "build:link-spike": "bash scripts/build-link-spike.sh",
     "build:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc",
+    "benchmark:poc": "node scripts/benchmark-native-api.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",

@@ -14,7 +14,7 @@ Each library is compiled independently and must not define Lean runtime, allocat
 
 ## Ordered work packages
 
-1. Preserve the preliminary README; record approval, pins, licenses, generated-file policy, and the canonical Nix/graph-lock format.
+1. Maintain the contributor and consumer README; record approval, pins, licenses, generated-file policy, and the canonical Nix and graph-lock format.
 2. In an isolated spike, build one Emscripten main module plus two Lean side modules and prove they share memory/table/runtime state.
 3. Define the runtime-free capsule, recursive resolver, startup/lazy loader, integrity/version/conflict rules, and final-static compositor over one lock.
 4. Establish one-time Lean runtime and module initialization plus repeat scalar/string calls and structured errors.

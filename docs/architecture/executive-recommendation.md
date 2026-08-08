@@ -2,9 +2,9 @@
 
 ## Decision
 
-**Yes, with constraints.** Ahead-of-time compiled Lean libraries can be exposed as idiomatic JavaScript/TypeScript packages, and Lean can manipulate retained JavaScript values, callbacks, and asynchronous capabilities through a generated bridge. The recommended approach uses upstream Lean-generated C, a matched Lean runtime compiled with Emscripten, generated typed bindings, and a narrow handle/frame ABI.
+**Approved for the architecture-testing POC.** Ahead-of-time compiled Lean libraries can expose idiomatic host APIs through upstream Lean-generated C, a matched Lean runtime compiled with Emscripten, generated typed bindings, and a narrow private handle/frame ABI. The shared-runtime and native JavaScript object path now pass. Retained JavaScript values, callbacks, asynchronous capabilities, and generated downstream-language packages remain POC work.
 
-The decisive constraint is that the application—not an individual library—is the runtime boundary. A composed application has exactly one Lean reference-counting heap, WebAssembly memory/table, symbol universe, bridge registry pair, pending/error domain, and initialization/shutdown sequence.
+The application is the runtime boundary. An individual library cannot own that boundary. A composed application has exactly one Lean reference-counting heap, WebAssembly memory/table, symbol universe, bridge registry pair, pending/error domain, and initialization/shutdown sequence.
 
 ## Recommended path
 
@@ -37,16 +37,17 @@ The same portable subset must project into an ordinary Python package rather tha
 
 Developer-experience acceptance measures install-to-first-call time, commands and configuration, unfamiliar concepts, handwritten glue, diagnostic recovery, migration effort, and manual escape-hatch use. Composition acceptance requires CI evidence across independently built components at semantic, ABI, runtime, proof/trust metadata, package, lock, and static/dynamic graph layers.
 
-## Highest risks
+## Highest remaining risks
 
-1. Full Lean runtime compatibility under Emscripten side-module dynamic linking.
-2. Correct reference counting and deterministic ownership across JS GC and Lean RC.
-3. Callback signature adapters, nested re-entry, async settlement, and cleanup races.
-4. Export retention, symbol/version conflicts, and bundler asset behavior.
+1. General binding generation across primitives, copied values, resources, errors, callbacks, asynchronous work, and multiple host languages.
+2. Correct reference counting and deterministic ownership across JavaScript GC and Lean RC for the complete lifecycle matrix.
+3. Callback signature adapters, nested re-entry, asynchronous settlement, and cleanup races.
+4. Bundler, browser, worker, and registry behavior for recursively loaded assets.
 5. Binding generated proof metadata to the exact shipped and reproducibly rebuilt artifact.
+6. Startup, memory, and size slopes across 10 and 50 independently packaged libraries.
 
 Each has an early falsification experiment in the POC plan.
 
 ## Implementation recommendation
 
-Approve only the architecture-testing POC first. Do not approve production hardening until three real libraries and a synthetic 50-library graph share one main runtime, pass identity/lifecycle checks, rebuild reproducibly, and present one drift-free TypeScript API in both side-module and static profiles.
+Continue the approved architecture-testing POC. Production hardening requires the generated API, complete lifecycle matrix, browser and downstream-language fixtures, proof-to-artifact identity chain, and synthetic 50-library measurements. The three-library shared-runtime and independent-root reproducibility gates already pass.

@@ -24,7 +24,7 @@ with Sample([1, 2, 3]) as sample:
 The exact APIs are generated from Lean declarations and binding metadata; these examples state the experience, not a handwritten wrapper contract.
 
 Dynamic loading follows the same rule. Loading resolves and links the package,
-then returns its generated native surface—not a linker handle or generic call
+then returns its generated native surface, never a linker handle or generic call
 object:
 
 ```ts
@@ -62,13 +62,32 @@ The binding generator owns:
 
 No manually maintained public wrapper may duplicate this logic.
 
+## Primitive and copied-value mapping
+
+The binding IR records numeric width, signedness, precision, constructor tags, field names, mutability, copy policy, and ownership. A backend chooses an idiomatic host representation that preserves those facts. It may not send a typed value through JSON or narrow it silently.
+
+| Lean type | JavaScript and TypeScript | Python | Required behavior |
+|---|---|---|---|
+| `Bool` | `boolean` | `bool` | Direct scalar conversion. |
+| `UInt8`, `UInt16`, `UInt32` | validated `number` | validated `int` | Reject values outside the declared range. |
+| `UInt64` | `bigint` | `int` | Preserve all 64 bits. |
+| `Nat`, `Int` | `bigint` | `int` | Preserve arbitrary precision. |
+| `Float`, `Float32` | `number` | `float` | Follow the declared IEEE width and conversion policy. |
+| `String` | `string` | `str` | Copy UTF-8 directly. |
+| `ByteArray` | `Uint8Array` | `bytes` or `memoryview` | Copy by default. Require an explicit lease for a zero-copy view. |
+| `Option T` | generated tagged union | generated tagged union | Preserve nested `none` and `some` cases. |
+| structure | generated interface or value class | dataclass or value class | Preserve field names and mapped field types. |
+| inductive type | discriminated union | tagged class union | Preserve constructor identity and payload types. |
+
+Rust, C, C++, and future WASI backends consume the same widths, cases, and ownership from the IR. Their surface types follow their own package and resource conventions. Conformance vectors prove that two backends observe the same portable values and reject the same invalid inputs.
+
 ## Semantic object projection
 
 Copied Lean records and supported inductives project as ordinary value types: TypeScript interfaces/readonly values and Python dataclasses or typed records. Constructor tags, pointer layouts and boxed representations remain internal.
 
 Identity-bearing Lean values project as canonical native-feeling classes/resources. Generated bindings provide constructors or factories, properties, instance/static methods, iteration, async methods, equality/identity policy and host-idiomatic lifecycle (`using`/`dispose` or context managers). If the same live Lean object crosses the boundary twice, the host receives the same live wrapper object.
 
-Host objects exposed to Lean use the symmetric declared model—classes, constructors, receivers, properties, methods, callbacks, iterators and async operations—not a required pattern of opaque handles plus free helper functions. Dynamic object access remains an explicit unsafe/advanced escape hatch.
+Host objects exposed to Lean use the symmetric declared model: classes, constructors, receivers, properties, methods, callbacks, iterators and async operations. The public model does not require opaque handles plus free helper functions. Dynamic object access remains an explicit unsafe/advanced escape hatch.
 
 ## CI acceptance
 

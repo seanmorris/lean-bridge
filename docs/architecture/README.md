@@ -2,7 +2,7 @@
 
 Status: **architecture approved for the falsification-driven POC; production hardening remains unapproved**.
 
-This directory materializes the Virtual Office design package for the Vrzno-inspired Lean WebAssembly bridge. The governing decision is “yes, with constraints”: a useful bridge is feasible, but production work begins only after the shared-runtime side-module model, lifecycle protocol, generated contract, and reproducible artifact identity have been accepted.
+This directory contains the reviewed architecture for moving Lean components from proved source into ordinary application packages. Production work begins only after the POC establishes the shared-runtime model, lifecycle protocol, generated contract, and reproducible artifact identity.
 
 ## Package contents
 
@@ -19,6 +19,8 @@ This directory materializes the Virtual Office design package for the Vrzno-insp
 - [Commit-pinned source dossier](sources.md)
 - [Patch policy](patches.md)
 - [Implementation approval checkpoint](approval.md)
+- [Historical synthesis](../vision.md)
+- [Native API performance evidence](../evidence/performance.md)
 
 ## Permanent review lenses
 
@@ -33,4 +35,8 @@ Every conclusion is reviewed for:
 7. accessible, ergonomic, zero-friction host-language adoption with optional progressive learning; and
 8. universal, independently tested composition across semantics, ABI, runtime, proof/trust metadata, packages, locks, and target profiles.
 
-These are veto gates, not features scheduled for later cleanup.
+An implementation that violates a lens requires an explicit compatibility profile and architecture decision.
+
+## Requirement language
+
+The key words `MUST`, `MUST NOT`, `REQUIRED`, `SHOULD`, `SHOULD NOT`, and `MAY` in architecture documents are interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). Authors use these terms only for interoperability, safety, reproducibility, or another stated release requirement.

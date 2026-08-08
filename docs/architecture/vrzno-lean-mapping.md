@@ -23,4 +23,4 @@
 
 ## Required direct reuse audit
 
-Implementation must compare against `/app/php-wasm/source/resolveDependencies.mjs`, `/app/php-wasm/source/PhpBase.mjs`, and representative `/app/php-wasm/packages/*` extension descriptors. Reuse the shape where compatible. Any divergence must state the Lean-specific reason and the permanent-lens impact.
+Implementation must compare against `source/resolveDependencies.mjs`, `source/PhpBase.mjs`, and representative `packages/*` extension descriptors in the pinned PHP-Wasm revision. Reuse the shape where compatible. Any divergence must state the Lean-specific reason and its effect on the permanent architecture lenses.

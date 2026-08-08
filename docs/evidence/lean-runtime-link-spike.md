@@ -85,7 +85,7 @@ The structural and profile tests pass:
 - every side module imports its Lean RC/allocation support and bridge registration symbols from `env`;
 - startup and lazy link maps in both profiles contain no `libleanrt.a` or
   `libInit.a` input and define exactly that library's declared `lean_link_*`
-  functions—no private Lean runtime domain;
+  functions, with no private Lean runtime domain;
 - the locked `MAIN_MODULE=2` export manifest makes every side-module function import available from main;
 - no side module contains a Lean runtime or `Init` archive;
 - main has no unresolved `lean_*`, `initialize_*`, `runtime_initialize_*`, or `meta_initialize_*` function import;

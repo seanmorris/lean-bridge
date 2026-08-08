@@ -4,9 +4,9 @@
 
 Accessibility, ergonomics, practicality, gradual adoption, and composition are load-bearing architecture requirements. They are evaluated in every design and implementation decision and may veto production approval.
 
-Unix-style composition, Nix-style reproducibility, and Lean-based correctness are invisible pillars. They strengthen an ordinary JavaScript or Python package; they do not require consumers to enter a separate toolchain, package manager, runtime model, or proof culture.
+Unix-style composition, Nix-style reproducibility, and Lean-based correctness strengthen an ordinary JavaScript or Python package. Consumers remain inside their existing toolchain, package manager, runtime model, and language conventions.
 
-Every abstraction must compose, or it is a dead end.
+Every semantic contract, ABI, runtime object, proof record, metadata fragment, package, and lock declares how it composes. CI combines independently built inputs at each layer and rejects an abstraction that cannot participate.
 
 ## Progressive adoption ladder
 
@@ -68,4 +68,4 @@ Each layer publishes identities, compatibility rules, and a deterministic failur
 
 The first Lean-generated Alpha side module is built independently from the main module. Structural tests show that it imports the application's memory, indirect function table, Lean runtime/RC functions, allocator functions, and bridge registration symbol rather than defining a private runtime. Startup and lazy loading both allocate, read, preserve, and release a Lean object through the same application domain.
 
-This proves only the narrow runtime/link layer for one component. Beta/Gamma, cross-library identity, static parity, proof/metadata merge, JavaScript zero-configuration packaging, and Python projection remain required before the universal composition claim can pass.
+The POC now proves the runtime and composition layer for Alpha, Beta, and Gamma, including cross-library identity, lazy loading, startup loading, static parity, and independent-root artifact reproducibility. Generated proof metadata, zero-configuration JavaScript packaging, and the Python projection remain required before the universal composition claim can pass.
