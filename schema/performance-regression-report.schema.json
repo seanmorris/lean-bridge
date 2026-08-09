@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-regression-report:v1",
+  "title": "Lean Bridge performance regression report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "status", "accepted", "budget", "source", "compatibility", "differences", "summary", "checks", "explanation"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-regression-report" },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["pass", "fail"] },
+    "accepted": { "type": "boolean" },
+    "budget": { "type": "object", "additionalProperties": false, "required": ["id", "baselineId"], "properties": { "id": { "type": "string" }, "baselineId": { "type": "string" } } },
+    "source": { "type": "object", "additionalProperties": false, "required": ["baseline", "candidate"], "properties": { "baseline": { "type": "object" }, "candidate": { "type": "object" } } },
+    "compatibility": { "type": "object", "additionalProperties": false, "required": ["accepted", "issues", "baselineComparisonSha256", "candidateComparisonSha256"], "properties": { "accepted": { "type": "boolean" }, "issues": { "type": "array", "items": { "type": "string" } }, "baselineComparisonSha256": { "type": "string" }, "candidateComparisonSha256": { "type": "string" } } },
+    "differences": { "type": "object", "additionalProperties": false, "required": ["environment", "artifacts"], "properties": { "environment": { "type": "array" }, "artifacts": { "type": "array" } } },
+    "summary": { "type": "object", "additionalProperties": false, "required": ["total", "passed", "failed"], "properties": { "total": { "type": "integer", "minimum": 0 }, "passed": { "type": "integer", "minimum": 0 }, "failed": { "type": "integer", "minimum": 0 } } },
+    "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+    "explanation": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metricId", "label", "status", "reason", "baseline", "candidate", "absoluteCeiling", "relativeRegressionRatio", "observedRegressionRatio", "statisticalSignificance", "practicalSignificance"],
+      "properties": {
+        "metricId": { "type": "string" },
+        "label": { "type": "string" },
+        "status": { "enum": ["pass", "fail"] },
+        "reason": { "type": "string" },
+        "baseline": { "type": ["number", "null"] },
+        "candidate": { "type": ["number", "null"] },
+        "absoluteCeiling": { "type": "number", "minimum": 0 },
+        "relativeRegressionRatio": { "type": "number", "minimum": 0 },
+        "observedRegressionRatio": { "type": ["number", "null"] },
+        "statisticalSignificance": { "type": "boolean" },
+        "practicalSignificance": { "type": "boolean" }
+      }
+    }
+  }
+}

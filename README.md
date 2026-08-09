@@ -376,6 +376,8 @@ The performance reproducibility gate rebuilds the spatial and 50-library suites 
 
 The approved measurement methodology requires nine valid fresh-process forks on an identified runner. It retains every sample from valid forks and calculates deterministic 95 percent confidence intervals from 10,000 fork-level bootstrap resamples. The pinned reference host can collect baselines. Shared CI stays informational because its CPU, kernel, co-tenant load, and power state can change between jobs. [The performance methodology](docs/evidence/performance-methodology.md) defines timed regions, cache profiles, noise rejection, memory collection, comparison identity, and accessible reporting.
 
+The performance budget pipeline runs the generated APIs in nine fresh processes and produces one versioned result vector. It covers startup, first calls, warm calls, callbacks, Promises, allocation and disposal, cross-library handoff, authoritative memory, and 1, 3, 10, and 50-library composition. Every metric receives a hard ceiling and a relative threshold. Missing metrics fail. Relative regressions fail only when the change exceeds the practical threshold and the 95 percent confidence intervals no longer overlap. Baseline history retains the reviewer, rationale, source revision, file path, and SHA-256. [The performance budget evidence](docs/evidence/performance-budgets.md) defines collection, review, comparison, and failure reporting.
+
 Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
@@ -469,7 +471,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 350 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
+- 358 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -494,6 +496,7 @@ npm run test:performance-overhead
 npm run test:performance-lifecycle
 npm run test:performance-reproducibility
 npm run test:performance-methodology
+npm run test:performance-budgets
 npm run benchmark:spatial -- --output build/performance-wasm/interactive-suite.json
 npm run benchmark:scaling -- --output build/performance-scale/scaling-suite.json
 npm run benchmark:overhead -- --output build/lean-link-spike/native-overhead-suite.json
@@ -501,6 +504,7 @@ npm run benchmark:lifecycle -- --output build/lean-link-spike/lifecycle-stabilit
 npm run verify:performance-reproducibility -- --output build/performance-reproducibility/build-comparison.json
 npm run benchmark:self-consistency -- --repetitions 3 --output build/performance-reproducibility/self-consistency.json
 npm run verify:performance-methodology -- --exclusive --network-disabled --output build/performance-methodology/reference.json
+npm run benchmark:baseline -- --environment reference-linux-x64-i7-7700k-v1 --exclusive --network-disabled --output build/performance-baseline/reference-v1
 npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate

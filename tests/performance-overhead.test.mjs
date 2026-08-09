@@ -37,6 +37,8 @@ test("the native overhead suite measures generated calls and releases every valu
   const result = await runNativeOverheadSuite({
     scalarSamples: 2,
     scalarIterations: 10,
+    lifecycleSamples: 2,
+    lifecycleIterations: 5,
     copiedSamples: 2,
     copiedIterations: 2,
     batchSamples: 2,
@@ -62,6 +64,7 @@ test("the native overhead suite measures generated calls and releases every valu
   assert.deepEqual(Object.keys(result.operations), [
     "scalarLeanClosure",
     "retainedBoxRead",
+    "boxConstructReadDispose",
     "canonicalIdentityCache",
     "copiedRecordSmall",
     "copiedRecord1024Items",

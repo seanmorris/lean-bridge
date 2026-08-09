@@ -80,7 +80,7 @@ The machine record is 17,293 bytes with SHA-256 `9fb1d2d367e8f2fb5f2f14b60121755
 
 ## Limits
 
-The Promise fixture schedules Lean work after one millisecond, so its latency includes that delay. Cancellation measures runtime shutdown, not an `AbortSignal` operation. The iterator uses the generated JavaScript cursor adapter and invokes a real Lean closure for every item. Node and the filesystem cache were warm after the first-call record. The performance methodology phase must approve reference environments, repetitions, noise rules, and uncertainty before release budgets use these values.
+The Promise fixture schedules Lean work after one millisecond, so its latency includes that delay. Cancellation measures runtime shutdown, not an `AbortSignal` operation. The iterator uses the generated JavaScript cursor adapter and invokes a real Lean closure for every item. Node and the filesystem cache were warm after the first-call record. The approved baseline collector repeats this suite in nine fresh processes before a release budget uses its values.
 
 ## Commands
 

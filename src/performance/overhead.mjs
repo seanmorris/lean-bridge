@@ -151,6 +151,8 @@ export const runNativeOverheadSuite = async (options = {}) => {
   const configuration = Object.freeze({
     scalarSamples: options.scalarSamples ?? 40,
     scalarIterations: options.scalarIterations ?? 10_000,
+    lifecycleSamples: options.lifecycleSamples ?? 40,
+    lifecycleIterations: options.lifecycleIterations ?? 1_000,
     copiedSamples: options.copiedSamples ?? 30,
     copiedIterations: options.copiedIterations ?? 100,
     batchSamples: options.batchSamples ?? 30,
@@ -207,6 +209,15 @@ export const runNativeOverheadSuite = async (options = {}) => {
     samples: configuration.scalarSamples,
     iterations: configuration.scalarIterations,
     operation() { checksum += box.read(); },
+  });
+  const boxLifecycle = sampleSync({
+    samples: configuration.lifecycleSamples,
+    iterations: configuration.lifecycleIterations,
+    operation(index) {
+      const temporary = new api.Box(index >>> 0);
+      checksum += temporary.read();
+      if (!temporary.dispose()) throw new Error("temporary Box did not dispose");
+    },
   });
   const identityCache = sampleSync({
     samples: configuration.scalarSamples,
@@ -344,6 +355,7 @@ export const runNativeOverheadSuite = async (options = {}) => {
     operations: Object.freeze({
       scalarLeanClosure: scalarClosure,
       retainedBoxRead: retainedRead,
+      boxConstructReadDispose: boxLifecycle,
       canonicalIdentityCache: identityCache,
       copiedRecordSmall: copiedSmall,
       copiedRecord1024Items: copiedLarge,
@@ -381,7 +393,7 @@ export const runNativeOverheadSuite = async (options = {}) => {
       "Cancellation measures runtime shutdown with sixteen pending public Promises, not an AbortSignal API.",
       "The generated iterator adapter owns its cursor in JavaScript and invokes a real Lean closure for every item. It is an adapter measurement, not a native Lean cursor implementation.",
       "The 1,024-item copied record measures one rich-value boundary transfer. It does not claim semantic equivalence to 1,024 scalar calls.",
-      "This run uses Node and a warm filesystem cache. Node 793 must approve repetitions and reference environments before these values become a baseline.",
+      "This single-process run is diagnostic. Only the approved nine-fork collector can promote its measurements into a baseline.",
     ]),
   });
 };
