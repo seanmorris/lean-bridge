@@ -260,7 +260,6 @@ spl_autoload_register(static function (string $class): void {
 require_once __DIR__ . '/src/functions.php';
 `;
   const phpFiles = Object.keys(composer)
-    .filter(path => path === "autoload.php" || path.startsWith("src/") && path.endsWith(".php"))
     .sort()
     .map(path => `${manifest.artifacts.composerPackage}/${path}`);
   const adapter = generatePhpWasmAdapterPackage({

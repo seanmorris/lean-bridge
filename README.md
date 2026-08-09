@@ -360,11 +360,12 @@ The architecture-testing POC has established:
 - one generated PHP-Wasm adapter that emits the flat locked runtime and component closure through PHP-Wasm's existing package hooks, imports maintained Weaker for Vrzno-compatible weak identity, and reuses the native PHP projection, Zend handlers, C ABI, and component provider;
 - one manifest-driven PHP-Wasm release built with the host's locked Emscripten ABI, containing one shared runtime, three capsule-locked components, a PHP 8.4 extension, Composer sources, provenance, and artifact hashes;
 - one published PHP-Wasm host execution that preserves retained identity and typed copied values, invokes callbacks and Lean closures, initializes the runtime once, and finishes with zero live identities;
+- one Binding IR-derived PHP conformance corpus that executes unchanged through native Zend and PHP-Wasm, producing the same typed values, identity, callback, closure, failure, reflection, documentation, assurance, initialization, and cleanup observations;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 209 passing behavioral and structural tests;
+- 211 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC and native PHP package.
 

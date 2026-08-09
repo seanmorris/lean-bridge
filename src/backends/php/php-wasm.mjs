@@ -688,11 +688,12 @@ export const generatePhpWasmAdapterPackage = ({
   if (phpPackage !== null && (
     typeof phpPackage !== "object" ||
     !Array.isArray(phpPackage.files) ||
+    new Set(phpPackage.files).size !== phpPackage.files.length ||
     typeof phpPackage.bootstrap !== "string" ||
     !phpPackage.files.includes(phpPackage.bootstrap) ||
-    phpPackage.files.some(path => !/^composer\/[A-Za-z0-9][A-Za-z0-9._/-]*\.php$/.test(path) || posix.normalize(path) !== path)
+    phpPackage.files.some(path => !/^composer\/[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(path) || posix.normalize(path) !== path)
   )) {
-    fail("invalid-php-wasm-php-package", "PHP package files must be normalized Composer PHP paths and include the bootstrap");
+    fail("invalid-php-wasm-php-package", "PHP package files must be unique normalized Composer paths and include the bootstrap");
   }
   const metadataFiles = [
     { name: "graph.json", file: "metadata/graph.json", path: `${metadataPrefix}/graph.json` },
