@@ -263,6 +263,7 @@ export const runLifecycleStabilitySuite = async (options = {}) => {
         nativeClosures: closuresPeak,
         pendingOperations: pendingPeak,
         iterators: iteratorPeak,
+        callbacks: runtime.maximumCallbackDepth(),
         callbackDepth: runtime.maximumCallbackDepth(),
       }),
       liveAfter,
@@ -377,6 +378,7 @@ export const runLifecycleStabilitySuite = async (options = {}) => {
         nativeClosures: maximum(rounds.map(round => round.peaks.nativeClosures)),
         pendingOperations: maximum(rounds.map(round => round.peaks.pendingOperations)),
         iterators: maximum(rounds.map(round => round.peaks.iterators)),
+        callbacks: maximum(rounds.map(round => round.peaks.callbacks)),
         callbackDepth: maximum(rounds.map(round => round.peaks.callbackDepth)),
       }),
       retained: Object.freeze({

@@ -33,6 +33,7 @@ test("lifecycle rounds return every registry to its defined baseline", async () 
     nativeClosures: 3,
     pendingOperations: 3,
     iterators: 1,
+    callbacks: 2,
     callbackDepth: 2,
   });
   assert.deepEqual(result.lifecycle.retained, {
