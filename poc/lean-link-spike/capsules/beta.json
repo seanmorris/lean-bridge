@@ -49,6 +49,26 @@
             "sha256": "372bc473d62e5c29d33c0407932217502326f1dd7268c76d17b3a1ae99c39ed4"
           }
         ]
+      },
+      {
+        "target": "php-wasm-emscripten-3.1.68",
+        "sideModule": {
+          "file": "beta.so.wasm",
+          "mediaType": "application/wasm",
+          "sha256": "c0974acd932e10eaf93c46661aa6e62db9714377811caa8e96f5b8b854d33c05"
+        },
+        "staticObjects": [
+          {
+            "file": "beta.generated.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "947c05bd0f44e685e42da6545f73ae07e3cd0244e221cf7694501288ce957c4c"
+          },
+          {
+            "file": "beta.shim.o",
+            "mediaType": "application/wasm-object",
+            "sha256": "10b4a547605cf3646b284f2b29deb9f1f603e92d28129e37405604ee65275e75"
+          }
+        ]
       }
     ]
   },

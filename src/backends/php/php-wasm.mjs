@@ -73,7 +73,7 @@ const graphLibrary = (library, target) => {
     componentSha256: library.sha256,
     dependencies: library.capsule.dependencies.map(dependency => dependency.id),
     name: artifact.file.split("/").at(-1),
-    file: `lib/${artifact.file}`,
+    file: `lib/components/${artifact.file}`,
     sha256: artifact.sha256,
     initializer: library.capsule.initializer.mode === "required"
       ? library.capsule.initializer.symbol
@@ -166,6 +166,7 @@ class PhpWasmLeanHost {
         id: library.id,
         sha256: library.sha256,
         dependencies: Object.freeze([...library.dependencies]),
+        bindingIrSha256: library.id === manifest.component ? manifest.bindingIrSha256 : null,
       }));
     }
     this.graphs.set(manifest.graph.sha256, manifest.graph.id);
@@ -196,22 +197,32 @@ class PhpWasmLeanHost {
   }
 
   initializeComponent(id, initializer) {
-    const definition = this.componentDefinitions.get(id);
+    const separator = id.lastIndexOf("#");
+    const componentId = separator === -1 ? id : id.slice(0, separator);
+    const bindingIrSha256 = separator === -1 ? null : id.slice(separator + 1);
+    const definition = this.componentDefinitions.get(componentId);
     if (!definition) {
-      throw new PhpWasmHostError("component-not-locked", "Component is absent from every attached graph", { component: id });
+      throw new PhpWasmHostError("component-not-locked", "Component is absent from every attached graph", { component: componentId });
+    }
+    if (bindingIrSha256 !== null && definition.bindingIrSha256 !== bindingIrSha256) {
+      throw new PhpWasmHostError("component-binding-mismatch", "Component provider does not match the locked Binding IR", {
+        component: componentId,
+        expected: definition.bindingIrSha256,
+        actual: bindingIrSha256,
+      });
     }
     if (this.runtimeState !== "ready") {
-      throw new PhpWasmHostError("runtime-not-ready", "Shared Lean runtime must initialize before a component", { component: id });
+      throw new PhpWasmHostError("runtime-not-ready", "Shared Lean runtime must initialize before a component", { component: componentId });
     }
-    const state = this.components.get(id);
+    const state = this.components.get(componentId);
     if (state === "ready") return false;
     if (state === "failed") {
-      throw new PhpWasmHostError("component-initialization-failed", "Component initialization already failed", { component: id });
+      throw new PhpWasmHostError("component-initialization-failed", "Component initialization already failed", { component: componentId });
     }
     for (const dependency of definition.dependencies) {
       if (this.components.get(dependency) !== "ready") {
         throw new PhpWasmHostError("component-dependency-not-ready", "Component dependency is not initialized", {
-          component: id,
+          component: componentId,
           dependency,
         });
       }
@@ -219,15 +230,15 @@ class PhpWasmLeanHost {
     if (typeof initializer !== "function") {
       throw new PhpWasmHostError("invalid-component-initializer", "Component initializer must be callable", { component: id });
     }
-    this.components.set(id, "initializing");
+    this.components.set(componentId, "initializing");
     try {
       if (!initializer()) throw new Error("initializer returned false");
-      this.components.set(id, "ready");
+      this.components.set(componentId, "ready");
       return true;
     } catch (error) {
-      this.components.set(id, "failed");
+      this.components.set(componentId, "failed");
       throw new PhpWasmHostError("component-initialization-failed", "Component initialization failed", {
-        component: id,
+        component: componentId,
         cause: error.message,
       });
     }
@@ -405,6 +416,162 @@ EM_JS(void, lean_bridge_php_wasm_request_end, (), {
 });
 `;
 
+const phpWasmLibuvC = `#include <stddef.h>
+#include <stdint.h>
+#include <lean/lean.h>
+#include <uv.h>
+
+/*
+ * Lean's pinned WebAssembly libuv build deliberately leaves part of its
+ * platform layer undefined. A main Emscripten module can tolerate those
+ * symbols, but a dynamically loaded side module cannot. The PHP-Wasm
+ * profile does not advertise Lean file-system support, so these entry points
+ * form an explicit unsupported-operation boundary instead of pulling a
+ * second system runtime into the shared PHP memory.
+ */
+
+static int lean_bridge_uv_unsupported(uv_fs_t *request) {
+  if (request != NULL) request->result = UV_ENOSYS;
+  return UV_ENOSYS;
+}
+
+const char *uv_strerror(int error) {
+  (void)error;
+  return "operation is unavailable in the PHP-Wasm Lean runtime profile";
+}
+
+void uv_fs_req_cleanup(uv_fs_t *request) {
+  (void)request;
+}
+
+int uv_fs_stat(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
+  (void)loop; (void)path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_fs_lstat(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
+  (void)loop; (void)path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_fs_link(uv_loop_t *loop, uv_fs_t *request, const char *path, const char *new_path, uv_fs_cb callback) {
+  (void)loop; (void)path; (void)new_path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_fs_unlink(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
+  (void)loop; (void)path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_fs_mkdtemp(uv_loop_t *loop, uv_fs_t *request, const char *template_path, uv_fs_cb callback) {
+  (void)loop; (void)template_path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_fs_mkstemp(uv_loop_t *loop, uv_fs_t *request, const char *template_path, uv_fs_cb callback) {
+  (void)loop; (void)template_path; (void)callback;
+  return lean_bridge_uv_unsupported(request);
+}
+
+int uv_os_tmpdir(char *buffer, size_t *size) {
+  (void)buffer; (void)size;
+  return UV_ENOSYS;
+}
+
+/*
+ * The link-spike components retain their JavaScript-main registration
+ * constructors. PHP binds their exported Lean symbols directly, so these
+ * compatibility hooks only let independently built components complete
+ * construction while they share this runtime's table.
+ */
+typedef lean_object *(*lean_bridge_alpha_box_fn)(uint32_t);
+typedef uint32_t (*lean_bridge_alpha_read_fn)(lean_object *);
+typedef lean_object *(*lean_bridge_alpha_payload_fn)(
+    uint8_t,
+    uint32_t,
+    lean_object *,
+    lean_object *,
+    lean_object *
+);
+typedef lean_object *(*lean_bridge_alpha_object_fn)(lean_object *);
+typedef uint32_t (*lean_bridge_alpha_callback_fn)(uint32_t, lean_object *);
+typedef lean_object *(*lean_bridge_alpha_adder_fn)(uint32_t);
+typedef uint8_t (*lean_bridge_alpha_enabled_fn)(lean_object *);
+typedef uint32_t (*lean_bridge_alpha_count_fn)(lean_object *);
+typedef lean_object *(*lean_bridge_alpha_initializer_fn)(uint8_t);
+
+static lean_bridge_alpha_box_fn alpha_box;
+static lean_bridge_alpha_read_fn alpha_read;
+static lean_bridge_alpha_payload_fn alpha_payload;
+static lean_bridge_alpha_object_fn alpha_round_trip;
+static lean_bridge_alpha_callback_fn alpha_with_callback;
+static lean_bridge_alpha_adder_fn alpha_make_adder;
+static lean_bridge_alpha_enabled_fn alpha_payload_enabled;
+static lean_bridge_alpha_count_fn alpha_payload_count;
+static lean_bridge_alpha_object_fn alpha_payload_label;
+static lean_bridge_alpha_object_fn alpha_payload_bytes;
+static lean_bridge_alpha_object_fn alpha_payload_values;
+static lean_bridge_alpha_initializer_fn alpha_initialize;
+
+void bridge_register_lean_alpha(
+    lean_bridge_alpha_box_fn box,
+    lean_bridge_alpha_read_fn read,
+    lean_bridge_alpha_payload_fn payload,
+    lean_bridge_alpha_object_fn round_trip,
+    lean_bridge_alpha_callback_fn with_callback,
+    lean_bridge_alpha_adder_fn make_adder,
+    lean_bridge_alpha_enabled_fn payload_enabled,
+    lean_bridge_alpha_count_fn payload_count,
+    lean_bridge_alpha_object_fn payload_label,
+    lean_bridge_alpha_object_fn payload_bytes,
+    lean_bridge_alpha_object_fn payload_values,
+    lean_bridge_alpha_initializer_fn initialize
+) {
+  alpha_box = box;
+  alpha_read = read;
+  alpha_payload = payload;
+  alpha_round_trip = round_trip;
+  alpha_with_callback = with_callback;
+  alpha_make_adder = make_adder;
+  alpha_payload_enabled = payload_enabled;
+  alpha_payload_count = payload_count;
+  alpha_payload_label = payload_label;
+  alpha_payload_bytes = payload_bytes;
+  alpha_payload_values = payload_values;
+  alpha_initialize = initialize;
+}
+
+lean_object *initialize_Alpha(uint8_t builtin) { return alpha_initialize(builtin); }
+lean_object *lean_link_alpha_box(uint32_t value) { return alpha_box(value); }
+uint32_t lean_link_alpha_read(lean_object *box) { return alpha_read(box); }
+lean_object *lean_link_alpha_payload(
+    uint8_t enabled,
+    uint32_t count,
+    lean_object *label,
+    lean_object *bytes,
+    lean_object *values
+) { return alpha_payload(enabled, count, label, bytes, values); }
+lean_object *lean_link_alpha_round_trip(lean_object *payload) { return alpha_round_trip(payload); }
+uint32_t lean_link_alpha_with_callback(uint32_t value, lean_object *transform) {
+  return alpha_with_callback(value, transform);
+}
+lean_object *lean_link_alpha_make_adder(uint32_t base) { return alpha_make_adder(base); }
+uint8_t lean_link_alpha_payload_enabled(lean_object *payload) { return alpha_payload_enabled(payload); }
+uint32_t lean_link_alpha_payload_count(lean_object *payload) { return alpha_payload_count(payload); }
+lean_object *lean_link_alpha_payload_label(lean_object *payload) { return alpha_payload_label(payload); }
+lean_object *lean_link_alpha_payload_bytes(lean_object *payload) { return alpha_payload_bytes(payload); }
+lean_object *lean_link_alpha_payload_values(lean_object *payload) { return alpha_payload_values(payload); }
+
+void bridge_register_lean_beta(uintptr_t identity, uintptr_t read, uintptr_t initialize) {
+  (void)identity; (void)read; (void)initialize;
+}
+
+void bridge_register_lean_gamma(uintptr_t identity, uintptr_t read, uintptr_t initialize) {
+  (void)identity; (void)read; (void)initialize;
+}
+`;
+
 const adaptProvider = source => {
   const includeMarker = "#include \"lean_bridge_native_runtime.h\"";
   if (!source.includes(includeMarker)) fail("provider-adaptation-failed", "component provider lacks the shared runtime include");
@@ -432,10 +599,19 @@ const adaptZend = source => {
     .replaceAll("Lean lean_alpha native transport", "Lean lean_alpha PHP-Wasm transport");
 };
 
-const versionModule = ({ version, libraries, files }) => `import manifest from "../manifest.mjs";
+const versionModule = ({ version, libraries, files, bootstrap }) => `import manifest from "../manifest.mjs";
 import { preparePhpWasmLeanHost } from "../host.mjs";
 
-const prepare = php => preparePhpWasmLeanHost(php, manifest);
+const prepare = php => {
+  const host = preparePhpWasmLeanHost(php, manifest);
+  const bootstrap = ${JSON.stringify(bootstrap)};
+  if (bootstrap) {
+    const directive = \`auto_prepend_file=\${bootstrap}\`;
+    const ini = php.phpArgs.ini ?? "";
+    if (!ini.split("\\n").includes(directive)) php.phpArgs.ini = [ini, directive].filter(Boolean).join("\\n");
+  }
+  return host;
+};
 
 export const getLibs = php => {
   prepare(php);
@@ -476,6 +652,7 @@ export const generatePhpWasmAdapterPackage = ({
   target = "browser",
   runtime,
   extensions,
+  phpPackage = null,
 }) => {
   validateBindingIr(ir);
   if (!graph || !Array.isArray(graph.libraries) || !Array.isArray(graph.order)) {
@@ -508,6 +685,15 @@ export const generatePhpWasmAdapterPackage = ({
   }));
   const graphLibraries = graph.libraries.map(library => graphLibrary(library, target));
   const metadataPrefix = `/preload/lean-bridge/${graph.graphId.replace(/[^A-Za-z0-9._-]+/g, "_")}`;
+  if (phpPackage !== null && (
+    typeof phpPackage !== "object" ||
+    !Array.isArray(phpPackage.files) ||
+    typeof phpPackage.bootstrap !== "string" ||
+    !phpPackage.files.includes(phpPackage.bootstrap) ||
+    phpPackage.files.some(path => !/^composer\/[A-Za-z0-9][A-Za-z0-9._/-]*\.php$/.test(path) || posix.normalize(path) !== path)
+  )) {
+    fail("invalid-php-wasm-php-package", "PHP package files must be normalized Composer PHP paths and include the bootstrap");
+  }
   const metadataFiles = [
     { name: "graph.json", file: "metadata/graph.json", path: `${metadataPrefix}/graph.json` },
     { name: "binding-ir.json", file: "metadata/binding-ir.json", path: `${metadataPrefix}/binding-ir.json` },
@@ -516,7 +702,13 @@ export const generatePhpWasmAdapterPackage = ({
       file: `metadata/capsules/${index.toString().padStart(3, "0")}.json`,
       path: `${metadataPrefix}/capsules/${index.toString().padStart(3, "0")}.json`,
     })),
+    ...(phpPackage?.files ?? []).map(path => ({
+      name: path.split("/").at(-1),
+      file: path,
+      path: `/${path.replace(/^composer\//, "vendor/")}`,
+    })),
   ];
+  const phpBootstrap = phpPackage ? `/${phpPackage.bootstrap.replace(/^composer\//, "vendor/")}` : null;
   const graphRecord = {
     id: graph.graphId,
     sha256: sha256(canonicalJson(graph)),
@@ -561,6 +753,10 @@ export const generatePhpWasmAdapterPackage = ({
       explicitClose: true,
       weakFinalization: "fallback-only",
     },
+    php: {
+      bootstrap: phpBootstrap,
+      composerFiles: phpPackage?.files ?? [],
+    },
     versions: versionRecords,
   };
 
@@ -573,6 +769,7 @@ export const generatePhpWasmAdapterPackage = ({
     "metadata/binding-ir.json": `${JSON.stringify(ir, null, 2)}\n`,
     "include/lean_bridge_php_wasm_host.h": phpWasmHostHeader,
     "src/lean_bridge_php_wasm_host.c": phpWasmHostC,
+    "src/lean_bridge_php_wasm_libuv.c": phpWasmLibuvC,
   };
   graph.libraries.forEach((library, index) => {
     files[`metadata/capsules/${index.toString().padStart(3, "0")}.json`] = `${JSON.stringify(library.capsule, null, 2)}\n`;
@@ -584,7 +781,11 @@ export const generatePhpWasmAdapterPackage = ({
   const providerPath = Object.keys(nativeRuntime).find(path => /src\/.+_native\.c$/.test(path));
   files[`extension/${providerPath}`] = adaptProvider(nativeRuntime[providerPath]);
   files["extension/lean_bridge_native_runtime.h"] = nativeRuntime["include/lean_bridge_native_runtime.h"];
-  for (const version of versions) files[`versions/${version}.mjs`] = versionModule({ version, ...versionRecords[version] });
+  for (const version of versions) files[`versions/${version}.mjs`] = versionModule({
+    version,
+    ...versionRecords[version],
+    bootstrap: phpBootstrap,
+  });
   files["index.mjs"] = indexModule(versions);
   files["package.json"] = `${JSON.stringify({
     name: `php-wasm-${ir.component.name.replace(/[^A-Za-z0-9]+/g, "-").toLowerCase()}`,

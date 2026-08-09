@@ -9,7 +9,7 @@
   "roots": [
     {
       "id": "poc/lean-gamma@0.0.0",
-      "sha256": "d1deb8afaccdc405f731f1c8162b4455eef51e3dddcca11ff74d24bec27a7c4c"
+      "sha256": "4f31cc3c9dbaca201959bcde80ca74cef3266e71df3159db28a803f35450528d"
     }
   ],
   "libraries": [
@@ -18,7 +18,7 @@
       "module": "Alpha",
       "capsule": {
         "path": "capsules/alpha.json",
-        "sha256": "5630ec31f85d1f7f45d048d45928d56d416909790c995024045bda0e2bd83c64"
+        "sha256": "d290f5500df5736de58a470452e9a840a8f6ebe7cc85fc4d13465af4b3c1728e"
       },
       "dependencies": [],
       "source": {
@@ -40,12 +40,12 @@
       "module": "Beta",
       "capsule": {
         "path": "capsules/beta.json",
-        "sha256": "9061cb023f904d4f0555dd3a52fcf1435e989d725736e7611c61fce191101936"
+        "sha256": "f4f7b6465c95805499830f16c7c871a0ff5028ae6e17417be7d36182affcfb40"
       },
       "dependencies": [
         {
           "id": "poc/lean-alpha@0.0.0",
-          "sha256": "5630ec31f85d1f7f45d048d45928d56d416909790c995024045bda0e2bd83c64"
+          "sha256": "d290f5500df5736de58a470452e9a840a8f6ebe7cc85fc4d13465af4b3c1728e"
         }
       ],
       "source": {
@@ -63,12 +63,12 @@
       "module": "Gamma",
       "capsule": {
         "path": "capsules/gamma.json",
-        "sha256": "d1deb8afaccdc405f731f1c8162b4455eef51e3dddcca11ff74d24bec27a7c4c"
+        "sha256": "4f31cc3c9dbaca201959bcde80ca74cef3266e71df3159db28a803f35450528d"
       },
       "dependencies": [
         {
           "id": "poc/lean-beta@0.0.0",
-            "sha256": "9061cb023f904d4f0555dd3a52fcf1435e989d725736e7611c61fce191101936"
+            "sha256": "f4f7b6465c95805499830f16c7c871a0ff5028ae6e17417be7d36182affcfb40"
         }
       ],
       "source": {

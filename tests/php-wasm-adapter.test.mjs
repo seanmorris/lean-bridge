@@ -118,6 +118,14 @@ test("generated host keeps one runtime, component domain, and Vrzno-style identi
     assert.equal(host.initializeComponent("poc/lean-beta@0.0.0", () => true), true);
     assert.equal(host.initializeComponent("poc/lean-gamma@0.0.0", () => true), true);
     assert.equal(host.initializeComponent("poc/lean-alpha@0.0.0", () => false), false);
+    assert.equal(
+      host.initializeComponent(`poc/lean-alpha@0.0.0#${alpha.bindingIrSha256}`, () => false),
+      false,
+    );
+    assert.throws(
+      () => host.initializeComponent(`poc/lean-alpha@0.0.0#${"0".repeat(64)}`, () => true),
+      error => error.code === "component-binding-mismatch",
+    );
 
     const value = {};
     const fromAlpha = host.targetIdentity(value);

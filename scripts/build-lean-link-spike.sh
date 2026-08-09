@@ -319,7 +319,10 @@ done
 node "$LEAN_WASM_PROJECT_ROOT/scripts/verify-lean-artifacts.mjs" \
   --lock "$GRAPH_LOCK" \
   --build-root "$BUILD_DIR" \
-  --target "$LEAN_WASM_RUNTIME_PROFILE" \
+  --target "$LEAN_WASM_ARTIFACT_TARGET" \
   > "$AUDIT_DIR/artifact-manifest.json"
 
-printf 'Built Lean link spike profile %s in %s\n' "$LEAN_WASM_RUNTIME_PROFILE" "$BUILD_DIR"
+printf 'Built Lean link spike profile %s for %s in %s\n' \
+  "$LEAN_WASM_RUNTIME_PROFILE" \
+  "$LEAN_WASM_ARTIFACT_TARGET" \
+  "$BUILD_DIR"

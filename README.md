@@ -16,7 +16,7 @@ npm, Composer, PyPI, Cargo, Nix, C, and C++ packages
 import, call, done
 ```
 
-The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript projection, locked composition, and reproducible build foundations described in [Current status](#current-status). The package generator and public registry releases are the next product layer.
+The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript and PHP projections, locked composition, and reproducible build foundations described in [Current status](#current-status). Public registry releases and broader target coverage are the next product layer.
 
 ## Why installable verified components matter
 
@@ -281,7 +281,7 @@ The default path uses a pinned Debian Docker environment. Native Nix provides th
 
 Any difference blocks publication. The release receives machine-readable and human-readable reports with both hashes, differing paths, likely entropy categories, and exact reproduction commands. Registry credentials remain unavailable until the comparison passes.
 
-The current POC passes this gate for 24 browser artifacts and 24 threaded artifacts across independent checkout roots. The generated C ABI header is part of each comparison. The native PHP release also rebuilds 32 files in separate roots and compares every byte, including the shared runtime, Zend extension, Composer sources, stubs, reflection, assurance data, and release metadata. The complete Wasm POC and the native PHP package run as separate Nix outputs from fixed inputs.
+The current POC passes this gate for 24 browser artifacts and 24 threaded artifacts across independent checkout roots. The generated C ABI header is part of each comparison. The native PHP release rebuilds 32 files in separate roots and compares every byte. The PHP-Wasm release rebuilds 61 files, compares every byte, then executes the result in the published PHP-Wasm host. Both PHP packages include the shared runtime, generated extension, Composer sources, stubs, reflection, assurance data, and release metadata. The complete Wasm POC and the native PHP package run as separate Nix outputs from fixed inputs.
 
 ## Current performance evidence
 
@@ -322,6 +322,16 @@ Current Nix native PHP release sizes:
 | stripped shared Lean runtime and `Init` | 13,753,112 |
 | stripped generated Alpha Zend extension | 64,944 |
 
+Current PHP-Wasm package sizes:
+
+| Artifact | Bytes |
+|---|---:|
+| shared Lean runtime and `Init` | 8,912,945 |
+| generated PHP 8.4 extension | 23,174 |
+| Alpha side module | 4,658 |
+| Beta side module | 632 |
+| Gamma side module | 633 |
+
 These measurements establish a POC baseline. The production suite will add callback and Promise latency, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
 
 ## Current status
@@ -348,11 +358,13 @@ The architecture-testing POC has established:
 - one PIC native Lean runtime and identity domain shared by two independently compiled and loaded PHP extensions, with one runtime initialization and two component initializations;
 - one manifest-driven native PHP release containing the shared runtime, generated extension, Composer package, reflection, assurance data, provenance inputs, and artifact hashes;
 - one generated PHP-Wasm adapter that emits the flat locked runtime and component closure through PHP-Wasm's existing package hooks, imports maintained Weaker for Vrzno-compatible weak identity, and reuses the native PHP projection, Zend handlers, C ABI, and component provider;
+- one manifest-driven PHP-Wasm release built with the host's locked Emscripten ABI, containing one shared runtime, three capsule-locked components, a PHP 8.4 extension, Composer sources, provenance, and artifact hashes;
+- one published PHP-Wasm host execution that preserves retained identity and typed copied values, invokes callbacks and Lean closures, initializes the runtime once, and finishes with zero live identities;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 207 passing behavioral and structural tests;
+- 209 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC and native PHP package.
 

@@ -17,6 +17,7 @@
     "build:lean-link-spike": "bash scripts/build-lean-link-spike.sh",
     "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
     "build:php-native-package": "node scripts/build-php-native-package.mjs --manifest poc/lean-link-spike/bindings/php-native.package.json --output build/php-native-package",
+    "build:php-wasm-package": "node scripts/build-php-wasm-package.mjs --manifest poc/lean-link-spike/bindings/php-wasm.package.json --php-source build/php-wasm-sdk/php8.4-src --output build/php-wasm-package",
     "build:link-spike": "bash scripts/build-link-spike.sh",
     "build:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc",
     "benchmark:poc": "node scripts/benchmark-native-api.mjs",
@@ -29,6 +30,9 @@
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
     "test:php-native-package": "node --test tests/php-native-package.test.mjs",
     "test:php-wasm-adapter": "node --test tests/php-wasm-adapter.test.mjs",
+    "test:php-wasm-package": "node --test tests/php-wasm-package.test.mjs",
+    "test:php-wasm-package:host": "node scripts/test-php-wasm-package-host.mjs",
+    "test:php-wasm-package:release": "node scripts/check-php-wasm-package-release.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"

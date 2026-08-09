@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/php-wasm-package.schema.json",
+  "title": "Lean Bridge PHP-Wasm package manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packageId",
+    "bindingIr",
+    "graphLock",
+    "phpWasm",
+    "weaker",
+    "artifacts",
+    "sourceDateEpoch"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packageId": { "type": "string", "minLength": 1 },
+    "bindingIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "fileSha256", "semanticSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "fileSha256": { "$ref": "#/$defs/sha256" },
+        "semanticSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "graphLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "fileSha256", "profile", "target"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "fileSha256": { "$ref": "#/$defs/sha256" },
+        "profile": { "enum": ["side-startup", "side-lazy"] },
+        "target": { "const": "php-wasm-emscripten-3.1.68" }
+      }
+    },
+    "phpWasm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceCommit", "packageVersion", "packageIntegrity", "emscripten", "phpVersions"],
+      "properties": {
+        "sourceCommit": { "$ref": "#/$defs/gitCommit" },
+        "packageVersion": { "const": "0.1.0" },
+        "packageIntegrity": { "type": "string", "pattern": "^sha512-[A-Za-z0-9+/]+={0,2}$" },
+        "emscripten": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version", "emsdkCommit", "sourceCommit", "runtimeVariant"],
+          "properties": {
+            "version": { "const": "3.1.68" },
+            "emsdkCommit": { "$ref": "#/$defs/gitCommit" },
+            "sourceCommit": { "$ref": "#/$defs/gitCommit" },
+            "runtimeVariant": { "const": "php-wasm-3.1.68" }
+          }
+        },
+        "phpVersions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^8\\.[2-9]$" }
+        }
+      }
+    },
+    "weaker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceCommit", "packageVersion", "packageIntegrity"],
+      "properties": {
+        "sourceCommit": { "$ref": "#/$defs/gitCommit" },
+        "packageVersion": { "const": "0.0.10" },
+        "packageIntegrity": { "type": "string", "pattern": "^sha512-[A-Za-z0-9+/]+={0,2}$" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtimeLibrary", "componentDirectory", "extensionPattern", "composerPackage", "metadata"],
+      "properties": {
+        "runtimeLibrary": { "const": "lib/liblean_bridge_runtime.so" },
+        "componentDirectory": { "const": "lib/components" },
+        "extensionPattern": { "const": "lib/php{version}-lean-alpha.so" },
+        "composerPackage": { "const": "composer" },
+        "metadata": { "const": "metadata/release" }
+      }
+    },
+    "sourceDateEpoch": { "type": "integer", "minimum": 1 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "gitCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "path": { "type": "string", "pattern": "^[^/]" }
+  }
+}

@@ -1,6 +1,6 @@
 # PHP-Wasm Lean Side-Module Adapter Evidence
 
-Status: the generator, PHP-Wasm descriptor, shared host bootstrap, request lifecycle hooks, and source-sharing boundary are implemented and contract-tested. The packaged Emscripten extension build belongs to the next release-package gate.
+Status: the generator, PHP-Wasm descriptor, shared host bootstrap, request lifecycle hooks, source-sharing boundary, packaged Emscripten extension, reproducibility gate, and published-host execution are implemented. [The release package evidence](php-wasm-release-package.md) records the compiled result.
 
 ## Generated library closure
 
@@ -65,6 +65,7 @@ Run:
 
 ```sh
 npm run test:php-wasm-adapter
+npm run test:php-wasm-package:release
 ```
 
 The tests verify:

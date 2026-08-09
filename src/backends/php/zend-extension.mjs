@@ -151,8 +151,8 @@ static inline lean_php_identity *identity_from_object(zend_object *object)
 
 static const char *identity_kind_name(lean_php_identity_kind kind)
 {
-    if (kind == LEAN_PHP_IDENTITY_RESOURCE) return "${namespace}\\${resource}";
-    if (kind == LEAN_PHP_IDENTITY_CALLBACK) return "${namespace}\\${callback}";
+    if (kind == LEAN_PHP_IDENTITY_RESOURCE) return "${namespace}\\\\${resource}";
+    if (kind == LEAN_PHP_IDENTITY_CALLBACK) return "${namespace}\\\\${callback}";
     return "closed";
 }
 
@@ -401,30 +401,30 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_void, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_runtime_snapshot, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box, 0, 1, ${namespace}\\Internal\\Identity, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
     ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_box_read, 0, 1, IS_LONG, 0)
-    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\Internal\\Identity, 0)
+    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box_identity, 0, 1, ${namespace}\\Internal\\Identity, 0)
-    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\Internal\\Identity, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box_identity, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
+    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_round_trip, 0, 1, ${namespace}\\${payload}, 0)
-    ZEND_ARG_OBJ_INFO(0, payload, ${namespace}\\${payload}, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_round_trip, 0, 1, ${namespace}\\\\${payload}, 0)
+    ZEND_ARG_OBJ_INFO(0, payload, ${namespace}\\\\${payload}, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_with_callback, 0, 2, IS_LONG, 0)
     ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
     ZEND_ARG_CALLABLE_INFO(0, transform, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_make_adder, 0, 1, ${namespace}\\Internal\\Identity, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_make_adder, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
     ZEND_ARG_TYPE_INFO(0, base, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_identity_close, 0, 1, IS_VOID, 0)
-    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\Internal\\Identity, 0)
+    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_transform_call, 0, 2, IS_LONG, 0)
-    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\Internal\\Identity, 0)
+    ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
     ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 
