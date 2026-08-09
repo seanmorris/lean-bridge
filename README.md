@@ -281,7 +281,7 @@ The default path uses a pinned Debian Docker environment. Native Nix provides th
 
 Any difference blocks publication. The release receives machine-readable and human-readable reports with both hashes, differing paths, likely entropy categories, and exact reproduction commands. Registry credentials remain unavailable until the comparison passes.
 
-The current POC passes this gate for 24 browser artifacts and 24 threaded artifacts across independent checkout roots. The generated C ABI header is part of each comparison. The native PHP release rebuilds 32 files in separate roots and compares every byte. The PHP-Wasm release rebuilds 61 files, compares every byte, then executes the result in the published PHP-Wasm host. Both PHP packages include the shared runtime, generated extension, Composer sources, stubs, reflection, assurance data, and release metadata. The complete Wasm POC and the native PHP package run as separate Nix outputs from fixed inputs.
+The current POC passes this gate for 24 browser artifacts and 24 threaded artifacts across independent checkout roots. The generated C ABI header is part of each comparison. The PHP release gate rebuilds 48 native files and 63 files for each PHP-Wasm profile in separate empty output roots. It compares every byte, verifies both hash inventories, executes one semantic corpus through all three profiles, then runs the two-component shared-runtime test. The packages retain generated PHP, C, stubs, documentation, manifests, metadata, native extensions, and Wasm where applicable. [The PHP release gate evidence](docs/evidence/php-release-gate.md) records the 174-file result. The complete Wasm POC and the native PHP package run as separate Nix outputs from fixed inputs.
 
 ## Current performance evidence
 
@@ -296,6 +296,8 @@ The current POC passes this gate for 24 browser artifacts and 24 threaded artifa
 | warm construct, read, and dispose | 1.604 µs | 7.412 µs |
 
 The first `Box` operation includes deferred Lean runtime initialization. The benchmark uses a warm filesystem cache under Node and does not measure browser download or compilation. Alpha's public class projection and resource lifecycle plan come from Binding IR. Its private symbol map remains a POC input until the Lean frontend emits it. [The benchmark record](docs/evidence/performance.md) includes artifact hashes, method, size results, and limitations.
+
+`npm run benchmark:php` measures the same generated PHP API through native Zend and both PHP-Wasm loading profiles. On the same machine, native warm reads measured 179.5 ns per call. PHP-Wasm lazy and startup measured 1,728.4 ns and 1,579.7 ns. Typed copied-record throughput measured 580,685 calls per second natively, 43,129 through lazy PHP-Wasm, and 46,496 through startup PHP-Wasm. The lazy profile spent 25.716 ms on its first Beta call because that call loads the independently compiled component into the existing runtime. The startup profile spent 0.416 ms. Every profile finished with zero live identities. [The PHP transport benchmark](docs/evidence/php-transport-performance.md) records startup, first calls, callbacks, copied values, memory, cleanup, package sizes, and limitations.
 
 Current browser-profile artifact sizes:
 
@@ -326,15 +328,16 @@ Current PHP-Wasm package sizes:
 
 | Artifact | Bytes |
 |---|---:|
-| shared Lean runtime and `Init` | 8,912,945 |
-| generated PHP 8.4 extension | 23,174 |
+| shared Lean runtime and `Init` | 8,913,483 |
+| generated lazy PHP 8.4 extension | 28,489 |
+| generated startup PHP 8.4 extension | 25,162 |
 | Alpha side module | 4,658 |
 | Beta side module | 632 |
 | Gamma side module | 633 |
 
-The two-package composition fixture currently produces a 25,162-byte startup extension and a 28,489-byte lazy extension. The lazy extension carries Asyncify support because its first Beta call loads the side module without exposing a loader to PHP.
+The lazy extension carries Asyncify support because its first Beta call loads the side module without exposing a loader to PHP.
 
-These measurements establish a POC baseline. The production suite will add callback and Promise latency, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
+These measurements establish a POC baseline. The production suite will add Promise latency, browser startup, per-instance host RSS, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
 
 ## Current status
 
@@ -369,7 +372,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 211 passing behavioral and structural tests;
+- 214 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC and native PHP package.
 

@@ -234,6 +234,11 @@ const build = async ({ manifest: manifestPath, output: outputPath }) => {
       "-c", join(extensionSource, leanC),
       inputs.leanSourceAbsolute,
     ], { cwd: projectRoot, env: epochEnvironment });
+    const leanCPath = join(extensionSource, leanC);
+    const normalizedLeanC = (await readFile(leanCPath, "utf8"))
+      .replaceAll(projectRoot, "/workspace")
+      .replaceAll(scratch, "/build/php-native");
+    await writeFile(leanCPath, normalizedLeanC);
     const compileEnvironment = {
       ...epochEnvironment,
       CFLAGS: ["-O2", "-g0", ...prefixFlags].join(" "),
@@ -249,6 +254,10 @@ const build = async ({ manifest: manifestPath, output: outputPath }) => {
     const extensionLibrary = join(extensionSource, "modules", `${extensionStem}.so`);
     await run("patchelf", ["--set-rpath", "$ORIGIN/..", extensionLibrary]);
     await run("llvm-strip", ["--strip-debug", extensionLibrary]);
+    const packagedExtensionFiles = Object.fromEntries(Object.entries(extensionFiles).map(([path, source]) => [
+      path,
+      source.replaceAll(scratch, "/build/php-native").replaceAll(projectRoot, "/workspace"),
+    ]));
 
     const runtimeDestination = join(output, inputs.manifest.artifacts.runtimeLibrary);
     const extensionDestination = join(output, inputs.manifest.artifacts.extension);
@@ -269,6 +278,11 @@ const build = async ({ manifest: manifestPath, output: outputPath }) => {
       writeFile(join(metadataDestination, "binding-ir.json"), `${JSON.stringify(inputs.bindingIr, null, 2)}\n`),
       writeFile(join(metadataDestination, "zend-manifest.json"), generated.zend["zend-manifest.json"]),
       writeFile(join(metadataDestination, "native-runtime-manifest.json"), generated.runtime["native-runtime-manifest.json"]),
+      writeFiles(join(metadataDestination, "sources/runtime"), generated.runtime),
+      writeFiles(join(metadataDestination, "sources/extension"), {
+        ...packagedExtensionFiles,
+        [leanC]: normalizedLeanC,
+      }),
     ]);
 
     const payload = await collectFiles(output);

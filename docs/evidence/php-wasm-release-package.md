@@ -1,6 +1,6 @@
 # PHP-Wasm Release Package Evidence
 
-Status: one manifest now builds a PHP 8.4 extension, one shared Lean runtime, three independently compiled Lean components, an ordinary Composer package, PHP-Wasm loader metadata, capsule records, proof-aware Binding IR, provenance, and artifact hashes. Two isolated output roots contain 61 byte-identical files. The published `php-wasm@0.1.0` host executes the package successfully.
+Status: one manifest now builds a PHP 8.4 extension, one shared Lean runtime, three independently compiled Lean components, an ordinary Composer package, PHP-Wasm loader metadata, capsule records, proof-aware Binding IR, provenance, and artifact hashes. Two isolated output roots contain 63 byte-identical files for each loading profile. The published `php-wasm@0.1.0` host executes both packages successfully.
 
 ## Consumer result
 
@@ -74,21 +74,25 @@ Run:
 
 ```sh
 npm run test:php-wasm-package:release
+npm run test:php-release
 ```
 
-The gate builds the package twice in separate temporary roots, compares every file, executes one build in the published PHP-Wasm host, and writes:
+The package-specific gate builds the lazy package twice in separate temporary roots, compares every file, executes one build in the published PHP-Wasm host, and writes:
 
 - `build/php-wasm-release-evidence/reproducibility.json`
 - `build/php-wasm-release-evidence/reproducibility.md`
 
 The comparison covers generated Composer sources, PHP stubs, C and Zend sources, the shared runtime, all component side modules, the compiled PHP extension, loader descriptors, capsule metadata, Binding IR, package documentation, provenance, release manifests, and SHA-256 inventories.
 
+The unified gate repeats that comparison for both loading profiles, compares the native package, runs semantic parity, and runs the two-component composition test. It writes `build/php-release-gate/release-gate.json` and `build/php-release-gate/release-gate.md`. [The unified release evidence](php-release-gate.md) records the current result.
+
 Current selected artifact sizes and hashes:
 
 | Artifact | Bytes | SHA-256 |
 |---|---:|---|
-| shared Lean runtime | 8,912,945 | `99ca4b92a22f49c3191ecefa180333e38155ac550c344d1cb16bb3894a4e1141` |
-| PHP 8.4 extension | 23,174 | `8dcef8509576d555d205146ab2bf819d9450085a5842f8b74c320e2261f0eac6` |
+| shared Lean runtime | 8,913,483 | `9277b01bae94c01e80e90632db52efab8de086093b461950051f5673a2ac4980` |
+| lazy PHP 8.4 extension | 28,489 | `7bf01a032ecd33b92edf5970acd77dcb6d9394126145a9a7faab316fca43ae24` |
+| startup PHP 8.4 extension | 25,162 | `9c8372546466e6f12b7eac2786e43aa85d115ba84ba43135b3e57aa18354616e` |
 | Alpha component | 4,658 | `707b37be0dbcd96794c815a32a94a07961a8381596623feeb19ca859c984aa7a` |
 | Beta component | 632 | `c0974acd932e10eaf93c46661aa6e62db9714377811caa8e96f5b8b854d33c05` |
 | Gamma component | 633 | `7ef7c6511cf56be2da63f580163fe4836fd521f59b03aa9499588611dcc72071` |

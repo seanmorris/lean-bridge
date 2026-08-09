@@ -37,6 +37,8 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [PHP-Wasm release package evidence](../evidence/php-wasm-release-package.md)
 - [PHP-Wasm shared runtime composition evidence](../evidence/php-wasm-shared-runtime-composition.md)
 - [Native PHP and PHP-Wasm conformance evidence](../evidence/php-transport-parity.md)
+- [PHP release gate evidence](../evidence/php-release-gate.md)
+- [PHP transport performance evidence](../evidence/php-transport-performance.md)
 - [Generated package drift gate evidence](../evidence/generated-package-gate.md)
 - [Cross-language semantic parity evidence](../evidence/cross-language-semantic-parity.md)
 - [Direct-call and native-object conformance evidence](../evidence/direct-call-conformance.md)

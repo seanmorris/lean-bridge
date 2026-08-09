@@ -118,6 +118,7 @@ mkdir -p "$AUDIT_DIR"
 llvm-ar t "$LEAN_NATIVE_ARCHIVE" > "$AUDIT_DIR/libleanrt-members.txt"
 llvm-nm --defined-only "$LEAN_NATIVE_ARCHIVE" > "$AUDIT_DIR/libleanrt-defined-symbols.txt"
 sha256sum "$LEAN_NATIVE_ARCHIVE" "$LEAN_NATIVE_INIT_ARCHIVE" > "$AUDIT_DIR/sha256.txt"
+BUILD_FACTS_TEMP="$AUDIT_DIR/build-facts.txt.$$"
 {
   printf 'lean_commit=%s\n' "$LEAN_NATIVE_COMMIT"
   printf 'config_sha256=%s\n' "$LEAN_NATIVE_CONFIG_SHA"
@@ -126,7 +127,8 @@ sha256sum "$LEAN_NATIVE_ARCHIVE" "$LEAN_NATIVE_INIT_ARCHIVE" > "$AUDIT_DIR/sha25
   printf 'tls_model=initial-exec\n'
   printf 'position_independent=true\n'
   printf 'multi_thread=true\n'
-} > "$AUDIT_DIR/build-facts.txt"
+} > "$BUILD_FACTS_TEMP"
+mv "$BUILD_FACTS_TEMP" "$AUDIT_DIR/build-facts.txt"
 
 printf 'native_runtime_archive=%s\n' "$LEAN_NATIVE_ARCHIVE"
 printf 'lean_init_archive=%s\n' "$LEAN_NATIVE_INIT_ARCHIVE"

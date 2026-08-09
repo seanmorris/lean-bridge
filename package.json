@@ -21,6 +21,7 @@
     "build:link-spike": "bash scripts/build-link-spike.sh",
     "build:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc",
     "benchmark:poc": "node scripts/benchmark-native-api.mjs",
+    "benchmark:php": "node scripts/benchmark-php-transports.mjs",
     "binding-ir": "node scripts/binding-ir.mjs",
     "binding-packages": "node scripts/binding-package-gate.mjs check poc/lean-link-spike/bindings/alpha.binding-ir.json poc/lean-link-spike/bindings/generated-package-gate.json",
     "binding-parity": "node scripts/binding-semantic-parity.mjs poc/lean-link-spike/bindings/alpha.binding-ir.json",
@@ -35,6 +36,7 @@
     "test:php-wasm-package:release": "node scripts/check-php-wasm-package-release.mjs",
     "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
     "test:php-transport-parity": "node scripts/check-php-transport-parity.mjs",
+    "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
