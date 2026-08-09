@@ -1,3 +1,5 @@
+import { PendingOperationRegistry } from "../../src/runtime/pending-operations.mjs";
+
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
 const frameErrorCodes = Object.freeze([
@@ -112,6 +114,9 @@ class RuntimeRegistry {
     this.classes = new Map();
     this.hostSlots = [];
     this.hostObjectTokens = new WeakMap();
+    this.pendingOperations = new PendingOperationRegistry({
+      capacity: options.pendingOperationCapacity ?? 1024,
+    });
     this.pendingFinalizations = [];
     this.createWeakReference =
       options.createWeakReference ?? (target => new WeakRef(target));
@@ -586,12 +591,14 @@ class RuntimeRegistry {
         leasesReleased: this.counters.hostLeasesReleased,
       }),
       pendingFinalizations: this.pendingFinalizations.length,
+      pendingOperations: this.pendingOperations.snapshot(),
     });
   }
 
   shutdown() {
     if (this.state === "closed") return true;
     this.drainFinalizers();
+    this.pendingOperations.shutdown();
     for (const [entryKey, entry] of [...this.entries]) {
       const wrapper = entry.reference.deref();
       this.releaseEntry({ ...entry, entryKey }, wrapper, "shutdown");
@@ -624,6 +631,14 @@ export const __bridgeTest = Object.freeze({
     getRuntimeContext(module).borrowHostValue(token, kind, operation),
   releaseHostValue: (module, token, kind) =>
     getRuntimeContext(module).releaseHostValue(token, kind),
+  beginPendingOperation: (module, plan, options) =>
+    getRuntimeContext(module).pendingOperations.begin(plan, options),
+  resolvePendingOperation: (module, token, value) =>
+    getRuntimeContext(module).pendingOperations.resolve(token, value),
+  rejectPendingOperation: (module, token, error) =>
+    getRuntimeContext(module).pendingOperations.reject(token, error),
+  cancelPendingOperation: (module, token, reason) =>
+    getRuntimeContext(module).pendingOperations.cancel(token, reason),
   diagnostics: module => getRuntimeContext(module).snapshot(),
 });
 
@@ -1047,6 +1062,103 @@ const projectValueFrameFunction = (
   };
 };
 
+const validatePendingArguments = (descriptor, binding, declaration, args) => {
+  const required = declaration.parameters.filter(parameter => !parameter.optional).length;
+  if (args.length < required || args.length > declaration.parameters.length) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-argument-count",
+      `${binding.name} expects from ${required} through ${declaration.parameters.length} arguments`,
+      { required, maximum: declaration.parameters.length, actual: args.length },
+    );
+  }
+  const typeMap = bindingIrTypeMap(descriptor);
+  for (let index = 0; index < args.length; index += 1) {
+    const parameter = declaration.parameters[index];
+    validateCopiedValue(
+      descriptor,
+      binding,
+      parameter.type,
+      args[index],
+      parameter.name,
+      typeMap,
+    );
+  }
+};
+
+const projectPendingFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const plan = binding.adapter;
+  if (
+    plan.abiVersion !== 1 ||
+    plan.delivery !== "promise" ||
+    plan.settlement?.cardinality !== "exactly-once" ||
+    plan.execution?.suspension !== "stackless"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported pending-operation plan`,
+      { abiVersion: plan.abiVersion },
+    );
+  }
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (!declaration || declaration.resultMode !== "promise") {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "missing-binding-contract",
+      `${binding.name} has no Promise declaration for its pending adapter`,
+    );
+  }
+
+  return async (...args) => {
+    context.beforeCall(descriptor, binding);
+    validatePendingArguments(descriptor, binding, declaration, args);
+    initializeBinding(module, descriptor, binding);
+    const pending = context.pendingOperations.begin(plan);
+    try {
+      const accepted = implementation(pending.token, ...args);
+      if (accepted !== 1 && accepted !== true) {
+        context.pendingOperations.reject(
+          pending.token,
+          bridgeError(
+            descriptor,
+            binding,
+            "pending-start-rejected",
+            `${binding.name} did not accept the pending operation`,
+            { token: pending.token, accepted },
+          ),
+        );
+      }
+    } catch (error) {
+      try {
+        context.pendingOperations.reject(pending.token, error);
+      } catch (settlementError) {
+        if (settlementError.code !== "stale-pending-operation") throw settlementError;
+      }
+    }
+    return pending.promise.then(result => {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        declaration.result.type,
+        result,
+        "result",
+        bindingIrTypeMap(descriptor),
+      );
+      return result;
+    });
+  };
+};
+
 const projectFunction = (module, descriptor, binding, context) => {
   const implementation = resolvePrivateFunction(
     module,
@@ -1062,6 +1174,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "value-frame-v1") {
     return projectValueFrameFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "pending-operation-v1") {
+    return projectPendingFunction(
       module,
       descriptor,
       binding,

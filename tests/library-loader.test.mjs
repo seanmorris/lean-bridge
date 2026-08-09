@@ -2,14 +2,26 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
-import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
+import { alpha as leanAlpha } from "../poc/lean-link-spike/descriptors.mjs";
+import {
+  __bridgeTest,
+  createLibraryLoader,
+} from "../poc/link-spike/loader.mjs";
+import { compileJavaScriptProjection } from "../src/backends/javascript/projection.mjs";
 
-const descriptor = ({ id, dependencies = [], bindings = [], integrity }) =>
+const descriptor = ({
+  id,
+  dependencies = [],
+  bindings = [],
+  bindingIr,
+  integrity,
+}) =>
   Object.freeze({
     id: `poc/${id}@0.0.0`,
     buildHash: `${id}-hash`,
     dependencies,
     integrity,
+    bindingIr,
     bindings: Object.freeze(bindings.map(binding => Object.freeze(binding))),
     sideModule: new URL(`file:///artifacts/${id}.so.wasm`),
   });
@@ -203,4 +215,94 @@ test("artifact integrity is checked before a side module is linked", async () =>
     /library artifact integrity mismatch.*restore the locked artifact/,
   );
   assert.deepEqual(events, ["verified", "linked", "verified"]);
+});
+
+test("generated Promise bindings use the shared pending-operation domain", async () => {
+  const bindingIr = structuredClone(leanAlpha.bindingIr);
+  const declaration = bindingIr.declarations.find(
+    item => item.id === "lean:Alpha.roundTrip",
+  );
+  declaration.resultMode = "promise";
+  declaration.effects.push("async");
+  const privateAbi = structuredClone(leanAlpha.privateAbi);
+  privateAbi.declarations[declaration.id].adapter = {
+    kind: "pending-operation-v1",
+    abiVersion: 1,
+  };
+  const projection = compileJavaScriptProjection(bindingIr, privateAbi);
+  const binding = projection.bindings.find(item => item.declarationId === declaration.id);
+  let behavior = "resolve";
+  let module;
+  module = {
+    _bridge_lean_runtime_init: () => 1,
+    _bridge_lean_alpha_round_trip: (token, payload) => {
+      if (behavior === "reject-start") return 0;
+      queueMicrotask(() =>
+        __bridgeTest.resolvePendingOperation(
+          module,
+          token,
+          behavior === "invalid-result"
+            ? { ...payload, count: -1 }
+            : {
+                ...payload,
+                enabled: !payload.enabled,
+                count: payload.count + 1,
+              },
+        ),
+      );
+      return 1;
+    },
+    async loadDynamicLibrary() {},
+  };
+  const library = descriptor({
+    id: "async-alpha",
+    bindingIr,
+    bindings: [binding],
+  });
+  const libraries = createLibraryLoader(module);
+  const api = await libraries.load(library);
+
+  const result = await api.roundTrip({
+    enabled: true,
+    count: 41,
+    label: "pending",
+    bytes: new Uint8Array([0, 255]),
+    values: [1, 2, 3],
+  });
+  assert.deepEqual(result, {
+    enabled: false,
+    count: 42,
+    label: "pending",
+    bytes: new Uint8Array([0, 255]),
+    values: [1, 2, 3],
+  });
+  assert.equal(libraries.diagnostics().pendingOperations.resolved, 1);
+  assert.equal(libraries.diagnostics().pendingOperations.live, 0);
+
+  behavior = "reject-start";
+  await assert.rejects(
+    api.roundTrip({
+      enabled: true,
+      count: 0,
+      label: "rejected",
+      bytes: new Uint8Array(),
+      values: [],
+    }),
+    error => error.code === "pending-start-rejected",
+  );
+  assert.equal(libraries.diagnostics().pendingOperations.rejected, 1);
+
+  behavior = "invalid-result";
+  await assert.rejects(
+    api.roundTrip({
+      enabled: true,
+      count: 0,
+      label: "invalid",
+      bytes: new Uint8Array(),
+      values: [],
+    }),
+    error => error.code === "invalid-argument",
+  );
+  assert.equal(libraries.diagnostics().pendingOperations.resolved, 2);
+  assert.equal(libraries.diagnostics().pendingOperations.live, 0);
 });

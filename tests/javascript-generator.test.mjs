@@ -134,6 +134,48 @@ test("generated JavaScript executes through direct functions and classes", async
   );
 });
 
+test("Promise declarations generate an ordinary async function", async () => {
+  const ir = clone(alpha.bindingIr);
+  const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+  declaration.resultMode = "promise";
+  declaration.effects.push("async");
+  const files = generateJavaScriptPackage(ir);
+  assert.match(files["index.mjs"], /export async function roundTrip\(payload\)/);
+  assert.match(
+    files["index.d.ts"],
+    /roundTrip\(payload: Payload\): Promise<Payload>/,
+  );
+
+  await withGeneratedPackage(
+    {
+      ...files,
+      "internal/runtime.mjs": runtimeStub.replace(
+        "  call(declaration, args) {",
+        "  async call(declaration, args) {",
+      ),
+    },
+    async directory => {
+      const module = await import(
+        `${pathToFileURL(join(directory, "index.mjs")).href}?test=promise`
+      );
+      const output = await module.roundTrip({
+        enabled: false,
+        count: 8,
+        label: "async",
+        bytes: new Uint8Array([1]),
+        values: [2],
+      });
+      assert.deepEqual(output, {
+        enabled: true,
+        count: 9,
+        label: "async",
+        bytes: new Uint8Array([1]),
+        values: [2],
+      });
+    },
+  );
+});
+
 test("generated validators reject malformed copied values before dispatch", async () => {
   const files = generateJavaScriptPackage(alpha.bindingIr);
   await withGeneratedPackage(

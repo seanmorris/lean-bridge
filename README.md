@@ -268,11 +268,11 @@ The architecture-testing POC has established:
 - a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 90 passing behavioral and structural tests;
+- 104 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, and resource lifecycle plan from the canonical binding IR. The loader follows generated constructor leases, receiver borrows, canonical result projection, explicit disposal, fallback finalization, and runtime cleanup policy. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, and pending-operation plan from the canonical binding IR. The shared runtime enforces exactly-once pending settlement, reverse cleanup, cancellation, late-settlement rejection, capacity, and shutdown. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) separates this passing state-machine result from the remaining Wasm Promise and callback adapter work. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

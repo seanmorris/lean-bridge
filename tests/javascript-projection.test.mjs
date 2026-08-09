@@ -81,10 +81,30 @@ test("the POC projector rejects semantic modes it cannot preserve", () => {
   const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
   declaration.resultMode = "promise";
   declaration.effects.push("async");
+  const abi = clone(alpha.privateAbi);
+  abi.declarations["lean:Alpha.roundTrip"].adapter = null;
   projectionError(
-    () => compileJavaScriptProjection(ir, alpha.privateAbi),
-    "unsupported-result-mode",
+    () => compileJavaScriptProjection(ir, abi),
+    "missing-pending-adapter",
   );
+});
+
+test("Promise declarations receive a generated pending-operation plan", () => {
+  const ir = clone(alpha.bindingIr);
+  const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+  declaration.resultMode = "promise";
+  declaration.effects.push("async");
+  const abi = clone(alpha.privateAbi);
+  abi.declarations["lean:Alpha.roundTrip"].adapter = {
+    kind: "pending-operation-v1",
+    abiVersion: 1,
+  };
+
+  const projection = compileJavaScriptProjection(ir, abi);
+  const binding = projection.bindings.find(item => item.name === "roundTrip");
+  assert.equal(binding.adapter.kind, "pending-operation-v1");
+  assert.equal(binding.adapter.declarationId, declaration.id);
+  assert.equal(binding.adapter.settlement.cardinality, "exactly-once");
 });
 
 test("class ABI adapters cannot be accepted and then ignored", () => {

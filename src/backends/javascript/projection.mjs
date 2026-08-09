@@ -8,6 +8,10 @@ import {
   ResourceLifecycleGenerationError,
   compileResourceLifecycleV1,
 } from "../../abi/resource-lifecycle.mjs";
+import {
+  PendingOperationGenerationError,
+  compilePendingOperationV1,
+} from "../../abi/pending-operation.mjs";
 
 export class JavaScriptProjectionError extends Error {
   constructor(code, message, details = {}) {
@@ -55,33 +59,53 @@ const nonemptyString = (value, path) => {
 
 const validateAdapter = (adapter, path) => {
   if (adapter === null) return;
-  exactKeys(
-    adapter,
-    ["kind", "abiVersion", "maxCopyBytes", "maxArrayLength"],
-    path,
-  );
-  if (adapter.kind !== "value-frame-v1" || adapter.abiVersion !== 1) {
-    fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
+  if (adapter.kind === "value-frame-v1") {
+    exactKeys(
+      adapter,
+      ["kind", "abiVersion", "maxCopyBytes", "maxArrayLength"],
       path,
-      kind: adapter.kind,
-      abiVersion: adapter.abiVersion,
-    });
-  }
-  for (const key of ["maxCopyBytes", "maxArrayLength"]) {
-    if (!Number.isSafeInteger(adapter[key]) || adapter[key] < 1) {
-      fail("invalid-private-abi", `${path}.${key} must be a positive integer`, {
-        path: `${path}.${key}`,
+    );
+    if (adapter.abiVersion !== 1) {
+      fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
+        path,
+        kind: adapter.kind,
+        abiVersion: adapter.abiVersion,
       });
     }
+    for (const key of ["maxCopyBytes", "maxArrayLength"]) {
+      if (!Number.isSafeInteger(adapter[key]) || adapter[key] < 1) {
+        fail("invalid-private-abi", `${path}.${key} must be a positive integer`, {
+          path: `${path}.${key}`,
+        });
+      }
+    }
+    return;
   }
+  if (adapter.kind === "pending-operation-v1") {
+    exactKeys(adapter, ["kind", "abiVersion"], path);
+    if (adapter.abiVersion === 1) return;
+  }
+  fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
+    path,
+    kind: adapter.kind,
+    abiVersion: adapter.abiVersion,
+  });
 };
 
 const compileAdapter = (ir, declaration, adapter) => {
   if (adapter === null) return undefined;
   try {
-    return compileValueFrameV1(ir, declaration.id, adapter);
+    if (adapter.kind === "value-frame-v1") {
+      return compileValueFrameV1(ir, declaration.id, adapter);
+    }
+    return compilePendingOperationV1(ir, declaration.id);
   } catch (error) {
-    if (!(error instanceof ValueFrameGenerationError)) throw error;
+    if (
+      !(error instanceof ValueFrameGenerationError) &&
+      !(error instanceof PendingOperationGenerationError)
+    ) {
+      throw error;
+    }
     fail(error.code, error.message, error.details);
   }
 };
@@ -269,10 +293,10 @@ export const compileJavaScriptProjection = (ir, abi) => {
       });
     }
     addPublicName(declaration.name, declaration.id);
-    if (declaration.resultMode !== "value") {
+    if (!new Set(["value", "promise"]).has(declaration.resultMode)) {
       fail(
         "unsupported-result-mode",
-        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value functions`,
+        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value and Promise functions`,
         { declaration: declaration.id, resultMode: declaration.resultMode },
       );
     }
@@ -289,6 +313,29 @@ export const compileJavaScriptProjection = (ir, abi) => {
     const entry = declarationAbi(abi, declaration);
     consumedDeclarations.add(declaration.id);
     const adapter = compileAdapter(ir, declaration, entry.adapter);
+    if (declaration.resultMode === "promise") {
+      if (adapter?.kind !== "pending-operation-v1") {
+        fail(
+          "missing-pending-adapter",
+          `${declaration.id} requires a pending-operation-v1 adapter`,
+          { declaration: declaration.id },
+        );
+      }
+      const unsupportedCapture = adapter.captures.find(
+        capture => capture.representation !== "copied",
+      );
+      if (unsupportedCapture || adapter.result.representation !== "copied") {
+        fail(
+          "unsupported-pending-resource",
+          `${declaration.id} requires pending resource retention that the JavaScript POC has not connected`,
+          {
+            declaration: declaration.id,
+            capture: unsupportedCapture?.name,
+            resultRepresentation: adapter.result.representation,
+          },
+        );
+      }
+    }
     bindings.push(
       Object.freeze({
         kind: "function",
