@@ -1648,6 +1648,184 @@ const projectErrorEnvelopeFunction = (
   };
 };
 
+const projectIteratorFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const plan = binding.adapter;
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (
+    plan.kind !== "iterator-v1" ||
+    plan.abiVersion !== 1 ||
+    plan.delivery !== "iterator" ||
+    plan.cursor?.handle?.side !== "lean" ||
+    !Number.isInteger(plan.cursor.handle.kind) ||
+    plan.cursor.ownership !== "lease" ||
+    plan.cursor.lifetime?.scope !== "explicit" ||
+    plan.cursor.disposal?.hostProtocol !== "return" ||
+    plan.cursor.disposal?.fallback !== "queued-finalizer" ||
+    plan.step?.header === undefined ||
+    plan.step?.states === undefined ||
+    !declaration ||
+    declaration.resultMode !== "iterator"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported iterator plan`,
+      { abiVersion: plan.abiVersion },
+    );
+  }
+  const nextNative = resolvePrivateFunction(module, descriptor, plan.step.symbol);
+  const release = resolvePrivateFunction(
+    module,
+    descriptor,
+    plan.cursor.disposal.symbol,
+  );
+  const allocate = resolvePrivateFunction(module, descriptor, "_malloc");
+  const free = resolvePrivateFunction(module, descriptor, "_free");
+  const cursorBinding = Object.freeze({
+    name: `${binding.name}Iterator`,
+    typeId: plan.cursor.typeId,
+    lifecycle: Object.freeze({
+      handle: plan.cursor.handle,
+      disposal: plan.cursor.disposal,
+    }),
+  });
+
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    validatePendingArguments(descriptor, binding, declaration, args);
+    initializeBinding(module, descriptor, binding);
+    const token = implementation(...args);
+    let closed = false;
+    let iterator;
+    const close = () => {
+      if (closed) return false;
+      closed = true;
+      return context.dispose(iterator, descriptor, cursorBinding);
+    };
+
+    class ProjectedIterator {
+      next() {
+        if (closed) return Object.freeze({ done: true, value: undefined });
+        context.beforeCall(descriptor, binding);
+        const state = context.requireReceiver(iterator, descriptor, cursorBinding);
+        const pointer = allocate(plan.step.byteSize);
+        if (!pointer) {
+          throw bridgeError(
+            descriptor,
+            binding,
+            "allocation-failed",
+            `${binding.name} could not allocate its iterator step`,
+            { byteSize: plan.step.byteSize },
+          );
+        }
+        try {
+          const bytes = new Uint8Array(
+            module.HEAP8.buffer,
+            pointer,
+            plan.step.byteSize,
+          );
+          bytes.fill(0);
+          let view = new DataView(module.HEAP8.buffer);
+          view.setUint32(
+            pointer + plan.step.header.abiVersion,
+            plan.abiVersion,
+            true,
+          );
+          view.setUint32(
+            pointer + plan.step.header.byteSize,
+            plan.step.byteSize,
+            true,
+          );
+          const status = nextNative(state.token, pointer) >>> 0;
+          view = new DataView(module.HEAP8.buffer);
+          const actualVersion = view.getUint32(
+            pointer + plan.step.header.abiVersion,
+            true,
+          );
+          const actualBytes = view.getUint32(
+            pointer + plan.step.header.byteSize,
+            true,
+          );
+          const stepState = view.getUint32(pointer + plan.step.header.state, true);
+          const detail = view.getUint32(pointer + plan.step.header.detail, true);
+          if (
+            status !== 0 ||
+            actualVersion !== plan.abiVersion ||
+            actualBytes !== plan.step.byteSize
+          ) {
+            close();
+            if (declaration.failure.unexpected === "poison-runtime") {
+              context.poison(
+                descriptor,
+                binding,
+                `${binding.name} returned a corrupt iterator step`,
+                { status, actualVersion, actualBytes, stepState, detail },
+              );
+            }
+            throw bridgeError(
+              descriptor,
+              binding,
+              "unexpected-native-failure",
+              `${binding.name} returned a corrupt iterator step`,
+              { status, actualVersion, actualBytes, stepState, detail },
+            );
+          }
+          if (stepState === plan.step.states.done) {
+            close();
+            return Object.freeze({ done: true, value: undefined });
+          }
+          if (stepState !== plan.step.states.value) {
+            close();
+            context.poison(
+              descriptor,
+              binding,
+              `${binding.name} returned an unknown iterator state`,
+              { stepState, detail },
+            );
+          }
+          const value = readEnvelopeScalar(view, pointer, plan.step.value);
+          validateCopiedValue(
+            descriptor,
+            binding,
+            declaration.result.type,
+            value,
+            "item",
+            bindingIrTypeMap(descriptor),
+          );
+          return Object.freeze({ done: false, value });
+        } finally {
+          free(pointer);
+        }
+      }
+
+      return() {
+        close();
+        return Object.freeze({ done: true, value: undefined });
+      }
+
+      throw(error) {
+        close();
+        throw error;
+      }
+
+      [Symbol.iterator]() {
+        return this;
+      }
+    }
+
+    iterator = Object.freeze(new ProjectedIterator());
+    context.attach(iterator, descriptor, cursorBinding, token, release);
+    return iterator;
+  };
+};
+
 const validatePendingArguments = (descriptor, binding, declaration, args) => {
   const required = declaration.parameters.filter(parameter => !parameter.optional).length;
   if (args.length < required || args.length > declaration.parameters.length) {
@@ -1993,6 +2171,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "error-envelope-v1") {
     return projectErrorEnvelopeFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "iterator-v1") {
+    return projectIteratorFunction(
       module,
       descriptor,
       binding,

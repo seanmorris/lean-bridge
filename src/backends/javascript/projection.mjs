@@ -20,6 +20,10 @@ import {
   ErrorEnvelopeGenerationError,
   compileErrorEnvelopeV1,
 } from "../../abi/error-envelope.mjs";
+import {
+  IteratorGenerationError,
+  compileIteratorV1,
+} from "../../abi/iterator.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
@@ -132,6 +136,24 @@ const validateAdapter = (adapter, path) => {
       return;
     }
   }
+  if (adapter.kind === "iterator-v1") {
+    exactKeys(
+      adapter,
+      ["kind", "abiVersion", "side", "handleKind", "next", "dispose"],
+      path,
+    );
+    if (
+      adapter.abiVersion === 1 &&
+      adapter.side === "lean" &&
+      Number.isSafeInteger(adapter.handleKind) &&
+      adapter.handleKind >= 1 &&
+      adapter.handleKind <= 0x7f
+    ) {
+      nonemptyString(adapter.next, `${path}.next`);
+      nonemptyString(adapter.dispose, `${path}.dispose`);
+      return;
+    }
+  }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
     path,
     kind: adapter.kind,
@@ -227,6 +249,9 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
     if (adapter.kind === "error-envelope-v1") {
       return compileErrorEnvelopeV1(ir, declaration.id, adapter);
     }
+    if (adapter.kind === "iterator-v1") {
+      return compileIteratorV1(ir, declaration.id, adapter);
+    }
     return Object.freeze({
       ...compilePendingOperationV1(ir, declaration.id),
       cancelSymbol: adapter.cancel,
@@ -236,7 +261,8 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
       !(error instanceof ValueFrameGenerationError) &&
       !(error instanceof PendingOperationGenerationError) &&
       !(error instanceof CallbackSignatureGenerationError) &&
-      !(error instanceof ErrorEnvelopeGenerationError)
+      !(error instanceof ErrorEnvelopeGenerationError) &&
+      !(error instanceof IteratorGenerationError)
     ) {
       throw error;
     }
@@ -319,6 +345,18 @@ const validatePrivateAbi = (ir, abi) => {
     nonemptyString(entry.call, `abi.callbacks.${id}.call`);
     nonemptyString(entry.dispose, `abi.callbacks.${id}.dispose`);
     const tag = `${entry.side}:${entry.kind}`;
+    if (resourceTags.has(tag)) {
+      fail(
+        "duplicate-resource-tag",
+        `${id} and ${resourceTags.get(tag)} use private identity tag ${tag}`,
+        { tag, resources: [resourceTags.get(tag), id] },
+      );
+    }
+    resourceTags.set(tag, id);
+  }
+  for (const [id, entry] of Object.entries(abi.declarations)) {
+    if (entry.adapter?.kind !== "iterator-v1") continue;
+    const tag = `${entry.adapter.side}:${entry.adapter.handleKind}`;
     if (resourceTags.has(tag)) {
       fail(
         "duplicate-resource-tag",
@@ -467,10 +505,10 @@ export const compileJavaScriptProjection = (ir, abi) => {
       });
     }
     addPublicName(declaration.name, declaration.id);
-    if (!new Set(["value", "promise"]).has(declaration.resultMode)) {
+    if (!new Set(["value", "promise", "iterator"]).has(declaration.resultMode)) {
       fail(
         "unsupported-result-mode",
-        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value and Promise functions`,
+        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value, Promise, and iterator functions`,
         { declaration: declaration.id, resultMode: declaration.resultMode },
       );
     }
@@ -533,6 +571,16 @@ export const compileJavaScriptProjection = (ir, abi) => {
           },
         );
       }
+    }
+    if (
+      declaration.resultMode === "iterator" &&
+      adapter?.kind !== "iterator-v1"
+    ) {
+      fail(
+        "missing-iterator-adapter",
+        `${declaration.id} requires an iterator-v1 adapter`,
+        { declaration: declaration.id },
+      );
     }
     bindings.push(
       Object.freeze({

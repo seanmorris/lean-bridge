@@ -1,5 +1,6 @@
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
+import { supportsIteratorValue } from "../../abi/iterator.mjs";
 
 const gap = (code, message, details = {}) =>
   Object.freeze({ code, message, details: Object.freeze({ ...details }) });
@@ -163,7 +164,9 @@ export const analyzeJavaScriptCoverage = ir => {
       );
     }
     const supportedModes =
-      declaration.kind === "function" ? new Set(["value", "promise"]) : new Set(["value"]);
+      declaration.kind === "function"
+        ? new Set(["value", "promise", "iterator"])
+        : new Set(["value"]);
     if (!supportedModes.has(declaration.resultMode)) {
       report(
         "unsupported-result-mode",
@@ -197,6 +200,16 @@ export const analyzeJavaScriptCoverage = ir => {
       } else {
         inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`);
       }
+      if (
+        declaration.resultMode === "iterator" &&
+        !supportsIteratorValue(parameter.type)
+      ) {
+        report(
+          "unsupported-iterator-value",
+          `${declaration.id}.${parameter.name} has no iterator scalar lowering`,
+          { declaration: declaration.id, parameter: parameter.name },
+        );
+      }
     }
 
     const resultType = typeMap.get(namedTypeId(declaration.result.type));
@@ -220,6 +233,16 @@ export const analyzeJavaScriptCoverage = ir => {
       });
     } else {
       inspectTypeRef(declaration.result.type, `${declaration.id}.result`);
+    }
+    if (
+      declaration.resultMode === "iterator" &&
+      !supportsIteratorValue(declaration.result.type)
+    ) {
+      report(
+        "unsupported-iterator-value",
+        `${declaration.id}.result has no iterator scalar lowering`,
+        { declaration: declaration.id },
+      );
     }
     inspectFailure(declaration.failure, `${declaration.id}.failure`, {
       errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value",

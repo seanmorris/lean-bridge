@@ -27,10 +27,10 @@ test("the reviewed Alpha surface has complete JavaScript lowering coverage", () 
   assert.deepEqual(coverage.gaps, []);
 });
 
-test("iterator delivery fails before a package can claim support", () => {
+test("iterator delivery accepts scalar plans and rejects values without pull frames", () => {
   const iterator = clone(alpha.bindingIr);
   roundTrip(iterator).resultMode = "iterator";
-  expectGap(iterator, "unsupported-result-mode");
+  expectGap(iterator, "unsupported-iterator-value");
 
   const asyncIterator = clone(alpha.bindingIr);
   roundTrip(asyncIterator).resultMode = "async-iterator";
