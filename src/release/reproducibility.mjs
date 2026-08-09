@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
-import { readFile, readdir } from "node:fs/promises";
-import { basename, join, relative } from "node:path";
+import { lstat, readFile, readdir } from "node:fs/promises";
+import { basename, extname, join, relative } from "node:path";
+
+import { canonicalJson } from "../capsule/node.mjs";
 
 const sha256 = source => createHash("sha256").update(source).digest("hex");
 
@@ -44,6 +46,128 @@ export const compareReleaseTrees = (left, right) => {
   }
   return Object.freeze({ artifacts, differences });
 };
+
+const portablePath = path => path.replaceAll("\\", "/");
+
+export const collectReleaseInventory = async (directory, { prefix = "" } = {}) => {
+  const files = new Map();
+  const visit = async current => {
+    const entries = await readdir(current, { withFileTypes: true });
+    entries.sort((left, right) => left.name.localeCompare(right.name));
+    for (const entry of entries) {
+      const absolute = join(current, entry.name);
+      const path = portablePath(join(prefix, relative(directory, absolute)));
+      if (entry.isDirectory()) {
+        await visit(absolute);
+        continue;
+      }
+      if (!entry.isFile()) fail("unsupported-release-entry", `release inventory only accepts regular files: ${path}`);
+      const [bytes, facts] = await Promise.all([readFile(absolute), lstat(absolute)]);
+      files.set(path, Object.freeze({ bytes, mode: facts.mode & 0o777 }));
+    }
+  };
+  await visit(directory);
+  return files;
+};
+
+const textExtensions = new Set([
+  ".c", ".cc", ".cpp", ".h", ".hpp", ".html", ".js", ".json", ".lean", ".md",
+  ".mjs", ".py", ".pyi", ".rs", ".sh", ".toml", ".ts", ".tsx", ".txt", ".wit", ".xml", ".yaml", ".yml",
+]);
+
+const textPreview = (path, left, right, limit) => {
+  if (!textExtensions.has(extname(path).toLowerCase())) return null;
+  if (left.includes(0) || right.includes(0)) return null;
+  const leftText = left.toString("utf8");
+  const rightText = right.toString("utf8");
+  if (Buffer.byteLength(leftText) !== left.length || Buffer.byteLength(rightText) !== right.length) return null;
+  const leftLines = leftText.split("\n");
+  const rightLines = rightText.split("\n");
+  const count = Math.max(leftLines.length, rightLines.length);
+  let line = 0;
+  while (line < count && leftLines[line] === rightLines[line]) line += 1;
+  const start = Math.max(0, line - 1);
+  const end = Math.min(count, line + 3);
+  const clip = value => value.length <= limit ? value : `${value.slice(0, limit)}\n[preview truncated]`;
+  return Object.freeze({
+    kind: extname(path).toLowerCase() === ".json" ? "json" : "text",
+    firstDifferentLine: line + 1,
+    left: clip(leftLines.slice(start, end).join("\n")),
+    right: clip(rightLines.slice(start, end).join("\n")),
+  });
+};
+
+const entropyLeads = ({ path, left, right, preview }) => {
+  const leads = new Set();
+  const text = preview === null ? "" : `${preview.left}\n${preview.right}`;
+  if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(text)) leads.add("timestamp");
+  if (/(?:\/tmp\/|\/nix\/store\/|\/workspace\/|[A-Za-z]:\\\\)/.test(text)) leads.add("absolute-path");
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) leads.add("random-identifier");
+  if (/\b(?:LANG|LC_ALL|LC_CTYPE|TZ)=|\blocale\b/i.test(text)) leads.add("locale-or-timezone");
+  if (/\b(?:latest|main|master|HEAD)\b|https?:\/\//.test(text)) leads.add("possibly-unpinned-input");
+  if (/\b(?:process\.env|environment|HOSTNAME|USER)=?/i.test(text)) leads.add("environment-derived-value");
+  if (/\.(?:tgz|tar|gz|zip|whl|crate)$/i.test(path)) leads.add("archive-or-compression-metadata");
+  if (/\.(?:wasm|so|o|a|dll|dylib)$/i.test(path)) leads.add("compiler-build-id-or-toolchain");
+  if (path.endsWith(".json") && left !== null && right !== null) {
+    try {
+      if (canonicalJson(JSON.parse(left.toString("utf8"))) === canonicalJson(JSON.parse(right.toString("utf8")))) {
+        leads.add("serialization-order");
+      }
+    } catch {}
+  }
+  return [...leads].sort();
+};
+
+const record = value => value === null ? null : Object.freeze({
+  bytes: value.bytes.length,
+  mode: value.mode,
+  sha256: sha256(value.bytes),
+});
+
+export const compareReleaseInventories = (left, right, { previewBytes = 4096 } = {}) => {
+  const paths = [...new Set([...left.keys(), ...right.keys()])].sort();
+  const artifacts = [];
+  const differences = [];
+  for (const path of paths) {
+    const first = left.get(path) ?? null;
+    const second = right.get(path) ?? null;
+    const leftRecord = record(first);
+    const rightRecord = record(second);
+    if (
+      leftRecord !== null && rightRecord !== null &&
+      leftRecord.sha256 === rightRecord.sha256 && leftRecord.mode === rightRecord.mode
+    ) {
+      artifacts.push(Object.freeze({ path, ...leftRecord }));
+      continue;
+    }
+    const kind = first === null
+      ? "missing-from-build-a"
+      : second === null
+        ? "missing-from-build-b"
+        : leftRecord.mode !== rightRecord.mode && leftRecord.sha256 === rightRecord.sha256
+          ? "mode"
+          : "content";
+    const preview = first !== null && second !== null
+      ? textPreview(path, first.bytes, second.bytes, previewBytes)
+      : null;
+    differences.push(Object.freeze({
+      path,
+      kind,
+      buildA: leftRecord,
+      buildB: rightRecord,
+      preview,
+      likelyEntropyCategories: entropyLeads({
+        path,
+        left: first?.bytes ?? null,
+        right: second?.bytes ?? null,
+        preview,
+      }),
+    }));
+  }
+  return Object.freeze({ artifacts: Object.freeze(artifacts), differences: Object.freeze(differences) });
+};
+
+export const hashReleaseInventory = artifacts => sha256(canonicalJson(artifacts));
 
 export const classifyReleasePath = path => {
   const name = basename(path);

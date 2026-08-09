@@ -35,6 +35,7 @@ const optionDefinitions = Object.freeze({
   "--help": Object.freeze({ name: "help", value: false, commands }),
   "--output": Object.freeze({ name: "output", value: true, commands: new Set(["build", "publish"]) }),
   "--bundle": Object.freeze({ name: "bundle", value: true, commands: new Set(["publish"]) }),
+  "--authorization": Object.freeze({ name: "authorization", value: true, commands: new Set(["publish"]) }),
   "--dry-run": Object.freeze({ name: "dryRun", value: false, commands: new Set(["publish"]) }),
 });
 
@@ -56,9 +57,10 @@ Build options:
   --output <path>       Local build output
 
 Publish options:
-  --bundle <path>       Existing canonical release bundle
-  --output <path>       Local rehearsal or publication output
-  --dry-run             Run every local gate without registry writes
+  --bundle <path>       Authorized candidate for a future external publish
+  --authorization <path> Reproducibility gate directory for that candidate
+  --output <path>       Local gate evidence or publication output
+  --dry-run             Build twice, compare, and authorize without registry writes
 `;
 
 export const parseCliArguments = (argv, { cwd = process.cwd() } = {}) => {
@@ -78,6 +80,7 @@ export const parseCliArguments = (argv, { cwd = process.cwd() } = {}) => {
     help: false,
     output: null,
     bundle: null,
+    authorization: null,
     dryRun: false,
   };
   const seen = new Set();
@@ -108,6 +111,7 @@ export const parseCliArguments = (argv, { cwd = process.cwd() } = {}) => {
     project: resolve(cwd, parsed.project),
     output: parsed.output === null ? null : resolve(cwd, parsed.output),
     bundle: parsed.bundle === null ? null : resolve(cwd, parsed.bundle),
+    authorization: parsed.authorization === null ? null : resolve(cwd, parsed.authorization),
     format: parsed.format,
     interactive: parsed.interactive,
   });

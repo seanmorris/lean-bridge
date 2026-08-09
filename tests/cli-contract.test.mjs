@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { promisify } from "node:util";
 
-import { cliHandlers } from "../src/cli/commands.mjs";
+import { cliHandlers, createCliHandlers } from "../src/cli/commands.mjs";
 import {
   CliContractError,
   diagnostic,
@@ -14,10 +12,8 @@ import {
   validateCliResult,
 } from "../src/cli/contract.mjs";
 import { runCli } from "../src/cli/run.mjs";
-import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
 const execute = promisify(execFile);
-const revision = "40a377af093f20b80ca883f18ae61727325fa86c";
 
 test("CLI parsing is noninteractive by default and keeps command options closed", () => {
   assert.deepEqual(parseCliArguments(["analyze"], { cwd: "/workspace" }), {
@@ -27,18 +23,20 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     project: "/workspace",
     output: null,
     bundle: null,
+    authorization: null,
     format: "human",
     interactive: false,
   });
   assert.deepEqual(parseCliArguments([
-    "publish", "--dry-run", "--bundle", "bundle", "--output", "release", "--json",
+    "publish", "--dry-run", "--output", "release", "--json",
   ], { cwd: "/workspace" }), {
     kind: "command",
     command: "publish",
     mode: "dry-run",
     project: "/workspace",
     output: "/workspace/release",
-    bundle: "/workspace/bundle",
+    bundle: null,
+    authorization: null,
     format: "json",
     interactive: false,
   });
@@ -94,35 +92,64 @@ test("the executable analyzes the project and reports pending commands honestly"
   assert.equal(response.result.bindingIr.origin, "existing-validated");
   await assert.rejects(
     execute("node", ["scripts/lean-bridge.mjs", "publish"], { cwd: process.cwd() }),
-    error => error.code === 2 && /publish-implementation-pending/.test(error.stderr),
+    error => error.code === 2 && /publish-authorization-required/.test(error.stderr),
   );
 });
 
-test("publish dry-run executes the existing no-publish rehearsal through the CLI contract", async () => {
-  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-cli-contract-"));
-  try {
-    const bundle = join(scratch, "bundle");
-    await buildUniversalReleaseBundle({
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      outputRoot: bundle,
-      revision,
-      sourceDateEpoch: 1786261809,
-    });
-    const output = join(scratch, "release");
-    const outcome = await runCli({
-      argv: ["publish", "--dry-run", "--bundle", bundle, "--output", output, "--json"],
-      handlers: cliHandlers,
-    });
-    assert.equal(outcome.exitCode, 0);
-    assert.equal(outcome.response.status, "ok");
-    assert.equal(outcome.response.result.externalRegistryWrites, false);
-    assert.equal(outcome.response.result.readyPackages, 1);
-    assert.equal(outcome.response.result.omittedPackages, 4);
-    assert.equal(JSON.parse(await readFile(join(output, "publication-index.json"), "utf8")).mode, "no-publish");
-  } finally {
-    await rm(scratch, { recursive: true, force: true });
-  }
+test("publish dry-run executes the full reproducibility gate through the CLI contract", async () => {
+  const calls = [];
+  const handlers = createCliHandlers({
+    gate: async request => {
+      calls.push(request);
+      return {
+        result: "passed",
+        candidate: { id: "a".repeat(64) },
+        report: "/workspace/gate/evidence/reproducibility.json",
+        authorization: "/workspace/gate/release-authorization.json",
+        externalRegistryWrites: false,
+      };
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--dry-run", "--output", "gate", "--json"],
+    cwd: "/workspace",
+    handlers,
+  });
+  assert.equal(outcome.exitCode, 0);
+  assert.equal(outcome.response.status, "ok");
+  assert.equal(outcome.response.result.externalRegistryWrites, false);
+  assert.equal(outcome.response.result.candidate.id, "a".repeat(64));
+  assert.deepEqual(calls, [{ projectRoot: "/workspace", outputRoot: "/workspace/gate" }]);
+
+  const oldShape = await runCli({
+    argv: ["publish", "--dry-run", "--bundle", "bundle", "--output", "gate", "--json"],
+    cwd: "/workspace",
+    handlers,
+  });
+  assert.equal(oldShape.response.status, "blocked");
+  assert.equal(oldShape.response.diagnostics[0].code, "dry-run-input-required");
+});
+
+test("external publish verifies the exact candidate before reaching the deferred registry step", async () => {
+  const calls = [];
+  const handlers = createCliHandlers({
+    verifyAuthorization: async request => {
+      calls.push(request);
+      return { status: "authorized", candidate: { id: "b".repeat(64) } };
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--authorization", "gate", "--bundle", "gate/release", "--json"],
+    cwd: "/workspace",
+    handlers,
+  });
+  assert.equal(outcome.response.status, "blocked");
+  assert.equal(outcome.response.diagnostics[0].code, "publish-implementation-pending");
+  assert.equal(outcome.response.result.authorization.status, "authorized");
+  assert.deepEqual(calls, [{
+    authorizationRoot: "/workspace/gate",
+    candidateRoot: "/workspace/gate/release",
+  }]);
 });
 
 test("the published CLI result schema is closed", async () => {

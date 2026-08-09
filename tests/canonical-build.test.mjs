@@ -142,3 +142,40 @@ test("Docker orchestration returns one validated bundle and package projection c
     await rm(scratch, { recursive: true, force: true });
   }
 });
+
+test("native Nix accepts only a private store beside generated build staging", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-native-store-"));
+  const output = join(scratch, "result");
+  const privateStore = join(scratch, "private-nix-store");
+  const calls = [];
+  const runner = {
+    capture: async request => {
+      if (request.command === "docker") throw unavailable("docker");
+      if (request.args[0] === "--version") return { code: 0, stdout: "nix (Nix) 2.8.0\n", stderr: "" };
+      calls.push(request);
+      const error = new Error("stop after observing isolated store arguments");
+      error.code = "test-stop";
+      throw error;
+    },
+  };
+  try {
+    await assert.rejects(
+      buildCanonicalProject({
+        projectRoot: process.cwd(),
+        outputRoot: output,
+        runner,
+        environment: {
+          LEAN_BRIDGE_BUILD_BACKEND: "nix",
+          LEAN_BRIDGE_NIX_STORE: privateStore,
+        },
+      }),
+      error => error.code === "test-stop",
+    );
+    assert.equal(calls.length, 1);
+    assert.ok(calls[0].args.includes("--store"));
+    assert.ok(calls[0].args.includes(`local?root=${privateStore}`));
+    await assert.rejects(access(output, constants.F_OK), error => error.code === "ENOENT");
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});

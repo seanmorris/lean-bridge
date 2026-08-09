@@ -187,8 +187,17 @@ const assertOutputIsAbsent = async ({ projectRoot, outputRoot }) => {
   return output;
 };
 
-const runNativeNix = async ({ root, staging, selection, runner }) => {
-  const common = ["--extra-experimental-features", "nix-command flakes"];
+const runNativeNix = async ({ root, staging, selection, runner, environment }) => {
+  const isolatedStore = environment.LEAN_BRIDGE_NIX_STORE ?? null;
+  const stagingParent = resolve(staging, "..");
+  const storeRoot = isolatedStore === null ? null : resolve(isolatedStore);
+  if (storeRoot !== null && (storeRoot === stagingParent || !storeRoot.startsWith(`${stagingParent}${sep}`))) {
+    fail("unsafe-nix-store", "LEAN_BRIDGE_NIX_STORE must be a child of the generated build staging parent");
+  }
+  const common = [
+    "--extra-experimental-features", "nix-command flakes",
+    ...(storeRoot === null ? [] : ["--store", `local?root=${storeRoot}`]),
+  ];
   await runner.capture({
     command: selection.command,
     args: [...common, "build", "--no-link", "--no-write-lock-file", ".#universal-release-bundle"],
@@ -323,7 +332,7 @@ export const buildCanonicalProject = async ({
     if (selection.backend === "docker") {
       await runDockerNix({ root, staging, selection, builder, runner, environment });
     } else {
-      await runNativeNix({ root, staging, selection, runner });
+      await runNativeNix({ root, staging, selection, runner, environment });
     }
     const checked = await validateBuildOutput(staging);
     await rename(staging, output);

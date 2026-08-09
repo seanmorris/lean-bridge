@@ -16,7 +16,7 @@ Every command defaults to noninteractive execution and concise human output. `--
 
 `build` is operational. It chooses the pinned Debian Docker builder first, falls back to native Nix, and validates one canonical artifact and package closure before moving the result into place. [The Docker-first build evidence](docker-first-build.md) records its image, flake, source-mount, fallback, and failure policies.
 
-`publish --dry-run --bundle <path> --output <path>` is operational. It runs the existing local release rehearsal, emits registry-ready archives and an in-toto statement, and reports zero external registry writes through the CLI result.
+`publish --dry-run --output <path>` is operational. It requires committed source, creates two independent clean source clones, runs the canonical build twice with separate writable state, compares every bundle and package artifact, and emits a content-addressed release authorization only when every byte and mode matches. [The reproducibility gate evidence](reproducibility-release-gate.md) records the isolation, comparison, report, authorization, and CI contracts.
 
 External publication belongs to node 879. That command returns `blocked` with a stable diagnostic code. The CLI does not report registry writes as successful before their implementation exists.
 
@@ -44,7 +44,7 @@ The parser rejects unknown commands, command-inappropriate flags, repeated flags
 - closed structured diagnostics for agents;
 - stable success and blocked-command exit behavior in JSON and human formats;
 - the executable analyzes the repository and does not claim deferred commands are complete;
-- publish dry-run produces a real no-publish publication index; and
+- publish dry-run invokes the clean rebuild authorization gate; and
 - the published JSON schema closes the result and diagnostic objects.
 
 Run the focused gate:

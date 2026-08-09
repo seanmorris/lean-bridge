@@ -1,7 +1,11 @@
 import { diagnostic } from "./contract.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { buildCanonicalProject, CanonicalBuildError } from "../build/canonical-build.mjs";
-import { rehearseRelease } from "../release/release-rehearsal.mjs";
+import {
+  ReproducibilityGateError,
+  runReproducibilityGate,
+  verifyReleaseAuthorization,
+} from "../release/reproducibility-gate.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -14,9 +18,14 @@ const deferred = (command, node) => ({
   nextActions: [],
 });
 
-export const cliHandlers = Object.freeze({
+export const createCliHandlers = ({
+  analyze = analyzeLeanProject,
+  build = buildCanonicalProject,
+  gate = runReproducibilityGate,
+  verifyAuthorization = verifyReleaseAuthorization,
+} = {}) => Object.freeze({
   analyze: async request => {
-    const report = await analyzeLeanProject(request.project);
+    const report = await analyze(request.project);
     const requiredHints = report.adapterHints.filter(item => item.required);
     const status = requiredHints.length > 0
       ? "needs-input"
@@ -34,7 +43,7 @@ export const cliHandlers = Object.freeze({
   },
   build: async request => {
     try {
-      const result = await buildCanonicalProject({ projectRoot: request.project, outputRoot: request.output });
+      const result = await build({ projectRoot: request.project, outputRoot: request.output });
       return { status: "ok", result, diagnostics: [], nextActions: [] };
     } catch (error) {
       if (!(error instanceof CanonicalBuildError) || !new Set([
@@ -49,32 +58,58 @@ export const cliHandlers = Object.freeze({
     }
   },
   publish: async request => {
-    if (request.mode !== "dry-run") return deferred("publish", 879);
-    if (request.bundle === null || request.output === null) {
+    if (request.mode !== "dry-run") {
+      if (request.authorization === null || request.bundle === null) {
+        return {
+          status: "blocked",
+          result: null,
+          diagnostics: [diagnostic({
+            code: "publish-authorization-required",
+            message: "publish requires a reproducibility authorization and its exact candidate",
+            hint: "Pass --authorization <gate directory> and --bundle <gate directory>/release.",
+          })],
+          nextActions: [],
+        };
+      }
+      const verified = await verifyAuthorization({
+        authorizationRoot: request.authorization,
+        candidateRoot: request.bundle,
+      });
+      const pending = deferred("publish", 879);
+      return { ...pending, result: { authorization: verified, externalRegistryWrites: false } };
+    }
+    if (request.output === null || request.bundle !== null || request.authorization !== null) {
       return {
         status: "blocked",
         result: null,
         diagnostics: [diagnostic({
           code: "dry-run-input-required",
-          message: "publish --dry-run requires --bundle and --output",
-          hint: "Build a canonical bundle, then pass its path and an empty local output path.",
+          message: "publish --dry-run requires --output and builds its own release candidate",
+          hint: "Remove --bundle and pass one empty output path for the candidate and gate evidence.",
         })],
         nextActions: [],
       };
     }
-    const rehearsal = await rehearseRelease({ bundleRoot: request.bundle, outputRoot: request.output });
-    return {
-      status: "ok",
-      result: {
-        canonicalPublicationIndex: rehearsal.index,
-        canonicalPublicationIndexSha256: rehearsal.indexSha256,
-        attestation: rehearsal.attestation,
-        readyPackages: rehearsal.ready,
-        omittedPackages: rehearsal.omitted,
-        externalRegistryWrites: false,
-      },
-      diagnostics: [],
-      nextActions: [],
-    };
+    try {
+      const result = await gate({ projectRoot: request.project, outputRoot: request.output });
+      return { status: "ok", result, diagnostics: [], nextActions: [] };
+    } catch (error) {
+      if (!(error instanceof ReproducibilityGateError)) throw error;
+      const blocked = new Set([
+        "source-not-git", "source-tree-dirty", "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
+      ]).has(error.code);
+      return {
+        status: blocked ? "blocked" : "failed",
+        result: error.details?.report ? {
+          gateOutput: error.details.output,
+          report: error.details.report,
+          externalRegistryWrites: false,
+        } : null,
+        diagnostics: [diagnostic({ code: error.code, message: error.message, hint: error.hint })],
+        nextActions: [],
+      };
+    }
   },
 });
+
+export const cliHandlers = createCliHandlers();

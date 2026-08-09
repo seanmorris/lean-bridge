@@ -1,0 +1,69 @@
+name: Reproducible release authorization
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproducibility-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out the exact candidate
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install JavaScript dependencies
+        run: npm ci
+      - name: Run contract tests
+        run: npm run test:release-authorization
+      - name: Build twice and compare every release artifact
+        run: npm run release:reproducibility -- --output build/reproducibility-gate
+      - name: Verify the content-addressed authorization
+        run: npm run verify:release-authorization -- --authorization build/reproducibility-gate --candidate build/reproducibility-gate/release
+      - name: Preserve release modes in one archive
+        run: tar -cf build/reproducibility-gate.tar -C build reproducibility-gate
+      - name: Attach candidate and gate reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: reproducibility-gate-${{ github.sha }}
+          path: build/reproducibility-gate.tar
+          archive: false
+          if-no-files-found: error
+          retention-days: 30
+
+  release-ready:
+    needs: reproducibility-gate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Check out authorization verifier
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install JavaScript dependencies
+        run: npm ci
+      - name: Download immutable gate artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: reproducibility-gate-${{ github.sha }}
+          path: build
+      - name: Restore candidate and verify authorization again
+        run: |
+          tar -xf build/reproducibility-gate.tar -C build
+          npm run verify:release-authorization -- --authorization build/reproducibility-gate --candidate build/reproducibility-gate/release

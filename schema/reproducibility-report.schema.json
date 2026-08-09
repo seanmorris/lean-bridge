@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/reproducibility-report.schema.json",
+  "title": "Lean Bridge reproducibility gate report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "predicateType",
+    "result",
+    "createdAt",
+    "candidate",
+    "source",
+    "policy",
+    "builds",
+    "artifacts",
+    "differences",
+    "likelyEntropyCategories",
+    "reproduction",
+    "failure"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "predicateType": { "const": "https://lean-bridge.dev/attestations/reproducibility/v1" },
+    "result": { "enum": ["passed", "failed"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "candidate": {
+      "oneOf": [
+        { "$ref": "#/$defs/candidate" },
+        { "type": "null" }
+      ]
+    },
+    "source": {
+      "oneOf": [
+        { "$ref": "#/$defs/source" },
+        { "type": "null" }
+      ]
+    },
+    "policy": { "$ref": "#/$defs/policy" },
+    "builds": { "type": "array", "maxItems": 2, "items": { "$ref": "#/$defs/build" } },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "differences": { "type": "array", "items": { "$ref": "#/$defs/difference" } },
+    "likelyEntropyCategories": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "verificationCommand"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "verificationCommand": { "type": "string", "minLength": 1 }
+      }
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message", "hint"],
+          "properties": {
+            "code": { "type": "string", "minLength": 1 },
+            "message": { "type": "string", "minLength": 1 },
+            "hint": { "type": ["string", "null"] }
+          }
+        },
+        { "type": "null" }
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "mediaType", "target", "profile", "bytes", "mode", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "profile": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "mode": { "type": "integer", "minimum": 0, "maximum": 511 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sourceRevision",
+        "sourceTree",
+        "flakeLockSha256",
+        "component",
+        "version",
+        "canonicalManifestSha256",
+        "coreArtifactSetSha256",
+        "artifactInventorySha256"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/sha256" },
+        "sourceRevision": { "type": "string", "minLength": 1 },
+        "sourceTree": { "type": "string", "minLength": 1 },
+        "flakeLockSha256": { "$ref": "#/$defs/sha256" },
+        "component": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "canonicalManifestSha256": { "$ref": "#/$defs/sha256" },
+        "coreArtifactSetSha256": { "$ref": "#/$defs/sha256" },
+        "artifactInventorySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "projectPath", "revision", "tree", "flakeLockSha256"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "projectPath": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "tree": { "type": "string", "minLength": 1 },
+        "flakeLockSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "releaseCriterion",
+        "requiredSequence",
+        "comparedRoots",
+        "exclusions",
+        "cleanCommittedSource",
+        "independentWritableState",
+        "externalRegistryWrites"
+      ],
+      "properties": {
+        "releaseCriterion": { "const": "byte-identical" },
+        "requiredSequence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "comparedRoots": { "const": ["bundle", "packages"] },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "reason"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "cleanCommittedSource": { "const": true },
+        "independentWritableState": { "const": true },
+        "externalRegistryWrites": { "const": false }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "backend",
+        "backendVersion",
+        "builderDefinitionSha256",
+        "platform",
+        "runtimeProfile",
+        "sourceRevision",
+        "canonicalManifestSha256",
+        "coreArtifactSetSha256",
+        "artifactCount",
+        "durationMs",
+        "isolation"
+      ],
+      "properties": {
+        "name": { "enum": ["A", "B"] },
+        "backend": { "enum": ["docker", "nix"] },
+        "backendVersion": { "type": "string", "minLength": 1 },
+        "builderDefinitionSha256": { "$ref": "#/$defs/sha256" },
+        "platform": { "type": "string", "minLength": 1 },
+        "runtimeProfile": { "type": "string", "minLength": 1 },
+        "sourceRevision": { "type": "string", "minLength": 1 },
+        "canonicalManifestSha256": { "$ref": "#/$defs/sha256" },
+        "coreArtifactSetSha256": { "$ref": "#/$defs/sha256" },
+        "artifactCount": { "type": "integer", "minimum": 1 },
+        "durationMs": { "type": "integer", "minimum": 0 },
+        "isolation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "side": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bytes", "mode", "sha256"],
+          "properties": {
+            "bytes": { "type": "integer", "minimum": 0 },
+            "mode": { "type": "integer", "minimum": 0, "maximum": 511 },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "preview": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "firstDifferentLine", "left", "right"],
+          "properties": {
+            "kind": { "enum": ["json", "text"] },
+            "firstDifferentLine": { "type": "integer", "minimum": 1 },
+            "left": { "type": "string" },
+            "right": { "type": "string" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "difference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "buildA", "buildB", "preview", "likelyEntropyCategories"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["missing-from-build-a", "missing-from-build-b", "mode", "content"] },
+        "buildA": { "$ref": "#/$defs/side" },
+        "buildB": { "$ref": "#/$defs/side" },
+        "preview": { "$ref": "#/$defs/preview" },
+        "likelyEntropyCategories": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      }
+    }
+  }
+}

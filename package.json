@@ -32,6 +32,8 @@
     "binding-packages": "node scripts/binding-package-gate.mjs check poc/lean-link-spike/bindings/alpha.binding-ir.json poc/lean-link-spike/bindings/generated-package-gate.json",
     "binding-parity": "node scripts/binding-semantic-parity.mjs poc/lean-link-spike/bindings/alpha.binding-ir.json",
     "release:rehearse": "node scripts/rehearse-release.mjs",
+    "release:reproducibility": "node scripts/check-release-reproducibility.mjs",
+    "verify:release-authorization": "node scripts/verify-release-authorization.mjs",
     "audit:php-wasm": "node scripts/audit-php-wasm-sources.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
@@ -53,6 +55,7 @@
     "test:canonical-build": "node --test tests/canonical-build.test.mjs tests/cli-contract.test.mjs",
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
+    "test:release-authorization": "node --test tests/reproducibility-gate.test.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },
