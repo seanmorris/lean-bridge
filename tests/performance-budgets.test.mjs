@@ -62,7 +62,12 @@ const scalingRun = (profile, count) => {
       firstNativeCall: summary(Array.from({ length: count }, (_, index) => 40 + index)),
     },
     memory: {
-      phaseSnapshots: [{ phase: "after-load-and-initialize", wasmMemoryBytes: wasm }],
+      phaseSnapshots: [{
+        phase: profile === "isolated"
+          ? "after-isolated-load-and-initialize"
+          : "after-load-and-initialize",
+        wasmMemoryBytes: wasm,
+      }],
     },
     correctness: { accepted: true },
   };

@@ -46,7 +46,9 @@ const findScalingRun = (suite, profile, count) => {
   return run;
 };
 
-const wasmBytesAt = (run, phase = "after-load-and-initialize") => {
+const wasmBytesAt = (run, phase = run.profile === "isolated"
+  ? "after-isolated-load-and-initialize"
+  : "after-load-and-initialize") => {
   const snapshot = run.memory.phaseSnapshots.find(candidate => candidate.phase === phase);
   if (!snapshot) fail("missing-memory-snapshot", `${run.profile}/${run.graph.libraryCount} lacks ${phase}`);
   return snapshot.wasmMemoryBytes;
