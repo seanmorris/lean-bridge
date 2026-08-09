@@ -413,7 +413,7 @@ export const runLifecycleStabilitySuite = async (options = {}) => {
     }),
     limitations: Object.freeze([
       "Host heap values are reliable for retained-state comparison only when Node exposes explicit garbage collection.",
-      "Process RSS includes Node, generated bindings, benchmark records, and auxiliary validation runtimes in addition to Wasm.",
+      "Process RSS includes Node, generated bindings, and benchmark records in addition to Wasm.",
       "WebAssembly memory grows by pages and does not shrink. The suite requires a stable page count after the first lifecycle round.",
       "Delayed finalization uses a deterministic finalizer fixture because JavaScript garbage collection timing is not a testable clock.",
       "The finalizer fixture uses one private live-handle diagnostic. Every workload operation uses the generated public API.",
