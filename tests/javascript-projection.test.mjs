@@ -98,12 +98,14 @@ test("Promise declarations receive a generated pending-operation plan", () => {
   abi.declarations["lean:Alpha.roundTrip"].adapter = {
     kind: "pending-operation-v1",
     abiVersion: 1,
+    cancel: "_bridge_pending_cancel",
   };
 
   const projection = compileJavaScriptProjection(ir, abi);
   const binding = projection.bindings.find(item => item.name === "roundTrip");
   assert.equal(binding.adapter.kind, "pending-operation-v1");
   assert.equal(binding.adapter.declarationId, declaration.id);
+  assert.equal(binding.adapter.cancelSymbol, "_bridge_pending_cancel");
   assert.equal(binding.adapter.settlement.cardinality, "exactly-once");
 });
 

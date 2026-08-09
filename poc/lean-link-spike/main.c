@@ -2,6 +2,7 @@
 #include <emscripten/heap.h>
 #include <lean/lean.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "alpha_value_frame.generated.h"
@@ -54,6 +55,34 @@ static uint32_t runtime_state = BRIDGE_LEAN_RUNTIME_COLD;
 static uint32_t runtime_init_runs = 0;
 static uint32_t library_init_runs = 0;
 static uint32_t active_frames = 0;
+static uint32_t native_pending_operations = 0;
+static uint32_t native_late_settlements = 0;
+static uint32_t native_cancelled_operations = 0;
+
+typedef struct bridge_lean_pending_u32 {
+  uint32_t token;
+  uint32_t value;
+  uint8_t cancelled;
+  struct bridge_lean_pending_u32 *next;
+} bridge_lean_pending_u32;
+
+static bridge_lean_pending_u32 *native_pending_head = 0;
+
+EM_JS(
+  uint32_t,
+  bridge_lean_pending_resolve_u32,
+  (uint32_t token, uint32_t value),
+  {
+    const settle = Module.__leanBridgePendingResolveU32;
+    if (typeof settle !== "function") return 0;
+    try {
+      settle(token, value);
+      return 1;
+    } catch (_error) {
+      return 0;
+    }
+  }
+);
 
 enum bridge_lean_handle_layout {
   BRIDGE_LEAN_HANDLE_SLOT_BITS = 12,
@@ -376,6 +405,92 @@ uint32_t bridge_lean_alpha_read(uint32_t handle) {
   /* The generated export consumes its argument; retain around a borrowed read. */
   lean_inc(box);
   return alpha_read(box);
+}
+
+static void bridge_lean_alpha_defer_box_value_settle(void *argument) {
+  bridge_lean_pending_u32 *pending = (bridge_lean_pending_u32 *)argument;
+  bridge_lean_pending_u32 **cursor = &native_pending_head;
+  uint32_t settled = 0;
+
+  if (
+    !pending->cancelled &&
+    runtime_state == BRIDGE_LEAN_RUNTIME_READY &&
+    alpha_box &&
+    alpha_read
+  ) {
+    lean_object *box = alpha_box(pending->value);
+    if (box) {
+      uint32_t result = alpha_read(box);
+      settled = bridge_lean_pending_resolve_u32(pending->token, result);
+      if (!settled) native_late_settlements += 1;
+    }
+  } else if (pending->cancelled || runtime_state != BRIDGE_LEAN_RUNTIME_READY) {
+    native_cancelled_operations += 1;
+  }
+  while (*cursor && *cursor != pending) cursor = &(*cursor)->next;
+  if (*cursor == pending) *cursor = pending->next;
+  native_pending_operations -= 1;
+  free(pending);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_defer_box_value(
+    uint32_t pending_token,
+    uint32_t value
+) {
+  bridge_lean_pending_u32 *pending;
+
+  if (
+    runtime_state != BRIDGE_LEAN_RUNTIME_READY ||
+    !alpha_box ||
+    !alpha_read ||
+    pending_token == 0
+  ) {
+    return 0;
+  }
+  pending = (bridge_lean_pending_u32 *)malloc(sizeof(bridge_lean_pending_u32));
+  if (!pending) return 0;
+  pending->token = pending_token;
+  pending->value = value;
+  pending->cancelled = 0;
+  pending->next = native_pending_head;
+  native_pending_head = pending;
+  native_pending_operations += 1;
+  emscripten_async_call(
+    bridge_lean_alpha_defer_box_value_settle,
+    pending,
+    1
+  );
+  return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_cancel_defer_box_value(uint32_t pending_token) {
+  bridge_lean_pending_u32 *pending = native_pending_head;
+
+  while (pending) {
+    if (pending->token == pending_token && !pending->cancelled) {
+      pending->cancelled = 1;
+      return 1;
+    }
+    pending = pending->next;
+  }
+  return 0;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_native_pending_operations(void) {
+  return native_pending_operations;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_native_late_settlements(void) {
+  return native_late_settlements;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_native_cancelled_operations(void) {
+  return native_cancelled_operations;
 }
 
 static uint32_t bridge_lean_frame_fail(

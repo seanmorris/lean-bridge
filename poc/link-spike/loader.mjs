@@ -116,6 +116,12 @@ class RuntimeRegistry {
     this.hostObjectTokens = new WeakMap();
     this.pendingOperations = new PendingOperationRegistry({
       capacity: options.pendingOperationCapacity ?? 1024,
+      onTransition: options.onPendingTransition,
+    });
+    Object.defineProperty(this.module, "__leanBridgePendingResolveU32", {
+      configurable: true,
+      enumerable: false,
+      value: (token, value) => this.pendingOperations.resolve(token, value),
     });
     this.pendingFinalizations = [];
     this.createWeakReference =
@@ -1118,12 +1124,30 @@ const projectPendingFunction = (
       `${binding.name} has no Promise declaration for its pending adapter`,
     );
   }
+  const cancel = resolvePrivateFunction(
+    module,
+    descriptor,
+    plan.cancelSymbol,
+  );
 
   return async (...args) => {
     context.beforeCall(descriptor, binding);
     validatePendingArguments(descriptor, binding, declaration, args);
     initializeBinding(module, descriptor, binding);
-    const pending = context.pendingOperations.begin(plan);
+    const pending = context.pendingOperations.begin(plan, {
+      cancel(token) {
+        const accepted = cancel(token);
+        if (accepted !== 1 && accepted !== true) {
+          throw bridgeError(
+            descriptor,
+            binding,
+            "pending-cancel-rejected",
+            `${binding.name} did not accept cancellation`,
+            { token, accepted },
+          );
+        }
+      },
+    });
     try {
       const accepted = implementation(pending.token, ...args);
       if (accepted !== 1 && accepted !== true) {

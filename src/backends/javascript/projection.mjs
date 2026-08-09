@@ -82,7 +82,8 @@ const validateAdapter = (adapter, path) => {
     return;
   }
   if (adapter.kind === "pending-operation-v1") {
-    exactKeys(adapter, ["kind", "abiVersion"], path);
+    exactKeys(adapter, ["kind", "abiVersion", "cancel"], path);
+    nonemptyString(adapter.cancel, `${path}.cancel`);
     if (adapter.abiVersion === 1) return;
   }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
@@ -98,7 +99,10 @@ const compileAdapter = (ir, declaration, adapter) => {
     if (adapter.kind === "value-frame-v1") {
       return compileValueFrameV1(ir, declaration.id, adapter);
     }
-    return compilePendingOperationV1(ir, declaration.id);
+    return Object.freeze({
+      ...compilePendingOperationV1(ir, declaration.id),
+      cancelSymbol: adapter.cancel,
+    });
   } catch (error) {
     if (
       !(error instanceof ValueFrameGenerationError) &&

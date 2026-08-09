@@ -228,6 +228,7 @@ test("generated Promise bindings use the shared pending-operation domain", async
   privateAbi.declarations[declaration.id].adapter = {
     kind: "pending-operation-v1",
     abiVersion: 1,
+    cancel: "_bridge_pending_cancel",
   };
   const projection = compileJavaScriptProjection(bindingIr, privateAbi);
   const binding = projection.bindings.find(item => item.declarationId === declaration.id);
@@ -235,6 +236,7 @@ test("generated Promise bindings use the shared pending-operation domain", async
   let module;
   module = {
     _bridge_lean_runtime_init: () => 1,
+    _bridge_pending_cancel: () => 1,
     _bridge_lean_alpha_round_trip: (token, payload) => {
       if (behavior === "reject-start") return 0;
       queueMicrotask(() =>

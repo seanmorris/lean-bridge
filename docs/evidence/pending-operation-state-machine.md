@@ -1,6 +1,6 @@
 # Pending Operation State Machine Evidence
 
-Status: the generated plan and shared-runtime state machine pass. Public Lean Promise settlement and callback re-entry remain open.
+Status: the generated plan, shared-runtime state machine, and public Lean Promise settlement pass. Callback re-entry remains open.
 
 ## Generated contract
 
@@ -35,6 +35,10 @@ Runtime shutdown stops admission, cancels every pending entry, runs cleanup, clo
 
 `tests/library-loader.test.mjs` compiles a Promise declaration and pending adapter from Binding IR, loads a normal API object, calls `await api.roundTrip(value)`, settles through the private runtime hook, validates the copied result, and returns every pending counter to baseline. The public function contains no token or settlement argument.
 
+`tests/internal/abi/lean-pending-operation.test.mjs` calls `api.deferBoxValue(value)` through a generated projection. The private C adapter schedules work with `emscripten_async_call` and returns. The callback later calls the Lean-generated `alpha_box` and `alpha_read` functions while the initiating Wasm frame count is zero, then resolves the JavaScript Promise through the runtime-owned pending registry.
+
+The same test cancels a scheduled operation before the callback runs. The generated cancellation symbol marks the native record, the JavaScript Promise rejects once, and a second settlement receives `stale-pending-operation`. A shutdown case cancels the record before Lean finalization. The native callback observes the closed runtime, skips the Lean call, and releases its allocation.
+
 ## Remaining boundary
 
-The conformance fixture uses a JavaScript implementation behind the private ABI symbol. A Lean-compiled side module does not yet initiate and settle the operation through Wasm. The bridge also does not generate the settlement entry symbol, callback signature adapter, cancellation signal binding, copied result frame, or nested callback frame. Those pieces must consume the generated plan and state machine before the Lean Promise path passes.
+The POC private C adapter schedules the operation and calls existing Lean-generated exports. The Lean frontend does not yet emit an asynchronous declaration or its private adapter. The bridge also does not generate copied result frames for rich asynchronous results, callback signature adapters, `AbortSignal` projection, or nested callback frames. Those pieces must consume the same plan and state machine.

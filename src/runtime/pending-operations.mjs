@@ -68,7 +68,7 @@ export class PendingOperationRegistry {
     }
   }
 
-  begin(plan, { cleanup = [] } = {}) {
+  begin(plan, { cleanup = [], cancel } = {}) {
     if (this.state !== "open") {
       throw new PendingOperationError(
         "pending-registry-closed",
@@ -86,6 +86,12 @@ export class PendingOperationRegistry {
       throw new PendingOperationError(
         "invalid-pending-cleanup",
         "pending cleanup must be an array of functions",
+      );
+    }
+    if (cancel !== undefined && typeof cancel !== "function") {
+      throw new PendingOperationError(
+        "invalid-pending-cancel",
+        "pending cancellation must be a function when supplied",
       );
     }
     if (this.live >= this.capacity) {
@@ -121,6 +127,7 @@ export class PendingOperationRegistry {
       token,
       plan,
       cleanup: [...cleanup],
+      cancel,
       resolvePromise,
       rejectPromise,
     });
@@ -181,6 +188,7 @@ export class PendingOperationRegistry {
     entry.plan = undefined;
     entry.resolvePromise = undefined;
     entry.rejectPromise = undefined;
+    entry.cancel = undefined;
     if (entry.generation === MAX_GENERATION) {
       entry.retired = true;
     } else {
@@ -193,7 +201,16 @@ export class PendingOperationRegistry {
     const { entry, slot } = this.requirePending(token);
     const resolvePromise = entry.resolvePromise;
     const rejectPromise = entry.rejectPromise;
-    const cleanupFailures = this.runCleanup(entry);
+    const cleanupFailures = [];
+    if (outcome === "cancel" && entry.cancel) {
+      try {
+        entry.cancel(entry.token);
+      } catch (error) {
+        cleanupFailures.push(error);
+        this.counters.cleanupFailures += 1;
+      }
+    }
+    cleanupFailures.push(...this.runCleanup(entry));
     const details = { outcome, cleanupFailures: cleanupFailures.length };
     this.transition(outcome, entry, details);
     this.retire(slot, entry);
