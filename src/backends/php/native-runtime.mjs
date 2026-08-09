@@ -112,6 +112,7 @@ const brokerSource = `#include "lean_bridge_native_runtime.h"
 #include <unistd.h>
 
 extern lean_object *initialize_Init(uint8_t builtin);
+extern void lean_initialize_runtime_module(void);
 
 enum lean_bridge_runtime_state {
   LEAN_BRIDGE_RUNTIME_COLD = 0,
@@ -185,7 +186,7 @@ static uint64_t opaque_process_id(const void *address, uint64_t domain)
 static lean_bridge_component_slot *component_find(const char *component_id)
 {
   for (size_t index = 0; index < LEAN_BRIDGE_COMPONENT_CAPACITY; index++) {
-    if (components[index].id[0] != '\0' && strcmp(components[index].id, component_id) == 0) return &components[index];
+    if (components[index].id[0] != 0 && strcmp(components[index].id, component_id) == 0) return &components[index];
   }
   return NULL;
 }
@@ -195,7 +196,7 @@ static lean_bridge_component_slot *component_reserve(const char *component_id)
   size_t length = strlen(component_id);
   if (length == 0 || length >= LEAN_BRIDGE_COMPONENT_ID_CAPACITY) return NULL;
   for (size_t index = 0; index < LEAN_BRIDGE_COMPONENT_CAPACITY; index++) {
-    if (components[index].id[0] == '\0') {
+    if (components[index].id[0] == 0) {
       memcpy(components[index].id, component_id, length + 1);
       components[index].state = LEAN_BRIDGE_RUNTIME_COLD;
       return &components[index];

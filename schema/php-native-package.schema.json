@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/php-native-package.schema.json",
+  "title": "Lean Bridge native PHP package manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packageId",
+    "bindingIr",
+    "lean",
+    "target",
+    "artifacts",
+    "sourceDateEpoch"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packageId": { "type": "string", "minLength": 1 },
+    "bindingIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "fileSha256", "semanticSha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^[^/]" },
+        "fileSha256": { "$ref": "#/$defs/sha256" },
+        "semanticSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "lean": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "sourceSha256", "module", "initializer"],
+      "properties": {
+        "source": { "type": "string", "pattern": "^[^/]" },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "module": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.]*$" },
+        "initializer": { "type": "string", "pattern": "^initialize_[A-Za-z][A-Za-z0-9_]*$" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "architecture", "php", "threadSafety", "sharedRuntimeAbi"],
+      "properties": {
+        "system": { "const": "linux" },
+        "architecture": { "const": "x86_64" },
+        "php": { "type": "string", "pattern": "^>=8\\.2 <9$" },
+        "threadSafety": { "const": "nts" },
+        "sharedRuntimeAbi": { "const": 1 }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtimeLibrary", "extension", "composerPackage", "metadata"],
+      "properties": {
+        "runtimeLibrary": { "const": "lib/liblean_bridge_native.so" },
+        "extension": { "type": "string", "pattern": "^lib/php/[a-z0-9_]+\\.so$" },
+        "composerPackage": { "const": "share/php/component" },
+        "metadata": { "const": "share/lean-bridge" }
+      }
+    },
+    "sourceDateEpoch": { "type": "integer", "minimum": 1 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

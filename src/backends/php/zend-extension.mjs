@@ -69,12 +69,12 @@ if test "$PHP_${upper(stem)}" != "no"; then
 fi
 `;
 
-const extensionHeader = (stem, hash) => `#ifndef PHP_${upper(stem)}_H
+const extensionHeader = (stem, hash, version) => `#ifndef PHP_${upper(stem)}_H
 #define PHP_${upper(stem)}_H
 
 #include "php.h"
 
-#define PHP_${upper(stem)}_VERSION "0.0.0-poc"
+#define PHP_${upper(stem)}_VERSION "${version}"
 #define PHP_${upper(stem)}_BINDING_IR_SHA256 "${hash}"
 
 extern zend_module_entry ${stem}_module_entry;
@@ -805,7 +805,7 @@ export const generatePhpZendExtensionPackage = ir => {
   const stem = packageStem(ir);
   const files = {
     "config.m4": configM4(stem),
-    [`php_${stem}.h`]: extensionHeader(stem, hashBindingIr(ir)),
+    [`php_${stem}.h`]: extensionHeader(stem, hashBindingIr(ir), ir.component.version),
     [`${stem}_zend.c`]: zendSource(ir, projection, shape),
   };
   for (const [path, source] of Object.entries(cFiles)) {

@@ -7,29 +7,31 @@ LEAN_NATIVE_PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$LEAN_NATIVE_PROJECT_ROOT/scripts/env.sh"
 
 LEAN_NATIVE_COMMIT=f3b06c705e6c85f5314019d5d3baab0fec5b580c
-LEAN_NATIVE_SOURCE=${LEAN_NATIVE_SOURCE:-$LEAN_NATIVE_PROJECT_ROOT/.toolchains/lean4-src}
+LEAN_NATIVE_SOURCE_INPUT=${LEAN_NATIVE_SOURCE:-$LEAN_NATIVE_PROJECT_ROOT/.toolchains/lean4-src}
 LEAN_NATIVE_HOST_PREFIX=${LEAN_NATIVE_HOST_PREFIX:-$(lean --print-prefix)}
 LEAN_NATIVE_CONFIG_SHA=$(
   printf '%s\n' \
     "$LEAN_NATIVE_COMMIT" \
-    native-shared-v1 \
+    native-shared-v2 \
     clang \
     position-independent \
     initial-exec-tls \
     multi-thread \
     system-libuv \
+    reproducible-prefix-map \
     | sha256sum \
     | awk '{print $1}'
 )
 LEAN_NATIVE_BUILD_ROOT="$LEAN_NATIVE_PROJECT_ROOT/build/lean-native-runtime/$LEAN_NATIVE_COMMIT-$LEAN_NATIVE_CONFIG_SHA"
+LEAN_NATIVE_SOURCE="$LEAN_NATIVE_BUILD_ROOT/source"
 LEAN_NATIVE_CMAKE_BUILD="$LEAN_NATIVE_BUILD_ROOT/cmake"
 LEAN_NATIVE_ARCHIVE="$LEAN_NATIVE_CMAKE_BUILD/runtime/libleanrt_initial-exec.a"
 LEAN_NATIVE_INIT_ARCHIVE="$LEAN_NATIVE_CMAKE_BUILD/lib/lean/libInit.a"
 
-if [[ -d "$LEAN_NATIVE_SOURCE/.git" ]]; then
-  actual_commit=$(git -C "$LEAN_NATIVE_SOURCE" rev-parse HEAD)
-elif [[ -f "$LEAN_NATIVE_SOURCE/.lean-wasm-source-commit" ]]; then
-  actual_commit=$(<"$LEAN_NATIVE_SOURCE/.lean-wasm-source-commit")
+if [[ -d "$LEAN_NATIVE_SOURCE_INPUT/.git" ]]; then
+  actual_commit=$(git -C "$LEAN_NATIVE_SOURCE_INPUT" rev-parse HEAD)
+elif [[ -f "$LEAN_NATIVE_SOURCE_INPUT/.lean-wasm-source-commit" ]]; then
+  actual_commit=$(<"$LEAN_NATIVE_SOURCE_INPUT/.lean-wasm-source-commit")
 else
   echo "Missing pinned Lean source identity; run npm run bootstrap or set LEAN_NATIVE_SOURCE." >&2
   exit 1
@@ -37,6 +39,35 @@ fi
 if [[ "$actual_commit" != "$LEAN_NATIVE_COMMIT" ]]; then
   echo "Lean source commit mismatch: expected $LEAN_NATIVE_COMMIT, got $actual_commit" >&2
   exit 1
+fi
+
+LEAN_NATIVE_LOCK_DIR="$LEAN_NATIVE_BUILD_ROOT/.build-lock"
+mkdir -p "$LEAN_NATIVE_BUILD_ROOT"
+while ! mkdir "$LEAN_NATIVE_LOCK_DIR" 2>/dev/null; do
+  lock_owner=""
+  if [[ -f "$LEAN_NATIVE_LOCK_DIR/owner" ]]; then
+    lock_owner=$(<"$LEAN_NATIVE_LOCK_DIR/owner")
+  fi
+  if [[ ! "$lock_owner" =~ ^[0-9]+$ ]] || ! kill -0 "$lock_owner" 2>/dev/null; then
+    find "$LEAN_NATIVE_LOCK_DIR" -mindepth 1 -maxdepth 1 -type f -delete 2>/dev/null || true
+    rmdir "$LEAN_NATIVE_LOCK_DIR" 2>/dev/null || true
+    continue
+  fi
+  sleep 0.1
+done
+printf '%s\n' "$$" > "$LEAN_NATIVE_LOCK_DIR/owner"
+release_native_build_lock() {
+  find "$LEAN_NATIVE_LOCK_DIR" -mindepth 1 -maxdepth 1 -type f -delete 2>/dev/null || true
+  rmdir "$LEAN_NATIVE_LOCK_DIR" 2>/dev/null || true
+}
+trap release_native_build_lock EXIT
+
+if [[ ! -f "$LEAN_NATIVE_SOURCE/src/CMakeLists.txt" ]]; then
+  source_stage="$LEAN_NATIVE_BUILD_ROOT/source-stage-$$"
+  mkdir -p "$source_stage"
+  tar -C "$LEAN_NATIVE_SOURCE_INPUT" --exclude=.git -cf - . | tar -xf - -C "$source_stage"
+  chmod -R u+w "$source_stage"
+  mv "$source_stage" "$LEAN_NATIVE_SOURCE"
 fi
 if ! command -v clang >/dev/null || ! command -v clang++ >/dev/null; then
   echo "The native shared runtime requires clang and clang++." >&2
@@ -66,8 +97,8 @@ cmake \
   -DINSTALL_CADICAL=OFF \
   -DINSTALL_LEANTAR=OFF \
   -DWFAIL=OFF \
-  "-DCMAKE_C_FLAGS=-ffile-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace" \
-  "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace"
+  "-DCMAKE_C_FLAGS=-ffile-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -fdebug-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -fmacro-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -ffile-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace" \
+  "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -fdebug-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -fmacro-prefix-map=$LEAN_NATIVE_SOURCE=/workspace/lean4 -ffile-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fdebug-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace -fmacro-prefix-map=$LEAN_NATIVE_PROJECT_ROOT=/workspace"
 
 cmake --build "$LEAN_NATIVE_CMAKE_BUILD" --target leanrt_initial-exec --parallel "$(nproc)"
 

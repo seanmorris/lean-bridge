@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "packageId": "poc/lean-alpha-php-native@0.0.0",
+  "bindingIr": {
+    "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+    "fileSha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
+    "semanticSha256": "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4"
+  },
+  "lean": {
+    "source": "poc/lean-link-spike/Alpha.lean",
+    "sourceSha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169",
+    "module": "Alpha",
+    "initializer": "initialize_Alpha"
+  },
+  "target": {
+    "system": "linux",
+    "architecture": "x86_64",
+    "php": ">=8.2 <9",
+    "threadSafety": "nts",
+    "sharedRuntimeAbi": 1
+  },
+  "artifacts": {
+    "runtimeLibrary": "lib/liblean_bridge_native.so",
+    "extension": "lib/php/lean_alpha.so",
+    "composerPackage": "share/php/component",
+    "metadata": "share/lean-bridge"
+  },
+  "sourceDateEpoch": 1786261809
+}

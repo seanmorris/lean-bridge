@@ -1,6 +1,6 @@
 # Generated Zend Adapter Evidence
 
-Status: the Alpha Binding IR generates and compiles a native PHP extension that implements the Composer package's private typed transport. A focused test uses a C fixture. The shared-runtime integration test executes the same adapter against real Lean code.
+Status: the Alpha Binding IR generates and compiles a native PHP extension that implements the Composer package's private typed transport. A focused test uses a C fixture. Shared-runtime and release-package tests execute the same adapter against real Lean code.
 
 ## Consumer boundary
 
@@ -44,7 +44,7 @@ The adapter does not serialize copied records. `Payload` fields cross as typed C
 
 The extension stores the generated C resource wrapper inside a private Zend object. The public `Box` keeps that identity behind the generated Composer class. An identity round trip returns the existing public object. `close()` disposes the C wrapper once. The Zend object destructor provides fallback cleanup.
 
-The internal identity's diagnostic `value()` method returns `null`. It does not reveal the C pointer or numeric Lean identity. The adapter assigns an opaque monotonic cache key for the generated userland identity cache.
+The internal identity's diagnostic `value()` method returns `null`. It does not reveal the C pointer or numeric Lean identity. The shared process broker assigns a generation-safe opaque cache key. Reprojection of the same live native value reuses that key, and final release advances the slot generation before reuse.
 
 ## Error and callback behavior
 
@@ -67,3 +67,5 @@ Unknown failures follow the Binding IR poison policy. The public package owns th
 The generator rejects unsupported IR shapes before it emits C. The test also rejects generic dispatch, `ccall`, `cwrap`, and JSON handling in the generated extension source.
 
 `tests/php-native-runtime.test.mjs` replaces the C fixture with the pinned shared native Lean runtime and a generated Alpha provider. [Shared native PHP runtime evidence](shared-native-php-runtime.md) records that execution path.
+
+`tests/php-native-package.test.mjs` builds the complete installed layout twice, compares every byte, executes a clean Composer consumer, and runs two requests through one PHP server process. [Native PHP release package evidence](native-php-release-package.md) records that gate.

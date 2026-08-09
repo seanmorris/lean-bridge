@@ -31,7 +31,7 @@ The installed `libleanrt.a` uses the `local-exec` TLS model and cannot be linked
 
 The script rebuilds `Init` with the same generated configuration, allocator policy, compiler, and PIC flags. Mixing the installed `Init` archive with the new runtime failed at load time because the two archives used different allocator policies. The build now treats that mismatch as invalid rather than resolving the missing allocator symbol from an unrelated system package.
 
-The native build records the Lean commit, configuration hash, compiler version, libuv version, TLS model, PIC policy, archive members, defined symbols, and artifact hashes under its content-addressed build root.
+The native build validates the pinned source identity, copies that source into its writable content-addressed build root, and applies stable source and project prefix maps. It records the Lean commit, configuration hash, compiler version, libuv version, TLS model, PIC policy, archive members, defined symbols, and artifact hashes.
 
 ## Initialization and loading
 

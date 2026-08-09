@@ -24,8 +24,15 @@
             lld
             ninja
             nodejs_22
+            openssl
+            patchelf
+            php82
+            php82.unwrapped.dev
+            php82Packages.composer
             pkg-config
             python3
+            libuv
+            llvm
             wabt
             xz
             zip
@@ -94,8 +101,19 @@
               gnused
               jq
               nodejs_22
+              openssl
               patch
+              patchelf
+              php82
+              php82.unwrapped.dev
+              php82Packages.composer
+              pkg-config
               python3
+              libuv
+              llvm
+              autoconf
+              automake
+              libtool
               wabt
               wasm-tools
             ];
@@ -107,6 +125,8 @@
               export LEAN_WASM_LEAN_SOURCE='${wasmToolchain.leanSource}'
               export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
               export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
+              export LEAN_NATIVE_HOST_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_NATIVE_SOURCE='${wasmToolchain.leanSource}'
               export EM_CACHE="$TMPDIR/emscripten-cache"
               cp -a '${wasmToolchain.emscriptenUpstream}/emscripten/cache' "$EM_CACHE"
               chmod -R u+w "$EM_CACHE"
@@ -132,6 +152,41 @@
               runHook postInstall
             '';
           };
+
+          php-native-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-php-native";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = with pkgs; [
+              autoconf
+              automake
+              bash
+              clang
+              cmake
+              gnumake
+              libtool
+              libuv
+              llvm
+              nodejs_22
+              openssl
+              patchelf
+              php82
+              php82.unwrapped.dev
+              pkg-config
+            ];
+
+            dontConfigure = true;
+            dontBuild = true;
+            installPhase = ''
+              runHook preInstall
+              export LEAN_NATIVE_HOST_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_NATIVE_SOURCE='${wasmToolchain.leanSource}'
+              node scripts/build-php-native-package.mjs \
+                --manifest poc/lean-link-spike/bindings/php-native.package.json \
+                --output "$out"
+              runHook postInstall
+            '';
+          };
         };
         in
         portablePackages // x86WasmPackages);
@@ -142,6 +197,7 @@
         }
         // nixpkgs.lib.optionalAttrs (pkgs.system == "x86_64-linux") {
           wasm-poc = self.packages.${pkgs.system}.wasm-poc;
+          php-native-package = self.packages.${pkgs.system}.php-native-package;
         });
     };
 }
