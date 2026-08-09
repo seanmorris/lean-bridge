@@ -27,6 +27,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generated JavaScript backend evidence](../evidence/generated-javascript-backend.md)
 - [Generated C backend evidence](../evidence/generated-c-backend.md)
 - [Generated Rust backend evidence](../evidence/generated-rust-backend.md)
+- [Generated Python backend evidence](../evidence/generated-python-backend.md)
 
 ## Permanent review lenses
 
