@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-wasm.invalid/schema/binding-ir.schema.json",
+  "$id": "https://lean-wasm.invalid/schema/binding-ir-v2.schema.json",
   "title": "Language-neutral binding intermediate representation",
   "type": "object",
   "additionalProperties": false,
@@ -16,7 +16,7 @@
     "documentation"
   ],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "component": {
       "type": "object",
       "additionalProperties": false,
@@ -230,6 +230,7 @@
         "fields",
         "target",
         "resource",
+        "callable",
         "documentation",
         "source",
         "assurance"
@@ -237,7 +238,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "name": { "$ref": "#/$defs/name" },
-        "kind": { "enum": ["record", "resource", "alias"] },
+        "kind": { "enum": ["record", "resource", "alias", "callback"] },
         "representation": { "enum": ["copied", "identity"] },
         "mutability": { "enum": ["immutable", "read", "write"] },
         "typeParameters": {
@@ -254,6 +255,9 @@
         "resource": {
           "oneOf": [{ "$ref": "#/$defs/resource" }, { "type": "null" }]
         },
+        "callable": {
+          "oneOf": [{ "$ref": "#/$defs/callable" }, { "type": "null" }]
+        },
         "documentation": { "$ref": "#/$defs/documentation" },
         "source": { "$ref": "#/$defs/source" },
         "assurance": {
@@ -261,6 +265,47 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/id" }
         }
+      }
+    },
+    "callable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "invocation",
+        "reentry",
+        "selfDisposal",
+        "parameters",
+        "result",
+        "effects",
+        "failure",
+        "resultMode"
+      ],
+      "properties": {
+        "invocation": { "enum": ["once", "many"] },
+        "reentry": { "enum": ["same-agent", "disallowed"] },
+        "selfDisposal": { "enum": ["reject", "defer"] },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/parameter" }
+        },
+        "result": { "$ref": "#/$defs/ownershipSite" },
+        "effects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "allocates",
+              "reads-resource",
+              "writes-resource",
+              "fails",
+              "host-call",
+              "async",
+              "nondeterministic"
+            ]
+          }
+        },
+        "failure": { "$ref": "#/$defs/failure" },
+        "resultMode": { "enum": ["value", "promise"] }
       }
     },
     "lifetime": {

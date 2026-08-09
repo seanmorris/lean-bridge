@@ -1,9 +1,12 @@
 import { createHash } from "node:crypto";
 
-import { validateBindingIr } from "./contract.mjs";
+import {
+  validateBindingIr,
+  validateBindingIrForMigration,
+} from "./contract.mjs";
 
-export const BINDING_IR_SCHEMA_VERSION = 1;
-export const SUPPORTED_BINDING_IR_SCHEMA_VERSIONS = Object.freeze([1]);
+export const BINDING_IR_SCHEMA_VERSION = 2;
+export const SUPPORTED_BINDING_IR_SCHEMA_VERSIONS = Object.freeze([2]);
 
 export class BindingIrCanonicalError extends Error {
   constructor(code, message, details = {}) {
@@ -171,8 +174,11 @@ export const parseBindingIr = text => {
 export const canonicalizeBindingIr = value => {
   assertCompatibleBindingIrVersion(value);
   validateBindingIr(value);
-  return serializeCanonical(value, "bindingIr", new Set());
+  return canonicalizeJsonValue(value, "bindingIr");
 };
+
+export const canonicalizeJsonValue = (value, path = "value") =>
+  serializeCanonical(value, path, new Set());
 
 export const hashBindingIr = value =>
   createHash("sha256").update(canonicalizeBindingIr(value), "utf8").digest("hex");
@@ -184,6 +190,14 @@ export const migrateBindingIr = (value, targetVersion = BINDING_IR_SCHEMA_VERSIO
       `This tool cannot emit binding IR schema version ${targetVersion}.`,
       { targetVersion, supported: [...SUPPORTED_BINDING_IR_SCHEMA_VERSIONS] },
     );
+  }
+  if (value?.schemaVersion === 1 && targetVersion === 2) {
+    validateBindingIrForMigration(value);
+    const migrated = structuredClone(value);
+    migrated.schemaVersion = 2;
+    for (const type of migrated.types) type.callable = null;
+    validateBindingIr(migrated);
+    return migrated;
   }
   const diagnostic = diagnoseBindingIrVersion(value);
   if (!diagnostic.compatible) {

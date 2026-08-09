@@ -62,9 +62,11 @@ test("the Alpha fixture defines copied values and identity resources", () => {
 test("the JSON schema is closed and uses draft 2020-12", async () => {
   const schema = JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"));
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.equal(schema.properties.schemaVersion.const, 2);
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.$defs.declaration.additionalProperties, false);
   assert.equal(schema.$defs.typeDefinition.additionalProperties, false);
+  assert.equal(schema.$defs.callable.additionalProperties, false);
 });
 
 test("unknown fields fail instead of silently changing binding semantics", () => {
@@ -151,8 +153,75 @@ test("producer-specific metadata stays behind namespaced extension keys", () => 
   contractError(() => validateBindingIr(candidate), "invalid-value");
 });
 
+const progressCallback = () => ({
+  id: "bridge:Alpha.ProgressCallback",
+  name: "ProgressCallback",
+  kind: "callback",
+  representation: "identity",
+  mutability: "immutable",
+  typeParameters: [],
+  fields: [],
+  target: null,
+  resource: null,
+  callable: {
+    invocation: "many",
+    reentry: "same-agent",
+    selfDisposal: "reject",
+    parameters: [
+      {
+        name: "value",
+        type: { kind: "primitive", name: "uint32" },
+        ownership: "copy",
+        lifetime: null,
+        mutability: "immutable",
+        optional: false,
+        default: null,
+      },
+    ],
+    result: {
+      type: { kind: "primitive", name: "unit" },
+      ownership: "copy",
+      lifetime: null,
+    },
+    effects: ["host-call"],
+    failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
+    resultMode: "value",
+  },
+  documentation: {
+    summary: "Receive progress from Lean.",
+    details: "The callback may re-enter the same shared runtime.",
+  },
+  source: {
+    producer: "bridge",
+    declaration: "Alpha.ProgressCallback",
+    extensions: { "lean-wasm.org/intrinsic": "host-callback" },
+  },
+  assurance: [],
+});
+
+test("callback types carry closed invocation and re-entry semantics", () => {
+  const candidate = clone(fixture);
+  candidate.types.push(progressCallback());
+  assert.equal(validateBindingIr(candidate), candidate);
+
+  const copied = clone(candidate);
+  copied.types.at(-1).representation = "copied";
+  contractError(() => validateBindingIr(copied), "callback-shape");
+
+  const asynchronous = clone(candidate);
+  asynchronous.types.at(-1).callable.resultMode = "promise";
+  contractError(() => validateBindingIr(asynchronous), "async-effect");
+
+  const receiverAnchor = clone(candidate);
+  const parameter = receiverAnchor.types.at(-1).callable.parameters[0];
+  parameter.type = { kind: "named", id: "lean:Alpha.Box" };
+  parameter.ownership = "borrow";
+  parameter.lifetime = { scope: "receiver", anchor: "receiver" };
+  contractError(() => validateBindingIr(receiverAnchor), "borrow-anchor");
+});
+
 const schemaProducedFixture = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   component: {
     id: "fixture/schema-math@1.0.0",
     name: "Schema Math",
@@ -279,7 +348,7 @@ test("the Lean frontend carries declaration and proof provenance through its nam
   assert.equal(ir.types[0].source.extensions["lean-lang.org/export"], "record");
   assert.deepEqual(
     ir.assurance.find(item => item.id === "assurance:Alpha.Payload.layout").assumptions,
-    ["The bridge generator and target ABI adapter implement Binding IR version 1."],
+    ["The bridge generator and target ABI adapter implement Binding IR version 2."],
   );
 });
 
@@ -307,7 +376,7 @@ test("canonical serialization ignores object insertion order", () => {
 test("the Alpha semantic fixture has a stable reviewed content identity", () => {
   assert.equal(
     hashBindingIr(fixture),
-    "b0df6aa84caa0a87f5d404f8def104d3210c1acbbd194d0fdcaf6eef48f54e65",
+    "0c70be5d4080e928182f6b8f3340c50614e8c5d14238810a04161cbcd25a5780",
   );
   const changed = clone(fixture);
   changed.documentation.summary = "Changed semantic documentation.";
@@ -336,14 +405,25 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
   assert.deepEqual(diagnoseBindingIrVersion(fixture), {
     compatible: true,
     code: "exact-schema-version",
-    actual: 1,
-    supported: [1],
+    actual: 2,
+    supported: [2],
     relation: "exact",
     action: null,
   });
-  assert.equal(diagnoseBindingIrVersion({ schemaVersion: 2 }).code, "consumer-upgrade-required");
+  assert.equal(diagnoseBindingIrVersion({ schemaVersion: 1 }).code, "migration-required");
+  assert.equal(diagnoseBindingIrVersion({ schemaVersion: 3 }).code, "consumer-upgrade-required");
   assert.equal(diagnoseBindingIrVersion({ schemaVersion: 0 }).code, "invalid-schema-version");
-  assert.throws(() => migrateBindingIr({ schemaVersion: 2 }), error => {
+
+  const legacy = clone(fixture);
+  legacy.schemaVersion = 1;
+  legacy.types.forEach(type => delete type.callable);
+  contractError(() => validateBindingIr(legacy), "unsupported-schema");
+  const migrated = migrateBindingIr(legacy);
+  assert.equal(migrated.schemaVersion, 2);
+  assert.deepEqual(migrated.types.map(type => type.callable), [null, null]);
+  assert.equal(validateBindingIr(migrated), migrated);
+
+  assert.throws(() => migrateBindingIr({ schemaVersion: 3 }), error => {
     assert.equal(error instanceof BindingIrCompatibilityError, true);
     assert.equal(error.code, "migration-unavailable");
     return true;
@@ -353,7 +433,7 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
 test("the Binding IR CLI exposes validation, hashing, and machine-readable diagnostics", async () => {
   const file = "poc/lean-link-spike/bindings/alpha.binding-ir.json";
   const validated = await execute(process.execPath, ["scripts/binding-ir.mjs", "validate", file]);
-  assert.match(validated.stdout, /valid schemaVersion=1 component=poc\/lean-alpha@0\.0\.0/);
+  assert.match(validated.stdout, /valid schemaVersion=2 component=poc\/lean-alpha@0\.0\.0/);
   const hashed = await execute(process.execPath, ["scripts/binding-ir.mjs", "hash", file]);
   assert.equal(hashed.stdout.trim(), hashBindingIr(fixture));
   const diagnosed = await execute(process.execPath, ["scripts/binding-ir.mjs", "diagnose", file]);

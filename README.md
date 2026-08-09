@@ -268,11 +268,11 @@ The architecture-testing POC has established:
 - a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 107 passing behavioral and structural tests;
+- 111 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, and pending-operation plan from the canonical binding IR. A public function returns a normal JavaScript Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Cancellation and shutdown complete once and prevent late Lean execution. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the generated contract and executable races. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. A public function returns a normal JavaScript Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Cancellation and shutdown complete once and prevent late Lean execution. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the generated call cycle. [The callback-plan evidence](docs/evidence/callback-signature-plan.md) records the stable signature and re-entry contract. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callback execution and nested re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

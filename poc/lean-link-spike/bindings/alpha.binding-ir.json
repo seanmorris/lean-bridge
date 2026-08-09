@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "component": {
     "id": "poc/lean-alpha@0.0.0",
     "name": "Lean Alpha",
@@ -86,6 +86,7 @@
       ],
       "target": null,
       "resource": null,
+      "callable": null,
       "documentation": {
         "summary": "A copied value used to test rich primitive preservation.",
         "details": "The bridge preserves field types across the ABI instead of serializing the record as JSON."
@@ -114,6 +115,7 @@
         "fallback": "queued-finalizer",
         "cycles": "explicit-cut"
       },
+      "callable": null,
       "documentation": {
         "summary": "An identity-bearing Lean object with deterministic disposal.",
         "details": "Generated host wrappers are canonical within one shared runtime."
@@ -322,7 +324,7 @@
       "subject": "lean:Alpha.Payload",
       "claim": "The copied ABI frame preserves the declared field types.",
       "theorems": [],
-      "assumptions": ["The bridge generator and target ABI adapter implement Binding IR version 1."],
+      "assumptions": ["The bridge generator and target ABI adapter implement Binding IR version 2."],
       "source": {
         "producer": "bridge",
         "declaration": "typed-value-frame",

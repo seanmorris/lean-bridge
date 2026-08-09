@@ -35,6 +35,8 @@ const EFFECTS = new Set([
   "nondeterministic",
 ]);
 const RESULT_MODES = new Set(["value", "promise", "iterator", "async-iterator"]);
+const CALLBACK_RESULT_MODES = new Set(["value", "promise"]);
+const SCHEMA_VERSIONS = new Set([1, 2]);
 
 export class BindingIrContractError extends Error {
   constructor(code, message, details = {}) {
@@ -275,6 +277,68 @@ const validateFailure = (value, path, knownErrors) => {
   }
 };
 
+const validateParameterShape = (parameter, path, typeParameters) => {
+  exactKeys(
+    parameter,
+    ["name", "type", "ownership", "lifetime", "mutability", "optional", "default"],
+    [],
+    path,
+  );
+  string(parameter.name, `${path}.name`, NAME);
+  validateOwnershipSite(parameter, path, typeParameters);
+  enumeration(parameter.mutability, MUTABILITY, `${path}.mutability`);
+  boolean(parameter.optional, `${path}.optional`);
+  if (!parameter.optional && parameter.default !== null) {
+    fail("unexpected-default", `${path} required parameter cannot have a default`, {
+      path,
+    });
+  }
+};
+
+const validateCallableShape = (value, path, typeParameters, knownErrors) => {
+  exactKeys(
+    value,
+    [
+      "invocation",
+      "reentry",
+      "selfDisposal",
+      "parameters",
+      "result",
+      "effects",
+      "failure",
+      "resultMode",
+    ],
+    [],
+    path,
+  );
+  enumeration(value.invocation, new Set(["once", "many"]), `${path}.invocation`);
+  enumeration(value.reentry, new Set(["same-agent", "disallowed"]), `${path}.reentry`);
+  enumeration(value.selfDisposal, new Set(["reject", "defer"]), `${path}.selfDisposal`);
+  array(value.parameters, `${path}.parameters`).forEach((parameter, index) =>
+    validateParameterShape(parameter, `${path}.parameters[${index}]`, typeParameters),
+  );
+  unique(value.parameters, parameter => parameter.name, `${path}.parameters`);
+  validateOwnershipSite(value.result, `${path}.result`, typeParameters);
+  array(value.effects, `${path}.effects`).forEach((effect, index) =>
+    enumeration(effect, EFFECTS, `${path}.effects[${index}]`),
+  );
+  unique(value.effects, effect => effect, `${path}.effects`);
+  validateFailure(value.failure, `${path}.failure`, knownErrors);
+  if (value.failure.mode === "declared" && !value.effects.includes("fails")) {
+    fail("failure-effect", `${path} declared failure must include fails effect`, { path });
+  }
+  if (value.failure.mode === "none" && value.effects.includes("fails")) {
+    fail("failure-effect", `${path} none failure mode cannot include fails effect`, { path });
+  }
+  enumeration(value.resultMode, CALLBACK_RESULT_MODES, `${path}.resultMode`);
+  if (value.resultMode === "promise" && !value.effects.includes("async")) {
+    fail("async-effect", `${path} Promise result must include async effect`, { path });
+  }
+  if (value.resultMode === "value" && value.effects.includes("async")) {
+    fail("sync-effect", `${path} value result cannot include async effect`, { path });
+  }
+};
+
 const assertKnownTypeRef = (typeRef, path, typeMap) => {
   if (typeRef.kind === "named" && !typeMap.has(typeRef.id)) {
     fail("unknown-type", `${path} references unknown type ${typeRef.id}`, {
@@ -333,7 +397,7 @@ const validateReferenceList = (value, known, path, code) => {
   });
 };
 
-export const validateBindingIr = (ir, path = "bindingIr") => {
+export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
   exactKeys(
     ir,
     [
@@ -350,10 +414,10 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
     [],
     path,
   );
-  if (ir.schemaVersion !== 1) {
-    fail("unsupported-schema", `${path}.schemaVersion must be 1`, {
+  if (!SCHEMA_VERSIONS.has(ir.schemaVersion)) {
+    fail("unsupported-schema", `${path}.schemaVersion must be 1 or 2`, {
       path: `${path}.schemaVersion`,
-      expected: 1,
+      expected: [...SCHEMA_VERSIONS],
       actual: ir.schemaVersion,
     });
   }
@@ -392,14 +456,20 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
     producers.add(producer.id);
   });
 
+  array(ir.errors, `${path}.errors`);
+  ir.errors.forEach((error, index) => {
+    object(error, `${path}.errors[${index}]`);
+    string(error.id, `${path}.errors[${index}].id`, ID);
+  });
+  unique(ir.errors, error => error.id, `${path}.errors`);
+  const declaredErrors = new Set(ir.errors.map(error => error.id));
+
   array(ir.types, `${path}.types`);
   unique(ir.types, type => type.id, `${path}.types`);
   const typeMap = new Map(ir.types.map(type => [type.id, type]));
   ir.types.forEach((type, index) => {
     const typePath = `${path}.types[${index}]`;
-    exactKeys(
-      type,
-      [
+    const typeKeys = [
         "id",
         "name",
         "kind",
@@ -412,13 +482,23 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
         "documentation",
         "source",
         "assurance",
-      ],
+      ];
+    if (ir.schemaVersion === 2) typeKeys.splice(9, 0, "callable");
+    exactKeys(
+      type,
+      typeKeys,
       [],
       typePath,
     );
     string(type.id, `${typePath}.id`, ID);
     string(type.name, `${typePath}.name`, NAME);
-    enumeration(type.kind, new Set(["record", "resource", "alias"]), `${typePath}.kind`);
+    enumeration(
+      type.kind,
+      ir.schemaVersion === 1
+        ? new Set(["record", "resource", "alias"])
+        : new Set(["record", "resource", "alias", "callback"]),
+      `${typePath}.kind`,
+    );
     enumeration(
       type.representation,
       new Set(["copied", "identity"]),
@@ -445,7 +525,12 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
     });
 
     if (type.kind === "record") {
-      if (type.representation !== "copied" || type.resource !== null || type.target !== null) {
+      if (
+        type.representation !== "copied" ||
+        type.resource !== null ||
+        type.target !== null ||
+        (ir.schemaVersion === 2 && type.callable !== null)
+      ) {
         fail("record-shape", `${typePath} record must be copied and have no resource or alias target`, {
           path: typePath,
         });
@@ -460,7 +545,12 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
       });
       unique(type.fields, field => field.name, `${typePath}.fields`);
     } else if (type.kind === "resource") {
-      if (type.representation !== "identity" || type.fields.length !== 0 || type.target !== null) {
+      if (
+        type.representation !== "identity" ||
+        type.fields.length !== 0 ||
+        type.target !== null ||
+        (ir.schemaVersion === 2 && type.callable !== null)
+      ) {
         fail("resource-shape", `${typePath} resource must be identity-bearing without fields or alias target`, {
           path: typePath,
         });
@@ -487,11 +577,37 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
         new Set(["no-back-edges", "explicit-cut"]),
         `${typePath}.resource.cycles`,
       );
-    } else {
-      if (type.fields.length !== 0 || type.resource !== null || type.target === null) {
+    } else if (type.kind === "alias") {
+      if (
+        type.fields.length !== 0 ||
+        type.resource !== null ||
+        type.target === null ||
+        (ir.schemaVersion === 2 && type.callable !== null)
+      ) {
         fail("alias-shape", `${typePath} alias requires only a target`, { path: typePath });
       }
       validateTypeRef(type.target, `${typePath}.target`, parameterIds);
+    } else {
+      if (
+        type.representation !== "identity" ||
+        type.mutability !== "immutable" ||
+        type.fields.length !== 0 ||
+        type.target !== null ||
+        type.resource !== null ||
+        type.callable === null
+      ) {
+        fail(
+          "callback-shape",
+          `${typePath} callback must be an immutable identity with one callable signature`,
+          { path: typePath },
+        );
+      }
+      validateCallableShape(
+        type.callable,
+        `${typePath}.callable`,
+        parameterIds,
+        declaredErrors,
+      );
     }
     validateDocumentation(type.documentation, `${typePath}.documentation`);
     validateSource(type.source, `${typePath}.source`, producers);
@@ -524,6 +640,56 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
           "alias-representation",
           `${targetPath} has ${representation} representation, not ${type.representation}`,
           { path: targetPath, expected: type.representation, actual: representation },
+        );
+      }
+    } else if (type.kind === "callback") {
+      const callablePath = `${type.id}.callable`;
+      type.callable.parameters.forEach((parameter, index) => {
+        const parameterPath = `${callablePath}.parameters[${index}]`;
+        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters);
+        if (parameter.lifetime?.scope === "receiver") {
+          fail("borrow-anchor", `${parameterPath} callback parameter has no receiver anchor`, {
+            path: `${parameterPath}.lifetime.anchor`,
+          });
+        }
+        if (
+          parameter.lifetime?.scope === "parameter" &&
+          !type.callable.parameters.some(item => item.name === parameter.lifetime.anchor)
+        ) {
+          fail(
+            "borrow-anchor",
+            `${parameterPath} names unknown callback parameter ${parameter.lifetime.anchor}`,
+            {
+              path: `${parameterPath}.lifetime.anchor`,
+              anchor: parameter.lifetime.anchor,
+            },
+          );
+        }
+      });
+      checkOwnershipRepresentation(
+        type.callable.result,
+        `${callablePath}.result`,
+        typeMap,
+        typeParameters,
+      );
+      if (type.callable.result.lifetime?.scope === "receiver") {
+        fail("borrow-anchor", `${callablePath}.result has no receiver anchor`, {
+          path: `${callablePath}.result.lifetime.anchor`,
+        });
+      }
+      if (
+        type.callable.result.lifetime?.scope === "parameter" &&
+        !type.callable.parameters.some(
+          parameter => parameter.name === type.callable.result.lifetime.anchor,
+        )
+      ) {
+        fail(
+          "borrow-anchor",
+          `${callablePath}.result names unknown callback parameter ${type.callable.result.lifetime.anchor}`,
+          {
+            path: `${callablePath}.result.lifetime.anchor`,
+            anchor: type.callable.result.lifetime.anchor,
+          },
         );
       }
     }
@@ -714,21 +880,7 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
     array(declaration.parameters, `${declarationPath}.parameters`).forEach(
       (parameter, parameterIndex) => {
         const parameterPath = `${declarationPath}.parameters[${parameterIndex}]`;
-        exactKeys(
-          parameter,
-          ["name", "type", "ownership", "lifetime", "mutability", "optional", "default"],
-          [],
-          parameterPath,
-        );
-        string(parameter.name, `${parameterPath}.name`, NAME);
-        validateOwnershipSite(parameter, parameterPath, parameterIds);
-        enumeration(parameter.mutability, MUTABILITY, `${parameterPath}.mutability`);
-        boolean(parameter.optional, `${parameterPath}.optional`);
-        if (!parameter.optional && parameter.default !== null) {
-          fail("unexpected-default", `${parameterPath} required parameter cannot have a default`, {
-            path: parameterPath,
-          });
-        }
+        validateParameterShape(parameter, parameterPath, parameterIds);
         checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters);
       },
     );
@@ -831,4 +983,15 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
     }
   }
   return ir;
+};
+
+export const validateBindingIr = (ir, path = "bindingIr") => {
+  if (ir?.schemaVersion !== 2) {
+    fail("unsupported-schema", `${path}.schemaVersion must be 2`, {
+      path: `${path}.schemaVersion`,
+      expected: 2,
+      actual: ir?.schemaVersion,
+    });
+  }
+  return validateBindingIrForMigration(ir, path);
 };

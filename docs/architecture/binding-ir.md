@@ -4,7 +4,7 @@ Status: implemented contract for the architecture POC.
 
 The binding intermediate representation records one component's public semantics before a generator chooses JavaScript, TypeScript, C, Rust, Python, or another host syntax. Every backend receives the same type, ownership, failure, capability, and assurance data. A backend can adapt those semantics to native language conventions. It cannot redefine them.
 
-The version 1 artifacts are:
+The version 2 artifacts are:
 
 - [`schema/binding-ir.schema.json`](../../schema/binding-ir.schema.json), the closed interchange schema;
 - [`src/binding-ir/contract.mjs`](../../src/binding-ir/contract.mjs), the graph and semantic validator;
@@ -13,7 +13,7 @@ The version 1 artifacts are:
 
 ## What the IR records
 
-| Concern | Version 1 representation | Required backend behavior |
+| Concern | Version 2 representation | Required backend behavior |
 |---|---|---|
 | Primitive values | Unit, booleans, fixed-width integers, arbitrary integers, floats, strings, and bytes | Preserve the semantic type. Do not substitute an untyped JSON protocol. |
 | Constructed values | Arrays, options, results, tuples, named types, and generic parameters | Reject unsupported instantiations before generating a package. |
@@ -23,6 +23,7 @@ The version 1 artifacts are:
 | Ownership | Copy, borrow, lease, and transfer | Generate validation, retain and release operations, disposal, and wrapper reuse from the declared transition. |
 | Lifetime | Call, receiver, parameter, explicit, or runtime scope with a checked anchor where required | Prevent a generated borrow from outliving its anchor. |
 | Resource policy | Nominal kind, disposal policy, finalizer fallback, and cycle policy | Use generation-safe tokens and deterministic cleanup. Finalization remains a fallback. |
+| Callbacks and closures | Identity-bearing callback types with invocation count, re-entry, self-disposal, parameters, result delivery, effects, and failure semantics | Generate stable signature IDs, native callables, handle conversion, fixed Wasm table adapters, nested frame checks, and deterministic cleanup. |
 | Failure | No declared failure or a closed set of declared errors, plus trap or poisoned-runtime handling for unexpected failures | Project the same failures through idiomatic exceptions or result types without dropping cases. |
 | Result delivery | Value, Promise, iterator, or async iterator | Generate the target's native protocol when its capability profile supports it. |
 | Capabilities | Required or optional host, target, runtime, and feature capabilities | Fail generation for a missing required capability. Report an optional gap explicitly. |
@@ -111,14 +112,14 @@ All generators MUST validate the IR before emitting files. A generator MUST reje
 These rules follow the JSON Canonicalization Scheme ordering and primitive serialization model. `hashBindingIr` computes SHA-256 over the canonical UTF-8 bytes. The reviewed Alpha fixture has this semantic identity:
 
 ```text
-b0df6aa84caa0a87f5d404f8def104d3210c1acbbd194d0fdcaf6eef48f54e65
+0c70be5d4080e928182f6b8f3340c50614e8c5d14238810a04161cbcd25a5780
 ```
 
 Changing object insertion order preserves the hash. Changing documentation, assurance, types, ownership, or any other recorded field changes the hash. Packages and provenance reports can therefore identify the exact reviewed semantic contract consumed by every backend.
 
 ## Compatibility rules
 
-`schemaVersion` is a semantic major version. Version 1 consumers accept version 1 artifacts and reject every other version before generation. Unknown core fields also fail validation. Namespaced extension objects can add producer facts without changing the core schema, but a backend cannot depend on an extension to replace required core semantics.
+`schemaVersion` is a semantic major version. Version 2 consumers accept version 2 artifacts and reject every other version before generation. Unknown core fields also fail validation. Namespaced extension objects can add producer facts without changing the core schema, but a backend cannot depend on an extension to replace required core semantics.
 
 The version diagnostic reports one of these outcomes:
 
@@ -129,7 +130,7 @@ The version diagnostic reports one of these outcomes:
 | Newer version | Upgrade the consumer before generation. |
 | Invalid version | Regenerate with a conforming frontend. |
 
-Version 1 has no predecessor, so no automatic migration is registered. A future migration returns a new validated IR artifact. It never edits an artifact while preserving its old content identity.
+The version 1 to version 2 migration adds a null callable slot to existing record, resource, and alias definitions. Version 2 producers can add callback definitions. Migration returns a new validated artifact with a new content identity. It does not edit the version 1 artifact.
 
 ## CLI contract
 
