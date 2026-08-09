@@ -2,6 +2,9 @@
   "name": "@lean-wasm/bridge-poc",
   "version": "0.0.0-poc",
   "private": true,
+  "bin": {
+    "lean-bridge": "scripts/lean-bridge.mjs"
+  },
   "type": "module",
   "description": "Architecture-testing POC for a Vrzno-inspired Lean WebAssembly bridge",
   "license": "MIT",
@@ -24,6 +27,7 @@
     "benchmark:poc": "node scripts/benchmark-native-api.mjs",
     "benchmark:php": "node scripts/benchmark-php-transports.mjs",
     "binding-ir": "node scripts/binding-ir.mjs",
+    "cli": "node scripts/lean-bridge.mjs",
     "binding-packages": "node scripts/binding-package-gate.mjs check poc/lean-link-spike/bindings/alpha.binding-ir.json poc/lean-link-spike/bindings/generated-package-gate.json",
     "binding-parity": "node scripts/binding-semantic-parity.mjs poc/lean-link-spike/bindings/alpha.binding-ir.json",
     "release:rehearse": "node scripts/rehearse-release.mjs",

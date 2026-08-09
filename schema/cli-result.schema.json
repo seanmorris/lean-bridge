@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/cli-result.schema.json",
+  "title": "Lean Bridge CLI result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "command",
+    "mode",
+    "status",
+    "project",
+    "interactive",
+    "result",
+    "diagnostics",
+    "nextActions"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "command": { "enum": ["analyze", "build", "publish"] },
+    "mode": { "enum": ["execute", "dry-run"] },
+    "status": { "enum": ["ok", "blocked", "needs-input", "failed"] },
+    "project": { "type": "string", "minLength": 1 },
+    "interactive": { "type": "boolean" },
+    "result": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "null" }
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "severity", "message", "path", "hint"],
+        "properties": {
+          "code": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["info", "warning", "error"] },
+          "message": { "type": "string", "minLength": 1 },
+          "path": { "type": ["string", "null"] },
+          "hint": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}
