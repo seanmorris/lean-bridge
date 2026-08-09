@@ -22,6 +22,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 16 | Preserve AI-native semantic discovery and verified reuse as an ecosystem north star | Directional; implementation deferred |
 | 17 | Accessibility, zero-friction host conventions, and progressive optional learning are architecture gates | Accepted for POC |
 | 18 | Universal composition contracts and independent-component CI evidence at every layer | Accepted for POC |
+| 19 | One language-neutral binding IR with namespaced producer adapters | Accepted for POC |
 
 ## ADR 1: Generated native binding surface
 
@@ -52,6 +53,12 @@ JavaScript and Python consumers use ordinary ecosystem installation and language
 ## ADR 18: Universal composition contract
 
 Every supported abstraction layer defines compatibility identities and composition rules for semantics, types/effects, ABI, runtime/ownership, errors/async, proofs/trust, metadata, packages, locks, and target projections. CI composes at least two independently built components at every claimed layer. Startup-side, lazy-side, and final-static profiles consume the same canonical graph and expose equivalent contracts. A composition claim without independent evidence is unverified and blocks production approval.
+
+## ADR 19: Language-neutral binding IR
+
+One versioned binding IR owns declaration, type, identity, mutability, ownership, lifetime, failure, result-delivery, capability, documentation, and assurance semantics. JavaScript, TypeScript, C, Rust, Python, ABI, and lifecycle generators consume this IR. Backend code may choose idiomatic syntax and report capability gaps. It may not restate or override binding semantics.
+
+Lean is the first producer adapter. Lean declaration identities, elaborator details, export selection, and proof provenance enter through a declared producer and namespaced extensions. Another verified source can populate the same core without pretending that source-specific evidence is universal. The validator rejects source metadata that bypasses a namespace and rejects abstraction that loses lifetime or assurance meaning.
 
 ## Amendment rule
 

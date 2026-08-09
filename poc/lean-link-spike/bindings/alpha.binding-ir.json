@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "component": {
+    "id": "poc/lean-alpha@0.0.0",
+    "name": "Lean Alpha",
+    "version": "0.0.0"
+  },
+  "producers": [
+    {
+      "id": "lean",
+      "adapter": "lean4",
+      "adapterVersion": 1,
+      "tool": "Lean",
+      "toolVersion": "4.19.0",
+      "extensions": {
+        "lean-lang.org/module": "Alpha"
+      }
+    },
+    {
+      "id": "bridge",
+      "adapter": "lean-wasm-bridge",
+      "adapterVersion": 1,
+      "tool": "Lean Bridge",
+      "toolVersion": "0.0.0-poc",
+      "extensions": {}
+    }
+  ],
+  "types": [
+    {
+      "id": "lean:Alpha.Payload",
+      "name": "Payload",
+      "kind": "record",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [
+        {
+          "name": "enabled",
+          "type": { "kind": "primitive", "name": "bool" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Whether processing is enabled.",
+            "details": ""
+          }
+        },
+        {
+          "name": "count",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "An unsigned 32-bit count.",
+            "details": ""
+          }
+        },
+        {
+          "name": "label",
+          "type": { "kind": "primitive", "name": "string" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "A Unicode label.",
+            "details": ""
+          }
+        },
+        {
+          "name": "digest",
+          "type": { "kind": "primitive", "name": "bytes" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "An uninterpreted byte sequence.",
+            "details": ""
+          }
+        },
+        {
+          "name": "samples",
+          "type": {
+            "kind": "apply",
+            "constructor": "array",
+            "arguments": [{ "kind": "primitive", "name": "uint32" }]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "A sequence of unsigned 32-bit samples.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "documentation": {
+        "summary": "A copied value used to test rich primitive preservation.",
+        "details": "The bridge preserves field types across the ABI instead of serializing the record as JSON."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Payload",
+        "extensions": {
+          "lean-lang.org/export": "record"
+        }
+      },
+      "assurance": ["assurance:Alpha.Payload.layout"]
+    },
+    {
+      "id": "lean:Alpha.Box",
+      "name": "Box",
+      "kind": "resource",
+      "representation": "identity",
+      "mutability": "read",
+      "typeParameters": [],
+      "fields": [],
+      "target": null,
+      "resource": {
+        "kindId": "resource:Alpha.Box",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "cycles": "explicit-cut"
+      },
+      "documentation": {
+        "summary": "An identity-bearing Lean object with deterministic disposal.",
+        "details": "Generated host wrappers are canonical within one shared runtime."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Box",
+        "extensions": {
+          "lean-lang.org/export": "resource"
+        }
+      },
+      "assurance": ["assurance:Alpha.Box.identity"]
+    }
+  ],
+  "declarations": [
+    {
+      "id": "lean:Alpha.box",
+      "name": "box",
+      "kind": "constructor",
+      "overloadKey": "box(uint32)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.box.boundary"],
+      "documentation": {
+        "summary": "Construct a Box owned by the caller.",
+        "details": "The generated wrapper exposes a native constructor or factory and hides token transport."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.box",
+        "extensions": {
+          "lean-lang.org/export": "constructor"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.Box.read",
+      "name": "read",
+      "kind": "method",
+      "overloadKey": "Box.read()",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "call", "anchor": null },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "read",
+      "effects": ["reads-resource", "fails"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:disposed-resource"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.Box.read.boundary"],
+      "documentation": {
+        "summary": "Read the value stored in a Box.",
+        "details": "The receiver remains borrowed for the duration of the call."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Box.read",
+        "extensions": {
+          "lean-lang.org/export": "method"
+        }
+      }
+    },
+    {
+      "id": "bridge:Alpha.Box.identity",
+      "name": "identity",
+      "kind": "method",
+      "overloadKey": "Box.identity()",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "call", "anchor": null },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      },
+      "mutability": "read",
+      "effects": ["fails"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:disposed-resource"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.Box.identity"] ,
+      "documentation": {
+        "summary": "Return the canonical wrapper for the receiver.",
+        "details": "Repeated projection of one live runtime object preserves host object identity."
+      },
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.Box.identity",
+        "extensions": {
+          "lean-wasm.org/intrinsic": "canonical-wrapper"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.roundTrip",
+      "name": "roundTrip",
+      "kind": "function",
+      "overloadKey": "roundTrip(Payload)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "payload",
+          "type": { "kind": "named", "id": "lean:Alpha.Payload" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Payload" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.roundTrip.boundary"],
+      "documentation": {
+        "summary": "Round-trip a typed copied record.",
+        "details": "The generated binding adapts booleans, fixed-width integers, strings, bytes, and arrays without a JSON protocol."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.roundTrip",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.echo",
+      "name": "echo",
+      "kind": "function",
+      "overloadKey": "echo<T>(T)",
+      "typeParameters": [
+        {
+          "id": "T",
+          "representation": "copied",
+          "constraints": ["constraint:copyable"]
+        }
+      ],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "parameter", "id": "T" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "parameter", "id": "T" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "immutable",
+      "effects": [],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": ["assurance:Alpha.echo.boundary"],
+      "documentation": {
+        "summary": "Return one copied value with the same semantic type.",
+        "details": "The type parameter is constrained to copied representations."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.echo",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
+    }
+  ],
+  "errors": [
+    {
+      "id": "error:disposed-resource",
+      "name": "DisposedResource",
+      "category": "boundary",
+      "payload": null,
+      "documentation": {
+        "summary": "A host wrapper referred to a resource that has been disposed.",
+        "details": "Generated bindings report this condition before calling the target function."
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "capability:shared-runtime",
+      "category": "runtime",
+      "requirement": "required",
+      "documentation": {
+        "summary": "The component uses the application shared runtime.",
+        "details": "The package does not embed a private Lean runtime, heap, memory, or table."
+      }
+    }
+  ],
+  "assurance": [
+    {
+      "id": "assurance:Alpha.Payload.layout",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.Payload",
+      "claim": "The copied ABI frame preserves the declared field types.",
+      "theorems": [],
+      "assumptions": ["The bridge generator and target ABI adapter implement Binding IR version 1."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "typed-value-frame",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/typed-value-frame.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.Box.identity",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.Box",
+      "claim": "One live runtime object maps to one canonical host wrapper.",
+      "theorems": [],
+      "assumptions": ["The runtime registry enforces generation-safe token validation."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "generation-safe-registry",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/generation-safe-registries.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.box.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.box",
+      "claim": "The generated constructor preserves the declared ownership transition.",
+      "theorems": [],
+      "assumptions": ["The current POC does not prove generated wrapper correctness."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.box",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.Box.read.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.Box.read",
+      "claim": "The generated method preserves the declared receiver borrow.",
+      "theorems": [],
+      "assumptions": ["The current POC does not prove generated wrapper correctness."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.Box.read",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.roundTrip.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.roundTrip",
+      "claim": "The wrapper preserves every copied field across the host boundary.",
+      "theorems": [],
+      "assumptions": ["The current POC tests representative values rather than all values."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.roundTrip",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.echo.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.echo",
+      "claim": "The selected target backend preserves copied generic arguments.",
+      "theorems": [],
+      "assumptions": ["Each target backend must reject unsupported concrete instantiations."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.echo",
+        "extensions": {}
+      }
+    }
+  ],
+  "documentation": {
+    "summary": "Language-neutral binding contract for the Alpha POC component.",
+    "details": "JavaScript, C, Rust, Python, and future backends consume the same semantic declaration graph."
+  }
+}

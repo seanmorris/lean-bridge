@@ -12,6 +12,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Recommended architecture](architecture.md)
 - [Accessibility and universal composition contract](accessibility-composition.md)
 - [Generated native binding contract](native-bindings.md)
+- [Canonical binding IR](binding-ir.md)
 - [Component and lifecycle diagrams](diagrams.md)
 - [Architecture decisions](adr/README.md)
 - [Proof-of-concept plan](poc-plan.md)

@@ -1,0 +1,465 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-wasm.invalid/schema/binding-ir.schema.json",
+  "title": "Language-neutral binding intermediate representation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "component",
+    "producers",
+    "types",
+    "declarations",
+    "errors",
+    "capabilities",
+    "assurance",
+    "documentation"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/packageId" },
+        "name": { "$ref": "#/$defs/nonemptyString" },
+        "version": { "$ref": "#/$defs/nonemptyString" }
+      }
+    },
+    "producers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/producer" }
+    },
+    "types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/typeDefinition" }
+    },
+    "declarations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/declaration" }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/error" }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capability" }
+    },
+    "assurance": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assurance" }
+    },
+    "documentation": { "$ref": "#/$defs/documentation" }
+  },
+  "$defs": {
+    "nonemptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "packageId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*@[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?$"
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "details"],
+      "properties": {
+        "summary": { "$ref": "#/$defs/nonemptyString" },
+        "details": { "type": "string" }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9.-]*/[A-Za-z0-9][A-Za-z0-9._-]*$"
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "adapter",
+        "adapterVersion",
+        "tool",
+        "toolVersion",
+        "extensions"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/name" },
+        "adapter": { "$ref": "#/$defs/nonemptyString" },
+        "adapterVersion": { "type": "integer", "minimum": 1 },
+        "tool": { "$ref": "#/$defs/nonemptyString" },
+        "toolVersion": { "$ref": "#/$defs/nonemptyString" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer", "declaration", "extensions"],
+      "properties": {
+        "producer": { "$ref": "#/$defs/name" },
+        "declaration": { "$ref": "#/$defs/nonemptyString" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "typeParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "representation", "constraints"],
+      "properties": {
+        "id": { "$ref": "#/$defs/name" },
+        "representation": { "enum": ["copied", "identity", "any"] },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "typeRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "name"],
+          "properties": {
+            "kind": { "const": "primitive" },
+            "name": {
+              "enum": [
+                "unit",
+                "bool",
+                "uint8",
+                "uint16",
+                "uint32",
+                "uint64",
+                "int8",
+                "int16",
+                "int32",
+                "int64",
+                "nat",
+                "int",
+                "float32",
+                "float64",
+                "string",
+                "bytes"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "named" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "parameter" },
+            "id": { "$ref": "#/$defs/name" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "constructor", "arguments"],
+          "properties": {
+            "kind": { "const": "apply" },
+            "constructor": { "enum": ["array", "option", "result", "tuple"] },
+            "arguments": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/typeRef" }
+            }
+          }
+        }
+      ]
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "mutability", "documentation"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "type": { "$ref": "#/$defs/typeRef" },
+        "mutability": { "enum": ["immutable", "read", "write"] },
+        "documentation": { "$ref": "#/$defs/documentation" }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kindId", "disposal", "fallback", "cycles"],
+      "properties": {
+        "kindId": { "$ref": "#/$defs/id" },
+        "disposal": { "enum": ["required", "scope", "runtime"] },
+        "fallback": { "enum": ["none", "queued-finalizer"] },
+        "cycles": { "enum": ["no-back-edges", "explicit-cut"] }
+      }
+    },
+    "typeDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "representation",
+        "mutability",
+        "typeParameters",
+        "fields",
+        "target",
+        "resource",
+        "documentation",
+        "source",
+        "assurance"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/name" },
+        "kind": { "enum": ["record", "resource", "alias"] },
+        "representation": { "enum": ["copied", "identity"] },
+        "mutability": { "enum": ["immutable", "read", "write"] },
+        "typeParameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typeParameter" }
+        },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "target": {
+          "oneOf": [{ "$ref": "#/$defs/typeRef" }, { "type": "null" }]
+        },
+        "resource": {
+          "oneOf": [{ "$ref": "#/$defs/resource" }, { "type": "null" }]
+        },
+        "documentation": { "$ref": "#/$defs/documentation" },
+        "source": { "$ref": "#/$defs/source" },
+        "assurance": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "lifetime": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scope", "anchor"],
+          "properties": {
+            "scope": { "enum": ["call", "receiver", "parameter", "explicit", "runtime"] },
+            "anchor": {
+              "oneOf": [{ "$ref": "#/$defs/nonemptyString" }, { "type": "null" }]
+            }
+          }
+        }
+      ]
+    },
+    "ownershipSite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ownership", "lifetime"],
+      "properties": {
+        "type": { "$ref": "#/$defs/typeRef" },
+        "ownership": { "enum": ["copy", "borrow", "lease", "transfer"] },
+        "lifetime": { "$ref": "#/$defs/lifetime" }
+      }
+    },
+    "receiver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ownership", "lifetime", "mutability"],
+      "properties": {
+        "type": { "$ref": "#/$defs/typeRef" },
+        "ownership": { "enum": ["copy", "borrow", "lease", "transfer"] },
+        "lifetime": { "$ref": "#/$defs/lifetime" },
+        "mutability": { "enum": ["immutable", "read", "write"] }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "ownership",
+        "lifetime",
+        "mutability",
+        "optional",
+        "default"
+      ],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "type": { "$ref": "#/$defs/typeRef" },
+        "ownership": { "enum": ["copy", "borrow", "lease", "transfer"] },
+        "lifetime": { "$ref": "#/$defs/lifetime" },
+        "mutability": { "enum": ["immutable", "read", "write"] },
+        "optional": { "type": "boolean" },
+        "default": true
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "overloadKey",
+        "typeParameters",
+        "receiver",
+        "parameters",
+        "result",
+        "mutability",
+        "effects",
+        "failure",
+        "resultMode",
+        "capabilities",
+        "assurance",
+        "documentation",
+        "source"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/name" },
+        "kind": {
+          "enum": ["function", "constructor", "method", "static-method", "property"]
+        },
+        "overloadKey": { "$ref": "#/$defs/nonemptyString" },
+        "typeParameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typeParameter" }
+        },
+        "receiver": {
+          "oneOf": [{ "$ref": "#/$defs/receiver" }, { "type": "null" }]
+        },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/parameter" }
+        },
+        "result": { "$ref": "#/$defs/ownershipSite" },
+        "mutability": { "enum": ["immutable", "read", "write"] },
+        "effects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "allocates",
+              "reads-resource",
+              "writes-resource",
+              "fails",
+              "host-call",
+              "async",
+              "nondeterministic"
+            ]
+          }
+        },
+        "failure": { "$ref": "#/$defs/failure" },
+        "resultMode": { "enum": ["value", "promise", "iterator", "async-iterator"] },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "assurance": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "documentation": { "$ref": "#/$defs/documentation" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "errors", "unexpected"],
+      "properties": {
+        "mode": { "enum": ["none", "declared"] },
+        "errors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "unexpected": { "enum": ["trap", "poison-runtime"] }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "category", "payload", "documentation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/name" },
+        "category": { "enum": ["domain", "boundary", "capability"] },
+        "payload": {
+          "oneOf": [{ "$ref": "#/$defs/typeRef" }, { "type": "null" }]
+        },
+        "documentation": { "$ref": "#/$defs/documentation" }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "requirement", "documentation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "category": { "enum": ["host", "target", "runtime", "feature"] },
+        "requirement": { "enum": ["required", "optional"] },
+        "documentation": { "$ref": "#/$defs/documentation" }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "subject",
+        "claim",
+        "theorems",
+        "assumptions",
+        "source"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "state": { "enum": ["proved", "trusted-boundary", "unverified"] },
+        "subject": { "$ref": "#/$defs/id" },
+        "claim": { "$ref": "#/$defs/nonemptyString" },
+        "theorems": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonemptyString" }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonemptyString" }
+        },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    }
+  }
+}
