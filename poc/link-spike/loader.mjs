@@ -1,6 +1,7 @@
 import { PendingOperationRegistry } from "../../src/runtime/pending-operations.mjs";
 import { CallbackRegistry } from "../../src/runtime/callbacks.mjs";
 import { WeakValueMap } from "../../src/runtime/weak-value-map.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
@@ -114,6 +115,7 @@ class RuntimeRegistry {
     nextRuntimeIdentity += 1;
     this.epoch = 1;
     this.state = "open";
+    this.initializations = new Map();
     this.entries = new Map();
     this.closureEntries = new Map();
     this.classes = new Map();
@@ -257,6 +259,75 @@ class RuntimeRegistry {
       );
     }
     this.callbacks.beforeNativeCall();
+  }
+
+  initialize(descriptor, binding, legacySymbol = null) {
+    const plan = binding.initialization;
+    if (plan) {
+      const bindingIrSha256 =
+        descriptor.bindingIrSha256 ??
+        (descriptor.bindingIr ? hashBindingIr(descriptor.bindingIr) : null);
+      if (
+        plan.kind !== "initialization-v1" ||
+        plan.abiVersion !== 1 ||
+        plan.bindingIrSha256 !== bindingIrSha256 ||
+        plan.trigger !== "first-call" ||
+        plan.scope !== "component-runtime" ||
+        plan.success !== "nonzero" ||
+        plan.failure !== "terminal" ||
+        plan.retry !== "never" ||
+        (plan.symbol !== null &&
+          (typeof plan.symbol !== "string" || plan.symbol.length === 0)) ||
+        plan.required !== (typeof plan.symbol === "string")
+      ) {
+        this.reject(
+          descriptor,
+          binding,
+          "unsupported-initialization-plan",
+          `${binding.name} has an initialization plan the runtime cannot preserve`,
+        );
+      }
+    }
+    const symbol = plan?.symbol ?? legacySymbol;
+    if (!symbol) return;
+    const key = `${descriptor.buildHash ?? descriptor.id}:${symbol}`;
+    const state = this.initializations.get(key);
+    if (state === "ready") return;
+    if (state === "failed") {
+      this.reject(
+        descriptor,
+        binding,
+        "runtime-not-ready",
+        `initialization already failed for ${descriptor.id}`,
+        { retry: "never" },
+      );
+    }
+    if (state === "initializing") {
+      this.reject(
+        descriptor,
+        binding,
+        "initialization-reentry",
+        `initialization re-entered for ${descriptor.id}`,
+      );
+    }
+    this.initializations.set(key, "initializing");
+    try {
+      const initialize = resolvePrivateFunction(this.module, descriptor, symbol);
+      if (!initialize()) {
+        this.initializations.set(key, "failed");
+        this.reject(
+          descriptor,
+          binding,
+          "runtime-not-ready",
+          `failed to initialize the Lean runtime for ${descriptor.id}`,
+          { retry: plan?.retry ?? "native-policy" },
+        );
+      }
+      this.initializations.set(key, "ready");
+    } catch (error) {
+      this.initializations.set(key, "failed");
+      throw error;
+    }
   }
 
   poison(descriptor, binding, message, details = {}) {
@@ -1048,6 +1119,9 @@ class RuntimeRegistry {
       pendingClosureFinalizations: this.pendingClosureFinalizations.length,
       pendingOperations: this.pendingOperations.snapshot(),
       callbacks: this.callbacks.snapshot(),
+      initializations: Object.freeze(
+        Object.fromEntries([...this.initializations].sort(([left], [right]) => left.localeCompare(right))),
+      ),
     });
   }
 
@@ -1106,20 +1180,7 @@ export const __bridgeTest = Object.freeze({
 });
 
 const initializeBinding = (module, descriptor, binding) => {
-  if (!binding.initialize) return;
-  const initialize = resolvePrivateFunction(
-    module,
-    descriptor,
-    binding.initialize,
-  );
-  if (!initialize()) {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "runtime-not-ready",
-      `failed to initialize the Lean runtime for ${descriptor.id}`,
-    );
-  }
+  getRuntimeContext(module).initialize(descriptor, binding, binding.initialize ?? null);
 };
 
 const validateUInt32 = (descriptor, binding, field, value) => {
@@ -2526,9 +2587,6 @@ const projectClass = (module, descriptor, binding, context) => {
     descriptor,
     lifecycle.constructor.symbol,
   );
-  const initialize = lifecycle.initialize
-    ? resolvePrivateFunction(module, descriptor, lifecycle.initialize)
-    : undefined;
   const dispose = resolvePrivateFunction(
     module,
     descriptor,
@@ -2556,9 +2614,7 @@ const projectClass = (module, descriptor, binding, context) => {
   class ProjectedResource {
     constructor(...args) {
       context.beforeCall(descriptor, binding);
-      if (initialize && !initialize()) {
-        throw new Error(`failed to initialize runtime for ${descriptor.id}`);
-      }
+      context.initialize(descriptor, binding, lifecycle.initialize ?? null);
       const handle = construct(...args);
       if (!handle) throw new Error(`failed to construct ${binding.name}`);
       context.attach(this, descriptor, binding, handle, dispose);

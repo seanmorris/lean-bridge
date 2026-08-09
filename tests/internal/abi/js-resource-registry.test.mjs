@@ -147,6 +147,7 @@ test("generated cleanup policy controls fallback finalizer registration", async 
   const descriptor = {
     ...alpha,
     bindingIr,
+    bindingIrSha256: projection.bindingIrSha256,
     bindings: projection.bindings,
   };
   const libraries = createLibraryLoader(module, {

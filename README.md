@@ -293,10 +293,11 @@ The architecture-testing POC has established:
 - generated scalar iterators with lazy native pulling, standard synchronous and asynchronous iteration, cancellation, and deterministic completion or early-return cleanup;
 - generated native properties with ordinary getter and setter syntax, TypeScript mutability, receiver lifetime checks, and no public helper methods;
 - generated arity-based overloads with one JavaScript callable, multiple TypeScript signatures, and ambiguity rejection before projection;
+- generated first-call initialization plans with canonical Binding IR identity, exactly-once execution, terminal failure, and no hidden retry;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - a root-only generated package export map with automated raw ABI and coverage drift gates;
-- 157 passing behavioral and structural tests;
+- 161 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 

@@ -26,6 +26,7 @@ import {
   compileIteratorV1,
 } from "../../abi/iterator.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
+import { compileInitializationV1 } from "../../abi/initialization.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
@@ -470,6 +471,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
     fail(first.code, first.message, first.details);
   }
   validatePrivateAbi(ir, abi);
+  const initialization = compileInitializationV1(ir, abi);
   const typeMap = new Map(ir.types.map(type => [type.id, type]));
   const errorMap = new Map(ir.errors.map(error => [error.id, error]));
   const bindings = [];
@@ -529,6 +531,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
         kind: "class",
         name: type.name,
         typeId: type.id,
+        initialization,
         lifecycle,
         methods: Object.freeze(methods),
         properties: Object.freeze(properties),
@@ -643,7 +646,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
         kind: "function",
         name: declaration.name,
         declarationId: declaration.id,
-        initialize: abi.initialize,
+        initialization,
         symbol: entry.symbol,
         ...(adapter ? { adapter } : {}),
       }),
@@ -686,6 +689,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
   return Object.freeze({
     schemaVersion: 1,
     bindingIrSha256: hashBindingIr(ir),
+    initialization,
     bindings: Object.freeze(bindings),
   });
 };

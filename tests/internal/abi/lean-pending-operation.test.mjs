@@ -69,6 +69,7 @@ const pendingDescriptor = () => {
   return {
     ...alpha,
     bindingIr,
+    bindingIrSha256: projection.bindingIrSha256,
     bindings: [binding],
   };
 };
