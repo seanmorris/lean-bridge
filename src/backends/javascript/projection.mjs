@@ -25,6 +25,7 @@ import {
   compileAsyncIteratorV1,
   compileIteratorV1,
 } from "../../abi/iterator.mjs";
+import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
@@ -535,6 +536,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
     );
   }
 
+  const compiledFunctions = [];
   for (const declaration of ir.declarations) {
     if (consumedDeclarations.has(declaration.id)) continue;
     if (declaration.kind !== "function") {
@@ -549,7 +551,6 @@ export const compileJavaScriptProjection = (ir, abi) => {
         declaration: declaration.id,
       });
     }
-    addPublicName(declaration.name, declaration.id);
     if (!new Set(["value", "promise", "iterator", "async-iterator"]).has(declaration.resultMode)) {
       fail(
         "unsupported-result-mode",
@@ -637,7 +638,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
         { declaration: declaration.id },
       );
     }
-    bindings.push(
+    compiledFunctions.push(
       Object.freeze({
         kind: "function",
         name: declaration.name,
@@ -645,6 +646,31 @@ export const compileJavaScriptProjection = (ir, abi) => {
         initialize: abi.initialize,
         symbol: entry.symbol,
         ...(adapter ? { adapter } : {}),
+      }),
+    );
+  }
+
+  const functionGroups = new Map();
+  for (const binding of compiledFunctions) {
+    const group = functionGroups.get(binding.name) ?? [];
+    group.push(binding);
+    functionGroups.set(binding.name, group);
+  }
+  for (const [name, branches] of functionGroups) {
+    addPublicName(
+      name,
+      branches.map(branch => branch.declarationId).join(","),
+    );
+    if (branches.length === 1) {
+      bindings.push(branches[0]);
+      continue;
+    }
+    bindings.push(
+      Object.freeze({
+        kind: "overload",
+        name,
+        dispatch: compileOverloadV1(ir, name),
+        branches: Object.freeze(branches),
       }),
     );
   }

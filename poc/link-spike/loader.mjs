@@ -2360,8 +2360,42 @@ const projectFunction = (module, descriptor, binding, context) => {
   if (!binding.adapter) {
     return (...args) => {
       context.beforeCall(descriptor, binding);
+      const declaration = descriptor.bindingIr?.declarations.find(
+        item => item.id === binding.declarationId,
+      );
+      if (declaration && args.length !== declaration.parameters.length) {
+        throw bridgeError(
+          descriptor,
+          binding,
+          "invalid-argument-count",
+          `${binding.name} expects ${declaration.parameters.length} arguments`,
+          { expected: declaration.parameters.length, actual: args.length },
+        );
+      }
+      const typeMap = bindingIrTypeMap(descriptor);
+      for (let index = 0; declaration && index < args.length; index += 1) {
+        validateCopiedValue(
+          descriptor,
+          binding,
+          declaration.parameters[index].type,
+          args[index],
+          declaration.parameters[index].name,
+          typeMap,
+        );
+      }
       initializeBinding(module, descriptor, binding);
-      return implementation(...args);
+      const result = implementation(...args);
+      if (declaration) {
+        validateCopiedValue(
+          descriptor,
+          binding,
+          declaration.result.type,
+          result,
+          "result",
+          typeMap,
+        );
+      }
+      return result;
     };
   }
   if (binding.adapter.kind === "value-frame-v1") {
@@ -2581,6 +2615,76 @@ const projectClass = (module, descriptor, binding, context) => {
   return ProjectedResource;
 };
 
+const projectOverload = (module, descriptor, binding, context) => {
+  if (
+    binding.dispatch?.kind !== "overload-v1" ||
+    binding.dispatch.abiVersion !== 1 ||
+    binding.dispatch.strategy !== "arity" ||
+    binding.dispatch.name !== binding.name ||
+    !Array.isArray(binding.dispatch.branches) ||
+    !Array.isArray(binding.branches) ||
+    binding.dispatch.branches.length !== binding.branches.length
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-overload-plan",
+      `${binding.name} has an overload plan the runtime cannot preserve`,
+    );
+  }
+  const declarations = new Map(
+    binding.branches.map(branch => [branch.declarationId, branch]),
+  );
+  const byArity = new Map();
+  for (const branch of binding.dispatch.branches) {
+    const declaration = declarations.get(branch.declarationId);
+    if (
+      !declaration ||
+      declaration.kind !== "function" ||
+      declaration.name !== binding.name ||
+      !Number.isSafeInteger(branch.arity) ||
+      branch.arity < 0 ||
+      byArity.has(branch.arity)
+    ) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-overload-plan",
+        `${binding.name} has an invalid or ambiguous overload branch`,
+        { declaration: branch.declarationId, arity: branch.arity },
+      );
+    }
+    byArity.set(
+      branch.arity,
+      projectFunction(module, descriptor, declaration, context),
+    );
+    declarations.delete(branch.declarationId);
+  }
+  if (declarations.size > 0) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "invalid-overload-plan",
+      `${binding.name} has an unplanned overload branch`,
+      { declarations: [...declarations.keys()] },
+    );
+  }
+  const accepted = [...byArity.keys()].sort((left, right) => left - right);
+  return (...args) => {
+    const implementation = byArity.get(args.length);
+    if (!implementation) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} expects ${accepted.join(" or ")} arguments`,
+        { accepted, actual: args.length },
+      );
+    }
+    return implementation(...args);
+  };
+};
+
 const projectBindings = (module, descriptor, context) => {
   const api = Object.create(null);
 
@@ -2596,6 +2700,11 @@ const projectBindings = (module, descriptor, context) => {
       Object.defineProperty(api, binding.name, {
         enumerable: true,
         value: projectClass(module, descriptor, binding, context),
+      });
+    } else if (binding.kind === "overload") {
+      Object.defineProperty(api, binding.name, {
+        enumerable: true,
+        value: projectOverload(module, descriptor, binding, context),
       });
     } else {
       throw new Error(

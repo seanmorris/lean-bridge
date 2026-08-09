@@ -1,6 +1,10 @@
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";
+import {
+  OverloadGenerationError,
+  compileOverloadV1,
+} from "../../abi/overload.mjs";
 
 const gap = (code, message, details = {}) =>
   Object.freeze({ code, message, details: Object.freeze({ ...details }) });
@@ -267,12 +271,12 @@ export const analyzeJavaScriptCoverage = ir => {
   }
 
   for (const [name, declarations] of overloads) {
-    if (declarations.length > 1) {
-      report(
-        "unsupported-overload-group",
-        `${name} requires an overload dispatch projection`,
-        { name, declarations },
-      );
+    if (declarations.length < 2) continue;
+    try {
+      compileOverloadV1(ir, name);
+    } catch (error) {
+      if (!(error instanceof OverloadGenerationError)) throw error;
+      report(error.code, error.message, error.details);
     }
   }
 

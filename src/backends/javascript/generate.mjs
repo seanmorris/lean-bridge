@@ -3,6 +3,7 @@ import {
   hashBindingIr,
 } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -124,6 +125,16 @@ const declarationsForResource = (ir, typeId) => ({
   ),
 });
 
+const groupFunctions = declarations => {
+  const groups = new Map();
+  for (const declaration of declarations) {
+    const group = groups.get(declaration.name) ?? [];
+    group.push(declaration);
+    groups.set(declaration.name, group);
+  }
+  return groups;
+};
+
 const propertyGroups = properties => {
   const groups = new Map();
   for (const property of properties) {
@@ -196,8 +207,11 @@ const ensureUniqueSurface = ir => {
     }
     propertyGroups(members.filter(member => member.kind === "property"));
   }
-  for (const declaration of ir.declarations.filter(item => item.kind === "function")) {
-    addExport(declaration.name, declaration.id);
+  for (const [name, declarations] of groupFunctions(
+    ir.declarations.filter(item => item.kind === "function"),
+  )) {
+    if (declarations.length > 1) compileOverloadV1(ir, name);
+    addExport(name, declarations.map(declaration => declaration.id).join(","));
   }
 };
 
@@ -331,6 +345,9 @@ const emitDeclarations = (ir, typeMap) => {
     exports.push(type.name);
   }
 
+  const functionsByName = groupFunctions(
+    ir.declarations.filter(declaration => declaration.kind === "function"),
+  );
   for (const declaration of ir.declarations) {
     if (consumed.has(declaration.id)) continue;
     if (declaration.kind !== "function") {
@@ -338,6 +355,60 @@ const emitDeclarations = (ir, typeMap) => {
         declaration: declaration.id,
         kind: declaration.kind,
       });
+    }
+    const overloads = functionsByName.get(declaration.name);
+    if (overloads.length > 1) {
+      const dispatch = compileOverloadV1(ir, declaration.name);
+      for (const branch of overloads) {
+        ensureSupportedGenerics(branch);
+        consumed.add(branch.id);
+      }
+      output.push(
+        docComment(declaration.documentation, [
+          `Generated overloads: ${dispatch.branches.map(branch => branch.overloadKey).join(", ")}.`,
+        ]),
+        `export function ${declaration.name}(...args) {`,
+        "  switch (args.length) {",
+      );
+      for (const branch of dispatch.branches) {
+        const target = overloads.find(item => item.id === branch.declarationId);
+        output.push(`    case ${branch.arity}: {`);
+        if (target.parameters.length > 0) {
+          output.push(
+            `      const [${target.parameters.map(parameter => parameter.name).join(", ")}] = args;`,
+          );
+        }
+        for (const parameter of target.parameters) {
+          output.push(
+            `      validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${target.name}.${parameter.name}`)});`,
+          );
+        }
+        const mappedErrors = declarationErrors(ir, target);
+        const indent = mappedErrors.length > 0 ? "        " : "      ";
+        if (mappedErrors.length > 0) output.push("      try {");
+        output.push(
+          `${indent}const result = runtime.call(${quote(target.id)}, [${target.parameters.map(parameter => parameter.name).join(", ")}]);`,
+          `${indent}validate.${validatorName(target.result.type, typeMap)}(result, ${quote(`${target.name}.result`)});`,
+          `${indent}return result;`,
+        );
+        if (mappedErrors.length > 0) {
+          output.push(
+            "      } catch (error) {",
+            "        throw translateDeclaredError(error);",
+            "      }",
+          );
+        }
+        output.push("    }");
+      }
+      const accepted = dispatch.branches.map(branch => branch.arity).join(" or ");
+      output.push(
+        `    default: throw new TypeError(${quote(`${declaration.name} expects ${accepted} arguments`)});`,
+        "  }",
+        "}",
+        "",
+      );
+      exports.push(declaration.name);
+      continue;
     }
     ensureSupportedGenerics(declaration);
     const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
@@ -550,7 +621,8 @@ const emitTypeScript = (ir, typeMap) => {
     );
     exports.push(declaration.name);
   }
-  lines.push("declare const bindings: Readonly<{", ...exports.map(name => `  readonly ${name}: typeof ${name};`), "}>;", "export default bindings;", "");
+  const uniqueExports = [...new Set(exports)];
+  lines.push("declare const bindings: Readonly<{", ...uniqueExports.map(name => `  readonly ${name}: typeof ${name};`), "}>;", "export default bindings;", "");
   return lines.join("\n");
 };
 

@@ -29,11 +29,13 @@ const sorted = values =>
   [...values].sort((left, right) => (left < right ? -1 : left > right ? 1 : 0));
 
 const expectedValueExports = ir => [
-  ...ir.errors.filter(error => error.category !== "boundary").map(error => error.name),
-  ...ir.types.filter(type => type.kind === "resource").map(type => type.name),
-  ...ir.declarations
-    .filter(declaration => declaration.kind === "function")
-    .map(declaration => declaration.name),
+  ...new Set([
+    ...ir.errors.filter(error => error.category !== "boundary").map(error => error.name),
+    ...ir.types.filter(type => type.kind === "resource").map(type => type.name),
+    ...ir.declarations
+      .filter(declaration => declaration.kind === "function")
+      .map(declaration => declaration.name),
+  ]),
 ];
 
 const requireFile = (files, path) => {

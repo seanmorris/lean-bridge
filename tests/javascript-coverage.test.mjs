@@ -73,7 +73,7 @@ test("generic and constructed values fail without runtime specialization", () =>
   expectGap(option, "unsupported-type-constructor");
 });
 
-test("optional arguments and overload groups fail instead of changing call behavior", () => {
+test("optional arguments and ambiguous overload groups fail before generation", () => {
   const optional = clone(alpha.bindingIr);
   const parameter = roundTrip(optional).parameters[0];
   parameter.optional = true;
@@ -106,7 +106,7 @@ test("optional arguments and overload groups fail instead of changing call behav
     extensions: { "lean-wasm.org/intrinsic": "coverage-probe" },
   };
   overloaded.declarations.push(declaration);
-  expectGap(overloaded, "unsupported-overload-group");
+  expectGap(overloaded, "ambiguous-overload-group");
 });
 
 test("callback domain errors and nonscalar payloads fail outside envelope coverage", () => {
