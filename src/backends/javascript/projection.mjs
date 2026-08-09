@@ -16,6 +16,7 @@ import {
   CallbackSignatureGenerationError,
   compileCallbackSignatureV1,
 } from "../../abi/callback-signature.mjs";
+import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
   constructor(code, message, details = {}) {
@@ -383,6 +384,11 @@ const validateJavaScriptLifecycle = lifecycle => {
 
 export const compileJavaScriptProjection = (ir, abi) => {
   validateBindingIr(ir);
+  const coverage = analyzeJavaScriptCoverage(ir);
+  if (!coverage.supported) {
+    const first = coverage.gaps[0];
+    fail(first.code, first.message, first.details);
+  }
   validatePrivateAbi(ir, abi);
   const typeMap = new Map(ir.types.map(type => [type.id, type]));
   const bindings = [];

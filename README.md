@@ -291,7 +291,8 @@ The architecture-testing POC has established:
 - exported Lean closures projected as native JavaScript functions with canonical weak identity, deterministic disposal, queued finalization, and the same nested frame rules;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 129 passing behavioral and structural tests;
+- a root-only generated package export map with automated raw ABI and coverage drift gates;
+- 136 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 

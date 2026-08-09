@@ -1,6 +1,8 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
+import { auditJavaScriptPackage } from "./package-audit.mjs";
+import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 const fail = (code, message, details = {}) => {
   throw new JavaScriptProjectionError(code, message, details);
@@ -295,6 +297,7 @@ const emitValidators = (ir, typeMap) => {
   const emittedArrays = new Set();
   const emitArray = typeRef => {
     if (typeRef.kind !== "apply" || typeRef.constructor !== "array") return;
+    emitArray(typeRef.arguments[0]);
     const name = validatorName(typeRef, typeMap);
     if (emittedArrays.has(name)) return;
     emittedArrays.add(name);
@@ -310,6 +313,7 @@ const emitValidators = (ir, typeMap) => {
   };
   for (const type of ir.types) {
     if (type.kind === "record") type.fields.forEach(field => emitArray(field.type));
+    if (type.kind === "alias") emitArray(type.target);
   }
   for (const declaration of ir.declarations) {
     declaration.parameters.forEach(parameter => emitArray(parameter.type));
@@ -330,6 +334,12 @@ const emitValidators = (ir, typeMap) => {
       );
     }
     lines.push("  return value;", "};", "");
+  }
+  for (const type of ir.types.filter(item => item.kind === "alias")) {
+    lines.push(
+      `export const assert${type.name} = (value, path) => ${validatorName(type.target, typeMap)}(value, path);`,
+      "",
+    );
   }
   for (const type of ir.types.filter(item => item.kind === "callback")) {
     lines.push(
@@ -422,28 +432,62 @@ const emitDocumentation = ir => {
 
 export const generateJavaScriptPackage = ir => {
   validateBindingIr(ir);
+  const coverage = analyzeJavaScriptCoverage(ir);
+  if (!coverage.supported) {
+    const first = coverage.gaps[0];
+    fail(first.code, first.message, first.details);
+  }
   ensureUniqueSurface(ir);
   const typeMap = new Map(ir.types.map(type => [type.id, type]));
   const generated = emitDeclarations(ir, typeMap);
+  const packageManifest = {
+    version: ir.component.version,
+    type: "module",
+    sideEffects: false,
+    types: "./index.d.ts",
+    exports: {
+      ".": {
+        types: "./index.d.ts",
+        import: "./index.mjs",
+        default: "./index.mjs",
+      },
+    },
+    files: [
+      "index.mjs",
+      "index.d.ts",
+      "README.md",
+      "binding-manifest.json",
+      "internal",
+    ],
+  };
+  const generatedFiles = [
+    "index.mjs",
+    "index.d.ts",
+    "internal/validators.mjs",
+    "README.md",
+    "binding-manifest.json",
+    "package.json",
+  ];
   const manifest = {
     schemaVersion: 1,
     component: ir.component.id,
     bindingIrSha256: hashBindingIr(ir),
+    generator: {
+      id: "lean-wasm/javascript",
+      version: 1,
+    },
     exports: generated.exports,
-    files: [
-      "index.mjs",
-      "index.d.ts",
-      "internal/validators.mjs",
-      "README.md",
-      "binding-manifest.json",
-    ],
+    files: generatedFiles,
     requiredInternalFiles: ["internal/runtime.mjs"],
   };
-  return Object.freeze({
+  const files = {
     "index.mjs": generated.source,
     "index.d.ts": emitTypeScript(ir, typeMap),
     "internal/validators.mjs": emitValidators(ir, typeMap),
     "README.md": emitDocumentation(ir),
     "binding-manifest.json": `${JSON.stringify(manifest, null, 2)}\n`,
-  });
+    "package.json": `${JSON.stringify(packageManifest, null, 2)}\n`,
+  };
+  auditJavaScriptPackage(ir, files);
+  return Object.freeze(files);
 };

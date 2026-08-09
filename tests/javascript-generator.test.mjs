@@ -7,6 +7,10 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import {
+  JavaScriptPackageAuditError,
+  auditJavaScriptPackage,
+} from "../src/backends/javascript/package-audit.mjs";
 import { JavaScriptProjectionError } from "../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
@@ -121,8 +125,67 @@ test("generated files are deterministic and bind to the reviewed IR hash", () =>
   const manifest = JSON.parse(first["binding-manifest.json"]);
   assert.equal(manifest.bindingIrSha256, alpha.bindingIrSha256);
   assert.deepEqual(manifest.exports, ["Box", "roundTrip", "withCallback", "makeAdder"]);
+  assert.deepEqual(manifest.generator, { id: "lean-wasm/javascript", version: 1 });
   assert.deepEqual(manifest.requiredInternalFiles, ["internal/runtime.mjs"]);
   assert.equal(manifest.files.includes("binding-manifest.json"), true);
+  assert.equal(manifest.files.includes("package.json"), true);
+
+  const packageManifest = JSON.parse(first["package.json"]);
+  assert.deepEqual(Object.keys(packageManifest.exports), ["."]);
+  assert.deepEqual(packageManifest.exports["."], {
+    types: "./index.d.ts",
+    import: "./index.mjs",
+    default: "./index.mjs",
+  });
+  assert.equal(packageManifest.files.includes("internal"), true);
+});
+
+test("the package audit rejects raw ABI and internal subpath drift", () => {
+  const files = generateJavaScriptPackage(alpha.bindingIr);
+  assert.deepEqual(auditJavaScriptPackage(alpha.bindingIr, files).exports, [
+    "Box",
+    "roundTrip",
+    "withCallback",
+    "makeAdder",
+  ]);
+
+  const rawSymbol = { ...files };
+  rawSymbol["index.mjs"] += "\nexport const _bridge_escape = 1;\n";
+  assert.throws(
+    () => auditJavaScriptPackage(alpha.bindingIr, rawSymbol),
+    error =>
+      error instanceof JavaScriptPackageAuditError &&
+      error.code === "public-export-drift",
+  );
+
+  const rawTypes = { ...files };
+  rawTypes["index.d.ts"] += "\nexport declare const rawHandle: any;\n";
+  assert.throws(
+    () => auditJavaScriptPackage(alpha.bindingIr, rawTypes),
+    error =>
+      error instanceof JavaScriptPackageAuditError &&
+      error.code === "untyped-public-api",
+  );
+
+  const rawHandle = { ...files };
+  rawHandle["index.d.ts"] += "\nexport declare const handle: number;\n";
+  assert.throws(
+    () => auditJavaScriptPackage(alpha.bindingIr, rawHandle),
+    error =>
+      error instanceof JavaScriptPackageAuditError &&
+      error.code === "raw-handle-leak",
+  );
+
+  const internalExport = { ...files };
+  const packageManifest = JSON.parse(internalExport["package.json"]);
+  packageManifest.exports["./internal/*"] = "./internal/*";
+  internalExport["package.json"] = `${JSON.stringify(packageManifest, null, 2)}\n`;
+  assert.throws(
+    () => auditJavaScriptPackage(alpha.bindingIr, internalExport),
+    error =>
+      error instanceof JavaScriptPackageAuditError &&
+      error.code === "package-export-drift",
+  );
 });
 
 test("generated JavaScript executes through direct functions and classes", async () => {

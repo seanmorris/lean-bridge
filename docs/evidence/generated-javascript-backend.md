@@ -11,9 +11,11 @@ The JavaScript backend reads one validated Binding IR document and emits:
 - TypeScript declarations;
 - copied-value validators;
 - package documentation; and
-- a manifest tied to the canonical Binding IR SHA-256 hash.
+- a manifest tied to the canonical Binding IR SHA-256 hash;
+- a root-only package export map; and
+- a machine-checked public-surface audit.
 
-The generated package requires a private `internal/runtime.mjs` link adapter. The packager supplies that file when it binds generated code to the selected shared-runtime artifact. Consumers cannot import private symbols through the public package surface.
+The generated package requires a private `internal/runtime.mjs` link adapter. The packager supplies that file when it binds generated code to the selected shared-runtime artifact. `package.json` exposes only the package root. Consumers cannot import the internal runtime or validators through a package subpath.
 
 For the Alpha component, the generated TypeScript contract is equivalent to:
 
@@ -79,7 +81,9 @@ The copied-value validator walks the Binding IR record instead of duplicating th
 
 ## Executable checks
 
-`tests/javascript-generator.test.mjs` writes the generated package to a fresh temporary directory and imports it. The fixture constructs and disposes a `Box`, checks canonical identity, calls `roundTrip`, `withCallback`, and `makeAdder`, preserves `Uint8Array`, and rejects malformed values before dispatch. It also inspects the generated JavaScript, callback type, owned-callable projection, TypeScript, manifest, and canonical hash.
+`tests/javascript-generator.test.mjs` writes the generated package to a fresh temporary directory and imports it. The fixture constructs and disposes a `Box`, checks canonical identity, calls `roundTrip`, `withCallback`, and `makeAdder`, preserves `Uint8Array`, and rejects malformed values before dispatch. It also inspects the generated JavaScript, callback type, owned-callable projection, TypeScript, manifest, package export map, and canonical hash. The package audit rejects added entry exports, raw ABI names, public `any`, and internal subpath exports.
+
+`tests/javascript-coverage.test.mjs` treats backend support as data. The reviewed Alpha graph has no JavaScript coverage gaps. Iterator delivery, async iterators, properties, static methods, generics, optional parameters, overload groups, constructed values without validators, and rich error envelopes each fail with a stable code before the generator emits a package. Adding target syntax without its runtime lowering cannot create a false support claim.
 
 `tests/javascript-projection.test.mjs` verifies that public names come from Binding IR, callback parameters receive a stable generated signature plan, and returned Lean closures receive a private call and disposal plan. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
 
@@ -87,4 +91,4 @@ The copied-value validator walks the Binding IR record instead of duplicating th
 
 ## Remaining generator boundary
 
-The value-frame compiler derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The resource lifecycle, pending-operation, and callback compilers derive ownership, cleanup, and re-entry plans from the same IR. Real Wasm fixtures exercise Promise settlement after stack return, a JavaScript callback invoked by Lean, and a returned Lean closure called from that callback. The C code that schedules asynchronous work and implements the two fixed callback adapters remains handwritten. Iterators, properties, overloads, generics, rich asynchronous result frames, additional callback signatures, and error payload translation still require backend conformance fixtures.
+The value-frame compiler derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The resource lifecycle, pending-operation, and callback compilers derive ownership, cleanup, and re-entry plans from the same IR. Real Wasm fixtures exercise Promise settlement after stack return, a JavaScript callback invoked by Lean, and a returned Lean closure called from that callback. The C code that schedules asynchronous work and implements the two fixed callback adapters remains handwritten. Iterators, properties, overloads, generics, rich asynchronous result frames, additional callback signatures, and error payload translation still require backend conformance fixtures. The coverage gate now blocks each unsupported mode before package generation.

@@ -112,7 +112,7 @@ All generators MUST validate the IR before emitting files. A generator MUST reje
 These rules follow the JSON Canonicalization Scheme ordering and primitive serialization model. `hashBindingIr` computes SHA-256 over the canonical UTF-8 bytes. The reviewed Alpha fixture has this semantic identity:
 
 ```text
-0c70be5d4080e928182f6b8f3340c50614e8c5d14238810a04161cbcd25a5780
+e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4
 ```
 
 Changing object insertion order preserves the hash. Changing documentation, assurance, types, ownership, or any other recorded field changes the hash. Packages and provenance reports can therefore identify the exact reviewed semantic contract consumed by every backend.
