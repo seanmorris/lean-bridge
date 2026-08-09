@@ -13,6 +13,7 @@
     "env:check": "bash scripts/inventory.sh",
     "build:lean-runtime": "bash scripts/build-lean-runtime.sh",
     "build:lean-runtime:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-runtime.sh",
+    "build:lean-runtime:native": "bash scripts/build-lean-native-runtime.sh",
     "build:lean-link-spike": "bash scripts/build-lean-link-spike.sh",
     "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
     "build:link-spike": "bash scripts/build-link-spike.sh",

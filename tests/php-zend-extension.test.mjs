@@ -9,6 +9,7 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
+import { generatePhpNativeRuntimePackage } from "../src/backends/php/native-runtime.mjs";
 import {
   PhpZendGenerationError,
   generatePhpZendExtensionPackage,
@@ -26,11 +27,47 @@ const writePackage = async (directory, files) => {
 };
 
 const nativeRuntimeFixture = `#include "lean_alpha_runtime.h"
+#include "lean_bridge_native_runtime.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 static void release_heap(void *owner) { free(owner); }
+
+static uint64_t next_identity = 0;
+static uint32_t live_identities = 0;
+
+uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer)
+{
+    (void)kind;
+    if (pointer == NULL) return 0;
+    live_identities++;
+    return ++next_identity;
+}
+
+int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer)
+{
+    (void)kind;
+    if (token == 0 || pointer == NULL || live_identities == 0) return -1;
+    live_identities--;
+    return 1;
+}
+
+void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out)
+{
+    *out = (lean_bridge_native_snapshot){
+        .abi_version = 1,
+        .runtime_state = 2,
+        .runtime_init_runs = 1,
+        .component_init_runs = 1,
+        .attached_components = 1,
+        .live_identities = live_identities,
+        .runtime_instance_id = 101,
+        .identity_domain_id = 202,
+    };
+}
+
+void lean_alpha_native_runtime_detach(void) {}
 
 static void *copy_bytes(const void *source, size_t length)
 {
@@ -169,6 +206,8 @@ test("Zend generator emits one typed handler for every PHP transport operation",
     assert.match(files["lean_alpha_zend.c"], new RegExp(`PHP_METHOD\\(LeanAlpha_NativeTransport, ${operation}\\)`));
   }
   assert.match(files["lean_alpha_zend.c"], /Z_PARAM_FUNC\(context\.fci, context\.fcc\)/);
+  assert.match(files["lean_alpha_zend.c"], /lean_bridge_native_identity_acquire/);
+  assert.match(files["lean_alpha_zend.c"], /runtimeSnapshot/);
   assert.match(files["lean_alpha_zend.c"], /lean_alpha_payload_clear\(&output\)/);
   assert.doesNotMatch(files["lean_alpha_zend.c"], /PHP_FUNCTION|\bccall\b|\bcwrap\b|json_/i);
 
@@ -189,6 +228,8 @@ test("generated Zend extension executes the Composer API without consumer adapte
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-zend-"));
   try {
     const extensionFiles = { ...generatePhpZendExtensionPackage(alpha.bindingIr) };
+    const nativeFiles = generatePhpNativeRuntimePackage(alpha.bindingIr);
+    extensionFiles["lean_bridge_native_runtime.h"] = nativeFiles["include/lean_bridge_native_runtime.h"];
     extensionFiles["config.m4"] = extensionFiles["config.m4"].replace(
       "src/lean_alpha.c]",
       "src/lean_alpha.c native_runtime_fixture.c]",
@@ -250,6 +291,7 @@ $trace = [
     'closure' => $adder(40),
     'declared' => $declaredFailure,
     'hash' => \\LeanAlpha\\Internal\\NativeTransport::BINDING_IR_SHA256,
+    'runtime' => (new \\LeanAlpha\\Internal\\NativeTransport())->runtimeSnapshot(),
 ];
 $adder->close();
 $declared->close();
@@ -269,6 +311,16 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
       closure: 42,
       declared: true,
       hash: alpha.bindingIrSha256,
+      runtime: {
+        abiVersion: 1,
+        runtimeState: 2,
+        runtimeInitRuns: 1,
+        componentInitRuns: 1,
+        attachedComponents: 1,
+        liveIdentities: 3,
+        runtimeInstanceId: "101",
+        identityDomainId: "202",
+      },
     });
   } finally {
     await rm(directory, { recursive: true, force: true });

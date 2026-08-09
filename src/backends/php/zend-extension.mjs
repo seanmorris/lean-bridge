@@ -106,20 +106,25 @@ const zendSource = (ir, projection, shape) => {
 #include "php_${stem}.h"
 #include "${stem}.h"
 #include "${stem}_runtime.h"
+#include "lean_bridge_native_runtime.h"
 
 #include <inttypes.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
+#ifdef ZTS
+#error "The generated native Lean transport POC requires non-thread-safe PHP"
+#endif
+
 extern const ${stem}_runtime_v1 *${stem}_native_runtime_v1(void);
+extern void ${stem}_native_runtime_detach(void);
 
 static zend_class_entry *identity_ce;
 static zend_class_entry *transport_error_ce;
 static zend_class_entry *transport_ce;
 static zend_class_entry *native_transport_ce;
 static zend_object_handlers identity_handlers;
-static uint64_t next_identity = 0;
 
 typedef enum lean_php_identity_kind {
     LEAN_PHP_IDENTITY_NONE = 0,
@@ -144,14 +149,28 @@ static inline lean_php_identity *identity_from_object(zend_object *object)
     return (lean_php_identity *)((char *)object - XtOffsetOf(lean_php_identity, std));
 }
 
+static const char *identity_kind_name(lean_php_identity_kind kind)
+{
+    if (kind == LEAN_PHP_IDENTITY_RESOURCE) return "${namespace}\\${resource}";
+    if (kind == LEAN_PHP_IDENTITY_CALLBACK) return "${namespace}\\${callback}";
+    return "closed";
+}
+
 static void identity_release(lean_php_identity *identity)
 {
     if (identity->closed) return;
     identity->closed = true;
-    if (identity->kind == LEAN_PHP_IDENTITY_RESOURCE) {
-        ${stem}_${snake(resource)}_dispose(&identity->value.resource);
-    } else if (identity->kind == LEAN_PHP_IDENTITY_CALLBACK) {
-        ${stem}_owned_${snake(callback)}_dispose(&identity->value.callback);
+    int release = lean_bridge_native_identity_release(
+        identity->opaque_id,
+        identity_kind_name(identity->kind),
+        identity->value.pointer
+    );
+    if (release == 1) {
+        if (identity->kind == LEAN_PHP_IDENTITY_RESOURCE) {
+            ${stem}_${snake(resource)}_dispose(&identity->value.resource);
+        } else if (identity->kind == LEAN_PHP_IDENTITY_CALLBACK) {
+            ${stem}_owned_${snake(callback)}_dispose(&identity->value.callback);
+        }
     }
     identity->value.pointer = NULL;
 }
@@ -176,14 +195,27 @@ static void identity_free(zend_object *object)
     zend_object_std_dtor(&identity->std);
 }
 
-static void identity_result(zval *return_value, lean_php_identity_kind kind, void *pointer)
+static zend_result identity_result(zval *return_value, lean_php_identity_kind kind, void *pointer)
 {
+    uint64_t token = lean_bridge_native_identity_acquire(identity_kind_name(kind), pointer);
+    if (token == 0) {
+        if (kind == LEAN_PHP_IDENTITY_RESOURCE) {
+            ${stem}_${snake(resource)} *resource = pointer;
+            ${stem}_${snake(resource)}_dispose(&resource);
+        } else if (kind == LEAN_PHP_IDENTITY_CALLBACK) {
+            ${stem}_owned_${snake(callback)} *callback = pointer;
+            ${stem}_owned_${snake(callback)}_dispose(&callback);
+        }
+        zend_throw_exception(zend_ce_error, "the shared Lean identity domain is full", 0);
+        return FAILURE;
+    }
     object_init_ex(return_value, identity_ce);
     lean_php_identity *identity = identity_from_object(Z_OBJ_P(return_value));
     identity->kind = kind;
     identity->value.pointer = pointer;
-    identity->opaque_id = ++next_identity;
+    identity->opaque_id = token;
     identity->closed = false;
+    return SUCCESS;
 }
 
 static lean_php_identity *identity_argument(zval *value, lean_php_identity_kind expected)
@@ -367,6 +399,8 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_transport_error_construct, 0, 0, 1)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_void, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_runtime_snapshot, 0, 0, IS_ARRAY, 0)
+ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box, 0, 1, ${namespace}\\Internal\\Identity, 0)
     ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
 ZEND_END_ARG_INFO()
@@ -412,7 +446,7 @@ PHP_METHOD(LeanAlpha_Identity, cacheKey)
 {
     ZEND_PARSE_PARAMETERS_NONE();
     lean_php_identity *identity = identity_from_object(Z_OBJ_P(ZEND_THIS));
-    const char *kind = identity->kind == LEAN_PHP_IDENTITY_RESOURCE ? "${resource}" : "${callback}";
+    const char *kind = identity_kind_name(identity->kind);
     char number[32];
     int number_length = snprintf(number, sizeof(number), "%" PRIu64, identity->opaque_id);
     size_t kind_length = strlen(kind);
@@ -462,6 +496,25 @@ PHP_METHOD(LeanAlpha_NativeTransport, initialize)
     }
 }
 
+PHP_METHOD(LeanAlpha_NativeTransport, runtimeSnapshot)
+{
+    ZEND_PARSE_PARAMETERS_NONE();
+    lean_bridge_native_snapshot snapshot = {0};
+    lean_bridge_native_snapshot_read(&snapshot);
+    char runtime_id[32], identity_id[32];
+    snprintf(runtime_id, sizeof(runtime_id), "%" PRIu64, snapshot.runtime_instance_id);
+    snprintf(identity_id, sizeof(identity_id), "%" PRIu64, snapshot.identity_domain_id);
+    array_init(return_value);
+    add_assoc_long(return_value, "abiVersion", snapshot.abi_version);
+    add_assoc_long(return_value, "runtimeState", snapshot.runtime_state);
+    add_assoc_long(return_value, "runtimeInitRuns", snapshot.runtime_init_runs);
+    add_assoc_long(return_value, "componentInitRuns", snapshot.component_init_runs);
+    add_assoc_long(return_value, "attachedComponents", snapshot.attached_components);
+    add_assoc_long(return_value, "liveIdentities", snapshot.live_identities);
+    add_assoc_string(return_value, "runtimeInstanceId", runtime_id);
+    add_assoc_string(return_value, "identityDomainId", identity_id);
+}
+
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.box"]})
 {
     zend_long value;
@@ -477,7 +530,7 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.box"]})
         throw_transport(&error);
         RETURN_THROWS();
     }
-    identity_result(return_value, LEAN_PHP_IDENTITY_RESOURCE, result);
+    if (identity_result(return_value, LEAN_PHP_IDENTITY_RESOURCE, result) != SUCCESS) RETURN_THROWS();
 }
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.Box.read"]})
@@ -586,7 +639,7 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.makeAdder"]
         throw_transport(&error);
         RETURN_THROWS();
     }
-    identity_result(return_value, LEAN_PHP_IDENTITY_CALLBACK, result);
+    if (identity_result(return_value, LEAN_PHP_IDENTITY_CALLBACK, result) != SUCCESS) RETURN_THROWS();
 }
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${closeResource})
@@ -667,6 +720,7 @@ static const zend_function_entry transport_methods[] = {
 
 static const zend_function_entry native_transport_methods[] = {
     PHP_ME(LeanAlpha_NativeTransport, initialize, arginfo_void, ZEND_ACC_PUBLIC)
+    PHP_ME(LeanAlpha_NativeTransport, runtimeSnapshot, arginfo_runtime_snapshot, ZEND_ACC_PUBLIC)
     PHP_ME(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.box"]}, arginfo_box, ZEND_ACC_PUBLIC)
     PHP_ME(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.Box.read"]}, arginfo_box_read, ZEND_ACC_PUBLIC)
     PHP_ME(LeanAlpha_NativeTransport, ${transportMethods["bridge:Alpha.Box.identity"]}, arginfo_box_identity, ZEND_ACC_PUBLIC)
@@ -707,6 +761,12 @@ PHP_MINIT_FUNCTION(${stem})
     return SUCCESS;
 }
 
+PHP_MSHUTDOWN_FUNCTION(${stem})
+{
+    ${stem}_native_runtime_detach();
+    return SUCCESS;
+}
+
 PHP_MINFO_FUNCTION(${stem})
 {
     php_info_print_table_start();
@@ -720,7 +780,7 @@ zend_module_entry ${stem}_module_entry = {
     "${stem}",
     NULL,
     PHP_MINIT(${stem}),
-    NULL,
+    PHP_MSHUTDOWN(${stem}),
     NULL,
     NULL,
     PHP_MINFO(${stem}),

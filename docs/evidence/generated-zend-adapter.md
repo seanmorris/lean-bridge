@@ -1,6 +1,6 @@
 # Generated Zend Adapter Evidence
 
-Status: the Alpha Binding IR generates and compiles a native PHP extension that implements the Composer package's private typed transport. The compiled test uses a C runtime fixture. Connecting the adapter to the shared Lean runtime belongs to the next node.
+Status: the Alpha Binding IR generates and compiles a native PHP extension that implements the Composer package's private typed transport. A focused test uses a C fixture. The shared-runtime integration test executes the same adapter against real Lean code.
 
 ## Consumer boundary
 
@@ -65,3 +65,5 @@ Unknown failures follow the Binding IR poison policy. The public package owns th
 - Binding IR hash agreement between the extension and package.
 
 The generator rejects unsupported IR shapes before it emits C. The test also rejects generic dispatch, `ccall`, `cwrap`, and JSON handling in the generated extension source.
+
+`tests/php-native-runtime.test.mjs` replaces the C fixture with the pinned shared native Lean runtime and a generated Alpha provider. [Shared native PHP runtime evidence](shared-native-php-runtime.md) records that execution path.
