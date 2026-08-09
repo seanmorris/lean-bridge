@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-environment-report.schema.json",
+  "title": "Lean Bridge performance environment report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "methodology", "source", "identityInputs", "observation", "accepted", "classification", "baselineEligible", "issues", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-environment-report" },
+    "recordedAt": { "type": "string" },
+    "methodology": { "$ref": "#/$defs/methodology" },
+    "source": { "$ref": "#/$defs/source" },
+    "identityInputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/identityInput" }
+    },
+    "observation": { "$ref": "#/$defs/observation" },
+    "accepted": { "type": "boolean" },
+    "classification": { "enum": ["budget-eligible", "informational-only", "rejected"] },
+    "baselineEligible": { "type": "boolean" },
+    "issues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "dirty": { "type": "boolean" }
+      }
+    },
+    "identityInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environmentId", "operatingSystem", "hardware", "runtimes", "constraints"],
+      "properties": {
+        "environmentId": { "type": "string", "minLength": 1 },
+        "operatingSystem": { "$ref": "#/$defs/operatingSystem" },
+        "hardware": { "$ref": "#/$defs/hardware" },
+        "runtimes": { "$ref": "#/$defs/runtimes" },
+        "constraints": { "$ref": "#/$defs/constraints" }
+      }
+    },
+    "operatingSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "kernelRelease"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "kernelRelease": { "type": "string" }
+      }
+    },
+    "hardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["architecture", "cpuModel", "logicalCpuCount", "memoryBytes"],
+      "properties": {
+        "architecture": { "type": "string" },
+        "cpuModel": { "type": "string" },
+        "logicalCpuCount": { "type": "integer", "minimum": 1 },
+        "memoryBytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "runtimes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "playwright", "browser"],
+      "properties": {
+        "node": { "type": "string" },
+        "playwright": { "type": "string" },
+        "browser": { "type": "string" }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exclusiveRunner", "cpuGovernor", "loadAveragePerCpu", "swapInputOutputDelta", "networkDuringTimedRegions"],
+      "properties": {
+        "exclusiveRunner": { "type": "boolean" },
+        "cpuGovernor": { "type": "string" },
+        "loadAveragePerCpu": { "type": "number", "minimum": 0 },
+        "swapInputOutputDelta": { "type": "integer", "minimum": 0 },
+        "networkDuringTimedRegions": { "enum": ["disabled", "enabled"] }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "expected", "actual"],
+      "properties": {
+        "path": { "type": "string" },
+        "expected": {},
+        "actual": {}
+      }
+    }
+  }
+}

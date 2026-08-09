@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "kind": "lean-bridge-performance-methodology",
+  "id": "lean-bridge/reference-methodology@1",
+  "status": "approved-for-baseline-collection",
+  "referenceEnvironments": [
+    {
+      "id": "reference-linux-x64-i7-7700k-v1",
+      "eligibility": "budget-eligible",
+      "operatingSystem": {
+        "id": "debian",
+        "version": "12",
+        "kernelRelease": "6.1.0-31-amd64"
+      },
+      "hardware": {
+        "architecture": "x64",
+        "cpuModel": "Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz",
+        "logicalCpuCount": 8,
+        "minimumMemoryBytes": 24000000000
+      },
+      "runtimes": {
+        "node": "v22.23.1",
+        "playwright": "1.62.1",
+        "browser": "Google Chrome for Testing 151.0.7922.34"
+      },
+      "constraints": {
+        "exclusiveRunner": true,
+        "cpuGovernor": "performance",
+        "maximumLoadAveragePerCpu": 1,
+        "swapActivity": "zero-delta",
+        "networkDuringTimedRegions": "disabled"
+      },
+      "limitations": [
+        "This environment represents one x86-64 reference host. Results from another CPU or kernel form another baseline series.",
+        "Browser download and wide-area network behavior require a separately identified network profile."
+      ]
+    },
+    {
+      "id": "shared-ci-linux-x64-v1",
+      "eligibility": "informational-only",
+      "operatingSystem": {
+        "id": "reported-by-runner",
+        "version": "reported-by-runner",
+        "kernelRelease": "reported-by-runner"
+      },
+      "hardware": {
+        "architecture": "x64",
+        "cpuModel": "reported-by-runner",
+        "logicalCpuCount": 1,
+        "minimumMemoryBytes": 1
+      },
+      "runtimes": {
+        "node": "v22.23.1",
+        "playwright": "1.62.1",
+        "browser": "Google Chrome for Testing 151.0.7922.34"
+      },
+      "constraints": {
+        "exclusiveRunner": false,
+        "cpuGovernor": "reported-by-runner",
+        "maximumLoadAveragePerCpu": 4,
+        "swapActivity": "reported",
+        "networkDuringTimedRegions": "disabled"
+      },
+      "limitations": [
+        "Shared CI does not promise a stable CPU, kernel, co-tenant load, or power state.",
+        "Shared CI results can expose large regressions and reporting failures but cannot authorize a baseline or performance budget."
+      ]
+    }
+  ],
+  "toolchain": {
+    "leanVersion": "4.32.2",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanPatchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "emscriptenVersion": "6.0.6",
+    "emscriptenCommit": "ce75e06884093bcefb86a6b8fd56a5d62a4cc245",
+    "libuvCommit": "e9f29cb984231524e3931aa0ae2c5dae1a32884e",
+    "nixSystem": "x86_64-linux"
+  },
+  "identityInputs": [
+    {
+      "path": "package-lock.json",
+      "sha256": "5237a3e4037f48e675a571d95d3fa854eb64008fb7accd6a49cdb7d85079a8da"
+    },
+    {
+      "path": "flake.lock",
+      "sha256": "81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5"
+    },
+    {
+      "path": "poc/lean-link-spike/graph-lock.json",
+      "sha256": "7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789"
+    },
+    {
+      "path": "poc/performance/corpus.v1.json",
+      "sha256": "687e331391e60ef0fb49f1fc84e73dbdb3b70438646adf67d7c797160d5145ea"
+    },
+    {
+      "path": "poc/performance/workloads.v1.json",
+      "sha256": "2593995175c9ba0b81e5155b882b8ddf39f08f10cce4c1a189c2312d31fd2ff8"
+    }
+  ],
+  "execution": {
+    "sourceState": "clean-committed-revision",
+    "buildIsolation": "pinned-nix-closure",
+    "targetProfiles": [
+      "lazy",
+      "startup",
+      "final-static",
+      "isolated-runtime"
+    ],
+    "artifactBuildTiming": "excluded",
+    "processModel": "one-fresh-process-per-fork",
+    "profileOrder": "deterministic-balanced-permutation",
+    "cacheProfiles": [
+      "cold-process-warm-filesystem",
+      "warm-runtime-warm-filesystem"
+    ],
+    "networkTiming": "separate-profile-only"
+  },
+  "sampling": {
+    "validForks": 9,
+    "maximumInvalidForks": 2,
+    "warmup": "run-the-workload-declared-warmup-before-steady-state-samples",
+    "firstCall": "record-separately-and-never-mix-with-steady-state",
+    "steadyStateSamples": "retain-every-workload-declared-sample-in-every-valid-fork",
+    "scalingSamples": "one-complete-graph-run-per-valid-fork",
+    "clockNode": "process.hrtime.bigint",
+    "clockBrowser": "performance.now",
+    "clockUnit": "nanoseconds",
+    "outlierPolicy": "retain-all-samples-from-valid-forks"
+  },
+  "statistics": {
+    "headline": [
+      "median-of-fork-medians",
+      "median-of-fork-p95s"
+    ],
+    "requiredDistribution": [
+      "minimum",
+      "median",
+      "p95",
+      "maximum",
+      "median-absolute-deviation",
+      "raw-samples"
+    ],
+    "confidenceLevel": 0.95,
+    "bootstrapResamples": 10000,
+    "bootstrapUnit": "fork-summary",
+    "bootstrapSeed": "sha256-of-methodology-result-and-metric-identities",
+    "comparisonRule": "same-environment-methodology-workload-artifacts-and-cache-profile",
+    "regressionRule": "require-both-statistical-and-practical-significance"
+  },
+  "memory": {
+    "authoritative": [
+      "wasm-memory-bytes",
+      "runtime-instance-count",
+      "live-resource-count",
+      "live-closure-count",
+      "live-callback-count",
+      "pending-operation-count",
+      "iterator-count"
+    ],
+    "supplemental": [
+      "process-rss-bytes",
+      "javascript-heap-used-bytes",
+      "external-bytes",
+      "array-buffer-bytes"
+    ],
+    "explicitGc": "three-cycles-before-baseline-and-after-cleanup-for-supplemental-host-memory-only",
+    "finalization": "deterministic-injected-finalizer-for-correctness-never-wall-clock-gc",
+    "wasmGrowth": "record-every-page-change-and-never-expect-shrink",
+    "retainedState": "all-authoritative-live-counts-return-to-zero-after-each-workload"
+  },
+  "noise": {
+    "observations": [
+      "load-average-per-logical-cpu-before-and-after",
+      "cpu-governor",
+      "logical-cpu-count",
+      "swap-input-output-delta",
+      "clock-monotonicity",
+      "process-exit-status"
+    ],
+    "invalidForkPolicy": "discard-the-entire-fork-only-when-a-recorded-protocol-limit-fails",
+    "retryPolicy": "replace-invalid-forks-until-valid-fork-count-or-maximum-invalid-forks-is-reached",
+    "failurePolicy": "do-not-publish-a-budget-eligible-result-with-insufficient-valid-forks"
+  },
+  "reporting": {
+    "requiredIdentity": [
+      "methodology-sha256",
+      "source-revision",
+      "toolchain-closure",
+      "graph-lock-sha256",
+      "artifact-sha256",
+      "dataset-sha256",
+      "workload-sha256",
+      "environment-id",
+      "cache-profile"
+    ],
+    "requiredEvidence": [
+      "raw-fork-records",
+      "distribution-summaries",
+      "confidence-intervals",
+      "memory-snapshots",
+      "correctness-acceptance",
+      "noise-observations",
+      "limitations",
+      "reproduction-command"
+    ],
+    "accessibility": "tables-require-text-labels-units-and-non-color-status",
+    "immutableBundle": true
+  }
+}
