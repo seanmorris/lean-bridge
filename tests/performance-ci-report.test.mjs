@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 
 import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
@@ -8,11 +10,18 @@ import {
   assemblePerformanceCiReport,
   renderPerformanceCiSummary,
 } from "../src/performance/ci-report.mjs";
+import {
+  buildPerformanceEvidenceBundle,
+  readVerifiedPerformanceEvidenceBundle,
+  validatePerformanceEvidenceBundle,
+  validatePerformanceEvidenceIndex,
+} from "../src/performance/evidence-bundle.mjs";
 
 const commit = "a".repeat(40);
 const digest = value => createHash("sha256").update(value).digest("hex");
 const workloadSha256 = digest("workloads");
-const artifact = Object.freeze({ path: "build/fixture/main.wasm", bytes: 1234, sha256: digest("artifact") });
+const artifactContents = Buffer.from("measured fixture artifact", "utf8");
+const artifact = Object.freeze({ path: "build/fixture/main.wasm", bytes: artifactContents.length, sha256: digest(artifactContents) });
 const source = () => ({ commit, dirty: false });
 const timing = () => ({ samples: 3, samplesNs: [10, 20, 30], minimumNs: 10, medianNs: 20, p95Ns: 30, maximumNs: 30, totalNs: 60 });
 const processMemory = () => ({ rssBytes: 100, heapUsedBytes: 50, externalBytes: 25, arrayBuffersBytes: 10 });
@@ -221,11 +230,19 @@ const acceptedReport = () => {
 };
 
 test("aggregate schema keeps the CI evidence envelope closed", async () => {
-  const schema = JSON.parse(await readFile("schema/performance-ci-report.schema.json", "utf8"));
+  const [schema, bundleSchema, indexSchema] = await Promise.all([
+    readFile("schema/performance-ci-report.schema.json", "utf8").then(JSON.parse),
+    readFile("schema/performance-evidence-bundle.schema.json", "utf8").then(JSON.parse),
+    readFile("schema/performance-evidence-index.schema.json", "utf8").then(JSON.parse),
+  ]);
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.properties.measurements.additionalProperties, false);
   assert.equal(schema.properties.policy.properties.regressionFailureAuthorized.const, false);
   assert.match(schema.$id, /^urn:lean-bridge:/);
+  assert.equal(bundleSchema.additionalProperties, false);
+  assert.equal(bundleSchema.properties.status.properties.budget.type, "null");
+  assert.equal(indexSchema.additionalProperties, false);
+  assert.equal(indexSchema.properties.properties.properties.performance.properties.claimKind.const, "compiled-artifact-measurement");
 });
 
 test("workflow runs the complete suite on pushes and publishes one job summary", async () => {
@@ -240,6 +257,8 @@ test("workflow runs the complete suite on pushes and publishes one job summary",
     "check-performance-build-reproducibility.sh",
   ]) assert.match(workflow, new RegExp(command.replaceAll(".", "\\.")));
   assert.match(workflow, /GITHUB_STEP_SUMMARY/);
+  assert.match(workflow, /build-performance-evidence-bundle\.mjs/);
+  assert.match(workflow, /performance-ci-build-graph-/);
   assert.match(workflow, /performance-evidence-\$\{\{ github\.sha \}\}-\$\{\{ github\.run_attempt \}\}/);
   assert.doesNotMatch(workflow, /\bccall\b|\bcwrap\b|module\._[A-Za-z]/);
 });
@@ -257,7 +276,7 @@ test("bootstrap pins the Wasm audit tools absent from clean GitHub runners", asy
 });
 
 test("accepts one complete, artifact-bound record from every performance family", () => {
-  const report = acceptedReport();
+  const report = structuredClone(acceptedReport());
   assert.equal(report.accepted, true, JSON.stringify(report.validation.issues));
   assert.equal(report.validation.issueCount, 0);
   assert.equal(report.informational, true);
@@ -305,4 +324,137 @@ test("renders every evidence group with units, explicit unavailable values, and 
   assert.match(markdown, /callback &lt;boundary&gt; \\| measured/);
   assert.doesNotMatch(markdown, /callback <boundary> \| measured/);
   assert.match(markdown, /Informational\. No approved performance budget is installed\./);
+});
+
+const bundleContractPaths = [
+  "schema/performance-ci-report.schema.json",
+  "schema/performance-evidence-bundle.schema.json",
+  "schema/performance-evidence-index.schema.json",
+  "schema/performance-corpus.schema.json",
+  "schema/performance-workloads.schema.json",
+  "schema/performance-methodology.schema.json",
+  "schema/performance-result.schema.json",
+  "schema/performance-scaling-result.schema.json",
+  "schema/performance-overhead-result.schema.json",
+  "schema/performance-lifecycle-result.schema.json",
+  "schema/performance-self-consistency-result.schema.json",
+  "schema/performance-build-reproducibility.schema.json",
+];
+
+const materialize = async (root, path, contents) => {
+  const target = join(root, path);
+  await mkdir(dirname(target), { recursive: true });
+  await writeFile(target, contents);
+  return { path, bytes: Buffer.byteLength(contents), sha256: digest(contents) };
+};
+
+const prepareBundleFixture = async root => {
+  for (const path of bundleContractPaths) {
+    const target = join(root, path);
+    await mkdir(dirname(target), { recursive: true });
+    await copyFile(path, target);
+  }
+  const values = {
+    workloads: await materialize(root, "poc/performance/workloads.v1.json", "workloads"),
+    corpus: await readFile("poc/performance/corpus.v1.json").then(contents => materialize(root, "poc/performance/corpus.v1.json", contents)),
+    methodology: await materialize(root, "poc/performance/methodology.v1.json", "methodology"),
+    graphLock: await materialize(root, "poc/performance/scale/graph.v1.json", "graph"),
+    packageLock: await materialize(root, "package-lock.json", "package"),
+    flakeLock: await materialize(root, "flake.lock", "flake"),
+    bootstrap: await materialize(root, "scripts/bootstrap-toolchains.sh", "bootstrap"),
+  };
+  values.workloads.semanticSha256 = workloadSha256;
+  await materialize(root, artifact.path, artifactContents);
+  const report = structuredClone(acceptedReport());
+  report.identities = values;
+  const reportPath = join(root, "incoming/report.json");
+  const summaryPath = join(root, "incoming/summary.md");
+  const validationPath = join(root, "incoming/validation.json");
+  await mkdir(dirname(reportPath), { recursive: true });
+  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  await writeFile(summaryPath, renderPerformanceCiSummary(report));
+  await writeFile(validationPath, `${JSON.stringify(report.validation, null, 2)}\n`);
+  return { report, reportPath, summaryPath, validationPath };
+};
+
+test("publishes accepted measurements beside exact artifacts and separate complexity claims", async t => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-performance-evidence-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const fixture = await prepareBundleFixture(root);
+  const first = await buildPerformanceEvidenceBundle({
+    projectRoot: root,
+    reportPath: fixture.reportPath,
+    summaryPath: fixture.summaryPath,
+    validationPath: fixture.validationPath,
+    outputRoot: join(root, "bundle-a"),
+    verifyProjectRevision: false,
+  });
+  const second = await buildPerformanceEvidenceBundle({
+    projectRoot: root,
+    reportPath: fixture.reportPath,
+    summaryPath: fixture.summaryPath,
+    validationPath: fixture.validationPath,
+    outputRoot: join(root, "bundle-b"),
+    verifyProjectRevision: false,
+  });
+  assert.equal(first.identitySha256, second.identitySha256);
+  assert.equal(first.manifestSha256, second.manifestSha256);
+
+  const manifest = JSON.parse(await readFile(join(root, "bundle-a/performance-evidence.json"), "utf8"));
+  const index = JSON.parse(await readFile(join(root, "bundle-a/metadata/property-index.json"), "utf8"));
+  const verified = await readVerifiedPerformanceEvidenceBundle(join(root, "bundle-a"));
+  assert.equal(validatePerformanceEvidenceBundle(manifest), true);
+  assert.equal(validatePerformanceEvidenceIndex(index), true);
+  assert.equal(verified.identitySha256, first.identitySha256);
+  assert.equal(manifest.artifacts.length, 1);
+  assert.deepEqual(await readFile(join(root, "bundle-a", manifest.artifacts[0].path)), artifactContents);
+  assert.deepEqual(new Set(manifest.measurements.map(value => value.family)), new Set([
+    "spatial", "scaling", "overhead", "lifecycle", "selfConsistency", "buildReproducibility",
+  ]));
+  assert.equal(index.properties.performance.claimKind, "compiled-artifact-measurement");
+  assert.equal(index.properties.performance.budget, null);
+  const lowerBound = index.properties.interfaces.find(value => value.interface === "point-lower-bound");
+  assert.equal(lowerBound.complexity.claimKind, "algorithmic-complexity");
+  assert.equal(lowerBound.complexity.time.state, "asserted");
+  assert.equal(lowerBound.complexity.time.evidence.theorem, null);
+  assert.ok(index.properties.interfaces.some(value => value.complexity.time.state === "unknown"));
+  await writeFile(join(root, "bundle-a", manifest.artifacts[0].path), "changed after publication");
+  await assert.rejects(
+    readVerifiedPerformanceEvidenceBundle(join(root, "bundle-a")),
+    error => error.code === "bundle-file-drift",
+  );
+});
+
+test("performance evidence publication fails on changed artifacts and unaccepted reports", async t => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-performance-evidence-drift-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const fixture = await prepareBundleFixture(root);
+  await writeFile(join(root, artifact.path), "changed");
+  await assert.rejects(
+    buildPerformanceEvidenceBundle({
+      projectRoot: root,
+      reportPath: fixture.reportPath,
+      summaryPath: fixture.summaryPath,
+      validationPath: fixture.validationPath,
+      outputRoot: join(root, "drift"),
+      verifyProjectRevision: false,
+    }),
+    error => error.code === "artifact-drift",
+  );
+
+  await writeFile(join(root, artifact.path), artifactContents);
+  fixture.report.accepted = false;
+  await writeFile(fixture.reportPath, `${JSON.stringify(fixture.report, null, 2)}\n`);
+  await writeFile(fixture.summaryPath, renderPerformanceCiSummary(fixture.report));
+  await assert.rejects(
+    buildPerformanceEvidenceBundle({
+      projectRoot: root,
+      reportPath: fixture.reportPath,
+      summaryPath: fixture.summaryPath,
+      validationPath: fixture.validationPath,
+      outputRoot: join(root, "rejected"),
+      verifyProjectRevision: false,
+    }),
+    error => error.code === "unaccepted-report",
+  );
 });

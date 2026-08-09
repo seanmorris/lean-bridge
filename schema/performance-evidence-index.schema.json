@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-evidence-index:v1",
+  "title": "Lean Bridge property index projection for performance evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "component", "source", "evidence", "properties"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-property-index" },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit"],
+      "properties": { "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" } }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identitySha256", "manifestPath", "reportPath", "reportSha256", "summaryPath"],
+      "properties": {
+        "identitySha256": { "$ref": "#/$defs/sha256" },
+        "manifestPath": { "$ref": "#/$defs/path" },
+        "reportPath": { "$ref": "#/$defs/path" },
+        "reportSha256": { "$ref": "#/$defs/sha256" },
+        "summaryPath": { "$ref": "#/$defs/path" }
+      }
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "targets", "performance", "interfaces"],
+      "properties": {
+        "runtime": { "const": "shared-application-runtime" },
+        "targets": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "performance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["claimKind", "informational", "budget", "families"],
+          "properties": {
+            "claimKind": { "const": "compiled-artifact-measurement" },
+            "informational": { "const": true },
+            "budget": { "type": "null" },
+            "families": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": { "enum": ["spatial", "scaling", "overhead", "lifecycle", "selfConsistency", "buildReproducibility"] }
+            }
+          }
+        },
+        "interfaces": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/interface" } }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$" },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "interface", "complexity"],
+      "properties": {
+        "component": { "type": "string", "minLength": 1 },
+        "interface": { "type": "string", "minLength": 1 },
+        "complexity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["claimKind", "time", "auxiliarySpace"],
+          "properties": {
+            "claimKind": { "const": "algorithmic-complexity" },
+            "time": { "$ref": "#/$defs/complexity" },
+            "auxiliarySpace": { "$ref": "#/$defs/complexity" }
+          }
+        }
+      }
+    },
+    "complexity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "bound", "evidence"],
+      "properties": {
+        "state": { "enum": ["proved", "asserted", "unknown"] },
+        "bound": { "type": ["string", "null"] },
+        "evidence": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "state", "basis", "theorem"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "state": { "enum": ["proved", "asserted", "tested", "unknown"] },
+                "basis": { "type": "string", "minLength": 1 },
+                "theorem": { "type": ["string", "null"] }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

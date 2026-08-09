@@ -36,6 +36,7 @@
     "benchmark:self-consistency": "npm run build:performance-wasm && node scripts/benchmark-self-consistency.mjs",
     "benchmark:baseline": "node scripts/collect-performance-baseline.mjs",
     "performance:ci": "node scripts/performance-ci.mjs",
+    "performance:evidence-bundle": "node scripts/build-performance-evidence-bundle.mjs",
     "performance:derive-budget": "node scripts/derive-performance-budget.mjs",
     "performance:check-regression": "node scripts/check-performance-regression.mjs",
     "verify:performance-builds": "node scripts/compare-performance-builds.mjs",

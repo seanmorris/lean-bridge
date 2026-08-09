@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-evidence-bundle:v1",
+  "title": "Lean Bridge immutable performance evidence bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "identity",
+    "source",
+    "status",
+    "report",
+    "summary",
+    "validation",
+    "inputs",
+    "contracts",
+    "artifacts",
+    "measurements",
+    "claims",
+    "index"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-evidence-bundle" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": { "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "dirty": { "const": false }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "informational", "policy", "budget"],
+      "properties": {
+        "accepted": { "const": true },
+        "informational": { "const": true },
+        "policy": { "const": "informational-no-approved-budget" },
+        "budget": { "type": "null" }
+      }
+    },
+    "report": { "$ref": "#/$defs/file" },
+    "summary": { "$ref": "#/$defs/file" },
+    "validation": { "$ref": "#/$defs/file" },
+    "inputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceFile" } },
+    "contracts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceFile" } },
+    "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artifact" } },
+    "measurements": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/measurement" }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["complexity"],
+      "properties": { "complexity": { "$ref": "#/$defs/file" } }
+    },
+    "index": { "$ref": "#/$defs/file" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$" },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "sourceFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "sourcePath", "path", "bytes", "sha256"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "sourcePath": { "$ref": "#/$defs/path" },
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "mediaType", "sourcePath", "path", "bytes", "sha256"],
+      "properties": {
+        "role": { "enum": ["wasm", "generated-binding", "build-audit", "build-metadata", "build-artifact"] },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "sourcePath": { "$ref": "#/$defs/path" },
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "claimKind", "path", "bytes", "sha256", "semanticSha256"],
+      "properties": {
+        "family": { "enum": ["spatial", "scaling", "overhead", "lifecycle", "selfConsistency", "buildReproducibility"] },
+        "claimKind": { "const": "compiled-artifact-measurement" },
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "semanticSha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

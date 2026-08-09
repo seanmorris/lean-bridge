@@ -390,6 +390,15 @@ jobs:
           pattern: performance-ci-part-*-${{ github.sha }}-${{ github.run_attempt }}
           path: build/performance-ci/collected
           merge-multiple: true
+      - name: Download the exact measured graph
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - name: Restore the exact measured graph
+        if: ${{ hashFiles('build/performance-ci/download/build-graph.tar') != '' }}
+        run: tar -xf build/performance-ci/download/build-graph.tar -C .
       - name: Assemble and render the report
         id: aggregate
         continue-on-error: true
@@ -410,19 +419,34 @@ jobs:
           else
             printf '# Lean Bridge performance evidence\n\nThe aggregate report could not be rendered.\n' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Package raw evidence and reproduction metadata
+      - name: Build the immutable artifact-bound evidence bundle
+        id: evidence-bundle
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/build-performance-evidence-bundle.mjs \
+            --report build/performance-ci/final/report.json \
+            --summary build/performance-ci/final/summary.md \
+            --validation build/performance-ci/final/validation.json \
+            --output build/performance-ci/bundle
+      - name: Package accepted evidence or failure diagnostics
         if: always()
         run: |
-          mkdir -p build/performance-ci/final/raw
-          if [[ -d build/performance-ci/collected ]]; then
-            cp -R build/performance-ci/collected/. build/performance-ci/final/raw/
+          if [[ -f build/performance-ci/bundle/performance-evidence.json ]]; then
+            package_root=build/performance-ci/bundle
+          else
+            mkdir -p build/performance-ci/final/raw
+            if [[ -d build/performance-ci/collected ]]; then
+              cp -R build/performance-ci/collected/. build/performance-ci/final/raw/
+            fi
+            cp poc/performance/workloads.v1.json build/performance-ci/final/
+            cp poc/performance/corpus.v1.json build/performance-ci/final/
+            cp poc/performance/methodology.v1.json build/performance-ci/final/
+            package_root=build/performance-ci/final
           fi
-          cp poc/performance/workloads.v1.json build/performance-ci/final/
-          cp poc/performance/corpus.v1.json build/performance-ci/final/
-          cp poc/performance/methodology.v1.json build/performance-ci/final/
           tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \
             -czf build/performance-evidence.tar.gz \
-            -C build/performance-ci/final .
+            -C "$package_root" .
           sha256sum build/performance-evidence.tar.gz > build/performance-evidence.tar.gz.sha256
       - name: Report the uploaded evidence footprint
         if: always()
@@ -453,3 +477,4 @@ jobs:
           test "${{ needs.lifecycle.result }}" = "success"
           test "${{ needs.reproducibility.result }}" = "success"
           test "${{ steps.aggregate.outcome }}" = "success"
+          test "${{ steps.evidence-bundle.outcome }}" = "success"

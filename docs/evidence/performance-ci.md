@@ -32,11 +32,19 @@ The final workflow artifact is named `performance-evidence-<commit>-<attempt>` a
 - every raw child benchmark record;
 - the validation report;
 - the rendered Markdown summary;
-- the workload, corpus, and methodology manifests;
-- build identities, source revision, toolchain pins, and artifact hashes; and
+- every measured Wasm binary, generated binding, object, link map, and audit record;
+- the workload, corpus, methodology, graph lock, package lock, flake lock, and toolchain bootstrap inputs;
+- build identities, source revision, toolchain pins, and artifact hashes;
+- closed schemas for the bundle, property index, report, and child records;
+- algorithmic complexity claims with their exact evidence state;
+- a property-index projection that points to the immutable evidence identity; and
 - commands and resource snapshots for each job.
 
-The aggregate contract is `schema/performance-ci-report.schema.json`. Child records keep their existing versioned schemas. The aggregator consumes JSON records directly and never scrapes console text.
+The bundle builder reads the accepted report, reruns its aggregate integrity checks, and verifies every copied file against its byte count and SHA-256. Changed or missing artifacts block publication. A failed workflow still uploads a diagnostic archive, but it cannot produce an accepted evidence manifest.
+
+The aggregate contract is `schema/performance-ci-report.schema.json`. The immutable bundle uses `schema/performance-evidence-bundle.schema.json`. The companion registry projection uses `schema/performance-evidence-index.schema.json`. Child records keep their existing versioned schemas. The aggregator consumes JSON records directly and never scrapes console text.
+
+Measured timings and algorithmic complexity remain separate claims. Measurement records use `compiled-artifact-measurement`. Corpus complexity records use `algorithmic-complexity` and retain `proved`, `asserted`, or `unknown`. An asserted bound cannot appear as a theorem-backed proof in the property index.
 
 ## Local checks
 
@@ -55,6 +63,16 @@ npm run benchmark:overhead -- --output build/performance-ci/input/overhead.json
 npm run benchmark:lifecycle -- --output build/performance-ci/input/lifecycle.json
 npm run benchmark:self-consistency -- --repetitions 3 --output build/performance-ci/input/self-consistency.json
 npm run verify:performance-reproducibility -- --output build/performance-ci/input/build-reproducibility.json
+```
+
+After assembling an accepted report, build the same artifact-bound directory that CI archives:
+
+```sh
+npm run performance:evidence-bundle -- \
+  --report build/performance-ci/final/report.json \
+  --summary build/performance-ci/final/summary.md \
+  --validation build/performance-ci/final/validation.json \
+  --output build/performance-ci/bundle
 ```
 
 The npm aliases build their required artifacts before measuring. GitHub Actions builds the graph once and invokes the measurement scripts directly so redundant build time does not contaminate job cost or benchmark timing.
