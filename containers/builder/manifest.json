@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "name": "lean-bridge-debian-builder",
+  "platform": "linux/amd64",
+  "sourceDateEpoch": 1786261809,
+  "image": {
+    "localTag": "lean-bridge-builder:146bfec6b72184f1",
+    "configSha256": "c4202ef2601394eeffe06d8a988e617d9cc990f28334ee51b4feb277c262a927",
+    "publishedReference": null,
+    "publicationStatus": "local-reproducible"
+  },
+  "bases": [
+    {
+      "role": "nix-store",
+      "reference": "nixos/nix@sha256:4bfe741027f0bfbef745862cbf3b5f424ee99801c04138146c0000a28759636d",
+      "version": "2.24.11"
+    },
+    {
+      "role": "runtime",
+      "reference": "debian@sha256:abd67ffcfa541b485a3dff59865ab629aa048a6c613e639d36e7456b0b229241",
+      "version": "bookworm-slim"
+    }
+  ],
+  "files": [
+    {
+      "path": ".dockerignore",
+      "sha256": "1d84f1a580290bb369914885bfb0a382284d86741f8b78982ba7908430d560d7"
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "5239ba5a4f623d56d7ccc6596b2414156773049894ddce3848146327fec9942b"
+    },
+    {
+      "path": "entrypoint.sh",
+      "sha256": "9c45101913fa09ca01e64dfdf8685ea266773bdaed55b137876d968497906c55"
+    },
+    {
+      "path": "nix.conf",
+      "sha256": "b17d03bcbb0824a40e19a3802d105e4931d0c0f51d226767c2ff4708ec741406"
+    }
+  ],
+  "definitionSha256": "146bfec6b72184f1d9d40cdee00c641f5b4f59008166fd2b886fd21fbf17fd0b",
+  "execution": {
+    "user": "root",
+    "uid": 0,
+    "gid": 0,
+    "locale": "C.UTF-8",
+    "timezone": "UTC",
+    "sourceMount": "read-only",
+    "outputMount": "read-write with host ownership restored",
+    "network": "Nix fetch access; build derivations use the locked flake closure",
+    "entrypoint": "/usr/local/bin/lean-bridge-builder build"
+  },
+  "flakeOutputs": [
+    "universal-release-bundle",
+    "release-rehearsal"
+  ]
+}

@@ -1,5 +1,6 @@
 import { diagnostic } from "./contract.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { buildCanonicalProject, CanonicalBuildError } from "../build/canonical-build.mjs";
 import { rehearseRelease } from "../release/release-rehearsal.mjs";
 
 const deferred = (command, node) => ({
@@ -31,7 +32,22 @@ export const cliHandlers = Object.freeze({
       ),
     };
   },
-  build: async () => deferred("build", 876),
+  build: async request => {
+    try {
+      const result = await buildCanonicalProject({ projectRoot: request.project, outputRoot: request.output });
+      return { status: "ok", result, diagnostics: [], nextActions: [] };
+    } catch (error) {
+      if (!(error instanceof CanonicalBuildError) || !new Set([
+        "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
+      ]).has(error.code)) throw error;
+      return {
+        status: "blocked",
+        result: null,
+        diagnostics: [diagnostic({ code: error.code, message: error.message, hint: error.hint })],
+        nextActions: [],
+      };
+    }
+  },
   publish: async request => {
     if (request.mode !== "dry-run") return deferred("publish", 879);
     if (request.bundle === null || request.output === null) {

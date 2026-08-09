@@ -14,9 +14,11 @@ Every command defaults to noninteractive execution and concise human output. `--
 
 `analyze` is operational. It inventories a Lean project without changing it, validates an existing Binding IR or proposes one for conservatively supported copied values, and reports narrow adapter questions for unresolved boundaries. [The analyzer evidence](lean-project-analysis.md) records its inference and assurance limits.
 
+`build` is operational. It chooses the pinned Debian Docker builder first, falls back to native Nix, and validates one canonical artifact and package closure before moving the result into place. [The Docker-first build evidence](docker-first-build.md) records its image, flake, source-mount, fallback, and failure policies.
+
 `publish --dry-run --bundle <path> --output <path>` is operational. It runs the existing local release rehearsal, emits registry-ready archives and an in-toto statement, and reports zero external registry writes through the CLI result.
 
-The Docker or Nix build selector and external publisher belong to nodes 876 and 879. Their commands return `blocked` with stable diagnostic codes and the responsible plan node. The CLI does not report those workflows as successful before their implementations exist.
+External publication belongs to node 879. That command returns `blocked` with a stable diagnostic code. The CLI does not report registry writes as successful before their implementation exists.
 
 ## Agent contract
 

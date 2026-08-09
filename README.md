@@ -395,11 +395,12 @@ The architecture-testing POC has established:
 - one clean-install gate that runs npm and C consumers through ordinary APIs, accounts for every installed package file, compares their public `Box` behavior, and executes packaging with child processes disabled;
 - one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, JSON agent output, and an operational no-publish dry run;
 - one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, and blocks ambiguous ownership or effect boundaries;
+- one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 260 passing behavioral and structural tests;
+- 264 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -418,6 +419,8 @@ npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate
 npm run cli -- analyze --json
+npm run build:builder-image
+npm run test:canonical-build
 npm run cli -- --help
 npm test
 npm run test:reproducibility

@@ -239,7 +239,7 @@
                 --core '${universal-core-artifacts}' \
                 --output "$out" \
                 --revision "$revision" \
-                --source-date-epoch '${toString (self.lastModified or 1786261809)}' \
+                --source-date-epoch '1786261809' \
                 --builder 'nix-flake-v1'
               runHook postInstall
             '';
