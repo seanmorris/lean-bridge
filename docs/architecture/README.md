@@ -33,6 +33,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generated Zend adapter evidence](../evidence/generated-zend-adapter.md)
 - [Shared native PHP runtime evidence](../evidence/shared-native-php-runtime.md)
 - [Native PHP release package evidence](../evidence/native-php-release-package.md)
+- [PHP-Wasm Lean side-module adapter evidence](../evidence/php-wasm-side-module-adapter.md)
 - [Generated package drift gate evidence](../evidence/generated-package-gate.md)
 - [Cross-language semantic parity evidence](../evidence/cross-language-semantic-parity.md)
 - [Direct-call and native-object conformance evidence](../evidence/direct-call-conformance.md)
