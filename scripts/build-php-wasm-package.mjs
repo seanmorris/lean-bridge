@@ -236,13 +236,19 @@ const buildExtension = async ({ inputs, version, phpSource, scratch, layout, run
     join(layout.runtimeRoot, "source/src/include"),
     join(scratch, "runtime-source/include"),
   ];
-  const componentPaths = inputs.graph.libraries.map(library => {
-    const artifact = library.capsule.artifacts.targets
-      .find(target => target.target === inputs.manifest.graphLock.target).sideModule;
-    return join(layout.profileDirectory, artifact.file);
-  });
+  const componentPaths = inputs.graph.libraries
+    .filter(library => (
+      inputs.manifest.graphLock.profile === "side-startup" ||
+      library.id === inputs.bindingIr.component.id
+    ))
+    .map(library => {
+      const artifact = library.capsule.artifacts.targets
+        .find(target => target.target === inputs.manifest.graphLock.target).sideModule;
+      return join(layout.profileDirectory, artifact.file);
+    });
+  const asyncify = inputs.manifest.graphLock.profile === "side-lazy" ? ["-sASYNCIFY=1"] : [];
   await run(toolchain.emcc, [
-    "-shared", "-O2", "-g0", "-fPIC", "-flto", "-fvisibility=hidden", "-sSIDE_MODULE=1",
+    "-shared", "-O2", "-g0", "-fPIC", "-flto", "-fvisibility=hidden", "-sSIDE_MODULE=1", ...asyncify,
     "-DCOMPILE_DL_LEAN_ALPHA=1",
     ...phpIncludes.flatMap(path => ["-I", path]),
     ...bridgeIncludes.flatMap(path => ["-I", path]),

@@ -10,7 +10,6 @@ import {
   PhpWasmGenerationError,
   generatePhpWasmAdapterPackage,
 } from "../src/backends/php/php-wasm.mjs";
-import { generatePhpZendExtensionPackage } from "../src/backends/php/zend-extension.mjs";
 
 const graph = await readLockedGraph({
   lockPath: "poc/lean-link-spike/graph-lock.json",
@@ -68,11 +67,13 @@ test("PHP-Wasm generator emits one flat PHP-Wasm library closure", () => {
   assert.doesNotMatch(files["host.mjs"], /\bccall\b|\bcwrap\b/);
   assert.match(files["src/lean_bridge_php_wasm_host.c"], /Module\.__leanBridgeInstallPhpWasmHostV1/);
   assert.match(files["extension/lean_alpha_zend.c"], /PHP_RINIT_FUNCTION\(lean_alpha\)/);
+  assert.match(files["extension/lean_alpha_zend.c"], /PHP_METHOD\(LeanAlpha_NativeTransport, leanBetaRead\)/);
+  assert.match(files["extension/lean_alpha_zend.c"], /PHP_METHOD\(LeanAlpha_NativeTransport, leanBetaIdentity\)/);
+  assert.match(files["extension/lean_alpha_zend.c"], /EM_ASYNC_JS\(int, lean_bridge_php_wasm_beta_load/);
+  assert.match(files["extension/lean_alpha_zend.c"], /FS\.readFile\(name\)/);
+  assert.match(files["extension/src/lean_alpha.c"], /lean_bridge_php_wasm_alpha_box_value/);
   assert.match(files["extension/src/lean_alpha_native.c"], /lean_bridge_php_wasm_component_ready/);
-  assert.equal(
-    files["extension/src/lean_alpha.c"],
-    generatePhpZendExtensionPackage(alpha.bindingIr)["src/lean_alpha.c"],
-  );
+  assert.doesNotMatch(files["extension/src/lean_alpha.c"], /\bccall\b|\bcwrap\b/);
 });
 
 test("generated host keeps one runtime, component domain, and Vrzno-style identity index", async () => {
@@ -168,7 +169,14 @@ test("PHP-Wasm generation rejects graph, asset, and component drift", async () =
     lockPath: "poc/lean-link-spike/graph-lock.json",
     profile: "side-lazy",
   });
-  assert.doesNotThrow(() => generatePhpWasmAdapterPackage({ ...options, graph: lazy }));
+  const lazyFiles = generatePhpWasmAdapterPackage({ ...options, graph: lazy });
+  const lazyManifest = JSON.parse(lazyFiles["php-wasm-manifest.json"]);
+  assert.deepEqual(
+    lazyManifest.versions["8.4"].files
+      .filter(file => /^\/(?:beta|gamma)\.so\.data$/.test(file.path))
+      .map(file => file.path),
+    ["/beta.so.data", "/gamma.so.data"],
+  );
 
   const staticGraph = await readLockedGraph({
     lockPath: "poc/lean-link-spike/graph-lock.json",

@@ -33,6 +33,7 @@
     "test:php-wasm-package": "node --test tests/php-wasm-package.test.mjs",
     "test:php-wasm-package:host": "node scripts/test-php-wasm-package-host.mjs",
     "test:php-wasm-package:release": "node scripts/check-php-wasm-package-release.mjs",
+    "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
     "test:php-transport-parity": "node scripts/check-php-transport-parity.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",

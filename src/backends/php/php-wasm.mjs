@@ -500,6 +500,8 @@ typedef lean_object *(*lean_bridge_alpha_adder_fn)(uint32_t);
 typedef uint8_t (*lean_bridge_alpha_enabled_fn)(lean_object *);
 typedef uint32_t (*lean_bridge_alpha_count_fn)(lean_object *);
 typedef lean_object *(*lean_bridge_alpha_initializer_fn)(uint8_t);
+typedef lean_object *(*lean_bridge_component_identity_fn)(lean_object *);
+typedef uint32_t (*lean_bridge_component_read_fn)(lean_object *);
 
 static lean_bridge_alpha_box_fn alpha_box;
 static lean_bridge_alpha_read_fn alpha_read;
@@ -513,6 +515,8 @@ static lean_bridge_alpha_object_fn alpha_payload_label;
 static lean_bridge_alpha_object_fn alpha_payload_bytes;
 static lean_bridge_alpha_object_fn alpha_payload_values;
 static lean_bridge_alpha_initializer_fn alpha_initialize;
+static lean_bridge_component_identity_fn beta_identity;
+static lean_bridge_component_read_fn beta_read;
 
 void bridge_register_lean_alpha(
     lean_bridge_alpha_box_fn box,
@@ -564,7 +568,34 @@ lean_object *lean_link_alpha_payload_bytes(lean_object *payload) { return alpha_
 lean_object *lean_link_alpha_payload_values(lean_object *payload) { return alpha_payload_values(payload); }
 
 void bridge_register_lean_beta(uintptr_t identity, uintptr_t read, uintptr_t initialize) {
-  (void)identity; (void)read; (void)initialize;
+  beta_identity = (lean_bridge_component_identity_fn)identity;
+  beta_read = (lean_bridge_component_read_fn)read;
+  (void)initialize;
+}
+
+int lean_bridge_php_wasm_beta_read(lean_object *box, uint32_t *out) {
+  if (box == NULL || out == NULL || beta_read == NULL) return 0;
+  lean_inc(box);
+  *out = beta_read(box);
+  return 1;
+}
+
+int lean_bridge_php_wasm_beta_identity(lean_object *box) {
+  if (box == NULL || beta_identity == NULL) return 0;
+  lean_inc(box);
+  lean_object *result = beta_identity(box);
+  int same = result == box;
+  if (result != NULL) lean_dec(result);
+  return same;
+}
+
+lean_object *lean_bridge_php_wasm_beta_initialize(uint8_t builtin) {
+  (void)builtin;
+  return lean_io_result_mk_ok(lean_box(0));
+}
+
+int lean_bridge_php_wasm_beta_available(void) {
+  return beta_identity != NULL && beta_read != NULL;
 }
 
 void bridge_register_lean_gamma(uintptr_t identity, uintptr_t read, uintptr_t initialize) {
@@ -583,10 +614,35 @@ const adaptProvider = source => {
   return adapted.replaceAll("shared native Lean runtime", "shared Lean runtime");
 };
 
-const adaptZend = source => {
+const adaptZend = (source, profile) => {
   const includeMarker = "#include \"lean_bridge_native_runtime.h\"";
   if (!source.includes(includeMarker)) fail("zend-adaptation-failed", "Zend adapter lacks the shared runtime include");
-  let adapted = source.replace(includeMarker, `${includeMarker}\n#include \"lean_bridge_php_wasm_host.h\"`);
+  let adapted = source.replace(includeMarker, `${includeMarker}\n#include \"lean_bridge_php_wasm_host.h\"\n#include <emscripten/em_js.h>`);
+  const externMarker = "extern void lean_alpha_native_runtime_detach(void);";
+  const betaExterns = `${externMarker}\nextern uintptr_t lean_bridge_php_wasm_alpha_box_value(const lean_alpha_box *box);\nextern int lean_bridge_php_wasm_beta_available(void);\nextern int lean_bridge_php_wasm_beta_read(void *box, uint32_t *out);\nextern int lean_bridge_php_wasm_beta_identity(void *box);\nextern void *lean_bridge_php_wasm_beta_initialize(uint8_t builtin);\n\nstatic const char lean_beta_component_id[] = \"poc/lean-beta@0.0.0\";\n\nEM_ASYNC_JS(int, lean_bridge_php_wasm_beta_load, (), {\n    const name = \"/beta.so.data\";\n    if (LDSO.loadedLibsByName[name]) return 1;\n    const dso = newDSO(name, undefined, \"loading\");\n    try {\n        const flags = {loadAsync: true, global: true, nodelete: true};\n        const exports = await loadWebAssemblyModule(FS.readFile(name), flags, name, null);\n        mergeLibSymbols(exports, name);\n        dso.exports = exports;\n        return 1;\n    } catch (error) {\n        delete LDSO.loadedLibsByName[name];\n        console.error(\"Lean PHP-Wasm lazy component load failed\", error);\n        return 0;\n    }\n})`;
+  if (!adapted.includes(externMarker)) fail("zend-adaptation-failed", "Zend adapter lacks the native runtime declarations");
+  adapted = adapted.replace(externMarker, betaExterns);
+  const methodMarker = "PHP_METHOD(LeanAlpha_NativeTransport, leanAlphaRoundTrip)";
+  const betaMethods = `PHP_METHOD(LeanAlpha_NativeTransport, leanBetaRead)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    uint32_t result = 0;\n    if (box == 0 || !lean_bridge_php_wasm_beta_read((void *)box, &result)) {\n        zend_throw_exception(zend_ce_error, \"Beta is unavailable in the locked PHP-Wasm component graph\", 0);\n        RETURN_THROWS();\n    }\n    RETURN_LONG(result);\n}\n\nPHP_METHOD(LeanAlpha_NativeTransport, leanBetaIdentity)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    if (box == 0 || !lean_bridge_php_wasm_beta_identity((void *)box)) {\n        zend_throw_exception(zend_ce_error, \"Beta broke canonical Lean object identity\", 0);\n        RETURN_THROWS();\n    }\n    RETURN_ZVAL(self, 1, 0);\n}\n\n${methodMarker}`;
+  if (!adapted.includes(methodMarker)) fail("zend-adaptation-failed", "Zend adapter method shape changed");
+  const betaInitialization = profile === "side-lazy"
+    ? "if (!lean_bridge_php_wasm_beta_load() ||\n        !lean_bridge_native_component_initialize(lean_beta_component_id, lean_bridge_php_wasm_beta_initialize)"
+    : "if (!lean_bridge_native_component_initialize(lean_beta_component_id, lean_bridge_php_wasm_beta_initialize)";
+  adapted = adapted.replace(
+    methodMarker,
+    betaMethods.replaceAll(
+      "if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL)",
+      betaInitialization,
+    ),
+  );
+  const tableMarker = "    PHP_ME(LeanAlpha_NativeTransport, leanAlphaRoundTrip, arginfo_round_trip, ZEND_ACC_PUBLIC)";
+  const tableReplacement = `    PHP_ME(LeanAlpha_NativeTransport, leanBetaRead, arginfo_box_read, ZEND_ACC_PUBLIC)\n    PHP_ME(LeanAlpha_NativeTransport, leanBetaIdentity, arginfo_box_identity, ZEND_ACC_PUBLIC)\n${tableMarker}`;
+  if (!adapted.includes(tableMarker)) fail("zend-adaptation-failed", "Zend adapter method table shape changed");
+  adapted = adapted.replace(tableMarker, tableReplacement);
+  const shutdownMarker = "PHP_MSHUTDOWN_FUNCTION(lean_alpha)\n{\n    lean_alpha_native_runtime_detach();";
+  const shutdownReplacement = "PHP_MSHUTDOWN_FUNCTION(lean_alpha)\n{\n    lean_bridge_native_component_detach(lean_beta_component_id);\n    lean_alpha_native_runtime_detach();";
+  if (!adapted.includes(shutdownMarker)) fail("zend-adaptation-failed", "Zend adapter shutdown shape changed");
+  adapted = adapted.replace(shutdownMarker, shutdownReplacement);
   const infoMarker = "PHP_MINFO_FUNCTION(lean_alpha)";
   const requestHooks = `PHP_RINIT_FUNCTION(lean_alpha)\n{\n    return lean_bridge_php_wasm_request_begin() ? SUCCESS : FAILURE;\n}\n\nPHP_RSHUTDOWN_FUNCTION(lean_alpha)\n{\n    lean_bridge_php_wasm_request_end();\n    return SUCCESS;\n}\n\n`;
   if (!adapted.includes(infoMarker)) fail("zend-adaptation-failed", "Zend adapter module info shape changed");
@@ -597,6 +653,13 @@ const adaptZend = source => {
   return adapted
     .replace(entryMarker, entryReplacement)
     .replaceAll("Lean lean_alpha native transport", "Lean lean_alpha PHP-Wasm transport");
+};
+
+const adaptCBinding = source => {
+  const marker = "struct lean_alpha_owned_transform { uintptr_t value; };";
+  const replacement = `${marker}\n\nuintptr_t lean_bridge_php_wasm_alpha_box_value(const lean_alpha_box *self) {\n  return self == NULL ? 0 : self->value;\n}`;
+  if (!source.includes(marker)) fail("c-binding-adaptation-failed", "C binding resource layout changed");
+  return source.replace(marker, replacement);
 };
 
 const versionModule = ({ version, libraries, files, bootstrap }) => `import manifest from "../manifest.mjs";
@@ -709,6 +772,14 @@ export const generatePhpWasmAdapterPackage = ({
       path: `/${path.replace(/^composer\//, "vendor/")}`,
     })),
   ];
+  const lazyComponentFiles = graph.profile === "side-lazy"
+    ? graphLibraries
+      .filter(library => library.component !== ir.component.id)
+      .map(library => {
+        const runtimeName = library.name.replace(/\.wasm$/, ".data");
+        return { name: runtimeName, file: library.file, path: `/${runtimeName}` };
+      })
+    : [];
   const phpBootstrap = phpPackage ? `/${phpPackage.bootstrap.replace(/^composer\//, "vendor/")}` : null;
   const graphRecord = {
     id: graph.graphId,
@@ -731,7 +802,7 @@ export const generatePhpWasmAdapterPackage = ({
       { role: "php-extension", component: ir.component.id, dependencies: [...graph.order], ...extensions[version], ini: true },
     ];
     assertUniqueAssets(libraries);
-    versionRecords[version] = { libraries, files: metadataFiles };
+    versionRecords[version] = { libraries, files: [...metadataFiles, ...lazyComponentFiles] };
   }
   const manifest = {
     schemaVersion: 1,
@@ -777,7 +848,11 @@ export const generatePhpWasmAdapterPackage = ({
   });
   for (const [path, source] of Object.entries(nativeZend)) {
     if (path === "zend-manifest.json") continue;
-    files[`extension/${path}`] = path.endsWith("_zend.c") ? adaptZend(source) : source;
+    files[`extension/${path}`] = path.endsWith("_zend.c")
+      ? adaptZend(source, graph.profile)
+      : path.endsWith("src/lean_alpha.c")
+        ? adaptCBinding(source)
+        : source;
   }
   const providerPath = Object.keys(nativeRuntime).find(path => /src\/.+_native\.c$/.test(path));
   files[`extension/${providerPath}`] = adaptProvider(nativeRuntime[providerPath]);

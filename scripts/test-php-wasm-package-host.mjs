@@ -41,6 +41,8 @@ $result = [
     'extension' => extension_loaded('lean_alpha'),
     'box' => $box->read(),
     'identity' => $box->identity() === $box,
+    'betaRead' => LeanBeta\\read($box),
+    'betaIdentity' => LeanBeta\\identity($box) === $box,
     'payload' => [$payload->enabled, $payload->count, $payload->label, bin2hex($payload->bytes->toString()), $payload->values],
     'callback' => LeanAlpha\\withCallback(40, static fn(int $value): int => $value),
     'closure' => $adder(40),
@@ -62,11 +64,13 @@ const expected = {
   extension: true,
   box: 41,
   identity: true,
+  betaRead: 41,
+  betaIdentity: true,
   payload: [true, 9, "wasm", "007fff", [1, 5, 13]],
   callback: 42,
   closure: 42,
   runtimeInitRuns: 1,
-  componentInitRuns: 1,
+  componentInitRuns: 2,
   liveIdentities: 0,
 };
 if (JSON.stringify(result) !== JSON.stringify(expected)) {

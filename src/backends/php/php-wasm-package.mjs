@@ -247,6 +247,44 @@ export const generatePhpWasmReleaseSources = ({ inputs, runtime, extensions }) =
   const { manifest, bindingIr, graph } = inputs;
   validatePhpWasmPackageManifest(manifest);
   const composer = { ...generatePhpBindingPackage(bindingIr) };
+  composer["src/LeanBeta/functions.php"] = `<?php
+declare(strict_types=1);
+
+namespace LeanBeta;
+
+use LeanAlpha\\Box;
+use LeanAlpha\\Internal\\Hydrator;
+use LeanAlpha\\Internal\\Runtime;
+
+function read(Box $box): int
+{
+    $transport = Runtime::transport();
+    if (!method_exists($transport, 'leanBetaRead')) {
+        throw new \\LeanAlpha\\RuntimeUnavailable('The installed transport does not contain the locked LeanBeta component');
+    }
+    return $transport->leanBetaRead(Hydrator::identity($box));
+}
+
+function identity(Box $box): Box
+{
+    $transport = Runtime::transport();
+    if (!method_exists($transport, 'leanBetaIdentity')) {
+        throw new \\LeanAlpha\\RuntimeUnavailable('The installed transport does not contain the locked LeanBeta component');
+    }
+    $identity = $transport->leanBetaIdentity(Hydrator::identity($box));
+    /** @var Box $result */
+    $result = Hydrator::canonical(Box::class, $identity);
+    return $result;
+}
+`;
+  composer["stubs/lean_beta.php"] = `<?php
+declare(strict_types=1);
+
+namespace LeanBeta;
+
+function read(\\LeanAlpha\\Box $box): int {}
+function identity(\\LeanAlpha\\Box $box): \\LeanAlpha\\Box {}
+`;
   composer["autoload.php"] = `<?php
 declare(strict_types=1);
 
@@ -258,6 +296,7 @@ spl_autoload_register(static function (string $class): void {
 });
 
 require_once __DIR__ . '/src/functions.php';
+require_once __DIR__ . '/src/LeanBeta/functions.php';
 `;
   const phpFiles = Object.keys(composer)
     .sort()

@@ -6,7 +6,7 @@ Status: the generator, PHP-Wasm descriptor, shared host bootstrap, request lifec
 
 `generatePhpWasmAdapterPackage` consumes a validated Binding IR and a resolved capsule graph. It emits a version-aware PHP-Wasm package helper with ordinary `getLibs` and `getFiles` functions.
 
-For the Alpha, Beta, and Gamma graph, PHP 8.4 receives this direct library list:
+For the Alpha, Beta, and Gamma graph, the startup profile gives PHP 8.4 this direct library list:
 
 1. `liblean_bridge_runtime.so`
 2. `alpha.so.wasm`
@@ -15,6 +15,8 @@ For the Alpha, Beta, and Gamma graph, PHP 8.4 receives this direct library list:
 5. `php8.4-lean-alpha.so`
 
 Only the generated PHP extension has `ini: true`. The runtime and component side modules remain support libraries. Emscripten resolves them into the PHP-Wasm main module, so they use its existing memory and function table. The descriptor contains no nested dependency helper. The capsule resolver computes and validates the transitive closure before generation.
+
+The lazy profile publishes the same package assets but links only the runtime and Alpha into the extension's startup closure. Its private generated adapter loads Beta into the same main module on the first `LeanBeta` call. [The shared runtime composition evidence](php-wasm-shared-runtime-composition.md) records the eager and lazy dependency closures and the cross-package identity test.
 
 Every graph capsule, the resolved graph, and the Binding IR also appear as `getFiles` preload records. PHP-Wasm mounts them below one graph-specific metadata directory. The generated manifest binds their component identities, dependency order, initializers, runtime ABI, Lean commit, patch hash, artifact hashes, and Binding IR semantic hash.
 
@@ -66,6 +68,7 @@ Run:
 ```sh
 npm run test:php-wasm-adapter
 npm run test:php-wasm-package:release
+npm run test:php-wasm-composition
 ```
 
 The tests verify:
@@ -81,4 +84,8 @@ The tests verify:
 - direct reuse of the generated C binding source;
 - generated Zend `RINIT` and `RSHUTDOWN` hooks;
 - rejection of static graphs, duplicate asset names, and absent components;
-- absence of `ccall`, `cwrap`, or a copied `WeakerMap` from generated host code.
+- absence of `ccall`, `cwrap`, or a copied `WeakerMap` from generated host code;
+- direct Alpha to Beta calls through generated PHP functions;
+- canonical PHP object identity for a retained Lean value passed across both components;
+- eager and first-call lazy Beta loading from one locked graph; and
+- rejection of private runtime identity drift.

@@ -90,6 +90,11 @@ test("one PHP-Wasm manifest generates the descriptor, Composer surface, stubs, d
   assert.equal(provenance.graph.profile, "side-lazy");
   assert.equal(descriptor.php.bootstrap, "/vendor/autoload.php");
   assert.ok(descriptor.php.composerFiles.includes("composer/src/Box.php"));
+  assert.ok(descriptor.php.composerFiles.includes("composer/src/LeanBeta/functions.php"));
+  assert.ok(descriptor.php.composerFiles.includes("composer/stubs/lean_beta.php"));
+  assert.match(files["composer/src/LeanBeta/functions.php"], /function read\(Box \$box\): int/);
+  assert.match(files["composer/src/LeanBeta/functions.php"], /function identity\(Box \$box\): Box/);
+  assert.doesNotMatch(files["composer/src/LeanBeta/functions.php"], /\bccall\b|\bcwrap\b|handle|pointer/);
   assert.ok(descriptor.php.composerFiles.includes("composer/reflection.json"));
   assert.ok(descriptor.php.composerFiles.includes("composer/assurance.json"));
   assert.ok(descriptor.php.composerFiles.includes("composer/README.md"));
