@@ -230,7 +230,7 @@ The default path uses a pinned Debian Docker environment. Native Nix provides th
 
 Any difference blocks publication. The release receives machine-readable and human-readable reports with both hashes, differing paths, likely entropy categories, and exact reproduction commands. Registry credentials remain unavailable until the comparison passes.
 
-The current POC passes this gate for 23 browser artifacts and 23 threaded artifacts across independent checkout roots. The complete x86-64 build also runs inside Nix from fixed Lean, libuv, Emscripten, Node, and source inputs.
+The current POC passes this gate for 24 browser artifacts and 24 threaded artifacts across independent checkout roots. The generated C ABI header is part of each comparison. The complete x86-64 build also runs inside Nix from fixed Lean, libuv, Emscripten, Node, and source inputs.
 
 ## Current performance evidence
 
@@ -244,7 +244,7 @@ The current POC passes this gate for 23 browser artifacts and 23 threaded artifa
 | warm `box.read()` | 45.3 ns | 256.0 ns |
 | warm construct, read, and dispose | 1.604 µs | 7.412 µs |
 
-The first `Box` operation includes deferred Lean runtime initialization. The benchmark uses a warm filesystem cache under Node and does not measure browser download or compilation. Alpha's descriptor and class projection are hand-authored POC stand-ins for generated output. [The benchmark record](docs/evidence/performance.md) includes artifact hashes, method, size results, and limitations.
+The first `Box` operation includes deferred Lean runtime initialization. The benchmark uses a warm filesystem cache under Node and does not measure browser download or compilation. Alpha's public class projection and resource lifecycle plan come from Binding IR. Its private symbol map remains a POC input until the Lean frontend emits it. [The benchmark record](docs/evidence/performance.md) includes artifact hashes, method, size results, and limitations.
 
 Current browser-profile artifact sizes:
 
@@ -268,11 +268,11 @@ The architecture-testing POC has established:
 - a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 45 passing behavioral and structural tests;
+- 90 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, and matching C frame header from the canonical binding IR. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, and resource lifecycle plan from the canonical binding IR. The loader follows generated constructor leases, receiver borrows, canonical result projection, explicit disposal, fallback finalization, and runtime cleanup policy. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

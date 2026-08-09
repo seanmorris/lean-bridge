@@ -84,8 +84,7 @@ const bridgeError = (descriptor, binding, code, message, details) =>
     details,
   });
 
-const classIdentity = (descriptor, bindingName) =>
-  `${identity(descriptor)}:${bindingName}`;
+const classIdentity = (descriptor, typeId) => `${identity(descriptor)}:${typeId}`;
 
 const decodeHandleToken = token => ({
   side: token >>> 31,
@@ -175,11 +174,12 @@ class RuntimeRegistry {
       );
     }
     const decoded = decodeHandleToken(token >>> 0);
-    const expectedSide = binding.handle?.side === "lean" ? 0 : undefined;
+    const handle = binding.lifecycle?.handle;
+    const expectedSide = handle?.side === "lean" ? 0 : undefined;
     if (
       expectedSide === undefined ||
       decoded.side !== expectedSide ||
-      decoded.kind !== binding.handle.kind ||
+      decoded.kind !== handle?.kind ||
       decoded.slot === 0 ||
       decoded.generation === 0
     ) {
@@ -189,8 +189,8 @@ class RuntimeRegistry {
         "invalid-handle-token",
         `${binding.name} returned a token with the wrong side or nominal kind`,
         {
-          expectedSide: binding.handle?.side,
-          expectedKind: binding.handle?.kind,
+          expectedSide: handle?.side,
+          expectedKind: handle?.kind,
         },
       );
     }
@@ -198,7 +198,7 @@ class RuntimeRegistry {
   }
 
   registerClass(descriptor, binding, projectedClass) {
-    this.classes.set(classIdentity(descriptor, binding.name), {
+    this.classes.set(classIdentity(descriptor, binding.typeId), {
       descriptor,
       binding,
       projectedClass,
@@ -363,7 +363,7 @@ class RuntimeRegistry {
 
   attach(wrapper, descriptor, binding, token, release) {
     const normalized = this.validateToken(descriptor, binding, token);
-    const bindingKey = classIdentity(descriptor, binding.name);
+    const bindingKey = classIdentity(descriptor, binding.typeId);
     const entryKey = `${bindingKey}:${normalized}`;
     const existing = this.entries.get(entryKey)?.reference.deref();
     if (existing) {
@@ -395,19 +395,21 @@ class RuntimeRegistry {
       binding,
       release,
     });
-    this.finalizer?.register(
-      wrapper,
-      {
-        entryKey,
-        token: normalized,
-        epoch: this.epoch,
-        bindingKey,
-        descriptor,
-        binding,
-        release,
-      },
-      wrapper,
-    );
+    if (binding.lifecycle.disposal.fallback === "queued-finalizer") {
+      this.finalizer?.register(
+        wrapper,
+        {
+          entryKey,
+          token: normalized,
+          epoch: this.epoch,
+          bindingKey,
+          descriptor,
+          binding,
+          release,
+        },
+        wrapper,
+      );
+    }
     this.counters.wrappersCreated += 1;
     this.counters.leasesAcquired += 1;
   }
@@ -430,7 +432,7 @@ class RuntimeRegistry {
         `${binding.name} belongs to a different Lean runtime`,
       );
     }
-    if (state.bindingKey !== classIdentity(descriptor, binding.name)) {
+    if (state.bindingKey !== classIdentity(descriptor, binding.typeId)) {
       this.reject(
         descriptor,
         binding,
@@ -458,13 +460,13 @@ class RuntimeRegistry {
   }
 
   liftResource(token, descriptor, method, result) {
-    const target = this.classes.get(classIdentity(descriptor, result.name));
+    const target = this.classes.get(classIdentity(descriptor, result.typeId));
     if (!target) {
       this.reject(
         descriptor,
         method,
         "unknown-resource-type",
-        `${method.name} returned unknown resource type ${result.name}`,
+        `${method.name} returned unknown resource type ${result.typeId}`,
       );
     }
     const normalized = this.validateToken(
@@ -472,17 +474,17 @@ class RuntimeRegistry {
       target.binding,
       token,
     );
-    const entryKey = `${classIdentity(descriptor, result.name)}:${normalized}`;
+    const entryKey = `${classIdentity(descriptor, result.typeId)}:${normalized}`;
     const wrapper = this.entries.get(entryKey)?.reference.deref();
     if (!wrapper) {
       this.reject(
         descriptor,
         method,
-        result.ownership === "borrowed"
+        result.ownership === "borrow"
           ? "unrooted-borrow"
           : "missing-retained-owner",
         `${method.name} returned a resource without a live canonical owner`,
-        { ownership: result.ownership, resource: result.name },
+        { ownership: result.ownership, resource: result.typeId },
       );
     }
     this.counters.canonicalHits += 1;
@@ -496,8 +498,8 @@ class RuntimeRegistry {
     this.counters.activeBorrows += 1;
     try {
       const result = method.implementation(state.token, ...args);
-      if (method.result?.kind === "resource") {
-        return this.liftResource(result, descriptor, method, method.result);
+      if (method.call.result?.transport === "handle") {
+        return this.liftResource(result, descriptor, method, method.call.result);
       }
       return result;
     } finally {
@@ -1076,22 +1078,70 @@ const projectFunction = (module, descriptor, binding, context) => {
   );
 };
 
+const assertResourceLifecycle = (descriptor, binding) => {
+  const lifecycle = binding.lifecycle;
+  if (
+    lifecycle?.kind !== "resource-lifecycle-v1" ||
+    lifecycle.abiVersion !== 1 ||
+    lifecycle.typeId !== binding.typeId ||
+    lifecycle.handle?.side !== "lean" ||
+    !Number.isInteger(lifecycle.handle?.kind) ||
+    lifecycle.handle.kind < 1 ||
+    lifecycle.handle.kind > 0x7f ||
+    lifecycle.identity?.projection !== "canonical-wrapper" ||
+    lifecycle.identity?.cache !== "weak-per-runtime-token" ||
+    lifecycle.disposal?.explicit !== true ||
+    typeof lifecycle.disposal?.symbol !== "string" ||
+    lifecycle.constructor?.result?.typeId !== binding.typeId ||
+    lifecycle.constructor.result.ownership !== "lease" ||
+    lifecycle.constructor.result.lifetime?.scope !== "explicit"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-resource-lifecycle",
+      `${binding.name} has resource lifecycle metadata the runtime cannot preserve`,
+      { typeId: binding.typeId },
+    );
+  }
+  for (const method of binding.methods ?? []) {
+    if (
+      method.call?.declarationId !== method.declarationId ||
+      method.call?.symbol !== method.symbol ||
+      method.call?.receiver?.typeId !== binding.typeId ||
+      method.call.receiver.ownership !== "borrow" ||
+      method.call.receiver.lifetime?.scope !== "call"
+    ) {
+      throw bridgeError(
+        descriptor,
+        method,
+        "unsupported-resource-lifecycle",
+        `${method.name} has call lifecycle metadata the runtime cannot preserve`,
+        { declaration: method.declarationId },
+      );
+    }
+  }
+  return lifecycle;
+};
+
 const projectClass = (module, descriptor, binding, context) => {
-  const bindingKey = classIdentity(descriptor, binding.name);
+  const bindingKey = classIdentity(descriptor, binding.typeId);
   const cached = context.classes.get(bindingKey)?.projectedClass;
   if (cached) return cached;
-  if (!binding.handle) {
-    throw new Error(`resource binding ${binding.name} is missing handle metadata`);
-  }
+  const lifecycle = assertResourceLifecycle(descriptor, binding);
   const construct = resolvePrivateFunction(
     module,
     descriptor,
-    binding.constructor,
+    lifecycle.constructor.symbol,
   );
-  const initialize = binding.initialize
-    ? resolvePrivateFunction(module, descriptor, binding.initialize)
+  const initialize = lifecycle.initialize
+    ? resolvePrivateFunction(module, descriptor, lifecycle.initialize)
     : undefined;
-  const dispose = resolvePrivateFunction(module, descriptor, binding.dispose);
+  const dispose = resolvePrivateFunction(
+    module,
+    descriptor,
+    lifecycle.disposal.symbol,
+  );
   const methods = (binding.methods ?? []).map(method => {
     assertPublicName(method.name);
     return {
@@ -1112,7 +1162,7 @@ const projectClass = (module, descriptor, binding, context) => {
     }
 
     dispose() {
-      context.dispose(this, descriptor, binding);
+      return context.dispose(this, descriptor, binding);
     }
   }
 

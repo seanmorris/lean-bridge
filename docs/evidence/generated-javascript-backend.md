@@ -61,7 +61,9 @@ The public source does not expose `ccall`, `cwrap`, underscored symbols, pointer
 
 Binding IR owns public names, declaration kinds, type signatures, ownership, lifetimes, mutability, effects, failure policy, and assurance references. The private ABI map owns symbols, resource tags, disposal symbols, and ABI adapter limits. Its closed validator rejects public names and ownership policy.
 
-The POC loader now derives Alpha's function, class, and method projection from Binding IR. Its copied-value validator also walks the Binding IR record instead of duplicating the public field contract in the descriptor.
+The POC generator compiles each identity-bearing resource into a closed lifecycle plan. Alpha's plan records the constructor lease, call-scoped receiver borrows, receiver-anchored resource results, canonical wrapper projection, nominal handle kind, explicit disposal, queued finalization, cycle policy, and runtime-shutdown cleanup. The loader consumes that plan. It does not assume that every resource follows one handwritten class convention.
+
+The copied-value validator walks the Binding IR record instead of duplicating the public field contract in the descriptor. The value-frame generator derives offsets and codecs from the same record.
 
 ## Executable checks
 
@@ -69,6 +71,8 @@ The POC loader now derives Alpha's function, class, and method projection from B
 
 `tests/javascript-projection.test.mjs` verifies that public names come from Binding IR. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
 
+`tests/resource-lifecycle-generator.test.mjs` verifies the exact ownership transitions produced for Alpha. It changes disposal and result ownership in valid Binding IR and confirms that the generated plan changes or the JavaScript backend rejects a contract it cannot preserve. Registry tests confirm that the generated fallback policy controls finalizer registration.
+
 ## Remaining generator boundary
 
-The value-frame compiler now derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The C code that constructs and projects Lean runtime objects remains handwritten. Promise settlement, iterators, callbacks, properties, overloads, generics, and error translation also require backend conformance fixtures.
+The value-frame compiler derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The C code that constructs and projects Lean runtime objects remains handwritten. Promise settlement, iterators, callbacks, properties, overloads, generics, and error translation also require backend conformance fixtures.

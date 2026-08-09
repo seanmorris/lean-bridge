@@ -97,7 +97,7 @@ test("class ABI adapters cannot be accepted and then ignored", () => {
   };
   projectionError(
     () => compileJavaScriptProjection(alpha.bindingIr, abi),
-    "unsupported-private-adapter",
+    "unsupported-lifecycle-adapter",
   );
 });
 

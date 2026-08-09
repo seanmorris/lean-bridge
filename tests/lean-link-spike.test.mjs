@@ -77,6 +77,15 @@ test("resource wrappers reject nominal and cross-runtime misuse", async () => {
     error => error.code === "cross-runtime-handle",
   );
 
+  const otherLifecycle = structuredClone(alpha.bindings[0].lifecycle);
+  otherLifecycle.typeId = "lean:Alpha.OtherBox";
+  otherLifecycle.constructor.result.typeId = "lean:Alpha.OtherBox";
+  for (const method of otherLifecycle.methods) {
+    method.receiver.typeId = "lean:Alpha.OtherBox";
+    if (method.result.transport === "handle") {
+      method.result.typeId = "lean:Alpha.OtherBox";
+    }
+  }
   const nominalDescriptor = Object.freeze({
     ...alpha,
     bindings: Object.freeze([
@@ -84,6 +93,14 @@ test("resource wrappers reject nominal and cross-runtime misuse", async () => {
       Object.freeze({
         ...alpha.bindings[0],
         name: "OtherBox",
+        typeId: "lean:Alpha.OtherBox",
+        lifecycle: otherLifecycle,
+        methods: otherLifecycle.methods.map(call => ({
+          name: call.name,
+          declarationId: call.declarationId,
+          symbol: call.symbol,
+          call,
+        })),
       }),
     ]),
   });

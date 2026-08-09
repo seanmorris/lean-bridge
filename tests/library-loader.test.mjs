@@ -98,17 +98,65 @@ test("native resource classes defer initialization and hide numeric handles", as
     },
     async loadDynamicLibrary() {},
   };
+  const readCall = {
+    declarationId: "test:Box.read",
+    name: "read",
+    kind: "method",
+    symbol: "_bridge_read_box",
+    receiver: {
+      typeId: "test:Box",
+      ownership: "borrow",
+      lifetime: { scope: "call", anchor: null },
+    },
+    result: { transport: "copy", ownership: "copy", lifetime: null },
+    resultMode: "value",
+  };
+  const lifecycle = {
+    kind: "resource-lifecycle-v1",
+    abiVersion: 1,
+    typeId: "test:Box",
+    initialize: "_bridge_initialize",
+    handle: { side: "lean", kind: 1 },
+    identity: {
+      projection: "canonical-wrapper",
+      cache: "weak-per-runtime-token",
+    },
+    disposal: {
+      policy: "required",
+      explicit: true,
+      runtimeShutdown: true,
+      fallback: "none",
+      cycles: "no-back-edges",
+      symbol: "_bridge_release",
+    },
+    constructor: {
+      declarationId: "test:Box.make",
+      symbol: "_bridge_make_box",
+      result: {
+        typeId: "test:Box",
+        ownership: "lease",
+        lifetime: { scope: "explicit", anchor: null },
+      },
+      resultMode: "value",
+    },
+    methods: [readCall],
+  };
   const boxes = descriptor({
     id: "boxes",
     bindings: [
       {
         kind: "class",
         name: "Box",
-        initialize: "_bridge_initialize",
-        constructor: "_bridge_make_box",
-        dispose: "_bridge_release",
-        handle: { side: "lean", kind: 1 },
-        methods: [{ name: "read", symbol: "_bridge_read_box" }],
+        typeId: "test:Box",
+        lifecycle,
+        methods: [
+          {
+            name: "read",
+            declarationId: "test:Box.read",
+            symbol: "_bridge_read_box",
+            call: readCall,
+          },
+        ],
       },
     ],
   });

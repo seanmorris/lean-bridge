@@ -7,6 +7,7 @@ import {
   __bridgeTest,
   createLibraryLoader,
 } from "../../../poc/link-spike/loader.mjs";
+import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 test("host values use canonical generation-safe tokens and retained leases", () => {
   const firstRuntime = {};
@@ -134,6 +135,38 @@ test("deterministic disposal cancels fallback finalization", async () => {
     released: 1,
     finalized: 0,
   });
+});
+
+test("generated cleanup policy controls fallback finalizer registration", async () => {
+  let registrations = 0;
+  const module = await createLazyModule();
+  const bindingIr = structuredClone(alpha.bindingIr);
+  bindingIr.types.find(type => type.id === "lean:Alpha.Box").resource.fallback =
+    "none";
+  const projection = compileJavaScriptProjection(bindingIr, alpha.privateAbi);
+  const descriptor = {
+    ...alpha,
+    bindingIr,
+    bindings: projection.bindings,
+  };
+  const libraries = createLibraryLoader(module, {
+    createFinalizationRegistry() {
+      return {
+        register() {
+          registrations += 1;
+        },
+        unregister() {
+          return true;
+        },
+      };
+    },
+  });
+  const api = await libraries.load(descriptor);
+
+  const box = new api.Box(100);
+  assert.equal(registrations, 0);
+  assert.equal(box.dispose(), true);
+  assert.equal(box.dispose(), false);
 });
 
 test("runtime shutdown releases both registry domains and expires wrappers", async () => {

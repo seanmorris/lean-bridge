@@ -4,6 +4,10 @@ import {
   ValueFrameGenerationError,
   compileValueFrameV1,
 } from "../../abi/value-frame.mjs";
+import {
+  ResourceLifecycleGenerationError,
+  compileResourceLifecycleV1,
+} from "../../abi/resource-lifecycle.mjs";
 
 export class JavaScriptProjectionError extends Error {
   constructor(code, message, details = {}) {
@@ -148,22 +152,60 @@ const declarationAbi = (abi, declaration) => {
 
 const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefined);
 
-const resourceResult = (declaration, typeMap) => {
-  const typeId = namedTypeId(declaration.result.type);
-  const type = typeMap.get(typeId);
-  if (type?.kind !== "resource") return undefined;
-  if (declaration.result.ownership !== "borrow") {
+const compileLifecycle = (ir, type, abi) => {
+  try {
+    return compileResourceLifecycleV1(ir, type.id, abi);
+  } catch (error) {
+    if (!(error instanceof ResourceLifecycleGenerationError)) throw error;
+    fail(error.code, error.message, error.details);
+  }
+};
+
+const validateJavaScriptLifecycle = lifecycle => {
+  const constructor = lifecycle.constructor;
+  if (
+    constructor.resultMode !== "value" ||
+    constructor.result.transport !== "handle" ||
+    constructor.result.ownership !== "lease" ||
+    constructor.result.lifetime?.scope !== "explicit"
+  ) {
     fail(
-      "unsupported-resource-result",
-      `${declaration.id} returns ${declaration.result.ownership}; the POC projector supports borrowed method resources`,
-      { declaration: declaration.id, ownership: declaration.result.ownership },
+      "unsupported-constructor-lifecycle",
+      `${constructor.declarationId} must return an explicit resource lease in the JavaScript POC`,
+      { declaration: constructor.declarationId, result: constructor.result },
     );
   }
-  return Object.freeze({
-    kind: "resource",
-    name: type.name,
-    ownership: "borrowed",
-  });
+  if (!lifecycle.disposal.explicit) {
+    fail(
+      "unsupported-disposal-policy",
+      `${lifecycle.typeId} does not expose deterministic disposal`,
+      { resource: lifecycle.typeId, policy: lifecycle.disposal.policy },
+    );
+  }
+  for (const method of lifecycle.methods) {
+    if (
+      method.resultMode !== "value" ||
+      method.receiver?.ownership !== "borrow" ||
+      method.receiver?.lifetime?.scope !== "call"
+    ) {
+      fail(
+        "unsupported-method-lifecycle",
+        `${method.declarationId} cannot preserve its receiver or result mode in the JavaScript POC`,
+        { declaration: method.declarationId },
+      );
+    }
+    if (
+      method.result.transport === "handle" &&
+      (method.result.ownership !== "borrow" ||
+        method.result.lifetime?.scope !== "receiver")
+    ) {
+      fail(
+        "unsupported-resource-result",
+        `${method.declarationId} must return a resource borrowed from its receiver in the JavaScript POC`,
+        { declaration: method.declarationId, result: method.result },
+      );
+    }
+  }
 };
 
 export const compileJavaScriptProjection = (ir, abi) => {
@@ -187,86 +229,26 @@ export const compileJavaScriptProjection = (ir, abi) => {
   for (const type of ir.types) {
     if (type.kind !== "resource") continue;
     addPublicName(type.name, type.id);
-    const resourceAbi = abi.resources[type.id];
-    if (!resourceAbi) {
-      fail("missing-abi-resource", `private ABI has no resource entry for ${type.id}`, {
-        resource: type.id,
+    const lifecycle = compileLifecycle(ir, type, abi);
+    validateJavaScriptLifecycle(lifecycle);
+    const constructor = lifecycle.constructor;
+    consumedDeclarations.add(constructor.declarationId);
+    const methods = lifecycle.methods.map(call => {
+      consumedDeclarations.add(call.declarationId);
+      return Object.freeze({
+        name: call.name,
+        declarationId: call.declarationId,
+        symbol: call.symbol,
+        call,
       });
-    }
-    const constructors = ir.declarations.filter(
-      declaration =>
-        declaration.kind === "constructor" && namedTypeId(declaration.result.type) === type.id,
-    );
-    if (constructors.length !== 1) {
-      fail(
-        "resource-constructor-count",
-        `${type.id} requires exactly one constructor in JavaScript POC bindings`,
-        { resource: type.id, actual: constructors.length },
-      );
-    }
-    const constructor = constructors[0];
-    if (constructor.typeParameters.length > 0) {
-      fail("unsupported-generic", `${constructor.id} requires monomorphization metadata`, {
-        declaration: constructor.id,
-      });
-    }
-    const constructorAbi = declarationAbi(abi, constructor);
-    if (constructorAbi.adapter !== null) {
-      fail(
-        "unsupported-private-adapter",
-        `${constructor.id} constructor adapters are not implemented by the POC projector`,
-        { declaration: constructor.id },
-      );
-    }
-    consumedDeclarations.add(constructor.id);
-
-    const methods = ir.declarations
-      .filter(
-        declaration =>
-          declaration.kind === "method" &&
-          namedTypeId(declaration.receiver?.type) === type.id,
-      )
-      .map(declaration => {
-        if (declaration.typeParameters.length > 0) {
-          fail("unsupported-generic", `${declaration.id} requires monomorphization metadata`, {
-            declaration: declaration.id,
-          });
-        }
-        const entry = declarationAbi(abi, declaration);
-        if (entry.adapter !== null) {
-          fail(
-            "unsupported-private-adapter",
-            `${declaration.id} method adapters are not implemented by the POC projector`,
-            { declaration: declaration.id },
-          );
-        }
-        if (declaration.resultMode !== "value") {
-          fail(
-            "unsupported-result-mode",
-            `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value methods`,
-            { declaration: declaration.id, resultMode: declaration.resultMode },
-          );
-        }
-        consumedDeclarations.add(declaration.id);
-        const result = resourceResult(declaration, typeMap);
-        return Object.freeze({
-          name: declaration.name,
-          declarationId: declaration.id,
-          symbol: entry.symbol,
-          ...(result ? { result } : {}),
-        });
-      });
+    });
 
     bindings.push(
       Object.freeze({
         kind: "class",
         name: type.name,
         typeId: type.id,
-        constructorId: constructor.id,
-        initialize: abi.initialize,
-        constructor: constructorAbi.symbol,
-        dispose: resourceAbi.dispose,
-        handle: Object.freeze({ side: resourceAbi.side, kind: resourceAbi.kind }),
+        lifecycle,
         methods: Object.freeze(methods),
       }),
     );

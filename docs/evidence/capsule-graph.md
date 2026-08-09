@@ -22,9 +22,9 @@ The browser and threaded capsules have distinct artifact hashes. Both runtime-lo
 
 Clang file, debug, and macro prefix maps normalize the checkout root to `/workspace` and every content-addressed runtime build directory to `/workspace/build/lean-runtime/current`. Final-static capsule objects are compiled from project-relative source paths so their LLVM module identifiers are also root-independent. Shipped side modules, static objects, and final Wasm artifacts contain no checkout-specific or cache-key-specific source path.
 
-`npm run test:reproducibility` copies the current tracked and untracked source closure to a fresh `mktemp` checkout, shares only the pinned toolchain installation, rebuilds the browser and threaded Lean runtimes and `Init` archives from extracted source, rebuilds the complete three-library graph, and compares 23 files per profile byte-for-byte. The verified set includes main `.mjs`/Wasm files, Alpha/Beta/Gamma startup and lazy side modules, all six final-static library objects, all three canonical resolution outputs, the artifact manifest, and the relative-path SHA manifest.
+`npm run test:reproducibility` copies the current tracked and untracked source closure to a fresh `mktemp` checkout, shares only the pinned toolchain installation, rebuilds the browser and threaded Lean runtimes and `Init` archives from extracted source, rebuilds the complete three-library graph, and compares 24 files per profile byte-for-byte. The verified set includes main `.mjs`/Wasm files, Alpha/Beta/Gamma startup and lazy side modules, all six final-static library objects, all three canonical resolution outputs, the generated C ABI header, the artifact manifest, and the relative-path SHA manifest.
 
-Result on 2026-08-08: **23 of 23 browser files and 23 of 23 threaded files were byte-identical across independent checkout roots.**
+Result on 2026-08-09: **24 of 24 browser files and 24 of 24 threaded files were byte-identical across independent checkout roots.**
 
 The previous high-severity gotcha about an absolute `lean.h` include path is therefore fixed for both POC artifact closures. The same gate also caught and eliminated a subtler leak of the content-addressed runtime build ID through `__FILE__` strings before the artifacts were relocked.
 

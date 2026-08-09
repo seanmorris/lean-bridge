@@ -69,9 +69,7 @@ operation and later calls return the same object. Only Beta and required Alpha
 are loaded. The Lean Alpha descriptor returns a native `Box` class whose opaque
 registry token, underscore-prefixed ABI calls, runtime initialization, and
 release call remain private. Consumers use `new alpha.Box(42)`, `box.read()`,
-`box.identity()`, and `box.dispose()`. Runtime initialization is deferred until construction. The
-descriptors are hand-authored POC stand-ins for the WP6-generated metadata and
-bindings, not an accepted manual-wrapper architecture.
+`box.identity()`, and `box.dispose()`. Runtime initialization is deferred until construction. Binding IR now generates the public projection, copied-value layout, and resource lifecycle plan. The private symbol map and capsule assembly remain POC inputs pending Lean frontend and package-pipeline generation.
 
 The structural and profile tests pass:
 
