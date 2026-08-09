@@ -120,6 +120,24 @@ auto visibleRows = acme::limits::cap(
 );
 ```
 
+### C
+
+```c
+#include <lean_alpha.h>
+
+lean_alpha_error error = {0};
+lean_alpha_box *box = NULL;
+uint32_t value = 0;
+
+if (lean_alpha_box_create(41, &box, &error) == LEAN_ALPHA_STATUS_OK) {
+    lean_alpha_box_read(box, &value, &error);
+}
+
+lean_alpha_box_dispose(&box);
+```
+
+The generated C header exposes prefixed functions, copied value structs, typed spans, callbacks, status values, and opaque owned resources. The runtime package installs a generated internal adapter before application code starts. Application code never passes a runtime handle or calls a generic dispatcher.
+
 Each backend consumes the same language-neutral binding IR. A backend defines host spelling and lifecycle conventions. It does not reinterpret the Lean declaration or create a second source of binding semantics.
 
 ## What a theorem adds for a web developer
@@ -295,14 +313,15 @@ The architecture-testing POC has established:
 - generated arity-based overloads with one JavaScript callable, multiple TypeScript signatures, and ambiguity rejection before projection;
 - generated first-call initialization plans with canonical Binding IR identity, exactly-once execution, terminal failure, and no hidden retry;
 - generated finite generic projections with concrete TypeScript signatures, native value dispatch, and no public type tokens;
+- a generated C11 package surface with typed copied records, direct functions, opaque resources, callbacks, explicit disposal, status conventions, and finite generic monomorphization;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - a root-only generated package export map with automated raw ABI and coverage drift gates;
-- 165 passing behavioral and structural tests;
+- 169 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, functions, callback type, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. One public function returns a normal JavaScript Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Another calls JavaScript from Lean, while `makeAdder` returns a Lean closure as an ordinary JavaScript function. A nested fixture crosses JavaScript to Lean, back to JavaScript, into a returned Lean closure, and back without creating another runtime. Cancellation, callback exceptions, explicit disposal, fallback finalization, and shutdown unwind their state without leaking retained values. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the asynchronous call cycle. [The callback evidence](docs/evidence/callback-signature-plan.md) records both synchronous directions. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, functions, callback type, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, C11 public header and implementation, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. The C package compiles and runs against its generated per-declaration runtime interface with no consumer wrapper code. Connecting that internal interface to the real Lean runtime remains a separate conformance step. One JavaScript function returns a normal Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Another calls JavaScript from Lean, while `makeAdder` returns a Lean closure as an ordinary JavaScript function. A nested fixture crosses JavaScript to Lean, back to JavaScript, into a returned Lean closure, and back without creating another runtime. Cancellation, callback exceptions, explicit disposal, fallback finalization, and shutdown unwind their state without leaking retained values. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The C backend evidence](docs/evidence/generated-c-backend.md) records the generated surface and current boundary. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the asynchronous call cycle. [The callback evidence](docs/evidence/callback-signature-plan.md) records both synchronous directions. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, registry-ready downstream packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

@@ -25,6 +25,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Typed copied-value frame evidence](../evidence/typed-value-frame.md)
 - [Generation-safe registry evidence](../evidence/generation-safe-registries.md)
 - [Generated JavaScript backend evidence](../evidence/generated-javascript-backend.md)
+- [Generated C backend evidence](../evidence/generated-c-backend.md)
 
 ## Permanent review lenses
 

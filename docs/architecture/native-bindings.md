@@ -4,7 +4,7 @@
 
 The public API is made of direct, named, idiomatic host-language callables and types. Generic dispatch is private runtime machinery.
 
-JavaScript and Python developers install a package, import a function or class, call it, and move on. They do not call `ccall`, `cwrap`, `invoke`, `dispatch`, raw `_symbols`, or an ABI frame function. They do not pass pointers, numeric handles, signature IDs, ownership flags, Wasm memories/tables, or manually written wrappers.
+JavaScript, Python, and native developers install a package, import or include a function or class, call it, and move on. They do not call `ccall`, `cwrap`, `invoke`, `dispatch`, raw `_symbols`, or an ABI frame function. JavaScript and Python consumers do not pass pointers or numeric handles. C consumers see typed pointers where C conventions require them, while runtime identity handles, signature IDs, ownership flags, Wasm memories/tables, and manually written wrappers remain private.
 
 ```ts
 import { Statistics, Sample } from "@lean-wasm/statistics";
@@ -80,6 +80,8 @@ The binding IR records numeric width, signedness, precision, constructor tags, f
 | inductive type | discriminated union | tagged class union | Preserve constructor identity and payload types. |
 
 Rust, C, C++, and future WASI backends consume the same widths, cases, and ownership from the IR. Their surface types follow their own package and resource conventions. Conformance vectors prove that two backends observe the same portable values and reject the same invalid inputs.
+
+The C11 POC projects copied records as field-preserving structs, strings and bytes as typed buffers, arrays as typed spans, identity-bearing values as opaque types, callbacks as typed function records, and owned Lean closures as opaque callable resources. Each public operation returns a generated status and accepts an optional structured error output. A generated `dispose` or `clear` function makes every target-side ownership obligation explicit.
 
 ## Semantic object projection
 
