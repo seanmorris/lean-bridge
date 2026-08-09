@@ -244,6 +244,18 @@ test("workflow runs the complete suite on pushes and publishes one job summary",
   assert.doesNotMatch(workflow, /\bccall\b|\bcwrap\b|module\._[A-Za-z]/);
 });
 
+test("bootstrap pins the Wasm audit tools absent from clean GitHub runners", async () => {
+  const bootstrap = await readFile("scripts/bootstrap-toolchains.sh", "utf8");
+  const environment = await readFile("scripts/env.sh", "utf8");
+  assert.match(bootstrap, /^WASM_TOOLS_VERSION=1\.245\.1$/m);
+  assert.match(bootstrap, /^WASM_TOOLS_SHA256=[a-f0-9]{64}$/m);
+  assert.match(bootstrap, /^WABT_VERSION=1\.0\.41$/m);
+  assert.match(bootstrap, /^WABT_SHA256=[a-f0-9]{64}$/m);
+  assert.match(bootstrap, /toolchain list \| cut -d' ' -f1 \| grep -Fxq/);
+  assert.match(environment, /\.toolchains\/wasm-tools\/bin/);
+  assert.match(environment, /\.toolchains\/wabt\/bin/);
+});
+
 test("accepts one complete, artifact-bound record from every performance family", () => {
   const report = acceptedReport();
   assert.equal(report.accepted, true, JSON.stringify(report.validation.issues));

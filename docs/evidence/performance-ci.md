@@ -14,7 +14,7 @@ The workflow builds one locked benchmark graph, then measures it in isolated job
 - timing variance from three repetitions; and
 - artifact equality from two clean builds.
 
-Every timing value names its unit and sample count. Every measured artifact retains its byte count and SHA-256. The report also records each CI job's elapsed time, runner disk before and after execution, workspace size, toolchain size, build size, evidence size, and toolchain-cache state.
+Every timing value names its unit and sample count. Every measured artifact retains its byte count and SHA-256. The report also records each CI job's elapsed time, runner disk before and after execution, workspace size, toolchain size, build size, evidence size, and toolchain-cache state. The bootstrap pins Lean, Emscripten, wasm-tools, and WABT inside the cached project toolchain. The workflow does not assume that a GitHub runner preinstalls Wasm validators or inspection commands.
 
 ## Failure policy
 

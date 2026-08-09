@@ -131,6 +131,10 @@ const parsePins = text => Object.fromEntries([
   "LEAN_COMMIT",
   "EMSDK_VERSION",
   "EMSDK_COMMIT",
+  "WASM_TOOLS_VERSION",
+  "WASM_TOOLS_SHA256",
+  "WABT_VERSION",
+  "WABT_SHA256",
 ].map(name => {
   const match = text.match(new RegExp(`^${name}=([^\\n]+)$`, "m"));
   if (!match) throw new Error(`bootstrap script does not define ${name}`);
@@ -170,6 +174,8 @@ const createManifest = async options => {
       npm: commandVersion("npm", ["--version"]),
       lean: commandVersion(join(root, ".toolchains/elan/bin/lean"), ["--version"]),
       emcc: commandVersion(join(root, ".toolchains/emsdk/upstream/emscripten/emcc"), ["--version"]),
+      wasmTools: commandVersion(join(root, ".toolchains/wasm-tools/bin/wasm-tools"), ["--version"]),
+      wasmObjdump: commandVersion(join(root, ".toolchains/wabt/bin/wasm-objdump"), ["--version"]),
       pins: Object.freeze(pins),
     }),
     identities: Object.freeze({

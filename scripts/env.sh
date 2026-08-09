@@ -5,6 +5,8 @@ set -euo pipefail
 LEAN_WASM_PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 export LEAN_WASM_PROJECT_ROOT
 
+export PATH="$LEAN_WASM_PROJECT_ROOT/.toolchains/wasm-tools/bin:$LEAN_WASM_PROJECT_ROOT/.toolchains/wabt/bin:$PATH"
+
 LEAN_WASM_HOST_LEAN_PREFIX=${LEAN_WASM_HOST_LEAN_PREFIX:-}
 if [[ -n "$LEAN_WASM_HOST_LEAN_PREFIX" ]]; then
   export PATH="$LEAN_WASM_HOST_LEAN_PREFIX/bin:$PATH"
