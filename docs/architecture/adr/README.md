@@ -23,6 +23,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 17 | Accessibility, zero-friction host conventions, and progressive optional learning are architecture gates | Accepted for POC |
 | 18 | Universal composition contracts and independent-component CI evidence at every layer | Accepted for POC |
 | 19 | One language-neutral binding IR with namespaced producer adapters | Accepted for POC |
+| 20 | Rust as the second semantic-parity backend; C++ remains a later packaging backend | Accepted for POC |
 
 ## ADR 1: Generated native binding surface
 
@@ -59,6 +60,14 @@ Every supported abstraction layer defines compatibility identities and compositi
 One versioned binding IR owns declaration, type, identity, mutability, ownership, lifetime, failure, result-delivery, capability, documentation, and assurance semantics. JavaScript, TypeScript, C, Rust, Python, ABI, and lifecycle generators consume this IR. Backend code may choose idiomatic syntax and report capability gaps. It may not restate or override binding semantics.
 
 Lean is the first producer adapter. Lean declaration identities, elaborator details, export selection, and proof provenance enter through a declared producer and namespaced extensions. Another verified source can populate the same core without pretending that source-specific evidence is universal. The validator rejects source metadata that bypasses a namespace and rejects abstraction that loses lifetime or assurance meaning.
+
+## ADR 20: Rust semantic-parity backend
+
+Rust is the second high-level binding backend for the POC. Rust expresses copied values through ownership, receiver-anchored results through borrows, failures through `Result`, host callbacks through closure traits, and deterministic resource cleanup through `Drop`. These projections expose Binding IR lifetime decisions in the host type system and make semantic drift visible during compilation.
+
+The generator emits a crate with a hidden typed runtime trait containing one method per declaration. The public module contains no generic dispatcher or runtime identity value. Finite generic declarations produce concrete functions for the declared specializations. Unsupported arbitrary integers, asynchronous delivery, rich error payloads, and other uncovered shapes fail generation.
+
+Stable Rust cannot implement the `Fn` traits for a generated owned resource. A returned Lean closure therefore exposes `.call(...)`, and the package manifest records that capability gap. C++ remains a later backend for package reach. It is not needed to establish that two high-level host projections can consume the same Binding IR.
 
 ## Amendment rule
 

@@ -26,6 +26,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generation-safe registry evidence](../evidence/generation-safe-registries.md)
 - [Generated JavaScript backend evidence](../evidence/generated-javascript-backend.md)
 - [Generated C backend evidence](../evidence/generated-c-backend.md)
+- [Generated Rust backend evidence](../evidence/generated-rust-backend.md)
 
 ## Permanent review lenses
 

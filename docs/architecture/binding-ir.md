@@ -11,7 +11,7 @@ The version 2 artifacts are:
 - [`src/binding-ir/frontend.mjs`](../../src/binding-ir/frontend.mjs), the versioned producer adapter boundary; and
 - [`poc/lean-link-spike/bindings/alpha.binding-ir.json`](../../poc/lean-link-spike/bindings/alpha.binding-ir.json), the reviewed golden fixture.
 
-The JavaScript and C generators both consume this fixture. The C generator emits a public C11 header, implementation, internal per-declaration runtime interface, documentation, and a hash-bound manifest. Its compiled consumer fixture demonstrates that target syntax and lifecycle conventions can change without creating another semantic contract.
+The JavaScript, C, and Rust generators consume this fixture. The C generator emits a public C11 header, implementation, internal per-declaration runtime interface, documentation, and a hash-bound manifest. The Rust generator emits a safe crate, a hidden typed runtime trait, documentation, capability-gap metadata, and a hash-bound manifest. Their compiled consumer fixtures demonstrate that target syntax and lifecycle conventions can change without creating another semantic contract.
 
 ## What the IR records
 
