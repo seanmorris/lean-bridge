@@ -56,8 +56,13 @@ test("PHP projection defines one immutable surface for both transports", () => {
   ]);
   assert.deepEqual(projection.lifecycle.map(operation => operation.transportMethod), [
     "boxClose",
+    "transformCall",
     "transformClose",
   ]);
+  assert.equal(
+    projection.lifecycle.find(operation => operation.kind === "resource-close").failure.unexpected,
+    "poison-runtime",
+  );
   assert.equal(new Set([
     ...projection.operations.map(operation => operation.transportMethod),
     ...projection.lifecycle.map(operation => operation.transportMethod),

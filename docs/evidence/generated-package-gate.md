@@ -1,6 +1,6 @@
 # Generated Package Drift Gate Evidence
 
-Status: JavaScript, Python, C, and Rust packages regenerate deterministically and match one reviewed hash report. Public package files pass backend-specific audits and one shared forbidden-surface scan.
+Status: JavaScript, PHP, Python, C, and Rust packages regenerate deterministically and match one reviewed hash report. Public package files pass backend-specific audits and one shared forbidden-surface scan.
 
 ## Release check
 
@@ -39,11 +39,12 @@ Each backend keeps its detailed audit. The shared gate also scans the files a pa
 | Backend | Scanned surface |
 |---|---|
 | JavaScript | module entry, TypeScript declaration, package export map, README |
+| PHP | public classes and functions, generated stub, Composer metadata, README |
 | Python | module entry, `.pyi` stub, project metadata, README |
 | C | public header, README |
 | Rust | public module, Cargo metadata, README |
 
-The shared scan rejects `ccall`, `cwrap`, generic dispatcher instructions, private bridge symbols, raw WebAssembly types, calling-convention directions, and ownership flags. Backend audits add target rules, including JavaScript `any`, Python `Any`, C runtime identity types, internal package subpaths, and mismatched export manifests.
+The shared scan rejects `ccall`, `cwrap`, generic dispatcher instructions, private bridge symbols, raw WebAssembly types, calling-convention directions, and ownership flags. Backend audits add target rules, including JavaScript `any`, PHP `mixed` in the public stub, Python `Any`, C runtime identity types, internal package subpaths, and mismatched export manifests.
 
 Package documentation describes the callable API directly. It does not teach consumers about private dispatch or transport conventions.
 
@@ -52,9 +53,9 @@ Package documentation describes the callable API directly. It does not teach con
 `tests/generated-package-gate.test.mjs` proves:
 
 - the current generators match the reviewed report;
-- the report contains the four expected backends and distinct package hashes;
+- the report contains the five expected backends and distinct package hashes;
 - changing one reviewed file hash produces a precise blocking diff;
 - adding generic dispatcher instructions to generated package docs fails the shared scan; and
 - the CLI validates the reviewed report and returns machine-readable package identities.
 
-These checks bring the repository suite to 181 tests.
+The repository test suite runs this gate with the backend-specific generator and execution tests.

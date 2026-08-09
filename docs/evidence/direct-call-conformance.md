@@ -36,6 +36,6 @@ Tests that inspect raw lifecycle symbols, value frames, initialization states, i
 
 ## Purity gate
 
-`tests/public-surface-conformance.test.mjs` scans the consumer fixtures and public documentation code examples. It rejects generic dispatch, raw symbols, linker calls, WebAssembly objects, ownership flags, and direct projection helpers. The same test invokes the generated-package gate for JavaScript, Python, C, and Rust, which audits public modules, declarations and stubs, package metadata, headers, and generated READMEs.
+`tests/public-surface-conformance.test.mjs` scans the consumer fixtures and public documentation code examples. It rejects generic dispatch, raw symbols, linker calls, WebAssembly objects, ownership flags, and direct projection helpers. The same test invokes the generated-package gate for JavaScript, PHP, Python, C, and Rust, which audits public modules, declarations and stubs, package metadata, headers, and generated READMEs.
 
-The repository suite contains 187 passing tests after this split.
+The repository suite contains 198 passing tests.

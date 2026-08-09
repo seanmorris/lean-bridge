@@ -19,6 +19,40 @@
       ]
     },
     {
+      "backend": "php",
+      "generator": { "id": "lean-wasm/php", "version": 1 },
+      "exports": ["LeanAlpha\\Bytes", "LeanAlpha\\Payload", "LeanAlpha\\Box", "LeanAlpha\\Transform", "LeanAlpha\\DisposedResource", "LeanAlpha\\CallbackThrew", "LeanAlpha\\RuntimeUnavailable", "LeanAlpha\\InitializationError", "LeanAlpha\\UnexpectedError", "LeanAlpha\\roundTrip", "LeanAlpha\\withCallback", "LeanAlpha\\makeAdder"],
+      "capabilityGaps": [],
+      "fileSetSha256": "3aa86c4fad47ce0c2e8e6491f94a8cc0960d020124d22a41f6a75986df958975",
+      "files": [
+        { "path": "README.md", "bytes": 1600, "sha256": "9ed50532465ace97b005a675cff8b45411f406ef8669ed24eee5f0d5979b2e91" },
+        { "path": "assurance.json", "bytes": 4029, "sha256": "4a285fd47b73ae97857632cab4d25e7eef78ecf19edec2938575e5c73f39f45c" },
+        { "path": "binding-manifest.json", "bytes": 4809, "sha256": "ca649bf469f6f350712fe43aa1b478ad68c618364cb3ddc4eab6cd4249263ef6" },
+        { "path": "capability-gaps.json", "bytes": 774, "sha256": "3e78c09fab51aa54c57f91a74fc91fa79f088a40862de949794a6e8d7751c0eb" },
+        { "path": "composer.json", "bytes": 551, "sha256": "1e6bd9289785f8beee35c876569dc810b973ba98e65406cd1e670a14f3fce56a" },
+        { "path": "reflection.json", "bytes": 26031, "sha256": "fba272024e0009ee5da04afbd3ee757eb9de700ac99f8bf3547adca22bea178f" },
+        { "path": "src/Box.php", "bytes": 3593, "sha256": "cddd03b6c066534ad820f699cd277bccd21b64c830193e3fe702f959166ec945" },
+        { "path": "src/Bytes.php", "bytes": 643, "sha256": "148928b332ccb2e1dc8250d545f94e66033b1a1a12d742ed7e80c921f17bbd2b" },
+        { "path": "src/CallbackThrew.php", "bytes": 416, "sha256": "3cdb17e287e6b4b87c0609240a42a5ec7160ff2c1485e16cfde8682ece105bb4" },
+        { "path": "src/DisposedResource.php", "bytes": 416, "sha256": "5bf234bb565311c013657d06cd5c118329ab1677be5e8c912c17eef905b35d2d" },
+        { "path": "src/InitializationError.php", "bytes": 271, "sha256": "be2ed5bcc1b64c98ba3c3c71ad574a32a2bf15fc8dba31bebaafe16cd76492af" },
+        { "path": "src/Internal/Hydrator.php", "bytes": 1137, "sha256": "798e5c459b72314f74071751fbc91d122caf24a8ebea2f2330095b3d2f3186de" },
+        { "path": "src/Internal/Identity.php", "bytes": 734, "sha256": "d2dffe96cd081166857d56ab6daa6976cdf3585cfff6d112269636435649e0e1" },
+        { "path": "src/Internal/IdentityCache.php", "bytes": 1793, "sha256": "a54c117d1292d48ba2076f15387db15854df3e3678a3fa4fe082dc5d54c718fe" },
+        { "path": "src/Internal/Runtime.php", "bytes": 2839, "sha256": "a961f645e1eb9bb649b58c091dcdb18ec30bae0dafa36d28367c31e8d0ee6eca" },
+        { "path": "src/Internal/Transport.php", "bytes": 994, "sha256": "48528efd3a0c645d6a2daf85ac91501afc857d47948f92c3a25a86023a9389bf" },
+        { "path": "src/Internal/TransportError.php", "bytes": 555, "sha256": "92f6964c16cbf74b458b6aab31fb0dab804d17f655cbc7b79280135aead5964e" },
+        { "path": "src/Internal/Validators.php", "bytes": 1484, "sha256": "65738af4ca454799b8fb8e9a26bdd8f0baeecd602886f2d5ff7e268f92079937" },
+        { "path": "src/Payload.php", "bytes": 1229, "sha256": "bf768a11215cbf704255a76929563b3dc1cef108dceea1a7cf96e08949266c2d" },
+        { "path": "src/RuntimeUnavailable.php", "bytes": 288, "sha256": "0315c40704df30ffdad4759d981e1baf1ad0cfcb3587583135e1b1f17d798ac3" },
+        { "path": "src/Transform.php", "bytes": 2197, "sha256": "265bfc98f3e2c29b0794ea3455fda3a7d53d5da80ce1d2d1f3c2b11491d567f2" },
+        { "path": "src/UnexpectedError.php", "bytes": 271, "sha256": "b154dc358153659d10941a0eee48c4c9504920cd09e2f6182a4195e954426c82" },
+        { "path": "src/functions.php", "bytes": 2601, "sha256": "0d41af3d7d9caeffbe87471ffce5ba7430df8a6eace7d5148865c2cc925f7ff2" },
+        { "path": "stubs/lean_alpha.php", "bytes": 2634, "sha256": "41fef69e1159ca4a120fe277bb5e7b03bcf294741e7c3cd18ad30176474cef90" }
+      ]
+    },
+
+    {
       "backend": "python",
       "generator": { "id": "lean-wasm/python", "version": 1 },
       "exports": ["LeanAlphaError", "RuntimeUnavailableError", "UnexpectedError", "DisposedResourceError", "CallbackThrewError", "Ok", "Err", "Payload", "Box", "Transform", "round_trip", "with_callback", "make_adder"],

@@ -39,7 +39,7 @@ The projection assigns one internal typed method to each declaration. The Alpha 
 | `LeanAlpha\withCallback($value, $callback)` | `leanAlphaWithCallback` |
 | `LeanAlpha\makeAdder($base)` | `leanAlphaMakeAdder` |
 
-Generated lifecycle operations add `boxClose` and `transformClose`. The interface has no `invoke`, `dispatch`, `ccall`, pointer, or public identity method. The native adapter can implement the interface over generated C. The PHP-Wasm adapter can implement it over the shared Wasm runtime and Vrzno host hooks.
+Generated support operations add `boxClose`, `transformCall`, and `transformClose`. The interface has no generic `invoke`, `dispatch`, `ccall`, pointer, or public identity method. The native adapter can implement the interface over generated C. The PHP-Wasm adapter can implement it over the shared Wasm runtime and Vrzno host hooks.
 
 Every projection declares the complete capability set required from a transport. `compilePhpTransportManifest` records each missing capability as a blocking gap. `assertPhpTransportSupported` stops package generation when any gap remains. A transport cannot publish a reduced package under the same public contract.
 

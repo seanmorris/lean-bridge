@@ -1,6 +1,6 @@
 # Lean Bridge
 
-Lean Bridge turns Lean libraries into ordinary packages for JavaScript, Python, Rust, C, and C++. It keeps functions, rich values, ownership rules, theorem evidence, generated bindings, and exact build inputs connected to the artifacts that developers install.
+Lean Bridge turns Lean libraries into ordinary packages for JavaScript, PHP, Python, Rust, C, and C++. It keeps functions, rich values, ownership rules, theorem evidence, generated bindings, and exact build inputs connected to the artifacts that developers install.
 
 The goal is to close the gap between research and implementation. A useful algorithm should be able to move from a Lean file with machine-checked properties into an application dependency graph without every consumer rebuilding the foreign-function boundary, packaging, and safety review.
 
@@ -11,7 +11,7 @@ analyze, generate, build, rebuild, compare
           ↓
 Wasm or native artifacts plus typed host bindings
           ↓
-npm, PyPI, Cargo, Nix, C, and C++ packages
+npm, Composer, PyPI, Cargo, Nix, C, and C++ packages
           ↓
 import, call, done
 ```
@@ -74,7 +74,7 @@ lean-bridge publish --dry-run
 
 `analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output. `publish` rebuilds in an independent clean environment and blocks on any artifact difference before sending packages to configured registries.
 
-Lean declarations remain the source of truth. Contributors do not maintain separate TypeScript declarations, Python stubs, C headers, Rust signatures, package docs, and validation schemas by hand.
+Lean declarations remain the source of truth. Contributors do not maintain separate TypeScript declarations, PHP or Python stubs, C headers, Rust signatures, package docs, and validation schemas by hand.
 
 ## Consume the same component from ordinary code
 
@@ -89,6 +89,18 @@ const visibleRows = cap(100n, BigInt(rows.length));
 ```
 
 `Nat` remains an arbitrary-precision integer. The generated TypeScript API uses `bigint` instead of narrowing the value through a JavaScript `number` or a JSON representation.
+
+### PHP
+
+```php
+use LeanAlpha\Box;
+
+$box = new Box(41);
+$value = $box->read();
+$box->close();
+```
+
+The generated Composer package exposes namespaced functions, typed value objects, canonical resource classes, callables, exceptions, and static-analysis stubs. A native Zend adapter and a PHP-Wasm adapter implement one private typed transport interface. PHP application code sees neither transport calls nor runtime identities.
 
 ### Python
 
@@ -169,21 +181,21 @@ These states keep the useful claim precise. A proved sorting property does not i
 
 Lean Bridge uses generated marshaling code and typed handles. It does not route calls through JSON. The target mapping preserves the source type's range, cases, field structure, and identity semantics.
 
-| Lean type | TypeScript | Python | Boundary behavior |
-|---|---|---|---|
-| `Bool` | `boolean` | `bool` | Direct scalar conversion. |
-| `UInt8`, `UInt16`, `UInt32` | validated `number` | validated `int` | Range is checked at the generated boundary. |
-| `UInt64` | `bigint` | `int` | Full 64-bit range is preserved. |
-| `Nat`, `Int` | `bigint` | `int` | Arbitrary precision is preserved. |
-| `Float`, `Float32` | `number` | `float` | IEEE value conversion follows the declared width. |
-| `String` | `string` | `str` | UTF-8 is copied directly, without a JSON encoder. |
-| `ByteArray` | `Uint8Array` | `bytes` or `memoryview` | Copy is the default. A zero-copy view requires an explicit lifetime contract. |
-| `Array T` | `readonly T[]` | `Sequence[T]` | Elements use the generated mapping for `T`. |
-| `Option T` | generated tagged union | generated tagged union | Nested options retain every `none` and `some` distinction. |
-| `Except E T` | typed result or generated exception policy | typed result or generated exception policy | Error cases remain structured and versioned. |
-| structure | generated interface or value class | dataclass or value class | Fields retain their names and generated types. |
-| inductive type | discriminated union | tagged class union | Constructor identity and payload types remain explicit. |
-| identity-bearing object | generated class | generated resource class | One canonical wrapper refers to one retained Lean identity. |
+| Lean type | TypeScript | PHP | Python | Boundary behavior |
+|---|---|---|---|---|
+| `Bool` | `boolean` | `bool` | `bool` | Direct scalar conversion. |
+| `UInt8`, `UInt16`, `UInt32` | validated `number` | validated `int` | validated `int` | Range is checked at the generated boundary. |
+| `UInt64` | `bigint` | `BigInteger` | `int` | Full 64-bit range is preserved. |
+| `Nat`, `Int` | `bigint` | `BigInteger` | `int` | Arbitrary precision is preserved. |
+| `Float`, `Float32` | `number` | `float` | `float` | IEEE value conversion follows the declared width. |
+| `String` | `string` | `string` | `str` | UTF-8 is copied directly, without a JSON encoder. |
+| `ByteArray` | `Uint8Array` | `Bytes` | `bytes` or `memoryview` | Copy is the default. A zero-copy view requires an explicit lifetime contract. |
+| `Array T` | `readonly T[]` | typed `list<T>` | `Sequence[T]` | Elements use the generated mapping for `T`. |
+| `Option T` | generated tagged union | `T|null` when unambiguous, otherwise generation blocks | generated tagged union | Nested options retain every `none` and `some` distinction. |
+| `Except E T` | typed result or generated exception policy | generated exception policy | typed result or generated exception policy | Error cases remain structured and versioned. |
+| structure | generated interface or value class | readonly value object | dataclass or value class | Fields retain their names and generated types. |
+| inductive type | discriminated union | tagged value classes | tagged class union | Constructor identity and payload types remain explicit. |
+| identity-bearing object | generated class | generated resource class | generated resource class | One canonical wrapper refers to one retained Lean identity. |
 
 Copied values and retained objects use different protocols. A copied record becomes an ordinary host value. A retained Lean object becomes a class with generated methods and deterministic disposal. Consumers never pass reference-count flags or numeric handles.
 
@@ -316,15 +328,16 @@ The architecture-testing POC has established:
 - a generated C11 package surface with typed copied records, direct functions, opaque resources, callbacks, explicit disposal, status conventions, and finite generic monomorphization;
 - a generated Rust crate with owned copied values, receiver-anchored borrows, `Result` errors, closure parameters, `Drop` cleanup, and finite generic monomorphization;
 - a generated Python package with frozen value dataclasses, native functions and callables, context-managed resources, exceptions, properties, iterators, async iterators, awaitables, and `.pyi` stubs;
+- a generated Composer package with readonly copied values, namespaced functions, canonical resources, native callables, exceptions, properties, iterators, awaitables, deterministic close, and PHP stubs;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- reviewed JavaScript, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
+- reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 187 passing behavioral and structural tests;
+- 198 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, functions, callback type, TypeScript declarations, Python package and stubs, C11 package, Rust crate, validators, documentation, manifests, copied-record frame layout, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. One reviewed gate locks every generated package file and rejects export, type, documentation, generator, hash, or capability drift. A second gate compiles one semantic contract for callable shape, generic instantiation, copied and identity values, mutability, ownership, errors, delivery modes, documentation, and assurance provenance, then verifies every target package against that contract. Named dynamic and prelinked loads now return the same generated API object. Consumer conformance tests call functions, classes, callbacks, closures, and typed values without accessing the linker or private ABI. [The direct-call conformance evidence](docs/evidence/direct-call-conformance.md) records that boundary. The C, Rust, and Python packages execute against generated per-declaration runtime interfaces with no consumer wrapper code. Connecting those internal interfaces to the real Lean runtime remains a separate conformance step. Rust represents copied records as owned values, receiver identity as a borrow, failures as `Result`, and cleanup as `Drop`. Python uses frozen dataclasses, context managers, normal callables, exceptions, properties, iterators, async iterators, and awaitables. One JavaScript function returns a normal Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Another calls JavaScript from Lean, while `makeAdder` returns a Lean closure as an ordinary JavaScript function. A nested fixture crosses JavaScript to Lean, back to JavaScript, into a returned Lean closure, and back without creating another runtime. Cancellation, callback exceptions, explicit disposal, fallback finalization, and shutdown unwind their state without leaking retained values. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The semantic parity evidence](docs/evidence/cross-language-semantic-parity.md) records the shared contract. [The generated-package gate evidence](docs/evidence/generated-package-gate.md) records the byte-level release check. [The C backend evidence](docs/evidence/generated-c-backend.md), [Rust backend evidence](docs/evidence/generated-rust-backend.md), and [Python backend evidence](docs/evidence/generated-python-backend.md) record the generated surfaces and current runtime boundary. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the asynchronous call cycle. [The callback evidence](docs/evidence/callback-signature-plan.md) records both synchronous directions. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, registry-ready downstream packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, functions, callback type, TypeScript declarations, Composer package and PHP stubs, Python package and stubs, C11 package, Rust crate, validators, documentation, manifests, copied-record frame layout, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. One reviewed gate locks every generated package file and rejects export, type, documentation, generator, hash, or capability drift. A second gate compiles one semantic contract for callable shape, generic instantiation, copied and identity values, mutability, ownership, errors, delivery modes, documentation, and assurance provenance, then verifies every target package against that contract. Named dynamic and prelinked loads now return the same generated API object. Consumer conformance tests call functions, classes, callbacks, closures, and typed values without accessing the linker or private ABI. [The direct-call conformance evidence](docs/evidence/direct-call-conformance.md) records that boundary. The C, Rust, Python, and PHP packages execute against generated per-declaration runtime interfaces with no consumer wrapper code. Connecting those internal interfaces to the real Lean runtime remains a separate conformance step. Rust represents copied records as owned values, receiver identity as a borrow, failures as `Result`, and cleanup as `Drop`. Python uses frozen dataclasses, context managers, normal callables, exceptions, properties, iterators, async iterators, and awaitables. PHP uses readonly value objects, canonical resource classes, callables, exceptions, properties, `Traversable`, awaitables, and deterministic `close()`. One JavaScript function returns a normal Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Another calls JavaScript from Lean, while `makeAdder` returns a Lean closure as an ordinary JavaScript function. A nested fixture crosses JavaScript to Lean, back to JavaScript, into a returned Lean closure, and back without creating another runtime. Cancellation, callback exceptions, explicit disposal, fallback finalization, and shutdown unwind their state without leaking retained values. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The semantic parity evidence](docs/evidence/cross-language-semantic-parity.md) records the shared contract. [The generated-package gate evidence](docs/evidence/generated-package-gate.md) records the byte-level release check. [The C backend evidence](docs/evidence/generated-c-backend.md), [Rust backend evidence](docs/evidence/generated-rust-backend.md), [Python backend evidence](docs/evidence/generated-python-backend.md), and [PHP backend evidence](docs/evidence/generated-php-backend.md) record the generated surfaces and current runtime boundary. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the asynchronous call cycle. [The callback evidence](docs/evidence/callback-signature-plan.md) records both synchronous directions. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, registry-ready downstream packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

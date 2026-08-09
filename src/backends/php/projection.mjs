@@ -394,19 +394,35 @@ const lifecycleOperations = (types, namespace) => types.flatMap(type => {
       transportMethod: `${camel(type.name)}Close`,
       parameterType: `\\${fqcn(namespace, "Internal\\Identity")}`,
       idempotent: true,
+      failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
       requiredCapabilities: ["deterministic-close-v1"],
     }];
   }
   if (type.projection === "invokable-object") {
-    return [{
-      kind: "callable-close",
-      type: type.id,
-      publicMethod: "close",
-      transportMethod: `${camel(type.name)}Close`,
-      parameterType: `\\${fqcn(namespace, "Internal\\Identity")}`,
-      idempotent: true,
-      requiredCapabilities: ["deterministic-close-v1"],
-    }];
+    return [
+      {
+        kind: "callable-call",
+        type: type.id,
+        publicMethod: "__invoke",
+        transportMethod: `${camel(type.name)}Call`,
+        receiverType: `\\${fqcn(namespace, "Internal\\Identity")}`,
+        parameters: clone(type.parameters),
+        result: clone(type.result),
+        delivery: clone(type.delivery),
+        failure: clone(type.failure),
+        requiredCapabilities: ["callable-adapter-v1"],
+      },
+      {
+        kind: "callable-close",
+        type: type.id,
+        publicMethod: "close",
+        transportMethod: `${camel(type.name)}Close`,
+        parameterType: `\\${fqcn(namespace, "Internal\\Identity")}`,
+        idempotent: true,
+        failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
+        requiredCapabilities: ["deterministic-close-v1"],
+      },
+    ];
   }
   return [];
 });

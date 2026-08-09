@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
+import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
 import { generateRustBindingPackage } from "../backends/rust/generate.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "./canonical.mjs";
@@ -21,6 +22,7 @@ const fail = (code, message, details = {}) => {
 
 const BACKENDS = Object.freeze([
   Object.freeze({ id: "javascript", generate: generateJavaScriptPackage }),
+  Object.freeze({ id: "php", generate: generatePhpBindingPackage }),
   Object.freeze({ id: "python", generate: generatePythonBindingPackage }),
   Object.freeze({ id: "c", generate: generateCBindingPackage }),
   Object.freeze({ id: "rust", generate: generateRustBindingPackage }),
@@ -48,6 +50,9 @@ const publicFilesFor = (backend, manifest, files) => {
   }
   if (backend === "python") {
     return [manifest.publicModule, manifest.typeStub, "pyproject.toml", ...docsFor(files)];
+  }
+  if (backend === "php") {
+    return [...manifest.publicFiles, manifest.stub, "composer.json", ...docsFor(files)];
   }
   if (backend === "c") return [manifest.publicHeader, ...docsFor(files)];
   if (backend === "rust") return [manifest.publicModule, "Cargo.toml", ...docsFor(files)];

@@ -42,6 +42,7 @@ test("consumer fixtures, examples, and generated packages expose only native API
   const report = compileGeneratedPackageGate(alpha.bindingIr);
   assert.deepEqual(report.packages.map(item => item.backend), [
     "javascript",
+    "php",
     "python",
     "c",
     "rust",

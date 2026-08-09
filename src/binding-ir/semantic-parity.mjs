@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { compileFiniteGenericSpecializations } from "../abi/generic-specialization.mjs";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
+import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
 import { generateRustBindingPackage } from "../backends/rust/generate.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "./canonical.mjs";
@@ -45,6 +46,20 @@ const BACKENDS = Object.freeze({
       promise: "Promise",
       iterator: "Iterable",
       "async-iterator": "AsyncIterable",
+    }),
+  }),
+  php: Object.freeze({
+    generate: generatePhpBindingPackage,
+    values: "readonly value objects",
+    resources: "canonical classes",
+    callbacks: "callables and invokable objects",
+    errors: "exceptions",
+    cleanup: "close and destructor fallback",
+    delivery: Object.freeze({
+      value: "value",
+      promise: "Awaitable",
+      iterator: "Traversable",
+      "async-iterator": "AsyncIterator",
     }),
   }),
   python: Object.freeze({

@@ -24,11 +24,12 @@ test("one reviewed report locks every generated host package", async () => {
   assert.deepEqual(actual, expected);
   assert.deepEqual(actual.packages.map(item => item.backend), [
     "javascript",
+    "php",
     "python",
     "c",
     "rust",
   ]);
-  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 4);
+  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 5);
   assert.equal(Object.isFrozen(actual.packages[0].files), true);
 });
 
@@ -67,6 +68,7 @@ test("the package gate CLI checks the reviewed report", async () => {
   assert.equal(result.bindingIrSha256, alpha.bindingIrSha256);
   assert.deepEqual(result.packages.map(item => item.backend), [
     "javascript",
+    "php",
     "python",
     "c",
     "rust",
