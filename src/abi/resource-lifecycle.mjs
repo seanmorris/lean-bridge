@@ -1,4 +1,5 @@
 import { validateBindingIr } from "../binding-ir/contract.mjs";
+import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 
 export class ResourceLifecycleGenerationError extends Error {
   constructor(code, message, details = {}) {
@@ -134,6 +135,46 @@ const compileCall = (declaration, abi, typeMap) => {
   });
 };
 
+const validatePropertyPairs = properties => {
+  const groups = new Map();
+  for (const property of properties) {
+    const getter = property.parameters.length === 0 && property.mutability !== "write";
+    const setter =
+      property.parameters.length === 1 &&
+      property.mutability === "write" &&
+      property.result.type.kind === "primitive" &&
+      property.result.type.name === "unit";
+    if (!getter && !setter) {
+      fail("unsupported-property-shape", `${property.id} is neither a getter nor setter`, {
+        declaration: property.id,
+      });
+    }
+    const role = getter ? "getter" : "setter";
+    const group = groups.get(property.name) ?? {};
+    if (group[role]) {
+      fail("duplicate-property-accessor", `${property.name} has two ${role}s`, {
+        property: property.name,
+        declarations: [group[role].id, property.id],
+      });
+    }
+    group[role] = property;
+    groups.set(property.name, group);
+  }
+  for (const [name, group] of groups) {
+    if (
+      group.getter &&
+      group.setter &&
+      canonicalizeJsonValue(group.getter.result.type, "property.getter.type") !==
+        canonicalizeJsonValue(group.setter.parameters[0].type, "property.setter.type")
+    ) {
+      fail("property-type-mismatch", `${name} getter and setter disagree`, {
+        property: name,
+        declarations: [group.getter.id, group.setter.id],
+      });
+    }
+  }
+};
+
 export const compileResourceLifecycleV1 = (ir, typeId, abi) => {
   validateBindingIr(ir);
   requireObject(abi, "abi");
@@ -188,8 +229,14 @@ export const compileResourceLifecycleV1 = (ir, typeId, abi) => {
     declaration =>
       declaration.kind === "method" && namedTypeId(declaration.receiver?.type) === typeId,
   );
+  const properties = ir.declarations.filter(
+    declaration =>
+      declaration.kind === "property" && namedTypeId(declaration.receiver?.type) === typeId,
+  );
+  validatePropertyPairs(properties);
   const constructor = compileCall(constructors[0], abi, typeMap);
   const compiledMethods = methods.map(method => compileCall(method, abi, typeMap));
+  const compiledProperties = properties.map(property => compileCall(property, abi, typeMap));
 
   if (constructor.result.typeId !== typeId) {
     fail("constructor-result", `${constructor.declarationId} constructs another resource`, {
@@ -222,5 +269,6 @@ export const compileResourceLifecycleV1 = (ir, typeId, abi) => {
     },
     constructor,
     methods: compiledMethods,
+    properties: compiledProperties,
   });
 };

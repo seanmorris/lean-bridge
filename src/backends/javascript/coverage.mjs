@@ -147,21 +147,38 @@ export const analyzeJavaScriptCoverage = ir => {
 
   const overloads = new Map();
   for (const declaration of ir.declarations) {
-    const sameName = overloads.get(declaration.name) ?? [];
-    sameName.push(declaration.id);
-    overloads.set(declaration.name, sameName);
+    if (declaration.kind === "function") {
+      const sameName = overloads.get(declaration.name) ?? [];
+      sameName.push(declaration.id);
+      overloads.set(declaration.name, sameName);
+    }
 
     if (declaration.typeParameters.length > 0) {
       report("unsupported-generic", `${declaration.id} requires target specialization metadata`, {
         declaration: declaration.id,
       });
     }
-    if (declaration.kind === "property" || declaration.kind === "static-method") {
+    if (declaration.kind === "static-method") {
       report(
         "unsupported-declaration-kind",
         `${declaration.id} uses ${declaration.kind}, which has no JavaScript projection`,
         { declaration: declaration.id, kind: declaration.kind },
       );
+    }
+    if (declaration.kind === "property") {
+      const getter = declaration.parameters.length === 0 && declaration.mutability !== "write";
+      const setter =
+        declaration.parameters.length === 1 &&
+        declaration.mutability === "write" &&
+        declaration.result.type.kind === "primitive" &&
+        declaration.result.type.name === "unit";
+      if (!getter && !setter) {
+        report(
+          "unsupported-property-shape",
+          `${declaration.id} is neither a property getter nor setter`,
+          { declaration: declaration.id },
+        );
+      }
     }
     const supportedModes =
       declaration.kind === "function"

@@ -291,10 +291,11 @@ The architecture-testing POC has established:
 - exported Lean closures projected as native JavaScript functions with canonical weak identity, deterministic disposal, queued finalization, and the same nested frame rules;
 - a generated scalar error envelope that returns copied values, projects declared failures as native error classes, and contains unexpected failures according to the declared policy;
 - generated scalar iterators with lazy native pulling, standard synchronous and asynchronous iteration, cancellation, and deterministic completion or early-return cleanup;
+- generated native properties with ordinary getter and setter syntax, TypeScript mutability, receiver lifetime checks, and no public helper methods;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - a root-only generated package export map with automated raw ABI and coverage drift gates;
-- 148 passing behavioral and structural tests;
+- 153 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 

@@ -912,12 +912,43 @@ class RuntimeRegistry {
   invoke(wrapper, descriptor, binding, method, args) {
     this.beforeCall(descriptor, method);
     const state = this.requireReceiver(wrapper, descriptor, binding);
+    const parameters = method.call.parameters;
+    if (parameters && args.length !== parameters.length) {
+      this.reject(
+        descriptor,
+        method,
+        "invalid-argument-count",
+        `${method.name} expects ${parameters.length} arguments`,
+        { expected: parameters.length, actual: args.length },
+      );
+    }
+    const typeMap = bindingIrTypeMap(descriptor);
+    for (let index = 0; parameters && index < args.length; index += 1) {
+      validateCopiedValue(
+        descriptor,
+        method,
+        parameters[index].type,
+        args[index],
+        parameters[index].name,
+        typeMap,
+      );
+    }
     this.counters.borrows += 1;
     this.counters.activeBorrows += 1;
     try {
       const result = method.implementation(state.token, ...args);
       if (method.call.result?.transport === "handle") {
         return this.liftResource(result, descriptor, method, method.call.result);
+      }
+      if (method.call.result?.type) {
+        validateCopiedValue(
+          descriptor,
+          method,
+          method.call.result.type,
+          result,
+          "result",
+          typeMap,
+        );
       }
       return result;
     } finally {
@@ -2431,7 +2462,7 @@ const assertResourceLifecycle = (descriptor, binding) => {
       { typeId: binding.typeId },
     );
   }
-  for (const method of binding.methods ?? []) {
+  for (const method of [...(binding.methods ?? []), ...(binding.properties ?? [])]) {
     if (
       method.call?.declarationId !== method.declarationId ||
       method.call?.symbol !== method.symbol ||
@@ -2476,6 +2507,17 @@ const projectClass = (module, descriptor, binding, context) => {
       implementation: resolvePrivateFunction(module, descriptor, method.symbol),
     };
   });
+  const properties = (binding.properties ?? []).map(property => {
+    assertPublicName(property.name);
+    return {
+      ...property,
+      implementation: resolvePrivateFunction(
+        module,
+        descriptor,
+        property.symbol,
+      ),
+    };
+  });
 
   class ProjectedResource {
     constructor(...args) {
@@ -2500,6 +2542,34 @@ const projectClass = (module, descriptor, binding, context) => {
         return context.invoke(this, descriptor, binding, method, args);
       },
     });
+  }
+  const propertyDescriptors = new Map();
+  for (const property of properties) {
+    const current = propertyDescriptors.get(property.name) ?? {
+      configurable: false,
+      enumerable: true,
+    };
+    if (property.role === "getter") {
+      if (current.get) {
+        throw new Error(`duplicate getter ${binding.name}.${property.name}`);
+      }
+      current.get = function getProjectedProperty() {
+        return context.invoke(this, descriptor, binding, property, []);
+      };
+    } else if (property.role === "setter") {
+      if (current.set) {
+        throw new Error(`duplicate setter ${binding.name}.${property.name}`);
+      }
+      current.set = function setProjectedProperty(value) {
+        context.invoke(this, descriptor, binding, property, [value]);
+      };
+    } else {
+      throw new Error(`unsupported property role ${property.role}`);
+    }
+    propertyDescriptors.set(property.name, current);
+  }
+  for (const [name, property] of propertyDescriptors) {
+    Object.defineProperty(ProjectedResource.prototype, name, property);
   }
   if (Symbol.dispose) {
     Object.defineProperty(ProjectedResource.prototype, Symbol.dispose, {

@@ -38,13 +38,14 @@ test("iterator delivery accepts scalar plans and rejects values without pull fra
   expectGap(asyncIterator, "unsupported-iterator-value");
 });
 
-test("properties and static methods fail until they have native projections", () => {
+test("invalid property shapes and static methods fail before projection", () => {
   const property = clone(alpha.bindingIr);
   const read = property.declarations.find(
     declaration => declaration.id === "lean:Alpha.Box.read",
   );
   read.kind = "property";
-  expectGap(property, "unsupported-declaration-kind");
+  read.mutability = "write";
+  expectGap(property, "unsupported-property-shape");
 
   const staticMethod = clone(alpha.bindingIr);
   roundTrip(staticMethod).kind = "static-method";

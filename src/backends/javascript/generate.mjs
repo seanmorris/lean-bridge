@@ -1,4 +1,7 @@
-import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import {
+  canonicalizeJsonValue,
+  hashBindingIr,
+} from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
@@ -115,7 +118,40 @@ const declarationsForResource = (ir, typeId) => ({
     declaration =>
       declaration.kind === "method" && namedTypeId(declaration.receiver?.type) === typeId,
   ),
+  properties: ir.declarations.filter(
+    declaration =>
+      declaration.kind === "property" && namedTypeId(declaration.receiver?.type) === typeId,
+  ),
 });
+
+const propertyGroups = properties => {
+  const groups = new Map();
+  for (const property of properties) {
+    const group = groups.get(property.name) ?? { name: property.name };
+    const role = property.parameters.length === 0 ? "getter" : "setter";
+    if (group[role]) {
+      fail("duplicate-property-accessor", `${property.name} has two ${role}s`, {
+        property: property.name,
+        declarations: [group[role].id, property.id],
+      });
+    }
+    group[role] = property;
+    groups.set(property.name, group);
+  }
+  for (const group of groups.values()) {
+    if (
+      group.getter &&
+      group.setter &&
+      canonicalizeJsonValue(group.getter.result.type, "property.getter.type") !==
+        canonicalizeJsonValue(group.setter.parameters[0].type, "property.setter.type")
+    ) {
+      fail("property-type-mismatch", `${group.name} getter and setter disagree`, {
+        property: group.name,
+      });
+    }
+  }
+  return [...groups.values()];
+};
 
 const ensureSupportedGenerics = declaration => {
   if (declaration.typeParameters.length > 0) {
@@ -139,21 +175,26 @@ const ensureUniqueSurface = ir => {
   for (const error of projectedErrors(ir)) addExport(error.name, error.id);
   for (const type of ir.types.filter(item => item.kind === "resource")) {
     addExport(type.name, type.id);
-    const methods = ir.declarations.filter(
+    const members = ir.declarations.filter(
       declaration =>
-        declaration.kind === "method" && namedTypeId(declaration.receiver?.type) === type.id,
+        new Set(["method", "property"]).has(declaration.kind) &&
+        namedTypeId(declaration.receiver?.type) === type.id,
     );
     const methodNames = new Map([["dispose", "generated lifecycle method"]]);
-    for (const method of methods) {
-      if (methodNames.has(method.name)) {
+    for (const member of members) {
+      if (
+        methodNames.has(member.name) &&
+        !(member.kind === "property" && methodNames.get(member.name) === "property")
+      ) {
         fail(
           "duplicate-public-name",
-          `${type.name}.${method.name} conflicts with ${methodNames.get(method.name)}`,
-          { name: method.name, declaration: method.id },
+          `${type.name}.${member.name} conflicts with ${methodNames.get(member.name)}`,
+          { name: member.name, declaration: member.id },
         );
       }
-      methodNames.set(method.name, method.id);
+      methodNames.set(member.name, member.kind === "property" ? "property" : member.id);
     }
+    propertyGroups(members.filter(member => member.kind === "property"));
   }
   for (const declaration of ir.declarations.filter(item => item.kind === "function")) {
     addExport(declaration.name, declaration.id);
@@ -210,7 +251,7 @@ const emitDeclarations = (ir, typeMap) => {
   }
 
   for (const type of ir.types.filter(item => item.kind === "resource")) {
-    const { constructors, methods } = declarationsForResource(ir, type.id);
+    const { constructors, methods, properties } = declarationsForResource(ir, type.id);
     if (constructors.length !== 1) {
       fail("resource-constructor-count", `${type.id} requires exactly one constructor`, {
         resource: type.id,
@@ -220,8 +261,10 @@ const emitDeclarations = (ir, typeMap) => {
     const constructor = constructors[0];
     ensureSupportedGenerics(constructor);
     methods.forEach(ensureSupportedGenerics);
+    properties.forEach(ensureSupportedGenerics);
     consumed.add(constructor.id);
     methods.forEach(method => consumed.add(method.id));
+    properties.forEach(property => consumed.add(property.id));
     output.push(docComment(type.documentation));
     output.push(`export class ${type.name} {`);
     output.push(`  constructor(${constructor.parameters.map(parameter => parameter.name).join(", ")}) {`);
@@ -254,6 +297,28 @@ const emitDeclarations = (ir, typeMap) => {
         );
       }
       output.push("  }", "");
+    }
+    for (const property of propertyGroups(properties)) {
+      if (property.getter) {
+        output.push(`  get ${property.name}() {`);
+        output.push(
+          `    const result = runtime.method(${quote(property.getter.id)}, this, []);`,
+          `    validate.${validatorName(property.getter.result.type, typeMap)}(result, ${quote(`${property.name}.result`)});`,
+          "    return result;",
+          "  }",
+          "",
+        );
+      }
+      if (property.setter) {
+        const parameter = property.setter.parameters[0];
+        output.push(`  set ${property.name}(${parameter.name}) {`);
+        output.push(
+          `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${property.name}.${parameter.name}`)});`,
+          `    runtime.method(${quote(property.setter.id)}, this, [${parameter.name}]);`,
+          "  }",
+          "",
+        );
+      }
     }
     output.push(
       "  dispose() {",
@@ -452,7 +517,7 @@ const emitTypeScript = (ir, typeMap) => {
     exports.push(error.name);
   }
   for (const type of ir.types.filter(item => item.kind === "resource")) {
-    const { constructors, methods } = declarationsForResource(ir, type.id);
+    const { constructors, methods, properties } = declarationsForResource(ir, type.id);
     const constructor = constructors[0];
     lines.push(docComment(type.documentation), `export declare class ${type.name} {`);
     lines.push(`  constructor(${constructor.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")});`);
@@ -461,6 +526,16 @@ const emitTypeScript = (ir, typeMap) => {
       consumed.add(method.id);
       lines.push(
         `  ${method.name}(${method.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(method, typeMap)};`,
+      );
+    }
+    for (const property of propertyGroups(properties)) {
+      if (property.getter) consumed.add(property.getter.id);
+      if (property.setter) consumed.add(property.setter.id);
+      const propertyType = property.getter
+        ? property.getter.result.type
+        : property.setter.parameters[0].type;
+      lines.push(
+        `  ${property.setter ? "" : "readonly "}${property.name}: ${typeScriptType(propertyType, typeMap)};`,
       );
     }
     lines.push("  dispose(): void;", "  [Symbol.dispose](): void;", "}", "");

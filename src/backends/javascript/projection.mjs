@@ -435,7 +435,7 @@ const validateJavaScriptLifecycle = lifecycle => {
       { resource: lifecycle.typeId, policy: lifecycle.disposal.policy },
     );
   }
-  for (const method of lifecycle.methods) {
+  for (const method of [...lifecycle.methods, ...lifecycle.properties]) {
     if (
       method.resultMode !== "value" ||
       method.receiver?.ownership !== "borrow" ||
@@ -501,6 +501,27 @@ export const compileJavaScriptProjection = (ir, abi) => {
         call,
       });
     });
+    const memberNames = new Map(methods.map(method => [method.name, method.declarationId]));
+    const properties = lifecycle.properties.map(call => {
+      consumedDeclarations.add(call.declarationId);
+      const role = call.parameters.length === 0 ? "getter" : "setter";
+      const existing = memberNames.get(call.name);
+      if (existing && existing !== "property") {
+        fail(
+          "duplicate-public-name",
+          `${type.name}.${call.name} conflicts with ${existing}`,
+          { name: call.name, declarations: [existing, call.declarationId] },
+        );
+      }
+      memberNames.set(call.name, "property");
+      return Object.freeze({
+        name: call.name,
+        role,
+        declarationId: call.declarationId,
+        symbol: call.symbol,
+        call,
+      });
+    });
 
     bindings.push(
       Object.freeze({
@@ -509,6 +530,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
         typeId: type.id,
         lifecycle,
         methods: Object.freeze(methods),
+        properties: Object.freeze(properties),
       }),
     );
   }
