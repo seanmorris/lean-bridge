@@ -442,6 +442,16 @@ final class Runtime
 
     public static function transport(): Transport
     {
+        if (self::$transport === null) {
+            $nativeClass = __NAMESPACE__ . '\\NativeTransport';
+            if (class_exists($nativeClass, false)) {
+                $native = new $nativeClass();
+                if (!$native instanceof Transport) {
+                    throw new RuntimeUnavailable('The native Lean transport does not implement the generated transport contract');
+                }
+                self::install($native);
+            }
+        }
         $transport = self::$transport ?? throw new RuntimeUnavailable('Install a native Zend or PHP-Wasm transport before the first Lean call');
         if (self::$state === 'failed') {
             throw new InitializationError('Lean runtime initialization previously failed', previous: self::$initializationFailure);

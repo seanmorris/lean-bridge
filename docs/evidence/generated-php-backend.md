@@ -1,6 +1,6 @@
 # Generated PHP Backend Evidence
 
-Status: the Alpha Binding IR generates one Composer package that runs through ordinary PHP values, functions, resources, and callables. The native Zend and PHP-Wasm transport adapters remain separate work.
+Status: the Alpha Binding IR generates one Composer package that runs through ordinary PHP values, functions, resources, and callables. It also generates a native Zend adapter over the C transport. The PHP-Wasm transport remains separate work.
 
 ## Generated package
 
@@ -74,4 +74,4 @@ The binding manifest records the canonical Binding IR hash, generator identity, 
 
 `tests/php-generator.test.mjs` parses every generated PHP file, builds Composer autoload metadata, and runs a consumer against a typed fixture transport. The executed path covers copied primitives, canonical object identity, callbacks passed into Lean, a returned invokable object, exactly-once initialization, deterministic close, use-after-close rejection, declared error translation, and terminal runtime poisoning after an unknown transport failure.
 
-The fixture establishes the generated package contract. Nodes 942 and 943 connect that contract to the real shared Lean runtime through native Zend and PHP-Wasm transports.
+The userland fixture establishes the generated package contract. The compiled Zend fixture establishes that the same package can discover a native adapter and execute without consumer setup. Node 946 connects the adapter to the shared native Lean runtime. Node 943 provides the PHP-Wasm transport.
