@@ -39,6 +39,7 @@
     "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
     "test:php-transport-parity": "node scripts/check-php-transport-parity.mjs",
     "test:npm-package": "node --test tests/npm-package.test.mjs",
+    "test:pypi-package": "node --test tests/pypi-package.test.mjs",
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
