@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-overhead-result.schema.json",
+  "title": "Lean Bridge native overhead result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "source", "environment", "artifacts", "bindingIrSha256", "method", "firstCallsNs", "operations", "cancellation", "correctness", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-native-overhead-suite" },
+    "recordedAt": { "type": "string" },
+    "source": { "type": "object" },
+    "environment": { "type": "object" },
+    "artifacts": { "type": "array", "minItems": 3 },
+    "bindingIrSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "method": { "type": "object" },
+    "firstCallsNs": { "type": "object" },
+    "operations": { "type": "object" },
+    "cancellation": { "type": "object" },
+    "correctness": { "type": "object" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}
