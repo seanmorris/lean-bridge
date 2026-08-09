@@ -18,7 +18,7 @@ RUNTIME_BUILD="$RUNTIME_ROOT/cmake"
 RUNTIME_SOURCE="$RUNTIME_ROOT/source"
 LEAN_RUNTIME="$RUNTIME_BUILD/lib/lean/libleanrt.a"
 LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
-mkdir -p "$GENERATED_DIR" "$BUILD_DIR/audit"
+mkdir -p "$GENERATED_DIR" "$BUILD_DIR/audit" "$BUILD_DIR/startup" "$BUILD_DIR/final-static"
 
 LEAN_PATH="$GENERATED_DIR${LEAN_PATH:+:$LEAN_PATH}" lean -R "$SOURCE_DIR" \
   -o "$GENERATED_DIR/OrderedSearch.olean" \
@@ -120,24 +120,70 @@ done \
   > "$EXPORT_MANIFEST"
 mapfile -t MAIN_EXPORTS < "$EXPORT_MANIFEST"
 
+link_dynamic_main() {
+  local output=$1
+  shift
+  em++ \
+    "$BUILD_DIR/main.o" \
+    "$BUILD_DIR/runtime_lifecycle.o" \
+    -Wl,--start-group "$LEAN_INIT" "$LEAN_RUNTIME" -Wl,--end-group \
+    "$@" \
+    "${TARGET_FLAGS[@]}" \
+    -sMAIN_MODULE=2 \
+    -sMODULARIZE=1 \
+    -sEXPORT_ES6=1 \
+    -sENVIRONMENT=web,worker,node \
+    -sALLOW_MEMORY_GROWTH=1 \
+    -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP32,HEAPU32 \
+    -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")" \
+    -Wl,--no-entry \
+    "${INCLUDES[@]}" \
+    -o "$output"
+}
+
+link_dynamic_main "$BUILD_DIR/main.mjs"
+for artifact in ordered-search.so.wasm spatial-index.so.wasm spatial-consumer.so.wasm; do
+  cp "$BUILD_DIR/$artifact" "$BUILD_DIR/startup/$artifact"
+done
+link_dynamic_main \
+  "$BUILD_DIR/startup/main.mjs" \
+  "$BUILD_DIR/startup/ordered-search.so.wasm" \
+  "$BUILD_DIR/startup/spatial-index.so.wasm" \
+  "$BUILD_DIR/startup/spatial-consumer.so.wasm"
+
+STATIC_OBJECTS=()
+for component in OrderedSearch SpatialIndex SpatialConsumer; do
+  object="$BUILD_DIR/final-static/$component.o"
+  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -c "$GENERATED_DIR/$component.c" -o "$object"
+  STATIC_OBJECTS+=("$object")
+done
+for shim in ordered_search spatial_index spatial_consumer; do
+  object="$BUILD_DIR/final-static/${shim}_shim.o"
+  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -c "$SOURCE_DIR/${shim}_shim.c" -o "$object"
+  STATIC_OBJECTS+=("$object")
+done
 em++ \
   "$BUILD_DIR/main.o" \
   "$BUILD_DIR/runtime_lifecycle.o" \
+  "${STATIC_OBJECTS[@]}" \
   -Wl,--start-group "$LEAN_INIT" "$LEAN_RUNTIME" -Wl,--end-group \
   "${TARGET_FLAGS[@]}" \
-  -sMAIN_MODULE=2 \
   -sMODULARIZE=1 \
   -sEXPORT_ES6=1 \
   -sENVIRONMENT=web,worker,node \
   -sALLOW_MEMORY_GROWTH=1 \
-  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP32,HEAPU32 \
-  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")" \
+  -sEXPORTED_RUNTIME_METHODS=HEAP32,HEAPU32 \
+  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${BRIDGE_EXPORTS[*]}")" \
   -Wl,--no-entry \
   "${INCLUDES[@]}" \
-  -o "$BUILD_DIR/main.mjs"
+  -o "$BUILD_DIR/final-static/main.mjs"
 
 for module in \
   "$BUILD_DIR/main.wasm" \
+  "$BUILD_DIR/startup/main.wasm" \
+  "$BUILD_DIR/final-static/main.wasm" \
   "$BUILD_DIR/ordered-search.so.wasm" \
   "$BUILD_DIR/spatial-index.so.wasm" \
   "$BUILD_DIR/spatial-consumer.so.wasm"; do
@@ -147,7 +193,9 @@ done
 
 (
   cd "$BUILD_DIR"
-  sha256sum main.wasm ordered-search.so.wasm spatial-index.so.wasm spatial-consumer.so.wasm
+  sha256sum \
+    main.wasm startup/main.wasm final-static/main.wasm \
+    ordered-search.so.wasm spatial-index.so.wasm spatial-consumer.so.wasm
 ) > "$BUILD_DIR/audit/sha256.txt"
 
 node "$LEAN_BRIDGE_ROOT/scripts/generate-performance-bindings.mjs"

@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "id": "lean-bridge.performance.workloads",
+  "version": "1.0.0",
+  "generator": {
+    "id": "lean-bridge-spatial-workload",
+    "version": "1.0.0",
+    "algorithm": "mulberry32-integer-v1"
+  },
+  "license": "CC0-1.0",
+  "workloads": [
+    {
+      "id": "interactive-clustered-2d",
+      "tier": "browser-safe",
+      "scale": "small",
+      "seed": 270544960,
+      "dimensions": 2,
+      "pointCount": 24,
+      "distribution": {
+        "kind": "clustered",
+        "coordinateMinimum": -256,
+        "coordinateMaximum": 256,
+        "clusterCount": 3,
+        "clusterRadius": 12,
+        "duplicateCoordinateRate": 0.2
+      },
+      "queryProfile": {
+        "keyLocality": 0.85,
+        "hitRatio": 0.75,
+        "rangeRadius": 16
+      },
+      "operations": {
+        "warmupQueries": 8,
+        "lowerBound": 32,
+        "nearest": 32,
+        "range": 16,
+        "insert": 8,
+        "consumerRangeChecksum": 8
+      },
+      "expected": {
+        "contentSha256": "0dda5dd91f97bf016c9d2477f6b2f7811695038d1b28baf0a199a3436458aba7",
+        "resultSha256": "f47be4b3eefe6ae3b7718e37d05a2f06a43b7a210c29d90a1f41868f12eb4390",
+        "operationCount": 106
+      }
+    },
+    {
+      "id": "application-uniform-4d",
+      "tier": "browser-safe",
+      "scale": "medium",
+      "seed": 1432778632,
+      "dimensions": 4,
+      "pointCount": 512,
+      "distribution": {
+        "kind": "uniform",
+        "coordinateMinimum": -4096,
+        "coordinateMaximum": 4096,
+        "clusterCount": 1,
+        "clusterRadius": 0,
+        "duplicateCoordinateRate": 0.05
+      },
+      "queryProfile": {
+        "keyLocality": 0.6,
+        "hitRatio": 0.5,
+        "rangeRadius": 128
+      },
+      "operations": {
+        "warmupQueries": 64,
+        "lowerBound": 256,
+        "nearest": 256,
+        "range": 128,
+        "insert": 64,
+        "consumerRangeChecksum": 64
+      },
+      "expected": {
+        "contentSha256": "a4020cee9a7c3fb53f04b0d525b5eb1b7fa849e8ec0a8c1ce462fb39217cb9c9",
+        "resultSha256": "de2c2451e0f19cb859ef082a3de01c7a59302206f25535719d8810c319d9f209",
+        "operationCount": 834
+      }
+    },
+    {
+      "id": "stress-clustered-8d",
+      "tier": "extended-node",
+      "scale": "large",
+      "seed": 2578103244,
+      "dimensions": 8,
+      "pointCount": 4096,
+      "distribution": {
+        "kind": "clustered",
+        "coordinateMinimum": -8192,
+        "coordinateMaximum": 8192,
+        "clusterCount": 16,
+        "clusterRadius": 96,
+        "duplicateCoordinateRate": 0.1
+      },
+      "queryProfile": {
+        "keyLocality": 0.9,
+        "hitRatio": 0.8,
+        "rangeRadius": 192
+      },
+      "operations": {
+        "warmupQueries": 128,
+        "lowerBound": 512,
+        "nearest": 512,
+        "range": 256,
+        "insert": 128,
+        "consumerRangeChecksum": 128
+      },
+      "expected": {
+        "contentSha256": "4a4aa0b3e2e303df99556a3973a4fbe2e9f683692d4f8787404ae91f2c4d8056",
+        "resultSha256": "815a2d8c448002c875decf4e45872ccca037d609302b4d88f64384f9f55f936d",
+        "operationCount": 1666
+      }
+    },
+    {
+      "id": "degenerate-diagonal-8d",
+      "tier": "extended-node",
+      "scale": "adversarial",
+      "seed": 324478056,
+      "dimensions": 8,
+      "pointCount": 1024,
+      "distribution": {
+        "kind": "diagonal-degenerate",
+        "coordinateMinimum": -2048,
+        "coordinateMaximum": 2048,
+        "clusterCount": 1,
+        "clusterRadius": 0,
+        "duplicateCoordinateRate": 0.25
+      },
+      "queryProfile": {
+        "keyLocality": 0.95,
+        "hitRatio": 0.5,
+        "rangeRadius": 4
+      },
+      "operations": {
+        "warmupQueries": 32,
+        "lowerBound": 128,
+        "nearest": 128,
+        "range": 128,
+        "insert": 32,
+        "consumerRangeChecksum": 64
+      },
+      "expected": {
+        "contentSha256": "d7cc3d3ac9ace910370d23062c9fc131263aff92f400fd4633e2752bc99bec31",
+        "resultSha256": "e7eef9f4df28d706279e00bff0c4dd57f49c63fa01ca327f50f1627408fe5a1f",
+        "operationCount": 514
+      }
+    }
+  ]
+}

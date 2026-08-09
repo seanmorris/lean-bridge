@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="the Alpha fixture defines copied values and identity resources" time="0.008966" classname="test"/>
+	<testcase name="the JSON schema is closed and uses draft 2020-12" time="0.012665" classname="test"/>
+	<testcase name="unknown fields fail instead of silently changing binding semantics" time="0.001922" classname="test"/>
+	<testcase name="copied values cannot acquire handles or lifetimes" time="0.002188" classname="test"/>
+	<testcase name="identity resources cannot cross the boundary as copied values" time="0.000750" classname="test"/>
+	<testcase name="every non-copy ownership mode declares a lifetime" time="0.000827" classname="test"/>
+	<testcase name="all named type references resolve within the component" time="0.001998" classname="test"/>
+	<testcase name="component and overload identities cannot drift" time="0.001293" classname="test"/>
+	<testcase name="borrow anchors must resolve to a receiver or declared parameter" time="0.002180" classname="test"/>
+	<testcase name="copied records reject identity-bearing fields" time="0.001184" classname="test"/>
+	<testcase name="asynchronous declarations must report their async effect" time="0.002758" classname="test"/>
+	<testcase name="producer-specific metadata stays behind namespaced extension keys" time="0.000632" classname="test"/>
+	<testcase name="callback types carry closed invocation and re-entry semantics" time="0.003391" classname="test"/>
+	<testcase name="variants carry semantic case names and copied fields" time="0.002035" classname="test"/>
+	<testcase name="resource ownership projects static methods without a receiver" time="0.002399" classname="test"/>
+	<testcase name="generic declarations use scoped representation constraints" time="0.000474" classname="test"/>
+	<testcase name="a versioned non-Lean frontend produces the same semantic core" time="0.000678" classname="test"/>
+	<testcase name="the Lean frontend carries declaration and proof provenance through its namespace" time="0.002863" classname="test"/>
+	<testcase name="a frontend cannot claim another producer or adapter version" time="0.000556" classname="test"/>
+	<testcase name="canonical serialization ignores object insertion order" time="0.007470" classname="test"/>
+	<testcase name="the Alpha semantic fixture has a stable reviewed content identity" time="0.027333" classname="test"/>
+	<testcase name="canonical serialization rejects values that JSON cannot identify safely" time="0.004315" classname="test"/>
+	<testcase name="version diagnostics distinguish migration from consumer upgrades" time="0.002523" classname="test"/>
+	<testcase name="the Binding IR CLI exposes validation, hashing, and machine-readable diagnostics" time="0.261822" classname="test"/>
+	<testcase name="one semantic contract resolves callable, ownership, error, documentation, and assurance facts" time="0.039127" classname="test"/>
+	<testcase name="JavaScript, PHP, Python, C, and Rust packages bind to one semantic contract" time="0.158179" classname="test"/>
+	<testcase name="JavaScript and Python preserve finite generics and asynchronous delivery from the same IR" time="0.042369" classname="test"/>
+	<testcase name="JavaScript and Python execute the same identity, value, callback, and cleanup vector" time="0.117650" classname="test"/>
+	<testcase name="the semantic parity CLI emits the complete machine-readable report" time="0.172379" classname="test"/>
+	<testcase name="raw browser ESM loads one shared runtime and native API" time="0.584350" classname="test"/>
+	<testcase name="a module worker uses the same ordinary native API" time="0.530603" classname="test"/>
+	<testcase name="the browser acceptance environment uses exact tool versions" time="0.000353" classname="test"/>
+	<testcase name="Vite preserves the Wasm runtime and side-module URLs" time="0.726816" classname="test"/>
+	<testcase name="Rollup preserves an ordinary ESM consumer" time="2.251795" classname="test"/>
+	<testcase name="Webpack preserves the Wasm runtime and side-module URLs" time="3.848160" classname="test"/>
+	<testcase name="React Strict Mode effects share one lazy Lean runtime" time="0.929343" classname="test"/>
+	<testcase name="C and C++ projections fail closed while native package targets are ineligible" time="0.374264" classname="test"/>
+	<testcase name="an eligible C binding target produces a deterministic package with pkg-config and CMake discovery" time="1.076474" classname="test"/>
+	<testcase name="C projection requires complete artifacts and an explicit source runtime contract" time="0.455635" classname="test"/>
+	<testcase name="C++ projection rejects an eligible target until generated C++ artifacts exist" time="0.270839" classname="test"/>
+	<testcase name="the C backend emits typed values, opaque resources, callbacks, and direct functions" time="0.072874" classname="test"/>
+	<testcase name="generated C compiles and runs through native functions without consumer glue" time="0.283661" classname="test"/>
+	<testcase name="finite generic declarations become concrete C functions" time="0.013427" classname="test"/>
+	<testcase name="unsupported asynchronous and open generic surfaces fail before emission" time="0.002042" classname="test"/>
+	<testcase name="callbacks receive canonical generation-safe handles by signature" time="0.002483" classname="test"/>
+	<testcase name="nested callback frames enter and leave in last-in-first-out order" time="0.002356" classname="test"/>
+	<testcase name="native Lean closures share the nested frame stack with host callbacks" time="0.000555" classname="test"/>
+	<testcase name="an active non-reentrant callback rejects a nested native call" time="0.000347" classname="test"/>
+	<testcase name="depth overflow rejects before entering another callback" time="0.000448" classname="test"/>
+	<testcase name="exceptions unwind to the entry frame and leave the registry usable" time="0.000505" classname="test"/>
+	<testcase name="active final release follows the generated self-disposal policy" time="0.000466" classname="test"/>
+	<testcase name="once and non-reentrant callback policies are enforced" time="0.000423" classname="test"/>
+	<testcase name="callback plans have stable signature IDs and fixed adapter rules" time="0.027964" classname="test"/>
+	<testcase name="signature identity follows callable ABI semantics, not documentation" time="0.017439" classname="test"/>
+	<testcase name="callback generation rejects non-callbacks and invalid depth budgets" time="0.002599" classname="test"/>
+	<testcase name="backend selection prefers Docker, falls back to Nix, and honors explicit policy" time="0.002392" classname="test"/>
+	<testcase name="missing build tools stop before creating the requested output" time="0.006278" classname="test"/>
+	<testcase name="the reviewed Debian builder contains Nix, not a second compiler policy" time="0.023897" classname="test"/>
+	<testcase name="Docker orchestration returns one validated bundle and package projection closure" time="0.487896" classname="test"/>
+	<testcase name="native Nix accepts only a private store beside generated build staging" time="0.004316" classname="test"/>
+	<testcase name="canonical package schema is closed and uses draft 2020-12" time="0.008903" classname="test"/>
+	<testcase name="fixture binds one component to locks, artifacts, targets, packages, assurance, and provenance" time="0.004108" classname="test"/>
+	<testcase name="fixture source, locks, metadata, documentation, and license match recorded bytes" time="0.005939" classname="test"/>
+	<testcase name="canonical identity ignores object insertion order" time="0.002796" classname="test"/>
+	<testcase name="unknown fields and missing provenance fail closed" time="0.001763" classname="test"/>
+	<testcase name="component, package, runtime, graph, and closure identities cannot drift" time="0.001698" classname="test"/>
+	<testcase name="target eligibility, capability, and artifact claims cannot contradict each other" time="0.002207" classname="test"/>
+	<testcase name="assurance claims cannot launder absent proof or trust evidence" time="0.001937" classname="test"/>
+	<testcase name="resolver is dependency-first and stable across capsule input order" time="0.005198" classname="test"/>
+	<testcase name="resolver selects only the requested transitive closure" time="0.001285" classname="test"/>
+	<testcase name="capsule schema rejects undeclared fields" time="0.000761" classname="test"/>
+	<testcase name="resolver rejects capsule integrity drift before composition" time="0.000446" classname="test"/>
+	<testcase name="resolver rejects a package built for another shared runtime" time="0.000696" classname="test"/>
+	<testcase name="resolver rejects conflicting dependency content identities" time="0.000574" classname="test"/>
+	<testcase name="resolver rejects duplicate library symbols" time="0.000642" classname="test"/>
+	<testcase name="resolver rejects duplicate initializer symbols" time="0.000547" classname="test"/>
+	<testcase name="resolver rejects unresolved package symbols" time="0.001641" classname="test"/>
+	<testcase name="resolver reports the complete dependency cycle" time="0.001014" classname="test"/>
+	<testcase name="capsule and graph-lock JSON schemas are valid JSON documents" time="0.017279" classname="test"/>
+	<testcase name="Cargo projection fails closed while the canonical native target is ineligible" time="0.329492" classname="test"/>
+	<testcase name="an eligible Rust binding target produces a deterministic crate without compiler access" time="1.485501" classname="test"/>
+	<testcase name="Cargo projection requires every generated Rust file in the reviewed selection" time="0.419665" classname="test"/>
+	<testcase name="CLI parsing is noninteractive by default and keeps command options closed" time="0.013995" classname="test"/>
+	<testcase name="agent output is one closed result envelope with stable exit semantics" time="0.001069" classname="test"/>
+	<testcase name="the executable analyzes the project and reports pending commands honestly" time="0.261319" classname="test"/>
+	<testcase name="publish dry-run executes the full reproducibility gate through the CLI contract" time="0.001155" classname="test"/>
+	<testcase name="external publish verifies the exact candidate before reaching the deferred registry step" time="0.000677" classname="test"/>
+	<testcase name="the published CLI result schema is closed" time="0.003312" classname="test"/>
+	<testcase name="one reviewed report locks every generated host package" time="0.223034" classname="test"/>
+	<testcase name="file, export, documentation, and generator drift blocks the gate" time="0.140824" classname="test"/>
+	<testcase name="the shared public-surface gate scans generated package documentation" time="0.008583" classname="test"/>
+	<testcase name="the package gate CLI checks the reviewed report" time="0.359598" classname="test"/>
+	<testcase name="Lean host adapters preserve native members, ownership, and target identity" time="0.060223" classname="test"/>
+	<testcase name="host adapters reject calls that omit the trusted host boundary" time="0.001608" classname="test"/>
+	<testcase name="an independent rebuild produces one content-addressed confirmation record" time="0.010887" classname="test"/>
+	<testcase name="a different independent candidate cannot become a confirmation" time="0.001909" classname="test"/>
+	<testcase name="archive validation rejects traversal and link entries before extraction" time="0.005169" classname="test"/>
+	<testcase name="a local tar archive resolves to exactly one authorization root" time="0.042527" classname="test"/>
+	<testcase name="published archives enforce size and HTTPS after redirects" time="0.030451" classname="test"/>
+	<testcase name="one independent command rebuilds the declared revision and writes a confirmation" time="0.011726" classname="test"/>
+	<testcase name="error envelope plans derive tags, scalar layout, and poison policy from Binding IR" time="0.010238" classname="test"/>
+	<testcase name="projection requires the generated error envelope for rich declared errors" time="0.057390" classname="test"/>
+	<testcase name="the runtime returns values, reports declared errors, and poisons on corrupt outcomes" time="0.039833" classname="test"/>
+	<testcase name="trap policy reports one unexpected failure without poisoning later calls" time="0.016415" classname="test"/>
+	<testcase name="generated JavaScript translates an internal envelope into an idiomatic error class" time="0.055512" classname="test"/>
+	<testcase name="generic plans bind canonical specializations to disjoint runtime guards" time="0.011120" classname="test"/>
+	<testcase name="the loader dispatches a native generic function without type tokens" time="0.045300" classname="test"/>
+	<testcase name="generated packages advertise only compiled generic signatures" time="0.051547" classname="test"/>
+	<testcase name="missing metadata, constrained types, and private drift remain gated" time="0.009038" classname="test"/>
+	<testcase name="initialization plans bind first-call policy to canonical Binding IR" time="0.041293" classname="test"/>
+	<testcase name="every generated binding receives the same initialization plan" time="0.017766" classname="test"/>
+	<testcase name="one component runtime initializes once across native callables" time="0.004125" classname="test"/>
+	<testcase name="failed or drifted initialization plans never retry" time="0.005658" classname="test"/>
+	<testcase name="iterator plans derive cursor ownership and pull frames from Binding IR" time="0.013616" classname="test"/>
+	<testcase name="projection requires one unique private cursor adapter" time="0.058662" classname="test"/>
+	<testcase name="native iterator objects pull lazily and release on completion or early return" time="0.025845" classname="test"/>
+	<testcase name="generated packages expose standard Iterable values" time="0.037320" classname="test"/>
+	<testcase name="async iterator plans use exactly-once pending pulls and cancellation" time="0.023517" classname="test"/>
+	<testcase name="native async iterators serialize pulls and cancel active work on return" time="0.017864" classname="test"/>
+	<testcase name="generated packages expose standard AsyncIterable values" time="0.028699" classname="test"/>
+	<testcase name="the Alpha JavaScript projection is generated from the reviewed Binding IR" time="0.048876" classname="test"/>
+	<testcase name="callback declarations receive a generated signature plan" time="0.014238" classname="test"/>
+	<testcase name="exported Lean closures receive a generated result projection" time="0.014841" classname="test"/>
+	<testcase name="public names come from Binding IR rather than the private ABI map" time="0.014376" classname="test"/>
+	<testcase name="every projected declaration requires an explicit private implementation" time="0.005187" classname="test"/>
+	<testcase name="private ABI metadata is closed and cannot inject public binding policy" time="0.001032" classname="test"/>
+	<testcase name="unknown private symbols cannot hide outside the semantic declaration graph" time="0.000889" classname="test"/>
+	<testcase name="the POC projector rejects semantic modes it cannot preserve" time="0.004197" classname="test"/>
+	<testcase name="Promise declarations receive a generated pending-operation plan" time="0.014481" classname="test"/>
+	<testcase name="class ABI adapters cannot be accepted and then ignored" time="0.004387" classname="test"/>
+	<testcase name="each private resource tag is unique inside one component" time="0.001459" classname="test"/>
+	<testcase name="one runtime owns one pending-operation domain" time="0.043368" classname="test"/>
+	<testcase name="runtime shutdown cancels pending work before closing its epoch" time="0.023840" classname="test"/>
+	<testcase name="host values use canonical generation-safe tokens and retained leases" time="0.003898" classname="test"/>
+	<testcase name="queued finalization releases an unreachable wrapper on the next safe entry" time="0.118514" classname="test"/>
+	<testcase name="deterministic disposal cancels fallback finalization" time="0.036712" classname="test"/>
+	<testcase name="generated cleanup policy controls fallback finalizer registration" time="0.106908" classname="test"/>
+	<testcase name="runtime shutdown releases both registry domains and expires wrappers" time="0.046161" classname="test"/>
+	<testcase name="Lean closure finalizers queue native release until a safe bridge entry" time="0.158151" classname="test"/>
+	<testcase name="startup graph passes one retained object through Alpha, Beta, and Gamma" time="0.160808" classname="test"/>
+	<testcase name="lazy graph resolves Gamma to Beta to Alpha before preserving identity" time="0.172992" classname="test"/>
+	<testcase name="final-static graph preserves the same cross-library identity" time="0.093121" classname="test"/>
+	<testcase name="threaded lazy graph preserves identity in the shared memory" time="0.115732" classname="test"/>
+	<testcase name="threaded final-static graph preserves the same identity" time="0.095162" classname="test"/>
+	<testcase name="browser profile owns one growable unshared memory" time="0.137428" classname="test"/>
+	<testcase name="threaded profile imports one growable shared memory" time="0.151716" classname="test"/>
+	<testcase name="Lean settles a public Promise after the initiating Wasm stack returns" time="0.205785" classname="test"/>
+	<testcase name="cancellation stops the scheduled Lean call and completes once" time="0.051821" classname="test"/>
+	<testcase name="runtime shutdown cancels native pending work before Lean finalization" time="0.104106" classname="test"/>
+	<testcase name="startup module preserves the private Lean lifecycle invariants" time="0.131690" classname="test"/>
+	<testcase name="Init failure makes the application instance terminal" time="0.023921" classname="test"/>
+	<testcase name="an unused runtime can shut down without running Init" time="0.020968" classname="test"/>
+	<testcase name="the Lean registry fails closed at its declared capacity" time="0.126970" classname="test"/>
+	<testcase name="private value frame rejects version, size, boolean, and limit drift" time="0.109472" classname="test"/>
+	<testcase name="copied-value arenas return to zero after repeated native calls" time="0.103537" classname="test"/>
+	<testcase name="load returns one boring native API for the minimum dependency graph" time="0.003072" classname="test"/>
+	<testcase name="load rejects underscore-prefixed public binding names" time="0.000313" classname="test"/>
+	<testcase name="native resource classes defer initialization and hide numeric handles" time="0.002082" classname="test"/>
+	<testcase name="artifact integrity is checked before a side module is linked" time="0.009229" classname="test"/>
+	<testcase name="generated Promise bindings use the shared pending-operation domain" time="0.051433" classname="test"/>
+	<testcase name="startup side modules register private symbols into one main runtime" time="0.018539" classname="test"/>
+	<testcase name="overload plans dispatch unique arities independent of declaration order" time="0.008911" classname="test"/>
+	<testcase name="the loader exposes one native callable for all overload branches" time="0.049974" classname="test"/>
+	<testcase name="generated JavaScript and TypeScript preserve ordinary overload syntax" time="0.048599" classname="test"/>
+	<testcase name="same-arity and asynchronous overload groups remain coverage-gated" time="0.003161" classname="test"/>
+	<testcase name="resource lifecycle groups native property getters and setters" time="0.050842" classname="test"/>
+	<testcase name="property accessors reject duplicate roles and mismatched types" time="0.021677" classname="test"/>
+	<testcase name="native classes expose property access without helper methods or handles" time="0.028144" classname="test"/>
+	<testcase name="generated JavaScript and TypeScript use native property syntax" time="0.044741" classname="test"/>
+	<testcase name="a getter without a setter becomes a readonly TypeScript property" time="0.016385" classname="test"/>
+	<testcase name="resource lifecycle is generated from ownership and lifetime semantics" time="0.009496" classname="test"/>
+	<testcase name="resource disposal policy changes the generated cleanup plan" time="0.030333" classname="test"/>
+	<testcase name="JavaScript projection rejects resource ownership it cannot preserve" time="0.005694" classname="test"/>
+	<testcase name="resource lifecycle fails closed when a private symbol is absent" time="0.001223" classname="test"/>
+	<testcase name="resource lifecycle rejects invalid private handle metadata" time="0.000640" classname="test"/>
+	<testcase name="the reviewed Alpha surface has complete JavaScript lowering coverage" time="0.008393" classname="test"/>
+	<testcase name="iterator delivery accepts scalar plans and rejects values without pull frames" time="0.010764" classname="test"/>
+	<testcase name="invalid property shapes fail before projection" time="0.003114" classname="test"/>
+	<testcase name="generic and constructed values fail without runtime specialization" time="0.005925" classname="test"/>
+	<testcase name="optional arguments and ambiguous overload groups fail before generation" time="0.006717" classname="test"/>
+	<testcase name="callback domain errors and nonscalar payloads fail outside envelope coverage" time="0.006060" classname="test"/>
+	<testcase name="the JavaScript backend emits direct native callables and rich TypeScript types" time="0.052311" classname="test"/>
+	<testcase name="generated files are deterministic and bind to the reviewed IR hash" time="0.042962" classname="test"/>
+	<testcase name="the package audit rejects raw ABI and internal subpath drift" time="0.047433" classname="test"/>
+	<testcase name="generated JavaScript executes through direct functions and classes" time="0.041997" classname="test"/>
+	<testcase name="Promise declarations generate an ordinary async function" time="0.055545" classname="test"/>
+	<testcase name="variants and static methods project as native TypeScript surfaces" time="0.015116" classname="test"/>
+	<testcase name="resource members retain Promise and iterator protocols" time="0.025053" classname="test"/>
+	<testcase name="generated validators reject malformed copied values before dispatch" time="0.020649" classname="test"/>
+	<testcase name="the backend rejects public name collisions instead of changing the API" time="0.001990" classname="test"/>
+	<testcase name="dynamic and final-static graphs project the same native Alpha contract" time="0.226302" classname="test"/>
+	<testcase name="one content-addressed graph drives dynamic and final-static composition" time="0.050534" classname="test"/>
+	<testcase name="startup, lazy, and final-static profiles resolve the same locked order" time="0.026828" classname="test"/>
+	<testcase name="threaded lazy side module loads into the existing shared memory" time="0.174867" classname="test"/>
+	<testcase name="threaded side modules bind the main shared memory and runtime" time="0.149811" classname="test"/>
+	<testcase name="Lean-generated lazy side module binds into the existing Lean runtime" time="0.204486" classname="test"/>
+	<testcase name="callback exceptions unwind to JavaScript without leaking the retained function" time="0.033321" classname="test"/>
+	<testcase name="exported Lean closures are ordinary nested callables with deterministic cleanup" time="0.029289" classname="test"/>
+	<testcase name="resource classes reject cross-runtime use and expire on shutdown" time="0.053671" classname="test"/>
+	<testcase name="native copied-value validation returns structured errors" time="0.014396" classname="test"/>
+	<testcase name="startup Lean side module imports the main memory, table, and runtime symbols" time="0.030700" classname="test"/>
+	<testcase name="lazy Lean side module imports the main memory, table, and runtime symbols" time="0.015403" classname="test"/>
+	<testcase name="final-static graph contains one runtime and all three library domains" time="0.080145" classname="test"/>
+	<testcase name="analysis infers a deterministic copied-value Binding IR without changing the project" time="0.058088" classname="test"/>
+	<testcase name="analysis blocks foreign, effectful, and unknown representations without inventing ownership" time="0.005766" classname="test"/>
+	<testcase name="analysis correlates Lake compiled interface metadata without trusting it as proof" time="0.013019" classname="test"/>
+	<testcase name="analysis defers namespace collisions instead of flattening them into one host name" time="0.006230" classname="test"/>
+	<testcase name="analysis treats one existing Binding IR as the explicit component boundary" time="0.039612" classname="test"/>
+	<testcase name="the published analysis schema closes the report and adapter questions" time="0.001099" classname="test"/>
+	<testcase name="CLI analyze returns a complete report or minimal adapter questions" time="0.019049" classname="test"/>
+	<testcase name="a named lazy load returns one native API and resolves dependencies once" time="0.019225" classname="test"/>
+	<testcase name="npm projection is deterministic and preserves every compiled core byte" time="0.630983" classname="test"/>
+	<testcase name="a clean npm consumer installs, imports, and calls the generated native surface" time="1.799397" classname="test"/>
+	<testcase name="npm projection rejects a changed canonical artifact before packaging" time="0.192075" classname="test"/>
+	<testcase name="pending plans come from Promise delivery and ownership semantics" time="0.010863" classname="test"/>
+	<testcase name="identity borrows receive a generated operation lease" time="0.001631" classname="test"/>
+	<testcase name="non-Promise declarations cannot receive pending-operation plans" time="0.001405" classname="test"/>
+	<testcase name="pending operations settle once and reject late settlement" time="0.003154" classname="test"/>
+	<testcase name="diagnostic observers cannot change settlement semantics" time="0.001253" classname="test"/>
+	<testcase name="cancellation runs cleanup in reverse order and rejects late results" time="0.001217" classname="test"/>
+	<testcase name="cleanup failure replaces a successful settlement with a boundary error" time="0.001852" classname="test"/>
+	<testcase name="shutdown cancels every operation and rejects new work" time="0.001165" classname="test"/>
+	<testcase name="pending capacity fails before allocating another operation" time="0.001246" classname="test"/>
+	<testcase name="the performance corpus schema is closed and uses draft 2020-12" time="0.008354" classname="test"/>
+	<testcase name="the canonical spatial corpus has one stable reviewed identity" time="0.016230" classname="test"/>
+	<testcase name="all frozen correctness, mutation, handoff, and disposal vectors execute" time="0.020803" classname="test"/>
+	<testcase name="complexity is either evidence-scoped or explicitly unknown" time="0.008512" classname="test"/>
+	<testcase name="the contract rejects semantic and correctness-vector drift" time="0.001963" classname="test"/>
+	<testcase name="two independent components declare one borrowed resource handoff" time="0.001308" classname="test"/>
+	<testcase name="independent Lean performance components compile and execute corpus vectors" time="3.192245" classname="test"/>
+	<testcase name="generated performance bindings load native callables lazily" time="0.120799" classname="test"/>
+	<testcase name="independent spatial components share one runtime and resource identity" time="0.035721" classname="test"/>
+	<testcase name="generated bindings preserve 4D and 8D typed values" time="0.066778" classname="test"/>
+	<testcase name="resources cannot cross independently instantiated runtimes" time="0.050297" classname="test"/>
+	<testcase name="side modules import one shared memory and resolve inter-library symbols" time="0.016036" classname="test"/>
+	<testcase name="PHP generator emits one hash-bound Composer package with typed public stubs" time="0.107193" classname="test"/>
+	<testcase name="every generated PHP source file and the public stub pass the PHP parser" time="1.058127" classname="test"/>
+	<testcase name="generated PHP executes through ordinary values, functions, resources, and callables" time="0.393754" classname="test"/>
+	<testcase name="PHP properties, iterators, and awaitables retain native syntax" time="2.017839" classname="test"/>
+	<testcase name="PHP package audit rejects generated drift and raw public dispatch" time="0.063286" classname="test"/>
+	<testcase name="unsupported PHP semantics fail before package emission" time="0.001919" classname="test"/>
+	<testcase name="native PHP package manifest closes every input, target, and output field" time="0.129009" classname="test"/>
+	<testcase name="clean native PHP package rebuilds are byte-identical and run without wrapper code" time="17.006719" classname="test"/>
+	<!-- native PHP release bytes {"runtime":14030976,"extension":67024,"files":48} -->
+	<testcase name="native runtime generator emits one process broker and a hash-bound component provider" time="0.047174" classname="test"/>
+	<testcase name="two native PHP components execute through one real Lean runtime and identity domain" time="12.657439" classname="test"/>
+	<!-- native PHP artifact bytes {"sharedRuntime":14048976,"alphaExtension":249064,"betaExtension":54368} -->
+	<testcase name="PHP projection defines one immutable surface for both transports" time="0.038763" classname="test"/>
+	<testcase name="PHP projection preserves copied primitives as typed values" time="0.003727" classname="test"/>
+	<testcase name="PHP resources, callbacks, errors, and delivery use native PHP concepts" time="0.016118" classname="test"/>
+	<testcase name="transport capability gaps are explicit and block package generation" time="0.004617" classname="test"/>
+	<testcase name="PHP projection rejects invalid namespace and typed operation collisions" time="0.002201" classname="test"/>
+	<testcase name="Binding IR generates one transport-neutral PHP conformance corpus" time="0.154443" classname="test"/>
+	<testcase name="PHP conformance comparison rejects undocumented transport differences" time="0.008411" classname="test"/>
+	<testcase name="PHP-Wasm generator emits one flat PHP-Wasm library closure" time="0.044650" classname="test"/>
+	<testcase name="generated host keeps one runtime, component domain, and Vrzno-style identity index" time="0.058696" classname="test"/>
+	<testcase name="PHP-Wasm generation rejects graph, asset, and component drift" time="0.054777" classname="test"/>
+	<testcase name="PHP-Wasm package manifest closes the graph, host, identity map, and release layout" time="0.049145" classname="test"/>
+	<testcase name="one PHP-Wasm manifest generates the descriptor, Composer surface, stubs, docs, and provenance" time="0.182634" classname="test"/>
+	<testcase name="Zend generator emits one typed handler for every PHP transport operation" time="0.080710" classname="test"/>
+	<testcase name="generated Zend extension executes the Composer API without consumer adapters" time="6.623955" classname="test"/>
+	<testcase name="consumer fixtures, examples, and generated packages expose only native APIs" time="0.237588" classname="test"/>
+	<testcase name="PyPI projection fails closed while the canonical native target is ineligible" time="0.359470" classname="test"/>
+	<testcase name="an eligible Python binding target produces deterministic wheel and source archives" time="1.431685" classname="test"/>
+	<testcase name="PyPI projection requires a reviewed wheel tag and every generated Python file" time="0.394371" classname="test"/>
+	<testcase name="the Python backend emits dataclasses, classes, exceptions, callables, and stubs" time="0.097259" classname="test"/>
+	<testcase name="the generated Python package runs through ordinary native syntax" time="0.200783" classname="test"/>
+	<testcase name="Python properties, iterators, async iterators, and awaitables use native protocols" time="0.058218" classname="test"/>
+	<testcase name="Python variants and static methods use frozen tagged classes" time="0.017470" classname="test"/>
+	<testcase name="Python finite generics expose overload stubs and private typed dispatch" time="0.015701" classname="test"/>
+	<testcase name="compile-once policy accepts a hash-preserving registry projection" time="0.001599" classname="test"/>
+	<testcase name="packaging backends cannot compile, link, or regenerate semantics" time="0.001126" classname="test"/>
+	<testcase name="canonical manifest owns package versions and binding semantics" time="0.000532" classname="test"/>
+	<testcase name="a packaging backend cannot mutate or collide core artifacts" time="0.000547" classname="test"/>
+	<testcase name="one candidate advances through the required release states in order" time="0.003173" classname="test"/>
+	<testcase name="skipped, stale, and cross-candidate transitions fail closed" time="0.001283" classname="test"/>
+	<testcase name="permission-isolated rehearsal passes clean npm and C consumers with complete install traces" time="2.966406" classname="test"/>
+	<testcase name="the real bundle rehearses every applicable backend and records explicit omissions" time="0.515244" classname="test"/>
+	<testcase name="one bundle identity produces deterministic npm and C rehearsal archives plus an in-toto statement" time="0.847561" classname="test"/>
+	<testcase name="publication index validation rejects publish mode, unknown fields, and identity drift" time="0.327551" classname="test"/>
+	<testcase name="release tree comparison identifies missing and changed artifacts" time="0.039222" classname="test"/>
+	<testcase name="release path classification covers retained source and package artifacts" time="0.000515" classname="test"/>
+	<testcase name="release inventory rejects an artifact hash mismatch" time="0.009948" classname="test"/>
+	<testcase name="release inventory comparison reports modes and bounded text diagnostics" time="0.022405" classname="test"/>
+	<testcase name="source preparation creates two independent clean clones of one commit" time="0.210455" classname="test"/>
+	<testcase name="build B cannot inherit build A source, output, or writable store markers" time="1.275069" classname="test"/>
+	<testcase name="two clean candidate builds produce one content-addressed release authorization" time="1.056568" classname="test"/>
+	<testcase name="one generated byte difference blocks authorization and retains both reports" time="0.569208" classname="test"/>
+	<testcase name="reproducibility and authorization schemas close every published field" time="0.001162" classname="test"/>
+	<testcase name="the Rust backend emits owned values, resources, closures, and Results" time="0.065871" classname="test"/>
+	<testcase name="the generated Rust crate compiles and runs through its native API" time="1.476086" classname="test"/>
+	<testcase name="finite generic declarations become concrete Rust functions" time="0.010831" classname="test"/>
+	<testcase name="unsupported target semantics fail before Rust files are emitted" time="0.001903" classname="test"/>
+	<testcase name="core source boundary includes compiler inputs and excludes packaging backends" time="0.007109" classname="test"/>
+	<testcase name="universal bundle is byte-identical across clean assembly roots" time="0.510726" classname="test"/>
+	<testcase name="canonical manifest inventories every release artifact with its actual bytes" time="0.301969" classname="test"/>
+	<testcase name="provenance and SBOM name the exact compiled core identity" time="0.280578" classname="test"/>
+	<testcase name="packaging policy changes cannot mutate the compiled artifact set" time="0.013440" classname="test"/>
+	<testcase name="value-frame-v1 layout is generated from copied record fields" time="0.011174" classname="test"/>
+	<testcase name="record order drives offsets without a handwritten field table" time="0.002224" classname="test"/>
+	<testcase name="unsupported fields fail instead of silently changing transport semantics" time="0.002367" classname="test"/>
+	<testcase name="the private ABI requests a frame profile but does not declare its layout" time="0.000272" classname="test"/>
+	<testcase name="the generated C header uses the same frame fields and semantic hash" time="0.021025" classname="test"/>
+	<testcase name="weak values retain arbitrary keys and live canonical values" time="0.002490" classname="test"/>
+	<testcase name="dead values disappear during lookup and iteration" time="0.000654" classname="test"/>
+	<testcase name="a replaced value's stale finalizer cannot delete its replacement" time="0.000252" classname="test"/>
+	<testcase name="a retired registry cannot mutate entries created after clear" time="0.000250" classname="test"/>
+	<testcase name="weak values reject primitives and support deterministic deletion" time="0.000915" classname="test"/>
+	<testcase name="WIT preserves the portable Alpha types, resource, and functions" time="0.109349" classname="test"/>
+	<testcase name="the WIT portable subset maps to ordinary generated Python names" time="0.016744" classname="test"/>
+	<testcase name="independent consumers bind to one nominal WIT resource identity" time="0.014498" classname="test"/>
+	<testcase name="WIT fails closed on host-only and unsupported semantic types" time="0.007258" classname="test"/>
+	<testcase name="the WIT CLI emits a validated deterministic package" time="0.191072" classname="test"/>
+	<!-- tests 311 -->
+	<!-- suites 0 -->
+	<!-- pass 311 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 20223.780584 -->
+</testsuites>

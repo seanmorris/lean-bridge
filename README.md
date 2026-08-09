@@ -452,7 +452,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 311 passing behavioral and structural tests;
+- 320 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -472,6 +472,8 @@ npm run test:browser-bundlers
 npm run test:performance-corpus
 npm run test:performance-reference
 npm run test:performance-wasm
+npm run test:performance-workloads
+npm run benchmark:spatial -- --output build/performance-wasm/interactive-suite.json
 npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate

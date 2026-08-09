@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-workloads.schema.json",
+  "title": "Lean Bridge deterministic performance workloads",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "version", "generator", "license", "workloads"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "generator": { "$ref": "#/$defs/generator" },
+    "license": { "const": "CC0-1.0" },
+    "workloads": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/workload" }
+    }
+  },
+  "$defs": {
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "algorithm"],
+      "properties": {
+        "id": { "const": "lean-bridge-spatial-workload" },
+        "version": { "const": "1.0.0" },
+        "algorithm": { "const": "mulberry32-integer-v1" }
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "coordinateMinimum", "coordinateMaximum", "clusterCount", "clusterRadius", "duplicateCoordinateRate"],
+      "properties": {
+        "kind": { "enum": ["uniform", "clustered", "diagonal-degenerate"] },
+        "coordinateMinimum": { "type": "integer", "minimum": -32768, "maximum": 32767 },
+        "coordinateMaximum": { "type": "integer", "minimum": -32768, "maximum": 32767 },
+        "clusterCount": { "type": "integer", "minimum": 1 },
+        "clusterRadius": { "type": "integer", "minimum": 0 },
+        "duplicateCoordinateRate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "queryProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyLocality", "hitRatio", "rangeRadius"],
+      "properties": {
+        "keyLocality": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hitRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rangeRadius": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warmupQueries", "lowerBound", "nearest", "range", "insert", "consumerRangeChecksum"],
+      "properties": {
+        "warmupQueries": { "type": "integer", "minimum": 0 },
+        "lowerBound": { "type": "integer", "minimum": 0 },
+        "nearest": { "type": "integer", "minimum": 0 },
+        "range": { "type": "integer", "minimum": 0 },
+        "insert": { "type": "integer", "minimum": 0 },
+        "consumerRangeChecksum": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contentSha256", "resultSha256", "operationCount"],
+      "properties": {
+        "contentSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "resultSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "operationCount": { "type": "integer", "minimum": 2 }
+      }
+    },
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tier", "scale", "seed", "dimensions", "pointCount", "distribution", "queryProfile", "operations", "expected"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tier": { "enum": ["browser-safe", "extended-node"] },
+        "scale": { "enum": ["small", "medium", "large", "adversarial"] },
+        "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "dimensions": { "enum": [2, 4, 8] },
+        "pointCount": { "type": "integer", "minimum": 1 },
+        "distribution": { "$ref": "#/$defs/distribution" },
+        "queryProfile": { "$ref": "#/$defs/queryProfile" },
+        "operations": { "$ref": "#/$defs/operations" },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    }
+  }
+}

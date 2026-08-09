@@ -419,7 +419,7 @@ const projectComponent = (runtime, descriptor) => {
   return Object.freeze(api);
 };
 
-export const createPerformanceLibraryLoader = (module, descriptors) => {
+export const createPerformanceLibraryLoader = (module, descriptors, options = {}) => {
   const byId = new Map(descriptors.map(descriptor => [descriptor.id, descriptor]));
   const aliases = new Map();
   for (const descriptor of descriptors) {
@@ -437,6 +437,7 @@ export const createPerformanceLibraryLoader = (module, descriptors) => {
   };
   const loaded = new Map();
   const pending = new Map();
+  const prelinked = new Set(options.prelinked ?? []);
 
   const load = async requested => {
     const descriptor = typeof requested === "string" ? aliases.get(requested) : requested;
@@ -447,11 +448,13 @@ export const createPerformanceLibraryLoader = (module, descriptors) => {
     if (pending.has(descriptor.id)) return pending.get(descriptor.id);
     const operation = (async () => {
       for (const dependency of descriptor.dependencies) await load(dependency);
-      await module.loadDynamicLibrary(descriptor.artifact, {
-        global: true,
-        loadAsync: true,
-        nodelete: true,
-      });
+      if (!prelinked.has(descriptor.id)) {
+        await module.loadDynamicLibrary(descriptor.artifact, {
+          global: true,
+          loadAsync: true,
+          nodelete: true,
+        });
+      }
       if (descriptor.runtimeRoot && !(module._bridge_perf_runtime_init() >>> 0)) {
         throw new Error("the shared Lean runtime failed to initialize");
       }
