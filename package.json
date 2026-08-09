@@ -34,6 +34,7 @@
     "release:rehearse": "node scripts/rehearse-release.mjs",
     "release:reproducibility": "node scripts/check-release-reproducibility.mjs",
     "verify:release-authorization": "node scripts/verify-release-authorization.mjs",
+    "verify:independent-release": "node scripts/verify-independent-release.mjs",
     "audit:php-wasm": "node scripts/audit-php-wasm-sources.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
@@ -55,7 +56,7 @@
     "test:canonical-build": "node --test tests/canonical-build.test.mjs tests/cli-contract.test.mjs",
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
-    "test:release-authorization": "node --test tests/reproducibility-gate.test.mjs",
+    "test:release-authorization": "node --test tests/reproducibility-gate.test.mjs tests/release-candidate-state.test.mjs tests/independent-confirmation.test.mjs tests/independent-verifier.test.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

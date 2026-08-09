@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/independent-confirmation.schema.json",
+  "title": "Lean Bridge independent rebuild confirmation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "predicateType", "status", "candidate", "verifier", "evidence", "confirmedAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "predicateType": { "const": "https://lean-bridge.dev/attestations/independent-confirmation/v1" },
+    "status": { "const": "confirmed" },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceRevision", "sourceTree", "artifactInventorySha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/sha256" },
+        "sourceRevision": { "type": "string", "minLength": 1 },
+        "sourceTree": { "type": "string", "minLength": 1 },
+        "artifactInventorySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "platform", "environmentSha256"],
+      "properties": {
+        "identity": { "type": ["string", "null"], "minLength": 1 },
+        "platform": { "type": "string", "minLength": 1 },
+        "environmentSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publishedAuthorizationSha256", "rebuiltAuthorizationSha256", "rebuiltReportSha256", "reportUrl"],
+      "properties": {
+        "publishedAuthorizationSha256": { "$ref": "#/$defs/sha256" },
+        "rebuiltAuthorizationSha256": { "$ref": "#/$defs/sha256" },
+        "rebuiltReportSha256": { "$ref": "#/$defs/sha256" },
+        "reportUrl": { "type": ["string", "null"], "minLength": 1 }
+      }
+    },
+    "confirmedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

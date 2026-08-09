@@ -14,7 +14,9 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 
 import { buildCanonicalProject, processBuildRunner } from "../build/canonical-build.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
+import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
+import { ReleaseCandidateState } from "./release-candidate-state.mjs";
 import { parsePublicationIndex } from "./release-rehearsal.mjs";
 import {
   collectReleaseInventory,
@@ -286,6 +288,7 @@ const emptyReport = ({ createdAt }) => ({
   createdAt,
   candidate: null,
   source: null,
+  state: null,
   policy: reportPolicy,
   builds: [],
   artifacts: [],
@@ -420,6 +423,7 @@ export const runReproducibilityGate = async ({
   environment = process.env,
   runner = processBuildRunner,
   build = buildCanonicalProject,
+  analyze = analyzeLeanProject,
   sourcePreparer = prepareCleanGitSources,
   now = () => Date.now(),
 } = {}) => {
@@ -435,10 +439,22 @@ export const runReproducibilityGate = async ({
   const report = emptyReport({ createdAt: new Date(now()).toISOString() });
   let source = null;
   let leftRoot = null;
+  let state = null;
   try {
     const prepared = await sourcePreparer({ projectRoot: project, scratchRoot: scratch, runner });
     source = prepared.source;
     report.source = source;
+    state = new ReleaseCandidateState({ sourceIdentitySha256: sha256(canonicalJson(source)) });
+    const analysis = await analyze(prepared.roots[0]);
+    const requiredHints = analysis.adapterHints.filter(item => item.required);
+    if (analysis.bindingIr === null || requiredHints.length > 0) {
+      fail("release-analysis-incomplete", "Release analysis did not produce a complete binding contract", {
+        hint: "Resolve required adapter hints before running the reproducibility gate.",
+      });
+    }
+    state.transition({ state: "analyze", evidenceSha256: sha256(canonicalJson(analysis)) });
+    state.transition({ state: "generate", evidenceSha256: analysis.bindingIr.semanticSha256 });
+    report.state = state.snapshot();
     const built = [];
     for (const [index, name] of ["A", "B"].entries()) {
       const buildRoot = join(scratch, `build-${name.toLowerCase()}`);
@@ -453,6 +469,8 @@ export const runReproducibilityGate = async ({
       });
       const candidate = await readCandidate(buildRoot);
       built.push({ name, buildRoot, result, candidate, durationMs: Math.max(0, now() - started) });
+      state.transition({ state: `build-${name.toLowerCase()}`, evidenceSha256: candidate.manifestSha256 });
+      report.state = state.snapshot();
     }
     const [left, right] = built;
     leftRoot = left.buildRoot;
@@ -482,11 +500,24 @@ export const runReproducibilityGate = async ({
     report.artifacts = inventoryRecords(left.candidate.inventory, { candidate: left.candidate });
     report.differences = comparison.differences;
     report.candidate = candidateRecord({ source, candidate: left.candidate, artifacts: report.artifacts });
+    state.transition({
+      state: "compare",
+      evidenceSha256: sha256(canonicalJson({ artifacts: report.artifacts, differences: report.differences })),
+      candidateId: report.candidate.id,
+    });
+    state.transition({
+      state: "report",
+      evidenceSha256: sha256(canonicalJson({ candidate: report.candidate, result: comparison.differences.length === 0 ? "passed" : "failed" })),
+      candidateId: report.candidate.id,
+    });
+    report.state = state.snapshot();
     if (comparison.differences.length > 0) {
       fail("release-not-reproducible", `${comparison.differences.length} release artifact paths differ between clean builds`, {
         hint: `Inspect ${portable(join(output, "evidence", "reproducibility.json"))} for hashes and bounded diffs.`,
       });
     }
+    state.transition({ state: "authorize", evidenceSha256: report.candidate.id, candidateId: report.candidate.id });
+    report.state = state.snapshot();
     report.result = "passed";
     report.failure = null;
     const evidence = await writeEvidence({ staging, report, candidateRoot: leftRoot });
@@ -504,6 +535,7 @@ export const runReproducibilityGate = async ({
   } catch (error) {
     report.failure = failureRecord(error);
     if (report.source === null && source !== null) report.source = source;
+    if (state !== null) report.state = state.snapshot();
     const evidence = await writeEvidence({ staging, report, candidateRoot: null });
     await rename(staging, output);
     throw new ReproducibilityGateError(error.code ?? "reproducibility-gate-failed", error.message ?? String(error), {
@@ -618,7 +650,12 @@ export const verifyReleaseAuthorization = async ({ authorizationRoot, candidateR
     readEvidenceFile(root, authorization.evidence.attestationPath, authorization.evidence.attestationSha256),
   ]);
   const report = JSON.parse(await readFile(join(root, authorization.evidence.reportPath), "utf8"));
-  if (report.result !== "passed" || report.candidate?.id !== authorization.candidate.id) {
+  const expectedStates = ["created", "analyze", "generate", "build-a", "build-b", "compare", "report", "authorize"];
+  if (
+    report.result !== "passed" || report.candidate?.id !== authorization.candidate.id ||
+    report.state?.current !== "authorize" || report.state.candidateId !== authorization.candidate.id ||
+    JSON.stringify(report.state.history.map(item => item.state)) !== JSON.stringify(expectedStates)
+  ) {
     fail("authorization-report-drift", "Reproducibility report does not authorize this candidate");
   }
   const { manifestSha256 } = await readVerifiedCanonicalBundle(join(resolve(candidateRoot), "bundle"));

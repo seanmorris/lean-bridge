@@ -22,6 +22,8 @@ authorize the exact candidate identity
 
 The gate requires a clean committed Git tree. It rejects tracked changes and untracked Git-visible files before building. It clones the commit twice without local hard links and checks out the same detached revision in each clone.
 
+The report carries an ordered candidate state history: created, analyze, generate, build A, build B, compare, report, authorize, and publish. The gate runs project analysis before compilation and binds the generate transition to the discovered Binding IR identity. Build, comparison, report, and authorization transitions each require SHA-256 evidence. The state machine rejects skipped, repeated, stale, and cross-candidate transitions. Dry run stops at authorize. The external publisher remains responsible for the final publish transition after it verifies the authorization.
+
 Docker remains the default backend. Each build runs in a new container overlay with its own writable Nix store. Both containers start from the same hash-locked Debian builder image. Native Nix remains the fallback. The gate assigns each native build a different `local?root=` store under its private scratch directory, so the two runs do not share writable Nix state.
 
 ## Complete consumer artifact comparison
@@ -85,25 +87,29 @@ The GitHub workflow runs the same gate with repository read permission. It verif
 
 ## Independent verification
 
-An independent developer or build service can check the same commit with:
+An independent developer, build service, or agent can verify a published gate directory or HTTPS tar archive with one command:
 
 ```sh
-git clone https://github.com/seanmorris/lean-bridge
-cd lean-bridge
-git checkout <source revision from reproducibility.json>
-npm ci
-npm run release:reproducibility -- --output build/reproducibility-gate
-npm run verify:release-authorization -- --authorization build/reproducibility-gate --candidate build/reproducibility-gate/release
+npm run verify:independent-release -- \
+  --repository https://github.com/seanmorris/lean-bridge \
+  --published ./reproducibility-gate.tar \
+  --output build/independent-confirmation \
+  --verifier example-auditor
 ```
+
+The verifier validates archive paths and rejects links before extraction. It reads the authorized revision, checks out that exact commit, runs the two-build gate, compares the rebuilt candidate identity with the published identity, and exits nonzero on any difference. An optional `--revision` must equal the revision in the published authorization. Local and HTTPS archives are limited to 1 GiB. HTTPS redirects must remain on HTTPS.
+
+A successful verifier writes an append-only `independent-confirmation.json` and SHA-256 record. The confirmation names the candidate, source revision, source tree, artifact inventory, optional verifier identity, platform, hashed rebuild environment, published authorization, rebuilt authorization, rebuilt report, optional report URL, and confirmation time. A second write to the same output path fails. Confirmation count never changes the theorem or reproducibility result; it records who independently reproduced the same bytes.
 
 The machine report records the platform, backend version, builder definition digest, runtime profile, flake lock, source revision, source tree, artifact hashes, durations, and reproduction commands. The current supported build platform is Linux x86-64. The trusted bootstrap includes Git, Docker or Nix, the pinned OCI base images, the flake lock, Nix, the Lean compiler, Emscripten, the bridge generators, and the target runtime.
 
 ## Tests
 
-[`tests/reproducibility-gate.test.mjs`](../../tests/reproducibility-gate.test.mjs) verifies independent clean cloning, byte differences, mode differences, bounded diagnostics, complete authorization generation, changed-candidate rejection, failed-report retention, and closed report schemas.
+[`tests/reproducibility-gate.test.mjs`](../../tests/reproducibility-gate.test.mjs), [`tests/independent-verifier.test.mjs`](../../tests/independent-verifier.test.mjs), and [`tests/independent-confirmation.test.mjs`](../../tests/independent-confirmation.test.mjs) verify independent clean cloning, byte differences, mode differences, bounded diagnostics, complete authorization generation, changed-candidate rejection, failed-report retention, archive safety, one-command verification, append-only confirmation records, and closed report schemas.
 
 Run the focused gate without compiling the full toolchain twice:
 
 ```sh
 npm run test:release-authorization
+node --test tests/independent-verifier.test.mjs tests/independent-confirmation.test.mjs
 ```

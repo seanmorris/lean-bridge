@@ -257,6 +257,10 @@ const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation =
         },
       };
     },
+    analyze: async () => ({
+      bindingIr: { semanticSha256: "9".repeat(64) },
+      adapterHints: [],
+    }),
     now: () => {
       tick += 10;
       return tick;

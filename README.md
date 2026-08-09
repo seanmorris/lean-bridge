@@ -401,7 +401,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 272 passing behavioral and structural tests;
+- 280 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -424,6 +424,7 @@ npm run build:builder-image
 npm run test:canonical-build
 npm run test:release-authorization
 npm run release:reproducibility -- --output build/reproducibility-gate
+npm run verify:independent-release -- --repository https://github.com/seanmorris/lean-bridge --published build/reproducibility-gate.tar
 npm run cli -- --help
 npm test
 npm run test:reproducibility
