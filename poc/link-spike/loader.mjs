@@ -2873,13 +2873,56 @@ const projectBindings = (module, descriptor, context) => {
 export const createLibrarySurface = (module, descriptor, options = {}) =>
   projectBindings(module, descriptor, getRuntimeContext(module, options));
 
+const libraryAliases = descriptor => {
+  const versionIndex = descriptor.id.lastIndexOf("@");
+  const unversioned = versionIndex > 0
+    ? descriptor.id.slice(0, versionIndex)
+    : descriptor.id;
+  return new Set([descriptor.id, unversioned, unversioned.split("/").at(-1)]);
+};
+
+const createLibraryCatalog = roots => {
+  const descriptors = new Map();
+  const aliases = new Map();
+  const visit = descriptor => {
+    if (!descriptor || typeof descriptor.id !== "string" || !Array.isArray(descriptor.dependencies)) {
+      throw new TypeError("library catalog entries must be resolved descriptors");
+    }
+    const key = identity(descriptor);
+    if (descriptors.has(key)) return;
+    descriptors.set(key, descriptor);
+    for (const alias of libraryAliases(descriptor)) {
+      const existing = aliases.get(alias);
+      if (existing && existing !== descriptor) {
+        throw new Error(`library alias ${alias} identifies more than one descriptor`);
+      }
+      aliases.set(alias, descriptor);
+    }
+    descriptor.dependencies.forEach(visit);
+  };
+  roots.forEach(visit);
+  return Object.freeze({
+    resolve(requested) {
+      if (typeof requested !== "string") return requested;
+      const descriptor = aliases.get(requested);
+      if (!descriptor) {
+        throw new Error(`unknown library ${requested}; add it to the loader catalog`);
+      }
+      return descriptor;
+    },
+  });
+};
+
 export const createLibraryLoader = (module, options = {}) => {
   const context = getRuntimeContext(module, options);
   const loaded = new Map();
   const pending = new Map();
   const read = options.readArtifact ?? readArtifact;
+  const catalog = createLibraryCatalog(options.libraries ?? []);
+  const prelinked = new Set((options.prelinked ?? []).map(identity));
 
-  const load = async (descriptor, ancestry = []) => {
+  const load = async (requested, ancestry = []) => {
+    const descriptor = catalog.resolve(requested);
     const key = identity(descriptor);
     if (loaded.has(key)) return loaded.get(key);
     if (ancestry.includes(key)) {
@@ -2897,16 +2940,18 @@ export const createLibraryLoader = (module, options = {}) => {
       // Passing an absolute path here would be prefixed a second time by the
       // default Node locator. The production descriptor loader will build the
       // same name→URL map used by PHP-Wasm's locateFile pattern.
-      const path = decodeURIComponent(
-        descriptor.sideModule.pathname.split("/").at(-1),
-      );
+      if (!prelinked.has(key)) {
+        const path = decodeURIComponent(
+          descriptor.sideModule.pathname.split("/").at(-1),
+        );
 
-      await verifyIntegrity(descriptor, read);
-      await module.loadDynamicLibrary(path, {
-        global: true,
-        loadAsync: true,
-        nodelete: true,
-      });
+        await verifyIntegrity(descriptor, read);
+        await module.loadDynamicLibrary(path, {
+          global: true,
+          loadAsync: true,
+          nodelete: true,
+        });
+      }
       const api = projectBindings(module, descriptor, context);
       loaded.set(key, api);
       return api;

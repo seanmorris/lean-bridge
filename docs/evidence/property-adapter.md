@@ -28,6 +28,6 @@ The coverage gate rejects ambiguous shapes before projection. It also rejects du
 
 ## Executable checks
 
-`tests/property-adapter.test.mjs` creates a writable `UInt32` property from canonical Binding IR. It verifies lifecycle generation, native access through the loader, range validation before the private setter runs, generated getter and setter syntax, the TypeScript property, and direct import of the generated package.
+`tests/internal/abi/property-adapter.test.mjs` creates a writable `UInt32` property from canonical Binding IR. It verifies lifecycle generation, native access through the loader, range validation before the private setter runs, generated getter and setter syntax, the TypeScript property, and direct import of the generated package.
 
 The native test stand-in keeps the private ABI deterministic so the tests can force valid and invalid values. A cross-compiled Lean property fixture remains required for Wasm ABI evidence.

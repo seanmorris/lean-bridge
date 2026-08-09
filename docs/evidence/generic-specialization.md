@@ -28,6 +28,6 @@ Generic constraints, resources, multiple type parameters, constructed types, gen
 
 ## Executable checks
 
-`tests/generic-specialization.test.mjs` verifies canonical plans, private symbol matching, disjoint runtime guards, native loader dispatch, generated JavaScript, concrete TypeScript signatures, direct package consumption, unsupported value rejection, missing metadata, constrained declarations, and private metadata drift.
+`tests/internal/abi/generic-specialization.test.mjs` verifies canonical plans, private symbol matching, disjoint runtime guards, native loader dispatch, generated JavaScript, concrete TypeScript signatures, direct package consumption, unsupported value rejection, missing metadata, constrained declarations, and private metadata drift.
 
 The native test stand-in keeps each private implementation observable. A cross-compiled Lean generic fixture remains required for Wasm ABI evidence.

@@ -39,6 +39,6 @@ Version 1 supports booleans, integers through 32 bits, and 32-bit or 64-bit floa
 
 ## Executable checks
 
-`tests/iterator-adapter.test.mjs` verifies generated ownership, frame layout, private-symbol requirements, nominal tag uniqueness, lazy pulling, serialized async pulling, exactly-once settlement, cancellation, completion cleanup, early-return cleanup, both iterator symbols, TypeScript iterable types, and direct package consumption.
+`tests/internal/abi/iterator-adapter.test.mjs` verifies generated ownership, frame layout, private-symbol requirements, nominal tag uniqueness, lazy pulling, serialized async pulling, exactly-once settlement, cancellation, completion cleanup, early-return cleanup, both iterator symbols, TypeScript iterable types, and direct package consumption.
 
 The current native test stand-in writes synchronous frames and settles asynchronous pulls directly so tests can force every state. A cross-compiled Lean iterator fixture remains required for Wasm ABI evidence.

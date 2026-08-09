@@ -22,6 +22,6 @@ The loader checks the plan's Binding IR hash before resolving the private symbol
 
 ## Executable checks
 
-`tests/initialization-adapter.test.mjs` verifies required and no-op plan generation, one plan shared by every projected Alpha binding, deferred execution, exactly-once behavior across callables, terminal failure, no retry, diagnostics, and hash-drift rejection.
+`tests/internal/abi/initialization-adapter.test.mjs` verifies required and no-op plan generation, one plan shared by every projected Alpha binding, deferred execution, exactly-once behavior across callables, terminal failure, no retry, diagnostics, and hash-drift rejection.
 
 The cross-compiled Alpha suite separately verifies the real Lean startup and shutdown sequence, one runtime initialization domain, deferred first use, terminal `Init` failure, and no reinitialization after shutdown.

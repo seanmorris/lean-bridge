@@ -4,10 +4,7 @@ import test from "node:test";
 import createFinalStaticModule from "../build/lean-link-spike/final-static/main.mjs";
 import createLazyModule from "../build/lean-link-spike/lazy/main.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
-import {
-  createLibraryLoader,
-  createLibrarySurface,
-} from "../poc/link-spike/loader.mjs";
+import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
 
 const exerciseBox = api => {
   assert.equal(Object.isFrozen(api), true);
@@ -45,8 +42,14 @@ const exerciseBox = api => {
 
 test("dynamic and final-static graphs project the same native Alpha contract", async () => {
   const dynamicModule = await createLazyModule();
-  const dynamicApi = await createLibraryLoader(dynamicModule).load(alpha);
-  const staticApi = createLibrarySurface(await createFinalStaticModule(), alpha);
+  const dynamicApi = await createLibraryLoader(dynamicModule, {
+    libraries: [alpha],
+  }).load("poc/lean-alpha");
+  const staticModule = await createFinalStaticModule();
+  const staticApi = await createLibraryLoader(staticModule, {
+    libraries: [alpha],
+    prelinked: [alpha],
+  }).load("poc/lean-alpha");
 
   assert.deepEqual(Object.keys(dynamicApi), Object.keys(staticApi));
   exerciseBox(dynamicApi);

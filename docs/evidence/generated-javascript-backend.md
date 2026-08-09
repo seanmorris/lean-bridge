@@ -85,21 +85,21 @@ The copied-value validator walks the Binding IR record instead of duplicating th
 
 `tests/javascript-coverage.test.mjs` treats backend support as data. The reviewed Alpha graph has no JavaScript coverage gaps. Invalid property shapes, static methods, missing or ambiguous generic specializations, optional parameters, ambiguous overload groups, constructed values without validators, unsupported iterator values, and unsupported error payloads each fail with a stable code before the generator emits a package. Adding target syntax without its runtime lowering cannot create a false support claim.
 
-`tests/error-envelope.test.mjs` verifies the generated scalar result and error union, deterministic tags, declared payload validation, idiomatic error classes, and unexpected-failure containment. [The error-envelope evidence](error-envelope.md) records the implemented layout and the payload types that remain gated.
+`tests/internal/abi/error-envelope.test.mjs` verifies the generated scalar result and error union, deterministic tags, declared payload validation, idiomatic error classes, and unexpected-failure containment. [The error-envelope evidence](error-envelope.md) records the implemented layout and the payload types that remain gated.
 
-`tests/iterator-adapter.test.mjs` verifies the generated scalar pull frame, private iteration-state lifetime, stackless pending pulls, cancellation, native `next` and `return` behavior, and public iterable projections. [The iterator evidence](iterator-adapter.md) records the synchronous and asynchronous call cycles and cleanup rules.
+`tests/internal/abi/iterator-adapter.test.mjs` verifies the generated scalar pull frame, private iteration-state lifetime, stackless pending pulls, cancellation, native `next` and `return` behavior, and public iterable projections. [The iterator evidence](iterator-adapter.md) records the synchronous and asynchronous call cycles and cleanup rules.
 
-`tests/property-adapter.test.mjs` verifies that Binding IR property declarations become native getters and setters while their private symbols, receiver borrows, and value checks stay inside the runtime. [The property evidence](property-adapter.md) records the supported shapes and package surface.
+`tests/internal/abi/property-adapter.test.mjs` verifies that Binding IR property declarations become native getters and setters while their private symbols, receiver borrows, and value checks stay inside the runtime. [The property evidence](property-adapter.md) records the supported shapes and package surface.
 
-`tests/overload-adapter.test.mjs` verifies that arity-distinct declarations become one native function with multiple TypeScript signatures. It rejects ambiguous and asynchronous groups before projection. [The overload evidence](overload-adapter.md) records the dispatch contract and current limits.
+`tests/internal/abi/overload-adapter.test.mjs` verifies that arity-distinct declarations become one native function with multiple TypeScript signatures. It rejects ambiguous and asynchronous groups before projection. [The overload evidence](overload-adapter.md) records the dispatch contract and current limits.
 
-`tests/initialization-adapter.test.mjs` verifies the generated first-call plan, exactly-once execution across native callables, terminal failure, and Binding IR drift rejection. [The initialization evidence](initialization-adapter.md) records the state contract.
+`tests/internal/abi/initialization-adapter.test.mjs` verifies the generated first-call plan, exactly-once execution across native callables, terminal failure, and Binding IR drift rejection. [The initialization evidence](initialization-adapter.md) records the state contract.
 
-`tests/generic-specialization.test.mjs` verifies finite copied generic specialization without public type tokens or false unrestricted TypeScript generics. [The generic evidence](generic-specialization.md) records the supported shape and ambiguity policy.
+`tests/internal/abi/generic-specialization.test.mjs` verifies finite copied generic specialization without public type tokens or false unrestricted TypeScript generics. [The generic evidence](generic-specialization.md) records the supported shape and ambiguity policy.
 
-`tests/javascript-projection.test.mjs` verifies that public names come from Binding IR, callback parameters receive a stable generated signature plan, and returned Lean closures receive a private call and disposal plan. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
+`tests/internal/abi/javascript-projection.test.mjs` verifies that public names come from Binding IR, callback parameters receive a stable generated signature plan, and returned Lean closures receive a private call and disposal plan. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
 
-`tests/resource-lifecycle-generator.test.mjs` verifies the exact ownership transitions produced for Alpha. It changes disposal and result ownership in valid Binding IR and confirms that the generated plan changes or the JavaScript backend rejects a contract it cannot preserve. Registry tests confirm that the generated fallback policy controls finalizer registration.
+`tests/internal/abi/resource-lifecycle-generator.test.mjs` verifies the exact ownership transitions produced for Alpha. It changes disposal and result ownership in valid Binding IR and confirms that the generated plan changes or the JavaScript backend rejects a contract it cannot preserve. Registry tests confirm that the generated fallback policy controls finalizer registration.
 
 ## Remaining generator boundary
 

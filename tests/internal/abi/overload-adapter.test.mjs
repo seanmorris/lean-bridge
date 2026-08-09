@@ -5,12 +5,12 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 
-import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
-import { createLibrarySurface } from "../poc/link-spike/loader.mjs";
-import { compileOverloadV1 } from "../src/abi/overload.mjs";
-import { analyzeJavaScriptCoverage } from "../src/backends/javascript/coverage.mjs";
-import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
-import { compileJavaScriptProjection } from "../src/backends/javascript/projection.mjs";
+import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
+import { createLibrarySurface } from "../../../poc/link-spike/loader.mjs";
+import { compileOverloadV1 } from "../../../src/abi/overload.mjs";
+import { analyzeJavaScriptCoverage } from "../../../src/backends/javascript/coverage.mjs";
+import { generateJavaScriptPackage } from "../../../src/backends/javascript/generate.mjs";
+import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const uint32Parameter = name => ({
   name,

@@ -35,6 +35,6 @@ An unexpected outcome follows the declaration's policy. `poison-runtime` makes t
 
 ## Executable checks
 
-`tests/error-envelope.test.mjs` verifies deterministic layout, private adapter requirements, copied success values, declared payloads, public error-class translation, poison containment, and nonpoisoning trap behavior. It also verifies that a string payload fails generation instead of crossing through an untyped representation.
+`tests/internal/abi/error-envelope.test.mjs` verifies deterministic layout, private adapter requirements, copied success values, declared payloads, public error-class translation, poison containment, and nonpoisoning trap behavior. It also verifies that a string payload fails generation instead of crossing through an untyped representation.
 
 The current fixture uses an in-memory native-module stand-in so every envelope state can be forced deterministically. A real Lean and Wasm error fixture remains required before the scalar envelope can count as cross-compiled ABI evidence.

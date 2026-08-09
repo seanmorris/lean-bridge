@@ -54,7 +54,7 @@ test("threaded lazy side module loads into the existing shared memory", async ()
   const addTwo = alpha.makeAdder(2);
   assert.equal(addTwo(40), 42);
   assert.equal(addTwo.dispose(), true);
-  assert.equal(module._bridge_lean_active_frames(), 0);
+  assert.equal(libraries.diagnostics().callbacks.activeFrames, 0);
 });
 
 test("threaded side modules bind the main shared memory and runtime", async () => {

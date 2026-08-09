@@ -5,17 +5,17 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 
-import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
-import { createLibrarySurface } from "../poc/link-spike/loader.mjs";
+import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
+import { createLibrarySurface } from "../../../poc/link-spike/loader.mjs";
 import {
   ErrorEnvelopeGenerationError,
   compileErrorEnvelopeV1,
-} from "../src/abi/error-envelope.mjs";
-import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+} from "../../../src/abi/error-envelope.mjs";
+import { generateJavaScriptPackage } from "../../../src/backends/javascript/generate.mjs";
 import {
   JavaScriptProjectionError,
   compileJavaScriptProjection,
-} from "../src/backends/javascript/projection.mjs";
+} from "../../../src/backends/javascript/projection.mjs";
 
 const errorFixture = () => {
   const ir = structuredClone(alpha.bindingIr);

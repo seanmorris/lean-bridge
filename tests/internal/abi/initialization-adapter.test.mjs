@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
   __bridgeTest,
   createLibrarySurface,
-} from "../poc/link-spike/loader.mjs";
-import { compileInitializationV1 } from "../src/abi/initialization.mjs";
-import { compileJavaScriptProjection } from "../src/backends/javascript/projection.mjs";
+} from "../../../poc/link-spike/loader.mjs";
+import { compileInitializationV1 } from "../../../src/abi/initialization.mjs";
+import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const descriptor = (plan, bindings) => ({
   id: "poc/initialization@0.0.0",

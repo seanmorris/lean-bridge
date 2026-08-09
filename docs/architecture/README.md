@@ -30,6 +30,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generated Python backend evidence](../evidence/generated-python-backend.md)
 - [Generated package drift gate evidence](../evidence/generated-package-gate.md)
 - [Cross-language semantic parity evidence](../evidence/cross-language-semantic-parity.md)
+- [Direct-call and native-object conformance evidence](../evidence/direct-call-conformance.md)
 
 ## Permanent review lenses
 

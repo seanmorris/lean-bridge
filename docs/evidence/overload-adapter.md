@@ -26,4 +26,4 @@ Promise, iterator, and async iterator overload groups remain gated until their g
 
 ## Executable checks
 
-`tests/overload-adapter.test.mjs` verifies deterministic plans, declaration-order independence, one native loader callable, generated JavaScript dispatch, two TypeScript signatures, one default export member, argument validation, invalid arity rejection, and direct package consumption. It also verifies that same-arity and asynchronous groups fail coverage before projection.
+`tests/internal/abi/overload-adapter.test.mjs` verifies deterministic plans, declaration-order independence, one native loader callable, generated JavaScript dispatch, two TypeScript signatures, one default export member, argument validation, invalid arity rejection, and direct package consumption. It also verifies that same-arity and asynchronous groups fail coverage before projection.

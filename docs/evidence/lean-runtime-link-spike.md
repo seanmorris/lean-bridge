@@ -89,10 +89,9 @@ The structural and profile tests pass:
 - main has no unresolved `lean_*`, `initialize_*`, `runtime_initialize_*`, or `meta_initialize_*` function import;
 - final-static contains exactly one memory, table, `initialize_Init`, representative runtime symbols, registry symbol set, and copy of every Alpha/Beta/Gamma definition;
 - browser and threaded memory growth succeeds, after which Alpha still allocates, reads, and releases a Lean object; and
-- threaded lazy loading binds the side modules into the already-running shared memory and runtime; and
-- generated modules do not export `ccall`/`cwrap`; remaining `_bridge_*` probes
-  are temporary internal lifecycle/profile instrumentation, while consumer
-  assertions call the projected native functions and classes.
+- threaded lazy loading binds the side modules into the already-running shared memory and runtime;
+- named dynamic and prelinked loads return the same frozen native API shape; and
+- generated modules do not export `ccall` or `cwrap`. Remaining raw probes live under `tests/internal/abi` as lifecycle and profile instrumentation. Consumer assertions call projected native functions and classes.
 
 Artifacts from this run:
 

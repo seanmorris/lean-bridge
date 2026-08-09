@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
   ResourceLifecycleGenerationError,
   compileResourceLifecycleV1,
-} from "../src/abi/resource-lifecycle.mjs";
+} from "../../../src/abi/resource-lifecycle.mjs";
 import {
   JavaScriptProjectionError,
   compileJavaScriptProjection,
-} from "../src/backends/javascript/projection.mjs";
+} from "../../../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
 

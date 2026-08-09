@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
-import { alpha as leanAlpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { alpha as leanAlpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
   __bridgeTest,
   createLibraryLoader,
-} from "../poc/link-spike/loader.mjs";
-import { compileJavaScriptProjection } from "../src/backends/javascript/projection.mjs";
+} from "../../../poc/link-spike/loader.mjs";
+import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const descriptor = ({
   id,
@@ -54,14 +54,14 @@ test("load returns one boring native API for the minimum dependency graph", asyn
   });
   descriptor({ id: "unrelated" });
 
-  const libraries = createLibraryLoader(module);
+  const libraries = createLibraryLoader(module, { libraries: [beta] });
   const [first, concurrent] = await Promise.all([
-    libraries.load(beta),
-    libraries.load(beta),
+    libraries.load("beta"),
+    libraries.load("beta"),
   ]);
 
   assert.equal(first, concurrent);
-  assert.equal(first, await libraries.load(beta));
+  assert.equal(first, await libraries.load("beta"));
   assert.notEqual(first, linkerHandle);
   assert.equal(Object.isFrozen(first), true);
   assert.deepEqual(Object.keys(first), ["chain"]);
@@ -70,6 +70,7 @@ test("load returns one boring native API for the minimum dependency graph", asyn
   assert.equal(first.chain(9), 1109);
   assert.deepEqual(linkEvents, ["alpha.so.wasm", "beta.so.wasm"]);
   assert.equal(libraries.loaded.size, 2);
+  await assert.rejects(libraries.load("unrelated"), /unknown library unrelated/);
 });
 
 test("load rejects underscore-prefixed public binding names", async () => {

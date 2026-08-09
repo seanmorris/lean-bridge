@@ -33,7 +33,7 @@ Runtime shutdown stops admission, cancels every pending entry, runs cleanup, clo
 
 `tests/internal/abi/js-pending-operations.test.mjs` places the registry inside the same runtime context used by loaded libraries. It verifies shared diagnostics and shutdown cancellation.
 
-`tests/library-loader.test.mjs` compiles a Promise declaration and pending adapter from Binding IR, loads a normal API object, calls `await api.roundTrip(value)`, settles through the private runtime hook, validates the copied result, and returns every pending counter to baseline. The public function contains no token or settlement argument.
+`tests/internal/abi/library-loader.test.mjs` compiles a Promise declaration and pending adapter from Binding IR, loads a normal API object, calls `await api.roundTrip(value)`, settles through the private runtime hook, validates the copied result, and returns every pending counter to baseline. The public function contains no token or settlement argument.
 
 `tests/internal/abi/lean-pending-operation.test.mjs` calls `api.deferBoxValue(value)` through a generated projection. The private C adapter schedules work with `emscripten_async_call` and returns. The callback later calls the Lean-generated `alpha_box` and `alpha_read` functions while the initiating Wasm frame count is zero, then resolves the JavaScript Promise through the runtime-owned pending registry.
 
