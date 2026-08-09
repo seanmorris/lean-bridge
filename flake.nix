@@ -262,6 +262,30 @@
             '';
           };
 
+          release-rehearsal = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-release-rehearsal";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+
+            installPhase = ''
+              runHook preInstall
+              node --experimental-permission \
+                --allow-fs-read="$PWD" \
+                --allow-fs-read='${universal-release-bundle}' \
+                --allow-fs-read="$out" \
+                --allow-fs-read="$out/*" \
+                --allow-fs-write="$out" \
+                --allow-fs-write="$out/*" \
+                scripts/rehearse-release.mjs \
+                  --bundle '${universal-release-bundle}' \
+                  --output "$out"
+              runHook postInstall
+            '';
+          };
+
           php-native-package = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-php-native";
             version = "0.0.0";
@@ -309,6 +333,7 @@
           universal-core-artifacts = self.packages.${pkgs.system}.universal-core-artifacts;
           universal-release-bundle = self.packages.${pkgs.system}.universal-release-bundle;
           npm-package = self.packages.${pkgs.system}.npm-package;
+          release-rehearsal = self.packages.${pkgs.system}.release-rehearsal;
           php-native-package = self.packages.${pkgs.system}.php-native-package;
         });
     };
