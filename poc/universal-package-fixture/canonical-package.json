@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "component": {
+    "id": "poc/lean-alpha@0.0.0",
+    "name": "Lean Alpha",
+    "version": "0.0.0"
+  },
+  "locks": {
+    "flake": {
+      "path": "flake.lock",
+      "sha256": "81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5",
+      "inputClosureSha256": "81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5"
+    },
+    "graph": {
+      "path": "poc/lean-link-spike/graph-lock.json",
+      "sha256": "3d7f115b3b400442844b0ab7f53b44a0b382fe0f14dd727a2a89e8f8b7251d2e",
+      "id": "poc/lean-link-spike@1",
+      "profile": "side-lazy"
+    }
+  },
+  "source": {
+    "repository": "https://github.com/seanmorris/lean-bridge",
+    "revision": "2885998fc4342e7d171412f253fd830d319c02eb",
+    "path": "poc/lean-link-spike/Alpha.lean",
+    "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169"
+  },
+  "bindingIr": {
+    "schemaVersion": 2,
+    "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+    "fileSha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
+    "semanticSha256": "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4"
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true,
+    "scope": "wasm-main-module"
+  },
+  "artifacts": [
+    {
+      "id": "browser-runtime",
+      "path": "artifacts/browser/main.wasm",
+      "mediaType": "application/wasm",
+      "role": "runtime",
+      "target": "browser",
+      "bytes": 1296987,
+      "sha256": "b8c6328d558f793a4847e6465f432c6d19602d56c01852237e7629b3417743b1",
+      "core": true,
+      "executable": true
+    },
+    {
+      "id": "browser-component",
+      "path": "artifacts/browser/alpha.so.wasm",
+      "mediaType": "application/wasm",
+      "role": "component",
+      "target": "browser",
+      "bytes": 4612,
+      "sha256": "df3c7c6da8f919a3c0bb6748ec2a265841fa4ade4e69fdf9fed53e7f3f15beda",
+      "core": true,
+      "executable": true
+    },
+    {
+      "id": "lean-source",
+      "path": "poc/lean-link-spike/Alpha.lean",
+      "mediaType": "text/x-lean",
+      "role": "source",
+      "target": null,
+      "bytes": 1745,
+      "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "flake-lock",
+      "path": "flake.lock",
+      "mediaType": "application/json",
+      "role": "lock",
+      "target": null,
+      "bytes": 564,
+      "sha256": "81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "graph-lock",
+      "path": "poc/lean-link-spike/graph-lock.json",
+      "mediaType": "application/json",
+      "role": "lock",
+      "target": null,
+      "bytes": 2643,
+      "sha256": "3d7f115b3b400442844b0ab7f53b44a0b382fe0f14dd727a2a89e8f8b7251d2e",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "binding-ir",
+      "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+      "mediaType": "application/vnd.lean-bridge.binding-ir+json",
+      "role": "binding",
+      "target": null,
+      "bytes": 18584,
+      "sha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "package-readme",
+      "path": "poc/universal-package-fixture/README.md",
+      "mediaType": "text/markdown",
+      "role": "documentation",
+      "target": null,
+      "bytes": 247,
+      "sha256": "0f3eb80f366e683ba43e8a6d68328e805f9925fbfc6fe683fafb65c2aab873ec",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "license",
+      "path": "LICENSE",
+      "mediaType": "text/plain",
+      "role": "license",
+      "target": null,
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "assurance",
+      "path": "poc/universal-package-fixture/assurance.json",
+      "mediaType": "application/vnd.lean-bridge.assurance+json",
+      "role": "assurance",
+      "target": null,
+      "bytes": 112,
+      "sha256": "2912bf555017ec90ba65ab14876c837dc5b8e6771131b4bfd24dcc6cf4b43b1f",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "sbom",
+      "path": "poc/universal-package-fixture/sbom.spdx.json",
+      "mediaType": "application/spdx+json",
+      "role": "sbom",
+      "target": null,
+      "bytes": 126,
+      "sha256": "623befbe3bdb9418411961986a4ca4148a8c8f36ea2f0148bee8ce7a6bb1983d",
+      "core": false,
+      "executable": false
+    },
+    {
+      "id": "provenance",
+      "path": "poc/universal-package-fixture/provenance.json",
+      "mediaType": "application/vnd.in-toto+json",
+      "role": "provenance",
+      "target": null,
+      "bytes": 154,
+      "sha256": "fa22fea44e8d126477186edc3c85946d6cbc0ec5133f1ab00bd1f4f8509ae3e6",
+      "core": false,
+      "executable": false
+    }
+  ],
+  "targets": [
+    {
+      "id": "browser",
+      "eligible": true,
+      "reason": null,
+      "platforms": ["wasm32-emscripten"],
+      "capabilities": ["callbacks", "copied-values", "identity-resources", "promises", "shared-runtime"],
+      "entryPoints": [
+        { "name": "runtime", "kind": "library", "artifact": "browser-runtime" },
+        { "name": "component", "kind": "library", "artifact": "browser-component" },
+        { "name": "types", "kind": "types", "artifact": "binding-ir" },
+        { "name": "readme", "kind": "documentation", "artifact": "package-readme" }
+      ]
+    },
+    {
+      "id": "native-ffi",
+      "eligible": false,
+      "reason": "The fixture does not contain a native shared-library target.",
+      "platforms": [],
+      "capabilities": ["copied-values", "identity-resources"],
+      "entryPoints": []
+    },
+    {
+      "id": "wasi-preview2",
+      "eligible": false,
+      "reason": "The current callback capability requires a JavaScript host adapter.",
+      "platforms": [],
+      "capabilities": ["copied-values"],
+      "entryPoints": []
+    }
+  ],
+  "dependencies": [],
+  "capabilities": {
+    "provided": ["callbacks", "copied-values", "identity-resources", "promises", "shared-runtime", "typed-bindings"],
+    "requiredHosts": ["javascript"],
+    "gaps": [
+      {
+        "target": "native-ffi",
+        "feature": "native-library-artifact",
+        "reason": "The fixture contains no native component artifact."
+      },
+      {
+        "target": "wasi-preview2",
+        "feature": "javascript-callback-host",
+        "reason": "The fixture has no WIT callback projection."
+      }
+    ]
+  },
+  "packages": [
+    {
+      "ecosystem": "npm",
+      "name": "@lean-bridge/alpha",
+      "version": "0.0.0",
+      "target": "browser",
+      "eligible": true,
+      "reason": null,
+      "publicArtifacts": ["browser-runtime", "browser-component", "binding-ir", "package-readme", "license", "assurance", "sbom", "provenance"]
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "lean_bridge_alpha",
+      "version": "0.0.0",
+      "target": "wasi-preview2",
+      "eligible": false,
+      "reason": "The current bundle has no WIT callback projection.",
+      "publicArtifacts": []
+    },
+    {
+      "ecosystem": "pypi",
+      "name": "lean-bridge-alpha",
+      "version": "0.0.0",
+      "target": "native-ffi",
+      "eligible": false,
+      "reason": "The current bundle has no native extension artifact.",
+      "publicArtifacts": []
+    },
+    {
+      "ecosystem": "c",
+      "name": "lean-bridge-alpha",
+      "version": "0.0.0",
+      "target": "native-ffi",
+      "eligible": false,
+      "reason": "The current bundle has no native shared-library artifact.",
+      "publicArtifacts": []
+    },
+    {
+      "ecosystem": "cpp",
+      "name": "lean-bridge-alpha",
+      "version": "0.0.0",
+      "target": "native-ffi",
+      "eligible": false,
+      "reason": "The current bundle has no C++ projection.",
+      "publicArtifacts": []
+    }
+  ],
+  "documentation": {
+    "generated": true,
+    "artifacts": ["package-readme"]
+  },
+  "licenses": {
+    "expression": "MIT",
+    "artifacts": ["license"]
+  },
+  "assurance": {
+    "artifact": "assurance",
+    "claims": [
+      {
+        "id": "assurance:Alpha.Box.identity",
+        "subject": "lean:Alpha.Box",
+        "state": "trusted-boundary",
+        "theorems": [],
+        "assumptions": ["The generation-safe shared runtime registry preserves canonical wrapper identity."],
+        "artifacts": ["browser-component", "assurance"]
+      },
+      {
+        "id": "assurance:Alpha.roundTrip.boundary",
+        "subject": "lean:Alpha.roundTrip",
+        "state": "unverified",
+        "theorems": [],
+        "assumptions": ["The POC tests representative copied values rather than all values."],
+        "artifacts": ["browser-component", "binding-ir"]
+      }
+    ]
+  },
+  "provenance": {
+    "sourceDateEpoch": 1786261809,
+    "builder": "nix-flake-v1",
+    "toolchainSha256": "5095b1e87cda3b256cd9c66f741577d328bdb88f6e287b2ec86ef2588c91f3e4",
+    "inputClosureSha256": "81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5",
+    "sbomArtifact": "sbom",
+    "attestationArtifact": "provenance"
+  }
+}
