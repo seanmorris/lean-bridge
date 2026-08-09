@@ -378,6 +378,8 @@ The approved measurement methodology requires nine valid fresh-process forks on 
 
 The performance budget pipeline runs the generated APIs in nine fresh processes and produces one versioned result vector. It covers startup, first calls, warm calls, callbacks, Promises, allocation and disposal, cross-library handoff, authoritative memory, and 1, 3, 10, and 50-library composition. Every metric receives a hard ceiling and a relative threshold. Missing metrics fail. Relative regressions fail only when the change exceeds the practical threshold and the 95 percent confidence intervals no longer overlap. Baseline history retains the reviewer, rationale, source revision, file path, and SHA-256. [The performance budget evidence](docs/evidence/performance-budgets.md) defines collection, review, comparison, and failure reporting.
 
+The complete performance workflow publishes those evidence families in one GitHub Actions summary on every push. It reports each job's elapsed time, disk use, toolchain footprint, build footprint, evidence size, and cache state so the project can split the workflow using observed CI cost. Shared-runner timing stays informational. Missing measurements, failed correctness, semantic drift, source disagreement, artifact hash drift, and nonreproducible builds fail closed. [The CI performance evidence contract](docs/evidence/performance-ci.md) defines the tables, raw artifact bundle, validation rules, and failure policy.
+
 Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
@@ -497,6 +499,7 @@ npm run test:performance-lifecycle
 npm run test:performance-reproducibility
 npm run test:performance-methodology
 npm run test:performance-budgets
+npm run test:performance-ci
 npm run benchmark:spatial -- --output build/performance-wasm/interactive-suite.json
 npm run benchmark:scaling -- --output build/performance-scale/scaling-suite.json
 npm run benchmark:overhead -- --output build/lean-link-spike/native-overhead-suite.json

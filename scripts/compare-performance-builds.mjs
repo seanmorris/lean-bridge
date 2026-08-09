@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { execFileSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
@@ -18,10 +19,20 @@ for (let index = 2; index < process.argv.length; index += 2) {
 if (!options.has("--build-a") || !options.has("--build-b")) {
   throw new Error("--build-a and --build-b are required");
 }
-const result = comparePerformanceInventories(
+const comparison = comparePerformanceInventories(
   await collectPerformanceInventory(resolve(options.get("--build-a"))),
   await collectPerformanceInventory(resolve(options.get("--build-b"))),
 );
+const result = Object.freeze({
+  schemaVersion: 1,
+  kind: "lean-bridge-performance-build-reproducibility",
+  recordedAt: new Date().toISOString(),
+  source: Object.freeze({
+    commit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+    dirty: execFileSync("git", ["status", "--porcelain"], { encoding: "utf8" }).trim().length > 0,
+  }),
+  ...comparison,
+});
 const output = `${JSON.stringify(result, null, 2)}\n`;
 if (options.has("--output")) {
   const path = resolve(options.get("--output"));

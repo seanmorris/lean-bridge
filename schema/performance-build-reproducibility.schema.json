@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-build-reproducibility:v1",
+  "title": "Lean Bridge clean-build performance artifact comparison",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "source", "accepted", "buildA", "buildB", "differences"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-build-reproducibility" },
+    "recordedAt": { "type": "string" },
+    "source": { "type": "object" },
+    "accepted": { "type": "boolean" },
+    "buildA": { "$ref": "#/$defs/inventory" },
+    "buildB": { "$ref": "#/$defs/inventory" },
+    "differences": { "type": "array", "items": { "type": "object" } }
+  },
+  "$defs": {
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries", "artifactCount", "totalBytes", "sha256", "scope"],
+      "properties": {
+        "entries": { "type": "array", "items": { "type": "object" } },
+        "artifactCount": { "type": "integer", "minimum": 0 },
+        "totalBytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "scope": { "type": "object" }
+      }
+    }
+  }
+}

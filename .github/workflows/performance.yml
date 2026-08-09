@@ -1,0 +1,455 @@
+name: Complete performance evidence
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: performance-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  EVIDENCE_RETENTION_DAYS: "30"
+  PART_RETENTION_DAYS: "1"
+
+jobs:
+  build:
+    name: Build locked performance graph
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Record initial runner resources
+        run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/build-start.json
+      - name: Restore pinned Lean and Emscripten toolchains
+        id: toolchain-cache
+        uses: actions/cache@v5
+        with:
+          path: .toolchains
+          key: performance-toolchain-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh', 'flake.lock') }}
+      - name: Build the complete benchmark graph
+        id: benchmark-build
+        shell: bash
+        run: |
+          set +e
+          npm ci && \
+            npm run bootstrap && \
+            npm run build:performance-wasm && \
+            npm run build:performance-scaling && \
+            npm run build:lean-link-spike
+          code=$?
+          set -e
+
+          result_args=()
+          if [[ $code -eq 0 ]]; then
+            node scripts/performance-ci.mjs manifest \
+              --snapshot build/performance-ci/build-start.json \
+              --output build/performance-ci/input/manifest.json
+            tar -cf build/performance-ci/build-graph.tar \
+              build/performance-wasm \
+              build/performance-scale \
+              build/lean-link-spike
+            result_args+=(--result build-manifest=build/performance-ci/input/manifest.json)
+          fi
+
+          node scripts/performance-ci.mjs job \
+            --id build \
+            --snapshot build/performance-ci/build-start.json \
+            --output build/performance-ci/input/job-build.json \
+            --accepted "$([[ $code -eq 0 ]] && printf true || printf false)" \
+            --exit-code "$code" \
+            --cache-hit "${{ steps.toolchain-cache.outputs.cache-hit }}" \
+            --command "npm ci; npm run bootstrap; build performance wasm, scaling, and lean-link-spike" \
+            "${result_args[@]}"
+          printf 'exit-code=%s\n' "$code" >> "$GITHUB_OUTPUT"
+      - name: Upload runnable graph
+        if: ${{ always() && hashFiles('build/performance-ci/build-graph.tar') != '' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/build-graph.tar
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-build-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce build acceptance
+        if: always()
+        run: test "${{ steps.benchmark-build.outputs.exit-code }}" = "0"
+
+  spatial:
+    name: Startup and composition profiles
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Record initial runner resources
+        run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/spatial-start.json
+      - name: Install JavaScript dependencies
+        run: npm ci
+      - name: Download runnable graph
+        uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - name: Restore runnable graph
+        run: tar -xf build/performance-ci/download/build-graph.tar -C .
+      - name: Measure all composition profiles
+        id: measure
+        continue-on-error: true
+        run: node scripts/benchmark-spatial-runtime.mjs --profiles lazy,startup,final-static,islands --output build/performance-ci/input/spatial.json
+      - name: Record spatial job evidence
+        if: always()
+        run: |
+          result_args=()
+          [[ -f build/performance-ci/input/spatial.json ]] && result_args+=(--result spatial=build/performance-ci/input/spatial.json)
+          node scripts/performance-ci.mjs job \
+            --id spatial \
+            --snapshot build/performance-ci/spatial-start.json \
+            --output build/performance-ci/input/job-spatial.json \
+            --accepted "$([[ '${{ steps.measure.outcome }}' == success ]] && printf true || printf false)" \
+            --exit-code "$([[ '${{ steps.measure.outcome }}' == success ]] && printf 0 || printf 1)" \
+            --cache-hit unavailable \
+            --command "benchmark-spatial-runtime: lazy,startup,final-static,islands" \
+            "${result_args[@]}"
+      - name: Upload spatial evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-spatial-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce spatial acceptance
+        if: always()
+        run: test "${{ steps.measure.outcome }}" = "success"
+
+  scaling:
+    name: 1, 3, 10, and 50 library scaling
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/scaling-start.json
+      - run: npm ci
+      - uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - run: tar -xf build/performance-ci/download/build-graph.tar -C .
+      - name: Measure the complete scaling matrix
+        id: measure
+        continue-on-error: true
+        run: node scripts/benchmark-library-scaling.mjs --counts 1,3,10,50 --profiles lazy,startup,final-static,isolated --output build/performance-ci/input/scaling.json
+      - name: Record scaling job evidence
+        if: always()
+        run: |
+          result_args=()
+          [[ -f build/performance-ci/input/scaling.json ]] && result_args+=(--result scaling=build/performance-ci/input/scaling.json)
+          node scripts/performance-ci.mjs job \
+            --id scaling \
+            --snapshot build/performance-ci/scaling-start.json \
+            --output build/performance-ci/input/job-scaling.json \
+            --accepted "$([[ '${{ steps.measure.outcome }}' == success ]] && printf true || printf false)" \
+            --exit-code "$([[ '${{ steps.measure.outcome }}' == success ]] && printf 0 || printf 1)" \
+            --cache-hit unavailable \
+            --command "benchmark-library-scaling: 1,3,10,50 libraries across all profiles" \
+            "${result_args[@]}"
+      - name: Upload scaling evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-scaling-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce scaling acceptance
+        if: always()
+        run: test "${{ steps.measure.outcome }}" = "success"
+
+  overhead:
+    name: Native call and marshalling overhead
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/overhead-start.json
+      - run: npm ci
+      - uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - run: tar -xf build/performance-ci/download/build-graph.tar -C .
+      - name: Measure generated native API overhead
+        id: measure
+        continue-on-error: true
+        run: node scripts/benchmark-native-overhead.mjs --output build/performance-ci/input/overhead.json
+      - name: Record overhead job evidence
+        if: always()
+        run: |
+          result_args=()
+          [[ -f build/performance-ci/input/overhead.json ]] && result_args+=(--result overhead=build/performance-ci/input/overhead.json)
+          node scripts/performance-ci.mjs job \
+            --id overhead \
+            --snapshot build/performance-ci/overhead-start.json \
+            --output build/performance-ci/input/job-overhead.json \
+            --accepted "$([[ '${{ steps.measure.outcome }}' == success ]] && printf true || printf false)" \
+            --exit-code "$([[ '${{ steps.measure.outcome }}' == success ]] && printf 0 || printf 1)" \
+            --cache-hit unavailable \
+            --command "benchmark-native-overhead through generated public bindings" \
+            "${result_args[@]}"
+      - name: Upload overhead evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-overhead-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce overhead acceptance
+        if: always()
+        run: test "${{ steps.measure.outcome }}" = "success"
+
+  lifecycle:
+    name: Memory and lifecycle stability
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/lifecycle-start.json
+      - run: npm ci
+      - uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - run: tar -xf build/performance-ci/download/build-graph.tar -C .
+      - name: Measure lifecycle stability
+        id: measure
+        continue-on-error: true
+        run: node --expose-gc scripts/benchmark-lifecycle-stability.mjs --output build/performance-ci/input/lifecycle.json
+      - name: Record lifecycle job evidence
+        if: always()
+        run: |
+          result_args=()
+          [[ -f build/performance-ci/input/lifecycle.json ]] && result_args+=(--result lifecycle=build/performance-ci/input/lifecycle.json)
+          node scripts/performance-ci.mjs job \
+            --id lifecycle \
+            --snapshot build/performance-ci/lifecycle-start.json \
+            --output build/performance-ci/input/job-lifecycle.json \
+            --accepted "$([[ '${{ steps.measure.outcome }}' == success ]] && printf true || printf false)" \
+            --exit-code "$([[ '${{ steps.measure.outcome }}' == success ]] && printf 0 || printf 1)" \
+            --cache-hit unavailable \
+            --command "benchmark-lifecycle-stability with explicit host GC" \
+            "${result_args[@]}"
+      - name: Upload lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-lifecycle-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce lifecycle acceptance
+        if: always()
+        run: test "${{ steps.measure.outcome }}" = "success"
+
+  reproducibility:
+    name: Variance and clean-build reproducibility
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: node scripts/performance-ci.mjs snapshot --output build/performance-ci/reproducibility-start.json
+      - name: Restore pinned Lean and Emscripten toolchains
+        id: toolchain-cache
+        uses: actions/cache@v5
+        with:
+          path: .toolchains
+          key: performance-toolchain-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh', 'flake.lock') }}
+      - run: npm ci
+      - run: npm run bootstrap
+      - uses: actions/download-artifact@v5
+        with:
+          name: performance-ci-build-graph-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/download
+      - run: tar -xf build/performance-ci/download/build-graph.tar -C .
+      - name: Measure variance and compare two clean builds
+        id: measure
+        continue-on-error: true
+        run: |
+          node scripts/benchmark-self-consistency.mjs \
+            --repetitions 3 \
+            --output build/performance-ci/input/self-consistency.json && \
+          bash scripts/check-performance-build-reproducibility.sh \
+            --output build/performance-ci/input/build-reproducibility.json
+      - name: Record reproducibility job evidence
+        if: always()
+        run: |
+          result_args=()
+          [[ -f build/performance-ci/input/self-consistency.json ]] && result_args+=(--result selfConsistency=build/performance-ci/input/self-consistency.json)
+          [[ -f build/performance-ci/input/build-reproducibility.json ]] && result_args+=(--result buildReproducibility=build/performance-ci/input/build-reproducibility.json)
+          node scripts/performance-ci.mjs job \
+            --id reproducibility \
+            --snapshot build/performance-ci/reproducibility-start.json \
+            --output build/performance-ci/input/job-reproducibility.json \
+            --accepted "$([[ '${{ steps.measure.outcome }}' == success ]] && printf true || printf false)" \
+            --exit-code "$([[ '${{ steps.measure.outcome }}' == success ]] && printf 0 || printf 1)" \
+            --cache-hit "${{ steps.toolchain-cache.outputs.cache-hit }}" \
+            --command "three self-consistency repetitions and two clean artifact builds" \
+            "${result_args[@]}"
+      - name: Upload reproducibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-ci-part-reproducibility-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/input/*.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
+      - name: Enforce reproducibility acceptance
+        if: always()
+        run: test "${{ steps.measure.outcome }}" = "success"
+
+  report:
+    name: Aggregate performance report
+    if: always()
+    needs: [build, spatial, scaling, overhead, lifecycle, reproducibility]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Download every available evidence part
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: performance-ci-part-*-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/performance-ci/collected
+          merge-multiple: true
+      - name: Assemble and render the report
+        id: aggregate
+        continue-on-error: true
+        run: |
+          node scripts/performance-ci.mjs assemble \
+            --input build/performance-ci/collected \
+            --output build/performance-ci/final/report.json \
+            --validation build/performance-ci/final/validation.json \
+            --summary build/performance-ci/final/summary.md \
+            --artifact-name performance-evidence-${{ github.sha }}-${{ github.run_attempt }} \
+            --artifact-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts" \
+            --retention-days "$EVIDENCE_RETENTION_DAYS"
+      - name: Publish the GitHub job summary
+        if: always()
+        run: |
+          if [[ -f build/performance-ci/final/summary.md ]]; then
+            cat build/performance-ci/final/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf '# Lean Bridge performance evidence\n\nThe aggregate report could not be rendered.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Package raw evidence and reproduction metadata
+        if: always()
+        run: |
+          mkdir -p build/performance-ci/final/raw
+          if [[ -d build/performance-ci/collected ]]; then
+            cp -R build/performance-ci/collected/. build/performance-ci/final/raw/
+          fi
+          cp poc/performance/workloads.v1.json build/performance-ci/final/
+          cp poc/performance/corpus.v1.json build/performance-ci/final/
+          cp poc/performance/methodology.v1.json build/performance-ci/final/
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf build/performance-evidence.tar.gz \
+            -C build/performance-ci/final .
+          sha256sum build/performance-evidence.tar.gz > build/performance-evidence.tar.gz.sha256
+      - name: Report the uploaded evidence footprint
+        if: always()
+        run: |
+          if [[ -f build/performance-evidence.tar.gz ]]; then
+            archive_bytes=$(stat -c %s build/performance-evidence.tar.gz)
+            archive_sha256=$(sha256sum build/performance-evidence.tar.gz | cut -d ' ' -f 1)
+            printf '\n## Uploaded evidence footprint\n\n| Archive | Bytes | SHA-256 | Retention |\n| --- | ---: | --- | --- |\n| performance-evidence.tar.gz | %s | %s | %s days |\n' \
+              "$archive_bytes" "$archive_sha256" "$EVIDENCE_RETENTION_DAYS" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload complete performance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            build/performance-evidence.tar.gz
+            build/performance-evidence.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: ${{ env.EVIDENCE_RETENTION_DAYS }}
+      - name: Enforce evidence integrity
+        if: always()
+        run: |
+          test "${{ needs.build.result }}" = "success"
+          test "${{ needs.spatial.result }}" = "success"
+          test "${{ needs.scaling.result }}" = "success"
+          test "${{ needs.overhead.result }}" = "success"
+          test "${{ needs.lifecycle.result }}" = "success"
+          test "${{ needs.reproducibility.result }}" = "success"
+          test "${{ steps.aggregate.outcome }}" = "success"
