@@ -48,7 +48,7 @@ const contractError = (operation, code) => {
   });
 };
 
-test("the Alpha fixture defines copied values, identity resources, and generics", () => {
+test("the Alpha fixture defines copied values and identity resources", () => {
   assert.equal(validateBindingIr(clone(fixture)).component.id, "poc/lean-alpha@0.0.0");
   assert.deepEqual(
     fixture.types.map(type => [type.name, type.representation]),
@@ -57,7 +57,6 @@ test("the Alpha fixture defines copied values, identity resources, and generics"
       ["Box", "identity"],
     ],
   );
-  assert.equal(fixture.declarations.find(item => item.name === "echo").typeParameters[0].id, "T");
 });
 
 test("the JSON schema is closed and uses draft 2020-12", async () => {
@@ -218,6 +217,43 @@ const schemaProducedFixture = {
   },
 };
 
+test("generic declarations use scoped representation constraints", () => {
+  const candidate = clone(schemaProducedFixture);
+  const declaration = candidate.declarations[0];
+  declaration.id = "schema:identity.echo";
+  declaration.name = "echo";
+  declaration.overloadKey = "echo<T>(T)";
+  declaration.typeParameters = [
+    {
+      id: "T",
+      representation: "copied",
+      constraints: ["constraint:copyable"],
+    },
+  ];
+  declaration.parameters = [
+    {
+      name: "value",
+      type: { kind: "parameter", id: "T" },
+      ownership: "copy",
+      lifetime: null,
+      mutability: "immutable",
+      optional: false,
+      default: null,
+    },
+  ];
+  declaration.result = {
+    type: { kind: "parameter", id: "T" },
+    ownership: "copy",
+    lifetime: null,
+  };
+  declaration.documentation = {
+    summary: "Return one copied value with the same semantic type.",
+    details: "The producer constrains T to copied representations.",
+  };
+  declaration.source.declaration = "identity.echo";
+  assert.equal(validateBindingIr(candidate), candidate);
+});
+
 test("a versioned non-Lean frontend produces the same semantic core", async () => {
   const frontend = createBindingIrFrontend({
     producerId: "schema",
@@ -271,7 +307,7 @@ test("canonical serialization ignores object insertion order", () => {
 test("the Alpha semantic fixture has a stable reviewed content identity", () => {
   assert.equal(
     hashBindingIr(fixture),
-    "9aa91298f4e352510d9b1f0f9eb64f2ba225498aa4e0e6a0a2260ec76aefc0f6",
+    "b0df6aa84caa0a87f5d404f8def104d3210c1acbbd194d0fdcaf6eef48f54e65",
   );
   const changed = clone(fixture);
   changed.documentation.summary = "Changed semantic documentation.";

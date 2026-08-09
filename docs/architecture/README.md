@@ -24,6 +24,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Native API performance evidence](../evidence/performance.md)
 - [Typed copied-value frame evidence](../evidence/typed-value-frame.md)
 - [Generation-safe registry evidence](../evidence/generation-safe-registries.md)
+- [Generated JavaScript backend evidence](../evidence/generated-javascript-backend.md)
 
 ## Permanent review lenses
 

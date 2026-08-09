@@ -62,7 +62,7 @@
           }
         },
         {
-          "name": "digest",
+          "name": "bytes",
           "type": { "kind": "primitive", "name": "bytes" },
           "mutability": "immutable",
           "documentation": {
@@ -71,7 +71,7 @@
           }
         },
         {
-          "name": "samples",
+          "name": "values",
           "type": {
             "kind": "apply",
             "constructor": "array",
@@ -79,7 +79,7 @@
           },
           "mutability": "immutable",
           "documentation": {
-            "summary": "A sequence of unsigned 32-bit samples.",
+            "summary": "A sequence of unsigned 32-bit values.",
             "details": ""
           }
         }
@@ -290,53 +290,6 @@
           "lean-lang.org/export": "function"
         }
       }
-    },
-    {
-      "id": "lean:Alpha.echo",
-      "name": "echo",
-      "kind": "function",
-      "overloadKey": "echo<T>(T)",
-      "typeParameters": [
-        {
-          "id": "T",
-          "representation": "copied",
-          "constraints": ["constraint:copyable"]
-        }
-      ],
-      "receiver": null,
-      "parameters": [
-        {
-          "name": "value",
-          "type": { "kind": "parameter", "id": "T" },
-          "ownership": "copy",
-          "lifetime": null,
-          "mutability": "immutable",
-          "optional": false,
-          "default": null
-        }
-      ],
-      "result": {
-        "type": { "kind": "parameter", "id": "T" },
-        "ownership": "copy",
-        "lifetime": null
-      },
-      "mutability": "immutable",
-      "effects": [],
-      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
-      "resultMode": "value",
-      "capabilities": [],
-      "assurance": ["assurance:Alpha.echo.boundary"],
-      "documentation": {
-        "summary": "Return one copied value with the same semantic type.",
-        "details": "The type parameter is constrained to copied representations."
-      },
-      "source": {
-        "producer": "lean",
-        "declaration": "Alpha.echo",
-        "extensions": {
-          "lean-lang.org/export": "function"
-        }
-      }
     }
   ],
   "errors": [
@@ -429,19 +382,6 @@
       "source": {
         "producer": "bridge",
         "declaration": "Alpha.roundTrip",
-        "extensions": {}
-      }
-    },
-    {
-      "id": "assurance:Alpha.echo.boundary",
-      "state": "unverified",
-      "subject": "lean:Alpha.echo",
-      "claim": "The selected target backend preserves copied generic arguments.",
-      "theorems": [],
-      "assumptions": ["Each target backend must reject unsupported concrete instantiations."],
-      "source": {
-        "producer": "bridge",
-        "declaration": "Alpha.echo",
         "extensions": {}
       }
     }

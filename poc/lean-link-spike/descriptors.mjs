@@ -1,7 +1,46 @@
 import alphaCapsule from "./capsules/alpha.json" with { type: "json" };
 import betaCapsule from "./capsules/beta.json" with { type: "json" };
 import gammaCapsule from "./capsules/gamma.json" with { type: "json" };
+import alphaBindingIr from "./bindings/alpha.binding-ir.json" with { type: "json" };
 import graphLock from "./graph-lock.json" with { type: "json" };
+
+import { compileJavaScriptProjection } from "../../src/backends/javascript/projection.mjs";
+
+const alphaPrivateAbi = Object.freeze({
+  schemaVersion: 1,
+  initialize: "_bridge_lean_runtime_init",
+  declarations: Object.freeze({
+    "lean:Alpha.box": Object.freeze({
+      symbol: "_bridge_lean_alpha_make",
+      adapter: null,
+    }),
+    "lean:Alpha.Box.read": Object.freeze({
+      symbol: "_bridge_lean_alpha_read",
+      adapter: null,
+    }),
+    "bridge:Alpha.Box.identity": Object.freeze({
+      symbol: "_bridge_lean_handle_identity",
+      adapter: null,
+    }),
+    "lean:Alpha.roundTrip": Object.freeze({
+      symbol: "_bridge_lean_alpha_round_trip",
+      adapter: Object.freeze({
+        kind: "value-frame-v1",
+        abiVersion: 1,
+        byteSize: 60,
+        maxCopyBytes: 1024 * 1024,
+        maxArrayLength: 64 * 1024,
+      }),
+    }),
+  }),
+  resources: Object.freeze({
+    "lean:Alpha.Box": Object.freeze({
+      side: "lean",
+      kind: 1,
+      dispose: "_bridge_lean_release",
+    }),
+  }),
+});
 
 const contentHash = id => {
   const library = graphLock.libraries.find(candidate => candidate.id === id);
@@ -31,66 +70,21 @@ export const createAlphaDescriptor = ({
   capsule = alphaCapsule,
   target = "browser",
   buildHash = contentHash(capsule.id),
-}) => Object.freeze({
-  id: capsule.id,
-  buildHash,
-  capsule,
-  integrity: sideArtifact(capsule, target).sha256,
-  dependencies: Object.freeze([]),
-  sideModule,
-  bindings: Object.freeze([
-    Object.freeze({
-      kind: "class",
-      name: "Box",
-      initialize: "_bridge_lean_runtime_init",
-      constructor: "_bridge_lean_alpha_make",
-      dispose: "_bridge_lean_release",
-      handle: Object.freeze({ side: "lean", kind: 1 }),
-      methods: Object.freeze([
-        Object.freeze({
-          name: "read",
-          symbol: "_bridge_lean_alpha_read",
-        }),
-        Object.freeze({
-          name: "identity",
-          symbol: "_bridge_lean_handle_identity",
-          result: Object.freeze({
-            kind: "resource",
-            name: "Box",
-            ownership: "borrowed",
-          }),
-        }),
-      ]),
-    }),
-    Object.freeze({
-      kind: "function",
-      name: "roundTrip",
-      initialize: "_bridge_lean_runtime_init",
-      symbol: "_bridge_lean_alpha_round_trip",
-      adapter: Object.freeze({
-        kind: "value-frame-v1",
-        abiVersion: 1,
-        byteSize: 60,
-        maxCopyBytes: 1024 * 1024,
-        maxArrayLength: 64 * 1024,
-        input: Object.freeze({
-          kind: "record",
-          fields: Object.freeze([
-            Object.freeze({ name: "enabled", type: "bool" }),
-            Object.freeze({ name: "count", type: "uint32" }),
-            Object.freeze({ name: "label", type: "string" }),
-            Object.freeze({ name: "bytes", type: "bytes" }),
-            Object.freeze({
-              name: "values",
-              type: Object.freeze({ kind: "array", element: "uint32" }),
-            }),
-          ]),
-        }),
-        output: "same-as-input",
-      }),
-    }),
-  ]),
-});
+}) => {
+  const projection = compileJavaScriptProjection(alphaBindingIr, alphaPrivateAbi);
+  return Object.freeze({
+    id: capsule.id,
+    buildHash,
+    capsule,
+    integrity: sideArtifact(capsule, target).sha256,
+    dependencies: Object.freeze([]),
+    sideModule,
+    bindingIr: alphaBindingIr,
+    bindingIrSha256: projection.bindingIrSha256,
+    privateAbi: alphaPrivateAbi,
+    bindings: projection.bindings,
+  });
+};
 
 export const alpha = createAlphaDescriptor({
   sideModule: new URL(

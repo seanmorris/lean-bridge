@@ -51,9 +51,9 @@ The Alpha fixture declares this copied record:
     { "name": "enabled", "type": { "kind": "primitive", "name": "bool" } },
     { "name": "count", "type": { "kind": "primitive", "name": "uint32" } },
     { "name": "label", "type": { "kind": "primitive", "name": "string" } },
-    { "name": "digest", "type": { "kind": "primitive", "name": "bytes" } },
+    { "name": "bytes", "type": { "kind": "primitive", "name": "bytes" } },
     {
-      "name": "samples",
+      "name": "values",
       "type": {
         "kind": "apply",
         "constructor": "array",
@@ -64,7 +64,7 @@ The Alpha fixture declares this copied record:
 }
 ```
 
-The shortened example omits required documentation and mutability fields. The complete fixture is the executable contract. A JavaScript backend can project `digest` as `Uint8Array` and `samples` as an array or typed array after recording that target choice. A C backend can project fixed-width fields and explicit spans. Both projections originate from the same record definition and must round-trip the same values.
+The shortened example omits required documentation and mutability fields. The complete fixture is the executable contract. A JavaScript backend can project `bytes` as `Uint8Array` and `values` as an array or typed array after recording that target choice. A C backend can project fixed-width fields and explicit spans. Both projections originate from the same record definition and must round-trip the same values.
 
 ## Language-neutral core and producer metadata
 
@@ -111,7 +111,7 @@ All generators MUST validate the IR before emitting files. A generator MUST reje
 These rules follow the JSON Canonicalization Scheme ordering and primitive serialization model. `hashBindingIr` computes SHA-256 over the canonical UTF-8 bytes. The reviewed Alpha fixture has this semantic identity:
 
 ```text
-9aa91298f4e352510d9b1f0f9eb64f2ba225498aa4e0e6a0a2260ec76aefc0f6
+b0df6aa84caa0a87f5d404f8def104d3210c1acbbd194d0fdcaf6eef48f54e65
 ```
 
 Changing object insertion order preserves the hash. Changing documentation, assurance, types, ownership, or any other recorded field changes the hash. Packages and provenance reports can therefore identify the exact reviewed semantic contract consumed by every backend.

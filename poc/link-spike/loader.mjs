@@ -673,55 +673,158 @@ const validateUInt32 = (descriptor, binding, field, value) => {
   return value;
 };
 
+const bindingIrTypeMap = descriptor =>
+  new Map((descriptor.bindingIr?.types ?? []).map(type => [type.id, type]));
+
+const invalidCopiedValue = (descriptor, binding, field, expected) => {
+  throw bridgeError(
+    descriptor,
+    binding,
+    "invalid-argument",
+    `${binding.name}.${field} must be ${expected}`,
+    { field, expected },
+  );
+};
+
+const validateCopiedValue = (
+  descriptor,
+  binding,
+  typeRef,
+  value,
+  field,
+  typeMap,
+) => {
+  if (typeRef.kind === "primitive") {
+    if (typeRef.name === "unit") {
+      if (value !== undefined) invalidCopiedValue(descriptor, binding, field, "undefined");
+    } else if (typeRef.name === "bool") {
+      if (typeof value !== "boolean") invalidCopiedValue(descriptor, binding, field, "boolean");
+    } else if (typeRef.name === "uint32") {
+      validateUInt32(descriptor, binding, field, value);
+    } else if (new Set(["uint8", "uint16"]).has(typeRef.name)) {
+      const maximum = typeRef.name === "uint8" ? 0xff : 0xffff;
+      if (!Number.isInteger(value) || value < 0 || value > maximum) {
+        invalidCopiedValue(descriptor, binding, field, typeRef.name);
+      }
+    } else if (new Set(["int8", "int16", "int32"]).has(typeRef.name)) {
+      const bits = Number(typeRef.name.slice(3));
+      const minimum = -(2 ** (bits - 1));
+      const maximum = 2 ** (bits - 1) - 1;
+      if (!Number.isInteger(value) || value < minimum || value > maximum) {
+        invalidCopiedValue(descriptor, binding, field, typeRef.name);
+      }
+    } else if (new Set(["uint64", "int64", "nat", "int"]).has(typeRef.name)) {
+      if (typeof value !== "bigint" || (typeRef.name === "nat" && value < 0n)) {
+        invalidCopiedValue(descriptor, binding, field, typeRef.name === "nat" ? "non-negative bigint" : "bigint");
+      }
+    } else if (new Set(["float32", "float64"]).has(typeRef.name)) {
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        invalidCopiedValue(descriptor, binding, field, "finite number");
+      }
+    } else if (typeRef.name === "string") {
+      if (typeof value !== "string") invalidCopiedValue(descriptor, binding, field, "string");
+    } else if (typeRef.name === "bytes") {
+      if (!(value instanceof Uint8Array)) {
+        invalidCopiedValue(descriptor, binding, field, "Uint8Array");
+      }
+    } else {
+      invalidCopiedValue(descriptor, binding, field, typeRef.name);
+    }
+    return value;
+  }
+
+  if (typeRef.kind === "named") {
+    const type = typeMap.get(typeRef.id);
+    if (type?.kind !== "record" || type.representation !== "copied") {
+      invalidCopiedValue(descriptor, binding, field, `copied ${typeRef.id}`);
+    }
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      invalidCopiedValue(descriptor, binding, field, type.name);
+    }
+    const expectedFields = new Set(type.fields.map(item => item.name));
+    const unknown = Object.keys(value).filter(name => !expectedFields.has(name));
+    const missing = type.fields.filter(item => !(item.name in value)).map(item => item.name);
+    if (unknown.length > 0 || missing.length > 0) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument",
+        `${binding.name}.${field} does not match record ${type.name}`,
+        { field, expected: type.name, missing, unknown },
+      );
+    }
+    for (const recordField of type.fields) {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        recordField.type,
+        value[recordField.name],
+        field === "value" ? recordField.name : `${field}.${recordField.name}`,
+        typeMap,
+      );
+    }
+    return value;
+  }
+
+  if (typeRef.kind === "apply" && typeRef.constructor === "array") {
+    if (!Array.isArray(value) && !(value instanceof Uint32Array)) {
+      invalidCopiedValue(descriptor, binding, field, "array");
+    }
+    for (let index = 0; index < value.length; index += 1) {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        typeRef.arguments[0],
+        value[index],
+        `${field}[${index}]`,
+        typeMap,
+      );
+    }
+    return value;
+  }
+
+  invalidCopiedValue(descriptor, binding, field, "a supported copied value");
+};
+
+const semanticDeclaration = (descriptor, binding) => {
+  if (!binding.declarationId || !descriptor.bindingIr) return undefined;
+  const declaration = descriptor.bindingIr.declarations.find(
+    item => item.id === binding.declarationId,
+  );
+  if (!declaration) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "missing-binding-contract",
+      `${binding.name} has no matching Binding IR declaration`,
+      { declaration: binding.declarationId },
+    );
+  }
+  return declaration;
+};
+
 const validateValueFrameInput = (descriptor, binding, adapter, value) => {
-  if (typeof value !== "object" || value === null || Array.isArray(value)) {
-    throw bridgeError(
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (declaration) {
+    if (declaration.parameters.length !== 1) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "unsupported-adapter",
+        `${binding.name} value frame requires one semantic parameter`,
+        { actual: declaration.parameters.length },
+      );
+    }
+    validateCopiedValue(
       descriptor,
       binding,
-      "invalid-argument",
-      `${binding.name} expects a record value`,
-      { expected: "record" },
+      declaration.parameters[0].type,
+      value,
+      "value",
+      bindingIrTypeMap(descriptor),
     );
-  }
-  if (typeof value.enabled !== "boolean") {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "invalid-argument",
-      `${binding.name}.enabled must be a boolean`,
-      { field: "enabled", expected: "boolean" },
-    );
-  }
-  validateUInt32(descriptor, binding, "count", value.count);
-  if (typeof value.label !== "string") {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "invalid-argument",
-      `${binding.name}.label must be a string`,
-      { field: "label", expected: "string" },
-    );
-  }
-  if (!(value.bytes instanceof Uint8Array)) {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "invalid-argument",
-      `${binding.name}.bytes must be a Uint8Array`,
-      { field: "bytes", expected: "Uint8Array" },
-    );
-  }
-  if (!Array.isArray(value.values) && !(value.values instanceof Uint32Array)) {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "invalid-argument",
-      `${binding.name}.values must be an array of unsigned 32-bit integers`,
-      { field: "values", expected: "readonly uint32[]" },
-    );
-  }
-  for (const item of value.values) {
-    validateUInt32(descriptor, binding, "values[]", item);
+  } else if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    invalidCopiedValue(descriptor, binding, "value", "record");
   }
 
   const label = textEncoder.encode(value.label);
@@ -919,7 +1022,7 @@ const projectValueFrameFunction = (
         values.push(heapView.getUint32(valuesPointer + index * 4, true));
       }
 
-      return Object.freeze({
+      const result = {
         enabled:
           heapView.getUint32(
             framePointer + valueFrameOffsets.enabled,
@@ -932,7 +1035,19 @@ const projectValueFrameFunction = (
         label,
         bytes,
         values: Object.freeze(values),
-      });
+      };
+      const declaration = semanticDeclaration(descriptor, binding);
+      if (declaration) {
+        validateCopiedValue(
+          descriptor,
+          binding,
+          declaration.result.type,
+          result,
+          "result",
+          bindingIrTypeMap(descriptor),
+        );
+      }
+      return Object.freeze(result);
     } finally {
       for (const pointer of allocations.reverse()) free(pointer);
     }
