@@ -26,6 +26,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generated native call overhead](../evidence/native-call-overhead.md)
 - [Lifecycle and memory stability evidence](../evidence/lifecycle-stability.md)
 - [Performance reproducibility and self-consistency evidence](../evidence/performance-reproducibility.md)
+- [Reproducible performance methodology](../evidence/performance-methodology.md)
 - [Typed copied-value frame evidence](../evidence/typed-value-frame.md)
 - [Generation-safe registry evidence](../evidence/generation-safe-registries.md)
 - [Generated JavaScript backend evidence](../evidence/generated-javascript-backend.md)
