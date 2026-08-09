@@ -4,7 +4,7 @@ Status: the Alpha Binding IR generates a C11 package that compiles and runs thro
 
 ## Generated package
 
-`generateCBindingPackage` validates Binding IR version 2 and emits:
+`generateCBindingPackage` validates Binding IR version 3 and emits:
 
 - `include/lean_alpha.h`, the public C11 API;
 - `src/lean_alpha.c`, the generated ownership and call wrappers;

@@ -4,7 +4,7 @@ Status: implemented contract for the architecture POC.
 
 The binding intermediate representation records one component's public semantics before a generator chooses JavaScript, TypeScript, C, Rust, Python, or another host syntax. Every backend receives the same type, ownership, failure, capability, and assurance data. A backend can adapt those semantics to native language conventions. It cannot redefine them.
 
-The version 2 artifacts are:
+The version 3 artifacts are:
 
 - [`schema/binding-ir.schema.json`](../../schema/binding-ir.schema.json), the closed interchange schema;
 - [`src/binding-ir/contract.mjs`](../../src/binding-ir/contract.mjs), the graph and semantic validator;
@@ -15,16 +15,18 @@ The JavaScript, PHP, Python, C, and Rust generators consume this fixture. The PH
 
 ## What the IR records
 
-| Concern | Version 2 representation | Required backend behavior |
+| Concern | Version 3 representation | Required backend behavior |
 |---|---|---|
 | Primitive values | Unit, booleans, fixed-width integers, arbitrary integers, floats, strings, and bytes | Preserve the semantic type. Do not substitute an untyped JSON protocol. |
 | Constructed values | Arrays, options, results, tuples, named types, and generic parameters | Reject unsupported instantiations before generating a package. |
+| Semantic variants | Named cases with typed copied fields | Emit discriminated unions or tagged classes. Do not expose Lean constructor numbers. |
 | Value identity | Every named type declares `copied` or `identity` representation | Generate native values for copied types and canonical resources or classes for identity types. |
 | Declarations | Functions, constructors, methods, static methods, properties, overload keys, parameters, defaults, and results | Emit direct named callables. Keep symbol dispatch and ABI calls private. |
 | Mutation and effects | Immutable, read, and write access plus allocation, resource access, host calls, failure, async work, and nondeterminism | Preserve observable behavior and reject target profiles that cannot support required effects. |
 | Ownership | Copy, borrow, lease, and transfer | Generate validation, retain and release operations, disposal, and wrapper reuse from the declared transition. |
 | Lifetime | Call, receiver, parameter, explicit, or runtime scope with a checked anchor where required | Prevent a generated borrow from outliving its anchor. |
 | Resource policy | Nominal kind, disposal policy, finalizer fallback, and cycle policy | Use generation-safe tokens and deterministic cleanup. Finalization remains a fallback. |
+| Host object projection | Target set, canonical identity policy, and dynamic access policy | Generate Lean APIs whose members preserve receiver ownership, lifetimes, callbacks, iterators, and asynchronous delivery. Keep handles private. |
 | Callbacks and closures | Identity-bearing callback types with invocation count, re-entry, self-disposal, parameters, result delivery, effects, and failure semantics | Generate stable signature IDs, native callables, handle conversion, fixed Wasm table adapters, nested frame checks, and deterministic cleanup. |
 | Failure | No declared failure or a closed set of declared errors, plus trap or poisoned-runtime handling for unexpected failures | Project the same failures through idiomatic exceptions or result types without dropping cases. |
 | Result delivery | Value, Promise, iterator, or async iterator | Generate the target's native protocol when its capability profile supports it. |
@@ -114,14 +116,14 @@ All generators MUST validate the IR before emitting files. A generator MUST reje
 These rules follow the JSON Canonicalization Scheme ordering and primitive serialization model. `hashBindingIr` computes SHA-256 over the canonical UTF-8 bytes. The reviewed Alpha fixture has this semantic identity:
 
 ```text
-e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4
+154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b
 ```
 
 Changing object insertion order preserves the hash. Changing documentation, assurance, types, ownership, or any other recorded field changes the hash. Packages and provenance reports can therefore identify the exact reviewed semantic contract consumed by every backend.
 
 ## Compatibility rules
 
-`schemaVersion` is a semantic major version. Version 2 consumers accept version 2 artifacts and reject every other version before generation. Unknown core fields also fail validation. Namespaced extension objects can add producer facts without changing the core schema, but a backend cannot depend on an extension to replace required core semantics.
+`schemaVersion` is a semantic major version. Version 3 consumers accept version 3 artifacts and reject every other version before generation. Unknown core fields also fail validation. Namespaced extension objects can add producer facts without changing the core schema, but a backend cannot depend on an extension to replace required core semantics.
 
 The version diagnostic reports one of these outcomes:
 
@@ -132,7 +134,7 @@ The version diagnostic reports one of these outcomes:
 | Newer version | Upgrade the consumer before generation. |
 | Invalid version | Regenerate with a conforming frontend. |
 
-The version 1 to version 2 migration adds a null callable slot to existing record, resource, and alias definitions. Version 2 producers can add callback definitions. Migration returns a new validated artifact with a new content identity. It does not edit the version 1 artifact.
+The version 1 to version 2 migration adds a null callable slot to existing record, resource, and alias definitions. Version 3 adds semantic variant cases, host projection metadata, and an explicit resource owner for constructors, methods, static methods, and properties. The migrator infers owners for constructors and instance members. It rejects a version 2 static method because its owner cannot be inferred safely. Migration returns a new validated artifact with a new content identity. It does not edit the older artifact.
 
 ## CLI contract
 

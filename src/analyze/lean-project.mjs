@@ -375,6 +375,7 @@ const proposedIr = ({ facts, exports, theorems }) => {
     id: `lean:${item.fullName}`,
     name: item.name,
     kind: "function",
+    owner: null,
     overloadKey: `${item.name}(${item.shape.parameters.map(parameter => parameter.leanType).join(",")})`,
     typeParameters: [],
     receiver: null,
@@ -402,7 +403,7 @@ const proposedIr = ({ facts, exports, theorems }) => {
   }));
   const idName = facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project";
   const ir = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     component: { id: `${idName}@${facts.version}`, name: facts.name, version: facts.version },
     producers: [
       {

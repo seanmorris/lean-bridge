@@ -48,6 +48,8 @@ const withCallback = () => {
       failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
       resultMode: "value",
     },
+    cases: [],
+    host: null,
     documentation: {
       summary: "Receive progress from Lean.",
       details: "The callback may re-enter the same shared runtime.",

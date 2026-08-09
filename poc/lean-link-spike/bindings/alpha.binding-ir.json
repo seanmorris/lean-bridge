@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "component": {
     "id": "poc/lean-alpha@0.0.0",
     "name": "Lean Alpha",
@@ -87,6 +87,8 @@
       "target": null,
       "resource": null,
       "callable": null,
+      "cases": [],
+      "host": null,
       "documentation": {
         "summary": "A copied value used to test rich primitive preservation.",
         "details": "The bridge preserves field types across the ABI instead of serializing the record as JSON."
@@ -116,6 +118,8 @@
         "cycles": "explicit-cut"
       },
       "callable": null,
+      "cases": [],
+      "host": null,
       "documentation": {
         "summary": "An identity-bearing Lean object with deterministic disposal.",
         "details": "Generated host wrappers are canonical within one shared runtime."
@@ -167,6 +171,8 @@
         },
         "resultMode": "value"
       },
+      "cases": [],
+      "host": null,
       "documentation": {
         "summary": "A synchronous transform that can cross the boundary in either direction.",
         "details": "Generated bindings preserve function identity and project an exported Lean closure as a normal host callable."
@@ -186,6 +192,7 @@
       "id": "lean:Alpha.box",
       "name": "box",
       "kind": "constructor",
+      "owner": "lean:Alpha.Box",
       "overloadKey": "box(uint32)",
       "typeParameters": [],
       "receiver": null,
@@ -227,6 +234,7 @@
       "id": "lean:Alpha.Box.read",
       "name": "read",
       "kind": "method",
+      "owner": "lean:Alpha.Box",
       "overloadKey": "Box.read()",
       "typeParameters": [],
       "receiver": {
@@ -267,6 +275,7 @@
       "id": "bridge:Alpha.Box.identity",
       "name": "identity",
       "kind": "method",
+      "owner": "lean:Alpha.Box",
       "overloadKey": "Box.identity()",
       "typeParameters": [],
       "receiver": {
@@ -307,6 +316,7 @@
       "id": "lean:Alpha.roundTrip",
       "name": "roundTrip",
       "kind": "function",
+      "owner": null,
       "overloadKey": "roundTrip(Payload)",
       "typeParameters": [],
       "receiver": null,
@@ -348,6 +358,7 @@
       "id": "lean:Alpha.withCallback",
       "name": "withCallback",
       "kind": "function",
+      "owner": null,
       "overloadKey": "withCallback(uint32,Transform)",
       "typeParameters": [],
       "receiver": null,
@@ -402,6 +413,7 @@
       "id": "lean:Alpha.makeAdder",
       "name": "makeAdder",
       "kind": "function",
+      "owner": null,
       "overloadKey": "makeAdder(uint32)",
       "typeParameters": [],
       "receiver": null,

@@ -19,7 +19,7 @@ The shared corpus established:
 
 | Contract | Observation in both transports |
 |---|---|
-| Binding identity | `e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4` |
+| Binding identity | `154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b` |
 | copied record | `Bool`, `UInt32`, `String`, `ByteArray`, and `Array UInt32` returned as typed PHP values |
 | resource read | `41` |
 | canonical identity | `$box->identity() === $box` |

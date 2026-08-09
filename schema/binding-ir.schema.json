@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-wasm.invalid/schema/binding-ir-v2.schema.json",
+  "$id": "https://lean-wasm.invalid/schema/binding-ir-v3.schema.json",
   "title": "Language-neutral binding intermediate representation",
   "type": "object",
   "additionalProperties": false,
@@ -16,7 +16,7 @@
     "documentation"
   ],
   "properties": {
-    "schemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 3 },
     "component": {
       "type": "object",
       "additionalProperties": false,
@@ -217,6 +217,34 @@
         "cycles": { "enum": ["no-back-edges", "explicit-cut"] }
       }
     },
+    "variantCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "fields", "documentation"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "documentation": { "$ref": "#/$defs/documentation" }
+      }
+    },
+    "hostProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targets", "identity", "dynamic"],
+      "properties": {
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["javascript", "python"] }
+        },
+        "identity": { "enum": ["weak-canonical", "strong-canonical"] },
+        "dynamic": { "type": "boolean" }
+      }
+    },
     "typeDefinition": {
       "type": "object",
       "additionalProperties": false,
@@ -231,6 +259,8 @@
         "target",
         "resource",
         "callable",
+        "cases",
+        "host",
         "documentation",
         "source",
         "assurance"
@@ -238,7 +268,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "name": { "$ref": "#/$defs/name" },
-        "kind": { "enum": ["record", "resource", "alias", "callback"] },
+        "kind": { "enum": ["record", "resource", "alias", "callback", "variant"] },
         "representation": { "enum": ["copied", "identity"] },
         "mutability": { "enum": ["immutable", "read", "write"] },
         "typeParameters": {
@@ -257,6 +287,13 @@
         },
         "callable": {
           "oneOf": [{ "$ref": "#/$defs/callable" }, { "type": "null" }]
+        },
+        "cases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/variantCase" }
+        },
+        "host": {
+          "oneOf": [{ "$ref": "#/$defs/hostProjection" }, { "type": "null" }]
         },
         "documentation": { "$ref": "#/$defs/documentation" },
         "source": { "$ref": "#/$defs/source" },
@@ -374,6 +411,7 @@
         "id",
         "name",
         "kind",
+        "owner",
         "overloadKey",
         "typeParameters",
         "receiver",
@@ -393,6 +431,9 @@
         "name": { "$ref": "#/$defs/name" },
         "kind": {
           "enum": ["function", "constructor", "method", "static-method", "property"]
+        },
+        "owner": {
+          "oneOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }]
         },
         "overloadKey": { "$ref": "#/$defs/nonemptyString" },
         "typeParameters": {

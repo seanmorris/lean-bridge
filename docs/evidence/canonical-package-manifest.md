@@ -40,7 +40,7 @@ The validator rejects:
 - source, lock, Binding IR, closure, SBOM, assurance, or provenance identity drift; and
 - self-dependencies or repeated registry names.
 
-The Alpha fixture hash is `aa39b00b770b98193a0facf31ad56718a6e5bd2761aab3c9873d5925407351ee`. Canonical serialization sorts object keys, so insertion order cannot change that identity. Array order remains meaningful for entry points, dependency resolution, and package projections.
+The Alpha fixture hash is `4b63e4b7ffe618093df36a46a71ebb885ee17c500cb380fa3bf72e9caaa737ea`. Canonical serialization sorts object keys, so insertion order cannot change that identity. Array order remains meaningful for entry points, dependency resolution, and package projections.
 
 ## Current fixture
 

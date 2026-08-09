@@ -276,6 +276,79 @@ test("Promise declarations generate an ordinary async function", async () => {
   );
 });
 
+test("variants and static methods project as native TypeScript surfaces", () => {
+  const ir = clone(alpha.bindingIr);
+  ir.types.push({
+    id: "bridge:Alpha.Lookup",
+    name: "Lookup",
+    kind: "variant",
+    representation: "copied",
+    mutability: "immutable",
+    typeParameters: [],
+    fields: [],
+    target: null,
+    resource: null,
+    callable: null,
+    cases: [
+      {
+        name: "Found",
+        fields: [{
+          name: "value",
+          type: { kind: "primitive", name: "uint32" },
+          mutability: "immutable",
+          documentation: { summary: "The value.", details: "" },
+        }],
+        documentation: { summary: "A hit.", details: "" },
+      },
+      {
+        name: "Missing",
+        fields: [],
+        documentation: { summary: "A miss.", details: "" },
+      },
+    ],
+    host: null,
+    documentation: { summary: "A lookup result.", details: "" },
+    source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} },
+    assurance: [],
+  });
+  const method = clone(ir.declarations.find(item => item.name === "roundTrip"));
+  method.id = "bridge:Alpha.Box.lookup";
+  method.name = "lookup";
+  method.kind = "static-method";
+  method.owner = "lean:Alpha.Box";
+  method.overloadKey = "Box.lookup(Payload)";
+  method.result.type = { kind: "named", id: "bridge:Alpha.Lookup" };
+  method.source.declaration = "Alpha.Box.lookup";
+  ir.declarations.push(method);
+
+  const files = generateJavaScriptPackage(ir);
+  assert.match(
+    files["index.d.ts"],
+    /export type Lookup = Readonly<\{ readonly kind: "Found"; readonly value: number \}> \| Readonly<\{ readonly kind: "Missing" \}>/,
+  );
+  assert.match(files["index.d.ts"], /static lookup\(payload: Payload\): Lookup/);
+  assert.match(files["index.mjs"], /static lookup\(payload\)/);
+  assert.match(files["internal/validators.mjs"], /switch \(value\.kind\)/);
+  assert.doesNotMatch(files["index.d.ts"], /tag: number|handle|pointer/i);
+});
+
+test("resource members retain Promise and iterator protocols", () => {
+  const promise = clone(alpha.bindingIr);
+  let method = promise.declarations.find(item => item.name === "read");
+  method.resultMode = "promise";
+  method.effects.push("async");
+  let files = generateJavaScriptPackage(promise);
+  assert.match(files["index.mjs"], /async read\(\)/);
+  assert.match(files["index.mjs"], /await runtime\.method/);
+  assert.match(files["index.d.ts"], /read\(\): Promise<number>/);
+
+  const iterator = clone(alpha.bindingIr);
+  method = iterator.declarations.find(item => item.name === "read");
+  method.resultMode = "iterator";
+  files = generateJavaScriptPackage(iterator);
+  assert.match(files["index.d.ts"], /read\(\): Iterable<number>/);
+});
+
 test("generated validators reject malformed copied values before dispatch", async () => {
   const files = generateJavaScriptPackage(alpha.bindingIr);
   await withGeneratedPackage(

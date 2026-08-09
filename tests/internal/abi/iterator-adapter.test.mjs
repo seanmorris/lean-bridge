@@ -25,6 +25,7 @@ const iteratorFixture = () => {
     id: "bridge:Alpha.range",
     name: "range",
     kind: "function",
+    owner: null,
     overloadKey: "range(uint32)",
     typeParameters: [],
     receiver: null,

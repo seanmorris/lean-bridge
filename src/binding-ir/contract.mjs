@@ -36,7 +36,7 @@ const EFFECTS = new Set([
 ]);
 const RESULT_MODES = new Set(["value", "promise", "iterator", "async-iterator"]);
 const CALLBACK_RESULT_MODES = new Set(["value", "promise"]);
-const SCHEMA_VERSIONS = new Set([1, 2]);
+const SCHEMA_VERSIONS = new Set([1, 2, 3]);
 
 export class BindingIrContractError extends Error {
   constructor(code, message, details = {}) {
@@ -135,6 +135,8 @@ const unique = (items, key, path) => {
     seen.add(value);
   }
 };
+
+const namedTypeId = typeRef => (typeRef?.kind === "named" ? typeRef.id : null);
 
 const validateDocumentation = (value, path) => {
   exactKeys(value, ["summary", "details"], [], path);
@@ -339,6 +341,43 @@ const validateCallableShape = (value, path, typeParameters, knownErrors) => {
   }
 };
 
+const validateFieldShape = (field, path, typeParameters) => {
+  exactKeys(field, ["name", "type", "mutability", "documentation"], [], path);
+  string(field.name, `${path}.name`, NAME);
+  validateTypeRef(field.type, `${path}.type`, typeParameters);
+  enumeration(field.mutability, MUTABILITY, `${path}.mutability`);
+  validateDocumentation(field.documentation, `${path}.documentation`);
+};
+
+const validateVariantCases = (value, path, typeParameters) => {
+  array(value, path, { nonempty: true }).forEach((variantCase, index) => {
+    const casePath = `${path}[${index}]`;
+    exactKeys(variantCase, ["name", "fields", "documentation"], [], casePath);
+    string(variantCase.name, `${casePath}.name`, NAME);
+    array(variantCase.fields, `${casePath}.fields`).forEach((field, fieldIndex) =>
+      validateFieldShape(field, `${casePath}.fields[${fieldIndex}]`, typeParameters),
+    );
+    unique(variantCase.fields, field => field.name, `${casePath}.fields`);
+    validateDocumentation(variantCase.documentation, `${casePath}.documentation`);
+  });
+  unique(value, variantCase => variantCase.name, path);
+};
+
+const validateHostProjection = (value, path) => {
+  if (value === null) return;
+  exactKeys(value, ["targets", "identity", "dynamic"], [], path);
+  array(value.targets, `${path}.targets`, { nonempty: true }).forEach((target, index) =>
+    enumeration(target, new Set(["javascript", "python"]), `${path}.targets[${index}]`),
+  );
+  unique(value.targets, target => target, `${path}.targets`);
+  enumeration(
+    value.identity,
+    new Set(["weak-canonical", "strong-canonical"]),
+    `${path}.identity`,
+  );
+  boolean(value.dynamic, `${path}.dynamic`);
+};
+
 const assertKnownTypeRef = (typeRef, path, typeMap) => {
   if (typeRef.kind === "named" && !typeMap.has(typeRef.id)) {
     fail("unknown-type", `${path} references unknown type ${typeRef.id}`, {
@@ -415,7 +454,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
     path,
   );
   if (!SCHEMA_VERSIONS.has(ir.schemaVersion)) {
-    fail("unsupported-schema", `${path}.schemaVersion must be 1 or 2`, {
+    fail("unsupported-schema", `${path}.schemaVersion must be 1, 2, or 3`, {
       path: `${path}.schemaVersion`,
       expected: [...SCHEMA_VERSIONS],
       actual: ir.schemaVersion,
@@ -483,7 +522,8 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         "source",
         "assurance",
       ];
-    if (ir.schemaVersion === 2) typeKeys.splice(9, 0, "callable");
+    if (ir.schemaVersion >= 2) typeKeys.splice(9, 0, "callable");
+    if (ir.schemaVersion >= 3) typeKeys.splice(10, 0, "cases", "host");
     exactKeys(
       type,
       typeKeys,
@@ -496,7 +536,9 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       type.kind,
       ir.schemaVersion === 1
         ? new Set(["record", "resource", "alias"])
-        : new Set(["record", "resource", "alias", "callback"]),
+        : ir.schemaVersion === 2
+          ? new Set(["record", "resource", "alias", "callback"])
+          : new Set(["record", "resource", "alias", "callback", "variant"]),
       `${typePath}.kind`,
     );
     enumeration(
@@ -529,19 +571,15 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         type.representation !== "copied" ||
         type.resource !== null ||
         type.target !== null ||
-        (ir.schemaVersion === 2 && type.callable !== null)
+        (ir.schemaVersion >= 2 && type.callable !== null) ||
+        (ir.schemaVersion >= 3 && (type.cases.length !== 0 || type.host !== null))
       ) {
         fail("record-shape", `${typePath} record must be copied and have no resource or alias target`, {
           path: typePath,
         });
       }
       array(type.fields, `${typePath}.fields`).forEach((field, fieldIndex) => {
-        const fieldPath = `${typePath}.fields[${fieldIndex}]`;
-        exactKeys(field, ["name", "type", "mutability", "documentation"], [], fieldPath);
-        string(field.name, `${fieldPath}.name`, NAME);
-        validateTypeRef(field.type, `${fieldPath}.type`, parameterIds);
-        enumeration(field.mutability, MUTABILITY, `${fieldPath}.mutability`);
-        validateDocumentation(field.documentation, `${fieldPath}.documentation`);
+        validateFieldShape(field, `${typePath}.fields[${fieldIndex}]`, parameterIds);
       });
       unique(type.fields, field => field.name, `${typePath}.fields`);
     } else if (type.kind === "resource") {
@@ -549,7 +587,8 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         type.representation !== "identity" ||
         type.fields.length !== 0 ||
         type.target !== null ||
-        (ir.schemaVersion === 2 && type.callable !== null)
+        (ir.schemaVersion >= 2 && type.callable !== null) ||
+        (ir.schemaVersion >= 3 && type.cases.length !== 0)
       ) {
         fail("resource-shape", `${typePath} resource must be identity-bearing without fields or alias target`, {
           path: typePath,
@@ -577,17 +616,19 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         new Set(["no-back-edges", "explicit-cut"]),
         `${typePath}.resource.cycles`,
       );
+      if (ir.schemaVersion >= 3) validateHostProjection(type.host, `${typePath}.host`);
     } else if (type.kind === "alias") {
       if (
         type.fields.length !== 0 ||
         type.resource !== null ||
         type.target === null ||
-        (ir.schemaVersion === 2 && type.callable !== null)
+        (ir.schemaVersion >= 2 && type.callable !== null) ||
+        (ir.schemaVersion >= 3 && (type.cases.length !== 0 || type.host !== null))
       ) {
         fail("alias-shape", `${typePath} alias requires only a target`, { path: typePath });
       }
       validateTypeRef(type.target, `${typePath}.target`, parameterIds);
-    } else {
+    } else if (type.kind === "callback") {
       if (
         type.representation !== "identity" ||
         type.mutability !== "immutable" ||
@@ -608,6 +649,28 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         parameterIds,
         declaredErrors,
       );
+      if (ir.schemaVersion >= 3 && (type.cases.length !== 0 || type.host !== null)) {
+        fail("callback-shape", `${typePath} callback cannot carry variant or host metadata`, {
+          path: typePath,
+        });
+      }
+    } else {
+      if (
+        type.representation !== "copied" ||
+        type.mutability !== "immutable" ||
+        type.fields.length !== 0 ||
+        type.target !== null ||
+        type.resource !== null ||
+        type.callable !== null ||
+        type.host !== null
+      ) {
+        fail(
+          "variant-shape",
+          `${typePath} variant must be an immutable copied value with named cases`,
+          { path: typePath },
+        );
+      }
+      validateVariantCases(type.cases, `${typePath}.cases`, parameterIds);
     }
     validateDocumentation(type.documentation, `${typePath}.documentation`);
     validateSource(type.source, `${typePath}.source`, producers);
@@ -618,9 +681,16 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
     const typeParameters = new Map(
       type.typeParameters.map(parameter => [parameter.id, parameter]),
     );
-    if (type.kind === "record") {
-      type.fields.forEach((field, index) => {
-        const fieldPath = `${type.id}.fields[${index}].type`;
+    if (type.kind === "record" || type.kind === "variant") {
+      const fields = type.kind === "record"
+        ? type.fields.map((field, index) => [field, `${type.id}.fields[${index}].type`])
+        : type.cases.flatMap((variantCase, caseIndex) =>
+            variantCase.fields.map((field, fieldIndex) => [
+              field,
+              `${type.id}.cases[${caseIndex}].fields[${fieldIndex}].type`,
+            ]),
+          );
+      fields.forEach(([field, fieldPath]) => {
         assertKnownTypeRef(field.type, fieldPath, typeMap);
         const representation = representationOf(field.type, typeMap, typeParameters);
         if (representation !== "copied") {
@@ -787,6 +857,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         "id",
         "name",
         "kind",
+        ...(ir.schemaVersion >= 3 ? ["owner"] : []),
         "overloadKey",
         "typeParameters",
         "receiver",
@@ -811,6 +882,16 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       new Set(["function", "constructor", "method", "static-method", "property"]),
       `${declarationPath}.kind`,
     );
+    if (ir.schemaVersion >= 3) {
+      if (declaration.owner !== null) string(declaration.owner, `${declarationPath}.owner`, ID);
+      const owner = declaration.owner === null ? null : typeMap.get(declaration.owner);
+      if (declaration.owner !== null && owner?.kind !== "resource") {
+        fail("invalid-owner", `${declarationPath}.owner must name a resource`, {
+          path: `${declarationPath}.owner`,
+          owner: declaration.owner,
+        });
+      }
+    }
     string(declaration.overloadKey, `${declarationPath}.overloadKey`);
     array(declaration.typeParameters, `${declarationPath}.typeParameters`);
     unique(
@@ -867,6 +948,33 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       fail("missing-receiver", `${declarationPath} ${declaration.kind} requires a receiver`, {
         path: declarationPath,
       });
+    }
+    if (ir.schemaVersion >= 3) {
+      const inferredOwner = declaration.kind === "constructor"
+        ? namedTypeId(declaration.result.type)
+        : new Set(["method", "property"]).has(declaration.kind)
+          ? namedTypeId(declaration.receiver?.type)
+          : null;
+      if (declaration.kind === "function" && declaration.owner !== null) {
+        fail("unexpected-owner", `${declarationPath} function cannot have an owner`, {
+          path: `${declarationPath}.owner`,
+        });
+      }
+      if (declaration.kind === "static-method" && declaration.owner === null) {
+        fail("missing-owner", `${declarationPath} static method requires an owner`, {
+          path: `${declarationPath}.owner`,
+        });
+      }
+      if (
+        new Set(["constructor", "method", "property"]).has(declaration.kind) &&
+        declaration.owner !== inferredOwner
+      ) {
+        fail("owner-mismatch", `${declarationPath}.owner does not match its resource type`, {
+          path: `${declarationPath}.owner`,
+          expected: inferredOwner,
+          actual: declaration.owner,
+        });
+      }
     }
     if (
       new Set(["function", "constructor", "static-method"]).has(declaration.kind) &&
@@ -986,10 +1094,10 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 };
 
 export const validateBindingIr = (ir, path = "bindingIr") => {
-  if (ir?.schemaVersion !== 2) {
-    fail("unsupported-schema", `${path}.schemaVersion must be 2`, {
+  if (ir?.schemaVersion !== 3) {
+    fail("unsupported-schema", `${path}.schemaVersion must be 3`, {
       path: `${path}.schemaVersion`,
-      expected: 2,
+      expected: 3,
       actual: ir?.schemaVersion,
     });
   }

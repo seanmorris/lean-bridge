@@ -1,6 +1,6 @@
 # Callback Signature Plan Evidence
 
-Status: Binding IR version 2, callback signature generation, JavaScript callback execution, exported Lean closure projection, and nested same-agent re-entry pass in browser, threaded, dynamic, and final-static profiles.
+Status: Binding IR version 3, callback signature generation, JavaScript callback execution, exported Lean closure projection, and nested same-agent re-entry pass in browser, threaded, dynamic, and final-static profiles.
 
 ## Binding contract
 

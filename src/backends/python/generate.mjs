@@ -91,6 +91,10 @@ const variants = declaration => {
 };
 
 const resourceFor = (ir, declaration) => {
+  if (declaration.owner) {
+    const owner = namedType(ir, declaration.owner);
+    if (owner?.kind === "resource") return owner;
+  }
   const ref = declaration.receiver?.type ?? declaration.result.type;
   if (ref.kind !== "named") return null;
   const type = namedType(ir, ref.id);
@@ -136,11 +140,6 @@ const validateCoverage = ir => {
   for (const declaration of ir.declarations) {
     if (declaration.parameters.some(parameter => parameter.optional)) {
       fail("unsupported-optional-parameter", `${declaration.id} has an optional parameter`, {
-        declaration: declaration.id,
-      });
-    }
-    if (declaration.kind === "static-method") {
-      fail("unsupported-static-method", `${declaration.id} has no declaring resource in Binding IR v2`, {
         declaration: declaration.id,
       });
     }
@@ -210,6 +209,9 @@ const collectRefs = ir => {
   };
   for (const type of ir.types) {
     if (type.kind === "record") type.fields.forEach(field => add(field.type));
+    if (type.kind === "variant") {
+      type.cases.forEach(variantCase => variantCase.fields.forEach(field => add(field.type)));
+    }
     if (type.kind === "alias") add(type.target);
     if (type.kind === "callback") {
       type.callable.parameters.forEach(site => add(site.type));
@@ -322,6 +324,43 @@ const emitRecord = (ir, type) => {
   return lines;
 };
 
+const variantClassName = (type, variantCase) => `${type.name}${variantCase.name}`;
+
+const emitVariant = (ir, type) => {
+  const lines = [];
+  for (const variantCase of type.cases) {
+    lines.push(
+      "@dataclass(frozen=True, slots=True)",
+      `class ${variantClassName(type, variantCase)}:`,
+      `    ${docstring(variantCase.documentation)}`,
+      `    kind: ClassVar[Literal[${JSON.stringify(variantCase.name)}]] = ${JSON.stringify(variantCase.name)}`,
+    );
+    for (const field of variantCase.fields) {
+      lines.push(`    ${snake(field.name)}: ${pythonType(ir, field.type)}`);
+    }
+    if (variantCase.fields.length === 0) lines.push("    pass");
+    lines.push("", "    def __post_init__(self) -> None:");
+    for (const field of variantCase.fields) {
+      const ref = resolveAlias(ir, field.type);
+      const name = snake(field.name);
+      if (ref.kind === "primitive" && ref.name === "bytes") {
+        lines.push(`        object.__setattr__(self, ${JSON.stringify(name)}, bytes(self.${name}))`);
+      }
+      if (ref.kind === "apply" && ref.constructor === "array") {
+        lines.push(`        object.__setattr__(self, ${JSON.stringify(name)}, tuple(self.${name}))`);
+      }
+      lines.push(`        ${validatorName(ref)}(self.${name}, ${JSON.stringify(`${type.name}.${variantCase.name}.${name}`)})`);
+    }
+    if (variantCase.fields.length === 0) lines.push("        pass");
+    lines.push("");
+  }
+  lines.push(
+    `${type.name} = ${type.cases.map(variantCase => variantClassName(type, variantCase)).join(" | ")}`,
+    "",
+  );
+  return lines;
+};
+
 const callResultLines = (ir, declaration, expression, indent = "        ") => {
   const resultRef = resolveAlias(ir, declaration.result.type);
   const resultNamed = resultRef.kind === "named" ? namedType(ir, resultRef.id) : null;
@@ -390,6 +429,18 @@ const emitResource = (ir, type) => {
     declaration.parameters.forEach(site => lines.push(`        ${validatorName(resolveAlias(ir, site.type))}(${snake(site.name)}, ${JSON.stringify(`${declaration.name}.${site.name}`)})`));
     const args = ["self._identity", ...declaration.parameters.map(site => snake(site.name))];
     lines.push(...callResultLines(ir, declaration, `self._runtime.${runtimeName(ir, declaration)}(${args.join(", ")})`));
+    lines.push("");
+  }
+  for (const declaration of declarations.filter(item => item.kind === "static-method")) {
+    const params = declaration.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`);
+    const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
+    lines.push(
+      "    @staticmethod",
+      `    ${asyncPrefix}def ${snake(declaration.name)}(${params.join(", ")}) -> ${deliveredType(ir, declaration)}:`,
+      "        runtime = _runtime.get_runtime()",
+    );
+    declaration.parameters.forEach(site => lines.push(`        ${validatorName(resolveAlias(ir, site.type))}(${snake(site.name)}, ${JSON.stringify(`${declaration.name}.${site.name}`)})`));
+    lines.push(...callResultLines(ir, declaration, `runtime.${runtimeName(ir, declaration)}(${declaration.parameters.map(site => snake(site.name)).join(", ")})`));
     lines.push("");
   }
   for (const [name, group] of properties) {
@@ -531,12 +582,15 @@ const emitFunction = (ir, declaration) => {
 
 const emitPublic = ir => {
   const errorBase = `${namedTypeBase(ir)}Error`;
-  const exports = [errorBase, "RuntimeUnavailableError", "UnexpectedError", ...ir.errors.map(error => `${error.name}Error`), "Ok", "Err", ...ir.types.map(type => type.name), ...ir.declarations.filter(item => item.kind === "function").map(item => snake(item.name))];
+  const variantClasses = ir.types
+    .filter(type => type.kind === "variant")
+    .flatMap(type => type.cases.map(variantCase => variantClassName(type, variantCase)));
+  const exports = [errorBase, "RuntimeUnavailableError", "UnexpectedError", ...ir.errors.map(error => `${error.name}Error`), "Ok", "Err", ...ir.types.map(type => type.name), ...variantClasses, ...ir.declarations.filter(item => item.kind === "function").map(item => snake(item.name))];
   const lines = [
     "from __future__ import annotations",
     "",
     "from dataclasses import dataclass",
-    "from typing import AsyncIterator, Awaitable, Callable, Generic, Iterator, TypeVar",
+    "from typing import AsyncIterator, Awaitable, Callable, ClassVar, Generic, Iterator, Literal, TypeVar",
     "",
     `__all__ = (`,
     ...exports.map(name => `    ${JSON.stringify(name)},`),
@@ -577,6 +631,7 @@ const emitPublic = ir => {
   );
   lines.push(...emitValidators(ir));
   for (const type of ir.types.filter(item => item.kind === "record")) lines.push(...emitRecord(ir, type));
+  for (const type of ir.types.filter(item => item.kind === "variant")) lines.push(...emitVariant(ir, type));
   for (const type of ir.types.filter(item => item.kind === "alias")) {
     lines.push(`${type.name} = ${pythonType(ir, type.target)}`, "");
   }
@@ -610,7 +665,7 @@ const runtimeParameters = (ir, declaration) => declaration.parameters.map(site =
 });
 
 const emitRuntime = ir => {
-  const typeNames = ir.types.filter(type => new Set(["record", "alias"]).has(type.kind)).map(type => type.name);
+  const typeNames = ir.types.filter(type => new Set(["record", "alias", "variant"]).has(type.kind)).map(type => type.name);
   const lines = [
     "from __future__ import annotations",
     "",
@@ -681,7 +736,7 @@ const emitStub = ir => {
   const lines = [
     "from collections.abc import AsyncIterator, Awaitable, Callable, Iterator",
     "from dataclasses import dataclass",
-    "from typing import Generic, TypeVar, overload",
+    "from typing import ClassVar, Generic, Literal, TypeVar, overload",
     "",
     `class ${errorBase}(Exception): code: str`,
     `class RuntimeUnavailableError(${errorBase}): ...`,
@@ -701,6 +756,16 @@ const emitStub = ir => {
     type.fields.forEach(field => lines.push(`    ${snake(field.name)}: ${pythonType(ir, field.type)}`));
     lines.push("");
   }
+  for (const type of ir.types.filter(type => type.kind === "variant")) {
+    for (const variantCase of type.cases) {
+      lines.push("@dataclass(frozen=True)", `class ${variantClassName(type, variantCase)}:`);
+      lines.push(`    kind: ClassVar[Literal[${JSON.stringify(variantCase.name)}]]`);
+      variantCase.fields.forEach(field => lines.push(`    ${snake(field.name)}: ${pythonType(ir, field.type)}`));
+      if (variantCase.fields.length === 0) lines.push("    ...");
+      lines.push("");
+    }
+    lines.push(`${type.name} = ${type.cases.map(variantCase => variantClassName(type, variantCase)).join(" | ")}`, "");
+  }
   for (const type of ir.types.filter(type => type.kind === "resource")) {
     const declarations = ir.declarations.filter(item => resourceFor(ir, item)?.id === type.id);
     lines.push(`class ${type.name}:`);
@@ -710,6 +775,10 @@ const emitStub = ir => {
     for (const method of declarations.filter(item => item.kind === "method")) {
       const asyncPrefix = method.resultMode === "promise" ? "async " : "";
       lines.push(`    ${asyncPrefix}def ${snake(method.name)}(self${method.parameters.length ? ", " : ""}${method.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
+    }
+    for (const method of declarations.filter(item => item.kind === "static-method")) {
+      const asyncPrefix = method.resultMode === "promise" ? "async " : "";
+      lines.push("    @staticmethod", `    ${asyncPrefix}def ${snake(method.name)}(${method.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
     }
     const properties = new Map();
     for (const property of declarations.filter(item => item.kind === "property")) {

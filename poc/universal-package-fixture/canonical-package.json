@@ -13,7 +13,7 @@
     },
     "graph": {
       "path": "poc/lean-link-spike/graph-lock.json",
-      "sha256": "3d7f115b3b400442844b0ab7f53b44a0b382fe0f14dd727a2a89e8f8b7251d2e",
+      "sha256": "7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789",
       "id": "poc/lean-link-spike@1",
       "profile": "side-lazy"
     }
@@ -25,10 +25,10 @@
     "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169"
   },
   "bindingIr": {
-    "schemaVersion": 2,
+    "schemaVersion": 3,
     "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
-    "fileSha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
-    "semanticSha256": "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4"
+    "fileSha256": "c4eb8f6c2ae538f58dd634914e6b9b0f527bad9a84d79276e91d39adc74877cb",
+    "semanticSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b"
   },
   "runtime": {
     "abiVersion": 1,
@@ -90,7 +90,7 @@
       "role": "lock",
       "target": null,
       "bytes": 2643,
-      "sha256": "3d7f115b3b400442844b0ab7f53b44a0b382fe0f14dd727a2a89e8f8b7251d2e",
+      "sha256": "7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789",
       "core": false,
       "executable": false
     },
@@ -100,8 +100,8 @@
       "mediaType": "application/vnd.lean-bridge.binding-ir+json",
       "role": "binding",
       "target": null,
-      "bytes": 18584,
-      "sha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
+      "bytes": 18863,
+      "sha256": "c4eb8f6c2ae538f58dd634914e6b9b0f527bad9a84d79276e91d39adc74877cb",
       "core": false,
       "executable": false
     },

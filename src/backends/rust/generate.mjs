@@ -204,7 +204,7 @@ const validateCoverage = ir => {
       });
     }
     if (declaration.kind === "static-method") {
-      fail("unsupported-static-method", `${declaration.id} has no declaring resource in Binding IR v2`, {
+      fail("unsupported-static-method", `${declaration.id} is not implemented by the Rust backend`, {
         declaration: declaration.id,
       });
     }

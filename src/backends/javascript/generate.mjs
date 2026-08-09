@@ -106,6 +106,18 @@ const emitTypeDeclarations = (ir, typeMap) => {
         `export type ${type.name} = (${parameters}) => ${delivered};`,
         "",
       );
+    } else if (type.kind === "variant") {
+      output.push(docComment(type.documentation));
+      const parameters = type.typeParameters.length
+        ? `<${type.typeParameters.map(parameter => parameter.id).join(", ")}>`
+        : "";
+      const cases = type.cases.map(variantCase => {
+        const fields = variantCase.fields.map(field =>
+          `readonly ${field.name}: ${typeScriptType(field.type, typeMap)}`,
+        );
+        return `Readonly<{ readonly kind: ${quote(variantCase.name)}${fields.length ? `; ${fields.join("; ")}` : ""} }>`;
+      });
+      output.push(`export type ${type.name}${parameters} = ${cases.join(" | ")};`, "");
     }
   }
   return output;
@@ -123,6 +135,9 @@ const declarationsForResource = (ir, typeId) => ({
   properties: ir.declarations.filter(
     declaration =>
       declaration.kind === "property" && namedTypeId(declaration.receiver?.type) === typeId,
+  ),
+  staticMethods: ir.declarations.filter(
+    declaration => declaration.kind === "static-method" && declaration.owner === typeId,
   ),
 });
 
@@ -189,8 +204,9 @@ const ensureUniqueSurface = ir => {
     addExport(type.name, type.id);
     const members = ir.declarations.filter(
       declaration =>
-        new Set(["method", "property"]).has(declaration.kind) &&
-        namedTypeId(declaration.receiver?.type) === type.id,
+        (new Set(["method", "property"]).has(declaration.kind) &&
+          namedTypeId(declaration.receiver?.type) === type.id) ||
+        (declaration.kind === "static-method" && declaration.owner === type.id),
     );
     const methodNames = new Map([["dispose", "generated lifecycle method"]]);
     for (const member of members) {
@@ -266,7 +282,7 @@ const emitDeclarations = (ir, typeMap) => {
   }
 
   for (const type of ir.types.filter(item => item.kind === "resource")) {
-    const { constructors, methods, properties } = declarationsForResource(ir, type.id);
+    const { constructors, methods, properties, staticMethods } = declarationsForResource(ir, type.id);
     if (constructors.length !== 1) {
       fail("resource-constructor-count", `${type.id} requires exactly one constructor`, {
         resource: type.id,
@@ -277,9 +293,11 @@ const emitDeclarations = (ir, typeMap) => {
     ensureSupportedGenerics(constructor);
     methods.forEach(ensureSupportedGenerics);
     properties.forEach(ensureSupportedGenerics);
+    staticMethods.forEach(ensureSupportedGenerics);
     consumed.add(constructor.id);
     methods.forEach(method => consumed.add(method.id));
     properties.forEach(property => consumed.add(property.id));
+    staticMethods.forEach(method => consumed.add(method.id));
     output.push(docComment(type.documentation));
     output.push(`export class ${type.name} {`);
     output.push(`  constructor(${constructor.parameters.map(parameter => parameter.name).join(", ")}) {`);
@@ -293,17 +311,43 @@ const emitDeclarations = (ir, typeMap) => {
       "  }",
       "",
     );
-    for (const method of methods) {
-      output.push(`  ${method.name}(${method.parameters.map(parameter => parameter.name).join(", ")}) {`);
+    for (const method of staticMethods) {
+      const asyncPrefix = method.resultMode === "promise" ? "async " : "";
+      output.push(`  static ${asyncPrefix}${method.name}(${method.parameters.map(parameter => parameter.name).join(", ")}) {`);
       method.parameters.forEach(parameter => {
         output.push(
           `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${method.name}.${parameter.name}`)});`,
         );
       });
+      const operation = new Set(["iterator", "async-iterator"]).has(method.resultMode)
+        ? method.resultMode === "iterator" ? "iterate" : "iterateAsync"
+        : "call";
+      const awaitPrefix = method.resultMode === "promise" ? "await " : "";
       output.push(
-        `    const result = runtime.method(${quote(method.id)}, this, [${method.parameters.map(parameter => parameter.name).join(", ")}]);`,
+        `    const result = ${awaitPrefix}runtime.${operation}(${quote(method.id)}, [${method.parameters.map(parameter => parameter.name).join(", ")}]);`,
       );
-      if (method.result.type.kind === "named" && typeMap.get(method.result.type.id)?.kind === "resource") {
+      if (new Set(["value", "promise"]).has(method.resultMode)) {
+        output.push(
+          `    validate.${validatorName(method.result.type, typeMap)}(result, ${quote(`${method.name}.result`)});`,
+        );
+      }
+      output.push("    return result;", "  }", "");
+    }
+    for (const method of methods) {
+      const asyncPrefix = method.resultMode === "promise" ? "async " : "";
+      output.push(`  ${asyncPrefix}${method.name}(${method.parameters.map(parameter => parameter.name).join(", ")}) {`);
+      method.parameters.forEach(parameter => {
+        output.push(
+          `    validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${method.name}.${parameter.name}`)});`,
+        );
+      });
+      const awaitPrefix = method.resultMode === "promise" ? "await " : "";
+      output.push(
+        `    const result = ${awaitPrefix}runtime.method(${quote(method.id)}, this, [${method.parameters.map(parameter => parameter.name).join(", ")}]);`,
+      );
+      if (new Set(["iterator", "async-iterator"]).has(method.resultMode)) {
+        output.push("    return result;");
+      } else if (method.result.type.kind === "named" && typeMap.get(method.result.type.id)?.kind === "resource") {
         output.push("    return result;");
       } else {
         output.push(
@@ -537,6 +581,9 @@ const emitValidators = (ir, typeMap) => {
   };
   for (const type of ir.types) {
     if (type.kind === "record") type.fields.forEach(field => emitArray(field.type));
+    if (type.kind === "variant") {
+      type.cases.forEach(variantCase => variantCase.fields.forEach(field => emitArray(field.type)));
+    }
     if (type.kind === "alias") emitArray(type.target);
   }
   for (const declaration of ir.declarations) {
@@ -558,6 +605,35 @@ const emitValidators = (ir, typeMap) => {
       );
     }
     lines.push("  return value;", "};", "");
+  }
+  for (const type of ir.types.filter(item => item.kind === "variant")) {
+    lines.push(`export const assert${type.name} = (value, path) => {`);
+    lines.push(
+      "  if (value === null || typeof value !== \"object\" || Array.isArray(value)) invalid(path, \"variant\");",
+      "  switch (value.kind) {",
+    );
+    for (const variantCase of type.cases) {
+      const names = ["kind", ...variantCase.fields.map(field => field.name)];
+      lines.push(
+        `    case ${quote(variantCase.name)}: {`,
+        `      const expected = new Set(${JSON.stringify(names)});`,
+        "      const unknown = Object.keys(value).filter(key => !expected.has(key));",
+        "      const missing = [...expected].filter(key => !(key in value));",
+        `      if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}.${variantCase.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
+      );
+      for (const field of variantCase.fields) {
+        lines.push(
+          `      ${validatorName(field.type, typeMap)}(value.${field.name}, \`\${path}.${field.name}\`);`,
+        );
+      }
+      lines.push("      return value;", "    }");
+    }
+    lines.push(
+      `    default: invalid(\`\${path}.kind\`, ${quote(type.cases.map(item => item.name).join(" or "))});`,
+      "  }",
+      "};",
+      "",
+    );
   }
   for (const type of ir.types.filter(item => item.kind === "alias")) {
     lines.push(
@@ -616,11 +692,17 @@ const emitTypeScript = (ir, typeMap) => {
     exports.push(error.name);
   }
   for (const type of ir.types.filter(item => item.kind === "resource")) {
-    const { constructors, methods, properties } = declarationsForResource(ir, type.id);
+    const { constructors, methods, properties, staticMethods } = declarationsForResource(ir, type.id);
     const constructor = constructors[0];
     lines.push(docComment(type.documentation), `export declare class ${type.name} {`);
     lines.push(`  constructor(${constructor.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")});`);
     consumed.add(constructor.id);
+    for (const method of staticMethods) {
+      consumed.add(method.id);
+      lines.push(
+        `  static ${method.name}(${method.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(method, typeMap)};`,
+      );
+    }
     for (const method of methods) {
       consumed.add(method.id);
       lines.push(

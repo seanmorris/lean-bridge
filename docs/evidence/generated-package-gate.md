@@ -29,7 +29,7 @@ Changing generated implementation code, headers, type declarations, stubs, docs,
 The reviewed report binds all packages to Alpha's canonical Binding IR SHA-256:
 
 ```text
-e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4
+154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b
 ```
 
 ## Public-surface scan

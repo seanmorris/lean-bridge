@@ -5,8 +5,8 @@ import {
   validateBindingIrForMigration,
 } from "./contract.mjs";
 
-export const BINDING_IR_SCHEMA_VERSION = 2;
-export const SUPPORTED_BINDING_IR_SCHEMA_VERSIONS = Object.freeze([2]);
+export const BINDING_IR_SCHEMA_VERSION = 3;
+export const SUPPORTED_BINDING_IR_SCHEMA_VERSIONS = Object.freeze([3]);
 
 export class BindingIrCanonicalError extends Error {
   constructor(code, message, details = {}) {
@@ -191,11 +191,37 @@ export const migrateBindingIr = (value, targetVersion = BINDING_IR_SCHEMA_VERSIO
       { targetVersion, supported: [...SUPPORTED_BINDING_IR_SCHEMA_VERSIONS] },
     );
   }
-  if (value?.schemaVersion === 1 && targetVersion === 2) {
+  if (new Set([1, 2]).has(value?.schemaVersion) && targetVersion === 3) {
     validateBindingIrForMigration(value);
     const migrated = structuredClone(value);
-    migrated.schemaVersion = 2;
-    for (const type of migrated.types) type.callable = null;
+    if (migrated.schemaVersion === 1) {
+      migrated.schemaVersion = 2;
+      for (const type of migrated.types) type.callable = null;
+    }
+    migrated.schemaVersion = 3;
+    for (const type of migrated.types) {
+      type.cases = [];
+      type.host = null;
+    }
+    for (const declaration of migrated.declarations) {
+      if (declaration.kind === "constructor") {
+        declaration.owner = declaration.result.type.kind === "named"
+          ? declaration.result.type.id
+          : null;
+      } else if (new Set(["method", "property"]).has(declaration.kind)) {
+        declaration.owner = declaration.receiver?.type.kind === "named"
+          ? declaration.receiver.type.id
+          : null;
+      } else if (declaration.kind === "static-method") {
+        throw new BindingIrCompatibilityError(
+          "ambiguous-static-owner",
+          `${declaration.id} requires an explicit owner before migration to schema version 3.`,
+          { declaration: declaration.id },
+        );
+      } else {
+        declaration.owner = null;
+      }
+    }
     validateBindingIr(migrated);
     return migrated;
   }

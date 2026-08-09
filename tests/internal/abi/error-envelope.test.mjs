@@ -33,6 +33,7 @@ const errorFixture = () => {
     id: "bridge:Alpha.checkedPred",
     name: "checkedPred",
     kind: "function",
+    owner: null,
     overloadKey: "checkedPred(uint32)",
     typeParameters: [],
     receiver: null,

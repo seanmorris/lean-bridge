@@ -2,7 +2,7 @@
 
 ## Result
 
-`lean-bridge analyze` now reads an ordinary Lean project and returns a deterministic, read-only export plan. A project with copied primitive types can produce a valid Binding IR version 2 document without bridge annotations.
+`lean-bridge analyze` now reads an ordinary Lean project and returns a deterministic, read-only export plan. A project with copied primitive types can produce a valid Binding IR version 3 document without bridge annotations.
 
 ```lean
 /-- Cap a natural number at a limit. -/

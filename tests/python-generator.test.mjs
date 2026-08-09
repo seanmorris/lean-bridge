@@ -250,6 +250,62 @@ test("Python properties, iterators, async iterators, and awaitables use native p
   assert.match(files["lean_alpha/__init__.py"], /def round_trip\(payload: Payload\) -> AsyncIterator\[Payload\]/);
 });
 
+test("Python variants and static methods use frozen tagged classes", () => {
+  const ir = clone(alpha.bindingIr);
+  ir.types.push({
+    id: "bridge:Alpha.Lookup",
+    name: "Lookup",
+    kind: "variant",
+    representation: "copied",
+    mutability: "immutable",
+    typeParameters: [],
+    fields: [],
+    target: null,
+    resource: null,
+    callable: null,
+    cases: [
+      {
+        name: "Found",
+        fields: [{
+          name: "value",
+          type: { kind: "primitive", name: "uint32" },
+          mutability: "immutable",
+          documentation: { summary: "The value.", details: "" },
+        }],
+        documentation: { summary: "A hit.", details: "" },
+      },
+      {
+        name: "Missing",
+        fields: [],
+        documentation: { summary: "A miss.", details: "" },
+      },
+    ],
+    host: null,
+    documentation: { summary: "A lookup result.", details: "" },
+    source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} },
+    assurance: [],
+  });
+  const method = clone(ir.declarations.find(item => item.name === "roundTrip"));
+  method.id = "bridge:Alpha.Box.lookup";
+  method.name = "lookup";
+  method.kind = "static-method";
+  method.owner = "lean:Alpha.Box";
+  method.overloadKey = "Box.lookup(Payload)";
+  method.result.type = { kind: "named", id: "bridge:Alpha.Lookup" };
+  method.source.declaration = "Alpha.Box.lookup";
+  ir.declarations.push(method);
+
+  const files = generatePythonBindingPackage(ir);
+  const source = files["lean_alpha/__init__.py"];
+  const stub = files["lean_alpha/__init__.pyi"];
+  assert.match(source, /class LookupFound:/);
+  assert.match(source, /kind: ClassVar\[Literal\["Found"\]\] = "Found"/);
+  assert.match(source, /Lookup = LookupFound \| LookupMissing/);
+  assert.match(source, /@staticmethod\n    def lookup\(payload: Payload\) -> Lookup/);
+  assert.match(stub, /@dataclass\(frozen=True\)\nclass LookupMissing/);
+  assert.doesNotMatch(stub, /tag: int|handle|pointer/i);
+});
+
 test("Python finite generics expose overload stubs and private typed dispatch", () => {
   const ir = clone(alpha.bindingIr);
   const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");

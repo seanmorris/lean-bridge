@@ -63,7 +63,7 @@ test("the Alpha fixture defines copied values and identity resources", () => {
 test("the JSON schema is closed and uses draft 2020-12", async () => {
   const schema = JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"));
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
-  assert.equal(schema.properties.schemaVersion.const, 2);
+  assert.equal(schema.properties.schemaVersion.const, 3);
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.$defs.declaration.additionalProperties, false);
   assert.equal(schema.$defs.typeDefinition.additionalProperties, false);
@@ -188,6 +188,8 @@ const progressCallback = () => ({
     failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
     resultMode: "value",
   },
+  cases: [],
+  host: null,
   documentation: {
     summary: "Receive progress from Lean.",
     details: "The callback may re-enter the same shared runtime.",
@@ -196,6 +198,44 @@ const progressCallback = () => ({
     producer: "bridge",
     declaration: "Alpha.ProgressCallback",
     extensions: { "lean-wasm.org/intrinsic": "host-callback" },
+  },
+  assurance: [],
+});
+
+const lookupVariant = () => ({
+  id: "bridge:Alpha.Lookup",
+  name: "Lookup",
+  kind: "variant",
+  representation: "copied",
+  mutability: "immutable",
+  typeParameters: [],
+  fields: [],
+  target: null,
+  resource: null,
+  callable: null,
+  cases: [
+    {
+      name: "Found",
+      fields: [{
+        name: "value",
+        type: { kind: "primitive", name: "uint32" },
+        mutability: "immutable",
+        documentation: { summary: "The located value.", details: "" },
+      }],
+      documentation: { summary: "A successful lookup.", details: "" },
+    },
+    {
+      name: "Missing",
+      fields: [],
+      documentation: { summary: "No value was found.", details: "" },
+    },
+  ],
+  host: null,
+  documentation: { summary: "A tagged lookup result.", details: "" },
+  source: {
+    producer: "bridge",
+    declaration: "Alpha.Lookup",
+    extensions: {},
   },
   assurance: [],
 });
@@ -221,8 +261,46 @@ test("callback types carry closed invocation and re-entry semantics", () => {
   contractError(() => validateBindingIr(receiverAnchor), "borrow-anchor");
 });
 
+test("variants carry semantic case names and copied fields", () => {
+  const candidate = clone(fixture);
+  candidate.types.push(lookupVariant());
+  assert.equal(validateBindingIr(candidate), candidate);
+
+  const duplicate = clone(candidate);
+  duplicate.types.at(-1).cases[1].name = "Found";
+  contractError(() => validateBindingIr(duplicate), "duplicate-id");
+
+  const identity = clone(candidate);
+  identity.types.at(-1).cases[0].fields[0].type = {
+    kind: "named",
+    id: "lean:Alpha.Box",
+  };
+  contractError(() => validateBindingIr(identity), "record-field-representation");
+});
+
+test("resource ownership projects static methods without a receiver", () => {
+  const candidate = clone(fixture);
+  const method = clone(candidate.declarations.find(item => item.name === "roundTrip"));
+  method.id = "bridge:Alpha.Box.fromPayload";
+  method.name = "fromPayload";
+  method.kind = "static-method";
+  method.owner = "lean:Alpha.Box";
+  method.overloadKey = "Box.fromPayload(Payload)";
+  method.source.declaration = "Alpha.Box.fromPayload";
+  candidate.declarations.push(method);
+  assert.equal(validateBindingIr(candidate), candidate);
+
+  const missing = clone(candidate);
+  missing.declarations.at(-1).owner = null;
+  contractError(() => validateBindingIr(missing), "missing-owner");
+
+  const mismatch = clone(candidate);
+  mismatch.declarations.find(item => item.kind === "constructor").owner = null;
+  contractError(() => validateBindingIr(mismatch), "owner-mismatch");
+});
+
 const schemaProducedFixture = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   component: {
     id: "fixture/schema-math@1.0.0",
     name: "Schema Math",
@@ -244,6 +322,7 @@ const schemaProducedFixture = {
       id: "schema:math.add",
       name: "add",
       kind: "function",
+      owner: null,
       overloadKey: "add(uint32,uint32)",
       typeParameters: [],
       receiver: null,
@@ -377,7 +456,7 @@ test("canonical serialization ignores object insertion order", () => {
 test("the Alpha semantic fixture has a stable reviewed content identity", () => {
   assert.equal(
     hashBindingIr(fixture),
-    "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4",
+    "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
   );
   const changed = clone(fixture);
   changed.documentation.summary = "Changed semantic documentation.";
@@ -406,13 +485,13 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
   assert.deepEqual(diagnoseBindingIrVersion(fixture), {
     compatible: true,
     code: "exact-schema-version",
-    actual: 2,
-    supported: [2],
+    actual: 3,
+    supported: [3],
     relation: "exact",
     action: null,
   });
   assert.equal(diagnoseBindingIrVersion({ schemaVersion: 1 }).code, "migration-required");
-  assert.equal(diagnoseBindingIrVersion({ schemaVersion: 3 }).code, "consumer-upgrade-required");
+  assert.equal(diagnoseBindingIrVersion({ schemaVersion: 4 }).code, "consumer-upgrade-required");
   assert.equal(diagnoseBindingIrVersion({ schemaVersion: 0 }).code, "invalid-schema-version");
 
   const legacy = clone(fixture);
@@ -430,13 +509,20 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
       claim.id !== "assurance:Alpha.makeAdder.boundary",
   );
   legacy.types.forEach(type => delete type.callable);
+  legacy.types.forEach(type => {
+    delete type.cases;
+    delete type.host;
+  });
+  legacy.declarations.forEach(declaration => delete declaration.owner);
   contractError(() => validateBindingIr(legacy), "unsupported-schema");
   const migrated = migrateBindingIr(legacy);
-  assert.equal(migrated.schemaVersion, 2);
+  assert.equal(migrated.schemaVersion, 3);
   assert.deepEqual(migrated.types.map(type => type.callable), [null, null]);
+  assert.deepEqual(migrated.types.map(type => type.cases), [[], []]);
+  assert.deepEqual(migrated.types.map(type => type.host), [null, null]);
   assert.equal(validateBindingIr(migrated), migrated);
 
-  assert.throws(() => migrateBindingIr({ schemaVersion: 3 }), error => {
+  assert.throws(() => migrateBindingIr({ schemaVersion: 4 }), error => {
     assert.equal(error instanceof BindingIrCompatibilityError, true);
     assert.equal(error.code, "migration-unavailable");
     return true;
@@ -446,7 +532,7 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
 test("the Binding IR CLI exposes validation, hashing, and machine-readable diagnostics", async () => {
   const file = "poc/lean-link-spike/bindings/alpha.binding-ir.json";
   const validated = await execute(process.execPath, ["scripts/binding-ir.mjs", "validate", file]);
-  assert.match(validated.stdout, /valid schemaVersion=2 component=poc\/lean-alpha@0\.0\.0/);
+  assert.match(validated.stdout, /valid schemaVersion=3 component=poc\/lean-alpha@0\.0\.0/);
   const hashed = await execute(process.execPath, ["scripts/binding-ir.mjs", "hash", file]);
   assert.equal(hashed.stdout.trim(), hashBindingIr(fixture));
   const diagnosed = await execute(process.execPath, ["scripts/binding-ir.mjs", "diagnose", file]);

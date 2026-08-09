@@ -18,6 +18,7 @@ const pendingDescriptor = () => {
     id: declarationId,
     name: "deferBoxValue",
     kind: "function",
+    owner: null,
     overloadKey: "deferBoxValue(uint32)",
     typeParameters: [],
     receiver: null,

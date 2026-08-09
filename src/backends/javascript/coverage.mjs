@@ -82,6 +82,12 @@ export const analyzeJavaScriptCoverage = ir => {
       for (const field of type.fields) {
         inspectTypeRef(field.type, `${type.id}.${field.name}`);
       }
+    } else if (type.kind === "variant") {
+      for (const variantCase of type.cases) {
+        for (const field of variantCase.fields) {
+          inspectTypeRef(field.type, `${type.id}.${variantCase.name}.${field.name}`);
+        }
+      }
     } else if (type.kind === "alias") {
       inspectTypeRef(type.target, `${type.id}.target`);
     }
@@ -146,7 +152,7 @@ export const analyzeJavaScriptCoverage = ir => {
   }
 
   for (const type of ir.types) {
-    if (type.kind === "record" || type.kind === "alias") {
+    if (type.kind === "record" || type.kind === "alias" || type.kind === "variant") {
       inspectTypeRef({ kind: "named", id: type.id }, type.id);
     } else if (type.kind === "callback") {
       inspectCallback(type);
@@ -170,13 +176,6 @@ export const analyzeJavaScriptCoverage = ir => {
         report(error.code, error.message, error.details);
       }
     }
-    if (declaration.kind === "static-method") {
-      report(
-        "unsupported-declaration-kind",
-        `${declaration.id} uses ${declaration.kind}, which has no JavaScript projection`,
-        { declaration: declaration.id, kind: declaration.kind },
-      );
-    }
     if (declaration.kind === "property") {
       const getter = declaration.parameters.length === 0 && declaration.mutability !== "write";
       const setter =
@@ -193,7 +192,7 @@ export const analyzeJavaScriptCoverage = ir => {
       }
     }
     const supportedModes =
-      declaration.kind === "function"
+      new Set(["function", "method", "static-method"]).has(declaration.kind)
         ? new Set(["value", "promise", "iterator", "async-iterator"])
         : new Set(["value"]);
     if (!supportedModes.has(declaration.resultMode)) {
