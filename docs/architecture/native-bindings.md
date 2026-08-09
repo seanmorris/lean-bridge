@@ -104,3 +104,5 @@ CI inspects package export maps, generated `.d.ts`/`.pyi`, documentation and cle
 - consumer-written wrappers needed to perform a normal call.
 
 Positive fixtures import and call named functions, construct and use objects, preserve identity across round trips, await methods, iterate, receive idiomatic errors and release resources. JavaScript and Python host projections share canonical declaration, semantic, proof and artifact identities even when their surface syntax differs.
+
+The implemented package gate regenerates the JavaScript, Python, C, and Rust projections twice, scans each public source, declaration or stub, export map, and package README, then compares every generated file with a reviewed SHA-256 report. A changed public export, generated type, capability gap, generator version, documentation byte, or implementation byte blocks the check until the report receives an intentional review update.

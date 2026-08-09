@@ -585,7 +585,7 @@ The generated crate projects copied records as owned Rust values, identity-beari
 
 \`Transform\` uses an ordinary \`.call(...)\` method. Stable Rust does not allow generated crates to implement the \`Fn\` call operator for a resource type. The package manifest records that target capability gap.
 
-The package runtime installs the hidden typed adapter before application code starts. Consumer code does not call a dispatcher or pass runtime identities.
+The package runtime installs the typed component adapter before application code starts.
 
 Binding IR SHA-256: \`${hashBindingIr(ir)}\`
 `;

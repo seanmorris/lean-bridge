@@ -835,7 +835,7 @@ const emitDocumentation = ir => {
     "",
     ir.documentation.summary,
     "",
-    "Include the generated public header and call its named functions. The package runtime installs the internal adapter before application code starts. Application code does not call a dispatcher or pass runtime handles.",
+    "Include the generated public header and call its named functions. The package runtime installs the component adapter before application code starts.",
     "",
     "Copied records preserve booleans, fixed-width integers, strings, bytes, and typed spans as C fields. Dynamic fields carry an optional release callback. Call the generated clear function for values returned by the runtime.",
     "",

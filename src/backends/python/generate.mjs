@@ -793,7 +793,7 @@ const emitReadme = ir => `# ${ir.component.name} Python binding
 
 ${ir.documentation.summary}
 
-The generated package exposes normal Python functions, frozen dataclasses, exceptions, context-managed resources, callables, iterators, async iterators, and awaitables for the supported Binding IR slice. Runtime identities and transport methods remain private.
+The generated package exposes normal Python functions, frozen dataclasses, exceptions, context-managed resources, callables, iterators, async iterators, and awaitables for the supported Binding IR slice.
 
 Binding IR SHA-256: \`${hashBindingIr(ir)}\`
 `;

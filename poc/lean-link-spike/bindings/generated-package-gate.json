@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "component": "poc/lean-alpha@0.0.0",
+  "bindingIrSha256": "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4",
+  "packages": [
+    {
+      "backend": "javascript",
+      "generator": { "id": "lean-wasm/javascript", "version": 1 },
+      "exports": ["Box", "roundTrip", "withCallback", "makeAdder"],
+      "capabilityGaps": [],
+      "fileSetSha256": "dbab80e00c942f12f9fbe43e0a7649853cd4c67afb3bc99efea0e4f5e682552a",
+      "files": [
+        { "path": "README.md", "bytes": 1210, "sha256": "5fb3660b220f5c4ba2fb5600ae9620d86b8e90f0c18953a6078dade68edea79e" },
+        { "path": "binding-manifest.json", "bytes": 520, "sha256": "5d6bf8f26f813a7211dc35a5c434811c92a078c3faa9b66903f8d29a87e9454c" },
+        { "path": "index.d.ts", "bytes": 2117, "sha256": "b4fc776a164cfff82d79090ea5c51fbd4d30427f796c2b2c3a2038fd0ec7b741" },
+        { "path": "index.mjs", "bytes": 2350, "sha256": "70b29b73296f2782098951faf11f9cc27eb351bdcac7cb8e1bbec5b7909b90ba" },
+        { "path": "internal/validators.mjs", "bytes": 3340, "sha256": "67ced4e86b003d0b08850dc3706702bec56e4255926f61c20a9484713eb06c17" },
+        { "path": "package.json", "bytes": 340, "sha256": "4ac5da1d9844c1e856382d99513fe7b258d592d402acaefd01a951459764c6cf" }
+      ]
+    },
+    {
+      "backend": "python",
+      "generator": { "id": "lean-wasm/python", "version": 1 },
+      "exports": ["LeanAlphaError", "RuntimeUnavailableError", "UnexpectedError", "DisposedResourceError", "CallbackThrewError", "Ok", "Err", "Payload", "Box", "Transform", "round_trip", "with_callback", "make_adder"],
+      "capabilityGaps": [],
+      "fileSetSha256": "cab8154a568becaa0d53f8b2f7ba45388dcf80c9ca1a69e40f3149a3dcbb8b4a",
+      "files": [
+        { "path": "README.md", "bytes": 385, "sha256": "2f2981f1acaa586e2243f1a7a2a9b58443bd5ff0edcf36e36cf001249c56fa07" },
+        { "path": "binding-manifest.json", "bytes": 851, "sha256": "32a91c41aab9201bdeace96a5ecc7d897071b0a2ca7812affd67fceb9dd6167d" },
+        { "path": "lean_alpha/__init__.py", "bytes": 7515, "sha256": "cb3d3b10329257fad8319f82a24e0cc5c945b634963a969ef06bb7e8ee82993f" },
+        { "path": "lean_alpha/__init__.pyi", "bytes": 1389, "sha256": "45d86041204ffc76e6e78df1567f3649d76f8e5b861f4fb44773cd51f466dc64" },
+        { "path": "lean_alpha/_runtime.py", "bytes": 1882, "sha256": "5da84311347fc9d7e5208c991b15eede2793f7a230b68ac9a253a47da145ccc1" },
+        { "path": "lean_alpha/py.typed", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" },
+        { "path": "pyproject.toml", "bytes": 230, "sha256": "ce4a0cd3876ea2dbc21d1ee3b2ed2de00b3b44ce006ca6964ab0cb78c7d4c7f8" }
+      ]
+    },
+    {
+      "backend": "c",
+      "generator": { "id": "lean-wasm/c", "version": 1 },
+      "exports": ["lean_alpha_box_create", "lean_alpha_box_read", "lean_alpha_box_identity", "lean_alpha_round_trip", "lean_alpha_with_callback", "lean_alpha_make_adder", "lean_alpha_box_dispose"],
+      "capabilityGaps": [],
+      "fileSetSha256": "0e444c6d2cbe2166b819f94318a890e663cecb72cff333ce25a9a4062e376654",
+      "files": [
+        { "path": "README.md", "bytes": 1065, "sha256": "134619c0a812fa934cad67bc127474b8f6820d048646042ee1422d3942672e7e" },
+        { "path": "binding-manifest.json", "bytes": 730, "sha256": "056e87a00917a687237b34fb3ca1fe1a5b455d31ccc502e96ec3ecea9be02831" },
+        { "path": "include/lean_alpha.h", "bytes": 3304, "sha256": "f8a5c6f2168a310037f55bdb1382149267f672326b7725d6f368e60400eb97e7" },
+        { "path": "internal/lean_alpha_runtime.h", "bytes": 1432, "sha256": "b23300e89dfbc915302dc206af542054e9923afe0204bd7216afe7623452aba8" },
+        { "path": "src/lean_alpha.c", "bytes": 10169, "sha256": "f509734ca7dcd513dd0a43ba3daa8af1711ec4b81a68cc749eece0db1fedf914" }
+      ]
+    },
+    {
+      "backend": "rust",
+      "generator": { "id": "lean-wasm/rust", "version": 1 },
+      "exports": ["Payload", "Box", "Transform", "round_trip", "with_callback", "make_adder"],
+      "capabilityGaps": [
+        {
+          "feature": "owned-callable-operator",
+          "projection": "call-method",
+          "reason": "Stable Rust does not allow generated resource types to implement Fn traits."
+        }
+      ],
+      "fileSetSha256": "8af49e1fe51af0d9320dacd9c024594a7f351258d37deaed8a842a97fbe41a42",
+      "files": [
+        { "path": "Cargo.toml", "bytes": 92, "sha256": "a21d0e7ffeef5faac857106f61874a43236b46fc81a278fb4a1248c86981a9a7" },
+        { "path": "README.md", "bytes": 691, "sha256": "8acca9f729a4f2c6a18b8e119b80d4dc7d211a20eab67718085d0b253588586b" },
+        { "path": "binding-manifest.json", "bytes": 746, "sha256": "1ebfa4473c219c96a937017e47a040d74704b99595a7480d637dd9594d77d03a" },
+        { "path": "src/__runtime.rs", "bytes": 1929, "sha256": "fb5d36cbc488937d04dd39f360d6ab8511d3440468c3b130a3caec781fa49b91" },
+        { "path": "src/lib.rs", "bytes": 4263, "sha256": "ca0e38958a0fb86e4e3d06222da189f5abead27317259fb7ec60b8878f4e45cf" }
+      ]
+    }
+  ]
+}
