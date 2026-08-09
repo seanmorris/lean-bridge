@@ -24,6 +24,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 18 | Universal composition contracts and independent-component CI evidence at every layer | Accepted for POC |
 | 19 | One language-neutral binding IR with namespaced producer adapters | Accepted for POC |
 | 20 | Rust as the second semantic-parity backend; C++ remains a later packaging backend | Accepted for POC |
+| 21 | One generated PHP projection over closed native Zend and PHP-Wasm transport interfaces | Accepted for POC |
 
 ## ADR 1: Generated native binding surface
 
@@ -68,6 +69,14 @@ Rust is the second high-level binding backend for the POC. Rust expresses copied
 The generator emits a crate with a hidden typed runtime trait containing one method per declaration. The public module contains no generic dispatcher or runtime identity value. Finite generic declarations produce concrete functions for the declared specializations. Unsupported arbitrary integers, asynchronous delivery, rich error payloads, and other uncovered shapes fail generation.
 
 Stable Rust cannot implement the `Fn` traits for a generated owned resource. A returned Lean closure therefore exposes `.call(...)`, and the package manifest records that capability gap. C++ remains a later backend for package reach. It is not needed to establish that two high-level host projections can consume the same Binding IR.
+
+## ADR 21: Shared PHP projection
+
+Binding IR compiles into one PHP surface before either PHP transport is selected. Copied records become typed value objects. Identity-bearing resources become canonical PHP objects with deterministic `close()`. Host callbacks remain normal callables. Returned Lean closures become invokable objects. Declared failures become named exceptions. Iterators use `Traversable`. Asynchronous results use the generated bridge `Awaitable` contract because PHP has no native awaitable interface.
+
+The generated internal transport interface contains one typed method per declaration plus typed lifecycle methods. It contains no generic dispatcher. Native Zend and PHP-Wasm adapters implement the same interface. Every adapter publishes a capability manifest. Any missing required capability blocks package generation.
+
+The PHP-Wasm adapter reuses Vrzno's paired weak identity-index pattern and the maintained `weakermap` package. It does not carry another copied `WeakerMap` implementation. Explicit ownership release remains authoritative. Weak finalization is a recovery path.
 
 ## Amendment rule
 
