@@ -168,12 +168,12 @@
         "resultMode": "value"
       },
       "documentation": {
-        "summary": "A JavaScript function that Lean may call synchronously.",
-        "details": "Generated bindings preserve function identity and keep boundary identities and Wasm adapters internal."
+        "summary": "A synchronous transform that can cross the boundary in either direction.",
+        "details": "Generated bindings preserve function identity and project an exported Lean closure as a normal host callable."
       },
       "source": {
         "producer": "lean",
-        "declaration": "Alpha.withCallback.transform",
+        "declaration": "Alpha.Transform",
         "extensions": {
           "lean-lang.org/export": "callback"
         }
@@ -397,6 +397,47 @@
           "lean-lang.org/export": "function"
         }
       }
+    },
+    {
+      "id": "lean:Alpha.makeAdder",
+      "name": "makeAdder",
+      "kind": "function",
+      "overloadKey": "makeAdder(uint32)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "base",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Transform" },
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.makeAdder.boundary"],
+      "documentation": {
+        "summary": "Return a Lean closure as an ordinary callable owned by the host.",
+        "details": "The generated function validates arguments, preserves canonical identity, and provides deterministic disposal."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.makeAdder",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
     }
   ],
   "errors": [
@@ -509,6 +550,21 @@
       "claim": "The generated callback adapter preserves function identity, unsigned integer values, nested frame order, and deterministic cleanup.",
       "theorems": [],
       "assumptions": ["The JavaScript callback registry and generated C closure adapter implement callback signature version 1."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "callback-signature-v1",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/callback-signature-plan.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.makeAdder.boundary",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.makeAdder",
+      "claim": "The generated closure projection preserves callable identity, nested frame order, unsigned integer values, and deterministic cleanup.",
+      "theorems": [],
+      "assumptions": ["The Lean handle table, weak reverse cache, and fixed callback adapter implement callback signature version 1."],
       "source": {
         "producer": "bridge",
         "declaration": "callback-signature-v1",

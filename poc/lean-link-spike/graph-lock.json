@@ -18,21 +18,21 @@
       "module": "Alpha",
       "capsule": {
         "path": "capsules/alpha.json",
-        "sha256": "2abfa259f6664d210ed37047ce20d166c1f71048efda96cc354b2e8f290f2363"
+        "sha256": "5630ec31f85d1f7f45d048d45928d56d416909790c995024045bda0e2bd83c64"
       },
       "dependencies": [],
       "source": {
         "path": "Alpha.lean",
-        "sha256": "303c38c9a313fa47a9abb9274cb1d5259cb2eff6205b58f22feb5ab12fc4c472"
+        "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169"
       },
       "shim": {
         "path": "alpha_shim.c",
-        "sha256": "264e1a81e0371d1516795fdf8d44868057cbd3b62b1096b50c8ee4b58f1d9a8a"
+        "sha256": "0e2a6e2b0ace2a2e0cce9afa32c1bd424a3cbaa4ca45f932a80da7fa28eed7f2"
       },
       "bindingIr": {
         "path": "bindings/alpha.binding-ir.json",
-        "sha256": "c0da7928af6c350cf175c0232b8856505cf1f9c79b78422f0d26aeca103a7958",
-        "semanticSha256": "a46003fa0dc2647587360b53a6d470b0fa38cd666ccb81be784db89def12b18d"
+        "sha256": "b8eb61c36ed3235e04cecde23144e8915360c1625ec1b19714ce4d027a7a2750",
+        "semanticSha256": "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4"
       }
     },
     {
@@ -45,7 +45,7 @@
       "dependencies": [
         {
           "id": "poc/lean-alpha@0.0.0",
-          "sha256": "2abfa259f6664d210ed37047ce20d166c1f71048efda96cc354b2e8f290f2363"
+          "sha256": "5630ec31f85d1f7f45d048d45928d56d416909790c995024045bda0e2bd83c64"
         }
       ],
       "source": {

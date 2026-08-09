@@ -33,7 +33,15 @@ const typeScriptType = (typeRef, typeMap) => {
 };
 
 const deliveredType = (declaration, typeMap) => {
-  const result = typeScriptType(declaration.result.type, typeMap);
+  const resultType =
+    declaration.result.type.kind === "named"
+      ? typeMap.get(declaration.result.type.id)
+      : undefined;
+  const projected = typeScriptType(declaration.result.type, typeMap);
+  const result =
+    resultType?.kind === "callback" && declaration.result.ownership === "lease"
+      ? `${projected} & LeanOwnedCallable`
+      : projected;
   if (declaration.resultMode === "promise") return `Promise<${result}>`;
   if (declaration.resultMode === "iterator") return `Iterable<${result}>`;
   if (declaration.resultMode === "async-iterator") return `AsyncIterable<${result}>`;
@@ -340,6 +348,23 @@ const emitTypeScript = (ir, typeMap) => {
     `// Generated from Binding IR SHA-256 ${hashBindingIr(ir)}.`,
     ...emitTypeDeclarations(ir, typeMap),
   ];
+  if (
+    ir.declarations.some(
+      declaration =>
+        declaration.result.type.kind === "named" &&
+        typeMap.get(declaration.result.type.id)?.kind === "callback" &&
+        declaration.result.ownership === "lease",
+    )
+  ) {
+    lines.push(
+      "export interface LeanOwnedCallable {",
+      "  readonly disposed: boolean;",
+      "  dispose(): boolean;",
+      "  [Symbol.dispose](): void;",
+      "}",
+      "",
+    );
+  }
   const exports = [];
   const consumed = new Set();
   for (const type of ir.types.filter(item => item.kind === "resource")) {

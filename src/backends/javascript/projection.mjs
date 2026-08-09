@@ -106,6 +106,17 @@ const validateAdapter = (adapter, path) => {
       return;
     }
   }
+  if (adapter.kind === "callback-result-v1") {
+    exactKeys(adapter, ["kind", "abiVersion", "maxDepth"], path);
+    if (
+      adapter.abiVersion === 1 &&
+      Number.isSafeInteger(adapter.maxDepth) &&
+      adapter.maxDepth >= 1 &&
+      adapter.maxDepth <= 0xffff
+    ) {
+      return;
+    }
+  }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
     path,
     kind: adapter.kind,
@@ -113,7 +124,7 @@ const validateAdapter = (adapter, path) => {
   });
 };
 
-const compileAdapter = (ir, declaration, adapter) => {
+const compileAdapter = (ir, declaration, adapter, abi) => {
   if (adapter === null) return undefined;
   try {
     if (adapter.kind === "value-frame-v1") {
@@ -156,6 +167,48 @@ const compileAdapter = (ir, declaration, adapter) => {
         signature,
       });
     }
+    if (adapter.kind === "callback-result-v1") {
+      const typeId = namedTypeId(declaration.result.type);
+      const callbackType = ir.types.find(type => type.id === typeId);
+      const transport = abi.callbacks[typeId];
+      if (callbackType?.kind !== "callback" || !transport) {
+        fail(
+          "invalid-callback-result",
+          `${declaration.id} does not return a callback with a private transport`,
+          { declaration: declaration.id, typeId },
+        );
+      }
+      const signature = compileCallbackSignatureV1(
+        ir,
+        typeId,
+        { maxDepth: adapter.maxDepth },
+      );
+      if (
+        declaration.resultMode !== "value" ||
+        declaration.result.ownership !== "lease" ||
+        declaration.result.lifetime?.scope !== "explicit" ||
+        signature.resultMode !== "value"
+      ) {
+        fail(
+          "unsupported-callback-lifecycle",
+          `${declaration.id} must return a synchronous callback with an explicit lease`,
+          { declaration: declaration.id },
+        );
+      }
+      return Object.freeze({
+        kind: "callback-result-v1",
+        abiVersion: 1,
+        declarationId: declaration.id,
+        signature,
+        handle: Object.freeze({ side: transport.side, kind: transport.kind }),
+        callSymbol: transport.call,
+        disposal: Object.freeze({
+          explicit: true,
+          fallback: "queued-finalizer",
+          symbol: transport.dispose,
+        }),
+      });
+    }
     return Object.freeze({
       ...compilePendingOperationV1(ir, declaration.id),
       cancelSymbol: adapter.cancel,
@@ -173,7 +226,11 @@ const compileAdapter = (ir, declaration, adapter) => {
 };
 
 const validatePrivateAbi = (ir, abi) => {
-  exactKeys(abi, ["schemaVersion", "initialize", "declarations", "resources"], "abi");
+  exactKeys(
+    abi,
+    ["schemaVersion", "initialize", "declarations", "resources", "callbacks"],
+    "abi",
+  );
   if (abi.schemaVersion !== 1) {
     fail("unsupported-private-abi", "abi.schemaVersion must be 1", {
       expected: 1,
@@ -183,6 +240,7 @@ const validatePrivateAbi = (ir, abi) => {
   if (abi.initialize !== null) nonemptyString(abi.initialize, "abi.initialize");
   object(abi.declarations, "abi.declarations");
   object(abi.resources, "abi.resources");
+  object(abi.callbacks, "abi.callbacks");
 
   const declarationIds = new Set(ir.declarations.map(item => item.id));
   for (const [id, entry] of Object.entries(abi.declarations)) {
@@ -217,6 +275,35 @@ const validatePrivateAbi = (ir, abi) => {
       fail(
         "duplicate-resource-tag",
         `${id} and ${resourceTags.get(tag)} use private resource tag ${tag}`,
+        { tag, resources: [resourceTags.get(tag), id] },
+      );
+    }
+    resourceTags.set(tag, id);
+  }
+
+  const callbackIds = new Set(
+    ir.types.filter(type => type.kind === "callback").map(type => type.id),
+  );
+  for (const [id, entry] of Object.entries(abi.callbacks)) {
+    if (!callbackIds.has(id)) {
+      fail("unknown-abi-callback", `private ABI names unknown callback ${id}`, { id });
+    }
+    exactKeys(entry, ["side", "kind", "call", "dispose"], `abi.callbacks.${id}`);
+    if (entry.side !== "lean") {
+      fail("invalid-private-abi", `abi.callbacks.${id}.side must be lean`, { id });
+    }
+    if (!Number.isSafeInteger(entry.kind) || entry.kind < 1 || entry.kind > 0x7f) {
+      fail("invalid-private-abi", `abi.callbacks.${id}.kind must be from 1 through 127`, {
+        id,
+      });
+    }
+    nonemptyString(entry.call, `abi.callbacks.${id}.call`);
+    nonemptyString(entry.dispose, `abi.callbacks.${id}.dispose`);
+    const tag = `${entry.side}:${entry.kind}`;
+    if (resourceTags.has(tag)) {
+      fail(
+        "duplicate-resource-tag",
+        `${id} and ${resourceTags.get(tag)} use private identity tag ${tag}`,
         { tag, resources: [resourceTags.get(tag), id] },
       );
     }
@@ -374,7 +461,18 @@ export const compileJavaScriptProjection = (ir, abi) => {
     }
     const entry = declarationAbi(abi, declaration);
     consumedDeclarations.add(declaration.id);
-    const adapter = compileAdapter(ir, declaration, entry.adapter);
+    const adapter = compileAdapter(ir, declaration, entry.adapter, abi);
+    const resultType = typeMap.get(namedTypeId(declaration.result.type));
+    if (
+      resultType?.kind === "callback" &&
+      adapter?.kind !== "callback-result-v1"
+    ) {
+      fail(
+        "missing-callback-result-adapter",
+        `${declaration.id} requires a callback-result-v1 adapter`,
+        { declaration: declaration.id },
+      );
+    }
     if (declaration.resultMode === "promise") {
       if (adapter?.kind !== "pending-operation-v1") {
         fail(

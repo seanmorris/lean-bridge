@@ -16,7 +16,10 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   const sameSurface = createLibrarySurface(module, alpha);
   assert.equal(libraries.loaded.size, 1);
   assert.equal(Object.isFrozen(loadedAlpha), true);
-  assert.deepEqual(Object.keys(loadedAlpha), ["Box", "roundTrip", "withCallback"]);
+  assert.deepEqual(
+    Object.keys(loadedAlpha),
+    ["Box", "roundTrip", "withCallback", "makeAdder"],
+  );
   assert.equal(sameSurface.Box, loadedAlpha.Box);
   assert.equal(Object.keys(loadedAlpha).some(name => name.startsWith("_")), false);
 
@@ -103,6 +106,116 @@ test("callback exceptions unwind to JavaScript without leaking the retained func
   assert.equal(libraries.diagnostics().callbacks.live, 0);
   assert.equal(libraries.diagnostics().callbacks.activeFrames, 0);
   assert.equal(loadedAlpha.withCallback(40, value => value), 42);
+});
+
+test("exported Lean closures are ordinary nested callables with deterministic cleanup", async () => {
+  const callbackFrames = [];
+  const module = await createLazyModule();
+  const libraries = createLibraryLoader(module, {
+    onCallbackFrame: event => callbackFrames.push(event),
+  });
+  const loadedAlpha = await libraries.load(alpha);
+  const addTwo = loadedAlpha.makeAdder(2);
+
+  assert.equal(typeof addTwo, "function");
+  assert.equal("handle" in addTwo, false);
+  assert.equal(addTwo.disposed, false);
+  assert.equal(loadedAlpha.withCallback(39, value => addTwo(value)), 43);
+  assert.deepEqual(
+    callbackFrames.map(event => [event.event, event.direction, event.depth]),
+    [
+      ["enter", "host", 1],
+      ["enter", "lean", 2],
+      ["leave", "lean", 2],
+      ["leave", "host", 1],
+    ],
+  );
+  assert.deepEqual(libraries.diagnostics().nativeClosures, {
+    live: 1,
+    created: 1,
+    canonicalHits: 0,
+    calls: 1,
+    leasesAcquired: 1,
+    leasesReleased: 0,
+    finalized: 0,
+  });
+  assert.equal(addTwo.dispose(), true);
+  assert.equal(addTwo.dispose(), false);
+  assert.equal(addTwo.disposed, true);
+  assert.throws(
+    () => addTwo(40),
+    error => error.code === "callback-disposed",
+  );
+  assert.equal(libraries.diagnostics().nativeClosures.live, 0);
+  assert.equal(libraries.diagnostics().nativeClosures.leasesReleased, 1);
+  assert.equal(module._bridge_lean_live_handles(), 0);
+  assert.equal(libraries.shutdown(), true);
+});
+
+test("exported Lean closure finalizers queue native release until a safe bridge entry", async () => {
+  const references = [];
+  const registries = [];
+  const module = await createLazyModule();
+  const createControlledFinalizer = callback => {
+    const holdings = [];
+    const registry = {
+      callback,
+      holdings,
+      register(_target, holding) {
+        holdings.push(holding);
+      },
+      unregister() {
+        return true;
+      },
+    };
+    registries.push(registry);
+    return registry;
+  };
+  const libraries = createLibraryLoader(module, {
+    createWeakReference(target) {
+      let value = target;
+      const reference = {
+        clear() {
+          value = undefined;
+        },
+        deref() {
+          return value;
+        },
+      };
+      references.push(reference);
+      return reference;
+    },
+    createClosureCacheFinalizationRegistry: createControlledFinalizer,
+    createClosureFinalizationRegistry: createControlledFinalizer,
+  });
+  const loadedAlpha = await libraries.load(alpha);
+  loadedAlpha.makeAdder(2);
+  const weakCacheRegistry = registries[0];
+  const nativeReleaseRegistry = registries[1];
+
+  references[0].clear();
+  weakCacheRegistry.callback(weakCacheRegistry.holdings[0]);
+  nativeReleaseRegistry.callback(nativeReleaseRegistry.holdings[0]);
+  assert.equal(module._bridge_lean_live_handles(), 1);
+
+  const diagnostics = libraries.diagnostics();
+  assert.equal(diagnostics.nativeClosures.live, 0);
+  assert.equal(diagnostics.nativeClosures.leasesReleased, 1);
+  assert.equal(diagnostics.nativeClosures.finalized, 1);
+  assert.equal(module._bridge_lean_live_handles(), 0);
+
+  const explicitlyDisposed = loadedAlpha.makeAdder(3);
+  const staleCacheHolding = weakCacheRegistry.holdings[1];
+  const staleReleaseHolding = nativeReleaseRegistry.holdings[1];
+  assert.equal(explicitlyDisposed.dispose(), true);
+  weakCacheRegistry.callback(staleCacheHolding);
+  nativeReleaseRegistry.callback(staleReleaseHolding);
+  const afterStaleFinalizer = libraries.diagnostics();
+  assert.equal(afterStaleFinalizer.nativeClosures.live, 0);
+  assert.equal(afterStaleFinalizer.nativeClosures.leasesReleased, 2);
+  assert.equal(afterStaleFinalizer.nativeClosures.finalized, 1);
+  assert.equal(module._bridge_lean_live_handles(), 0);
+  assert.equal(libraries.shutdown(), true);
 });
 
 test("resource wrappers reject nominal and cross-runtime misuse", async () => {

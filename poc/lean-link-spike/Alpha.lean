@@ -11,6 +11,9 @@ structure Payload where
   bytes : ByteArray
   values : Array UInt32
 
+structure TransformOwner where
+  transform : UInt32 → UInt32
+
 @[export lean_link_alpha_box]
 def box (value : UInt32) : Box :=
   { value, label := "alpha" }
@@ -40,6 +43,10 @@ def withCallback
     (value : UInt32)
     (transform : UInt32 → UInt32) : UInt32 :=
   transform (value + 1) + 1
+
+@[export lean_link_alpha_make_adder]
+def makeAdder (base : UInt32) : TransformOwner :=
+  { transform := fun value => base + value }
 
 @[export lean_link_alpha_payload_enabled]
 def payloadEnabled (payload : Payload) : Bool :=

@@ -1,6 +1,6 @@
 # Callback Signature Plan Evidence
 
-Status: Binding IR version 2, callback signature generation, JavaScript callback execution, and nested same-agent re-entry pass in browser, threaded, dynamic, and final-static profiles.
+Status: Binding IR version 2, callback signature generation, JavaScript callback execution, exported Lean closure projection, and nested same-agent re-entry pass in browser, threaded, dynamic, and final-static profiles.
 
 ## Binding contract
 
@@ -36,6 +36,8 @@ Lean Bridge carries those architecture choices into generated, typed bindings. O
 
 `tests/lean-link-spike.test.mjs` exercises the generated `withCallback(value, transform)` binding. Lean increments the input, invokes a JavaScript function through a generated C closure, receives the result, increments it again, and returns it to JavaScript. The JavaScript callback constructs and reads a Lean `Box`, then recursively calls `withCallback` with the same function. The runtime records depths 1 and 2, reuses the canonical callback token, returns every lease and frame to zero, and leaves the public surface free of private calling conventions. A second test throws the original JavaScript error through the boundary and proves that the runtime remains usable afterward.
 
+The same test file exercises `makeAdder(base)`. Lean returns an owned closure, and the generated binding projects it as a callable JavaScript function with `dispose()` and `Symbol.dispose`. A complete nested call enters a JavaScript callback at depth 1, calls the returned Lean closure at depth 2, and unwinds in reverse order. Another fixture simulates collection and confirms that the finalizer queues native release until diagnostics enters the bridge safely. Explicit disposal and shutdown release immediately.
+
 ## Remaining boundary
 
-Exported Lean closures still need the symmetric native JavaScript function projection. That path must use the weak-value reverse cache, deterministic `dispose()`, queued fallback release, and the same signature and frame rules. The current fixed adapter covers synchronous `UInt32 → UInt32`. Additional generated adapters must cover the remaining copied types, retained resources, Promise delivery, and declared error payloads.
+The current fixed adapter covers synchronous `UInt32 → UInt32`. Additional generated adapters must cover the remaining copied types, retained resources, Promise delivery, declared error payloads, and closures that capture host values beyond one call.

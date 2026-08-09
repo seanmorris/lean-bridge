@@ -15,7 +15,7 @@ Tokens do not contain Wasm pointers. A consumer cannot read or write them throug
 
 The Lean registry lives in the one main Wasm module. Each slot stores a `lean_object *`, but only after the registry validates the token's side, kind, slot, and generation. A release clears the pointer before decrementing the Lean reference count, then advances the generation. A slot retires instead of wrapping generation 4095 back to generation 1. The POC allocates 1,024 Lean slots. Exhaustion fails instead of returning an unchecked pointer.
 
-The host registry lives in the JavaScript runtime context shared by every library loader for one Emscripten module. It assigns the same live token when the bridge retains the same JavaScript object under the same nominal kind. Each retain acquires a lease. Each release removes one lease. The final release clears the strong reference and advances the slot generation. A token from another runtime cannot resolve against an empty or incompatible registry. The callback registry applies the same layout to JavaScript functions and adds the generated signature identity, invocation count, active frame count, and self-disposal policy. A callback borrowed for one call releases its final lease before the public function returns.
+The host registry lives in the JavaScript runtime context shared by every library loader for one Emscripten module. It assigns the same live token when the bridge retains the same JavaScript object under the same nominal kind. Each retain acquires a lease. Each release removes one lease. The final release clears the strong reference and advances the slot generation. A token from another runtime cannot resolve against an empty or incompatible registry. The callback registry applies the same layout to JavaScript functions and adds the generated signature identity, invocation count, active frame count, and self-disposal policy. A callback borrowed for one call releases its final lease before the public function returns. Returned Lean closures use Lean-side generation-safe tokens and a weak reverse cache, so JavaScript receives one ordinary function for each live runtime identity.
 
 ## Native wrapper behavior
 
@@ -43,7 +43,7 @@ Every module instance has a private runtime identity and epoch. `libraries.shutd
 | JavaScript object retained by Lean | one host registry lease per retain | generated Lean-side release or runtime shutdown | no GC shortcut while Lean still owns the value |
 | JavaScript object borrowed by Lean | call-scoped borrow | generated call frame ends | `finally` unwinds the borrow counter |
 
-`FinalizationRegistry` never invokes Wasm from the garbage collector callback. It only queues a holding record. The next bridge entry checks that the wrapper is unreachable, the token still names the same entry, and the runtime epoch is current before releasing it. Explicit disposal unregisters the fallback. Correctness does not depend on garbage collection timing.
+`FinalizationRegistry` never invokes Wasm from the garbage collector callback. It only queues a holding record. The next bridge entry checks that the resource wrapper or returned Lean closure is unreachable, the token still names the same entry, and the runtime epoch is current before releasing it. Explicit disposal unregisters the fallback. Correctness does not depend on garbage collection timing.
 
 The POC does not collect JavaScript to Lean cycles automatically. An API that retains values in both directions needs an explicit ownership cut.
 

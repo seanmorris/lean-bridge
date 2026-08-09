@@ -46,6 +46,18 @@ export const runtime = Object.freeze({
     if (declaration === "lean:Alpha.withCallback") {
       return args[1](args[0] + 1) + 1;
     }
+    if (declaration === "lean:Alpha.makeAdder") {
+      let isDisposed = false;
+      const callable = value => {
+        if (isDisposed) throw new Error("disposed callback");
+        return args[0] + value;
+      };
+      Object.defineProperties(callable, {
+        disposed: { get: () => isDisposed },
+        dispose: { value: () => { isDisposed = true; return true; } },
+      });
+      return callable;
+    }
     if (declaration !== "lean:Alpha.roundTrip") throw new Error("unknown function");
     const input = args[0];
     return Object.freeze({
@@ -72,6 +84,7 @@ test("the JavaScript backend emits direct native callables and rich TypeScript t
   assert.match(source, /export class Box/);
   assert.match(source, /export function roundTrip\(payload\)/);
   assert.match(source, /export function withCallback\(value, transform\)/);
+  assert.match(source, /export function makeAdder\(base\)/);
   assert.match(source, /\bread\(\)/);
   assert.match(source, /\bidentity\(\)/);
   assert.doesNotMatch(source, /\bccall\b|\bcwrap\b|_bridge_|WebAssembly/);
@@ -92,6 +105,11 @@ test("the JavaScript backend emits direct native callables and rich TypeScript t
     declarations,
     /withCallback\(value: number, transform: Transform\): number/,
   );
+  assert.match(declarations, /interface LeanOwnedCallable/);
+  assert.match(
+    declarations,
+    /makeAdder\(base: number\): Transform & LeanOwnedCallable/,
+  );
   assert.doesNotMatch(declarations, /\bany\b|WebAssembly|pointer|handle/i);
 });
 
@@ -102,7 +120,7 @@ test("generated files are deterministic and bind to the reviewed IR hash", () =>
 
   const manifest = JSON.parse(first["binding-manifest.json"]);
   assert.equal(manifest.bindingIrSha256, alpha.bindingIrSha256);
-  assert.deepEqual(manifest.exports, ["Box", "roundTrip", "withCallback"]);
+  assert.deepEqual(manifest.exports, ["Box", "roundTrip", "withCallback", "makeAdder"]);
   assert.deepEqual(manifest.requiredInternalFiles, ["internal/runtime.mjs"]);
   assert.equal(manifest.files.includes("binding-manifest.json"), true);
 });
@@ -113,7 +131,10 @@ test("generated JavaScript executes through direct functions and classes", async
     { ...files, "internal/runtime.mjs": runtimeStub },
     async directory => {
       const module = await import(`${pathToFileURL(join(directory, "index.mjs")).href}?test=consumer`);
-      assert.deepEqual(Object.keys(module.default), ["Box", "roundTrip", "withCallback"]);
+      assert.deepEqual(
+        Object.keys(module.default),
+        ["Box", "roundTrip", "withCallback", "makeAdder"],
+      );
 
       const box = new module.Box(41);
       assert.equal(box.read(), 41);
@@ -137,6 +158,12 @@ test("generated JavaScript executes through direct functions and classes", async
       assert.equal(output.bytes instanceof Uint8Array, true);
       assert.notEqual(output.bytes, input.bytes);
       assert.equal(module.withCallback(40, value => value), 42);
+      const addTwo = module.makeAdder(2);
+      assert.equal(addTwo(40), 42);
+      assert.equal(addTwo.disposed, false);
+      assert.equal(addTwo.dispose(), true);
+      assert.equal(addTwo.disposed, true);
+      assert.throws(() => addTwo(40), /disposed callback/);
 
       box.dispose();
       assert.throws(() => box.read(), /disposed resource/);

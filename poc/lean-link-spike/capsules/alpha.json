@@ -15,18 +15,18 @@
         "sideModule": {
           "file": "alpha.so.wasm",
           "mediaType": "application/wasm",
-          "sha256": "21372489548cc97ccaa7335aaacf1191381e49e20bcbb1477aed15600d8df38d"
+          "sha256": "df3c7c6da8f919a3c0bb6748ec2a265841fa4ade4e69fdf9fed53e7f3f15beda"
         },
         "staticObjects": [
           {
             "file": "alpha.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "aaec56cff5331fe6019835b8b7969d60728592bce10aab495d7fb98e9cdaebf2"
+            "sha256": "88ef8a6f6719608a6e05e3e98a5074854e90ddd4cc0d638ee55850eafb80ba67"
           },
           {
             "file": "alpha.shim.o",
             "mediaType": "application/wasm-object",
-            "sha256": "15d7f9f5fdfa4430dbe5b98a837474d11eaa0f31007d81100c81607ca109fef9"
+            "sha256": "cb96624f6e7daa15a45e5e37a8db6bf5c2100914d066c95a2181ee5f3799ec02"
           }
         ]
       },
@@ -35,18 +35,18 @@
         "sideModule": {
           "file": "alpha.so.wasm",
           "mediaType": "application/wasm",
-          "sha256": "615954f33c0e5fd15f5b09c754654c97d5ddac7f9862bb901b8afadb572ca812"
+          "sha256": "694b29bd35bc374792385fcbe014221cdf76efe48599beeb8ca158e5bdfa7d82"
         },
         "staticObjects": [
           {
             "file": "alpha.generated.o",
             "mediaType": "application/wasm-object",
-            "sha256": "d60cb1b77986064be67ca8ec9017f742279fe63aeab34abbfc0f56a9edded559"
+            "sha256": "38751248d603bedb49b78f1df7cfd097c8ef468e33d2b632fd2d66698a9371e2"
           },
           {
             "file": "alpha.shim.o",
             "mediaType": "application/wasm-object",
-            "sha256": "14d8902406c78ad5a0c65c02d5cace36a785889aa1b34f9381ed4b35a98f3640"
+            "sha256": "a97a6f72009a3a2a77819ffa88c85f3200cf856d54cf33cf22075e016bec775c"
           }
         ]
       }
@@ -59,6 +59,7 @@
       "lean_link_alpha_payload",
       "lean_link_alpha_round_trip",
       "lean_link_alpha_with_callback",
+      "lean_link_alpha_make_adder",
       "lean_link_alpha_payload_enabled",
       "lean_link_alpha_payload_count",
       "lean_link_alpha_payload_label",

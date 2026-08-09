@@ -377,7 +377,7 @@ test("canonical serialization ignores object insertion order", () => {
 test("the Alpha semantic fixture has a stable reviewed content identity", () => {
   assert.equal(
     hashBindingIr(fixture),
-    "a46003fa0dc2647587360b53a6d470b0fa38cd666ccb81be784db89def12b18d",
+    "e3a9f0e95e65a76f8d4776ced695ae5a6fffd83028b2307fa2345c7a28a545a4",
   );
   const changed = clone(fixture);
   changed.documentation.summary = "Changed semantic documentation.";
@@ -419,11 +419,15 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
   legacy.schemaVersion = 1;
   legacy.types = legacy.types.filter(type => type.kind !== "callback");
   legacy.declarations = legacy.declarations.filter(
-    declaration => declaration.id !== "lean:Alpha.withCallback",
+    declaration =>
+      declaration.id !== "lean:Alpha.withCallback" &&
+      declaration.id !== "lean:Alpha.makeAdder",
   );
   legacy.errors = legacy.errors.filter(error => error.id !== "error:callback-threw");
   legacy.assurance = legacy.assurance.filter(
-    claim => claim.id !== "assurance:Alpha.withCallback.boundary",
+    claim =>
+      claim.id !== "assurance:Alpha.withCallback.boundary" &&
+      claim.id !== "assurance:Alpha.makeAdder.boundary",
   );
   legacy.types.forEach(type => delete type.callable);
   contractError(() => validateBindingIr(legacy), "unsupported-schema");

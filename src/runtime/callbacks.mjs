@@ -109,6 +109,7 @@ export class CallbackRegistry {
           parentFrameId: frame.parentId,
           token: frame.token,
           signatureId: frame.signatureId,
+          direction: frame.direction,
           depth: frame.depth,
           ...details,
         }),
@@ -227,6 +228,7 @@ export class CallbackRegistry {
       token,
       callback,
       plan,
+      direction: "host",
       signatureId: plan.signatureId,
       leases: 1,
       active: 0,
@@ -254,6 +256,7 @@ export class CallbackRegistry {
     entry.token = undefined;
     entry.callback = undefined;
     entry.plan = undefined;
+    entry.direction = undefined;
     entry.signatureId = undefined;
     entry.leases = 0;
     entry.active = 0;
@@ -324,6 +327,7 @@ export class CallbackRegistry {
       token: entry.token,
       signatureId: entry.signatureId,
       plan: entry.plan,
+      direction: entry.direction,
       depth: this.frames.length + 1,
     };
     this.nextFrameId += 1;
@@ -367,6 +371,37 @@ export class CallbackRegistry {
     }
     const { entry, slot } = this.resolveRetained(token);
     return this.invokeEntry(entry, slot, args);
+  }
+
+  invokeNative(token, plan, operation, args = []) {
+    this.requireOpen();
+    assertPlan(plan);
+    if (!Number.isInteger(token) || token <= 0 || token > 0xffff_ffff) {
+      this.reject("invalid-callback-token", "native callback token is invalid", {
+        token,
+      });
+    }
+    if (typeof operation !== "function") {
+      this.reject(
+        "invalid-callback",
+        "native callback operation must be a function",
+      );
+    }
+    if (!Array.isArray(args)) {
+      this.reject("invalid-callback-arguments", "callback arguments must be an array");
+    }
+    const entry = {
+      token: token >>> 0,
+      callback: operation,
+      plan,
+      direction: "lean",
+      signatureId: plan.signatureId,
+      leases: 1,
+      active: 0,
+      calls: 0,
+      releaseDeferred: false,
+    };
+    return this.invokeEntry(entry, undefined, args);
   }
 
   beforeNativeCall() {
@@ -448,6 +483,7 @@ export class CallbackRegistry {
             parentId: frame.parentId,
             token: frame.token,
             signatureId: frame.signatureId,
+            direction: frame.direction,
             depth: frame.depth,
           }),
         ),

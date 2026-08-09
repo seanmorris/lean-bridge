@@ -40,12 +40,28 @@ const alphaPrivateAbi = Object.freeze({
         maxDepth: 64,
       }),
     }),
+    "lean:Alpha.makeAdder": Object.freeze({
+      symbol: "_bridge_lean_alpha_make_adder",
+      adapter: Object.freeze({
+        kind: "callback-result-v1",
+        abiVersion: 1,
+        maxDepth: 64,
+      }),
+    }),
   }),
   resources: Object.freeze({
     "lean:Alpha.Box": Object.freeze({
       side: "lean",
       kind: 1,
       dispose: "_bridge_lean_release",
+    }),
+  }),
+  callbacks: Object.freeze({
+    "lean:Alpha.Transform": Object.freeze({
+      side: "lean",
+      kind: 2,
+      call: "_bridge_lean_alpha_transform_call",
+      dispose: "_bridge_lean_alpha_transform_release",
     }),
   }),
 });

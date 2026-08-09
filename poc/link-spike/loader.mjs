@@ -1,5 +1,6 @@
 import { PendingOperationRegistry } from "../../src/runtime/pending-operations.mjs";
 import { CallbackRegistry } from "../../src/runtime/callbacks.mjs";
+import { WeakValueMap } from "../../src/runtime/weak-value-map.mjs";
 
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
@@ -18,6 +19,7 @@ const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder("utf-8", { fatal: true });
 const runtimeContexts = new WeakMap();
 const wrapperStates = new WeakMap();
+const nativeClosureStates = new WeakMap();
 let nextRuntimeIdentity = 1;
 
 export class LeanBridgeError extends Error {
@@ -88,6 +90,7 @@ const bridgeError = (descriptor, binding, code, message, details) =>
   });
 
 const classIdentity = (descriptor, typeId) => `${identity(descriptor)}:${typeId}`;
+const closureIdentity = (typeId, token) => `${typeId}:${token}`;
 
 const decodeHandleToken = token => ({
   side: token >>> 31,
@@ -112,6 +115,7 @@ class RuntimeRegistry {
     this.epoch = 1;
     this.state = "open";
     this.entries = new Map();
+    this.closureEntries = new Map();
     this.classes = new Map();
     this.hostSlots = [];
     this.hostObjectTokens = new WeakMap();
@@ -159,6 +163,7 @@ class RuntimeRegistry {
       value: () => (this.callbackBoundaries.at(-1)?.error ? 1 : 0),
     });
     this.pendingFinalizations = [];
+    this.pendingClosureFinalizations = [];
     this.createWeakReference =
       options.createWeakReference ?? (target => new WeakRef(target));
     this.counters = {
@@ -177,6 +182,12 @@ class RuntimeRegistry {
       hostLeasesAcquired: 0,
       hostLeasesReleased: 0,
       hostRejected: 0,
+      closuresCreated: 0,
+      closureCanonicalHits: 0,
+      closureCalls: 0,
+      closureLeasesAcquired: 0,
+      closureLeasesReleased: 0,
+      closuresFinalized: 0,
     };
     const createFinalizationRegistry =
       options.createFinalizationRegistry ??
@@ -184,8 +195,27 @@ class RuntimeRegistry {
         typeof FinalizationRegistry === "function"
           ? new FinalizationRegistry(callback)
           : undefined);
+    const createClosureFinalizationRegistry =
+      options.createClosureFinalizationRegistry ??
+      (callback =>
+        typeof FinalizationRegistry === "function"
+          ? new FinalizationRegistry(callback)
+          : undefined);
+    const createClosureCacheFinalizationRegistry =
+      options.createClosureCacheFinalizationRegistry ??
+      (callback =>
+        typeof FinalizationRegistry === "function"
+          ? new FinalizationRegistry(callback)
+          : undefined);
     this.finalizer = createFinalizationRegistry(holding => {
       this.pendingFinalizations.push(holding);
+    });
+    this.closureCache = new WeakValueMap({
+      createWeakReference: this.createWeakReference,
+      createFinalizationRegistry: createClosureCacheFinalizationRegistry,
+    });
+    this.closureFinalizer = createClosureFinalizationRegistry(holding => {
+      this.pendingClosureFinalizations.push(holding);
     });
   }
 
@@ -200,6 +230,7 @@ class RuntimeRegistry {
 
   beforeCall(descriptor, binding) {
     this.drainFinalizers();
+    this.drainClosureFinalizers();
     if (this.state !== "open") {
       this.reject(
         descriptor,
@@ -441,6 +472,291 @@ class RuntimeRegistry {
     }
   }
 
+  validateClosureToken(descriptor, binding, token, adapter) {
+    if (!Number.isInteger(token) || token === 0) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-callback-token",
+        `${binding.name} returned an invalid Lean closure token`,
+      );
+    }
+    const normalized = token >>> 0;
+    const decoded = decodeHandleToken(normalized);
+    if (
+      adapter.handle?.side !== "lean" ||
+      decoded.side !== 0 ||
+      decoded.kind !== adapter.handle.kind ||
+      decoded.slot === 0 ||
+      decoded.generation === 0
+    ) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-callback-token",
+        `${binding.name} returned a closure token with the wrong side or nominal kind`,
+        { expectedSide: adapter.handle?.side, expectedKind: adapter.handle?.kind },
+      );
+    }
+    return normalized;
+  }
+
+  requireNativeClosure(wrapper, descriptor, binding) {
+    const state = nativeClosureStates.get(wrapper);
+    if (!state) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-callback",
+        `${binding.name} requires a generated Lean closure`,
+      );
+    }
+    if (state.context !== this) {
+      this.reject(
+        descriptor,
+        binding,
+        "cross-runtime-handle",
+        `${binding.name} belongs to a different Lean runtime`,
+      );
+    }
+    if (state.disposed) {
+      this.reject(
+        descriptor,
+        binding,
+        "callback-disposed",
+        `${binding.name} has been disposed`,
+      );
+    }
+    if (state.epoch !== this.epoch || this.state !== "open") {
+      this.reject(
+        descriptor,
+        binding,
+        "runtime-epoch-expired",
+        `${binding.name} belongs to an expired runtime epoch`,
+      );
+    }
+    return state;
+  }
+
+  liftNativeClosure(token, descriptor, binding, adapter, call, release) {
+    const normalized = this.validateClosureToken(
+      descriptor,
+      binding,
+      token,
+      adapter,
+    );
+    const key = closureIdentity(adapter.signature.typeId, normalized);
+    const existing = this.closureCache.get(key);
+    if (existing) {
+      this.counters.closureCanonicalHits += 1;
+      return existing;
+    }
+    if (this.closureEntries.has(key)) {
+      this.reject(
+        descriptor,
+        binding,
+        "duplicate-owned-callback",
+        `${binding.name} returned a Lean closure identity whose previous owner awaits cleanup`,
+      );
+    }
+
+    let wrapper;
+    wrapper = (...args) => this.invokeNativeClosure(wrapper, args);
+    const state = {
+      context: this,
+      epoch: this.epoch,
+      key,
+      token: normalized,
+      descriptor,
+      binding,
+      adapter,
+      call,
+      release,
+      disposed: false,
+      active: 0,
+      calls: 0,
+    };
+    nativeClosureStates.set(wrapper, state);
+    this.closureEntries.set(key, {
+      key,
+      token: normalized,
+      epoch: this.epoch,
+      descriptor,
+      binding,
+      adapter,
+      release,
+    });
+    this.closureCache.set(key, wrapper);
+    this.closureFinalizer?.register(
+      wrapper,
+      Object.freeze({
+        key,
+        token: normalized,
+        epoch: this.epoch,
+        descriptor,
+        binding,
+        adapter,
+        release,
+      }),
+      wrapper,
+    );
+    Object.defineProperties(wrapper, {
+      dispose: {
+        value: () => this.disposeNativeClosure(wrapper),
+      },
+      disposed: {
+        get: () => nativeClosureStates.get(wrapper)?.disposed ?? true,
+      },
+    });
+    if (Symbol.dispose) {
+      Object.defineProperty(wrapper, Symbol.dispose, {
+        value: wrapper.dispose,
+      });
+    }
+    this.counters.closuresCreated += 1;
+    this.counters.closureLeasesAcquired += 1;
+    return wrapper;
+  }
+
+  invokeNativeClosure(wrapper, args) {
+    const preliminary = nativeClosureStates.get(wrapper);
+    const descriptor = preliminary?.descriptor ?? {
+      id: "bridge/native-closure",
+      buildHash: "unknown",
+    };
+    const binding = preliminary?.binding ?? { name: "callback" };
+    this.beforeCall(descriptor, binding);
+    const state = this.requireNativeClosure(wrapper, descriptor, binding);
+    const { signature } = state.adapter;
+    if (args.length !== signature.parameters.length) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} closure expects ${signature.parameters.length} arguments`,
+        { expected: signature.parameters.length, actual: args.length },
+      );
+    }
+    const typeMap = bindingIrTypeMap(descriptor);
+    for (let index = 0; index < args.length; index += 1) {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        signature.parameters[index].type,
+        args[index],
+        signature.parameters[index].name,
+        typeMap,
+      );
+    }
+    if (signature.invocation === "once" && state.calls > 0) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "callback-already-invoked",
+        `${binding.name} returned a once-only closure that has already run`,
+      );
+    }
+    state.calls += 1;
+    state.active += 1;
+    this.counters.closureCalls += 1;
+    let result;
+    try {
+      result = this.callbacks.invokeNative(
+        state.token,
+        signature,
+        (...values) => state.call(state.token, ...values),
+        args,
+      );
+    } finally {
+      state.active -= 1;
+    }
+    validateCopiedValue(
+      descriptor,
+      binding,
+      signature.result.type,
+      result,
+      "result",
+      typeMap,
+    );
+    return result;
+  }
+
+  releaseNativeClosure(entry, wrapper, reason) {
+    const current = this.closureEntries.get(entry.key);
+    if (
+      !current ||
+      current.token !== entry.token ||
+      current.epoch !== entry.epoch
+    ) {
+      if (reason === "finalizer") return false;
+      this.reject(
+        entry.descriptor,
+        entry.binding,
+        "stale-callback-token",
+        `${entry.binding.name} cleanup rejected an expired Lean closure lease`,
+        { cleanup: reason },
+      );
+    }
+    this.closureEntries.delete(entry.key);
+    if (wrapper) {
+      const state = nativeClosureStates.get(wrapper);
+      if (state) state.disposed = true;
+      this.closureFinalizer?.unregister(wrapper);
+    }
+    this.closureCache.delete(entry.key);
+    const remaining = entry.release(entry.token) >>> 0;
+    if (remaining === 0xffff_ffff) {
+      this.reject(
+        entry.descriptor,
+        entry.binding,
+        "stale-callback-token",
+        `${entry.binding.name} cleanup rejected a stale Lean closure token`,
+        { cleanup: reason },
+      );
+    }
+    this.counters.closureLeasesReleased += 1;
+    if (reason === "finalizer") this.counters.closuresFinalized += 1;
+    return true;
+  }
+
+  disposeNativeClosure(wrapper) {
+    const state = nativeClosureStates.get(wrapper);
+    if (state?.context === this && state.disposed) return false;
+    const descriptor = state?.descriptor ?? {
+      id: "bridge/native-closure",
+      buildHash: "unknown",
+    };
+    const binding = state?.binding ?? { name: "callback" };
+    const live = this.requireNativeClosure(wrapper, descriptor, binding);
+    if (live.active > 0 && live.adapter.signature.selfDisposal === "reject") {
+      this.reject(
+        descriptor,
+        binding,
+        "callback-active",
+        `${binding.name} cannot be disposed while it is running`,
+      );
+    }
+    this.releaseNativeClosure(live, wrapper, "dispose");
+    return true;
+  }
+
+  drainClosureFinalizers() {
+    while (this.pendingClosureFinalizations.length > 0) {
+      const holding = this.pendingClosureFinalizations.shift();
+      if (holding.epoch !== this.epoch || this.state !== "open") continue;
+      const current = this.closureEntries.get(holding.key);
+      if (
+        !current ||
+        current.token !== holding.token ||
+        current.epoch !== holding.epoch
+      ) {
+        continue;
+      }
+      if (this.closureCache.get(holding.key) !== undefined) continue;
+      this.releaseNativeClosure(current, undefined, "finalizer");
+    }
+  }
+
   attach(wrapper, descriptor, binding, token, release) {
     const normalized = this.validateToken(descriptor, binding, token);
     const bindingKey = classIdentity(descriptor, binding.typeId);
@@ -635,6 +951,7 @@ class RuntimeRegistry {
 
   snapshot() {
     this.drainFinalizers();
+    this.drainClosureFinalizers();
     return Object.freeze({
       runtimeId: this.runtimeId,
       epoch: this.epoch,
@@ -665,7 +982,17 @@ class RuntimeRegistry {
         leasesAcquired: this.counters.hostLeasesAcquired,
         leasesReleased: this.counters.hostLeasesReleased,
       }),
+      nativeClosures: Object.freeze({
+        live: this.closureEntries.size,
+        created: this.counters.closuresCreated,
+        canonicalHits: this.counters.closureCanonicalHits,
+        calls: this.counters.closureCalls,
+        leasesAcquired: this.counters.closureLeasesAcquired,
+        leasesReleased: this.counters.closureLeasesReleased,
+        finalized: this.counters.closuresFinalized,
+      }),
       pendingFinalizations: this.pendingFinalizations.length,
+      pendingClosureFinalizations: this.pendingClosureFinalizations.length,
       pendingOperations: this.pendingOperations.snapshot(),
       callbacks: this.callbacks.snapshot(),
     });
@@ -674,7 +1001,13 @@ class RuntimeRegistry {
   shutdown() {
     if (this.state === "closed") return true;
     this.drainFinalizers();
+    this.drainClosureFinalizers();
     this.pendingOperations.shutdown();
+    for (const [key, entry] of [...this.closureEntries]) {
+      const wrapper = this.closureCache.get(key);
+      this.releaseNativeClosure(entry, wrapper, "shutdown");
+    }
+    this.closureCache.clear();
     this.callbacks.shutdown();
     for (const [entryKey, entry] of [...this.entries]) {
       const wrapper = entry.reference.deref();
@@ -1355,6 +1688,84 @@ const projectCallbackFunction = (
   };
 };
 
+const projectCallbackResultFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const adapter = binding.adapter;
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (
+    adapter.abiVersion !== 1 ||
+    adapter.signature?.kind !== "callback-signature-v1" ||
+    adapter.signature.abiVersion !== 1 ||
+    adapter.handle?.side !== "lean" ||
+    !Number.isInteger(adapter.handle.kind) ||
+    typeof adapter.callSymbol !== "string" ||
+    adapter.disposal?.explicit !== true ||
+    adapter.disposal.fallback !== "queued-finalizer" ||
+    typeof adapter.disposal.symbol !== "string" ||
+    !declaration ||
+    declaration.resultMode !== "value" ||
+    declaration.result.ownership !== "lease" ||
+    declaration.result.lifetime?.scope !== "explicit"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported Lean closure result adapter`,
+      { abiVersion: adapter.abiVersion },
+    );
+  }
+  const call = resolvePrivateFunction(
+    module,
+    descriptor,
+    adapter.callSymbol,
+  );
+  const release = resolvePrivateFunction(
+    module,
+    descriptor,
+    adapter.disposal.symbol,
+  );
+
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    if (args.length !== declaration.parameters.length) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} expects ${declaration.parameters.length} arguments`,
+        { expected: declaration.parameters.length, actual: args.length },
+      );
+    }
+    const typeMap = bindingIrTypeMap(descriptor);
+    for (let index = 0; index < args.length; index += 1) {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        declaration.parameters[index].type,
+        args[index],
+        declaration.parameters[index].name,
+        typeMap,
+      );
+    }
+    initializeBinding(module, descriptor, binding);
+    const token = implementation(...args);
+    return context.liftNativeClosure(
+      token,
+      descriptor,
+      binding,
+      adapter,
+      call,
+      release,
+    );
+  };
+};
+
 const projectFunction = (module, descriptor, binding, context) => {
   const implementation = resolvePrivateFunction(
     module,
@@ -1388,6 +1799,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "callback-call-v1") {
     return projectCallbackFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "callback-result-v1") {
+    return projectCallbackResultFunction(
       module,
       descriptor,
       binding,

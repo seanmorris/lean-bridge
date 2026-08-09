@@ -36,12 +36,17 @@ export declare class Box {
 export declare function roundTrip(payload: Payload): Payload;
 export type Transform = (value: number) => number;
 export declare function withCallback(value: number, transform: Transform): number;
+export interface LeanOwnedCallable {
+  readonly disposed: boolean;
+  dispose(): boolean;
+}
+export declare function makeAdder(base: number): Transform & LeanOwnedCallable;
 ```
 
 A consumer uses direct imports and calls:
 
 ```js
-import { Box, roundTrip, withCallback } from "@lean-wasm/alpha";
+import { Box, makeAdder, roundTrip, withCallback } from "@lean-wasm/alpha";
 
 const box = new Box(41);
 console.log(box.read());
@@ -55,8 +60,11 @@ const result = roundTrip({
 });
 
 const answer = withCallback(40, value => value);
+const addTwo = makeAdder(2);
+console.log(addTwo(40));
 
 box.dispose();
+addTwo.dispose();
 ```
 
 The public source does not expose `ccall`, `cwrap`, underscored symbols, pointers, numeric handles, or WebAssembly objects. `Uint8Array` remains a byte sequence, numeric ranges are checked, records retain named fields, and resource identity remains attached to the generated class.
@@ -71,12 +79,12 @@ The copied-value validator walks the Binding IR record instead of duplicating th
 
 ## Executable checks
 
-`tests/javascript-generator.test.mjs` writes the generated package to a fresh temporary directory and imports it. The fixture constructs and disposes a `Box`, checks canonical identity, calls `roundTrip` and `withCallback`, preserves `Uint8Array`, and rejects malformed values before dispatch. It also inspects the generated JavaScript, callback type, TypeScript, manifest, and canonical hash.
+`tests/javascript-generator.test.mjs` writes the generated package to a fresh temporary directory and imports it. The fixture constructs and disposes a `Box`, checks canonical identity, calls `roundTrip`, `withCallback`, and `makeAdder`, preserves `Uint8Array`, and rejects malformed values before dispatch. It also inspects the generated JavaScript, callback type, owned-callable projection, TypeScript, manifest, and canonical hash.
 
-`tests/javascript-projection.test.mjs` verifies that public names come from Binding IR and that callback parameters receive a stable generated signature plan. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
+`tests/javascript-projection.test.mjs` verifies that public names come from Binding IR, callback parameters receive a stable generated signature plan, and returned Lean closures receive a private call and disposal plan. It rejects missing implementation mappings, private policy injection, unknown symbols, duplicate resource tags, unsupported adapters, unsupported result modes, and public name collisions.
 
 `tests/resource-lifecycle-generator.test.mjs` verifies the exact ownership transitions produced for Alpha. It changes disposal and result ownership in valid Binding IR and confirms that the generated plan changes or the JavaScript backend rejects a contract it cannot preserve. Registry tests confirm that the generated fallback policy controls finalizer registration.
 
 ## Remaining generator boundary
 
-The value-frame compiler derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The resource lifecycle, pending-operation, and callback compilers derive ownership, cleanup, and re-entry plans from the same IR. Real Wasm fixtures exercise Promise settlement after stack return and a synchronous JavaScript to Lean to JavaScript to Lean callback cycle. The C code that schedules asynchronous work and creates the fixed callback closure remains handwritten. Iterators, exported Lean closures, properties, overloads, generics, rich asynchronous result frames, additional callback signatures, and error payload translation still require backend conformance fixtures.
+The value-frame compiler derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The resource lifecycle, pending-operation, and callback compilers derive ownership, cleanup, and re-entry plans from the same IR. Real Wasm fixtures exercise Promise settlement after stack return, a JavaScript callback invoked by Lean, and a returned Lean closure called from that callback. The C code that schedules asynchronous work and implements the two fixed callback adapters remains handwritten. Iterators, properties, overloads, generics, rich asynchronous result frames, additional callback signatures, and error payload translation still require backend conformance fixtures.

@@ -19,6 +19,7 @@ typedef lean_object *(*lean_link_payload_fn)(
 );
 typedef lean_object *(*lean_link_round_trip_fn)(lean_object *);
 typedef uint32_t (*lean_link_with_callback_fn)(uint32_t, lean_object *);
+typedef lean_object *(*lean_link_make_adder_fn)(uint32_t);
 typedef uint8_t (*lean_link_payload_enabled_fn)(lean_object *);
 typedef uint32_t (*lean_link_payload_count_fn)(lean_object *);
 typedef lean_object *(*lean_link_payload_object_fn)(lean_object *);
@@ -41,6 +42,7 @@ static lean_link_read_fn alpha_read = 0;
 static lean_link_payload_fn alpha_payload = 0;
 static lean_link_round_trip_fn alpha_round_trip = 0;
 static lean_link_with_callback_fn alpha_with_callback = 0;
+static lean_link_make_adder_fn alpha_make_adder = 0;
 static lean_link_payload_enabled_fn alpha_payload_enabled = 0;
 static lean_link_payload_count_fn alpha_payload_count = 0;
 static lean_link_payload_object_fn alpha_payload_label = 0;
@@ -119,6 +121,7 @@ enum bridge_lean_handle_layout {
   BRIDGE_LEAN_HANDLE_CAPACITY = 1024,
   BRIDGE_LEAN_HANDLE_SIDE_LEAN = 0,
   BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX = 1,
+  BRIDGE_LEAN_HANDLE_KIND_ALPHA_TRANSFORM = 2,
 };
 
 typedef struct bridge_lean_handle_slot {
@@ -340,6 +343,7 @@ void bridge_register_lean_alpha(
     lean_link_payload_fn payload,
     lean_link_round_trip_fn round_trip,
     lean_link_with_callback_fn with_callback,
+    lean_link_make_adder_fn make_adder,
     lean_link_payload_enabled_fn payload_enabled,
     lean_link_payload_count_fn payload_count,
     lean_link_payload_object_fn payload_label,
@@ -352,6 +356,7 @@ void bridge_register_lean_alpha(
   alpha_payload = payload;
   alpha_round_trip = round_trip;
   alpha_with_callback = with_callback;
+  alpha_make_adder = make_adder;
   alpha_payload_enabled = payload_enabled;
   alpha_payload_count = payload_count;
   alpha_payload_label = payload_label;
@@ -390,6 +395,7 @@ uint32_t bridge_has_lean_alpha(void) {
     alpha_payload != 0 &&
     alpha_round_trip != 0 &&
     alpha_with_callback != 0 &&
+    alpha_make_adder != 0 &&
     alpha_payload_enabled != 0 &&
     alpha_payload_count != 0 &&
     alpha_payload_label != 0 &&
@@ -473,6 +479,49 @@ uint32_t bridge_lean_alpha_with_callback(
   active_frames -= 1;
   if (bridge_lean_host_callback_failed()) return 0;
   return result;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_make_adder(uint32_t base) {
+  if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || !alpha_make_adder) return 0;
+  return bridge_lean_handle_retain(
+    alpha_make_adder(base),
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_TRANSFORM
+  );
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_transform_call(
+    uint32_t handle,
+    uint32_t value
+) {
+  lean_object *transform;
+  lean_object *result_object;
+  uint32_t result;
+
+  if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || handle == 0) {
+    return UINT32_MAX;
+  }
+  transform = bridge_lean_handle_resolve(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_TRANSFORM
+  );
+  if (!transform) return UINT32_MAX;
+  lean_inc(transform);
+  active_frames += 1;
+  result_object = lean_apply_1(transform, lean_box_uint32(value));
+  active_frames -= 1;
+  result = lean_unbox_uint32(result_object);
+  lean_dec(result_object);
+  return result;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_transform_release(uint32_t handle) {
+  return bridge_lean_handle_release(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_TRANSFORM
+  );
 }
 
 static void bridge_lean_alpha_defer_box_value_settle(void *argument) {

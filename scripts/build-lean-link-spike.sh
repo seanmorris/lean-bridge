@@ -126,6 +126,9 @@ BRIDGE_EXPORTS=(
   _bridge_lean_alpha_make
   _bridge_lean_alpha_read
   _bridge_lean_alpha_with_callback
+  _bridge_lean_alpha_make_adder
+  _bridge_lean_alpha_transform_call
+  _bridge_lean_alpha_transform_release
   _bridge_lean_alpha_defer_box_value
   _bridge_lean_alpha_cancel_defer_box_value
   _bridge_lean_alpha_round_trip

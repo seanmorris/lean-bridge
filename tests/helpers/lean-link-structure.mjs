@@ -52,6 +52,7 @@ const SIDE_LIBRARIES = Object.freeze([
       "lean_link_alpha_payload",
       "lean_link_alpha_round_trip",
       "lean_link_alpha_with_callback",
+      "lean_link_alpha_make_adder",
       "lean_link_alpha_payload_enabled",
       "lean_link_alpha_payload_count",
       "lean_link_alpha_payload_label",

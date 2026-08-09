@@ -24,7 +24,10 @@ test("threaded lazy side module loads into the existing shared memory", async ()
 
   assert.equal(libraries.loaded.size, 1);
   assert.equal(Object.isFrozen(alpha), true);
-  assert.deepEqual(Object.keys(alpha), ["Box", "roundTrip", "withCallback"]);
+  assert.deepEqual(
+    Object.keys(alpha),
+    ["Box", "roundTrip", "withCallback", "makeAdder"],
+  );
   const box = new alpha.Box(73);
   assert.equal(box.read(), 73);
   assert.equal(box.identity(), box);
@@ -48,6 +51,9 @@ test("threaded lazy side module loads into the existing shared memory", async ()
     },
   );
   assert.equal(alpha.withCallback(40, value => value), 42);
+  const addTwo = alpha.makeAdder(2);
+  assert.equal(addTwo(40), 42);
+  assert.equal(addTwo.dispose(), true);
   assert.equal(module._bridge_lean_active_frames(), 0);
 });
 

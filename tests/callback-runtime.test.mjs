@@ -67,6 +67,34 @@ test("nested callback frames enter and leave in last-in-first-out order", () => 
   assert.equal(callbacks.snapshot().maxDepth, 2);
 });
 
+test("native Lean closures share the nested frame stack with host callbacks", () => {
+  const events = [];
+  const callbacks = new CallbackRegistry({ onFrame: event => events.push(event) });
+  const signature = plan();
+  const hostToken = callbacks.retain(
+    value =>
+      callbacks.invokeNative(
+        0x0200_1001,
+        signature,
+        nested => nested + 1,
+        [value],
+      ),
+    signature,
+  );
+
+  assert.equal(callbacks.invokeRetained(hostToken, [41]), 42);
+  assert.deepEqual(
+    events.map(event => [event.event, event.direction, event.depth]),
+    [
+      ["enter", "host", 1],
+      ["enter", "lean", 2],
+      ["leave", "lean", 2],
+      ["leave", "host", 1],
+    ],
+  );
+  assert.equal(callbacks.snapshot().activeFrames, 0);
+});
+
 test("an active non-reentrant callback rejects a nested native call", () => {
   const callbacks = new CallbackRegistry();
   const signature = plan({
