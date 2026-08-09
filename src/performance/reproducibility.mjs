@@ -20,7 +20,14 @@ const roots = Object.freeze([
 
 const isGeneratedMeasurement = path => (
   path === "build/performance-wasm/interactive-suite.json" ||
+  path === "build/performance-wasm/self-consistency-suite.json" ||
   /^build\/performance-scale\/scaling-suite(?:-[^/]*)?\.json$/.test(path)
+);
+
+const isTransientBuildProduct = path => (
+  path.endsWith(".o") ||
+  path.endsWith(".olean") ||
+  path.endsWith(".link.map")
 );
 
 const walk = async (root, path, output) => {
@@ -32,7 +39,7 @@ const walk = async (root, path, output) => {
   }
   if (!value.isFile()) throw new Error(`unsupported benchmark artifact ${path}`);
   const portablePath = portable(relative(root, path));
-  if (isGeneratedMeasurement(portablePath)) return;
+  if (isGeneratedMeasurement(portablePath) || isTransientBuildProduct(portablePath)) return;
   const bytes = await readFile(path);
   output.push(Object.freeze({
     path: portablePath,
@@ -51,6 +58,19 @@ export const collectPerformanceInventory = async projectRoot => {
     artifactCount: entries.length,
     totalBytes: entries.reduce((sum, entry) => sum + entry.bytes, 0),
     sha256: sha256(canonicalizeJsonValue(entries)),
+    scope: Object.freeze({
+      included: Object.freeze([
+        "benchmark sources and locked schemas",
+        "generated source and public bindings",
+        "executable Wasm and JavaScript artifacts",
+        "normalized audit manifests",
+      ]),
+      excluded: Object.freeze([
+        "timing measurement records",
+        "compiler and linker intermediates",
+        "raw linker maps containing build-root paths",
+      ]),
+    }),
   });
 };
 

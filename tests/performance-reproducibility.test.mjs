@@ -22,7 +22,7 @@ test("the self-consistency result schema closes the report envelope", async () =
   assert.equal(schema.properties.kind.const, "lean-bridge-performance-self-consistency");
 });
 
-test("the benchmark inventory covers inputs and build products but excludes measurements", async () => {
+test("the benchmark inventory covers executable artifacts and inputs but excludes transient products", async () => {
   const inventory = await collectPerformanceInventory(".");
   assert.ok(inventory.artifactCount > 500);
   assert.ok(inventory.totalBytes > 0);
@@ -32,6 +32,11 @@ test("the benchmark inventory covers inputs and build products but excludes meas
   assert.ok(paths.includes("build/performance-wasm/main.wasm"));
   assert.ok(paths.includes("build/performance-scale/lazy/main.wasm"));
   assert.equal(paths.some(path => /(?:interactive|scaling)-suite/.test(path)), false);
+  assert.equal(paths.some(path => path.endsWith(".o")), false);
+  assert.equal(paths.some(path => path.endsWith(".olean")), false);
+  assert.equal(paths.some(path => path.endsWith(".link.map")), false);
+  assert.ok(inventory.scope.included.includes("executable Wasm and JavaScript artifacts"));
+  assert.ok(inventory.scope.excluded.includes("raw linker maps containing build-root paths"));
 });
 
 test("inventory comparison accepts equality and reports exact artifact drift", () => {
