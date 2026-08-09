@@ -22,6 +22,7 @@ import {
 } from "../../abi/error-envelope.mjs";
 import {
   IteratorGenerationError,
+  compileAsyncIteratorV1,
   compileIteratorV1,
 } from "../../abi/iterator.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -154,6 +155,25 @@ const validateAdapter = (adapter, path) => {
       return;
     }
   }
+  if (adapter.kind === "async-iterator-v1") {
+    exactKeys(
+      adapter,
+      ["kind", "abiVersion", "side", "handleKind", "next", "cancel", "dispose"],
+      path,
+    );
+    if (
+      adapter.abiVersion === 1 &&
+      adapter.side === "lean" &&
+      Number.isSafeInteger(adapter.handleKind) &&
+      adapter.handleKind >= 1 &&
+      adapter.handleKind <= 0x7f
+    ) {
+      nonemptyString(adapter.next, `${path}.next`);
+      nonemptyString(adapter.cancel, `${path}.cancel`);
+      nonemptyString(adapter.dispose, `${path}.dispose`);
+      return;
+    }
+  }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
     path,
     kind: adapter.kind,
@@ -251,6 +271,9 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
     }
     if (adapter.kind === "iterator-v1") {
       return compileIteratorV1(ir, declaration.id, adapter);
+    }
+    if (adapter.kind === "async-iterator-v1") {
+      return compileAsyncIteratorV1(ir, declaration.id, adapter);
     }
     return Object.freeze({
       ...compilePendingOperationV1(ir, declaration.id),
@@ -355,7 +378,7 @@ const validatePrivateAbi = (ir, abi) => {
     resourceTags.set(tag, id);
   }
   for (const [id, entry] of Object.entries(abi.declarations)) {
-    if (entry.adapter?.kind !== "iterator-v1") continue;
+    if (!new Set(["iterator-v1", "async-iterator-v1"]).has(entry.adapter?.kind)) continue;
     const tag = `${entry.adapter.side}:${entry.adapter.handleKind}`;
     if (resourceTags.has(tag)) {
       fail(
@@ -505,10 +528,10 @@ export const compileJavaScriptProjection = (ir, abi) => {
       });
     }
     addPublicName(declaration.name, declaration.id);
-    if (!new Set(["value", "promise", "iterator"]).has(declaration.resultMode)) {
+    if (!new Set(["value", "promise", "iterator", "async-iterator"]).has(declaration.resultMode)) {
       fail(
         "unsupported-result-mode",
-        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value, Promise, and iterator functions`,
+        `${declaration.id} uses ${declaration.resultMode}; the POC projector supports value, Promise, iterator, and async iterator functions`,
         { declaration: declaration.id, resultMode: declaration.resultMode },
       );
     }
@@ -579,6 +602,16 @@ export const compileJavaScriptProjection = (ir, abi) => {
       fail(
         "missing-iterator-adapter",
         `${declaration.id} requires an iterator-v1 adapter`,
+        { declaration: declaration.id },
+      );
+    }
+    if (
+      declaration.resultMode === "async-iterator" &&
+      adapter?.kind !== "async-iterator-v1"
+    ) {
+      fail(
+        "missing-async-iterator-adapter",
+        `${declaration.id} requires an async-iterator-v1 adapter`,
         { declaration: declaration.id },
       );
     }

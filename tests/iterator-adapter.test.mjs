@@ -9,6 +9,7 @@ import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { createLibrarySurface } from "../poc/link-spike/loader.mjs";
 import {
   IteratorGenerationError,
+  compileAsyncIteratorV1,
   compileIteratorV1,
 } from "../src/abi/iterator.mjs";
 import { analyzeJavaScriptCoverage } from "../src/backends/javascript/coverage.mjs";
@@ -70,6 +71,33 @@ const iteratorFixture = () => {
       handleKind: 3,
       next: "_bridge_range_next",
       dispose: "_bridge_range_release",
+    },
+  };
+  return { ir, privateAbi };
+};
+
+const asyncIteratorFixture = () => {
+  const { ir, privateAbi } = iteratorFixture();
+  const declaration = ir.declarations.find(
+    candidate => candidate.id === "bridge:Alpha.range",
+  );
+  declaration.id = "bridge:Alpha.asyncRange";
+  declaration.name = "asyncRange";
+  declaration.overloadKey = "asyncRange(uint32)";
+  declaration.resultMode = "async-iterator";
+  declaration.effects.push("async");
+  declaration.source.declaration = "Alpha.asyncRange";
+  delete privateAbi.declarations["bridge:Alpha.range"];
+  privateAbi.declarations["bridge:Alpha.asyncRange"] = {
+    symbol: "_bridge_async_range_start",
+    adapter: {
+      kind: "async-iterator-v1",
+      abiVersion: 1,
+      side: "lean",
+      handleKind: 4,
+      next: "_bridge_async_range_next",
+      cancel: "_bridge_async_range_cancel",
+      dispose: "_bridge_async_range_release",
     },
   };
   return { ir, privateAbi };
@@ -228,4 +256,147 @@ test("generated packages expose standard Iterable values", async () => {
     );
     assert.deepEqual(Array.from(module.range(5)), [0, 1, 2, 3, 4]);
   });
+});
+
+test("async iterator plans use exactly-once pending pulls and cancellation", () => {
+  const { ir, privateAbi } = asyncIteratorFixture();
+  const options = privateAbi.declarations["bridge:Alpha.asyncRange"].adapter;
+  const plan = compileAsyncIteratorV1(ir, "bridge:Alpha.asyncRange", options);
+  assert.equal(plan.kind, "async-iterator-v1");
+  assert.equal(plan.delivery, "async-iterator");
+  assert.equal(plan.cursor.handle.kind, 4);
+  assert.equal(plan.step.pending.kind, "pending-operation-v1");
+  assert.equal(plan.step.pending.settlement.cardinality, "exactly-once");
+  assert.equal(plan.step.pending.cancellation.supported, true);
+  assert.equal(plan.step.resolver, "__leanBridgePendingResolveIteratorU32");
+  assert.equal(analyzeJavaScriptCoverage(ir).supported, true);
+
+  const projection = compileJavaScriptProjection(ir, privateAbi);
+  const binding = projection.bindings.find(binding => binding.name === "asyncRange");
+  assert.equal(binding.adapter.kind, "async-iterator-v1");
+  const missing = structuredClone(privateAbi);
+  missing.declarations["bridge:Alpha.asyncRange"].adapter = null;
+  assert.throws(
+    () => compileJavaScriptProjection(ir, missing),
+    error =>
+      error instanceof JavaScriptProjectionError &&
+      error.code === "missing-async-iterator-adapter",
+  );
+});
+
+test("native async iterators serialize pulls and cancel active work on return", async () => {
+  const { ir, privateAbi } = asyncIteratorFixture();
+  const projection = compileJavaScriptProjection(ir, privateAbi);
+  const binding = projection.bindings.find(binding => binding.name === "asyncRange");
+  const cursors = new Map();
+  const pending = new Map();
+  let generation = 0;
+  let releases = 0;
+  let cancellations = 0;
+  let autoResolve = true;
+  const module = {
+    _bridge_async_range_start(end) {
+      generation += 1;
+      const token = ((4 << 24) | (generation << 12) | 1) >>> 0;
+      cursors.set(token, { current: 0, end });
+      return token;
+    },
+    _bridge_async_range_next(pendingToken, cursorToken) {
+      const job = { cursorToken, cancelled: false };
+      pending.set(pendingToken, job);
+      if (autoResolve) {
+        queueMicrotask(() => {
+          if (job.cancelled) return;
+          pending.delete(pendingToken);
+          const cursor = cursors.get(cursorToken);
+          if (cursor.current >= cursor.end) {
+            module.__leanBridgePendingResolveIteratorU32(pendingToken, 1, 0);
+          } else {
+            const value = cursor.current;
+            cursor.current += 1;
+            module.__leanBridgePendingResolveIteratorU32(pendingToken, 0, value);
+          }
+        });
+      }
+      return 1;
+    },
+    _bridge_async_range_cancel(pendingToken) {
+      const job = pending.get(pendingToken);
+      if (!job) return 0;
+      job.cancelled = true;
+      pending.delete(pendingToken);
+      cancellations += 1;
+      return 1;
+    },
+    _bridge_async_range_release(token) {
+      if (!cursors.delete(token)) return 0xffff_ffff;
+      releases += 1;
+      return 0;
+    },
+  };
+  const api = createLibrarySurface(module, {
+    id: "poc/async-iterator@0.0.0",
+    buildHash: "async-iterator-test",
+    bindingIr: ir,
+    bindings: Object.freeze([binding]),
+  });
+
+  const values = [];
+  const complete = api.asyncRange(4);
+  assert.equal(complete[Symbol.asyncIterator](), complete);
+  for await (const value of complete) values.push(value);
+  assert.deepEqual(values, [0, 1, 2, 3]);
+  assert.equal(releases, 1);
+
+  autoResolve = false;
+  const cancelled = api.asyncRange(10);
+  const next = cancelled.next();
+  await Promise.resolve();
+  const returned = cancelled.return();
+  await assert.rejects(next, error => error.code === "operation-cancelled");
+  assert.deepEqual(await returned, { done: true, value: undefined });
+  assert.equal(cancellations, 1);
+  assert.equal(releases, 2);
+});
+
+test("generated packages expose standard AsyncIterable values", async () => {
+  const { ir } = asyncIteratorFixture();
+  const files = generateJavaScriptPackage(ir);
+  assert.match(files["index.mjs"], /runtime\.iterateAsync\("bridge:Alpha\.asyncRange"/);
+  assert.match(
+    files["index.d.ts"],
+    /asyncRange\(end: number\): AsyncIterable<number>/,
+  );
+  assert.doesNotMatch(files["index.d.ts"], /cursor|handle|pointer/i);
+
+  const directory = await mkdtemp(join(tmpdir(), "lean-bridge-async-iterator-"));
+  try {
+    for (const [relativePath, source] of Object.entries({
+      ...files,
+      "internal/runtime.mjs": `
+export const runtime = Object.freeze({
+  async *iterateAsync(declaration, args) {
+    if (declaration !== "bridge:Alpha.asyncRange") throw new Error("unknown iterator");
+    for (let value = 0; value < args[0]; value += 1) yield value;
+  },
+  call() {},
+  construct() {},
+  method() {},
+  dispose() {},
+});
+`,
+    })) {
+      const destination = join(directory, relativePath);
+      await mkdir(join(destination, ".."), { recursive: true });
+      await writeFile(destination, source);
+    }
+    const module = await import(
+      `${pathToFileURL(join(directory, "index.mjs")).href}?test=async-iterator`
+    );
+    const values = [];
+    for await (const value of module.asyncRange(3)) values.push(value);
+    assert.deepEqual(values, [0, 1, 2]);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });

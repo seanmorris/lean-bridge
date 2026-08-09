@@ -35,7 +35,7 @@ test("iterator delivery accepts scalar plans and rejects values without pull fra
   const asyncIterator = clone(alpha.bindingIr);
   roundTrip(asyncIterator).resultMode = "async-iterator";
   roundTrip(asyncIterator).effects.push("async");
-  expectGap(asyncIterator, "unsupported-result-mode");
+  expectGap(asyncIterator, "unsupported-iterator-value");
 });
 
 test("properties and static methods fail until they have native projections", () => {

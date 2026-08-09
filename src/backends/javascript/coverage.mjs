@@ -165,7 +165,7 @@ export const analyzeJavaScriptCoverage = ir => {
     }
     const supportedModes =
       declaration.kind === "function"
-        ? new Set(["value", "promise", "iterator"])
+        ? new Set(["value", "promise", "iterator", "async-iterator"])
         : new Set(["value"]);
     if (!supportedModes.has(declaration.resultMode)) {
       report(
@@ -201,7 +201,7 @@ export const analyzeJavaScriptCoverage = ir => {
         inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`);
       }
       if (
-        declaration.resultMode === "iterator" &&
+        new Set(["iterator", "async-iterator"]).has(declaration.resultMode) &&
         !supportsIteratorValue(parameter.type)
       ) {
         report(
@@ -235,7 +235,7 @@ export const analyzeJavaScriptCoverage = ir => {
       inspectTypeRef(declaration.result.type, `${declaration.id}.result`);
     }
     if (
-      declaration.resultMode === "iterator" &&
+      new Set(["iterator", "async-iterator"]).has(declaration.resultMode) &&
       !supportsIteratorValue(declaration.result.type)
     ) {
       report(

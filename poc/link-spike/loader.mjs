@@ -135,6 +135,21 @@ class RuntimeRegistry {
       enumerable: false,
       value: (token, value) => this.pendingOperations.resolve(token, value),
     });
+    for (const [name, convert] of [
+      ["__leanBridgePendingResolveIteratorU32", value => value >>> 0],
+      ["__leanBridgePendingResolveIteratorI32", value => value | 0],
+      ["__leanBridgePendingResolveIteratorF64", value => Number(value)],
+    ]) {
+      Object.defineProperty(this.module, name, {
+        configurable: true,
+        enumerable: false,
+        value: (token, state, value) =>
+          this.pendingOperations.resolve(
+            token,
+            Object.freeze({ state: state >>> 0, value: convert(value) }),
+          ),
+      });
+    }
     Object.defineProperty(this.module, "__leanBridgeInvokeCallbackU32", {
       configurable: true,
       enumerable: false,
@@ -1826,6 +1841,191 @@ const projectIteratorFunction = (
   };
 };
 
+const projectAsyncIteratorFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const plan = binding.adapter;
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (
+    plan.kind !== "async-iterator-v1" ||
+    plan.abiVersion !== 1 ||
+    plan.delivery !== "async-iterator" ||
+    plan.cursor?.handle?.side !== "lean" ||
+    !Number.isInteger(plan.cursor.handle.kind) ||
+    plan.cursor.ownership !== "lease" ||
+    plan.cursor.lifetime?.scope !== "explicit" ||
+    plan.cursor.disposal?.hostProtocol !== "return" ||
+    plan.cursor.disposal?.fallback !== "queued-finalizer" ||
+    plan.step?.pending?.kind !== "pending-operation-v1" ||
+    plan.step.pending.abiVersion !== 1 ||
+    plan.step.pending.settlement?.cardinality !== "exactly-once" ||
+    typeof module[plan.step.resolver] !== "function" ||
+    !declaration ||
+    declaration.resultMode !== "async-iterator"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported async iterator plan`,
+      { abiVersion: plan.abiVersion },
+    );
+  }
+  const nextNative = resolvePrivateFunction(module, descriptor, plan.step.symbol);
+  const cancelNative = resolvePrivateFunction(
+    module,
+    descriptor,
+    plan.step.cancelSymbol,
+  );
+  const release = resolvePrivateFunction(
+    module,
+    descriptor,
+    plan.cursor.disposal.symbol,
+  );
+  const cursorBinding = Object.freeze({
+    name: `${binding.name}AsyncIterator`,
+    typeId: plan.cursor.typeId,
+    lifecycle: Object.freeze({
+      handle: plan.cursor.handle,
+      disposal: plan.cursor.disposal,
+    }),
+  });
+
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    validatePendingArguments(descriptor, binding, declaration, args);
+    initializeBinding(module, descriptor, binding);
+    const token = implementation(...args);
+    let closed = false;
+    let released = false;
+    let activePending;
+    let chain = Promise.resolve();
+    let iterator;
+    const releaseCursor = () => {
+      if (released) return false;
+      released = true;
+      return context.dispose(iterator, descriptor, cursorBinding);
+    };
+    const done = () => Object.freeze({ done: true, value: undefined });
+
+    const pull = async () => {
+      if (closed) return done();
+      context.beforeCall(descriptor, binding);
+      const state = context.requireReceiver(iterator, descriptor, cursorBinding);
+      const pending = context.pendingOperations.begin(plan.step.pending, {
+        cancel(pendingToken) {
+          const accepted = cancelNative(pendingToken, state.token);
+          if (accepted !== 1 && accepted !== true) {
+            throw bridgeError(
+              descriptor,
+              binding,
+              "iterator-cancel-rejected",
+              `${binding.name} did not accept iterator cancellation`,
+              { pendingToken, accepted },
+            );
+          }
+        },
+      });
+      activePending = pending;
+      try {
+        const accepted = nextNative(pending.token, state.token);
+        if (accepted !== 1 && accepted !== true) {
+          context.pendingOperations.reject(
+            pending.token,
+            bridgeError(
+              descriptor,
+              binding,
+              "iterator-start-rejected",
+              `${binding.name} did not accept an async pull`,
+              { pendingToken: pending.token, accepted },
+            ),
+          );
+        }
+        const step = await pending.promise;
+        if (
+          step === null ||
+          typeof step !== "object" ||
+          !Number.isInteger(step.state)
+        ) {
+          closed = true;
+          releaseCursor();
+          context.poison(
+            descriptor,
+            binding,
+            `${binding.name} returned an invalid async iterator step`,
+            { step },
+          );
+        }
+        if (step.state === plan.step.states.done) {
+          closed = true;
+          releaseCursor();
+          return done();
+        }
+        if (step.state !== plan.step.states.value) {
+          closed = true;
+          releaseCursor();
+          context.poison(
+            descriptor,
+            binding,
+            `${binding.name} returned an unknown async iterator state`,
+            { state: step.state },
+          );
+        }
+        validateCopiedValue(
+          descriptor,
+          binding,
+          declaration.result.type,
+          step.value,
+          "item",
+          bindingIrTypeMap(descriptor),
+        );
+        return Object.freeze({ done: false, value: step.value });
+      } finally {
+        if (activePending === pending) activePending = undefined;
+      }
+    };
+
+    class ProjectedAsyncIterator {
+      next() {
+        const operation = chain.then(pull);
+        chain = operation.catch(() => undefined);
+        return operation;
+      }
+
+      async return() {
+        if (closed) return done();
+        closed = true;
+        if (activePending) {
+          context.pendingOperations.cancel(
+            activePending.token,
+            "async iteration returned before the pull settled",
+          );
+        }
+        await chain;
+        releaseCursor();
+        return done();
+      }
+
+      async throw(error) {
+        await this.return();
+        throw error;
+      }
+
+      [Symbol.asyncIterator]() {
+        return this;
+      }
+    }
+
+    iterator = Object.freeze(new ProjectedAsyncIterator());
+    context.attach(iterator, descriptor, cursorBinding, token, release);
+    return iterator;
+  };
+};
+
 const validatePendingArguments = (descriptor, binding, declaration, args) => {
   const required = declaration.parameters.filter(parameter => !parameter.optional).length;
   if (args.length < required || args.length > declaration.parameters.length) {
@@ -2180,6 +2380,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "iterator-v1") {
     return projectIteratorFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "async-iterator-v1") {
+    return projectAsyncIteratorFunction(
       module,
       descriptor,
       binding,

@@ -136,3 +136,98 @@ export const compileIteratorV1 = (
     },
   });
 };
+
+export const compileAsyncIteratorV1 = (
+  ir,
+  declarationId,
+  {
+    abiVersion = 1,
+    side,
+    handleKind,
+    next,
+    cancel,
+    dispose,
+  } = {},
+) => {
+  validateBindingIr(ir);
+  if (abiVersion !== 1) {
+    fail("unsupported-iterator-version", `iterator ABI ${abiVersion} is unsupported`, {
+      actual: abiVersion,
+      supported: [1],
+    });
+  }
+  if (side !== "lean" || !Number.isSafeInteger(handleKind) || handleKind < 1 || handleKind > 0x7f) {
+    fail("invalid-iterator-handle", `${declarationId} has an invalid cursor handle`, {
+      side,
+      handleKind,
+    });
+  }
+  for (const [name, value] of Object.entries({ next, cancel, dispose })) {
+    if (typeof value !== "string" || value.length === 0) {
+      fail("invalid-iterator-symbol", `${declarationId} has no ${name} symbol`, { name });
+    }
+  }
+  const declaration = ir.declarations.find(candidate => candidate.id === declarationId);
+  if (!declaration) {
+    fail("missing-declaration", `Binding IR has no declaration ${declarationId}`, {
+      declaration: declarationId,
+    });
+  }
+  if (
+    declaration.kind !== "function" ||
+    declaration.resultMode !== "async-iterator" ||
+    declaration.typeParameters.length > 0
+  ) {
+    fail(
+      "unsupported-iterator-declaration",
+      `${declarationId} must be a monomorphic async iterator function`,
+      { declaration: declarationId, resultMode: declaration.resultMode },
+    );
+  }
+  for (const parameter of declaration.parameters) {
+    scalar(parameter.type, `${declarationId}.${parameter.name}`);
+  }
+  const value = scalar(declaration.result.type, `${declarationId}.result`);
+  const resolver =
+    value.codec === "int32"
+      ? "__leanBridgePendingResolveIteratorI32"
+      : new Set(["float32", "float64"]).has(value.codec)
+        ? "__leanBridgePendingResolveIteratorF64"
+        : "__leanBridgePendingResolveIteratorU32";
+
+  return deepFreeze({
+    kind: "async-iterator-v1",
+    abiVersion,
+    declarationId,
+    delivery: "async-iterator",
+    cursor: {
+      typeId: `${declarationId}/async-iterator`,
+      handle: { side, kind: handleKind },
+      ownership: "lease",
+      lifetime: { scope: "explicit", anchor: null },
+      disposal: {
+        explicit: true,
+        hostProtocol: "return",
+        fallback: "queued-finalizer",
+        symbol: dispose,
+      },
+    },
+    step: {
+      symbol: next,
+      cancelSymbol: cancel,
+      resolver,
+      states: { value: 0, done: 1 },
+      value: {
+        type: declaration.result.type,
+        ...value,
+      },
+      pending: {
+        kind: "pending-operation-v1",
+        abiVersion: 1,
+        delivery: "promise",
+        settlement: { cardinality: "exactly-once", late: "reject" },
+        cancellation: { supported: true, cleanup: "before-reject" },
+      },
+    },
+  });
+};
