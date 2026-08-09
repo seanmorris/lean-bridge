@@ -125,7 +125,7 @@ Proof records distinguish theorem-checked behavior from trusted compiler/runtime
 
 JavaScript/TypeScript is the primary initial adapter and receives first-class object, closure, Promise, browser, Node, and bundler support. The canonical schema remains host-neutral for copied data, resources, errors, dependency graphs, and assurance metadata. JS-only features are capability tagged.
 
-A future generator may project the portable subset into WIT/WASI Component Model or a native ABI. Version one does not depend on Component Model support and does not weaken JS semantics to pretend every capability is portable.
+The WIT probe projects portable records, nominal resources, and ordinary functions from the same Binding IR that feeds JavaScript and Python. It preserves the Binding IR hash and assurance identities, validates an independent consumer with the official WIT parser, and reports unsupported callbacks, escaping borrows, arbitrary-precision integers, and host capabilities as explicit gaps. It does not yet produce a Component Model binary adapter or execute the component through a WASI host. Version one does not weaken JS semantics to pretend every capability is portable.
 
 ## Packaging
 

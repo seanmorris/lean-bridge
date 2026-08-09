@@ -28,6 +28,7 @@
     "benchmark:poc": "node scripts/benchmark-native-api.mjs",
     "benchmark:php": "node scripts/benchmark-php-transports.mjs",
     "generate:lean-link-projection": "node scripts/generate-lean-link-projection.mjs",
+    "generate:wit": "node scripts/generate-wit.mjs",
     "binding-ir": "node scripts/binding-ir.mjs",
     "cli": "node scripts/lean-bridge.mjs",
     "binding-packages": "node scripts/binding-package-gate.mjs check poc/lean-link-spike/bindings/alpha.binding-ir.json poc/lean-link-spike/bindings/generated-package-gate.json",

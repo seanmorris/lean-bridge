@@ -1,0 +1,180 @@
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import test from "node:test";
+
+import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import { generatePythonBindingPackage } from "../src/backends/python/generate.mjs";
+import {
+  WitBindingGenerationError,
+  generateWitConsumerProbe,
+  generateWitPackage,
+  verifyWitComposition,
+} from "../src/backends/wit/generate.mjs";
+
+const run = promisify(execFile);
+
+test("WIT preserves the portable Alpha types, resource, and functions", async () => {
+  const source = structuredClone(alpha.bindingIr);
+  const javascriptBefore = generateJavaScriptPackage(source);
+  const generated = generateWitPackage(alpha.bindingIr);
+  assert.deepEqual(alpha.bindingIr, source);
+  assert.deepEqual(generateJavaScriptPackage(alpha.bindingIr), javascriptBefore);
+  assert.equal(generated.manifest.bindingIrSha256, alpha.bindingIrSha256);
+  assert.match(generated.wit, /^package poc:lean-alpha@0\.0\.0;/);
+  assert.match(generated.wit, /record payload \{/);
+  assert.match(generated.wit, /bytes: list<u8>/);
+  assert.match(generated.wit, /values: list<u32>/);
+  assert.match(generated.wit, /resource box \{/);
+  assert.match(generated.wit, /constructor\(value: u32\);/);
+  assert.match(generated.wit, /read: func\(\) -> result<u32, bridge-error>;/);
+  assert.match(generated.wit, /round-trip: func\(payload: payload\) -> payload;/);
+
+  assert.deepEqual(
+    generated.manifest.declarations.map(item => item.id),
+    ["lean:Alpha.box", "lean:Alpha.Box.read", "lean:Alpha.roundTrip"],
+  );
+  assert.deepEqual(
+    generated.manifest.deferred.map(item => [item.id, item.code]),
+    [
+      ["bridge:Alpha.Box.identity", "unsupported-borrowed-result"],
+      ["lean:Alpha.withCallback", "unsupported-host-call"],
+      ["lean:Alpha.makeAdder", "unsupported-first-class-callback"],
+    ],
+  );
+  assert.deepEqual(
+    generated.manifest.assurance.map(item => item.id),
+    [
+      "assurance:Alpha.Payload.layout",
+      "assurance:Alpha.Box.identity",
+      "assurance:Alpha.box.boundary",
+      "assurance:Alpha.Box.read.boundary",
+      "assurance:Alpha.roundTrip.boundary",
+    ],
+  );
+
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-wit-"));
+  try {
+    const witPath = join(scratch, "alpha.wit");
+    await writeFile(witPath, generated.wit);
+    const parsed = await run("wasm-tools", ["component", "wit", witPath, "--json"]);
+    const document = JSON.parse(parsed.stdout);
+    assert.equal(document.worlds.length, 1);
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});
+
+test("the WIT portable subset maps to ordinary generated Python names", () => {
+  const generated = generateWitPackage(alpha.bindingIr);
+  const python = generatePythonBindingPackage(alpha.bindingIr);
+  const mapping = JSON.parse(generated.files["python-consumer.json"]);
+  assert.equal(mapping.bindingIrSha256, alpha.bindingIrSha256);
+  assert.deepEqual(mapping.declarations, [
+    { id: "lean:Alpha.box", name: "Box.__init__" },
+    { id: "lean:Alpha.Box.read", name: "Box.read" },
+    { id: "lean:Alpha.roundTrip", name: "round_trip" },
+  ]);
+  assert.match(python["lean_alpha/__init__.py"], /class Box/);
+  assert.match(python["lean_alpha/__init__.py"], /def round_trip\(payload: Payload\) -> Payload/);
+  assert.match(python["lean_alpha/__init__.pyi"], /class Payload/);
+});
+
+test("independent consumers bind to one nominal WIT resource identity", async () => {
+  const provider = generateWitPackage(alpha.bindingIr);
+  const consumer = generateWitConsumerProbe(provider);
+  const composition = verifyWitComposition(provider, consumer);
+  assert.equal(
+    composition.resourceIdentity,
+    "poc:lean-alpha@0.0.0/types#box",
+  );
+
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-wit-compose-"));
+  try {
+    await mkdir(join(scratch, "deps", "lean-alpha"), { recursive: true });
+    await writeFile(join(scratch, "deps", "lean-alpha", "alpha.wit"), provider.wit);
+    await writeFile(join(scratch, "consumer.wit"), consumer.wit);
+    const parsed = await run("wasm-tools", ["component", "wit", scratch, "--json"]);
+    const document = JSON.parse(parsed.stdout);
+    assert.deepEqual(
+      document.packages.map(item => item.name),
+      ["poc:lean-alpha@0.0.0", "poc:lean-alpha-consumer@0.0.0"],
+    );
+    const providerBox = document.interfaces.find(item => item.name === "types").types.box;
+    const consumerBox = document.interfaces.find(item => item.name === "consume").types.box;
+    assert.equal(document.types[consumerBox].kind.type, providerBox);
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+
+  const drifted = {
+    ...consumer,
+    requirement: {
+      ...consumer.requirement,
+      providerBindingIrSha256: "0".repeat(64),
+    },
+  };
+  assert.throws(
+    () => verifyWitComposition(provider, drifted),
+    error => error instanceof WitBindingGenerationError && error.code === "wit-composition-drift",
+  );
+});
+
+test("WIT fails closed on host-only and unsupported semantic types", () => {
+  const ir = structuredClone(alpha.bindingIr);
+  const roundTrip = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+  roundTrip.result.type = { kind: "primitive", name: "nat" };
+  const generated = generateWitPackage(ir);
+  assert.deepEqual(
+    generated.manifest.deferred.find(item => item.id === roundTrip.id),
+    {
+      id: roundTrip.id,
+      name: roundTrip.name,
+      code: "unsupported-wit-primitive",
+      reason: "WIT has no lossless built-in projection for nat",
+    },
+  );
+  assert.doesNotMatch(generated.wit, /round-trip:/);
+
+  const hostSpecific = structuredClone(alpha.bindingIr);
+  hostSpecific.capabilities.push({
+    id: "capability:browser-dom",
+    category: "host",
+    requirement: "required",
+    documentation: { summary: "Requires the browser DOM.", details: "" },
+  });
+  hostSpecific.declarations.find(item => item.id === "lean:Alpha.roundTrip").capabilities = [
+    "capability:browser-dom",
+  ];
+  const hostResult = generateWitPackage(hostSpecific);
+  assert.equal(
+    hostResult.manifest.deferred.find(item => item.id === roundTrip.id).code,
+    "unsupported-host-capability",
+  );
+});
+
+test("the WIT CLI emits a validated deterministic package", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-wit-cli-"));
+  try {
+    const first = await run("node", [
+      "scripts/generate-wit.mjs",
+      "--output",
+      scratch,
+      "--json",
+    ]);
+    const result = JSON.parse(first.stdout);
+    assert.equal(result.status, "generated");
+    assert.equal(result.bindingIrSha256, alpha.bindingIrSha256);
+    assert.equal(result.declarations, 3);
+    const firstWit = await readFile(join(scratch, "wit", "lean-alpha.wit"), "utf8");
+    await run("node", ["scripts/generate-wit.mjs", "--output", scratch, "--json"]);
+    const secondWit = await readFile(join(scratch, "wit", "lean-alpha.wit"), "utf8");
+    assert.equal(secondWit, firstWit);
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});
