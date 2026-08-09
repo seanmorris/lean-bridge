@@ -1,5 +1,9 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import {
+  GenericSpecializationError,
+  compileFiniteGenericSpecializations,
+} from "../../abi/generic-specialization.mjs";
 import { auditRustPackage } from "./package-audit.mjs";
 
 export class RustBindingGenerationError extends Error {
@@ -94,45 +98,14 @@ const substitute = (ref, parameter, replacement) => {
 
 const specializations = declaration => {
   if (declaration.typeParameters.length === 0) return null;
-  if (
-    declaration.kind !== "function" ||
-    declaration.typeParameters.length !== 1 ||
-    declaration.typeParameters[0].representation !== "copied" ||
-    declaration.typeParameters[0].constraints.length !== 0 ||
-    declaration.resultMode !== "value"
-  ) {
-    fail("unsupported-generic", `${declaration.id} cannot be finitely specialized for Rust`, {
-      declaration: declaration.id,
-    });
-  }
-  const branches = declaration.source.extensions["lean-wasm.org/specializations"];
-  if (!Array.isArray(branches) || branches.length === 0) {
-    fail("missing-generic-specializations", `${declaration.id} has no finite specialization list`, {
-      declaration: declaration.id,
-    });
-  }
-  const ids = new Set();
-  return branches.map((branch, index) => {
-    if (
-      branch === null ||
-      typeof branch !== "object" ||
-      Array.isArray(branch) ||
-      Object.keys(branch).sort().join(",") !== "id,type" ||
-      typeof branch.id !== "string" ||
-      branch.id.length === 0 ||
-      branch.type?.kind !== "primitive"
-    ) {
-      fail("invalid-generic-specialization", `${declaration.id} specialization ${index} is invalid`, {
-        declaration: declaration.id,
-        index,
-      });
+  try {
+    return compileFiniteGenericSpecializations(declaration);
+  } catch (error) {
+    if (error instanceof GenericSpecializationError) {
+      fail(error.code, error.message, error.details);
     }
-    if (ids.has(branch.id)) {
-      fail("duplicate-generic-specialization", `${declaration.id} repeats ${branch.id}`);
-    }
-    ids.add(branch.id);
-    return branch;
-  });
+    throw error;
+  }
 };
 
 const variants = declaration => {

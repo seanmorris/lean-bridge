@@ -37,11 +37,15 @@ const GUARDS = Object.freeze({
   bytes: "bytes",
 });
 
-export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null) => {
-  validateBindingIr(ir);
-  const declaration = ir.declarations.find(item => item.id === declarationId);
-  if (!declaration) fail("unknown-generic-declaration", `unknown declaration ${declarationId}`);
+export const compileFiniteGenericSpecializations = declaration => {
+  const metadata = declaration?.source?.extensions?.["lean-wasm.org/specializations"];
+  if (!Array.isArray(metadata) || metadata.length === 0) {
+    fail("missing-generic-specializations", `${declaration?.id ?? "unknown declaration"} has no specialization metadata`, {
+      declaration: declaration?.id,
+    });
+  }
   if (
+    !declaration ||
     declaration.kind !== "function" ||
     declaration.typeParameters.length !== 1 ||
     declaration.typeParameters[0].representation !== "copied" ||
@@ -55,19 +59,10 @@ export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null
   ) {
     fail(
       "unsupported-generic-shape",
-      `${declarationId} is not a synchronous copied identity specialization`,
-      { declaration: declarationId },
+      `${declaration?.id ?? "unknown declaration"} is not a synchronous copied identity specialization`,
+      { declaration: declaration?.id },
     );
   }
-  const metadata = declaration.source.extensions["lean-wasm.org/specializations"];
-  if (!Array.isArray(metadata) || metadata.length === 0) {
-    fail("missing-generic-specializations", `${declarationId} has no specialization metadata`, {
-      declaration: declarationId,
-    });
-  }
-  const privateBranches = adapter
-    ? new Map(adapter.branches.map(branch => [branch.id, branch.symbol]))
-    : null;
   const ids = new Set();
   const guards = new Map();
   const branches = metadata.map((branch, index) => {
@@ -81,14 +76,14 @@ export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null
       branch.type?.kind !== "primitive" ||
       !(branch.type.name in GUARDS)
     ) {
-      fail("invalid-generic-specialization", `${declarationId} specialization ${index} is invalid`, {
-        declaration: declarationId,
+      fail("invalid-generic-specialization", `${declaration.id} specialization ${index} is invalid`, {
+        declaration: declaration.id,
         index,
       });
     }
     if (ids.has(branch.id)) {
-      fail("duplicate-generic-specialization", `${declarationId} repeats ${branch.id}`, {
-        declaration: declarationId,
+      fail("duplicate-generic-specialization", `${declaration.id} repeats ${branch.id}`, {
+        declaration: declaration.id,
         specialization: branch.id,
       });
     }
@@ -97,11 +92,29 @@ export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null
     if (guards.has(guard)) {
       fail(
         "ambiguous-generic-specialization",
-        `${declarationId} maps ${guards.get(guard)} and ${branch.id} to ${guard}`,
-        { declaration: declarationId, guard },
+        `${declaration.id} maps ${guards.get(guard)} and ${branch.id} to ${guard}`,
+        { declaration: declaration.id, guard },
       );
     }
     guards.set(guard, branch.id);
+    return {
+      id: branch.id,
+      type: structuredClone(branch.type),
+      guard,
+    };
+  });
+  return deepFreeze(branches);
+};
+
+export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null) => {
+  validateBindingIr(ir);
+  const declaration = ir.declarations.find(item => item.id === declarationId);
+  if (!declaration) fail("unknown-generic-declaration", `unknown declaration ${declarationId}`);
+  const metadataBranches = compileFiniteGenericSpecializations(declaration);
+  const privateBranches = adapter
+    ? new Map(adapter.branches.map(branch => [branch.id, branch.symbol]))
+    : null;
+  const branches = metadataBranches.map(branch => {
     const symbol = privateBranches?.get(branch.id);
     if (privateBranches && (typeof symbol !== "string" || symbol.length === 0)) {
       fail("missing-generic-symbol", `${declarationId} has no private symbol for ${branch.id}`, {
@@ -110,9 +123,7 @@ export const compileGenericSpecializationV1 = (ir, declarationId, adapter = null
       });
     }
     return {
-      id: branch.id,
-      type: structuredClone(branch.type),
-      guard,
+      ...structuredClone(branch),
       ...(symbol ? { symbol } : {}),
     };
   });

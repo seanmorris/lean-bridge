@@ -29,6 +29,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Generated Rust backend evidence](../evidence/generated-rust-backend.md)
 - [Generated Python backend evidence](../evidence/generated-python-backend.md)
 - [Generated package drift gate evidence](../evidence/generated-package-gate.md)
+- [Cross-language semantic parity evidence](../evidence/cross-language-semantic-parity.md)
 
 ## Permanent review lenses
 
