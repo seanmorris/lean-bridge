@@ -8,6 +8,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 
 - [Executive recommendation](executive-recommendation.md)
 - [Vrzno and PHP-Wasm mapping](vrzno-lean-mapping.md)
+- [PHP-Wasm, Vrzno, and Weaker extension audit](../evidence/php-wasm-vrzno-weaker-audit.md)
 - [Existing-work comparison](existing-work.md)
 - [Recommended architecture](architecture.md)
 - [Accessibility and universal composition contract](accessibility-composition.md)

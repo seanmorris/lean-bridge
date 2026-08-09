@@ -10,7 +10,7 @@ Retrieved and reviewed on 2026-08-08 unless otherwise noted.
 - [PHP-Wasm extension loading](https://php-wasm.seanmorr.is/extensions/using-php-extensions.html)
 - [PHP-Wasm build modes](https://php-wasm.seanmorr.is/compiling/php-wasm-rc.html)
 - [Vrzno documentation](https://php-wasm.seanmorr.is/extensions/vrzno.html)
-- Code-level evidence: `source/resolveDependencies.mjs`, `source/PhpBase.mjs`, and representative `packages/*` descriptors in the pinned PHP-Wasm revision above.
+- Code-level evidence: [`PHP-Wasm, Vrzno, and Weaker extension audit`](../evidence/php-wasm-vrzno-weaker-audit.md), covering `source/resolveDependencies.mjs`, `source/PhpBase.mjs`, representative `packages/*` descriptors, Vrzno identity and request hooks, and the maintained Weaker implementation.
 
 The key observed PHP-Wasm shape is version-aware ESM descriptors exposing `getLibs/getFiles`; the runtime normalizes library definitions, maps names to URLs through its locator, preloads support files, writes startup extension configuration for `sharedLibs`, and stages `dynamicLibs` without auto-registration.
 
