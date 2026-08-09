@@ -203,6 +203,16 @@ const output = alpha.roundTrip({
 
 The wrapper checks numeric ranges and copy limits, allocates a temporary boundary arena, copies each typed field directly, and frees every allocation before returning. [The typed-value evidence](docs/evidence/typed-value-frame.md) records the ABI and failure behavior.
 
+Functions cross the boundary as functions. Alpha calls the supplied JavaScript transform from Lean, then resumes Lean before returning the result:
+
+```ts
+const answer = alpha.withCallback(40, value => value);
+
+console.assert(answer === 42);
+```
+
+Lean adds one before invoking the transform and one after it returns. The generated binding retains the JavaScript function for the call, reuses its identity during nested calls, validates each `UInt32`, unwinds thrown JavaScript errors, and releases the function before returning. A callback may call Alpha again on the same agent. The runtime tracks that path with bounded nested frames. The public API contains no callback tokens, table indices, or manual adapters. [The callback evidence](docs/evidence/callback-signature-plan.md) records the complete call cycle and failure tests.
+
 ## One runtime for the application
 
 Fifty libraries should not create fifty Lean heaps and fifty copies of the runtime. An application owns one Lean runtime, one heap, one WebAssembly memory, one function table, one symbol space, and one initialization domain.
@@ -250,13 +260,13 @@ Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
 |---|---:|
-| lazy main module with one Lean runtime and `Init` | 1,295,378 |
-| Alpha lazy side module | 3,778 |
+| lazy main module with one Lean runtime and `Init` | 1,296,071 |
+| Alpha lazy side module | 4,059 |
 | Beta lazy side module | 604 |
 | Gamma lazy side module | 605 |
-| final-static three-library application | 1,295,167 |
+| final-static three-library application | 1,298,975 |
 
-These measurements establish a POC baseline. The production suite will add primitive and structured-value marshaling, callbacks, promises, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
+These measurements establish a POC baseline. The production suite will add callback and Promise latency, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
 
 ## Current status
 
@@ -266,13 +276,14 @@ The architecture-testing POC has established:
 - one retained Lean object passed across all three libraries without losing identity;
 - startup, lazy dynamic, and final-static composition from one content-addressed graph;
 - a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
+- a native JavaScript callback projection with canonical function identity, bounded nested re-entry, exception unwinding, and deterministic call-scoped release;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 111 passing behavioral and structural tests;
+- 125 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. A public function returns a normal JavaScript Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Cancellation and shutdown complete once and prevent late Lean execution. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the generated call cycle. [The callback-plan evidence](docs/evidence/callback-signature-plan.md) records the stable signature and re-entry contract. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callback execution and nested re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, functions, callback type, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, matching C frame header, resource lifecycle plan, pending-operation plan, and callback signature plan from the canonical binding IR. One public function returns a normal JavaScript Promise, runs Lean after the initiating Wasm frame returns, and settles through the shared runtime. Another public function calls JavaScript from Lean, supports bounded same-agent re-entry, resumes Lean, and returns through an ordinary synchronous function. Cancellation, callback exceptions, and shutdown unwind their state without leaking retained values. Binding IR version 2 defines callback and closure semantics and migrates version 1 documents before generation. [The pending-operation evidence](docs/evidence/pending-operation-state-machine.md) records the asynchronous call cycle. [The callback evidence](docs/evidence/callback-signature-plan.md) records the synchronous call cycle. Remaining product work includes exported Lean closure projection, Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 
@@ -308,6 +319,7 @@ Architecture documents use `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT`, and `MAY`
 ## Primary references
 
 - [Vrzno](https://github.com/seanmorris/vrzno)
+- [Weaker](https://github.com/seanmorris/weaker)
 - [PHP-Wasm](https://github.com/seanmorris/php-wasm)
 - [PHP-Wasm extension loading](https://php-wasm.seanmorr.is/extensions/using-php-extensions.html)
 - [Lean 4](https://github.com/leanprover/lean4)

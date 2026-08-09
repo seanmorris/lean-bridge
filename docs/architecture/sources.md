@@ -5,6 +5,7 @@ Retrieved and reviewed on 2026-08-08 unless otherwise noted.
 ## Vrzno and PHP-Wasm
 
 - Vrzno: [`seanmorris/vrzno@c3aa3b9dd9de0eab88e3e3c3dc0f86d813ebb53d`](https://github.com/seanmorris/vrzno/tree/c3aa3b9dd9de0eab88e3e3c3dc0f86d813ebb53d)
+- Weaker: [`seanmorris/weaker@8e147cc8832589f582ab61a12b9c429dee1e15b0`](https://github.com/seanmorris/weaker/tree/8e147cc8832589f582ab61a12b9c429dee1e15b0), reviewed 2026-08-09. The maintained `weakermap` package supplies the weak-value reverse-map precedent and replacement-safe finalizer behavior.
 - PHP-Wasm: [`seanmorris/php-wasm@bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89`](https://github.com/seanmorris/php-wasm/tree/bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89)
 - [PHP-Wasm extension loading](https://php-wasm.seanmorr.is/extensions/using-php-extensions.html)
 - [PHP-Wasm build modes](https://php-wasm.seanmorr.is/compiling/php-wasm-rc.html)

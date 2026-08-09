@@ -11,6 +11,7 @@ typedef lean_object *(*lean_link_payload_fn)(
     lean_object *
 );
 typedef lean_object *(*lean_link_round_trip_fn)(lean_object *);
+typedef uint32_t (*lean_link_with_callback_fn)(uint32_t, lean_object *);
 typedef uint8_t (*lean_link_payload_enabled_fn)(lean_object *);
 typedef uint32_t (*lean_link_payload_count_fn)(lean_object *);
 typedef lean_object *(*lean_link_payload_object_fn)(lean_object *);
@@ -26,6 +27,10 @@ extern lean_object *lean_link_alpha_payload(
     lean_object *values
 );
 extern lean_object *lean_link_alpha_round_trip(lean_object *payload);
+extern uint32_t lean_link_alpha_with_callback(
+    uint32_t value,
+    lean_object *transform
+);
 extern uint8_t lean_link_alpha_payload_enabled(lean_object *payload);
 extern uint32_t lean_link_alpha_payload_count(lean_object *payload);
 extern lean_object *lean_link_alpha_payload_label(lean_object *payload);
@@ -37,6 +42,7 @@ extern void bridge_register_lean_alpha(
     lean_link_read_fn read,
     lean_link_payload_fn payload,
     lean_link_round_trip_fn round_trip,
+    lean_link_with_callback_fn with_callback,
     lean_link_payload_enabled_fn payload_enabled,
     lean_link_payload_count_fn payload_count,
     lean_link_payload_object_fn payload_label,
@@ -52,6 +58,7 @@ static void lean_link_alpha_register(void) {
     lean_link_alpha_read,
     lean_link_alpha_payload,
     lean_link_alpha_round_trip,
+    lean_link_alpha_with_callback,
     lean_link_alpha_payload_enabled,
     lean_link_alpha_payload_count,
     lean_link_alpha_payload_label,

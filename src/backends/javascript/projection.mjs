@@ -12,6 +12,10 @@ import {
   PendingOperationGenerationError,
   compilePendingOperationV1,
 } from "../../abi/pending-operation.mjs";
+import {
+  CallbackSignatureGenerationError,
+  compileCallbackSignatureV1,
+} from "../../abi/callback-signature.mjs";
 
 export class JavaScriptProjectionError extends Error {
   constructor(code, message, details = {}) {
@@ -86,6 +90,22 @@ const validateAdapter = (adapter, path) => {
     nonemptyString(adapter.cancel, `${path}.cancel`);
     if (adapter.abiVersion === 1) return;
   }
+  if (adapter.kind === "callback-call-v1") {
+    exactKeys(
+      adapter,
+      ["kind", "abiVersion", "callbackParameter", "maxDepth"],
+      path,
+    );
+    nonemptyString(adapter.callbackParameter, `${path}.callbackParameter`);
+    if (
+      adapter.abiVersion === 1 &&
+      Number.isSafeInteger(adapter.maxDepth) &&
+      adapter.maxDepth >= 1 &&
+      adapter.maxDepth <= 0xffff
+    ) {
+      return;
+    }
+  }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
     path,
     kind: adapter.kind,
@@ -99,6 +119,43 @@ const compileAdapter = (ir, declaration, adapter) => {
     if (adapter.kind === "value-frame-v1") {
       return compileValueFrameV1(ir, declaration.id, adapter);
     }
+    if (adapter.kind === "callback-call-v1") {
+      const callbackIndex = declaration.parameters.findIndex(
+        parameter => parameter.name === adapter.callbackParameter,
+      );
+      const parameter = declaration.parameters[callbackIndex];
+      if (callbackIndex < 0 || parameter?.type.kind !== "named") {
+        fail(
+          "invalid-callback-parameter",
+          `${declaration.id} has no named callback parameter ${adapter.callbackParameter}`,
+          { declaration: declaration.id, parameter: adapter.callbackParameter },
+        );
+      }
+      const signature = compileCallbackSignatureV1(
+        ir,
+        parameter.type.id,
+        { maxDepth: adapter.maxDepth },
+      );
+      if (
+        parameter.ownership !== "borrow" ||
+        parameter.lifetime?.scope !== "call" ||
+        signature.resultMode !== "value"
+      ) {
+        fail(
+          "unsupported-callback-lifecycle",
+          `${declaration.id}.${parameter.name} must be a synchronous callback borrowed for one call`,
+          { declaration: declaration.id, parameter: parameter.name },
+        );
+      }
+      return Object.freeze({
+        kind: "callback-call-v1",
+        abiVersion: 1,
+        declarationId: declaration.id,
+        callbackParameter: parameter.name,
+        callbackIndex,
+        signature,
+      });
+    }
     return Object.freeze({
       ...compilePendingOperationV1(ir, declaration.id),
       cancelSymbol: adapter.cancel,
@@ -106,7 +163,8 @@ const compileAdapter = (ir, declaration, adapter) => {
   } catch (error) {
     if (
       !(error instanceof ValueFrameGenerationError) &&
-      !(error instanceof PendingOperationGenerationError)
+      !(error instanceof PendingOperationGenerationError) &&
+      !(error instanceof CallbackSignatureGenerationError)
     ) {
       throw error;
     }

@@ -11,7 +11,7 @@ import {
 
 const exerciseBox = api => {
   assert.equal(Object.isFrozen(api), true);
-  assert.deepEqual(Object.keys(api), ["Box", "roundTrip"]);
+  assert.deepEqual(Object.keys(api), ["Box", "roundTrip", "withCallback"]);
   const box = new api.Box(2718);
   assert.equal(box.read(), 2718);
   assert.equal(box.identity(), box);
@@ -34,6 +34,7 @@ const exerciseBox = api => {
       values: [16, 32],
     },
   );
+  assert.equal(api.withCallback(40, value => value), 42);
 };
 
 test("dynamic and final-static graphs project the same native Alpha contract", async () => {

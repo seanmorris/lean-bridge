@@ -41,4 +41,4 @@ The same test cancels a scheduled operation before the callback runs. The genera
 
 ## Remaining boundary
 
-The POC private C adapter schedules the operation and calls existing Lean-generated exports. The Lean frontend does not yet emit an asynchronous declaration or its private adapter. The bridge also does not generate copied result frames for rich asynchronous results, callback signature adapters, `AbortSignal` projection, or nested callback frames. Those pieces must consume the same plan and state machine.
+The POC private C adapter schedules the operation and calls existing Lean-generated exports. The Lean frontend does not yet emit an asynchronous declaration or its private adapter. The bridge also does not generate copied result frames for rich asynchronous results or `AbortSignal` projection. Synchronous callback signature adapters and nested callback frames use the same runtime context, but asynchronous callbacks still need an explicit continuation protocol.

@@ -128,6 +128,57 @@
         }
       },
       "assurance": ["assurance:Alpha.Box.identity"]
+    },
+    {
+      "id": "lean:Alpha.Transform",
+      "name": "Transform",
+      "kind": "callback",
+      "representation": "identity",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "target": null,
+      "resource": null,
+      "callable": {
+        "invocation": "many",
+        "reentry": "same-agent",
+        "selfDisposal": "reject",
+        "parameters": [
+          {
+            "name": "value",
+            "type": { "kind": "primitive", "name": "uint32" },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "effects": ["fails", "host-call"],
+        "failure": {
+          "mode": "declared",
+          "errors": ["error:callback-threw"],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value"
+      },
+      "documentation": {
+        "summary": "A JavaScript function that Lean may call synchronously.",
+        "details": "Generated bindings preserve function identity and keep boundary identities and Wasm adapters internal."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.withCallback.transform",
+        "extensions": {
+          "lean-lang.org/export": "callback"
+        }
+      },
+      "assurance": ["assurance:Alpha.withCallback.boundary"]
     }
   ],
   "declarations": [
@@ -292,6 +343,60 @@
           "lean-lang.org/export": "function"
         }
       }
+    },
+    {
+      "id": "lean:Alpha.withCallback",
+      "name": "withCallback",
+      "kind": "function",
+      "overloadKey": "withCallback(uint32,Transform)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        },
+        {
+          "name": "transform",
+          "type": { "kind": "named", "id": "lean:Alpha.Transform" },
+          "ownership": "borrow",
+          "lifetime": { "scope": "call", "anchor": null },
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "immutable",
+      "effects": ["allocates", "fails", "host-call"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:callback-threw"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.withCallback.boundary"],
+      "documentation": {
+        "summary": "Call a JavaScript transform from Lean and return to Lean before producing the result.",
+        "details": "The generated API accepts a normal function. Callback tokens, nested frames, marshalling, and cleanup remain internal."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.withCallback",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
     }
   ],
   "errors": [
@@ -303,6 +408,16 @@
       "documentation": {
         "summary": "A host wrapper referred to a resource that has been disposed.",
         "details": "Generated bindings report this condition before calling the target function."
+      }
+    },
+    {
+      "id": "error:callback-threw",
+      "name": "CallbackThrew",
+      "category": "boundary",
+      "payload": null,
+      "documentation": {
+        "summary": "A host callback threw while Lean was waiting for its result.",
+        "details": "The bridge unwinds the nested callback frames and rethrows the original host error."
       }
     }
   ],
@@ -385,6 +500,21 @@
         "producer": "bridge",
         "declaration": "Alpha.roundTrip",
         "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.withCallback.boundary",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.withCallback",
+      "claim": "The generated callback adapter preserves function identity, unsigned integer values, nested frame order, and deterministic cleanup.",
+      "theorems": [],
+      "assumptions": ["The JavaScript callback registry and generated C closure adapter implement callback signature version 1."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "callback-signature-v1",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/callback-signature-plan.md"
+        }
       }
     }
   ],

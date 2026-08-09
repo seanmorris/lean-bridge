@@ -1,4 +1,5 @@
 import { PendingOperationRegistry } from "../../src/runtime/pending-operations.mjs";
+import { CallbackRegistry } from "../../src/runtime/callbacks.mjs";
 
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
@@ -118,10 +119,44 @@ class RuntimeRegistry {
       capacity: options.pendingOperationCapacity ?? 1024,
       onTransition: options.onPendingTransition,
     });
+    this.callbacks = new CallbackRegistry({
+      capacity: options.callbackCapacity ?? 1024,
+      handleKind: options.callbackHandleKind ?? 0x7f,
+      onFrame: options.onCallbackFrame,
+    });
+    this.callbackBoundaries = [];
+    this.nextCallbackBoundaryId = 1;
     Object.defineProperty(this.module, "__leanBridgePendingResolveU32", {
       configurable: true,
       enumerable: false,
       value: (token, value) => this.pendingOperations.resolve(token, value),
+    });
+    Object.defineProperty(this.module, "__leanBridgeInvokeCallbackU32", {
+      configurable: true,
+      enumerable: false,
+      value: (token, value) => {
+        try {
+          const result = this.callbacks.invokeRetained(token >>> 0, [value >>> 0]);
+          if (
+            result &&
+            typeof result.then === "function"
+          ) {
+            throw new TypeError("a synchronous callback returned a Promise");
+          }
+          if (!Number.isInteger(result) || result < 0 || result > 0xffff_ffff) {
+            throw new TypeError("callback result must be an unsigned 32-bit integer");
+          }
+          return result >>> 0;
+        } catch (error) {
+          this.recordCallbackBoundaryError(error);
+          return 0;
+        }
+      },
+    });
+    Object.defineProperty(this.module, "__leanBridgeCallbackFailed", {
+      configurable: true,
+      enumerable: false,
+      value: () => (this.callbackBoundaries.at(-1)?.error ? 1 : 0),
     });
     this.pendingFinalizations = [];
     this.createWeakReference =
@@ -173,6 +208,40 @@ class RuntimeRegistry {
         `the Lean runtime for ${descriptor.id} has been shut down`,
       );
     }
+    this.callbacks.beforeNativeCall();
+  }
+
+  beginCallbackBoundary() {
+    const boundary = {
+      id: this.nextCallbackBoundaryId,
+      error: undefined,
+    };
+    this.nextCallbackBoundaryId += 1;
+    this.callbackBoundaries.push(boundary);
+    return boundary;
+  }
+
+  recordCallbackBoundaryError(error) {
+    const boundary = this.callbackBoundaries.at(-1);
+    if (!boundary) {
+      this.state = "poisoned";
+      throw error;
+    }
+    boundary.error ??= error;
+  }
+
+  endCallbackBoundary(boundary) {
+    const current = this.callbackBoundaries.pop();
+    if (current !== boundary) {
+      this.state = "poisoned";
+      throw new LeanBridgeError("callback boundary frames did not unwind in order", {
+        code: "callback-boundary-corruption",
+        library: "bridge/callback-runtime",
+        operation: "callback",
+        details: { expected: boundary.id, actual: current?.id ?? null },
+      });
+    }
+    return boundary.error;
   }
 
   validateToken(descriptor, binding, token) {
@@ -598,6 +667,7 @@ class RuntimeRegistry {
       }),
       pendingFinalizations: this.pendingFinalizations.length,
       pendingOperations: this.pendingOperations.snapshot(),
+      callbacks: this.callbacks.snapshot(),
     });
   }
 
@@ -605,6 +675,7 @@ class RuntimeRegistry {
     if (this.state === "closed") return true;
     this.drainFinalizers();
     this.pendingOperations.shutdown();
+    this.callbacks.shutdown();
     for (const [entryKey, entry] of [...this.entries]) {
       const wrapper = entry.reference.deref();
       this.releaseEntry({ ...entry, entryKey }, wrapper, "shutdown");
@@ -1183,6 +1254,107 @@ const projectPendingFunction = (
   };
 };
 
+const projectCallbackFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const adapter = binding.adapter;
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (
+    adapter.abiVersion !== 1 ||
+    adapter.signature?.kind !== "callback-signature-v1" ||
+    adapter.signature.abiVersion !== 1 ||
+    !declaration ||
+    declaration.resultMode !== "value"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported callback adapter`,
+      { abiVersion: adapter.abiVersion },
+    );
+  }
+  const callbackParameter = declaration.parameters[adapter.callbackIndex];
+  if (
+    callbackParameter?.name !== adapter.callbackParameter ||
+    callbackParameter.type.kind !== "named" ||
+    callbackParameter.type.id !== adapter.signature.typeId
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "missing-binding-contract",
+      `${binding.name} callback adapter does not match its semantic parameter`,
+    );
+  }
+
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    if (args.length !== declaration.parameters.length) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} expects ${declaration.parameters.length} arguments`,
+        { expected: declaration.parameters.length, actual: args.length },
+      );
+    }
+    const typeMap = bindingIrTypeMap(descriptor);
+    for (let index = 0; index < args.length; index += 1) {
+      const parameter = declaration.parameters[index];
+      if (index === adapter.callbackIndex) {
+        if (typeof args[index] !== "function") {
+          invalidCopiedValue(descriptor, binding, parameter.name, "function");
+        }
+      } else {
+        validateCopiedValue(
+          descriptor,
+          binding,
+          parameter.type,
+          args[index],
+          parameter.name,
+          typeMap,
+        );
+      }
+    }
+    initializeBinding(module, descriptor, binding);
+    const callback = args[adapter.callbackIndex];
+    const token = context.callbacks.retain(callback, adapter.signature);
+    const boundary = context.beginCallbackBoundary();
+    let result;
+    let failure;
+    try {
+      const nativeArguments = [...args];
+      nativeArguments[adapter.callbackIndex] = token;
+      result = implementation(...nativeArguments);
+    } catch (error) {
+      failure = error;
+    } finally {
+      const callbackFailure = context.endCallbackBoundary(boundary);
+      failure ??= callbackFailure;
+      try {
+        context.callbacks.release(token, adapter.signature);
+      } catch (error) {
+        failure ??= error;
+      }
+    }
+    if (failure) throw failure;
+    validateCopiedValue(
+      descriptor,
+      binding,
+      declaration.result.type,
+      result,
+      "result",
+      typeMap,
+    );
+    return result;
+  };
+};
+
 const projectFunction = (module, descriptor, binding, context) => {
   const implementation = resolvePrivateFunction(
     module,
@@ -1207,6 +1379,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "pending-operation-v1") {
     return projectPendingFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "callback-call-v1") {
+    return projectCallbackFunction(
       module,
       descriptor,
       binding,

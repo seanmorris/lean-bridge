@@ -70,6 +70,18 @@ const emitTypeDeclarations = (ir, typeMap) => {
         `export type ${type.name}${parameters} = ${typeScriptType(type.target, typeMap)};`,
         "",
       );
+    } else if (type.kind === "callback") {
+      output.push(docComment(type.documentation));
+      const parameters = type.callable.parameters
+        .map(parameter => parameterType(parameter, typeMap))
+        .join(", ");
+      const result = typeScriptType(type.callable.result.type, typeMap);
+      const delivered =
+        type.callable.resultMode === "promise" ? `Promise<${result}>` : result;
+      output.push(
+        `export type ${type.name} = (${parameters}) => ${delivered};`,
+        "",
+      );
     }
   }
   return output;
@@ -310,6 +322,15 @@ const emitValidators = (ir, typeMap) => {
       );
     }
     lines.push("  return value;", "};", "");
+  }
+  for (const type of ir.types.filter(item => item.kind === "callback")) {
+    lines.push(
+      `export const assert${type.name} = (value, path) => {`,
+      '  if (typeof value !== "function") invalid(path, "function");',
+      "  return value;",
+      "};",
+      "",
+    );
   }
   return lines.join("\n");
 };

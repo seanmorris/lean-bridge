@@ -35,6 +35,12 @@ def roundTrip (payload : Payload) : Payload :=
     enabled := !payload.enabled
     count := payload.count + 1 }
 
+@[export lean_link_alpha_with_callback]
+def withCallback
+    (value : UInt32)
+    (transform : UInt32 → UInt32) : UInt32 :=
+  transform (value + 1) + 1
+
 @[export lean_link_alpha_payload_enabled]
 def payloadEnabled (payload : Payload) : Bool :=
   payload.enabled

@@ -1,6 +1,6 @@
 # Lean Runtime and Generated Side-Module Spike
 
-Status: verified for the exact narrow scope below. Three Lean libraries, cross-library identity, startup/lazy/final-static composition, and both memory profiles pass. JavaScript callbacks/re-entry and real browser/bundler packaging remain open.
+Status: verified for the exact narrow scope below. Three Lean libraries, cross-library identity, JavaScript callback re-entry, startup/lazy/final-static composition, and both memory profiles pass. Exported Lean closures and real browser/bundler packaging remain open.
 
 Date: 2026-08-08 UTC.
 

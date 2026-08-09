@@ -16,7 +16,7 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   const sameSurface = createLibrarySurface(module, alpha);
   assert.equal(libraries.loaded.size, 1);
   assert.equal(Object.isFrozen(loadedAlpha), true);
-  assert.deepEqual(Object.keys(loadedAlpha), ["Box", "roundTrip"]);
+  assert.deepEqual(Object.keys(loadedAlpha), ["Box", "roundTrip", "withCallback"]);
   assert.equal(sameSurface.Box, loadedAlpha.Box);
   assert.equal(Object.keys(loadedAlpha).some(name => name.startsWith("_")), false);
 
@@ -61,6 +61,48 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   assert.equal(input.enabled, true);
   assert.equal(input.count, 41);
   assert.equal(module._bridge_lean_active_frames(), 0);
+
+  const callbackFrames = [];
+  const nestedModule = await createLazyModule();
+  const nestedLibraries = createLibraryLoader(nestedModule, {
+    onCallbackFrame: event => callbackFrames.push(event),
+  });
+  const nestedAlpha = await nestedLibraries.load(alpha);
+  const transform = value => {
+    const nestedBox = new nestedAlpha.Box(value);
+    try {
+      const read = nestedBox.read();
+      return read === 40
+        ? nestedAlpha.withCallback(read, transform)
+        : read;
+    } finally {
+      nestedBox.dispose();
+    }
+  };
+  assert.equal(nestedAlpha.withCallback(39, transform), 43);
+  assert.deepEqual(
+    callbackFrames.map(event => [event.event, event.depth]),
+    [["enter", 1], ["enter", 2], ["leave", 2], ["leave", 1]],
+  );
+  assert.equal(nestedLibraries.diagnostics().callbacks.canonicalHits, 1);
+  assert.equal(nestedLibraries.diagnostics().callbacks.live, 0);
+  assert.equal(nestedLibraries.diagnostics().callbacks.activeFrames, 0);
+});
+
+test("callback exceptions unwind to JavaScript without leaking the retained function", async () => {
+  const module = await createLazyModule();
+  const libraries = createLibraryLoader(module);
+  const loadedAlpha = await libraries.load(alpha);
+  const expected = new Error("host callback failed");
+
+  assert.throws(
+    () => loadedAlpha.withCallback(40, () => { throw expected; }),
+    error => error === expected,
+  );
+  assert.equal(module._bridge_lean_active_frames(), 0);
+  assert.equal(libraries.diagnostics().callbacks.live, 0);
+  assert.equal(libraries.diagnostics().callbacks.activeFrames, 0);
+  assert.equal(loadedAlpha.withCallback(40, value => value), 42);
 });
 
 test("resource wrappers reject nominal and cross-runtime misuse", async () => {

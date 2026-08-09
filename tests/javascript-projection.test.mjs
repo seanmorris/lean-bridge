@@ -23,12 +23,24 @@ test("the Alpha JavaScript projection is generated from the reviewed Binding IR"
   assert.deepEqual(projection.bindings, alpha.bindings);
   assert.deepEqual(
     projection.bindings.map(binding => binding.name),
-    ["Box", "roundTrip"],
+    ["Box", "roundTrip", "withCallback"],
   );
   assert.deepEqual(
     projection.bindings[0].methods.map(method => method.name),
     ["read", "identity"],
   );
+});
+
+test("callback declarations receive a generated signature plan", () => {
+  const projection = compileJavaScriptProjection(alpha.bindingIr, alpha.privateAbi);
+  const binding = projection.bindings.find(item => item.name === "withCallback");
+
+  assert.equal(binding.adapter.kind, "callback-call-v1");
+  assert.equal(binding.adapter.callbackParameter, "transform");
+  assert.equal(binding.adapter.callbackIndex, 1);
+  assert.equal(binding.adapter.signature.typeId, "lean:Alpha.Transform");
+  assert.equal(binding.adapter.signature.reentry.frames, "nested-lifo");
+  assert.equal(binding.adapter.signature.hostFunction.identity, "canonical-per-runtime-function");
 });
 
 test("public names come from Binding IR rather than the private ABI map", () => {

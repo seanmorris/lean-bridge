@@ -31,6 +31,15 @@ const alphaPrivateAbi = Object.freeze({
         maxArrayLength: 64 * 1024,
       }),
     }),
+    "lean:Alpha.withCallback": Object.freeze({
+      symbol: "_bridge_lean_alpha_with_callback",
+      adapter: Object.freeze({
+        kind: "callback-call-v1",
+        abiVersion: 1,
+        callbackParameter: "transform",
+        maxDepth: 64,
+      }),
+    }),
   }),
   resources: Object.freeze({
     "lean:Alpha.Box": Object.freeze({

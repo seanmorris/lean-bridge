@@ -18,6 +18,7 @@ typedef lean_object *(*lean_link_payload_fn)(
     lean_object *
 );
 typedef lean_object *(*lean_link_round_trip_fn)(lean_object *);
+typedef uint32_t (*lean_link_with_callback_fn)(uint32_t, lean_object *);
 typedef uint8_t (*lean_link_payload_enabled_fn)(lean_object *);
 typedef uint32_t (*lean_link_payload_count_fn)(lean_object *);
 typedef lean_object *(*lean_link_payload_object_fn)(lean_object *);
@@ -39,6 +40,7 @@ static lean_link_box_fn alpha_box = 0;
 static lean_link_read_fn alpha_read = 0;
 static lean_link_payload_fn alpha_payload = 0;
 static lean_link_round_trip_fn alpha_round_trip = 0;
+static lean_link_with_callback_fn alpha_with_callback = 0;
 static lean_link_payload_enabled_fn alpha_payload_enabled = 0;
 static lean_link_payload_count_fn alpha_payload_count = 0;
 static lean_link_payload_object_fn alpha_payload_label = 0;
@@ -81,6 +83,27 @@ EM_JS(
     } catch (_error) {
       return 0;
     }
+  }
+);
+
+EM_JS(
+  uint32_t,
+  bridge_lean_host_callback_u32,
+  (uint32_t token, uint32_t value),
+  {
+    const invoke = Module.__leanBridgeInvokeCallbackU32;
+    if (typeof invoke !== "function") return 0;
+    return invoke(token, value) >>> 0;
+  }
+);
+
+EM_JS(
+  uint32_t,
+  bridge_lean_host_callback_failed,
+  (),
+  {
+    const failed = Module.__leanBridgeCallbackFailed;
+    return typeof failed === "function" && failed() ? 1 : 0;
   }
 );
 
@@ -316,6 +339,7 @@ void bridge_register_lean_alpha(
     lean_link_read_fn read,
     lean_link_payload_fn payload,
     lean_link_round_trip_fn round_trip,
+    lean_link_with_callback_fn with_callback,
     lean_link_payload_enabled_fn payload_enabled,
     lean_link_payload_count_fn payload_count,
     lean_link_payload_object_fn payload_label,
@@ -327,6 +351,7 @@ void bridge_register_lean_alpha(
   alpha_read = read;
   alpha_payload = payload;
   alpha_round_trip = round_trip;
+  alpha_with_callback = with_callback;
   alpha_payload_enabled = payload_enabled;
   alpha_payload_count = payload_count;
   alpha_payload_label = payload_label;
@@ -364,6 +389,7 @@ uint32_t bridge_has_lean_alpha(void) {
     alpha_read != 0 &&
     alpha_payload != 0 &&
     alpha_round_trip != 0 &&
+    alpha_with_callback != 0 &&
     alpha_payload_enabled != 0 &&
     alpha_payload_count != 0 &&
     alpha_payload_label != 0 &&
@@ -405,6 +431,48 @@ uint32_t bridge_lean_alpha_read(uint32_t handle) {
   /* The generated export consumes its argument; retain around a borrowed read. */
   lean_inc(box);
   return alpha_read(box);
+}
+
+static lean_object *bridge_lean_host_callback_u32_apply(
+    lean_object *token_object,
+    lean_object *value_object
+) {
+  uint32_t token = lean_unbox_uint32(token_object);
+  uint32_t value = lean_unbox_uint32(value_object);
+  uint32_t result;
+
+  lean_dec(token_object);
+  lean_dec(value_object);
+  result = bridge_lean_host_callback_u32(token, value);
+  return lean_box_uint32(result);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_alpha_with_callback(
+    uint32_t value,
+    uint32_t callback_token
+) {
+  lean_object *callback;
+  uint32_t result;
+
+  if (
+    runtime_state != BRIDGE_LEAN_RUNTIME_READY ||
+    !alpha_with_callback ||
+    callback_token == 0
+  ) {
+    return UINT32_MAX;
+  }
+  callback = lean_alloc_closure(
+    (void *)bridge_lean_host_callback_u32_apply,
+    2,
+    1
+  );
+  lean_closure_set(callback, 0, lean_box_uint32(callback_token));
+  active_frames += 1;
+  result = alpha_with_callback(value, callback);
+  active_frames -= 1;
+  if (bridge_lean_host_callback_failed()) return 0;
+  return result;
 }
 
 static void bridge_lean_alpha_defer_box_value_settle(void *argument) {

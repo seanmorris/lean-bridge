@@ -2,7 +2,7 @@
 
 ## Decision
 
-**Approved for the architecture-testing POC.** Ahead-of-time compiled Lean libraries can expose idiomatic host APIs through upstream Lean-generated C, a matched Lean runtime compiled with Emscripten, generated typed bindings, and a narrow private handle/frame ABI. The shared-runtime and native JavaScript object path now pass. Retained JavaScript values, callbacks, asynchronous capabilities, and generated downstream-language packages remain POC work.
+**Approved for the architecture-testing POC.** Ahead-of-time compiled Lean libraries can expose idiomatic host APIs through upstream Lean-generated C, a matched Lean runtime compiled with Emscripten, generated typed bindings, and a narrow private handle/frame ABI. The shared-runtime, native JavaScript object, synchronous callback, and asynchronous Promise paths now pass. Exported Lean closures, additional callback signatures, broader retained JavaScript capabilities, and generated downstream-language packages remain POC work.
 
 The application is the runtime boundary. An individual library cannot own that boundary. A composed application has exactly one Lean reference-counting heap, WebAssembly memory/table, symbol universe, bridge registry pair, pending/error domain, and initialization/shutdown sequence.
 
@@ -41,7 +41,7 @@ Developer-experience acceptance measures install-to-first-call time, commands an
 
 1. General binding generation across primitives, copied values, resources, errors, callbacks, asynchronous work, and multiple host languages.
 2. Correct reference counting and deterministic ownership across JavaScript GC and Lean RC for the complete lifecycle matrix.
-3. Callback signature adapters, nested re-entry, asynchronous settlement, and cleanup races.
+3. Exported Lean closure projection, additional callback signatures, asynchronous callback settlement, and cleanup races.
 4. Bundler, browser, worker, and registry behavior for recursively loaded assets.
 5. Binding generated proof metadata to the exact shipped and reproducibly rebuilt artifact.
 6. Startup, memory, and size slopes across 10 and 50 independently packaged libraries.
