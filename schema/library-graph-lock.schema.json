@@ -30,7 +30,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "module", "capsule", "dependencies", "source", "shim"],
+        "required": ["id", "module", "capsule", "dependencies", "source", "shim", "bindingIr"],
         "properties": {
           "id": { "$ref": "#/$defs/packageId" },
           "module": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
@@ -41,7 +41,13 @@
             "items": { "$ref": "#/$defs/hashReference" }
           },
           "source": { "$ref": "#/$defs/input" },
-          "shim": { "$ref": "#/$defs/input" }
+          "shim": { "$ref": "#/$defs/input" },
+          "bindingIr": {
+            "oneOf": [
+              { "$ref": "#/$defs/bindingInput" },
+              { "type": "null" }
+            ]
+          }
         }
       }
     }
@@ -65,6 +71,16 @@
       "properties": {
         "path": { "$ref": "#/$defs/path" },
         "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "bindingInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "semanticSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "semanticSha256": { "$ref": "#/$defs/sha256" }
       }
     },
     "hashReference": {

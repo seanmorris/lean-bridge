@@ -92,7 +92,6 @@ test("class ABI adapters cannot be accepted and then ignored", () => {
   abi.declarations["lean:Alpha.box"].adapter = {
     kind: "value-frame-v1",
     abiVersion: 1,
-    byteSize: 4,
     maxCopyBytes: 4,
     maxArrayLength: 1,
   };

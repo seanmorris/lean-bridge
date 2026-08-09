@@ -272,7 +272,7 @@ The architecture-testing POC has established:
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
-The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, and package manifest from the canonical binding IR. Remaining product work includes generated ABI lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
+The POC now generates its JavaScript class, function, TypeScript declarations, validators, documentation, package manifest, copied-record frame layout, and matching C frame header from the canonical binding IR. Remaining product work includes Lean runtime object lowering, additional numeric and inductive mappings, zero-copy leases, JavaScript callbacks and asynchronous re-entry, generated npm and downstream-language packages, bundler and browser fixtures, the 50-library performance suite, and AArch64 toolchain support.
 
 ## Work on the project
 

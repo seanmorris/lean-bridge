@@ -27,7 +27,6 @@ const alphaPrivateAbi = Object.freeze({
       adapter: Object.freeze({
         kind: "value-frame-v1",
         abiVersion: 1,
-        byteSize: 60,
         maxCopyBytes: 1024 * 1024,
         maxArrayLength: 64 * 1024,
       }),
@@ -46,6 +45,14 @@ const contentHash = id => {
   const library = graphLock.libraries.find(candidate => candidate.id === id);
   if (!library) throw new Error(`missing locked capsule ${id}`);
   return library.capsule.sha256;
+};
+
+const assertBindingIdentity = (id, semanticSha256) => {
+  const library = graphLock.libraries.find(candidate => candidate.id === id);
+  if (!library?.bindingIr) throw new Error(`${id} has no locked Binding IR`);
+  if (library.bindingIr.semanticSha256 !== semanticSha256) {
+    throw new Error(`${id} Binding IR does not match the graph lock`);
+  }
 };
 
 const assertDependency = (capsule, dependency, index) => {
@@ -72,6 +79,7 @@ export const createAlphaDescriptor = ({
   buildHash = contentHash(capsule.id),
 }) => {
   const projection = compileJavaScriptProjection(alphaBindingIr, alphaPrivateAbi);
+  assertBindingIdentity(capsule.id, projection.bindingIrSha256);
   return Object.freeze({
     id: capsule.id,
     buildHash,

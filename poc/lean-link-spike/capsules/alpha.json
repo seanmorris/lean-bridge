@@ -68,7 +68,7 @@
   },
   "initializer": { "mode": "required", "symbol": "initialize_Alpha" },
   "dependencies": [],
-  "fragments": { "bindings": null, "schema": null, "assurance": null },
+  "fragments": { "bindings": "bindings/alpha.binding-ir.json", "schema": null, "assurance": null },
   "capabilities": {
     "hosts": ["javascript", "host-neutral-abi"],
     "threads": ["single", "shared"],

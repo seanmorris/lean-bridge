@@ -71,4 +71,4 @@ The POC loader now derives Alpha's function, class, and method projection from B
 
 ## Remaining generator boundary
 
-The value-frame adapter still contains handwritten field offsets and memory operations. The ABI lowering generator must derive those details from Binding IR and target layout metadata before the binding pipeline can support arbitrary copied records. Promise settlement, iterators, callbacks, properties, overloads, generics, and error translation also require backend conformance fixtures.
+The value-frame compiler now derives copied-record offsets, buffer triples, widths, limits, and JavaScript lowering/lifting loops from Binding IR. It emits the matching C struct used by the shared module. The C code that constructs and projects Lean runtime objects remains handwritten. Promise settlement, iterators, callbacks, properties, overloads, generics, and error translation also require backend conformance fixtures.

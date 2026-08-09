@@ -16,6 +16,8 @@ Lean toggles `enabled` and increments `count`. It preserves the string, byte arr
 
 The call does not use JSON. The JavaScript projection validates the input, allocates a temporary Wasm arena, writes a 60-byte versioned frame and the copied field buffers, calls one private ABI symbol, reads the typed output, copies the result into native JavaScript values, and frees the arena in a `finally` block.
 
+The frame compiler derives the size, field order, scalar offsets, buffer triples, encodings, element widths, and copy limits from Alpha's canonical Binding IR. The JavaScript loader consumes that generated layout. The C build emits `alpha_value_frame.generated.h` from the same compiler and includes its generated struct and constants in the shared main module. A static assertion rejects C layout drift.
+
 ## Frame contract
 
 Frame version 1 contains only little-endian `uint32` words:
@@ -58,20 +60,22 @@ JavaScript frees every Wasm allocation in reverse order after success or failure
 
 1. Shared runtime: the bridge kernel owns allocation and reference counting. Side modules contain no private runtime helpers.
 2. Native API: `roundTrip(value)` is public. The frame call and allocator exports remain private.
-3. Assurance identity: the graph lock pins the Lean source, shim, capsule, target artifacts, Lean revision, and patch set. The transformation has no attached theorem yet, so its behavioral state is unverified.
+3. Assurance identity: the graph lock pins the Lean source, Binding IR raw bytes and semantic hash, shim, capsule, target artifacts, Lean revision, and patch set. The transformation has no attached theorem yet, so its behavioral state is unverified.
 4. Reproducibility: browser and threaded artifact hashes are recorded in the capsule and checked during every build.
 5. Host neutrality: the frame defines widths, copied bytes, cases, and ownership without JavaScript objects in the ABI. A later backend can consume the same schema.
-6. Verified reuse: the descriptor preserves the field types and copy limits needed by a future component index.
+6. Verified reuse: Binding IR preserves the field types and copy limits needed by a future component index.
 7. Adoption: consumers use a native record and receive named errors. They do not allocate memory or manage Lean values.
 8. Composition: lazy dynamic, startup dynamic, final-static, browser, and threaded tests exercise the same Alpha contract.
 
 ## Test evidence
 
-`npm test` passes 45 behavioral and structural tests. WP4 adds coverage for:
+The test suite covers:
 
 - the native copied record through lazy, threaded, and final-static profiles;
 - Unicode, embedded NUL, full-range bytes, and `UInt32.max`;
 - ABI version, byte-size, boolean, and copy-limit rejection;
+- generated JavaScript and C layouts from one semantic record;
+- graph-lock checks for raw and canonical Binding IR identity;
 - structured public validation failures;
 - 1,000-call arena cleanup; and
 - side-module link maps that contain only the declared Alpha library domain.

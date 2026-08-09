@@ -49,7 +49,18 @@ while IFS=$'\t' read -r relative_path expected_sha; do
     exit 1
   fi
 done < <(
-  jq -r '.libraries[] | .capsule, .source, .shim | [.path, .sha256] | @tsv' \
+  jq -r '.libraries[] | .capsule, .source, .shim, (.bindingIr // empty) | [.path, .sha256] | @tsv' \
+    "$GRAPH_LOCK"
+)
+
+while IFS=$'\t' read -r relative_path expected_sha; do
+  actual_sha=$(node "$LEAN_WASM_PROJECT_ROOT/scripts/binding-ir.mjs" hash "$SOURCE_DIR/$relative_path")
+  if [[ "$actual_sha" != "$expected_sha" ]]; then
+    echo "Graph lock semantic Binding IR mismatch for $relative_path" >&2
+    exit 1
+  fi
+done < <(
+  jq -r '.libraries[] | select(.bindingIr != null) | [.bindingIr.path, .bindingIr.semanticSha256] | @tsv' \
     "$GRAPH_LOCK"
 )
 
@@ -74,7 +85,13 @@ for library in "${LEAN_LIBRARIES[@]}"; do
     "$SOURCE_DIR/$library.lean"
 done
 
+node "$LEAN_WASM_PROJECT_ROOT/scripts/generate-value-frame.mjs" \
+  --ir "$SOURCE_DIR/bindings/alpha.binding-ir.json" \
+  --declaration lean:Alpha.roundTrip \
+  > "$GENERATED_DIR/alpha_value_frame.generated.h"
+
 INCLUDES=(
+  -I"$GENERATED_DIR"
   -I"$RUNTIME_BUILD/include"
   -I"$RUNTIME_SOURCE/src/include"
 )

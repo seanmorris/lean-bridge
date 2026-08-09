@@ -9,6 +9,7 @@ import {
   gamma,
 } from "../poc/lean-link-spike/descriptors.mjs";
 import { readLockedGraph } from "../src/capsule/node.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 
 const digest = contents => createHash("sha256").update(contents).digest("hex");
 const lockPath = "poc/lean-link-spike/graph-lock.json";
@@ -49,9 +50,17 @@ test("one content-addressed graph drives dynamic and final-static composition", 
       );
     }
 
-    for (const input of [library.capsule, library.source, library.shim]) {
+    for (const input of [library.capsule, library.source, library.shim, library.bindingIr].filter(Boolean)) {
       const contents = await readFile(`poc/lean-link-spike/${input.path}`);
       assert.equal(digest(contents), input.sha256, input.path);
+    }
+    if (library.bindingIr) {
+      const bindingIr = JSON.parse(
+        await readFile(`poc/lean-link-spike/${library.bindingIr.path}`, "utf8"),
+      );
+      assert.equal(hashBindingIr(bindingIr), library.bindingIr.semanticSha256);
+      assert.equal(descriptor.bindingIrSha256, library.bindingIr.semanticSha256);
+      assert.equal(descriptor.capsule.fragments.bindings, library.bindingIr.path);
     }
   }
 });

@@ -1,23 +1,5 @@
 const identity = descriptor => `${descriptor.id}#${descriptor.buildHash}`;
 
-const VALUE_FRAME_V1_BYTES = 60;
-const valueFrameOffsets = Object.freeze({
-  abiVersion: 0,
-  byteSize: 4,
-  status: 8,
-  detail: 12,
-  enabled: 16,
-  count: 20,
-  labelPointer: 24,
-  labelLength: 28,
-  labelCapacity: 32,
-  bytesPointer: 36,
-  bytesLength: 40,
-  bytesCapacity: 44,
-  valuesPointer: 48,
-  valuesLength: 52,
-  valuesCapacity: 56,
-});
 const frameErrorCodes = Object.freeze([
   "ok",
   "abi-version-mismatch",
@@ -827,33 +809,38 @@ const validateValueFrameInput = (descriptor, binding, adapter, value) => {
     invalidCopiedValue(descriptor, binding, "value", "record");
   }
 
-  const label = textEncoder.encode(value.label);
-  if (
-    label.byteLength > adapter.maxCopyBytes ||
-    value.bytes.byteLength > adapter.maxCopyBytes ||
-    value.values.length > adapter.maxArrayLength
-  ) {
-    throw bridgeError(
-      descriptor,
-      binding,
-      "copy-limit-exceeded",
-      `${binding.name} input exceeds the declared copied-value limit`,
-      {
-        labelBytes: label.byteLength,
-        byteArrayBytes: value.bytes.byteLength,
-        arrayLength: value.values.length,
-        maxCopyBytes: adapter.maxCopyBytes,
-        maxArrayLength: adapter.maxArrayLength,
-      },
-    );
+  const buffers = new Map();
+  for (const field of adapter.fields) {
+    if (field.transport !== "buffer") continue;
+    const source = value[field.name];
+    const encoded = field.codec === "utf8" ? textEncoder.encode(source) : source;
+    const length = field.codec === "array" ? source.length : encoded.byteLength;
+    if (length > field.maximumLength) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "copy-limit-exceeded",
+        `${binding.name}.${field.name} exceeds the declared copied-value limit`,
+        { field: field.name, length, maximumLength: field.maximumLength },
+      );
+    }
+    buffers.set(field.name, {
+      source: encoded,
+      length,
+      byteLength: length * field.elementBytes,
+    });
   }
-  return { label, bytes: value.bytes, values: value.values };
+  return buffers;
 };
 
 const assertValueFrameAdapter = (descriptor, binding, adapter) => {
   if (
     adapter.abiVersion !== 1 ||
-    adapter.byteSize !== VALUE_FRAME_V1_BYTES
+    !Number.isSafeInteger(adapter.byteSize) ||
+    adapter.byteSize < 16 ||
+    adapter.byteSize % 4 !== 0 ||
+    !adapter.header ||
+    !Array.isArray(adapter.fields)
   ) {
     throw bridgeError(
       descriptor,
@@ -866,6 +853,23 @@ const assertValueFrameAdapter = (descriptor, binding, adapter) => {
       },
     );
   }
+};
+
+const writeFrameScalar = (view, pointer, field, value) => {
+  if (field.scalar === "bool") {
+    view.setUint32(pointer + field.offset, value ? 1 : 0, true);
+  } else if (field.scalar === "uint32") {
+    view.setUint32(pointer + field.offset, value, true);
+  } else {
+    throw new Error(`unsupported generated frame scalar ${field.scalar}`);
+  }
+};
+
+const readFrameScalar = (view, pointer, field) => {
+  const value = view.getUint32(pointer + field.offset, true);
+  if (field.scalar === "bool") return value !== 0;
+  if (field.scalar === "uint32") return value;
+  throw new Error(`unsupported generated frame scalar ${field.scalar}`);
 };
 
 const projectValueFrameFunction = (
@@ -882,7 +886,7 @@ const projectValueFrameFunction = (
 
   return value => {
     context.beforeCall(descriptor, binding);
-    const copied = validateValueFrameInput(
+    const copiedBuffers = validateValueFrameInput(
       descriptor,
       binding,
       adapter,
@@ -906,77 +910,66 @@ const projectValueFrameFunction = (
     };
 
     try {
-      const labelPointer = reserve(copied.label.byteLength);
-      const bytesPointer = reserve(copied.bytes.byteLength);
-      const valuesPointer = reserve(copied.values.length * Uint32Array.BYTES_PER_ELEMENT);
-      const framePointer = reserve(VALUE_FRAME_V1_BYTES);
+      const allocatedBuffers = new Map();
+      for (const field of adapter.fields) {
+        if (field.transport !== "buffer") continue;
+        const copied = copiedBuffers.get(field.name);
+        allocatedBuffers.set(field.name, {
+          ...copied,
+          pointer: reserve(copied.byteLength),
+        });
+      }
+      const framePointer = reserve(adapter.byteSize);
 
       let heapBytes = new Uint8Array(module.HEAP8.buffer);
-      heapBytes.set(copied.label, labelPointer);
-      heapBytes.set(copied.bytes, bytesPointer);
       let heapView = new DataView(module.HEAP8.buffer);
-      for (let index = 0; index < copied.values.length; index += 1) {
-        heapView.setUint32(valuesPointer + index * 4, copied.values[index], true);
+      for (const field of adapter.fields) {
+        if (field.transport !== "buffer") continue;
+        const buffer = allocatedBuffers.get(field.name);
+        if (field.codec === "array") {
+          for (let index = 0; index < buffer.length; index += 1) {
+            heapView.setUint32(
+              buffer.pointer + index * field.elementBytes,
+              buffer.source[index],
+              true,
+            );
+          }
+        } else {
+          heapBytes.set(buffer.source, buffer.pointer);
+        }
       }
 
       heapView.setUint32(
-        framePointer + valueFrameOffsets.abiVersion,
+        framePointer + adapter.header.abiVersion,
         adapter.abiVersion,
         true,
       );
       heapView.setUint32(
-        framePointer + valueFrameOffsets.byteSize,
-        VALUE_FRAME_V1_BYTES,
+        framePointer + adapter.header.byteSize,
+        adapter.byteSize,
         true,
       );
-      heapView.setUint32(framePointer + valueFrameOffsets.status, 0, true);
-      heapView.setUint32(framePointer + valueFrameOffsets.detail, 0, true);
-      heapView.setUint32(
-        framePointer + valueFrameOffsets.enabled,
-        value.enabled ? 1 : 0,
-        true,
-      );
-      heapView.setUint32(
-        framePointer + valueFrameOffsets.count,
-        value.count,
-        true,
-      );
-      for (const [pointerOffset, lengthOffset, capacityOffset, pointer, length] of [
-        [
-          valueFrameOffsets.labelPointer,
-          valueFrameOffsets.labelLength,
-          valueFrameOffsets.labelCapacity,
-          labelPointer,
-          copied.label.byteLength,
-        ],
-        [
-          valueFrameOffsets.bytesPointer,
-          valueFrameOffsets.bytesLength,
-          valueFrameOffsets.bytesCapacity,
-          bytesPointer,
-          copied.bytes.byteLength,
-        ],
-        [
-          valueFrameOffsets.valuesPointer,
-          valueFrameOffsets.valuesLength,
-          valueFrameOffsets.valuesCapacity,
-          valuesPointer,
-          copied.values.length,
-        ],
-      ]) {
-        heapView.setUint32(framePointer + pointerOffset, pointer, true);
-        heapView.setUint32(framePointer + lengthOffset, length, true);
-        heapView.setUint32(framePointer + capacityOffset, length, true);
+      heapView.setUint32(framePointer + adapter.header.status, 0, true);
+      heapView.setUint32(framePointer + adapter.header.detail, 0, true);
+      for (const field of adapter.fields) {
+        if (field.transport === "scalar") {
+          writeFrameScalar(heapView, framePointer, field, value[field.name]);
+          continue;
+        }
+        const buffer = allocatedBuffers.get(field.name);
+        heapView.setUint32(framePointer + field.pointerOffset, buffer.pointer, true);
+        heapView.setUint32(framePointer + field.lengthOffset, buffer.length, true);
+        heapView.setUint32(framePointer + field.capacityOffset, buffer.length, true);
       }
 
       const status = implementation(framePointer) >>> 0;
       heapView = new DataView(module.HEAP8.buffer);
       const frameStatus = heapView.getUint32(
-        framePointer + valueFrameOffsets.status,
+        framePointer + adapter.header.status,
         true,
       );
       const detail = heapView.getUint32(
-        framePointer + valueFrameOffsets.detail,
+        framePointer + adapter.header.detail,
         true,
       );
       if (status !== 0) {
@@ -999,43 +992,41 @@ const projectValueFrameFunction = (
         );
       }
 
-      const labelLength = heapView.getUint32(
-        framePointer + valueFrameOffsets.labelLength,
-        true,
-      );
-      const bytesLength = heapView.getUint32(
-        framePointer + valueFrameOffsets.bytesLength,
-        true,
-      );
-      const valuesLength = heapView.getUint32(
-        framePointer + valueFrameOffsets.valuesLength,
-        true,
-      );
       heapBytes = new Uint8Array(module.HEAP8.buffer);
-      const label = textDecoder.decode(
-        heapBytes.slice(labelPointer, labelPointer + labelLength),
-      );
-      const bytes = heapBytes.slice(bytesPointer, bytesPointer + bytesLength);
       heapView = new DataView(module.HEAP8.buffer);
-      const values = [];
-      for (let index = 0; index < valuesLength; index += 1) {
-        values.push(heapView.getUint32(valuesPointer + index * 4, true));
+      const result = {};
+      for (const field of adapter.fields) {
+        if (field.transport === "scalar") {
+          result[field.name] = readFrameScalar(heapView, framePointer, field);
+          continue;
+        }
+        const buffer = allocatedBuffers.get(field.name);
+        const length = heapView.getUint32(framePointer + field.lengthOffset, true);
+        if (length > buffer.length || length > field.maximumLength) {
+          throw bridgeError(
+            descriptor,
+            binding,
+            "output-capacity-exceeded",
+            `${binding.name}.${field.name} returned an invalid length`,
+            { field: field.name, length, capacity: buffer.length },
+          );
+        }
+        if (field.codec === "utf8") {
+          result[field.name] = textDecoder.decode(
+            heapBytes.slice(buffer.pointer, buffer.pointer + length),
+          );
+        } else if (field.codec === "bytes") {
+          result[field.name] = heapBytes.slice(buffer.pointer, buffer.pointer + length);
+        } else if (field.codec === "array") {
+          const values = [];
+          for (let index = 0; index < length; index += 1) {
+            values.push(
+              heapView.getUint32(buffer.pointer + index * field.elementBytes, true),
+            );
+          }
+          result[field.name] = Object.freeze(values);
+        }
       }
-
-      const result = {
-        enabled:
-          heapView.getUint32(
-            framePointer + valueFrameOffsets.enabled,
-            true,
-          ) !== 0,
-        count: heapView.getUint32(
-          framePointer + valueFrameOffsets.count,
-          true,
-        ),
-        label,
-        bytes,
-        values: Object.freeze(values),
-      };
       const declaration = semanticDeclaration(descriptor, binding);
       if (declaration) {
         validateCopiedValue(

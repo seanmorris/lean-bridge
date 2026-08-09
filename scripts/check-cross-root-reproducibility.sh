@@ -20,6 +20,7 @@ mkdir -p "$REPRO_CHECKOUT"
 ln -s "$LEAN_WASM_PROJECT_ROOT/.toolchains" "$REPRO_CHECKOUT/.toolchains"
 
 ARTIFACTS=(
+  generated/alpha_value_frame.generated.h
   startup/main.mjs
   startup/main.wasm
   startup/alpha.so.wasm

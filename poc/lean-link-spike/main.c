@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "alpha_value_frame.generated.h"
+
 typedef lean_object *(*lean_link_box_fn)(uint32_t);
 typedef uint32_t (*lean_link_read_fn)(lean_object *);
 typedef lean_object *(*lean_link_identity_fn)(lean_object *);
@@ -375,42 +377,6 @@ uint32_t bridge_lean_alpha_read(uint32_t handle) {
   lean_inc(box);
   return alpha_read(box);
 }
-
-enum bridge_lean_frame_status {
-  BRIDGE_LEAN_FRAME_OK = 0,
-  BRIDGE_LEAN_FRAME_ABI_VERSION = 1,
-  BRIDGE_LEAN_FRAME_BYTE_SIZE = 2,
-  BRIDGE_LEAN_FRAME_RUNTIME = 3,
-  BRIDGE_LEAN_FRAME_BOOL = 4,
-  BRIDGE_LEAN_FRAME_LIMIT = 5,
-  BRIDGE_LEAN_FRAME_POINTER_RANGE = 6,
-  BRIDGE_LEAN_FRAME_OUTPUT_CAPACITY = 7,
-  BRIDGE_LEAN_FRAME_INTERNAL = 8,
-};
-
-enum bridge_lean_frame_limits {
-  BRIDGE_LEAN_FRAME_ABI_V1 = 1,
-  BRIDGE_LEAN_FRAME_MAX_COPY_BYTES = 1024 * 1024,
-  BRIDGE_LEAN_FRAME_MAX_ARRAY_LENGTH = 64 * 1024,
-};
-
-typedef struct bridge_lean_value_frame_v1 {
-  uint32_t abi_version;
-  uint32_t byte_size;
-  uint32_t status;
-  uint32_t detail;
-  uint32_t enabled;
-  uint32_t count;
-  uint32_t label_ptr;
-  uint32_t label_length;
-  uint32_t label_capacity;
-  uint32_t bytes_ptr;
-  uint32_t bytes_length;
-  uint32_t bytes_capacity;
-  uint32_t values_ptr;
-  uint32_t values_length;
-  uint32_t values_capacity;
-} bridge_lean_value_frame_v1;
 
 static uint32_t bridge_lean_frame_fail(
     bridge_lean_value_frame_v1 *frame,

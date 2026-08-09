@@ -1,5 +1,9 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import {
+  ValueFrameGenerationError,
+  compileValueFrameV1,
+} from "../../abi/value-frame.mjs";
 
 export class JavaScriptProjectionError extends Error {
   constructor(code, message, details = {}) {
@@ -45,19 +49,11 @@ const nonemptyString = (value, path) => {
   }
 };
 
-const deepFreeze = value => {
-  if (value !== null && typeof value === "object" && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const child of Object.values(value)) deepFreeze(child);
-  }
-  return value;
-};
-
 const validateAdapter = (adapter, path) => {
   if (adapter === null) return;
   exactKeys(
     adapter,
-    ["kind", "abiVersion", "byteSize", "maxCopyBytes", "maxArrayLength"],
+    ["kind", "abiVersion", "maxCopyBytes", "maxArrayLength"],
     path,
   );
   if (adapter.kind !== "value-frame-v1" || adapter.abiVersion !== 1) {
@@ -67,12 +63,22 @@ const validateAdapter = (adapter, path) => {
       abiVersion: adapter.abiVersion,
     });
   }
-  for (const key of ["byteSize", "maxCopyBytes", "maxArrayLength"]) {
+  for (const key of ["maxCopyBytes", "maxArrayLength"]) {
     if (!Number.isSafeInteger(adapter[key]) || adapter[key] < 1) {
       fail("invalid-private-abi", `${path}.${key} must be a positive integer`, {
         path: `${path}.${key}`,
       });
     }
+  }
+};
+
+const compileAdapter = (ir, declaration, adapter) => {
+  if (adapter === null) return undefined;
+  try {
+    return compileValueFrameV1(ir, declaration.id, adapter);
+  } catch (error) {
+    if (!(error instanceof ValueFrameGenerationError)) throw error;
+    fail(error.code, error.message, error.details);
   }
 };
 
@@ -300,6 +306,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
     }
     const entry = declarationAbi(abi, declaration);
     consumedDeclarations.add(declaration.id);
+    const adapter = compileAdapter(ir, declaration, entry.adapter);
     bindings.push(
       Object.freeze({
         kind: "function",
@@ -307,7 +314,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
         declarationId: declaration.id,
         initialize: abi.initialize,
         symbol: entry.symbol,
-        ...(entry.adapter ? { adapter: deepFreeze(structuredClone(entry.adapter)) } : {}),
+        ...(adapter ? { adapter } : {}),
       }),
     );
   }

@@ -83,6 +83,7 @@ try {
     libraries.push({
       id: library.id,
       capsuleSha256: library.sha256,
+      bindingIr: library.build.bindingIr,
       artifacts,
     });
   }

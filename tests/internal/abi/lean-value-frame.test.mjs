@@ -5,7 +5,9 @@ import createLazyModule from "../../../build/lean-link-spike/lazy/main.mjs";
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import { createLibraryLoader } from "../../../poc/link-spike/loader.mjs";
 
-const frameBytes = 60;
+const adapter = alpha.bindings.find(binding => binding.name === "roundTrip").adapter;
+const fields = new Map(adapter.fields.map(field => [field.name, field]));
+const frameBytes = adapter.byteSize;
 
 const createFrame = module => {
   const pointer = module._malloc(frameBytes);
@@ -15,8 +17,8 @@ const createFrame = module => {
     for (let offset = 0; offset < frameBytes; offset += 4) {
       frame.setUint32(offset, 0, true);
     }
-    frame.setUint32(0, 1, true);
-    frame.setUint32(4, frameBytes, true);
+    frame.setUint32(adapter.header.abiVersion, adapter.abiVersion, true);
+    frame.setUint32(adapter.header.byteSize, frameBytes, true);
     return frame;
   };
   const read = offset =>
@@ -34,17 +36,21 @@ test("private value frame rejects version, size, boolean, and limit drift", asyn
   const frame = createFrame(module);
 
   try {
-    frame.reset().setUint32(0, 2, true);
+    frame.reset().setUint32(adapter.header.abiVersion, 2, true);
     assert.equal(module._bridge_lean_alpha_round_trip(frame.pointer), 1);
-    assert.equal(frame.read(8), 1);
+    assert.equal(frame.read(adapter.header.status), 1);
 
-    frame.reset().setUint32(4, frameBytes - 4, true);
+    frame.reset().setUint32(adapter.header.byteSize, frameBytes - 4, true);
     assert.equal(module._bridge_lean_alpha_round_trip(frame.pointer), 2);
 
-    frame.reset().setUint32(16, 2, true);
+    frame.reset().setUint32(fields.get("enabled").offset, 2, true);
     assert.equal(module._bridge_lean_alpha_round_trip(frame.pointer), 4);
 
-    frame.reset().setUint32(28, 1024 * 1024 + 1, true);
+    frame.reset().setUint32(
+      fields.get("label").lengthOffset,
+      fields.get("label").maximumLength + 1,
+      true,
+    );
     assert.equal(module._bridge_lean_alpha_round_trip(frame.pointer), 5);
     assert.equal(module._bridge_lean_active_frames(), 0);
   } finally {

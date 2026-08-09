@@ -249,7 +249,7 @@ export const validateGraphLock = (lock, path = "lock") => {
     const itemPath = `${path}.libraries[${index}]`;
     exactKeys(
       library,
-      ["id", "module", "capsule", "dependencies", "source", "shim"],
+      ["id", "module", "capsule", "dependencies", "source", "shim", "bindingIr"],
       [],
       itemPath,
     );
@@ -266,6 +266,21 @@ export const validateGraphLock = (lock, path = "lock") => {
     );
     validateInput(library.source, `${itemPath}.source`);
     validateInput(library.shim, `${itemPath}.shim`);
+    if (library.bindingIr !== null) {
+      exactKeys(
+        library.bindingIr,
+        ["path", "sha256", "semanticSha256"],
+        [],
+        `${itemPath}.bindingIr`,
+      );
+      validateFile(library.bindingIr.path, `${itemPath}.bindingIr.path`);
+      string(library.bindingIr.sha256, `${itemPath}.bindingIr.sha256`, SHA256);
+      string(
+        library.bindingIr.semanticSha256,
+        `${itemPath}.bindingIr.semanticSha256`,
+        SHA256,
+      );
+    }
   });
   return lock;
 };

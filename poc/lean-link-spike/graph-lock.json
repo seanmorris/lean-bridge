@@ -18,7 +18,7 @@
       "module": "Alpha",
       "capsule": {
         "path": "capsules/alpha.json",
-        "sha256": "91463e47ade2129cadf9a35c07f51b196fe3c0e59dd9e4d3cedd8e31cd10918c"
+        "sha256": "6bf347cb84bdf292704bd905809857bebef9d0e80a18ce272f4c6f5780abefdb"
       },
       "dependencies": [],
       "source": {
@@ -28,6 +28,11 @@
       "shim": {
         "path": "alpha_shim.c",
         "sha256": "f9136f60406f9f83e2f0da4bd631d951b1508520f6295a6f68853f3ee0ede2d3"
+      },
+      "bindingIr": {
+        "path": "bindings/alpha.binding-ir.json",
+        "sha256": "b8709ba765508ac448ae413e88fccf3006b88aaca255709dc8b7766f7eeae2e2",
+        "semanticSha256": "b0df6aa84caa0a87f5d404f8def104d3210c1acbbd194d0fdcaf6eef48f54e65"
       }
     },
     {
@@ -40,7 +45,7 @@
       "dependencies": [
         {
           "id": "poc/lean-alpha@0.0.0",
-            "sha256": "91463e47ade2129cadf9a35c07f51b196fe3c0e59dd9e4d3cedd8e31cd10918c"
+          "sha256": "6bf347cb84bdf292704bd905809857bebef9d0e80a18ce272f4c6f5780abefdb"
         }
       ],
       "source": {
@@ -50,7 +55,8 @@
       "shim": {
         "path": "beta_shim.c",
         "sha256": "ae9f0cc9652216a0573f491a86d25abd352c45aa98ef5d37db04879160d9ffab"
-      }
+      },
+      "bindingIr": null
     },
     {
       "id": "poc/lean-gamma@0.0.0",
@@ -72,7 +78,8 @@
       "shim": {
         "path": "gamma_shim.c",
         "sha256": "88167f1c9dfc0e9328575177674214a470171edb6d731b3f68c90fca8d80fecf"
-      }
+      },
+      "bindingIr": null
     }
   ]
 }
