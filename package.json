@@ -19,6 +19,7 @@
     "build:lean-runtime:native": "bash scripts/build-lean-native-runtime.sh",
     "build:lean-link-spike": "bash scripts/build-lean-link-spike.sh",
     "build:lean-link-spike:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-link-spike.sh",
+    "build:performance-wasm": "bash scripts/build-performance-wasm.sh",
     "build:php-native-package": "node scripts/build-php-native-package.mjs --manifest poc/lean-link-spike/bindings/php-native.package.json --output build/php-native-package",
     "build:php-wasm-package": "node scripts/build-php-wasm-package.mjs --manifest poc/lean-link-spike/bindings/php-wasm.package.json --php-source build/php-wasm-sdk/php8.4-src --output build/php-wasm-package",
     "build:npm-package": "nix --extra-experimental-features 'nix-command flakes' build .#npm-package",
@@ -42,6 +43,8 @@
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
     "test:browser-bundlers": "npm run build:lean-link-spike && LEAN_BRIDGE_REQUIRE_BROWSER=1 node --test tests/browser-bundler.test.mjs",
     "test:performance-corpus": "node --test tests/performance-corpus.test.mjs",
+    "test:performance-reference": "node --test tests/performance-reference.test.mjs",
+    "test:performance-wasm": "npm run build:performance-wasm && node --test tests/performance-wasm.test.mjs",
     "test:cargo-package": "node --test tests/cargo-package.test.mjs",
     "test:c-family-package": "node --test tests/c-family-package.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
@@ -61,7 +64,7 @@
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test:release-authorization": "node --test tests/reproducibility-gate.test.mjs tests/release-candidate-state.test.mjs tests/independent-confirmation.test.mjs tests/independent-verifier.test.mjs",
-    "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",
+    "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },
   "dependencies": {

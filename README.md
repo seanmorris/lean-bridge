@@ -311,6 +311,27 @@ const result = statistics.mean([1, 2, 3]);
 
 `load` returns the generated API object. Emscripten handles, underscore-prefixed symbols, `ccall`, memory objects, and reference counts remain private.
 
+The performance POC applies that rule to three independently compiled Lean libraries:
+
+```ts
+const { SpatialIndex } = await libraries.load("spatial-index");
+const analytics = await libraries.load("spatial-consumer");
+
+const index = new SpatialIndex(2, [
+  { id: 11, coordinates: new Int32Array([0, 0]) },
+  { id: 12, coordinates: new Int32Array([0, 7]) },
+]);
+
+const nearest = index.nearest(new Int32Array([1, 0]));
+const result = analytics.rangeChecksum(index, [0, 0], [2, 7]);
+
+console.assert(nearest.squaredDistance === 1n);
+console.assert(result.checksum === 23n);
+index.dispose();
+```
+
+`SpatialIndex` is a generated JavaScript class. Its Lean identity stays private in a generation-safe `WeakMap`. Coordinates cross as signed 32-bit arrays, point IDs cross as unsigned 32-bit arrays, and squared distances and checksums cross as `bigint`. No call serializes the values through JSON. Loading `spatial-consumer` resolves its producer dependencies recursively and initializes each library once inside the existing Lean runtime.
+
 This model follows the dynamic-library architecture proven by [PHP-Wasm](https://github.com/seanmorris/php-wasm) and the native cross-language ergonomics explored by [Vrzno](https://github.com/seanmorris/vrzno).
 
 ## Reproducible releases
@@ -431,7 +452,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 305 passing behavioral and structural tests;
+- 311 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -449,6 +470,8 @@ npm run generate:wit -- --json
 npm run test:php-native-package
 npm run test:browser-bundlers
 npm run test:performance-corpus
+npm run test:performance-reference
+npm run test:performance-wasm
 npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate

@@ -2,7 +2,9 @@
 
 Status: measured architecture POC evidence. This record covers the browser-profile JavaScript `Box` projection under Node. It does not establish production performance or browser startup performance.
 
-The versioned [canonical spatial performance corpus](performance-corpus.md) now fixes the operations, ownership rules, complexity evidence, and correctness vectors for the next suite. This page remains the earlier `Box` baseline until the independent Lean performance components execute through generated native APIs.
+The versioned [canonical spatial performance corpus](performance-corpus.md) fixes the operations, ownership rules, complexity evidence, and correctness vectors for the next timing suite. The independent Lean components now execute through generated native APIs in one shared runtime. This page remains the earlier `Box` timing baseline until the spatial harness records reviewed measurements.
+
+The spatial correctness gate builds a 1,301,915 byte main runtime, a 5,296 byte ordered-search module, a 26,292 byte spatial-index module, and a 2,116 byte independent consumer module. The test loads components on demand, checks one runtime initialization and one initialization per loaded library, passes the same retained index into the consumer, and reaches zero live resources before shutdown. These sizes are architecture evidence. They are not performance budgets.
 
 Date: 2026-08-08 UTC.
 

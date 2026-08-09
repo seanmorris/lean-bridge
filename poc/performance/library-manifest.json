@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "components": [
+    {
+      "id": "performance/ordered-search@1.0.0",
+      "artifact": "ordered-search.so.wasm",
+      "runtimeRoot": true,
+      "dependencies": [],
+      "bindings": [
+        { "name": "lowerBound", "kind": "function", "adapter": "point-lower-bound" }
+      ]
+    },
+    {
+      "id": "performance/spatial-index@1.0.0",
+      "artifact": "spatial-index.so.wasm",
+      "runtimeRoot": false,
+      "dependencies": ["performance/ordered-search@1.0.0"],
+      "bindings": [
+        { "name": "SpatialIndex", "kind": "class", "adapter": "spatial-index" }
+      ]
+    },
+    {
+      "id": "performance/spatial-consumer@1.0.0",
+      "artifact": "spatial-consumer.so.wasm",
+      "runtimeRoot": false,
+      "dependencies": ["performance/spatial-index@1.0.0"],
+      "bindings": [
+        { "name": "rangeChecksum", "kind": "function", "adapter": "range-checksum" }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Canonical spatial performance corpus
 
-Status: executable contract. This record freezes the operations, ownership model, complexity evidence, and small correctness vectors that later performance implementations must satisfy. It does not contain timing results or claim that the Lean reference components have been implemented.
+Status: executable contract with a shared-runtime Lean implementation. This record freezes the operations, ownership model, complexity evidence, and small correctness vectors that every timed implementation must satisfy. It does not contain timing results.
 
 ## Command
 
@@ -54,6 +54,12 @@ The version 1 fixture covers:
 
 The reference runner resets resource state for each vector and compares canonical result bytes at every step. A wrong result blocks the corpus before a timing sample can be accepted.
 
-## Next implementation boundary
+## Implemented boundary
 
-The next work item must implement `performance/ordered-search`, `performance/spatial-index`, and `performance/spatial-consumer` as independent Lean capsules. Generated host bindings must expose the same functions and index class without raw ABI access. The producer and consumer must share one Lean runtime and one resource identity domain. Correctness and lifecycle counters must pass before the harness records timing.
+The repository now contains separate Lean modules for `performance/ordered-search`, `performance/spatial-index`, and `performance/spatial-consumer`. `npm run test:performance-reference` compiles each module into its own generated C artifact, then executes the frozen 2D vector through Lean. The consumer artifact imports the producer's range operation and none of the component artifacts contains a private Lean runtime.
+
+`npm run test:performance-wasm` compiles those modules into three runtime-free Wasm side modules and generates the JavaScript and TypeScript projection from `poc/performance/library-manifest.json`. The public surface contains `lowerBound`, `SpatialIndex`, and `rangeChecksum`. It contains no generic dispatch operation, raw handle, pointer, memory, or underscored symbol.
+
+The generated projection loads only the requested component and its transitive dependencies. Every component imports one memory and one function table from the application runtime. `SpatialIndex` retains one Lean value in a generation-safe slot. The independent consumer borrows that same value, so it does not copy the index or create another runtime. Tests cover lazy loading, one-time initialization, 2D, 4D, and 8D typed results, mutation through stable wrapper identity, cross-runtime rejection, deterministic idempotent disposal, and zero live resources at shutdown.
+
+The timing harness remains the next boundary. It must execute these public generated APIs and reject a sample unless the correctness and ownership checks pass first.
