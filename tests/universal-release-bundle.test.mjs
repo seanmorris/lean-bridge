@@ -79,6 +79,7 @@ test("canonical manifest inventories every release artifact with its actual byte
   const manifest = parseCanonicalPackageManifest(source);
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
+  assert.equal(firstResult.artifactCount, 76);
   for (const artifact of manifest.artifacts) {
     const bytes = await readFile(join(first, artifact.path));
     assert.equal(bytes.length, artifact.bytes, artifact.path);
@@ -87,6 +88,11 @@ test("canonical manifest inventories every release artifact with its actual byte
   assert.deepEqual(firstResult.generatedBackends, ["c", "javascript", "php", "python", "rust"]);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/javascript/index.d.ts"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/c/include/lean_alpha.h"), true);
+  assert.equal(manifest.artifacts.some(item => item.path === "runtime/javascript/alpha-descriptor.json"), true);
+  const npm = manifest.packages.find(item => item.ecosystem === "npm");
+  assert.equal(npm.eligible, true);
+  assert.equal(npm.target, "node-esm");
+  assert.equal(npm.publicArtifacts.includes("javascript-library-loader"), true);
   const bundledValidator = await import(`${pathToFileURL(join(first, "validators/src/release/canonical-package-manifest.mjs")).href}?bundle-test`);
   assert.equal(bundledValidator.validateCanonicalPackageManifest(manifest), true);
 }));

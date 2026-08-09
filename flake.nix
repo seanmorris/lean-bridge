@@ -243,6 +243,23 @@
                 --builder 'nix-flake-v1'
               runHook postInstall
             '';
+            };
+
+          npm-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-npm-package";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-npm-package.mjs \
+                --bundle '${universal-release-bundle}' \
+                --output "$out"
+              runHook postInstall
+            '';
           };
 
           php-native-package = pkgs.stdenvNoCC.mkDerivation {
@@ -291,6 +308,7 @@
           wasm-poc = self.packages.${pkgs.system}.wasm-poc;
           universal-core-artifacts = self.packages.${pkgs.system}.universal-core-artifacts;
           universal-release-bundle = self.packages.${pkgs.system}.universal-release-bundle;
+          npm-package = self.packages.${pkgs.system}.npm-package;
           php-native-package = self.packages.${pkgs.system}.php-native-package;
         });
     };

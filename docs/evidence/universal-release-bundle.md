@@ -9,7 +9,7 @@ The flake exposes two separate outputs:
 
 The second derivation has no Lean, C, C++, Emscripten, linker, or Wasm compiler in its build inputs. It receives the core output as a read-only Nix store path and writes a new bundle.
 
-The current bundle contains 69 inventoried artifacts. It includes the Emscripten runtime loader and Wasm runtime, three independently compiled side modules, the Lean source, graph and flake locks, Binding IR, JavaScript and TypeScript, PHP, Python, C, and Rust binding sources, schemas, an executable validator module tree, generated documentation, the MIT license, assurance metadata, an SPDX 2.3 SBOM, and an in-toto statement using the SLSA provenance predicate.
+The current bundle contains 76 inventoried artifacts. It includes the Emscripten runtime loader and Wasm runtime, three independently compiled side modules, the Lean source, graph and flake locks, Binding IR, JavaScript and TypeScript, PHP, Python, C, and Rust binding sources, schemas, an executable validator module tree, generated documentation, the MIT license, assurance metadata, an SPDX 2.3 SBOM, and an in-toto statement using the SLSA provenance predicate. The bundle also carries the generated Alpha loader descriptor and the exact JavaScript runtime modules required to consume it. An npm backend can therefore project the package without reading source files outside the bundle.
 
 ## Compilation boundary
 
@@ -35,7 +35,7 @@ Its identity is the SHA-256 hash of the canonical file records and graph profile
 
 The verified Nix build produced core identity `6d35a6ea087f84f9390e5faf5d60526c4b657c551f2a7345616387bff4489c24`. The canonical manifest identity changes when the recorded source revision changes, while the isolated core identity remains stable.
 
-The bundle marks registry packages ineligible until the next pipeline stage projects and validates their installable layouts. The browser target itself is eligible because the shared runtime and side modules are present. The native target remains ineligible because this core derivation does not contain a native component library. The manifest reports both limits directly.
+The bundle marks the npm package eligible because it contains every compiled artifact, generated binding, loader contract, license, and provenance record required by that projection. The package targets Node 22 ESM. The `browser` name in compiled artifact paths identifies the unthreaded Wasm memory profile and does not claim browser execution. A browser bundler fixture remains required. Cargo, PyPI, C, and C++ mappings remain ineligible because this core derivation does not contain a native component library. The manifest reports each limit directly.
 
 ## Tests
 
@@ -46,6 +46,7 @@ The bundle marks registry packages ineligible until the next pipeline stage proj
 - every manifest artifact matches the actual file size and SHA-256 hash;
 - the bundled validator imports from the finished tree and validates its own manifest;
 - JavaScript, PHP, Python, C, and Rust generated bindings are present;
+- the npm mapping names the Node ESM target and its packaged loader artifacts;
 - provenance and SBOM records name the exact core identity; and
 - a valid changed packaging plan cannot alter the compiled file set.
 
@@ -54,4 +55,7 @@ Run the focused gate:
 ```sh
 node --test tests/universal-release-bundle.test.mjs
 nix --extra-experimental-features 'nix-command flakes' build .#universal-release-bundle --no-link
+nix --extra-experimental-features 'nix-command flakes' build .#npm-package --no-link
 ```
+
+[The npm package evidence](npm-package.md) records the deterministic projection and clean consumer test.

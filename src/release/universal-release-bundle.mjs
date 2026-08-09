@@ -11,6 +11,8 @@ import { dirname, join, relative, resolve } from "node:path";
 
 import { parseBindingIr } from "../binding-ir/canonical.mjs";
 import { generateBindingPackages } from "../binding-ir/package-gate.mjs";
+import { compileJavaScriptProjection } from "../backends/javascript/projection.mjs";
+import { alphaPrivateAbi } from "../../poc/lean-link-spike/private-abi.mjs";
 import {
   canonicalPackageManifestJson,
   hashCanonicalPackageManifest,
@@ -113,11 +115,13 @@ export const buildUniversalReleaseBundle = async ({
   const graph = JSON.parse(graphSource);
   const coreManifest = await createCoreArtifactSetManifest(core);
   validateCoreArtifactSetManifest(coreManifest);
+  const alphaLibrary = graph.libraries.find(library => library.id === ir.component.id);
+  if (!alphaLibrary) throw new Error(`graph lock does not contain ${ir.component.id}`);
 
   const artifacts = [];
   for (const item of coreLayout) {
     await copy(output, item.path, join(core, item.source));
-    artifacts.push(await record(output, { ...item, target: "browser", core: true }));
+    artifacts.push(await record(output, { ...item, target: "node-esm", core: true }));
   }
 
   const fixedFiles = [
@@ -151,17 +155,51 @@ export const buildUniversalReleaseBundle = async ({
         id,
         path,
         role: packagePath.endsWith("README.md") ? "documentation" : "binding",
-        target: backend === "javascript" ? "browser" : "native-ffi",
+        target: backend === "javascript" ? "node-esm" : "native-ffi",
       }));
       ids.push(id);
     }
     bindingArtifacts.set(backend, ids);
   }
 
+  const alphaCapsule = JSON.parse(await readFile(join(root, "poc/lean-link-spike/capsules/alpha.json"), "utf8"));
+  const alphaProjection = compileJavaScriptProjection(ir, alphaPrivateAbi);
+  if (alphaProjection.bindingIrSha256 !== alphaLibrary.bindingIr.semanticSha256) {
+    throw new Error("JavaScript runtime descriptor differs from the locked Binding IR");
+  }
+  const runtimeDescriptor = {
+    schemaVersion: 1,
+    id: alphaCapsule.id,
+    buildHash: alphaLibrary.capsule.sha256,
+    integrity: coreManifest.files.find(file => file.path === "lazy/alpha.so.wasm")?.sha256,
+    dependencies: [],
+    capsule: alphaCapsule,
+    bindingIr: ir,
+    bindingIrSha256: alphaProjection.bindingIrSha256,
+    privateAbi: alphaPrivateAbi,
+    bindings: alphaProjection.bindings,
+  };
+  if (typeof runtimeDescriptor.integrity !== "string") throw new Error("core artifact set has no Alpha side module");
+  const runtimeSupport = [
+    ["runtime/javascript/alpha-descriptor.json", json(runtimeDescriptor), "javascript-alpha-descriptor"],
+    ["runtime/javascript/poc/link-spike/loader.mjs", await readFile(join(root, "poc/link-spike/loader.mjs")), "javascript-library-loader"],
+    ["runtime/javascript/src/runtime/pending-operations.mjs", await readFile(join(root, "src/runtime/pending-operations.mjs")), "javascript-pending-operations"],
+    ["runtime/javascript/src/runtime/callbacks.mjs", await readFile(join(root, "src/runtime/callbacks.mjs")), "javascript-callback-runtime"],
+    ["runtime/javascript/src/runtime/weak-value-map.mjs", await readFile(join(root, "src/runtime/weak-value-map.mjs")), "javascript-weak-value-map"],
+    ["runtime/javascript/src/binding-ir/canonical.mjs", await readFile(join(root, "src/binding-ir/canonical.mjs")), "javascript-binding-ir-canonical"],
+    ["runtime/javascript/src/binding-ir/contract.mjs", await readFile(join(root, "src/binding-ir/contract.mjs")), "javascript-binding-ir-contract"],
+  ];
+  const runtimeSupportIds = [];
+  for (const [path, value, id] of runtimeSupport) {
+    await write(output, path, value);
+    artifacts.push(await record(output, { id, path, role: "binding", target: "node-esm" }));
+    runtimeSupportIds.push(id);
+  }
+
   const assurance = {
     schemaVersion: 1,
     component: ir.component.id,
-    bindingIrSha256: graph.libraries.find(library => library.id === ir.component.id).bindingIr.semanticSha256,
+    bindingIrSha256: alphaLibrary.bindingIr.semanticSha256,
     claims: ir.assurance,
   };
   await write(output, "metadata/assurance.json", json(assurance));
@@ -215,20 +253,41 @@ export const buildUniversalReleaseBundle = async ({
   artifacts.push(await record(output, { id: "provenance", path: "metadata/provenance.intoto.json", role: "provenance" }));
 
   const packages = [
-    ["npm", "@lean-bridge/alpha", "browser", "javascript"],
-    ["cargo", "lean_bridge_alpha", "native-ffi", "rust"],
-    ["pypi", "lean-bridge-alpha", "native-ffi", "python"],
-    ["c", "lean-bridge-alpha", "native-ffi", "c"],
-    ["cpp", "lean-bridge-alpha", "native-ffi", null],
-  ].map(([ecosystem, name, target]) => ({
-    ecosystem,
-    name,
-    version: ir.component.version,
-    target,
-    eligible: false,
-    reason: "The canonical bundle requires a registry projection before publication.",
-    publicArtifacts: [],
-  }));
+    {
+      ecosystem: "npm",
+      name: "@lean-bridge/alpha",
+      version: ir.component.version,
+      target: "node-esm",
+      eligible: true,
+      reason: null,
+      publicArtifacts: [
+        "browser-runtime-loader",
+        "browser-runtime-wasm",
+        "browser-alpha-component",
+        ...bindingArtifacts.get("javascript"),
+        ...runtimeSupportIds,
+        "license",
+        "assurance",
+        "core-artifact-set",
+        "sbom",
+        "provenance",
+      ],
+    },
+    ...[
+      ["cargo", "lean_bridge_alpha", "native-ffi"],
+      ["pypi", "lean-bridge-alpha", "native-ffi"],
+      ["c", "lean-bridge-alpha", "native-ffi"],
+      ["cpp", "lean-bridge-alpha", "native-ffi"],
+    ].map(([ecosystem, name, target]) => ({
+      ecosystem,
+      name,
+      version: ir.component.version,
+      target,
+      eligible: false,
+      reason: "The canonical bundle requires a registry projection before publication.",
+      publicArtifacts: [],
+    })),
+  ];
   const docs = artifacts.filter(item => item.role === "documentation").map(item => item.id);
   const manifest = {
     schemaVersion: 1,
@@ -247,7 +306,7 @@ export const buildUniversalReleaseBundle = async ({
       schemaVersion: ir.schemaVersion,
       path: "binding-ir/alpha.binding-ir.json",
       fileSha256: sha256(irSource),
-      semanticSha256: graph.libraries.find(library => library.id === ir.component.id).bindingIr.semanticSha256,
+      semanticSha256: alphaLibrary.bindingIr.semanticSha256,
     },
     runtime: {
       abiVersion: graph.runtime.abiVersion,
@@ -260,11 +319,11 @@ export const buildUniversalReleaseBundle = async ({
     artifacts,
     targets: [
       {
-        id: "browser",
+        id: "node-esm",
         eligible: true,
         reason: null,
         platforms: ["wasm32-emscripten"],
-        capabilities: ["callbacks", "copied-values", "identity-resources", "promises", "shared-runtime"],
+        capabilities: ["callbacks", "copied-values", "identity-resources", "literal-wasm-assets", "promises", "shared-runtime"],
         entryPoints: [
           { name: "runtime", kind: "library", artifact: "browser-runtime-loader" },
           { name: "component", kind: "library", artifact: "browser-alpha-component" },
