@@ -14,6 +14,7 @@ const exerciseBox = api => {
   assert.deepEqual(Object.keys(api), ["Box", "roundTrip"]);
   const box = new api.Box(2718);
   assert.equal(box.read(), 2718);
+  assert.equal(box.identity(), box);
   assert.equal("handle" in box, false);
   box.dispose();
 

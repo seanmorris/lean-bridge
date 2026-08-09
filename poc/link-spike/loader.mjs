@@ -31,6 +31,9 @@ const frameErrorCodes = Object.freeze([
 ]);
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder("utf-8", { fatal: true });
+const runtimeContexts = new WeakMap();
+const wrapperStates = new WeakMap();
+let nextRuntimeIdentity = 1;
 
 export class LeanBridgeError extends Error {
   constructor(message, { code, library, operation, details = {} }) {
@@ -98,6 +101,547 @@ const bridgeError = (descriptor, binding, code, message, details) =>
     operation: binding.name,
     details,
   });
+
+const classIdentity = (descriptor, bindingName) =>
+  `${identity(descriptor)}:${bindingName}`;
+
+const decodeHandleToken = token => ({
+  side: token >>> 31,
+  kind: (token >>> 24) & 0x7f,
+  generation: (token >>> 12) & 0x0fff,
+  slot: token & 0x0fff,
+});
+
+const encodeHostToken = (slot, generation, kind) =>
+  (
+    0x8000_0000 |
+    ((kind & 0x7f) << 24) |
+    ((generation & 0x0fff) << 12) |
+    (slot + 1)
+  ) >>> 0;
+
+class RuntimeRegistry {
+  constructor(module, options) {
+    this.module = module;
+    this.runtimeId = nextRuntimeIdentity;
+    nextRuntimeIdentity += 1;
+    this.epoch = 1;
+    this.state = "open";
+    this.entries = new Map();
+    this.classes = new Map();
+    this.hostSlots = [];
+    this.hostObjectTokens = new WeakMap();
+    this.pendingFinalizations = [];
+    this.createWeakReference =
+      options.createWeakReference ?? (target => new WeakRef(target));
+    this.counters = {
+      wrappersCreated: 0,
+      canonicalHits: 0,
+      borrows: 0,
+      activeBorrows: 0,
+      leasesAcquired: 0,
+      leasesReleased: 0,
+      finalized: 0,
+      rejected: 0,
+      hostValuesCreated: 0,
+      hostCanonicalHits: 0,
+      hostBorrows: 0,
+      hostActiveBorrows: 0,
+      hostLeasesAcquired: 0,
+      hostLeasesReleased: 0,
+      hostRejected: 0,
+    };
+    const createFinalizationRegistry =
+      options.createFinalizationRegistry ??
+      (callback =>
+        typeof FinalizationRegistry === "function"
+          ? new FinalizationRegistry(callback)
+          : undefined);
+    this.finalizer = createFinalizationRegistry(holding => {
+      this.pendingFinalizations.push(holding);
+    });
+  }
+
+  reject(descriptor, binding, code, message, details = {}) {
+    this.counters.rejected += 1;
+    throw bridgeError(descriptor, binding, code, message, {
+      runtimeId: this.runtimeId,
+      epoch: this.epoch,
+      ...details,
+    });
+  }
+
+  beforeCall(descriptor, binding) {
+    this.drainFinalizers();
+    if (this.state !== "open") {
+      this.reject(
+        descriptor,
+        binding,
+        "runtime-shut-down",
+        `the Lean runtime for ${descriptor.id} has been shut down`,
+      );
+    }
+  }
+
+  validateToken(descriptor, binding, token) {
+    if (!Number.isInteger(token) || token === 0) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-handle-token",
+        `${binding.name} returned an invalid resource token`,
+      );
+    }
+    const decoded = decodeHandleToken(token >>> 0);
+    const expectedSide = binding.handle?.side === "lean" ? 0 : undefined;
+    if (
+      expectedSide === undefined ||
+      decoded.side !== expectedSide ||
+      decoded.kind !== binding.handle.kind ||
+      decoded.slot === 0 ||
+      decoded.generation === 0
+    ) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-handle-token",
+        `${binding.name} returned a token with the wrong side or nominal kind`,
+        {
+          expectedSide: binding.handle?.side,
+          expectedKind: binding.handle?.kind,
+        },
+      );
+    }
+    return token >>> 0;
+  }
+
+  registerClass(descriptor, binding, projectedClass) {
+    this.classes.set(classIdentity(descriptor, binding.name), {
+      descriptor,
+      binding,
+      projectedClass,
+    });
+  }
+
+  rejectHost(code, message, details = {}) {
+    this.counters.hostRejected += 1;
+    throw new LeanBridgeError(message, {
+      code,
+      library: "bridge/host-registry",
+      operation: "hostValue",
+      details: {
+        runtimeId: this.runtimeId,
+        epoch: this.epoch,
+        ...details,
+      },
+    });
+  }
+
+  validateHostKind(kind) {
+    if (!Number.isInteger(kind) || kind < 1 || kind > 0x7f) {
+      this.rejectHost(
+        "invalid-handle-kind",
+        "host value kind must be an integer from 1 through 127",
+        { kind },
+      );
+    }
+  }
+
+  resolveHostEntry(token, expectedKind) {
+    this.validateHostKind(expectedKind);
+    if (!Number.isInteger(token) || token === 0) {
+      this.rejectHost("invalid-handle-token", "host value token is invalid");
+    }
+    const normalized = token >>> 0;
+    const decoded = decodeHandleToken(normalized);
+    if (
+      decoded.side !== 1 ||
+      decoded.kind !== expectedKind ||
+      decoded.slot === 0 ||
+      decoded.generation === 0
+    ) {
+      this.rejectHost(
+        "wrong-handle-kind",
+        "host value token has the wrong side or nominal kind",
+        { expectedKind },
+      );
+    }
+    const entry = this.hostSlots[decoded.slot - 1];
+    if (
+      !entry?.value ||
+      entry.retired ||
+      entry.kind !== expectedKind ||
+      entry.generation !== decoded.generation ||
+      entry.leases === 0
+    ) {
+      this.rejectHost(
+        "stale-handle-token",
+        "host value token is stale or belongs to another runtime",
+        { expectedKind },
+      );
+    }
+    return { entry, normalized, slot: decoded.slot - 1 };
+  }
+
+  internHostValue(value, kind) {
+    if (this.state !== "open") {
+      this.rejectHost("runtime-shut-down", "cannot retain a host value after shutdown");
+    }
+    this.validateHostKind(kind);
+    if (
+      (typeof value !== "object" || value === null) &&
+      typeof value !== "function"
+    ) {
+      this.rejectHost(
+        "invalid-host-value",
+        "retained host values must have object identity",
+      );
+    }
+    let tokensByKind = this.hostObjectTokens.get(value);
+    const existingToken = tokensByKind?.get(kind);
+    if (existingToken !== undefined) {
+      const { entry } = this.resolveHostEntry(existingToken, kind);
+      entry.leases += 1;
+      this.counters.hostCanonicalHits += 1;
+      this.counters.hostLeasesAcquired += 1;
+      return existingToken;
+    }
+
+    let slot = this.hostSlots.findIndex(entry => !entry.value && !entry.retired);
+    if (slot < 0) {
+      if (this.hostSlots.length >= 0x0fff) {
+        this.rejectHost("registry-capacity", "host value registry is full");
+      }
+      slot = this.hostSlots.length;
+      this.hostSlots.push({
+        value: undefined,
+        generation: 1,
+        kind: 0,
+        leases: 0,
+        retired: false,
+      });
+    }
+    const entry = this.hostSlots[slot];
+    if (entry.generation === 0) entry.generation = 1;
+    entry.value = value;
+    entry.kind = kind;
+    entry.leases = 1;
+    const token = encodeHostToken(slot, entry.generation, kind);
+    if (!tokensByKind) {
+      tokensByKind = new Map();
+      this.hostObjectTokens.set(value, tokensByKind);
+    }
+    tokensByKind.set(kind, token);
+    this.counters.hostValuesCreated += 1;
+    this.counters.hostLeasesAcquired += 1;
+    return token;
+  }
+
+  borrowHostValue(token, kind, operation) {
+    const { entry } = this.resolveHostEntry(token, kind);
+    this.counters.hostBorrows += 1;
+    this.counters.hostActiveBorrows += 1;
+    try {
+      return operation(entry.value);
+    } finally {
+      this.counters.hostActiveBorrows -= 1;
+    }
+  }
+
+  releaseHostValue(token, kind) {
+    const { entry } = this.resolveHostEntry(token, kind);
+    entry.leases -= 1;
+    this.counters.hostLeasesReleased += 1;
+    if (entry.leases !== 0) return entry.leases;
+    const tokensByKind = this.hostObjectTokens.get(entry.value);
+    tokensByKind?.delete(kind);
+    if (tokensByKind?.size === 0) this.hostObjectTokens.delete(entry.value);
+    entry.value = undefined;
+    entry.kind = 0;
+    if (entry.generation === 0x0fff) {
+      entry.retired = true;
+    } else {
+      entry.generation += 1;
+    }
+    return 0;
+  }
+
+  clearHostValues() {
+    for (const entry of this.hostSlots) {
+      if (!entry.value || entry.leases === 0) continue;
+      const tokensByKind = this.hostObjectTokens.get(entry.value);
+      tokensByKind?.delete(entry.kind);
+      if (tokensByKind?.size === 0) this.hostObjectTokens.delete(entry.value);
+      this.counters.hostLeasesReleased += entry.leases;
+      entry.value = undefined;
+      entry.kind = 0;
+      entry.leases = 0;
+    }
+  }
+
+  attach(wrapper, descriptor, binding, token, release) {
+    const normalized = this.validateToken(descriptor, binding, token);
+    const bindingKey = classIdentity(descriptor, binding.name);
+    const entryKey = `${bindingKey}:${normalized}`;
+    const existing = this.entries.get(entryKey)?.reference.deref();
+    if (existing) {
+      this.reject(
+        descriptor,
+        binding,
+        "duplicate-owned-handle",
+        `${binding.name} returned a resource token that already has a live owner`,
+      );
+    }
+    const state = {
+      context: this,
+      epoch: this.epoch,
+      bindingKey,
+      entryKey,
+      token: normalized,
+      descriptor,
+      binding,
+      release,
+      disposed: false,
+    };
+    wrapperStates.set(wrapper, state);
+    this.entries.set(entryKey, {
+      reference: this.createWeakReference(wrapper),
+      token: normalized,
+      epoch: this.epoch,
+      bindingKey,
+      descriptor,
+      binding,
+      release,
+    });
+    this.finalizer?.register(
+      wrapper,
+      {
+        entryKey,
+        token: normalized,
+        epoch: this.epoch,
+        bindingKey,
+        descriptor,
+        binding,
+        release,
+      },
+      wrapper,
+    );
+    this.counters.wrappersCreated += 1;
+    this.counters.leasesAcquired += 1;
+  }
+
+  requireReceiver(wrapper, descriptor, binding) {
+    const state = wrapperStates.get(wrapper);
+    if (!state) {
+      this.reject(
+        descriptor,
+        binding,
+        "invalid-receiver",
+        `${binding.name} requires a generated ${binding.name} instance`,
+      );
+    }
+    if (state.context !== this) {
+      this.reject(
+        descriptor,
+        binding,
+        "cross-runtime-handle",
+        `${binding.name} belongs to a different Lean runtime`,
+      );
+    }
+    if (state.bindingKey !== classIdentity(descriptor, binding.name)) {
+      this.reject(
+        descriptor,
+        binding,
+        "wrong-handle-kind",
+        `${binding.name} received a different nominal resource type`,
+      );
+    }
+    if (state.disposed) {
+      this.reject(
+        descriptor,
+        binding,
+        "resource-disposed",
+        `${binding.name} has been disposed`,
+      );
+    }
+    if (state.epoch !== this.epoch || this.state !== "open") {
+      this.reject(
+        descriptor,
+        binding,
+        "runtime-epoch-expired",
+        `${binding.name} belongs to an expired runtime epoch`,
+      );
+    }
+    return state;
+  }
+
+  liftResource(token, descriptor, method, result) {
+    const target = this.classes.get(classIdentity(descriptor, result.name));
+    if (!target) {
+      this.reject(
+        descriptor,
+        method,
+        "unknown-resource-type",
+        `${method.name} returned unknown resource type ${result.name}`,
+      );
+    }
+    const normalized = this.validateToken(
+      descriptor,
+      target.binding,
+      token,
+    );
+    const entryKey = `${classIdentity(descriptor, result.name)}:${normalized}`;
+    const wrapper = this.entries.get(entryKey)?.reference.deref();
+    if (!wrapper) {
+      this.reject(
+        descriptor,
+        method,
+        result.ownership === "borrowed"
+          ? "unrooted-borrow"
+          : "missing-retained-owner",
+        `${method.name} returned a resource without a live canonical owner`,
+        { ownership: result.ownership, resource: result.name },
+      );
+    }
+    this.counters.canonicalHits += 1;
+    return wrapper;
+  }
+
+  invoke(wrapper, descriptor, binding, method, args) {
+    this.beforeCall(descriptor, method);
+    const state = this.requireReceiver(wrapper, descriptor, binding);
+    this.counters.borrows += 1;
+    this.counters.activeBorrows += 1;
+    try {
+      const result = method.implementation(state.token, ...args);
+      if (method.result?.kind === "resource") {
+        return this.liftResource(result, descriptor, method, method.result);
+      }
+      return result;
+    } finally {
+      this.counters.activeBorrows -= 1;
+    }
+  }
+
+  releaseEntry(entry, wrapper, reason) {
+    this.entries.delete(entry.entryKey ?? `${entry.bindingKey}:${entry.token}`);
+    if (wrapper) {
+      const state = wrapperStates.get(wrapper);
+      if (state) state.disposed = true;
+      this.finalizer?.unregister(wrapper);
+    }
+    const remaining = entry.release(entry.token) >>> 0;
+    if (remaining === 0xffff_ffff) {
+      this.reject(
+        entry.descriptor,
+        entry.binding,
+        "stale-handle-token",
+        `${entry.binding.name} cleanup rejected a stale resource token`,
+        { cleanup: reason },
+      );
+    }
+    this.counters.leasesReleased += 1;
+    if (reason === "finalizer") this.counters.finalized += 1;
+  }
+
+  dispose(wrapper, descriptor, binding) {
+    const state = wrapperStates.get(wrapper);
+    if (state?.context === this && state.disposed) return false;
+    const live = this.requireReceiver(wrapper, descriptor, binding);
+    this.releaseEntry(
+      {
+        ...live,
+        entryKey: live.entryKey,
+      },
+      wrapper,
+      "dispose",
+    );
+    return true;
+  }
+
+  drainFinalizers() {
+    while (this.pendingFinalizations.length > 0) {
+      const holding = this.pendingFinalizations.shift();
+      if (holding.epoch !== this.epoch || this.state !== "open") continue;
+      const entry = this.entries.get(holding.entryKey);
+      if (!entry || entry.reference.deref() !== undefined) continue;
+      this.releaseEntry({ ...holding }, undefined, "finalizer");
+    }
+  }
+
+  snapshot() {
+    this.drainFinalizers();
+    return Object.freeze({
+      runtimeId: this.runtimeId,
+      epoch: this.epoch,
+      state: this.state,
+      resources: Object.freeze({
+        live: this.entries.size,
+        wrappersCreated: this.counters.wrappersCreated,
+        canonicalHits: this.counters.canonicalHits,
+        rejected: this.counters.rejected,
+      }),
+      borrows: Object.freeze({
+        total: this.counters.borrows,
+        active: this.counters.activeBorrows,
+      }),
+      leases: Object.freeze({
+        acquired: this.counters.leasesAcquired,
+        released: this.counters.leasesReleased,
+        finalized: this.counters.finalized,
+      }),
+      hostValues: Object.freeze({
+        live: this.hostSlots.filter(entry => entry.value && entry.leases > 0)
+          .length,
+        created: this.counters.hostValuesCreated,
+        canonicalHits: this.counters.hostCanonicalHits,
+        rejected: this.counters.hostRejected,
+        borrows: this.counters.hostBorrows,
+        activeBorrows: this.counters.hostActiveBorrows,
+        leasesAcquired: this.counters.hostLeasesAcquired,
+        leasesReleased: this.counters.hostLeasesReleased,
+      }),
+      pendingFinalizations: this.pendingFinalizations.length,
+    });
+  }
+
+  shutdown() {
+    if (this.state === "closed") return true;
+    this.drainFinalizers();
+    for (const [entryKey, entry] of [...this.entries]) {
+      const wrapper = entry.reference.deref();
+      this.releaseEntry({ ...entry, entryKey }, wrapper, "shutdown");
+    }
+    this.clearHostValues();
+    const shutdown = this.module._bridge_lean_runtime_shutdown;
+    if (typeof shutdown !== "function" || !shutdown()) {
+      throw new Error("the Lean runtime rejected bridge shutdown");
+    }
+    this.state = "closed";
+    this.epoch += 1;
+    return true;
+  }
+}
+
+const getRuntimeContext = (module, options = {}) => {
+  let context = runtimeContexts.get(module);
+  if (!context) {
+    context = new RuntimeRegistry(module, options);
+    runtimeContexts.set(module, context);
+  }
+  return context;
+};
+
+// Internal POC probes. Generated consumer packages do not export these hooks.
+export const __bridgeTest = Object.freeze({
+  internHostValue: (module, value, kind) =>
+    getRuntimeContext(module).internHostValue(value, kind),
+  borrowHostValue: (module, token, kind, operation) =>
+    getRuntimeContext(module).borrowHostValue(token, kind, operation),
+  releaseHostValue: (module, token, kind) =>
+    getRuntimeContext(module).releaseHostValue(token, kind),
+  diagnostics: module => getRuntimeContext(module).snapshot(),
+});
 
 const initializeBinding = (module, descriptor, binding) => {
   if (!binding.initialize) return;
@@ -226,6 +770,7 @@ const projectValueFrameFunction = (
   descriptor,
   binding,
   implementation,
+  context,
 ) => {
   const adapter = binding.adapter;
   assertValueFrameAdapter(descriptor, binding, adapter);
@@ -233,6 +778,7 @@ const projectValueFrameFunction = (
   const free = resolvePrivateFunction(module, descriptor, "_free");
 
   return value => {
+    context.beforeCall(descriptor, binding);
     const copied = validateValueFrameInput(
       descriptor,
       binding,
@@ -393,7 +939,7 @@ const projectValueFrameFunction = (
   };
 };
 
-const projectFunction = (module, descriptor, binding) => {
+const projectFunction = (module, descriptor, binding, context) => {
   const implementation = resolvePrivateFunction(
     module,
     descriptor,
@@ -401,6 +947,7 @@ const projectFunction = (module, descriptor, binding) => {
   );
   if (!binding.adapter) {
     return (...args) => {
+      context.beforeCall(descriptor, binding);
       initializeBinding(module, descriptor, binding);
       return implementation(...args);
     };
@@ -411,6 +958,7 @@ const projectFunction = (module, descriptor, binding) => {
       descriptor,
       binding,
       implementation,
+      context,
     );
   }
   throw bridgeError(
@@ -422,7 +970,13 @@ const projectFunction = (module, descriptor, binding) => {
   );
 };
 
-const projectClass = (module, descriptor, binding) => {
+const projectClass = (module, descriptor, binding, context) => {
+  const bindingKey = classIdentity(descriptor, binding.name);
+  const cached = context.classes.get(bindingKey)?.projectedClass;
+  if (cached) return cached;
+  if (!binding.handle) {
+    throw new Error(`resource binding ${binding.name} is missing handle metadata`);
+  }
   const construct = resolvePrivateFunction(
     module,
     descriptor,
@@ -439,23 +993,20 @@ const projectClass = (module, descriptor, binding) => {
       implementation: resolvePrivateFunction(module, descriptor, method.symbol),
     };
   });
-  const handles = new WeakMap();
 
   class ProjectedResource {
     constructor(...args) {
+      context.beforeCall(descriptor, binding);
       if (initialize && !initialize()) {
         throw new Error(`failed to initialize runtime for ${descriptor.id}`);
       }
       const handle = construct(...args);
       if (!handle) throw new Error(`failed to construct ${binding.name}`);
-      handles.set(this, handle);
+      context.attach(this, descriptor, binding, handle, dispose);
     }
 
     dispose() {
-      const handle = handles.get(this);
-      if (handle === undefined) return;
-      handles.delete(this);
-      dispose(handle);
+      context.dispose(this, descriptor, binding);
     }
   }
 
@@ -463,11 +1014,7 @@ const projectClass = (module, descriptor, binding) => {
   for (const method of methods) {
     Object.defineProperty(ProjectedResource.prototype, method.name, {
       value(...args) {
-        const handle = handles.get(this);
-        if (handle === undefined) {
-          throw new Error(`${binding.name} has been disposed`);
-        }
-        return method.implementation(handle, ...args);
+        return context.invoke(this, descriptor, binding, method, args);
       },
     });
   }
@@ -477,10 +1024,11 @@ const projectClass = (module, descriptor, binding) => {
     });
   }
 
+  context.registerClass(descriptor, binding, ProjectedResource);
   return ProjectedResource;
 };
 
-const projectBindings = (module, descriptor) => {
+const projectBindings = (module, descriptor, context) => {
   const api = Object.create(null);
 
   for (const binding of descriptor.bindings ?? []) {
@@ -489,12 +1037,12 @@ const projectBindings = (module, descriptor) => {
     if (binding.kind === "function") {
       Object.defineProperty(api, binding.name, {
         enumerable: true,
-        value: projectFunction(module, descriptor, binding),
+        value: projectFunction(module, descriptor, binding, context),
       });
     } else if (binding.kind === "class") {
       Object.defineProperty(api, binding.name, {
         enumerable: true,
-        value: projectClass(module, descriptor, binding),
+        value: projectClass(module, descriptor, binding, context),
       });
     } else {
       throw new Error(
@@ -506,10 +1054,11 @@ const projectBindings = (module, descriptor) => {
   return Object.freeze(api);
 };
 
-export const createLibrarySurface = (module, descriptor) =>
-  projectBindings(module, descriptor);
+export const createLibrarySurface = (module, descriptor, options = {}) =>
+  projectBindings(module, descriptor, getRuntimeContext(module, options));
 
 export const createLibraryLoader = (module, options = {}) => {
+  const context = getRuntimeContext(module, options);
   const loaded = new Map();
   const pending = new Map();
   const read = options.readArtifact ?? readArtifact;
@@ -542,7 +1091,7 @@ export const createLibraryLoader = (module, options = {}) => {
         loadAsync: true,
         nodelete: true,
       });
-      const api = createLibrarySurface(module, descriptor);
+      const api = projectBindings(module, descriptor, context);
       loaded.set(key, api);
       return api;
     })();
@@ -555,5 +1104,10 @@ export const createLibraryLoader = (module, options = {}) => {
     }
   };
 
-  return Object.freeze({ load, loaded });
+  return Object.freeze({
+    load,
+    loaded,
+    diagnostics: () => context.snapshot(),
+    shutdown: () => context.shutdown(),
+  });
 };

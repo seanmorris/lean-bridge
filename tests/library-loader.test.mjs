@@ -81,13 +81,18 @@ test("load rejects underscore-prefixed public binding names", async () => {
 test("native resource classes defer initialization and hide numeric handles", async () => {
   let initializationRuns = 0;
   let releasedHandle;
+  let boxValue;
+  const privateToken = (1 << 24) | (1 << 12) | 1;
   const module = {
     _bridge_initialize: () => {
       initializationRuns += 1;
       return 1;
     },
-    _bridge_make_box: value => value + 1000,
-    _bridge_read_box: handle => handle - 1000,
+    _bridge_make_box: value => {
+      boxValue = value;
+      return privateToken;
+    },
+    _bridge_read_box: () => boxValue,
     _bridge_release: handle => {
       releasedHandle = handle;
     },
@@ -102,6 +107,7 @@ test("native resource classes defer initialization and hide numeric handles", as
         initialize: "_bridge_initialize",
         constructor: "_bridge_make_box",
         dispose: "_bridge_release",
+        handle: { side: "lean", kind: 1 },
         methods: [{ name: "read", symbol: "_bridge_read_box" }],
       },
     ],
@@ -118,7 +124,7 @@ test("native resource classes defer initialization and hide numeric handles", as
   assert.deepEqual(Object.keys(box), []);
 
   box.dispose();
-  assert.equal(releasedHandle, 1042);
+  assert.equal(releasedHandle, privateToken);
   box.dispose();
   assert.throws(() => box.read(), /Box has been disposed/);
 });

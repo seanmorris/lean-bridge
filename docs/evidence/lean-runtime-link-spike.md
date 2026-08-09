@@ -10,7 +10,7 @@ The pinned Lean 4.32.2 sources were configured through their existing Emscripten
 
 The resulting `libleanrt.a` and a wasm32/LTO build of Lean's complete `Init` closure were linked only into an Emscripten `MAIN_MODULE=2`. Lean-authored Alpha, Beta, and Gamma modules were compiled independently by the pinned host Lean compiler to generated C, then linked without either archive as `SIDE_MODULE=2` artifacts. Beta and Gamma compile against Alpha's `.olean`, so all three use the same nominal `Box` type rather than relying on compatible layouts. Small C shims register each module's generated entry points into the main-owned registry. A tracked graph lock content-addresses all six Lean/shim inputs, pins their dependency order and runtime/patch identities, and drives both modes. Startup and lazy loading use the same three side binaries; final-static links the same locked generated sources into one non-dynamic application.
 
-Alpha allocates a non-scalar Lean structure containing a `UInt32` and persistent `String`. Alpha, Beta, and Gamma each read that same object through independently generated code. The main bridge then passes one retained reference through Beta's and Gamma's identity functions, checks that the returned pointer is unchanged, balances every consume/retain, and verifies the ownership counter returns to zero.
+Alpha allocates a non-scalar Lean structure containing a `UInt32` and persistent `String`. Alpha, Beta, and Gamma each read that same object through independently generated code. The main bridge retains the object in a generation-safe registry, passes the resolved object through Beta's and Gamma's identity functions, checks that the Lean identity is unchanged, balances every consume and retain, and verifies the ownership counter returns to zero.
 
 ## Stock-source failures and admitted patches
 
@@ -66,10 +66,10 @@ The loader-facing tests also establish the intended native convention for this
 POC. `await libraries.load(beta)` returns one frozen API object with `chain()`,
 not Emscripten's dynamic-link handle. Concurrent calls share the same in-flight
 operation and later calls return the same object. Only Beta and required Alpha
-are loaded. The Lean Alpha descriptor returns a native `Box` class whose numeric
-handle, underscore-prefixed ABI calls, runtime initialization, and release call
-remain private; `new alpha.Box(42)`, `box.read()`, and `box.dispose()` are the
-consumer surface. Runtime initialization is deferred until construction. The
+are loaded. The Lean Alpha descriptor returns a native `Box` class whose opaque
+registry token, underscore-prefixed ABI calls, runtime initialization, and
+release call remain private. Consumers use `new alpha.Box(42)`, `box.read()`,
+`box.identity()`, and `box.dispose()`. Runtime initialization is deferred until construction. The
 descriptors are hand-authored POC stand-ins for the WP6-generated metadata and
 bindings, not an accepted manual-wrapper architecture.
 
@@ -100,30 +100,30 @@ Artifacts from this run:
 
 | Profile and artifact | Bytes | SHA-256 |
 |---|---:|---|
-| browser startup main | 1,289,844 | `20545285cf10b6690213f8cb34460e667098c8ac1e9a90b1926427fcf6c839d2` |
-| browser lazy main | 1,289,759 | `ad6b73edca8493cbaedff3f854a6513253f92f8f0dfe44be4b1d6f9740fbe5b6` |
-| browser final-static main | 1,288,288 | `f64a48d82cbdf5f049f8187d6ba8478b4498c9d7d34b9c537e665bf86e0bfefc` |
-| browser Alpha side module | 1,029 | `e98111b14c3effbe9b1e0d72b8bbe1e0fa44d79254171bcb08c3e2c3d0fd8853` |
-| browser Beta side module | 713 | `7f36961d6ee36765e5ff926a94f6a41375fd151e5fb61f28ebc46c0c1c2af252` |
-| browser Gamma side module | 714 | `8dd69c40e3373355ff3779b9e5844b0dd1924af052013710ea6cfd4a87bc089a` |
-| threaded startup main | 1,323,826 | `f04eb6bd5bf67f0c640794fd05799665b834cfab93732d73f869eb1ecece4f6b` |
-| threaded lazy main | 1,323,741 | `4c77cb594467f7d722d680f072c1d983c2b44f2aea2db2b76d7303cfc638cd34` |
-| threaded final-static main | 1,315,888 | `6066e4e2eefaa3f2698651884730749e520f808a3ef2215e375749188c14ce71` |
-| threaded Alpha side module | 1,249 | `44b5f3390e7fde4e2ce0aaa77ad30c447942b275f36c23901f30d4676b16d748` |
-| threaded Beta side module | 941 | `d0efd8912bdcf9387857d31e645fa2a0ae5bc1031f2f1f894579d859a3ee9405` |
-| threaded Gamma side module | 942 | `19cb369ff0b7c07968e7c90fa9c9849903d0215abd418cf0d7a296ef2cdca982` |
+| browser startup main | 1,294,557 | `93d5ee928282019299dabbba12467b659a94047b1cd0ee9bc9f6b4184eed1290` |
+| browser lazy main | 1,294,472 | `c417b8c79c5f676959df95dcd9fcb310932ebc23d11069d059b2a29cfb102442` |
+| browser final-static main | 1,294,401 | `00d2225cac650b30fca2bd8cedbc0729a2607c9539164a1456b23dcf7d3ab679` |
+| browser Alpha side module | 3,778 | `bfa12d7b6869c1eba84606ab8bb5f1c804836b2384c14186e6e9654f66f96f09` |
+| browser Beta side module | 604 | `aaee59f1ec973e56275e46f7f7dab4f08642b0a4e0c088297a319c4f695071e8` |
+| browser Gamma side module | 605 | `cff5bd84b30c64dd7ff2b199202f45f7b79c23936f51e3661bae1190eff096a5` |
+| threaded startup main | 1,327,110 | `60881f40b5bcc4c4bcd7982ccac1b5d8c98956f801a5383d599294ef5d6185e4` |
+| threaded lazy main | 1,327,025 | `5f81807089a91d37312d572d88dd064b92659d0a224f623b32ad2973110ab132` |
+| threaded final-static main | 1,323,599 | `f2007d70fe0a834704bfb312f8e239ae771b8a162456ab6908fa27cd7b910f0e` |
+| threaded Alpha side module | 3,974 | `5fd500f8869bd4dd201663959641a5199ece2dfc9a86e6a1b864865c738c88bf` |
+| threaded Beta side module | 831 | `c677d1c7f1ff1057ac13678a0f04fe21b380f53b40893bf4b5ef45f20114415c` |
+| threaded Gamma side module | 832 | `b4fe836032a02aa0b3427e1ab4ec082d53372626616253040baf4aa1c842c051` |
 
 ## Architectural consequences
 
 `MAIN_MODULE=1` is unsuitable as the default because it preserves the entire dynamic symbol universe and pulled runtime subsystems whose Lean `Init` implementations were not linked. `MAIN_MODULE=2` plus a generated symbol-export manifest derived from the canonical side-module graph works for the narrow slice and makes symbol compatibility explicit.
 
-The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 33,982 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. Actual browser, worker, and bundler validation remains a later work package; this experiment ran under Node.
+The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 32,553 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. Actual browser, worker, and bundler validation remains a later work package; this experiment ran under Node.
 
 The explicit `threaded` profile sets `MULTI_THREAD=ON`, passes `-pthread` through the runtime, generated `Init`, side modules, and final link, and imports one shared memory. It retains Emscripten's warnings that dynamic linking with pthreads is experimental and that shared-memory growth may execute non-Wasm support code slowly. Browser deployments of this profile require SharedArrayBuffer availability and the corresponding cross-origin-isolation policy. Thread selection is therefore an application/runtime-profile decision, never a per-library choice; all libraries in one graph must use the same profile.
 
 The real `Init` closure increases the current main artifact by approximately 1.14 MiB over the earlier narrow stub. That is paid once per application, not once per Lean library. Libraries that import `Std` or other roots will require their exact cross-compiled initialization closure in the main graph; this milestone proves `Init` and core `IO`, not every future standard-library profile.
 
-For this three-library slice, browser final-static is 3,794 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 10,850 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
+For this three-library slice, browser final-static is 5,143 bytes smaller than the startup dynamic main plus its three side modules; threaded final-static is 9,148 bytes smaller. This is evidence for a packaging choice, not a general performance conclusion. Both modes expose the same native Alpha `Box` surface and satisfy the same cross-library identity test.
 
 Compiler prefix maps normalize the source root to `/workspace`, normalize every
 content-addressed runtime build directory to

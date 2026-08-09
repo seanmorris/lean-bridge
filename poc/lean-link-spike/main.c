@@ -51,8 +51,125 @@ static lean_link_initializer_fn gamma_initializer = 0;
 static uint32_t runtime_state = BRIDGE_LEAN_RUNTIME_COLD;
 static uint32_t runtime_init_runs = 0;
 static uint32_t library_init_runs = 0;
-static uint32_t live_handles = 0;
 static uint32_t active_frames = 0;
+
+enum bridge_lean_handle_layout {
+  BRIDGE_LEAN_HANDLE_SLOT_BITS = 12,
+  BRIDGE_LEAN_HANDLE_GENERATION_BITS = 12,
+  BRIDGE_LEAN_HANDLE_SLOT_MASK = (1u << BRIDGE_LEAN_HANDLE_SLOT_BITS) - 1u,
+  BRIDGE_LEAN_HANDLE_GENERATION_MASK =
+    (1u << BRIDGE_LEAN_HANDLE_GENERATION_BITS) - 1u,
+  BRIDGE_LEAN_HANDLE_KIND_SHIFT = 24,
+  BRIDGE_LEAN_HANDLE_SIDE_SHIFT = 31,
+  BRIDGE_LEAN_HANDLE_KIND_MASK = 0x7fu,
+  BRIDGE_LEAN_HANDLE_CAPACITY = 1024,
+  BRIDGE_LEAN_HANDLE_SIDE_LEAN = 0,
+  BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX = 1,
+};
+
+typedef struct bridge_lean_handle_slot {
+  lean_object *object;
+  uint16_t generation;
+  uint8_t kind;
+  uint8_t retired;
+} bridge_lean_handle_slot;
+
+static bridge_lean_handle_slot handle_slots[BRIDGE_LEAN_HANDLE_CAPACITY];
+static uint32_t live_handles = 0;
+static uint32_t rejected_handles = 0;
+static uint32_t retired_handle_slots = 0;
+
+static uint32_t bridge_lean_handle_encode(
+    uint32_t slot,
+    uint32_t generation,
+    uint32_t kind
+) {
+  return
+    (BRIDGE_LEAN_HANDLE_SIDE_LEAN << BRIDGE_LEAN_HANDLE_SIDE_SHIFT) |
+    ((kind & BRIDGE_LEAN_HANDLE_KIND_MASK) << BRIDGE_LEAN_HANDLE_KIND_SHIFT) |
+    ((generation & BRIDGE_LEAN_HANDLE_GENERATION_MASK)
+      << BRIDGE_LEAN_HANDLE_SLOT_BITS) |
+    (slot + 1u);
+}
+
+static lean_object *bridge_lean_handle_resolve(
+    uint32_t token,
+    uint32_t expected_kind
+) {
+  uint32_t encoded_slot = token & BRIDGE_LEAN_HANDLE_SLOT_MASK;
+  uint32_t generation =
+    (token >> BRIDGE_LEAN_HANDLE_SLOT_BITS) &
+    BRIDGE_LEAN_HANDLE_GENERATION_MASK;
+  uint32_t kind =
+    (token >> BRIDGE_LEAN_HANDLE_KIND_SHIFT) & BRIDGE_LEAN_HANDLE_KIND_MASK;
+  uint32_t side = token >> BRIDGE_LEAN_HANDLE_SIDE_SHIFT;
+  bridge_lean_handle_slot *slot;
+
+  if (
+    side != BRIDGE_LEAN_HANDLE_SIDE_LEAN ||
+    kind != expected_kind ||
+    encoded_slot == 0 ||
+    encoded_slot > BRIDGE_LEAN_HANDLE_CAPACITY ||
+    generation == 0
+  ) {
+    rejected_handles += 1;
+    return 0;
+  }
+  slot = &handle_slots[encoded_slot - 1u];
+  if (
+    !slot->object ||
+    slot->retired ||
+    slot->kind != kind ||
+    slot->generation != generation
+  ) {
+    rejected_handles += 1;
+    return 0;
+  }
+  return slot->object;
+}
+
+static uint32_t bridge_lean_handle_retain(
+    lean_object *object,
+    uint32_t kind
+) {
+  uint32_t index;
+
+  if (!object) return 0;
+  for (index = 0; index < BRIDGE_LEAN_HANDLE_CAPACITY; index += 1) {
+    bridge_lean_handle_slot *slot = &handle_slots[index];
+    if (slot->object || slot->retired) continue;
+    if (slot->generation == 0) slot->generation = 1;
+    slot->object = object;
+    slot->kind = (uint8_t)kind;
+    live_handles += 1;
+    return bridge_lean_handle_encode(index, slot->generation, kind);
+  }
+  lean_dec(object);
+  return 0;
+}
+
+static uint32_t bridge_lean_handle_release(
+    uint32_t token,
+    uint32_t expected_kind
+) {
+  uint32_t encoded_slot = token & BRIDGE_LEAN_HANDLE_SLOT_MASK;
+  lean_object *object = bridge_lean_handle_resolve(token, expected_kind);
+  bridge_lean_handle_slot *slot;
+
+  if (!object) return UINT32_MAX;
+  slot = &handle_slots[encoded_slot - 1u];
+  slot->object = 0;
+  slot->kind = 0;
+  lean_dec(object);
+  live_handles -= 1;
+  if (slot->generation == BRIDGE_LEAN_HANDLE_GENERATION_MASK) {
+    slot->retired = 1;
+    retired_handle_slots += 1;
+  } else {
+    slot->generation += 1;
+  }
+  return live_handles;
+}
 #if defined(BRIDGE_LEAN_RUNTIME_TEST_HOOKS)
 static uint32_t force_init_error = 0;
 
@@ -151,6 +268,10 @@ uint32_t bridge_lean_library_init_runs(void) {
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_runtime_shutdown(void) {
   if (runtime_state == BRIDGE_LEAN_RUNTIME_SHUT_DOWN) return 1;
+  if (runtime_state == BRIDGE_LEAN_RUNTIME_COLD) {
+    runtime_state = BRIDGE_LEAN_RUNTIME_SHUT_DOWN;
+    return 1;
+  }
   if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || live_handles != 0) return 0;
 
   runtime_state = BRIDGE_LEAN_RUNTIME_SHUT_DOWN;
@@ -232,17 +353,24 @@ uint32_t bridge_has_lean_gamma(void) {
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_alpha_make(uint32_t value) {
   if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || !alpha_box) return 0;
-  lean_object *box = alpha_box(value);
-  live_handles += 1;
-  return (uint32_t)(uintptr_t)box;
+  return bridge_lean_handle_retain(
+    alpha_box(value),
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX
+  );
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_alpha_read(uint32_t handle) {
+  lean_object *box;
+
   if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || !alpha_read || handle == 0) {
     return UINT32_MAX;
   }
-  lean_object *box = (lean_object *)(uintptr_t)handle;
+  box = bridge_lean_handle_resolve(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX
+  );
+  if (!box) return UINT32_MAX;
   /* The generated export consumes its argument; retain around a borrowed read. */
   lean_inc(box);
   return alpha_read(box);
@@ -500,7 +628,10 @@ uint32_t bridge_lean_active_frames(void) {
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_handle_identity(uint32_t handle) {
-  return handle;
+  return bridge_lean_handle_resolve(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX
+  ) ? handle : 0;
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -525,7 +656,11 @@ uint32_t bridge_lean_cross_library_identity(uint32_t handle) {
     return 0;
   }
 
-  original = (lean_object *)(uintptr_t)handle;
+  original = bridge_lean_handle_resolve(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX
+  );
+  if (!original) return 0;
   lean_inc(original);
   alpha_value = alpha_read(original);
   lean_inc(original);
@@ -546,13 +681,28 @@ uint32_t bridge_lean_cross_library_identity(uint32_t handle) {
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_release(uint32_t handle) {
-  if (handle == 0 || live_handles == 0) return 0;
-  lean_dec((lean_object *)(uintptr_t)handle);
-  live_handles -= 1;
-  return live_handles;
+  return bridge_lean_handle_release(
+    handle,
+    BRIDGE_LEAN_HANDLE_KIND_ALPHA_BOX
+  );
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_live_handles(void) {
   return live_handles;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_rejected_handles(void) {
+  return rejected_handles;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_retired_handle_slots(void) {
+  return retired_handle_slots;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_handle_capacity(void) {
+  return BRIDGE_LEAN_HANDLE_CAPACITY;
 }

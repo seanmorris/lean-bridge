@@ -21,7 +21,7 @@ The run used a warm filesystem cache. No browser, network, bundler, or compresse
 
 | Artifact | SHA-256 |
 |---|---|
-| lazy main Wasm | `1e866f7ba5447da504612b95859f7dd65925e3637ec537cc3762c778b5a1678e` |
+| lazy main Wasm | `c417b8c79c5f676959df95dcd9fcb310932ebc23d11069d059b2a29cfb102442` |
 | Alpha lazy side module | `bfa12d7b6869c1eba84606ab8bb5f1c804836b2384c14186e6e9654f66f96f09` |
 | canonical graph lock | `5559812f095c992b6c87f4b7917af8a6eea4eca832a52b3b931c9f5f24025a54` |
 
@@ -37,26 +37,28 @@ Warm measurements perform 10,000 complete lifecycle operations before sampling. 
 
 | Operation | Samples | Median | p95 | Minimum | Maximum |
 |---|---:|---:|---:|---:|---:|
-| main module factory | 12 | 8.56 ms | 16.12 ms | 5.22 ms | 16.12 ms |
-| Alpha integrity check and lazy load | 12 | 1.16 ms | 5.65 ms | 0.74 ms | 5.65 ms |
-| first `Box` lifecycle, including deferred initialization | 12 | 1.26 ms | 39.16 ms | 1.16 ms | 39.16 ms |
-| warm `box.read()` | 60 batches | 16.4 ns | 65.7 ns | 15.7 ns | 91.4 ns |
-| warm `Box` construct, read, and dispose | 60 batches | 0.218 µs | 0.264 µs | 0.144 µs | 0.402 µs |
+| main module factory | 12 | 9.49 ms | 18.37 ms | 5.61 ms | 18.37 ms |
+| Alpha integrity check and lazy load | 12 | 1.11 ms | 6.94 ms | 0.98 ms | 6.94 ms |
+| first `Box` lifecycle, including deferred initialization | 12 | 1.46 ms | 49.43 ms | 1.24 ms | 49.43 ms |
+| warm `box.read()` | 60 batches | 45.3 ns | 256.0 ns | 43.9 ns | 426.8 ns |
+| warm `Box` construct, read, and dispose | 60 batches | 1.604 µs | 7.412 µs | 1.319 µs | 9.458 µs |
 
 The 12-sample p95 is the maximum sample. More cold samples and separate process runs are required before setting a production p95 budget.
+
+The generation-safe registry changed the earlier WP4 median from 16.4 ns to 45.3 ns for a warm read and from 0.218 µs to 1.604 µs for a warm lifecycle. The added work includes token validation, wrapper lookup, borrow accounting, lease accounting, weak-reference registration, and stale-use protection. The absolute medians remain below 0.046 µs per read and 1.7 µs per lifecycle on this machine. The relative regression is recorded and requires optimization before a production budget can be accepted.
 
 ## Size results
 
 | Artifact | Bytes |
 |---|---:|
-| browser startup main | 1,292,186 |
-| browser lazy main | 1,292,101 |
+| browser startup main | 1,294,557 |
+| browser lazy main | 1,294,472 |
 | browser Alpha side module | 3,778 |
 | browser Beta side module | 604 |
 | browser Gamma side module | 605 |
-| browser final-static three-library main | 1,293,376 |
-| threaded startup main | 1,326,087 |
-| threaded final-static three-library main | 1,322,585 |
+| browser final-static three-library main | 1,294,401 |
+| threaded startup main | 1,327,110 |
+| threaded final-static three-library main | 1,323,599 |
 
 The application pays for the Lean runtime and `Init` once. Side modules remain runtime-free. This result covers three small libraries, so it does not establish the size slope for realistic libraries or a 50-library graph.
 

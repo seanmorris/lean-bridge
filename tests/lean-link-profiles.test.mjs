@@ -27,6 +27,7 @@ test("threaded lazy side module loads into the existing shared memory", async ()
   assert.deepEqual(Object.keys(alpha), ["Box", "roundTrip"]);
   const box = new alpha.Box(73);
   assert.equal(box.read(), 73);
+  assert.equal(box.identity(), box);
   assert.equal("handle" in box, false);
   box.dispose();
 

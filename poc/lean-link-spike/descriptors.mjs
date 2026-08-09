@@ -45,10 +45,20 @@ export const createAlphaDescriptor = ({
       initialize: "_bridge_lean_runtime_init",
       constructor: "_bridge_lean_alpha_make",
       dispose: "_bridge_lean_release",
+      handle: Object.freeze({ side: "lean", kind: 1 }),
       methods: Object.freeze([
         Object.freeze({
           name: "read",
           symbol: "_bridge_lean_alpha_read",
+        }),
+        Object.freeze({
+          name: "identity",
+          symbol: "_bridge_lean_handle_identity",
+          result: Object.freeze({
+            kind: "resource",
+            name: "Box",
+            ownership: "borrowed",
+          }),
         }),
       ]),
     }),

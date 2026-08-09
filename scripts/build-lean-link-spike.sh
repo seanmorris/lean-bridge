@@ -114,6 +114,9 @@ BRIDGE_EXPORTS=(
   _bridge_lean_cross_library_identity
   _bridge_lean_release
   _bridge_lean_live_handles
+  _bridge_lean_rejected_handles
+  _bridge_lean_retired_handle_slots
+  _bridge_lean_handle_capacity
   _malloc
   _free
 )

@@ -169,7 +169,17 @@ Lean Bridge uses generated marshaling code and typed handles. It does not route 
 
 Copied values and retained objects use different protocols. A copied record becomes an ordinary host value. A retained Lean object becomes a class with generated methods and deterministic disposal. Consumers never pass reference-count flags or numeric handles.
 
-The current POC exercises the retained-object path with a Lean `Box` containing a `UInt32` and a persistent `String`. Three independently compiled libraries observe the same object identity while the public JavaScript API exposes only `new Box(42)`, `box.read()`, and `box.dispose()`.
+The current POC exercises the retained-object path with a Lean `Box` containing a `UInt32` and a persistent `String`. Three independently compiled libraries observe the same object identity while JavaScript uses `new Box(42)`, `box.read()`, `box.identity()`, and `box.dispose()`.
+
+```ts
+const box = new alpha.Box(42);
+const sameBox = box.identity();
+
+console.assert(sameBox === box);
+box.dispose();
+```
+
+The bridge stores the Lean pointer in its shared registry and gives the generated wrapper a private token containing a side, nominal kind, slot, and generation. Reused slots receive a new generation, so a disposed token cannot name a later object. The wrapper also carries a private runtime identity. Wrong-class, wrong-runtime, disposed, and stale uses fail before Lean runs. Explicit disposal controls correctness. Garbage collection only queues fallback cleanup. [The registry evidence](docs/evidence/generation-safe-registries.md) records the ownership matrix and misuse tests.
 
 It also sends a copied Lean record containing `Bool`, `UInt32`, `String`, `ByteArray`, and `Array UInt32` through a private typed frame. Lean changes the boolean and count, then JavaScript receives a new native record:
 
@@ -228,11 +238,11 @@ The current POC passes this gate for 23 browser artifacts and 23 threaded artifa
 
 | Operation | Median | p95 |
 |---|---:|---:|
-| create the browser-profile main module | 8.56 ms | 16.12 ms |
-| verify and lazy-load Alpha | 1.16 ms | 5.65 ms |
-| first `Box` construct, read, and dispose | 1.26 ms | 39.16 ms |
-| warm `box.read()` | 16.4 ns | 65.7 ns |
-| warm construct, read, and dispose | 0.218 µs | 0.264 µs |
+| create the browser-profile main module | 9.49 ms | 18.37 ms |
+| verify and lazy-load Alpha | 1.11 ms | 6.94 ms |
+| first `Box` construct, read, and dispose | 1.46 ms | 49.43 ms |
+| warm `box.read()` | 45.3 ns | 256.0 ns |
+| warm construct, read, and dispose | 1.604 µs | 7.412 µs |
 
 The first `Box` operation includes deferred Lean runtime initialization. The benchmark uses a warm filesystem cache under Node and does not measure browser download or compilation. Alpha's descriptor and class projection are hand-authored POC stand-ins for generated output. [The benchmark record](docs/evidence/performance.md) includes artifact hashes, method, size results, and limitations.
 
@@ -240,11 +250,11 @@ Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
 |---|---:|
-| lazy main module with one Lean runtime and `Init` | 1,292,101 |
+| lazy main module with one Lean runtime and `Init` | 1,294,472 |
 | Alpha lazy side module | 3,778 |
 | Beta lazy side module | 604 |
 | Gamma lazy side module | 605 |
-| final-static three-library application | 1,293,376 |
+| final-static three-library application | 1,294,401 |
 
 These measurements establish a POC baseline. The production suite will add primitive and structured-value marshaling, callbacks, promises, browser startup, memory, 1/3/10/50-library slopes, and comparisons against standalone runtime copies.
 
@@ -255,10 +265,10 @@ The architecture-testing POC has established:
 - one real Lean runtime shared by three independently compiled Lean libraries;
 - one retained Lean object passed across all three libraries without losing identity;
 - startup, lazy dynamic, and final-static composition from one content-addressed graph;
-- a native JavaScript class projection with hidden handles and deterministic disposal;
+- a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
-- 38 passing behavioral and structural tests;
+- 45 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 

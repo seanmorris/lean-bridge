@@ -67,7 +67,7 @@ JavaScript frees every Wasm allocation in reverse order after success or failure
 
 ## Test evidence
 
-`npm test` passes 38 behavioral and structural tests. WP4 adds coverage for:
+`npm test` passes 45 behavioral and structural tests. WP4 adds coverage for:
 
 - the native copied record through lazy, threaded, and final-static profiles;
 - Unicode, embedded NUL, full-range bytes, and `UInt32.max`;
