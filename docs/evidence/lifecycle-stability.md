@@ -17,7 +17,7 @@ The copied record preserves `Bool`, `UInt32`, `String`, `ByteArray`, and `Array 
 
 ## Clean run
 
-The clean run used commit `a2222469507814410d9a61e94d643d8bf1da8c3d`. Git reported `dirty: false`. Node 22.23.1 ran on Linux x64 with an Intel Core i7-7700K and eight logical CPUs. The command exposed explicit garbage collection so the host heap snapshots have a defined collection point.
+The clean run used commit `9a56a93e4d4f80b019d48353aea2468b6cf86631`. Git reported `dirty: false`. Node 22.23.1 ran on Linux x64 with an Intel Core i7-7700K and eight logical CPUs. The command exposed explicit garbage collection so the host heap snapshots have a defined collection point.
 
 The suite checked 12,288 retained-resource calls, 1,536 typed copied values, 3,120 callbacks, 768 Lean closures, 768 Promises, and 6,144 iterator items.
 
@@ -45,8 +45,8 @@ Wasm memory started at 17,039,360 bytes, remained at 17,039,360 bytes at every o
 
 | Process measure | Loaded baseline | High-water | Retained delta |
 |---|---:|---:|---:|
-| RSS | 70,553,600 bytes | 83,853,312 bytes | 13,299,712 bytes |
-| JavaScript heap used | 7,943,840 bytes | 9,066,488 bytes | 1,065,216 bytes |
+| RSS | 73,089,024 bytes | 89,006,080 bytes | 15,917,056 bytes |
+| JavaScript heap used | 7,944,120 bytes | 9,071,528 bytes | 1,067,888 bytes |
 | external | 19,160,988 bytes | 19,187,515 bytes | 25,759 bytes |
 | array buffers | 26,315 bytes | 27,083 bytes | 0 bytes |
 
@@ -61,7 +61,7 @@ The bridge counters and Wasm page count define native retained state. Process RS
 | locked component graph | 2,643 | `7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789` |
 | Binding IR | | `0cb3a53415d72ee941b58c8a0291bb7ae6caf3218d97778ea247cee58acd4fd8` |
 
-The machine record is 32,805 bytes with SHA-256 `c93103e5952d8b5bb9a114e8e9ac5cab53f517df5f7d9092c941ce9788de3c1a`.
+The machine record is 33,451 bytes with SHA-256 `51cd726e4f178cbc0dced4434c4f5d55e1c348494c68912ddfab44512e25fc3f`.
 
 ## Measurement boundary
 
