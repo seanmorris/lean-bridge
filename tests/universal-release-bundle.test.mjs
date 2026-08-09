@@ -79,7 +79,7 @@ test("canonical manifest inventories every release artifact with its actual byte
   const manifest = parseCanonicalPackageManifest(source);
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
-  assert.equal(firstResult.artifactCount, 76);
+  assert.equal(firstResult.artifactCount, 78);
   for (const artifact of manifest.artifacts) {
     const bytes = await readFile(join(first, artifact.path));
     assert.equal(bytes.length, artifact.bytes, artifact.path);

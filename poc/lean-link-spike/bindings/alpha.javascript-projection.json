@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 1,
+  "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+  "initialization": {
+    "kind": "initialization-v1",
+    "abiVersion": 1,
+    "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+    "required": true,
+    "symbol": "_bridge_lean_runtime_init",
+    "trigger": "first-call",
+    "scope": "component-runtime",
+    "success": "nonzero",
+    "failure": "terminal",
+    "retry": "never"
+  },
+  "bindings": [
+    {
+      "kind": "class",
+      "name": "Box",
+      "typeId": "lean:Alpha.Box",
+      "initialization": {
+        "kind": "initialization-v1",
+        "abiVersion": 1,
+        "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+        "required": true,
+        "symbol": "_bridge_lean_runtime_init",
+        "trigger": "first-call",
+        "scope": "component-runtime",
+        "success": "nonzero",
+        "failure": "terminal",
+        "retry": "never"
+      },
+      "lifecycle": {
+        "kind": "resource-lifecycle-v1",
+        "abiVersion": 1,
+        "typeId": "lean:Alpha.Box",
+        "resourceKindId": "resource:Alpha.Box",
+        "initialize": "_bridge_lean_runtime_init",
+        "handle": {
+          "side": "lean",
+          "kind": 1
+        },
+        "identity": {
+          "projection": "canonical-wrapper",
+          "cache": "weak-per-runtime-token"
+        },
+        "disposal": {
+          "policy": "required",
+          "explicit": true,
+          "runtimeShutdown": true,
+          "fallback": "queued-finalizer",
+          "cycles": "explicit-cut",
+          "symbol": "_bridge_lean_release"
+        },
+        "constructor": {
+          "declarationId": "lean:Alpha.box",
+          "name": "box",
+          "kind": "constructor",
+          "symbol": "_bridge_lean_alpha_make",
+          "receiver": null,
+          "parameters": [
+            {
+              "name": "value",
+              "optional": false,
+              "default": null,
+              "role": "parameter",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "representation": "copied",
+              "ownership": "copy",
+              "mutability": "immutable",
+              "lifetime": null,
+              "transport": "copy",
+              "transition": "copy"
+            }
+          ],
+          "result": {
+            "role": "result",
+            "type": {
+              "kind": "named",
+              "id": "lean:Alpha.Box"
+            },
+            "representation": "identity",
+            "ownership": "lease",
+            "mutability": "immutable",
+            "lifetime": {
+              "scope": "explicit",
+              "anchor": null
+            },
+            "transport": "handle",
+            "transition": "acquire-lease",
+            "typeId": "lean:Alpha.Box",
+            "projection": "canonical-owner"
+          },
+          "resultMode": "value",
+          "effects": [
+            "allocates"
+          ],
+          "failure": {
+            "mode": "none",
+            "errors": [],
+            "unexpected": "poison-runtime"
+          }
+        },
+        "methods": [
+          {
+            "declarationId": "lean:Alpha.Box.read",
+            "name": "read",
+            "kind": "method",
+            "symbol": "_bridge_lean_alpha_read",
+            "receiver": {
+              "role": "receiver",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "read",
+              "lifetime": {
+                "scope": "call",
+                "anchor": null
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box"
+            },
+            "parameters": [],
+            "result": {
+              "role": "result",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "representation": "copied",
+              "ownership": "copy",
+              "mutability": "immutable",
+              "lifetime": null,
+              "transport": "copy",
+              "transition": "copy"
+            },
+            "resultMode": "value",
+            "effects": [
+              "reads-resource",
+              "fails"
+            ],
+            "failure": {
+              "mode": "declared",
+              "errors": [
+                "error:disposed-resource"
+              ],
+              "unexpected": "poison-runtime"
+            }
+          },
+          {
+            "declarationId": "bridge:Alpha.Box.identity",
+            "name": "identity",
+            "kind": "method",
+            "symbol": "_bridge_lean_handle_identity",
+            "receiver": {
+              "role": "receiver",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "read",
+              "lifetime": {
+                "scope": "call",
+                "anchor": null
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box"
+            },
+            "parameters": [],
+            "result": {
+              "role": "result",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "immutable",
+              "lifetime": {
+                "scope": "receiver",
+                "anchor": "receiver"
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box",
+              "projection": "canonical-borrow"
+            },
+            "resultMode": "value",
+            "effects": [
+              "fails"
+            ],
+            "failure": {
+              "mode": "declared",
+              "errors": [
+                "error:disposed-resource"
+              ],
+              "unexpected": "poison-runtime"
+            }
+          }
+        ],
+        "properties": []
+      },
+      "methods": [
+        {
+          "name": "read",
+          "declarationId": "lean:Alpha.Box.read",
+          "symbol": "_bridge_lean_alpha_read",
+          "call": {
+            "declarationId": "lean:Alpha.Box.read",
+            "name": "read",
+            "kind": "method",
+            "symbol": "_bridge_lean_alpha_read",
+            "receiver": {
+              "role": "receiver",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "read",
+              "lifetime": {
+                "scope": "call",
+                "anchor": null
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box"
+            },
+            "parameters": [],
+            "result": {
+              "role": "result",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "representation": "copied",
+              "ownership": "copy",
+              "mutability": "immutable",
+              "lifetime": null,
+              "transport": "copy",
+              "transition": "copy"
+            },
+            "resultMode": "value",
+            "effects": [
+              "reads-resource",
+              "fails"
+            ],
+            "failure": {
+              "mode": "declared",
+              "errors": [
+                "error:disposed-resource"
+              ],
+              "unexpected": "poison-runtime"
+            }
+          }
+        },
+        {
+          "name": "identity",
+          "declarationId": "bridge:Alpha.Box.identity",
+          "symbol": "_bridge_lean_handle_identity",
+          "call": {
+            "declarationId": "bridge:Alpha.Box.identity",
+            "name": "identity",
+            "kind": "method",
+            "symbol": "_bridge_lean_handle_identity",
+            "receiver": {
+              "role": "receiver",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "read",
+              "lifetime": {
+                "scope": "call",
+                "anchor": null
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box"
+            },
+            "parameters": [],
+            "result": {
+              "role": "result",
+              "type": {
+                "kind": "named",
+                "id": "lean:Alpha.Box"
+              },
+              "representation": "identity",
+              "ownership": "borrow",
+              "mutability": "immutable",
+              "lifetime": {
+                "scope": "receiver",
+                "anchor": "receiver"
+              },
+              "transport": "handle",
+              "transition": "borrow",
+              "typeId": "lean:Alpha.Box",
+              "projection": "canonical-borrow"
+            },
+            "resultMode": "value",
+            "effects": [
+              "fails"
+            ],
+            "failure": {
+              "mode": "declared",
+              "errors": [
+                "error:disposed-resource"
+              ],
+              "unexpected": "poison-runtime"
+            }
+          }
+        }
+      ],
+      "properties": []
+    },
+    {
+      "kind": "function",
+      "name": "roundTrip",
+      "declarationId": "lean:Alpha.roundTrip",
+      "initialization": {
+        "kind": "initialization-v1",
+        "abiVersion": 1,
+        "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+        "required": true,
+        "symbol": "_bridge_lean_runtime_init",
+        "trigger": "first-call",
+        "scope": "component-runtime",
+        "success": "nonzero",
+        "failure": "terminal",
+        "retry": "never"
+      },
+      "symbol": "_bridge_lean_alpha_round_trip",
+      "adapter": {
+        "kind": "value-frame-v1",
+        "abiVersion": 1,
+        "byteSize": 60,
+        "maxCopyBytes": 1048576,
+        "maxArrayLength": 65536,
+        "declarationId": "lean:Alpha.roundTrip",
+        "parameterName": "payload",
+        "recordTypeId": "lean:Alpha.Payload",
+        "header": {
+          "abiVersion": 0,
+          "byteSize": 4,
+          "status": 8,
+          "detail": 12
+        },
+        "fields": [
+          {
+            "name": "enabled",
+            "transport": "scalar",
+            "scalar": "bool",
+            "offset": 16
+          },
+          {
+            "name": "count",
+            "transport": "scalar",
+            "scalar": "uint32",
+            "offset": 20
+          },
+          {
+            "name": "label",
+            "transport": "buffer",
+            "codec": "utf8",
+            "element": "uint8",
+            "elementBytes": 1,
+            "maximumLength": 1048576,
+            "pointerOffset": 24,
+            "lengthOffset": 28,
+            "capacityOffset": 32
+          },
+          {
+            "name": "bytes",
+            "transport": "buffer",
+            "codec": "bytes",
+            "element": "uint8",
+            "elementBytes": 1,
+            "maximumLength": 1048576,
+            "pointerOffset": 36,
+            "lengthOffset": 40,
+            "capacityOffset": 44
+          },
+          {
+            "name": "values",
+            "transport": "buffer",
+            "codec": "array",
+            "element": "uint32",
+            "elementBytes": 4,
+            "maximumLength": 65536,
+            "pointerOffset": 48,
+            "lengthOffset": 52,
+            "capacityOffset": 56
+          }
+        ]
+      }
+    },
+    {
+      "kind": "function",
+      "name": "withCallback",
+      "declarationId": "lean:Alpha.withCallback",
+      "initialization": {
+        "kind": "initialization-v1",
+        "abiVersion": 1,
+        "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+        "required": true,
+        "symbol": "_bridge_lean_runtime_init",
+        "trigger": "first-call",
+        "scope": "component-runtime",
+        "success": "nonzero",
+        "failure": "terminal",
+        "retry": "never"
+      },
+      "symbol": "_bridge_lean_alpha_with_callback",
+      "adapter": {
+        "kind": "callback-call-v1",
+        "abiVersion": 1,
+        "declarationId": "lean:Alpha.withCallback",
+        "callbackParameter": "transform",
+        "callbackIndex": 1,
+        "signature": {
+          "kind": "callback-signature-v1",
+          "abiVersion": 1,
+          "typeId": "lean:Alpha.Transform",
+          "signatureId": "callback-v1:033e4810809937b15bf7fec7a6a763c9e0184944e336c6b2bc66d53f62f7013e",
+          "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+          "invocation": "many",
+          "hostFunction": {
+            "transport": "generation-safe-handle",
+            "identity": "canonical-per-runtime-function",
+            "cleanup": "deterministic"
+          },
+          "wasmTable": {
+            "adapter": "fixed-signature",
+            "reuse": "by-signature-id"
+          },
+          "reentry": {
+            "policy": "same-agent",
+            "agent": "same-agent",
+            "frames": "nested-lifo",
+            "maxDepth": 64,
+            "overflow": "reject-before-call",
+            "exception": "unwind-to-entry-frame"
+          },
+          "selfDisposal": "reject",
+          "cleanup": "reverse-capture-order",
+          "parameters": [
+            {
+              "name": "value",
+              "optional": false,
+              "default": null,
+              "mutability": "immutable",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "representation": "copied",
+              "ownership": "copy",
+              "lifetime": null,
+              "transport": "copy-frame",
+              "transition": "copy",
+              "cleanup": "none"
+            }
+          ],
+          "result": {
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "representation": "copied",
+            "ownership": "copy",
+            "lifetime": null,
+            "transport": "copy-frame",
+            "transition": "copy",
+            "cleanup": "none"
+          },
+          "resultMode": "value",
+          "effects": [
+            "fails",
+            "host-call"
+          ],
+          "failure": {
+            "mode": "declared",
+            "errors": [
+              "error:callback-threw"
+            ],
+            "unexpected": "poison-runtime"
+          }
+        }
+      }
+    },
+    {
+      "kind": "function",
+      "name": "makeAdder",
+      "declarationId": "lean:Alpha.makeAdder",
+      "initialization": {
+        "kind": "initialization-v1",
+        "abiVersion": 1,
+        "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+        "required": true,
+        "symbol": "_bridge_lean_runtime_init",
+        "trigger": "first-call",
+        "scope": "component-runtime",
+        "success": "nonzero",
+        "failure": "terminal",
+        "retry": "never"
+      },
+      "symbol": "_bridge_lean_alpha_make_adder",
+      "adapter": {
+        "kind": "callback-result-v1",
+        "abiVersion": 1,
+        "declarationId": "lean:Alpha.makeAdder",
+        "signature": {
+          "kind": "callback-signature-v1",
+          "abiVersion": 1,
+          "typeId": "lean:Alpha.Transform",
+          "signatureId": "callback-v1:033e4810809937b15bf7fec7a6a763c9e0184944e336c6b2bc66d53f62f7013e",
+          "bindingIrSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b",
+          "invocation": "many",
+          "hostFunction": {
+            "transport": "generation-safe-handle",
+            "identity": "canonical-per-runtime-function",
+            "cleanup": "deterministic"
+          },
+          "wasmTable": {
+            "adapter": "fixed-signature",
+            "reuse": "by-signature-id"
+          },
+          "reentry": {
+            "policy": "same-agent",
+            "agent": "same-agent",
+            "frames": "nested-lifo",
+            "maxDepth": 64,
+            "overflow": "reject-before-call",
+            "exception": "unwind-to-entry-frame"
+          },
+          "selfDisposal": "reject",
+          "cleanup": "reverse-capture-order",
+          "parameters": [
+            {
+              "name": "value",
+              "optional": false,
+              "default": null,
+              "mutability": "immutable",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "representation": "copied",
+              "ownership": "copy",
+              "lifetime": null,
+              "transport": "copy-frame",
+              "transition": "copy",
+              "cleanup": "none"
+            }
+          ],
+          "result": {
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "representation": "copied",
+            "ownership": "copy",
+            "lifetime": null,
+            "transport": "copy-frame",
+            "transition": "copy",
+            "cleanup": "none"
+          },
+          "resultMode": "value",
+          "effects": [
+            "fails",
+            "host-call"
+          ],
+          "failure": {
+            "mode": "declared",
+            "errors": [
+              "error:callback-threw"
+            ],
+            "unexpected": "poison-runtime"
+          }
+        },
+        "handle": {
+          "side": "lean",
+          "kind": 2
+        },
+        "callSymbol": "_bridge_lean_alpha_transform_call",
+        "disposal": {
+          "explicit": true,
+          "fallback": "queued-finalizer",
+          "symbol": "_bridge_lean_alpha_transform_release"
+        }
+      }
+    }
+  ]
+}

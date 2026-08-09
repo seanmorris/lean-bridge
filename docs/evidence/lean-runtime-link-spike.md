@@ -1,6 +1,6 @@
 # Lean Runtime and Generated Side-Module Spike
 
-Status: verified for the exact narrow scope below. Three Lean libraries, cross-library identity, bidirectional callback re-entry, startup/lazy/final-static composition, and both memory profiles pass. Real browser and bundler packaging remain open.
+Status: verified for the exact scope below. Three Lean libraries, cross-library identity, bidirectional callback re-entry, startup/lazy/final-static composition, and both memory profiles pass. A separate acceptance gate now runs the browser profile through raw ESM, a module worker, Vite, Rollup, Webpack, and React Strict Mode.
 
 Date: 2026-08-08 UTC.
 
@@ -97,16 +97,16 @@ Artifacts from this run:
 
 | Profile and artifact | Bytes | SHA-256 |
 |---|---:|---|
-| browser startup main | 1,294,557 | `93d5ee928282019299dabbba12467b659a94047b1cd0ee9bc9f6b4184eed1290` |
-| browser lazy main | 1,294,472 | `c417b8c79c5f676959df95dcd9fcb310932ebc23d11069d059b2a29cfb102442` |
-| browser final-static main | 1,294,401 | `00d2225cac650b30fca2bd8cedbc0729a2607c9539164a1456b23dcf7d3ab679` |
-| browser Alpha side module | 3,778 | `bfa12d7b6869c1eba84606ab8bb5f1c804836b2384c14186e6e9654f66f96f09` |
+| browser startup main | 1,297,072 | `c9d625db5fae4f8c9ec602e4fb7aa3a572dda6c5c365426bbdcfc2dfbb1b3caf` |
+| browser lazy main | 1,296,987 | `b8c6328d558f793a4847e6465f432c6d19602d56c01852237e7629b3417743b1` |
+| browser final-static main | 1,300,218 | `a8da327507fce6a628f47dff7ec8107c9df399ac9aaaffdca094e13680c75d4f` |
+| browser Alpha side module | 4,612 | `df3c7c6da8f919a3c0bb6748ec2a265841fa4ade4e69fdf9fed53e7f3f15beda` |
 | browser Beta side module | 604 | `aaee59f1ec973e56275e46f7f7dab4f08642b0a4e0c088297a319c4f695071e8` |
 | browser Gamma side module | 605 | `cff5bd84b30c64dd7ff2b199202f45f7b79c23936f51e3661bae1190eff096a5` |
-| threaded startup main | 1,327,110 | `60881f40b5bcc4c4bcd7982ccac1b5d8c98956f801a5383d599294ef5d6185e4` |
-| threaded lazy main | 1,327,025 | `5f81807089a91d37312d572d88dd064b92659d0a224f623b32ad2973110ab132` |
-| threaded final-static main | 1,323,599 | `f2007d70fe0a834704bfb312f8e239ae771b8a162456ab6908fa27cd7b910f0e` |
-| threaded Alpha side module | 3,974 | `5fd500f8869bd4dd201663959641a5199ece2dfc9a86e6a1b864865c738c88bf` |
+| threaded startup main | 1,329,414 | `a73fa0f6293f57a1adca0eb23b26768370c8ed2c6af433c3d8a49f11e77be51d` |
+| threaded lazy main | 1,329,329 | `dd7e539fd7641e8a0c4ab1b6f20d37002c14a4bb9044063be0de39b2a904e027` |
+| threaded final-static main | 1,326,392 | `b326377ce2f899fe328aaaa6eced9bb40ebe2c31e24c5f2c960653526e53db35` |
+| threaded Alpha side module | 4,802 | `694b29bd35bc374792385fcbe014221cdf76efe48599beeb8ca158e5bdfa7d82` |
 | threaded Beta side module | 831 | `c677d1c7f1ff1057ac13678a0f04fe21b380f53b40893bf4b5ef45f20114415c` |
 | threaded Gamma side module | 832 | `b4fe836032a02aa0b3427e1ab4ec082d53372626616253040baf4aa1c842c051` |
 
@@ -114,7 +114,7 @@ Artifacts from this run:
 
 `MAIN_MODULE=1` is unsuitable as the default because it preserves the entire dynamic symbol universe and pulled runtime subsystems whose Lean `Init` implementations were not linked. `MAIN_MODULE=2` plus a generated symbol-export manifest derived from the canonical side-module graph works for the narrow slice and makes symbol compatibility explicit.
 
-The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 32,553 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. Actual browser, worker, and bundler validation remains a later work package; this experiment ran under Node.
+The browser profile is now the default: `MULTI_THREAD=OFF`, no `-pthread`, one main-defined unshared memory, no SharedArrayBuffer requirement, and no dynamic-linking/pthreads or pthread/memory-growth warnings. Its startup main is 32,553 bytes smaller than the threaded equivalent in this narrow build. This removes cross-origin-isolation headers as a prerequisite for ordinary single-threaded browser consumption. [The browser acceptance record](browser-bundler-acceptance.md) covers real Chromium, worker, bundler, and React execution.
 
 The explicit `threaded` profile sets `MULTI_THREAD=ON`, passes `-pthread` through the runtime, generated `Init`, side modules, and final link, and imports one shared memory. It retains Emscripten's warnings that dynamic linking with pthreads is experimental and that shared-memory growth may execute non-Wasm support code slowly. Browser deployments of this profile require SharedArrayBuffer availability and the corresponding cross-origin-isolation policy. Thread selection is therefore an application/runtime-profile decision, never a per-library choice; all libraries in one graph must use the same profile.
 

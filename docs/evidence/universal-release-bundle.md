@@ -9,7 +9,7 @@ The flake exposes two separate outputs:
 
 The second derivation has no Lean, C, C++, Emscripten, linker, or Wasm compiler in its build inputs. It receives the core output as a read-only Nix store path and writes a new bundle.
 
-The current bundle contains 76 inventoried artifacts. It includes the Emscripten runtime loader and Wasm runtime, three independently compiled side modules, the Lean source, graph and flake locks, Binding IR, JavaScript and TypeScript, PHP, Python, C, and Rust binding sources, schemas, an executable validator module tree, generated documentation, the MIT license, assurance metadata, an SPDX 2.3 SBOM, and an in-toto statement using the SLSA provenance predicate. The bundle also carries the generated Alpha loader descriptor and the exact JavaScript runtime modules required to consume it. An npm backend can therefore project the package without reading source files outside the bundle.
+The current bundle contains 78 inventoried artifacts. It includes the Emscripten runtime loader and Wasm runtime, three independently compiled side modules, the Lean source, graph and flake locks, Binding IR, JavaScript and TypeScript, PHP, Python, C, and Rust binding sources, schemas, an executable validator module tree, generated documentation, the MIT license, assurance metadata, an SPDX 2.3 SBOM, and an in-toto statement using the SLSA provenance predicate. The bundle also carries the generated Alpha loader descriptor, browser-safe Binding IR hashing, and the exact JavaScript runtime modules required to consume it. An npm backend can therefore project the package without reading source files outside the bundle.
 
 ## Compilation boundary
 

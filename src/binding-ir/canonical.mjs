@@ -1,9 +1,8 @@
-import { createHash } from "node:crypto";
-
 import {
   validateBindingIr,
   validateBindingIrForMigration,
 } from "./contract.mjs";
+import { sha256Text } from "./sha256.mjs";
 
 export const BINDING_IR_SCHEMA_VERSION = 3;
 export const SUPPORTED_BINDING_IR_SCHEMA_VERSIONS = Object.freeze([3]);
@@ -181,7 +180,7 @@ export const canonicalizeJsonValue = (value, path = "value") =>
   serializeCanonical(value, path, new Set());
 
 export const hashBindingIr = value =>
-  createHash("sha256").update(canonicalizeBindingIr(value), "utf8").digest("hex");
+  sha256Text(canonicalizeBindingIr(value));
 
 export const migrateBindingIr = (value, targetVersion = BINDING_IR_SCHEMA_VERSION) => {
   if (targetVersion !== BINDING_IR_SCHEMA_VERSION) {

@@ -22,12 +22,14 @@ BUILD_DIR="$LEAN_WASM_LINK_SPIKE_DIR"
 GENERATED_DIR="$BUILD_DIR/generated"
 STARTUP_DIR="$BUILD_DIR/startup"
 LAZY_DIR="$BUILD_DIR/lazy"
+BROWSER_DIR="$BUILD_DIR/browser"
 FINAL_STATIC_DIR="$BUILD_DIR/final-static"
 AUDIT_DIR="$BUILD_DIR/audit"
 mkdir -p \
   "$GENERATED_DIR" \
   "$STARTUP_DIR" \
   "$LAZY_DIR" \
+  "$BROWSER_DIR" \
   "$FINAL_STATIC_DIR" \
   "$AUDIT_DIR"
 
@@ -63,6 +65,8 @@ done < <(
   jq -r '.libraries[] | select(.bindingIr != null) | [.bindingIr.path, .bindingIr.semanticSha256] | @tsv' \
     "$GRAPH_LOCK"
 )
+
+node "$LEAN_WASM_PROJECT_ROOT/scripts/generate-lean-link-projection.mjs"
 
 mapfile -t LEAN_LIBRARIES < <(
   node "$LEAN_WASM_PROJECT_ROOT/scripts/resolve-lean-graph.mjs" \
@@ -189,6 +193,7 @@ build_main() {
 for library in "${LEAN_LIBRARIES[@]}"; do
   build_side "$STARTUP_DIR" "$library"
   build_side "$LAZY_DIR" "$library"
+  build_side "$BROWSER_DIR" "$library"
 done
 
 SIDE_IMPORTS="$AUDIT_DIR/side-function-imports.txt"
@@ -222,7 +227,7 @@ MAIN_FLAGS=(
   -sMAIN_MODULE=2
   -sMODULARIZE=1
   -sEXPORT_ES6=1
-  -sENVIRONMENT=node
+  -sENVIRONMENT=web,worker,node
   -sALLOW_MEMORY_GROWTH=1
   -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8
   -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")"
@@ -239,6 +244,23 @@ build_main \
   "$STARTUP_DIR/beta.so.wasm" \
   "$STARTUP_DIR/gamma.so.wasm"
 build_main "$LAZY_DIR"
+
+MAIN_FLAGS=(
+  "${TARGET_FLAGS[@]}"
+  -sMAIN_MODULE=2
+  -sMODULARIZE=1
+  -sEXPORT_ES6=1
+  -sENVIRONMENT=web,worker
+  -sALLOW_MEMORY_GROWTH=1
+  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8
+  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")"
+  -Wl,--no-entry
+  "${INCLUDES[@]}"
+)
+if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded ]]; then
+  MAIN_FLAGS+=(-sPTHREAD_POOL_SIZE=0)
+fi
+build_main "$BROWSER_DIR"
 
 compile_main_objects "$FINAL_STATIC_DIR"
 FINAL_STATIC_OBJECTS=()
@@ -265,7 +287,7 @@ FINAL_STATIC_FLAGS=(
   "${TARGET_FLAGS[@]}"
   -sMODULARIZE=1
   -sEXPORT_ES6=1
-  -sENVIRONMENT=node
+  -sENVIRONMENT=web,worker,node
   -sALLOW_MEMORY_GROWTH=1
   -sEXPORTED_RUNTIME_METHODS=HEAP8
   -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${BRIDGE_EXPORTS[*]}")"

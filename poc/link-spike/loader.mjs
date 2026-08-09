@@ -41,7 +41,8 @@ const bytesFrom = value =>
 
 const readArtifact = async url => {
   if (url.protocol === "file:") {
-    const { readFile } = await import("node:fs/promises");
+    const nodeFileSystem = `node:${"fs/promises"}`;
+    const { readFile } = await import(nodeFileSystem);
     return bytesFrom(await readFile(url));
   }
   const response = await fetch(url);

@@ -2,10 +2,9 @@ import alphaCapsule from "./capsules/alpha.json" with { type: "json" };
 import betaCapsule from "./capsules/beta.json" with { type: "json" };
 import gammaCapsule from "./capsules/gamma.json" with { type: "json" };
 import alphaBindingIr from "./bindings/alpha.binding-ir.json" with { type: "json" };
+import alphaProjection from "./bindings/alpha.javascript-projection.json" with { type: "json" };
 import graphLock from "./graph-lock.json" with { type: "json" };
 import { alphaPrivateAbi } from "./private-abi.mjs";
-
-import { compileJavaScriptProjection } from "../../src/backends/javascript/projection.mjs";
 
 const contentHash = id => {
   const library = graphLock.libraries.find(candidate => candidate.id === id);
@@ -44,8 +43,7 @@ export const createAlphaDescriptor = ({
   target = "browser",
   buildHash = contentHash(capsule.id),
 }) => {
-  const projection = compileJavaScriptProjection(alphaBindingIr, alphaPrivateAbi);
-  assertBindingIdentity(capsule.id, projection.bindingIrSha256);
+  assertBindingIdentity(capsule.id, alphaProjection.bindingIrSha256);
   return Object.freeze({
     id: capsule.id,
     buildHash,
@@ -54,15 +52,22 @@ export const createAlphaDescriptor = ({
     dependencies: Object.freeze([]),
     sideModule,
     bindingIr: alphaBindingIr,
-    bindingIrSha256: projection.bindingIrSha256,
+    bindingIrSha256: alphaProjection.bindingIrSha256,
     privateAbi: alphaPrivateAbi,
-    bindings: projection.bindings,
+    bindings: alphaProjection.bindings,
   });
 };
 
 export const alpha = createAlphaDescriptor({
   sideModule: new URL(
     "../../build/lean-link-spike/lazy/alpha.so.wasm",
+    import.meta.url,
+  ),
+});
+
+export const alphaBrowser = createAlphaDescriptor({
+  sideModule: new URL(
+    "../../build/lean-link-spike/browser/alpha.so.wasm",
     import.meta.url,
   ),
 });

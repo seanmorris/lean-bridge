@@ -14,6 +14,7 @@ const descriptor = ({
   dependencies = [],
   bindings = [],
   bindingIr,
+  bindingIrSha256,
   integrity,
 }) =>
   Object.freeze({
@@ -22,6 +23,7 @@ const descriptor = ({
     dependencies,
     integrity,
     bindingIr,
+    bindingIrSha256,
     bindings: Object.freeze(bindings.map(binding => Object.freeze(binding))),
     sideModule: new URL(`file:///artifacts/${id}.so.wasm`),
   });
@@ -260,6 +262,7 @@ test("generated Promise bindings use the shared pending-operation domain", async
   const library = descriptor({
     id: "async-alpha",
     bindingIr,
+    bindingIrSha256: projection.bindingIrSha256,
     bindings: [binding],
   });
   const libraries = createLibraryLoader(module);

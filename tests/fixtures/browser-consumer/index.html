@@ -1,0 +1,14 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lean Bridge browser fixture</title>
+<script type="module">
+  import { runNativeConsumer } from "./app.mjs";
+
+  try {
+    const started = performance.now();
+    globalThis.leanBridgeResult = await runNativeConsumer();
+    globalThis.leanBridgeElapsedMs = performance.now() - started;
+  } catch (error) {
+    globalThis.leanBridgeError = String(error?.stack ?? error);
+  }
+</script>

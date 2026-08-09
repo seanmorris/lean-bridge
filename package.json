@@ -27,6 +27,7 @@
     "build:builder-image": "node scripts/build-builder-image.mjs",
     "benchmark:poc": "node scripts/benchmark-native-api.mjs",
     "benchmark:php": "node scripts/benchmark-php-transports.mjs",
+    "generate:lean-link-projection": "node scripts/generate-lean-link-projection.mjs",
     "binding-ir": "node scripts/binding-ir.mjs",
     "cli": "node scripts/lean-bridge.mjs",
     "binding-packages": "node scripts/binding-package-gate.mjs check poc/lean-link-spike/bindings/alpha.binding-ir.json poc/lean-link-spike/bindings/generated-package-gate.json",
@@ -38,6 +39,7 @@
     "audit:php-wasm": "node scripts/audit-php-wasm-sources.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
+    "test:browser-bundlers": "npm run build:lean-link-spike && LEAN_BRIDGE_REQUIRE_BROWSER=1 node --test tests/browser-bundler.test.mjs",
     "test:cargo-package": "node --test tests/cargo-package.test.mjs",
     "test:c-family-package": "node --test tests/c-family-package.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
@@ -62,5 +64,15 @@
   },
   "dependencies": {
     "weaker": "0.0.10"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "6.1.0",
+    "@web/rollup-plugin-import-meta-assets": "3.0.0",
+    "playwright": "1.62.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "rollup": "4.62.4",
+    "vite": "8.2.1",
+    "webpack": "5.109.2"
   }
 }

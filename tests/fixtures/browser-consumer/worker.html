@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lean Bridge worker fixture</title>
+<script type="module">
+  const worker = new Worker("./worker.mjs", { type: "module" });
+  worker.onmessage = event => {
+    if (event.data.ok) {
+      globalThis.leanBridgeResult = event.data.result;
+      globalThis.leanBridgeElapsedMs = event.data.elapsedMs;
+    }
+    else globalThis.leanBridgeError = event.data.error;
+    worker.terminate();
+  };
+  worker.onerror = event => {
+    globalThis.leanBridgeError = event.message;
+    worker.terminate();
+  };
+</script>

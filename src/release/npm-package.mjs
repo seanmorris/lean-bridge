@@ -171,6 +171,7 @@ export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
     ["runtime/javascript/src/runtime/weak-value-map.mjs", "internal/bridge/src/runtime/weak-value-map.mjs"],
     ["runtime/javascript/src/binding-ir/canonical.mjs", "internal/bridge/src/binding-ir/canonical.mjs"],
     ["runtime/javascript/src/binding-ir/contract.mjs", "internal/bridge/src/binding-ir/contract.mjs"],
+    ["runtime/javascript/src/binding-ir/sha256.mjs", "internal/bridge/src/binding-ir/sha256.mjs"],
     ["LICENSE", "LICENSE"],
     ["canonical-package.json", "metadata/canonical-package.json"],
     ["canonical-package.sha256", "metadata/canonical-package.sha256"],
