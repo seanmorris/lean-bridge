@@ -372,6 +372,8 @@ The generated-call suite measures the API that application code receives. On the
 
 The lifecycle suite repeats generated object, closure, callback, copied-value, Promise, and iterator operations for 24 rounds. It reaches 256 live Lean resources, 32 live Lean closures, and 32 pending operations per round, then returns every registry to zero. Wasm memory remains at 17,039,360 bytes across 50 snapshots. Disposed, cross-runtime, and shutdown-expired wrappers fail with specific boundary errors. [The lifecycle stability evidence](docs/evidence/lifecycle-stability.md) records high-water state, retained state, deterministic delayed-finalizer behavior, process memory, and exact artifact identities.
 
+The performance reproducibility gate rebuilds the spatial and 50-library suites in two independent clean trees. Both 385-file inventories contain 17,838,911 bytes and produce the same SHA-256. A separate three-run check executes one fixed workload through all four loading profiles. Every run produces the same semantic digest while the report preserves variance for 62 timing metrics. [The performance reproducibility evidence](docs/evidence/performance-reproducibility.md) records the exact scope, hashes, exclusions, commands, and observed timing spread.
+
 Current browser-profile artifact sizes:
 
 | Artifact | Bytes |
@@ -459,11 +461,12 @@ The architecture-testing POC has established:
 - one 1, 3, 10, and 50-library scaling suite built from real Lean modules, with lazy, startup, final-static, and isolated-runtime profiles;
 - one generated-call overhead suite covering retained methods, typed copied records, batching, identity reuse, callbacks, nested re-entry, iterators, Promises, cancellation, exceptions, and cleanup;
 - one 24-round lifecycle stability suite with registry high-water marks, zero retained bridge state, stable Wasm pages, deterministic delayed-finalizer checks, and explicit cross-runtime and shutdown rejection;
+- one independent two-root performance rebuild covering 385 files, plus a three-run semantic consistency check with 62 separately reported timing metrics;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 333 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
+- 340 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -486,10 +489,13 @@ npm run test:performance-wasm
 npm run test:performance-workloads
 npm run test:performance-overhead
 npm run test:performance-lifecycle
+npm run test:performance-reproducibility
 npm run benchmark:spatial -- --output build/performance-wasm/interactive-suite.json
 npm run benchmark:scaling -- --output build/performance-scale/scaling-suite.json
 npm run benchmark:overhead -- --output build/lean-link-spike/native-overhead-suite.json
 npm run benchmark:lifecycle -- --output build/lean-link-spike/lifecycle-stability-suite.json
+npm run verify:performance-reproducibility -- --output build/performance-reproducibility/build-comparison.json
+npm run benchmark:self-consistency -- --repetitions 3 --output build/performance-reproducibility/self-consistency.json
 npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate

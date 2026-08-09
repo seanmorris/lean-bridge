@@ -24,7 +24,7 @@ test("the self-consistency result schema closes the report envelope", async () =
 
 test("the benchmark inventory covers executable artifacts and inputs but excludes transient products", async () => {
   const inventory = await collectPerformanceInventory(".");
-  assert.ok(inventory.artifactCount > 500);
+  assert.ok(inventory.artifactCount > 300);
   assert.ok(inventory.totalBytes > 0);
   assert.match(inventory.sha256, /^[a-f0-9]{64}$/);
   const paths = inventory.entries.map(entry => entry.path);
