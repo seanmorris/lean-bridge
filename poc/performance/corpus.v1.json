@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "id": "lean-bridge.performance.spatial",
+  "version": "1.0.0",
+  "coordinate": {
+    "type": "int32",
+    "minimum": -32768,
+    "maximum": 32767
+  },
+  "dimensions": [2, 4, 8],
+  "ordering": {
+    "points": "coordinates-lexicographic-then-id",
+    "duplicates": "first",
+    "queryResults": "point-id-ascending",
+    "nearestTies": "lowest-point-id"
+  },
+  "evidence": [
+    {
+      "id": "evidence:lower-bound-control-flow",
+      "state": "asserted",
+      "scope": "point-lower-bound over canonically sorted fixed-dimension points",
+      "basis": "Each loop halves the remaining point interval. Each comparison examines no more than the declared dimension count.",
+      "theorem": null
+    },
+    {
+      "id": "evidence:canonical-vectors",
+      "state": "tested",
+      "scope": "version 1 duplicate, ordering, query, mutation, cross-component, and disposal semantics",
+      "basis": "The reference runner executes every frozen vector and compares canonical result bytes.",
+      "theorem": null
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "point-lower-bound",
+      "component": "performance/ordered-search@1.0.0",
+      "kind": "function",
+      "owner": null,
+      "mutability": "pure",
+      "parameters": [
+        { "name": "points", "type": "point-list", "ownership": "copy" },
+        { "name": "query", "type": "point", "ownership": "copy" }
+      ],
+      "result": { "type": "u32", "ownership": "copy" },
+      "preconditions": [
+        "Every point and the query have the declared dimension.",
+        "Points use coordinates-lexicographic-then-id order.",
+        "Point IDs are unique. Coordinate values are within the corpus range."
+      ],
+      "postconditions": [
+        "The result is the first index whose coordinates are not less than the query.",
+        "The result equals the point count when every point is less than the query.",
+        "Duplicate coordinates resolve to the first matching point."
+      ],
+      "failures": ["dimension-mismatch", "invalid-coordinate", "unsorted-points", "duplicate-point-id"],
+      "complexity": {
+        "time": {
+          "state": "asserted",
+          "bound": "O(log(point-count) * dimensions)",
+          "evidence": "evidence:lower-bound-control-flow"
+        },
+        "auxiliarySpace": {
+          "state": "asserted",
+          "bound": "O(1)",
+          "evidence": "evidence:lower-bound-control-flow"
+        }
+      }
+    },
+    {
+      "id": "index-build",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "constructor",
+      "owner": "spatial-index",
+      "mutability": "write",
+      "parameters": [
+        { "name": "dimensions", "type": "u32", "ownership": "copy" },
+        { "name": "points", "type": "point-list", "ownership": "copy" }
+      ],
+      "result": { "type": "spatial-index", "ownership": "own" },
+      "preconditions": ["Dimensions are supported by the corpus.", "Point IDs are unique."],
+      "postconditions": ["The new resource owns an internal copy of every point.", "The caller retains no borrowed storage."],
+      "failures": ["unsupported-dimension", "dimension-mismatch", "invalid-coordinate", "duplicate-point-id"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "index-nearest",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "method",
+      "owner": "spatial-index",
+      "mutability": "read",
+      "parameters": [
+        { "name": "self", "type": "spatial-index", "ownership": "borrow" },
+        { "name": "query", "type": "point", "ownership": "copy" }
+      ],
+      "result": { "type": "nearest-result", "ownership": "copy" },
+      "preconditions": ["The resource is live.", "The query has the resource dimension."],
+      "postconditions": ["The result minimizes squared Euclidean distance.", "Equal distances resolve to the lowest point ID."],
+      "failures": ["disposed-resource", "dimension-mismatch", "empty-index"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "index-range",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "method",
+      "owner": "spatial-index",
+      "mutability": "read",
+      "parameters": [
+        { "name": "self", "type": "spatial-index", "ownership": "borrow" },
+        { "name": "minimum", "type": "point", "ownership": "copy" },
+        { "name": "maximum", "type": "point", "ownership": "copy" }
+      ],
+      "result": { "type": "point-id-list", "ownership": "copy" },
+      "preconditions": ["The resource is live.", "Bounds have the resource dimension.", "Minimum is coordinate-wise no greater than maximum."],
+      "postconditions": ["Every returned point lies inside the inclusive orthogonal range.", "Every stored point inside the range is returned once.", "Point IDs are ascending."],
+      "failures": ["disposed-resource", "dimension-mismatch", "invalid-range"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "index-insert",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "method",
+      "owner": "spatial-index",
+      "mutability": "write",
+      "parameters": [
+        { "name": "self", "type": "spatial-index", "ownership": "borrow" },
+        { "name": "point", "type": "point", "ownership": "copy" }
+      ],
+      "result": { "type": "u32", "ownership": "copy" },
+      "preconditions": ["The resource is live.", "The point has the resource dimension.", "The point ID is not present."],
+      "postconditions": ["The resource owns a copy of the point.", "The result is the new point count.", "Existing aliases observe the insertion."],
+      "failures": ["disposed-resource", "dimension-mismatch", "invalid-coordinate", "duplicate-point-id"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "index-size",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "method",
+      "owner": "spatial-index",
+      "mutability": "read",
+      "parameters": [
+        { "name": "self", "type": "spatial-index", "ownership": "borrow" }
+      ],
+      "result": { "type": "u32", "ownership": "copy" },
+      "preconditions": ["The resource is live."],
+      "postconditions": ["The result equals the number of stored unique point IDs."],
+      "failures": ["disposed-resource"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "consumer-range-checksum",
+      "component": "performance/spatial-consumer@1.0.0",
+      "kind": "function",
+      "owner": null,
+      "mutability": "read",
+      "parameters": [
+        { "name": "index", "type": "spatial-index", "ownership": "borrow" },
+        { "name": "minimum", "type": "point", "ownership": "copy" },
+        { "name": "maximum", "type": "point", "ownership": "copy" }
+      ],
+      "result": { "type": "range-checksum", "ownership": "copy" },
+      "preconditions": ["The borrowed resource comes from the same resolved runtime graph.", "The resource is live."],
+      "postconditions": ["The point list equals index-range.", "The checksum equals the sum of returned point IDs.", "The borrow ends when the call returns."],
+      "failures": ["cross-runtime-resource", "disposed-resource", "dimension-mismatch", "invalid-range"],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    },
+    {
+      "id": "index-dispose",
+      "component": "performance/spatial-index@1.0.0",
+      "kind": "lifecycle",
+      "owner": "spatial-index",
+      "mutability": "lifecycle",
+      "parameters": [
+        { "name": "self", "type": "spatial-index", "ownership": "own" }
+      ],
+      "result": { "type": "bool", "ownership": "copy" },
+      "preconditions": [],
+      "postconditions": ["The first call releases the resource and returns true.", "Later calls return false without releasing another value.", "Every non-lifecycle operation rejects the disposed resource."],
+      "failures": [],
+      "complexity": {
+        "time": { "state": "unknown", "bound": null, "evidence": null },
+        "auxiliarySpace": { "state": "unknown", "bound": null, "evidence": null }
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "spatial-index",
+      "identity": "resource",
+      "mutability": "mutable",
+      "owns": "copied-points",
+      "aliases": "canonical",
+      "disposal": "required-idempotent",
+      "invariants": [
+        "Every live point has the resource dimension.",
+        "Point IDs are unique.",
+        "All wrappers for one foreign resource share one identity.",
+        "A consumer borrow cannot outlive its call.",
+        "Disposal invalidates every alias in the runtime epoch."
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "performance/ordered-search@1.0.0",
+      "role": "copied-value search producer",
+      "provides": ["point-lower-bound"],
+      "requires": [],
+      "runtime": "shared-application-runtime"
+    },
+    {
+      "id": "performance/spatial-index@1.0.0",
+      "role": "identity-bearing spatial index producer",
+      "provides": ["index-build", "index-nearest", "index-range", "index-insert", "index-size", "index-dispose", "spatial-index"],
+      "requires": [],
+      "runtime": "shared-application-runtime"
+    },
+    {
+      "id": "performance/spatial-consumer@1.0.0",
+      "role": "independently built borrowed-index consumer",
+      "provides": ["consumer-range-checksum"],
+      "requires": ["spatial-index", "index-range"],
+      "runtime": "shared-application-runtime"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "duplicates-2d",
+      "dimensions": 2,
+      "initialPoints": [
+        { "id": 10, "coordinates": [-3, 4] },
+        { "id": 11, "coordinates": [0, 0] },
+        { "id": 12, "coordinates": [0, 7] },
+        { "id": 13, "coordinates": [2, -1] },
+        { "id": 14, "coordinates": [2, -1] },
+        { "id": 15, "coordinates": [9, 9] }
+      ],
+      "vectors": [
+        {
+          "id": "lower-bound-duplicate-order",
+          "steps": [
+            { "call": "point-lower-bound", "arguments": { "query": [-4, 99] }, "expected": { "index": 0 } },
+            { "call": "point-lower-bound", "arguments": { "query": [0, 0] }, "expected": { "index": 1 } },
+            { "call": "point-lower-bound", "arguments": { "query": [1, 0] }, "expected": { "index": 3 } },
+            { "call": "point-lower-bound", "arguments": { "query": [2, -1] }, "expected": { "index": 3 } },
+            { "call": "point-lower-bound", "arguments": { "query": [10, 0] }, "expected": { "index": 6 } }
+          ]
+        },
+        {
+          "id": "resource-mutation-handoff-disposal",
+          "steps": [
+            { "call": "index-build", "arguments": {}, "expected": { "size": 6 } },
+            { "call": "index-nearest", "arguments": { "query": [1, 0] }, "expected": { "pointId": 11, "coordinates": [0, 0], "squaredDistance": 1 } },
+            { "call": "index-nearest", "arguments": { "query": [2, -1] }, "expected": { "pointId": 13, "coordinates": [2, -1], "squaredDistance": 0 } },
+            { "call": "index-range", "arguments": { "minimum": [0, -1], "maximum": [2, 7] }, "expected": { "pointIds": [11, 12, 13, 14] } },
+            { "call": "index-insert", "arguments": { "point": { "id": 16, "coordinates": [1, 1] } }, "expected": { "size": 7 } },
+            { "call": "index-nearest", "arguments": { "query": [1, 1] }, "expected": { "pointId": 16, "coordinates": [1, 1], "squaredDistance": 0 } },
+            { "call": "consumer-range-checksum", "arguments": { "minimum": [0, -1], "maximum": [2, 7] }, "expected": { "pointIds": [11, 12, 13, 14, 16], "checksum": 66 } },
+            { "call": "index-dispose", "arguments": {}, "expected": { "released": true } },
+            { "call": "index-dispose", "arguments": {}, "expected": { "released": false } },
+            { "call": "index-size", "arguments": {}, "expected": { "error": "disposed-resource" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ordered-4d",
+      "dimensions": 4,
+      "initialPoints": [
+        { "id": 100, "coordinates": [-1, -1, -1, -1] },
+        { "id": 101, "coordinates": [0, 0, 0, 0] },
+        { "id": 102, "coordinates": [0, 0, 0, 1] },
+        { "id": 103, "coordinates": [4, 3, 2, 1] }
+      ],
+      "vectors": [
+        {
+          "id": "fixed-dimension-query",
+          "steps": [
+            { "call": "point-lower-bound", "arguments": { "query": [0, 0, 0, 1] }, "expected": { "index": 2 } },
+            { "call": "index-build", "arguments": {}, "expected": { "size": 4 } },
+            { "call": "index-nearest", "arguments": { "query": [1, 1, 1, 1] }, "expected": { "pointId": 102, "coordinates": [0, 0, 0, 1], "squaredDistance": 3 } },
+            { "call": "index-range", "arguments": { "minimum": [0, 0, 0, 0], "maximum": [4, 3, 2, 1] }, "expected": { "pointIds": [101, 102, 103] } },
+            { "call": "index-dispose", "arguments": {}, "expected": { "released": true } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ordered-8d",
+      "dimensions": 8,
+      "initialPoints": [
+        { "id": 200, "coordinates": [0, 0, 0, 0, 0, 0, 0, 0] },
+        { "id": 201, "coordinates": [1, 1, 1, 1, 1, 1, 1, 1] },
+        { "id": 202, "coordinates": [2, 2, 2, 2, 2, 2, 2, 2] }
+      ],
+      "vectors": [
+        {
+          "id": "dimension-eight-query",
+          "steps": [
+            { "call": "point-lower-bound", "arguments": { "query": [1, 1, 1, 1, 1, 1, 1, 1] }, "expected": { "index": 1 } },
+            { "call": "index-build", "arguments": {}, "expected": { "size": 3 } },
+            { "call": "index-nearest", "arguments": { "query": [1, 1, 1, 1, 1, 1, 1, 1] }, "expected": { "pointId": 201, "coordinates": [1, 1, 1, 1, 1, 1, 1, 1], "squaredDistance": 0 } },
+            { "call": "index-range", "arguments": { "minimum": [0, 0, 0, 0, 0, 0, 0, 0], "maximum": [1, 1, 1, 1, 1, 1, 1, 1] }, "expected": { "pointIds": [200, 201] } },
+            { "call": "index-dispose", "arguments": {}, "expected": { "released": true } }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -41,6 +41,7 @@
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
     "test:browser-bundlers": "npm run build:lean-link-spike && LEAN_BRIDGE_REQUIRE_BROWSER=1 node --test tests/browser-bundler.test.mjs",
+    "test:performance-corpus": "node --test tests/performance-corpus.test.mjs",
     "test:cargo-package": "node --test tests/cargo-package.test.mjs",
     "test:c-family-package": "node --test tests/c-family-package.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",

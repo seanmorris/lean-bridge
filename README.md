@@ -426,11 +426,12 @@ The architecture-testing POC has established:
 - one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, and blocks ambiguous ownership or effect boundaries;
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;
+- one versioned spatial performance corpus with 2D, 4D, and 8D search contracts, evidence-scoped complexity claims, frozen correctness vectors, retained index identity, cross-component borrowing, and disposal semantics;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 299 passing behavioral and structural tests;
+- 305 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -447,6 +448,7 @@ npm run binding-parity
 npm run generate:wit -- --json
 npm run test:php-native-package
 npm run test:browser-bundlers
+npm run test:performance-corpus
 npm run test:c-family-package
 npm run test:release-rehearsal
 npm run test:release-install-gate

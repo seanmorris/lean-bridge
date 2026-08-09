@@ -2,6 +2,8 @@
 
 Status: measured architecture POC evidence. This record covers the browser-profile JavaScript `Box` projection under Node. It does not establish production performance or browser startup performance.
 
+The versioned [canonical spatial performance corpus](performance-corpus.md) now fixes the operations, ownership rules, complexity evidence, and correctness vectors for the next suite. This page remains the earlier `Box` baseline until the independent Lean performance components execute through generated native APIs.
+
 Date: 2026-08-08 UTC.
 
 ## Environment
