@@ -25,6 +25,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 19 | One language-neutral binding IR with namespaced producer adapters | Accepted for POC |
 | 20 | Rust as the second semantic-parity backend; C++ remains a later packaging backend | Accepted for POC |
 | 21 | One generated PHP projection over closed native Zend and PHP-Wasm transport interfaces | Accepted for POC |
+| 22 | Compile each component once; registry backends package an immutable canonical release bundle without compiler access | Accepted for POC |
 
 ## ADR 1: Generated native binding surface
 
@@ -77,6 +78,47 @@ Binding IR compiles into one PHP surface before either PHP transport is selected
 The generated internal transport interface contains one typed method per declaration plus typed lifecycle methods. It contains no generic dispatcher. Native Zend and PHP-Wasm adapters implement the same interface. Every adapter publishes a capability manifest. Any missing required capability blocks package generation.
 
 The PHP-Wasm adapter reuses Vrzno's paired weak identity-index pattern and the maintained `weakermap` package. It does not carry another copied `WeakerMap` implementation. Explicit ownership release remains authoritative. Weak finalization is a recovery path.
+
+## ADR 22: Compile once, package many times
+
+### Context
+
+Npm, Cargo, PyPI, C, C++, and future registries need different layouts and metadata. Independent build pipelines would let each ecosystem compile a different Lean component, reinterpret Binding IR, select another dependency graph, or publish a version that no longer identifies the proved artifact.
+
+### Alternatives considered
+
+1. Let every registry backend run the Lean build and generate its own bindings. This duplicates toolchains and makes cross-registry artifact identity accidental.
+2. Publish one registry package as the source for every other registry. This makes one host ecosystem authoritative and excludes targets that cannot consume its package shape.
+3. Build one host-neutral release bundle, then project it into registry packages. Each backend receives immutable artifacts and one canonical manifest.
+
+### Decision
+
+The pinned Nix flake and canonical resolved graph are the only compilation authorities. They compile each component once and emit one content-addressed release bundle. That bundle owns component and version identity, Binding IR and graph identity, core artifact hashes, capabilities, documentation, assurance metadata, licenses, provenance, and target eligibility.
+
+Registry backends receive the bundle as read-only input. They MAY select applicable files, arrange paths, copy or rename files, render registry metadata from canonical fields, archive, compress, sign, and attest. They MUST NOT invoke Lean, Lake, C or C++ compilers, Rust compilers, Emscripten, linkers, build systems, or package lifecycle scripts. They MUST NOT regenerate binding semantics, resolve another dependency graph, rewrite a core artifact, choose an independent version, or substitute an artifact with the same filename.
+
+The backend execution plan declares `compilerAccess: false`, `scriptPolicy: disabled`, `versionSource: canonical-manifest`, and `semanticSource: canonical-manifest`. Every copied core artifact records equal source and packaged hashes. The policy validator rejects forbidden operations, compiler or linker commands, lifecycle scripts, version drift, semantic-source drift, and core hash changes before a registry archive can enter the release rehearsal.
+
+### Consequences
+
+Adding an ecosystem requires a packaging backend and install test. It does not require another Lean build definition. Registry-specific metadata can describe native conventions but cannot change public semantics. A target that cannot represent the canonical contract reports a capability gap and is omitted.
+
+The release bundle becomes the handoff between expensive trusted compilation and low-authority packaging. Backends can run with a read-only bundle mount, an empty output directory, no compiler toolchain, no network, and disabled package scripts. Node 832 will use execution tracing to verify those environmental constraints.
+
+### Permanent lenses
+
+1. Shared runtime: every registry package points to the same graph and runtime profile. A backend cannot introduce a private runtime.
+2. Native bindings: backends package generated direct APIs. They cannot add public wrappers or expose generic dispatch.
+3. Assurance: every package carries the same proof, trust, source, toolchain, and artifact identities.
+4. Reproducibility: one flake output is the canonical build. Backend outputs are deterministic projections of its manifest.
+5. Host neutrality: the bundle is language-neutral. JavaScript remains first-class without becoming the compilation authority.
+6. AI reuse: package identities and semantic metadata remain stable across registries.
+7. Accessibility: consumers install ordinary ecosystem packages. Contributors do not maintain several build systems.
+8. Composition: every package resolves the same dependency graph and declares the same semantic compatibility facts.
+
+### Unresolved work
+
+Node 828 defines the closed canonical manifest. Node 829 builds the flake bundle. Nodes 830 through 832 implement packaging backends, release rehearsal, clean installs, and build tracing.
 
 ## Amendment rule
 
