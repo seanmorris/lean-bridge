@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "graphCounts": [1, 3, 10, 50],
+  "maximumLibraries": 50,
+  "dependencyShape": "linear-chain",
+  "component": {
+    "idPrefix": "performance/scale-",
+    "version": "1.0.0",
+    "artifactSuffix": ".so.wasm",
+    "operation": "ping",
+    "input": "uint32",
+    "output": "uint32",
+    "resultRule": "input-plus-one-based-ordinal"
+  }
+}
