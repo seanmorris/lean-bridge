@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-self-consistency-result.schema.json",
+  "title": "Lean Bridge performance self-consistency result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "source", "environment", "workload", "profiles", "accepted", "repetitions", "semanticSha256", "semanticHashes", "timingVariance", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-self-consistency" },
+    "recordedAt": { "type": "string" },
+    "source": { "type": "object" },
+    "environment": { "type": "object" },
+    "workload": { "type": "string" },
+    "profiles": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "accepted": { "const": true },
+    "repetitions": { "type": "integer", "minimum": 2 },
+    "semanticSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "semanticHashes": { "type": "array", "minItems": 2, "items": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+    "timingVariance": { "type": "object" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}
