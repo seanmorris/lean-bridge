@@ -1,4 +1,5 @@
 import { diagnostic } from "./contract.mjs";
+import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { rehearseRelease } from "../release/release-rehearsal.mjs";
 
 const deferred = (command, node) => ({
@@ -13,7 +14,23 @@ const deferred = (command, node) => ({
 });
 
 export const cliHandlers = Object.freeze({
-  analyze: async () => deferred("analyze", 877),
+  analyze: async request => {
+    const report = await analyzeLeanProject(request.project);
+    const requiredHints = report.adapterHints.filter(item => item.required);
+    const status = requiredHints.length > 0
+      ? "needs-input"
+      : report.bindingIr === null
+        ? "blocked"
+        : "ok";
+    return {
+      status,
+      result: report,
+      diagnostics: report.diagnostics.map(item => diagnostic(item)),
+      nextActions: requiredHints.map(item =>
+        `${item.declaration === null ? "Project" : item.declaration}: ${item.question}`
+      ),
+    };
+  },
   build: async () => deferred("build", 876),
   publish: async request => {
     if (request.mode !== "dry-run") return deferred("publish", 879);

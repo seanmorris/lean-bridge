@@ -87,14 +87,11 @@ test("agent output is one closed result envelope with stable exit semantics", as
   );
 });
 
-test("the executable reports pending commands honestly in machine and human formats", async () => {
-  await assert.rejects(
-    execute("node", ["scripts/lean-bridge.mjs", "analyze", "--json"], { cwd: process.cwd() }),
-    error => {
-      const response = JSON.parse(error.stdout);
-      return error.code === 2 && response.status === "blocked" && response.diagnostics[0].code === "analyze-implementation-pending";
-    },
-  );
+test("the executable analyzes the project and reports pending commands honestly", async () => {
+  const analyzed = await execute("node", ["scripts/lean-bridge.mjs", "analyze", "--json"], { cwd: process.cwd() });
+  const response = JSON.parse(analyzed.stdout);
+  assert.equal(response.status, "ok");
+  assert.equal(response.result.bindingIr.origin, "existing-validated");
   await assert.rejects(
     execute("node", ["scripts/lean-bridge.mjs", "publish"], { cwd: process.cwd() }),
     error => error.code === 2 && /publish-implementation-pending/.test(error.stderr),

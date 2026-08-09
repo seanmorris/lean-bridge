@@ -48,6 +48,7 @@
     "test:pypi-package": "node --test tests/pypi-package.test.mjs",
     "test:release-rehearsal": "node --test tests/release-rehearsal.test.mjs",
     "test:release-install-gate": "node --test tests/release-install-gate.test.mjs",
+    "test:analyze": "node --test tests/lean-project-analyzer.test.mjs tests/cli-contract.test.mjs",
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && node --test tests/**/*.test.mjs",

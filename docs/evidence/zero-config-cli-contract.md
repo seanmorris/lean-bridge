@@ -12,9 +12,11 @@ lean-bridge publish
 
 Every command defaults to noninteractive execution and concise human output. `--json` or `--format json` emits one machine-readable result object for scripts and agents. `--interactive` grants later analyzer implementations permission to ask only for unresolved adapter hints. It does not enable prompts by default.
 
+`analyze` is operational. It inventories a Lean project without changing it, validates an existing Binding IR or proposes one for conservatively supported copied values, and reports narrow adapter questions for unresolved boundaries. [The analyzer evidence](lean-project-analysis.md) records its inference and assurance limits.
+
 `publish --dry-run --bundle <path> --output <path>` is operational. It runs the existing local release rehearsal, emits registry-ready archives and an in-toto statement, and reports zero external registry writes through the CLI result.
 
-The general analyzer, Docker or Nix build selector, and external publisher belong to nodes 877, 876, and 879. Their commands currently return `blocked` with stable diagnostic codes and the responsible plan node. The CLI does not report those workflows as successful before their implementations exist.
+The Docker or Nix build selector and external publisher belong to nodes 876 and 879. Their commands return `blocked` with stable diagnostic codes and the responsible plan node. The CLI does not report those workflows as successful before their implementations exist.
 
 ## Agent contract
 
@@ -38,8 +40,8 @@ The parser rejects unknown commands, command-inappropriate flags, repeated flags
 - noninteractive defaults and absolute path resolution;
 - command-specific options and dry-run mode;
 - closed structured diagnostics for agents;
-- stable blocked-command exit behavior in JSON and human formats;
-- the executable does not claim deferred commands are complete;
+- stable success and blocked-command exit behavior in JSON and human formats;
+- the executable analyzes the repository and does not claim deferred commands are complete;
 - publish dry-run produces a real no-publish publication index; and
 - the published JSON schema closes the result and diagnostic objects.
 
