@@ -108,7 +108,7 @@ test("optional arguments and overload groups fail instead of changing call behav
   expectGap(overloaded, "unsupported-overload-group");
 });
 
-test("domain and payload errors fail until an error envelope preserves them", () => {
+test("callback domain errors and nonscalar payloads fail outside envelope coverage", () => {
   const domain = clone(alpha.bindingIr);
   const declaredError = domain.errors.find(error => error.id === "error:callback-threw");
   declaredError.category = "domain";

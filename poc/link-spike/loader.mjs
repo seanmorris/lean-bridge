@@ -235,11 +235,18 @@ class RuntimeRegistry {
       this.reject(
         descriptor,
         binding,
-        "runtime-shut-down",
-        `the Lean runtime for ${descriptor.id} has been shut down`,
+        this.state === "poisoned" ? "runtime-poisoned" : "runtime-shut-down",
+        this.state === "poisoned"
+          ? `the Lean runtime for ${descriptor.id} rejected work after an unexpected failure`
+          : `the Lean runtime for ${descriptor.id} has been shut down`,
       );
     }
     this.callbacks.beforeNativeCall();
+  }
+
+  poison(descriptor, binding, message, details = {}) {
+    this.state = "poisoned";
+    this.reject(descriptor, binding, "unexpected-native-failure", message, details);
   }
 
   beginCallbackBoundary() {
@@ -1299,6 +1306,17 @@ const readFrameScalar = (view, pointer, field) => {
   throw new Error(`unsupported generated frame scalar ${field.scalar}`);
 };
 
+const readEnvelopeScalar = (view, pointer, value) => {
+  if (value.codec === "unit") return undefined;
+  const offset = pointer + value.offset;
+  if (value.codec === "bool") return view.getUint32(offset, true) !== 0;
+  if (value.codec === "uint32") return view.getUint32(offset, true);
+  if (value.codec === "int32") return view.getInt32(offset, true);
+  if (value.codec === "float32") return view.getFloat32(offset, true);
+  if (value.codec === "float64") return view.getFloat64(offset, true);
+  throw new Error(`unsupported generated error scalar ${value.codec}`);
+};
+
 const projectValueFrameFunction = (
   module,
   descriptor,
@@ -1468,6 +1486,164 @@ const projectValueFrameFunction = (
       return Object.freeze(result);
     } finally {
       for (const pointer of allocations.reverse()) free(pointer);
+    }
+  };
+};
+
+const projectErrorEnvelopeFunction = (
+  module,
+  descriptor,
+  binding,
+  implementation,
+  context,
+) => {
+  const plan = binding.adapter;
+  const declaration = semanticDeclaration(descriptor, binding);
+  if (
+    plan.kind !== "error-envelope-v1" ||
+    plan.abiVersion !== 1 ||
+    !Number.isSafeInteger(plan.byteSize) ||
+    plan.byteSize < 16 ||
+    !plan.header ||
+    !plan.outcomes ||
+    !plan.result ||
+    !Array.isArray(plan.errors) ||
+    !declaration ||
+    declaration.kind !== "function" ||
+    declaration.resultMode !== "value" ||
+    declaration.failure.mode !== "declared"
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-adapter",
+      `${binding.name} has an unsupported error envelope plan`,
+      { abiVersion: plan.abiVersion },
+    );
+  }
+  const allocate = resolvePrivateFunction(module, descriptor, "_malloc");
+  const free = resolvePrivateFunction(module, descriptor, "_free");
+
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    if (args.length !== declaration.parameters.length) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} expects ${declaration.parameters.length} arguments`,
+        { expected: declaration.parameters.length, actual: args.length },
+      );
+    }
+    const typeMap = bindingIrTypeMap(descriptor);
+    for (let index = 0; index < args.length; index += 1) {
+      validateCopiedValue(
+        descriptor,
+        binding,
+        declaration.parameters[index].type,
+        args[index],
+        declaration.parameters[index].name,
+        typeMap,
+      );
+    }
+    initializeBinding(module, descriptor, binding);
+    const pointer = allocate(plan.byteSize);
+    if (!pointer) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "allocation-failed",
+        `${binding.name} could not allocate its error envelope`,
+        { byteSize: plan.byteSize },
+      );
+    }
+
+    try {
+      let bytes = new Uint8Array(module.HEAP8.buffer, pointer, plan.byteSize);
+      bytes.fill(0);
+      let view = new DataView(module.HEAP8.buffer);
+      view.setUint32(pointer + plan.header.abiVersion, plan.abiVersion, true);
+      view.setUint32(pointer + plan.header.byteSize, plan.byteSize, true);
+      const status = implementation(pointer, ...args) >>> 0;
+      view = new DataView(module.HEAP8.buffer);
+      const actualVersion = view.getUint32(pointer + plan.header.abiVersion, true);
+      const actualBytes = view.getUint32(pointer + plan.header.byteSize, true);
+      const outcome = view.getUint32(pointer + plan.header.outcome, true);
+      const errorTag = view.getUint32(pointer + plan.header.errorTag, true);
+      if (status !== 0 || actualVersion !== plan.abiVersion || actualBytes !== plan.byteSize) {
+        context.poison(
+          descriptor,
+          binding,
+          `${binding.name} returned a corrupt error envelope`,
+          { status, actualVersion, actualBytes, outcome, errorTag },
+        );
+      }
+      if (outcome === plan.outcomes.ok) {
+        const result = readEnvelopeScalar(view, pointer, plan.result);
+        validateCopiedValue(
+          descriptor,
+          binding,
+          declaration.result.type,
+          result,
+          "result",
+          typeMap,
+        );
+        return result;
+      }
+      if (outcome === plan.outcomes.declared) {
+        const declared = plan.errors.find(error => error.tag === errorTag);
+        if (!declared) {
+          context.poison(
+            descriptor,
+            binding,
+            `${binding.name} returned an unknown declared error tag`,
+            { outcome, errorTag },
+          );
+        }
+        const payload =
+          declared.payload === null
+            ? undefined
+            : readEnvelopeScalar(view, pointer, declared.payload);
+        if (declared.payload !== null) {
+          validateCopiedValue(
+            descriptor,
+            binding,
+            declared.payload.type,
+            payload,
+            `${declared.name}.payload`,
+            typeMap,
+          );
+        }
+        throw bridgeError(
+          descriptor,
+          binding,
+          "declared-error",
+          `${binding.name} reported ${declared.name}`,
+          {
+            errorId: declared.id,
+            errorName: declared.name,
+            category: declared.category,
+            payload,
+          },
+        );
+      }
+      if (plan.unexpected === "trap") {
+        throw bridgeError(
+          descriptor,
+          binding,
+          "unexpected-native-failure",
+          `${binding.name} reported an unexpected native failure`,
+          { outcome, errorTag, policy: plan.unexpected },
+        );
+      }
+      context.poison(
+        descriptor,
+        binding,
+        `${binding.name} reported an unexpected native failure`,
+        { outcome, errorTag, policy: plan.unexpected },
+      );
+    } finally {
+      free(pointer);
     }
   };
 };
@@ -1808,6 +1984,15 @@ const projectFunction = (module, descriptor, binding, context) => {
   }
   if (binding.adapter.kind === "callback-result-v1") {
     return projectCallbackResultFunction(
+      module,
+      descriptor,
+      binding,
+      implementation,
+      context,
+    );
+  }
+  if (binding.adapter.kind === "error-envelope-v1") {
+    return projectErrorEnvelopeFunction(
       module,
       descriptor,
       binding,

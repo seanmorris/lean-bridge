@@ -58,6 +58,15 @@ const docComment = (documentation, extra = []) => {
 const parameterType = (parameter, typeMap) =>
   `${parameter.name}${parameter.optional ? "?" : ""}: ${typeScriptType(parameter.type, typeMap)}`;
 
+const projectedErrors = ir => ir.errors.filter(error => error.category !== "boundary");
+
+const declarationErrors = (ir, declaration) => {
+  const errors = new Map(ir.errors.map(error => [error.id, error]));
+  return declaration.failure.errors
+    .map(errorId => errors.get(errorId))
+    .filter(error => error?.category !== "boundary");
+};
+
 const emitTypeDeclarations = (ir, typeMap) => {
   const output = [];
   for (const type of ir.types) {
@@ -127,6 +136,7 @@ const ensureUniqueSurface = ir => {
     }
     exports.set(name, id);
   };
+  for (const error of projectedErrors(ir)) addExport(error.name, error.id);
   for (const type of ir.types.filter(item => item.kind === "resource")) {
     addExport(type.name, type.id);
     const methods = ir.declarations.filter(
@@ -159,6 +169,45 @@ const emitDeclarations = (ir, typeMap) => {
   ];
   const exports = [];
   const consumed = new Set();
+  const errors = projectedErrors(ir);
+
+  if (errors.length > 0) {
+    output.push(
+      "const translateDeclaredError = error => {",
+      '  if (error?.code !== "declared-error") throw error;',
+      "  switch (error.details?.errorId) {",
+    );
+    for (const error of errors) {
+      const construction =
+        error.payload === null
+          ? `new ${error.name}({ cause: error })`
+          : `new ${error.name}(error.details.payload, { cause: error })`;
+      output.push(`    case ${quote(error.id)}: return ${construction};`);
+    }
+    output.push("    default: throw error;", "  }", "};", "");
+  }
+
+  for (const error of errors) {
+    output.push(docComment(error.documentation));
+    output.push(`export class ${error.name} extends Error {`);
+    if (error.payload === null) {
+      output.push(`  constructor(options) {`, `    super(${quote(error.documentation.summary)}, options);`);
+    } else {
+      output.push(
+        "  constructor(payload, options) {",
+        `    super(${quote(error.documentation.summary)}, options);`,
+        "    this.payload = payload;",
+      );
+    }
+    output.push(
+      `    this.name = ${quote(error.name)};`,
+      `    this.code = ${quote(error.id)};`,
+      "  }",
+      "}",
+      "",
+    );
+    exports.push(error.name);
+  }
 
   for (const type of ir.types.filter(item => item.kind === "resource")) {
     const { constructors, methods } = declarationsForResource(ir, type.id);
@@ -243,15 +292,26 @@ const emitDeclarations = (ir, typeMap) => {
           ? "iterateAsync"
           : "call";
     const awaitPrefix = declaration.resultMode === "promise" ? "await " : "";
+    const mappedErrors = declarationErrors(ir, declaration);
+    const indent = mappedErrors.length > 0 ? "    " : "  ";
+    if (mappedErrors.length > 0) output.push("  try {");
     output.push(
-      `  const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => parameter.name).join(", ")}]);`,
+      `${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => parameter.name).join(", ")}]);`,
     );
     if (new Set(["value", "promise"]).has(declaration.resultMode)) {
       output.push(
-        `  validate.${validatorName(declaration.result.type, typeMap)}(result, ${quote(`${declaration.name}.result`)});`,
+        `${indent}validate.${validatorName(declaration.result.type, typeMap)}(result, ${quote(`${declaration.name}.result`)});`,
       );
     }
-    output.push("  return result;", "}", "");
+    output.push(`${indent}return result;`);
+    if (mappedErrors.length > 0) {
+      output.push(
+        "  } catch (error) {",
+        "    throw translateDeclaredError(error);",
+        "  }",
+      );
+    }
+    output.push("}", "");
     exports.push(declaration.name);
   }
 
@@ -377,6 +437,20 @@ const emitTypeScript = (ir, typeMap) => {
   }
   const exports = [];
   const consumed = new Set();
+  for (const error of projectedErrors(ir)) {
+    lines.push(docComment(error.documentation), `export declare class ${error.name} extends Error {`);
+    lines.push(`  readonly code: ${quote(error.id)};`);
+    if (error.payload !== null) {
+      lines.push(`  readonly payload: ${typeScriptType(error.payload, typeMap)};`);
+      lines.push(
+        `  constructor(payload: ${typeScriptType(error.payload, typeMap)}, options?: ErrorOptions);`,
+      );
+    } else {
+      lines.push("  constructor(options?: ErrorOptions);");
+    }
+    lines.push("}", "");
+    exports.push(error.name);
+  }
   for (const type of ir.types.filter(item => item.kind === "resource")) {
     const { constructors, methods } = declarationsForResource(ir, type.id);
     const constructor = constructors[0];
@@ -421,6 +495,9 @@ const emitDocumentation = ir => {
   }
   for (const declaration of ir.declarations.filter(item => item.kind === "function")) {
     lines.push(`### ${declaration.name}`, "", declaration.documentation.summary, "");
+  }
+  for (const error of projectedErrors(ir)) {
+    lines.push(`### ${error.name}`, "", error.documentation.summary, "");
   }
   lines.push("## Assurance", "");
   for (const claim of ir.assurance) {

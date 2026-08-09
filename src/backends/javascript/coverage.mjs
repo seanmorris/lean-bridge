@@ -1,4 +1,5 @@
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
 
 const gap = (code, message, details = {}) =>
   Object.freeze({ code, message, details: Object.freeze({ ...details }) });
@@ -77,11 +78,14 @@ export const analyzeJavaScriptCoverage = ir => {
     }
   };
 
-  const inspectFailure = (failure, path) => {
+  const inspectFailure = (failure, path, { errorEnvelope = false } = {}) => {
     if (failure.mode !== "declared") return;
     for (const errorId of failure.errors) {
       const error = errorMap.get(errorId);
-      if (error?.category !== "boundary" || error.payload !== null) {
+      const boundaryOnly = error?.category === "boundary" && error.payload === null;
+      const envelopeSupported =
+        errorEnvelope && error && supportsErrorEnvelopeValue(error.payload);
+      if (!boundaryOnly && !envelopeSupported) {
         report(
           "unsupported-error-envelope",
           `${path} requires domain or payload error translation`,
@@ -217,7 +221,9 @@ export const analyzeJavaScriptCoverage = ir => {
     } else {
       inspectTypeRef(declaration.result.type, `${declaration.id}.result`);
     }
-    inspectFailure(declaration.failure, `${declaration.id}.failure`);
+    inspectFailure(declaration.failure, `${declaration.id}.failure`, {
+      errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value",
+    });
   }
 
   for (const [name, declarations] of overloads) {

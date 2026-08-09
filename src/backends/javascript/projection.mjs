@@ -16,6 +16,10 @@ import {
   CallbackSignatureGenerationError,
   compileCallbackSignatureV1,
 } from "../../abi/callback-signature.mjs";
+import {
+  ErrorEnvelopeGenerationError,
+  compileErrorEnvelopeV1,
+} from "../../abi/error-envelope.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
@@ -118,6 +122,16 @@ const validateAdapter = (adapter, path) => {
       return;
     }
   }
+  if (adapter.kind === "error-envelope-v1") {
+    exactKeys(adapter, ["kind", "abiVersion", "maxEnvelopeBytes"], path);
+    if (
+      adapter.abiVersion === 1 &&
+      Number.isSafeInteger(adapter.maxEnvelopeBytes) &&
+      adapter.maxEnvelopeBytes >= 24
+    ) {
+      return;
+    }
+  }
   fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
     path,
     kind: adapter.kind,
@@ -210,6 +224,9 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
         }),
       });
     }
+    if (adapter.kind === "error-envelope-v1") {
+      return compileErrorEnvelopeV1(ir, declaration.id, adapter);
+    }
     return Object.freeze({
       ...compilePendingOperationV1(ir, declaration.id),
       cancelSymbol: adapter.cancel,
@@ -218,7 +235,8 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
     if (
       !(error instanceof ValueFrameGenerationError) &&
       !(error instanceof PendingOperationGenerationError) &&
-      !(error instanceof CallbackSignatureGenerationError)
+      !(error instanceof CallbackSignatureGenerationError) &&
+      !(error instanceof ErrorEnvelopeGenerationError)
     ) {
       throw error;
     }
@@ -391,6 +409,7 @@ export const compileJavaScriptProjection = (ir, abi) => {
   }
   validatePrivateAbi(ir, abi);
   const typeMap = new Map(ir.types.map(type => [type.id, type]));
+  const errorMap = new Map(ir.errors.map(error => [error.id, error]));
   const bindings = [];
   const consumedDeclarations = new Set();
   const publicNames = new Map();
@@ -469,6 +488,19 @@ export const compileJavaScriptProjection = (ir, abi) => {
     consumedDeclarations.add(declaration.id);
     const adapter = compileAdapter(ir, declaration, entry.adapter, abi);
     const resultType = typeMap.get(namedTypeId(declaration.result.type));
+    const requiresErrorEnvelope =
+      declaration.failure.mode === "declared" &&
+      declaration.failure.errors.some(errorId => {
+        const error = errorMap.get(errorId);
+        return error?.category !== "boundary" || error.payload !== null;
+      });
+    if (requiresErrorEnvelope && adapter?.kind !== "error-envelope-v1") {
+      fail(
+        "missing-error-envelope-adapter",
+        `${declaration.id} requires an error-envelope-v1 adapter`,
+        { declaration: declaration.id },
+      );
+    }
     if (
       resultType?.kind === "callback" &&
       adapter?.kind !== "callback-result-v1"

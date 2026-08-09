@@ -289,10 +289,11 @@ The architecture-testing POC has established:
 - a native JavaScript class projection with generation-safe private tokens, canonical identity, deterministic disposal, fallback finalization, and runtime epoch checks;
 - a native JavaScript callback projection with canonical function identity, bounded nested re-entry, exception unwinding, and deterministic call-scoped release;
 - exported Lean closures projected as native JavaScript functions with canonical weak identity, deterministic disposal, queued finalization, and the same nested frame rules;
+- a generated scalar error envelope that returns copied values, projects declared failures as native error classes, and contains unexpected failures according to the declared policy;
 - browser and threaded memory profiles;
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - a root-only generated package export map with automated raw ABI and coverage drift gates;
-- 136 passing behavioral and structural tests;
+- 141 passing behavioral and structural tests;
 - byte-identical browser and threaded artifacts across independent roots; and
 - a complete fixed-input x86-64 Nix build.
 
