@@ -4,6 +4,7 @@ import {
 } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
+import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -410,6 +411,33 @@ const emitDeclarations = (ir, typeMap) => {
       exports.push(declaration.name);
       continue;
     }
+    if (declaration.typeParameters.length > 0) {
+      const plan = compileGenericSpecializationV1(ir, declaration.id);
+      const parameter = declaration.parameters[0];
+      output.push(docComment(declaration.documentation));
+      output.push(`export function ${declaration.name}(${parameter.name}) {`);
+      for (const branch of plan.branches) {
+        const condition =
+          branch.guard === "bytes"
+            ? `${parameter.name} instanceof Uint8Array`
+            : `typeof ${parameter.name} === ${quote(branch.guard)}`;
+        output.push(`  if (${condition}) {`);
+        output.push(
+          `    validate.${validatorName(branch.type, typeMap)}(${parameter.name}, ${quote(`${declaration.name}.${parameter.name}`)});`,
+          `    const result = runtime.call(${quote(declaration.id)}, [${parameter.name}]);`,
+          `    validate.${validatorName(branch.type, typeMap)}(result, ${quote(`${declaration.name}.result`)});`,
+          "    return result;",
+          "  }",
+        );
+      }
+      output.push(
+        `  throw new TypeError(${quote(`${declaration.name} does not support this value type`)});`,
+        "}",
+        "",
+      );
+      exports.push(declaration.name);
+      continue;
+    }
     ensureSupportedGenerics(declaration);
     const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
     output.push(docComment(declaration.documentation));
@@ -615,10 +643,20 @@ const emitTypeScript = (ir, typeMap) => {
   for (const declaration of ir.declarations) {
     if (consumed.has(declaration.id)) continue;
     lines.push(docComment(declaration.documentation));
-    lines.push(
-      `export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap)};`,
-      "",
-    );
+    if (declaration.typeParameters.length > 0) {
+      const plan = compileGenericSpecializationV1(ir, declaration.id);
+      for (const branch of plan.branches) {
+        lines.push(
+          `export declare function ${declaration.name}(${plan.parameter}: ${typeScriptType(branch.type, typeMap)}): ${typeScriptType(branch.type, typeMap)};`,
+        );
+      }
+      lines.push("");
+    } else {
+      lines.push(
+        `export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap)};`,
+        "",
+      );
+    }
     exports.push(declaration.name);
   }
   const uniqueExports = [...new Set(exports)];

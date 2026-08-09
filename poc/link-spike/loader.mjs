@@ -2412,7 +2412,105 @@ const projectCallbackResultFunction = (
   };
 };
 
+const matchesGenericGuard = (guard, value) => {
+  if (guard === "bytes") return value instanceof Uint8Array;
+  return typeof value === guard;
+};
+
+const genericGuardForType = type => {
+  if (type?.kind !== "primitive") return undefined;
+  if (type.name === "bool") return "boolean";
+  if (type.name === "string") return "string";
+  if (type.name === "bytes") return "bytes";
+  if (new Set(["uint64", "int64", "nat", "int"]).has(type.name)) return "bigint";
+  if (
+    new Set([
+      "uint8",
+      "uint16",
+      "uint32",
+      "int8",
+      "int16",
+      "int32",
+      "float32",
+      "float64",
+    ]).has(type.name)
+  ) {
+    return "number";
+  }
+  return undefined;
+};
+
+const projectGenericFunction = (module, descriptor, binding, context) => {
+  const adapter = binding.adapter;
+  if (
+    adapter.abiVersion !== 1 ||
+    adapter.declarationId !== binding.declarationId ||
+    !Array.isArray(adapter.branches) ||
+    adapter.branches.length === 0
+  ) {
+    throw bridgeError(
+      descriptor,
+      binding,
+      "unsupported-generic-plan",
+      `${binding.name} has a generic plan the runtime cannot preserve`,
+    );
+  }
+  const guards = new Set();
+  const branches = adapter.branches.map(branch => {
+    if (
+      genericGuardForType(branch.type) !== branch.guard ||
+      guards.has(branch.guard) ||
+      typeof branch.id !== "string" ||
+      branch.id.length === 0
+    ) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-generic-plan",
+        `${binding.name} has an invalid or ambiguous generic branch`,
+        { specialization: branch.id, guard: branch.guard },
+      );
+    }
+    guards.add(branch.guard);
+    return {
+      ...branch,
+      implementation: resolvePrivateFunction(module, descriptor, branch.symbol),
+    };
+  });
+  const typeMap = bindingIrTypeMap(descriptor);
+  return (...args) => {
+    context.beforeCall(descriptor, binding);
+    if (args.length !== 1) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "invalid-argument-count",
+        `${binding.name} expects 1 argument`,
+        { expected: 1, actual: args.length },
+      );
+    }
+    const branch = branches.find(item => matchesGenericGuard(item.guard, args[0]));
+    if (!branch) {
+      throw bridgeError(
+        descriptor,
+        binding,
+        "unsupported-generic-value",
+        `${binding.name} does not support this value type`,
+        { accepted: branches.map(item => item.id) },
+      );
+    }
+    validateCopiedValue(descriptor, binding, branch.type, args[0], adapter.parameter, typeMap);
+    initializeBinding(module, descriptor, binding);
+    const result = branch.implementation(args[0]);
+    validateCopiedValue(descriptor, binding, branch.type, result, "result", typeMap);
+    return result;
+  };
+};
+
 const projectFunction = (module, descriptor, binding, context) => {
+  if (binding.adapter?.kind === "generic-specialization-v1") {
+    return projectGenericFunction(module, descriptor, binding, context);
+  }
   const implementation = resolvePrivateFunction(
     module,
     descriptor,

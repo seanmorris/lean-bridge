@@ -62,7 +62,7 @@ test("generic and constructed values fail without runtime specialization", () =>
   });
   declaration.parameters[0].type = { kind: "parameter", id: "T" };
   declaration.result.type = { kind: "parameter", id: "T" };
-  expectGap(generic, "unsupported-generic");
+  expectGap(generic, "missing-generic-specializations");
 
   const option = clone(alpha.bindingIr);
   roundTrip(option).parameters[0].type = {

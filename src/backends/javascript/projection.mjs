@@ -27,6 +27,10 @@ import {
 } from "../../abi/iterator.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileInitializationV1 } from "../../abi/initialization.mjs";
+import {
+  GenericSpecializationError,
+  compileGenericSpecializationV1,
+} from "../../abi/generic-specialization.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 
 export class JavaScriptProjectionError extends Error {
@@ -75,6 +79,24 @@ const nonemptyString = (value, path) => {
 
 const validateAdapter = (adapter, path) => {
   if (adapter === null) return;
+  if (adapter.kind === "generic-specialization-v1") {
+    exactKeys(adapter, ["kind", "abiVersion", "branches"], path);
+    if (adapter.abiVersion !== 1 || !Array.isArray(adapter.branches) || adapter.branches.length === 0) {
+      fail("unsupported-private-adapter", `${path} requests an unsupported adapter`, {
+        path,
+        kind: adapter.kind,
+        abiVersion: adapter.abiVersion,
+      });
+    }
+    for (let index = 0; index < adapter.branches.length; index += 1) {
+      const branchPath = `${path}.branches[${index}]`;
+      const branch = adapter.branches[index];
+      exactKeys(branch, ["id", "symbol"], branchPath);
+      nonemptyString(branch.id, `${branchPath}.id`);
+      nonemptyString(branch.symbol, `${branchPath}.symbol`);
+    }
+    return;
+  }
   if (adapter.kind === "value-frame-v1") {
     exactKeys(
       adapter,
@@ -186,6 +208,9 @@ const validateAdapter = (adapter, path) => {
 const compileAdapter = (ir, declaration, adapter, abi) => {
   if (adapter === null) return undefined;
   try {
+    if (adapter.kind === "generic-specialization-v1") {
+      return compileGenericSpecializationV1(ir, declaration.id, adapter);
+    }
     if (adapter.kind === "value-frame-v1") {
       return compileValueFrameV1(ir, declaration.id, adapter);
     }
@@ -287,7 +312,8 @@ const compileAdapter = (ir, declaration, adapter, abi) => {
       !(error instanceof PendingOperationGenerationError) &&
       !(error instanceof CallbackSignatureGenerationError) &&
       !(error instanceof ErrorEnvelopeGenerationError) &&
-      !(error instanceof IteratorGenerationError)
+      !(error instanceof IteratorGenerationError) &&
+      !(error instanceof GenericSpecializationError)
     ) {
       throw error;
     }
@@ -549,11 +575,6 @@ export const compileJavaScriptProjection = (ir, abi) => {
         { declaration: declaration.id, kind: declaration.kind },
       );
     }
-    if (declaration.typeParameters.length > 0) {
-      fail("unsupported-generic", `${declaration.id} requires monomorphization metadata`, {
-        declaration: declaration.id,
-      });
-    }
     if (!new Set(["value", "promise", "iterator", "async-iterator"]).has(declaration.resultMode)) {
       fail(
         "unsupported-result-mode",
@@ -574,6 +595,26 @@ export const compileJavaScriptProjection = (ir, abi) => {
     const entry = declarationAbi(abi, declaration);
     consumedDeclarations.add(declaration.id);
     const adapter = compileAdapter(ir, declaration, entry.adapter, abi);
+    if (
+      adapter?.kind === "generic-specialization-v1" &&
+      !adapter.branches.some(branch => branch.symbol === entry.symbol)
+    ) {
+      fail(
+        "generic-entry-symbol",
+        `${declaration.id} entry symbol must name one compiled specialization`,
+        { declaration: declaration.id },
+      );
+    }
+    if (
+      declaration.typeParameters.length > 0 &&
+      adapter?.kind !== "generic-specialization-v1"
+    ) {
+      fail(
+        "missing-generic-specialization-adapter",
+        `${declaration.id} requires a generic-specialization-v1 adapter`,
+        { declaration: declaration.id },
+      );
+    }
     const resultType = typeMap.get(namedTypeId(declaration.result.type));
     const requiresErrorEnvelope =
       declaration.failure.mode === "declared" &&

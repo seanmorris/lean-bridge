@@ -5,6 +5,10 @@ import {
   OverloadGenerationError,
   compileOverloadV1,
 } from "../../abi/overload.mjs";
+import {
+  GenericSpecializationError,
+  compileGenericSpecializationV1,
+} from "../../abi/generic-specialization.mjs";
 
 const gap = (code, message, details = {}) =>
   Object.freeze({ code, message, details: Object.freeze({ ...details }) });
@@ -157,10 +161,14 @@ export const analyzeJavaScriptCoverage = ir => {
       overloads.set(declaration.name, sameName);
     }
 
+    let genericPlan;
     if (declaration.typeParameters.length > 0) {
-      report("unsupported-generic", `${declaration.id} requires target specialization metadata`, {
-        declaration: declaration.id,
-      });
+      try {
+        genericPlan = compileGenericSpecializationV1(ir, declaration.id);
+      } catch (error) {
+        if (!(error instanceof GenericSpecializationError)) throw error;
+        report(error.code, error.message, error.details);
+      }
     }
     if (declaration.kind === "static-method") {
       report(
@@ -218,7 +226,7 @@ export const analyzeJavaScriptCoverage = ir => {
         inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`, {
           allowCallback: true,
         });
-      } else {
+      } else if (!genericPlan) {
         inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`);
       }
       if (
@@ -252,7 +260,7 @@ export const analyzeJavaScriptCoverage = ir => {
       inspectTypeRef(declaration.result.type, `${declaration.id}.result`, {
         allowCallback: true,
       });
-    } else {
+    } else if (!genericPlan) {
       inspectTypeRef(declaration.result.type, `${declaration.id}.result`);
     }
     if (
@@ -272,6 +280,18 @@ export const analyzeJavaScriptCoverage = ir => {
 
   for (const [name, declarations] of overloads) {
     if (declarations.length < 2) continue;
+    if (
+      declarations.some(id =>
+        ir.declarations.find(declaration => declaration.id === id)?.typeParameters.length > 0,
+      )
+    ) {
+      report(
+        "unsupported-generic-overload",
+        `${name} combines generic specialization with overload dispatch`,
+        { name, declarations },
+      );
+      continue;
+    }
     try {
       compileOverloadV1(ir, name);
     } catch (error) {
