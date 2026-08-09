@@ -29,6 +29,7 @@
     "audit:php-wasm": "node scripts/audit-php-wasm-sources.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
+    "test:cargo-package": "node --test tests/cargo-package.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
     "test:php-native-package": "node --test tests/php-native-package.test.mjs",
     "test:php-wasm-adapter": "node --test tests/php-wasm-adapter.test.mjs",

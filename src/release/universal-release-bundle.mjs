@@ -274,17 +274,17 @@ export const buildUniversalReleaseBundle = async ({
       ],
     },
     ...[
-      ["cargo", "lean_bridge_alpha", "native-ffi"],
-      ["pypi", "lean-bridge-alpha", "native-ffi"],
-      ["c", "lean-bridge-alpha", "native-ffi"],
-      ["cpp", "lean-bridge-alpha", "native-ffi"],
-    ].map(([ecosystem, name, target]) => ({
+      ["cargo", "lean_bridge_alpha", "native-ffi", "The canonical bundle has no native component library or Rust runtime adapter."],
+      ["pypi", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library or Python extension adapter."],
+      ["c", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library."],
+      ["cpp", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library or C++ binding projection."],
+    ].map(([ecosystem, name, target, reason]) => ({
       ecosystem,
       name,
       version: ir.component.version,
       target,
       eligible: false,
-      reason: "The canonical bundle requires a registry projection before publication.",
+      reason,
       publicArtifacts: [],
     })),
   ];

@@ -1,19 +1,15 @@
 import { createHash } from "node:crypto";
-import { gzipSync } from "node:zlib";
 import {
   copyFile,
   mkdir,
-  readFile,
   readdir,
   writeFile,
 } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-import {
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
-} from "./canonical-package-manifest.mjs";
 import { validatePackagingBackendPlan } from "./backend-policy.mjs";
+import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
+import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -21,23 +17,6 @@ const json = value => `${JSON.stringify(value, null, 2)}\n`;
 const ensureEmptyOutput = async output => {
   await mkdir(output, { recursive: true });
   if ((await readdir(output)).length !== 0) throw new Error(`npm package output is not empty: ${output}`);
-};
-
-const verifyBundle = async bundle => {
-  const source = await readFile(join(bundle, "canonical-package.json"), "utf8");
-  const manifest = parseCanonicalPackageManifest(source);
-  const manifestSha256 = hashCanonicalPackageManifest(manifest);
-  const inventory = await readFile(join(bundle, "canonical-package.sha256"), "utf8");
-  if (inventory !== `${manifestSha256}  canonical-package.json\n`) {
-    throw new Error("canonical package hash inventory does not match the manifest");
-  }
-  for (const artifact of manifest.artifacts) {
-    const bytes = await readFile(join(bundle, artifact.path));
-    if (bytes.length !== artifact.bytes || sha256(bytes) !== artifact.sha256) {
-      throw new Error(`canonical bundle artifact changed: ${artifact.path}`);
-    }
-  }
-  return { manifest, manifestSha256 };
 };
 
 const copy = async (source, destination) => {
@@ -166,76 +145,12 @@ export const runtime = Object.freeze({
 });
 `;
 
-const splitTarPath = path => {
-  if (Buffer.byteLength(path) <= 100) return { name: path, prefix: "" };
-  for (let index = path.lastIndexOf("/"); index > 0; index = path.lastIndexOf("/", index - 1)) {
-    const prefix = path.slice(0, index);
-    const name = path.slice(index + 1);
-    if (Buffer.byteLength(prefix) <= 155 && Buffer.byteLength(name) <= 100) return { name, prefix };
-  }
-  throw new Error(`package path is too long for ustar: ${path}`);
-};
-
-const writeText = (header, offset, length, value) => {
-  const bytes = Buffer.from(value, "utf8");
-  if (bytes.length > length) throw new Error(`tar field exceeds ${length} bytes`);
-  bytes.copy(header, offset);
-};
-
-const octal = (value, width) => `${value.toString(8).padStart(width - 1, "0")}\0`;
-
-const tarHeader = (path, size, epoch) => {
-  const header = Buffer.alloc(512);
-  const { name, prefix } = splitTarPath(path);
-  writeText(header, 0, 100, name);
-  writeText(header, 100, 8, octal(0o644, 8));
-  writeText(header, 108, 8, octal(0, 8));
-  writeText(header, 116, 8, octal(0, 8));
-  writeText(header, 124, 12, octal(size, 12));
-  writeText(header, 136, 12, octal(epoch, 12));
-  header.fill(0x20, 148, 156);
-  header[156] = "0".charCodeAt(0);
-  writeText(header, 257, 6, "ustar\0");
-  writeText(header, 263, 2, "00");
-  writeText(header, 345, 155, prefix);
-  const checksum = header.reduce((sum, byte) => sum + byte, 0);
-  writeText(header, 148, 8, `${checksum.toString(8).padStart(6, "0")}\0 `);
-  return header;
-};
-
-const collectPackageFiles = async root => {
-  const files = [];
-  const visit = async (directory, prefix = "") => {
-    const entries = await readdir(directory, { withFileTypes: true });
-    entries.sort((left, right) => left.name.localeCompare(right.name));
-    for (const entry of entries) {
-      const path = prefix ? `${prefix}/${entry.name}` : entry.name;
-      const absolute = join(directory, entry.name);
-      if (entry.isDirectory()) await visit(absolute, path);
-      if (entry.isFile()) files.push({ path: `package/${path}`, bytes: await readFile(absolute) });
-    }
-  };
-  await visit(root);
-  return files;
-};
-
-const createArchive = async (packageRoot, epoch) => {
-  const chunks = [];
-  for (const file of await collectPackageFiles(packageRoot)) {
-    chunks.push(tarHeader(file.path, file.bytes.length, epoch), file.bytes);
-    const remainder = file.bytes.length % 512;
-    if (remainder !== 0) chunks.push(Buffer.alloc(512 - remainder));
-  }
-  chunks.push(Buffer.alloc(1024));
-  return gzipSync(Buffer.concat(chunks), { level: 9, mtime: 0 });
-};
-
 export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
   const bundle = resolve(bundleRoot);
   const output = resolve(outputRoot);
   if (output === bundle || output === dirname(bundle)) throw new Error("refusing to replace the canonical bundle with an npm package");
   await ensureEmptyOutput(output);
-  const { manifest, manifestSha256 } = await verifyBundle(bundle);
+  const { manifest, manifestSha256 } = await readVerifiedCanonicalBundle(bundle);
   const npm = manifest.packages.find(packageMapping => packageMapping.ecosystem === "npm");
   if (!npm?.eligible) throw new Error(`canonical bundle is not eligible for npm projection: ${npm?.reason ?? "mapping absent"}`);
 
@@ -321,7 +236,11 @@ export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
   await writeFile(join(output, "npm-projection.json"), json(plan));
 
   const archiveName = `${npm.name.replace(/^@/, "").replace("/", "-")}-${npm.version}.tgz`;
-  const archive = await createArchive(packageRoot, manifest.provenance.sourceDateEpoch);
+  const archive = await createDeterministicTarGz({
+    directory: packageRoot,
+    archiveRoot: "package",
+    sourceDateEpoch: manifest.provenance.sourceDateEpoch,
+  });
   await writeFile(join(output, archiveName), archive);
   return Object.freeze({
     package: `${npm.name}@${npm.version}`,
