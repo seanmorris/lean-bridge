@@ -45,12 +45,14 @@ const fail = (code, message, details = {}) => {
   throw new LeanProjectAnalysisError(code, message, details);
 };
 
-const sourceFiles = async root => {
+const sourceFiles = async (root, { signal = undefined } = {}) => {
   const files = [];
   const visit = async directory => {
+    signal?.throwIfAborted();
     const entries = await readdir(directory, { withFileTypes: true });
     entries.sort((left, right) => left.name.localeCompare(right.name));
     for (const entry of entries) {
+      signal?.throwIfAborted();
       if (entry.isDirectory() && ignoredDirectories.has(entry.name)) continue;
       const absolute = join(directory, entry.name);
       if (entry.isDirectory()) await visit(absolute);
@@ -61,10 +63,11 @@ const sourceFiles = async root => {
   return files.sort();
 };
 
-const compiledEnvironment = async root => {
+const compiledEnvironment = async (root, { signal = undefined } = {}) => {
   const metadataRoot = join(root, ".lake", "build", "lib", "lean");
   const paths = [];
   const visit = async directory => {
+    signal?.throwIfAborted();
     let entries;
     try {
       entries = await readdir(directory, { withFileTypes: true });
@@ -74,6 +77,7 @@ const compiledEnvironment = async root => {
     }
     entries.sort((left, right) => left.name.localeCompare(right.name));
     for (const entry of entries) {
+      signal?.throwIfAborted();
       const absolute = join(directory, entry.name);
       if (entry.isDirectory()) await visit(absolute);
       if (entry.isFile() && entry.name.endsWith(".ilean")) paths.push(absolute);
@@ -82,6 +86,7 @@ const compiledEnvironment = async root => {
   await visit(metadataRoot);
   const modules = [];
   for (const absolute of paths.sort()) {
+    signal?.throwIfAborted();
     let document;
     try {
       document = JSON.parse(await readFile(absolute, "utf8"));
@@ -430,11 +435,12 @@ const proposedIr = ({ facts, exports, theorems }) => {
   return ir;
 };
 
-export const analyzeLeanProject = async projectRoot => {
+export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {}) => {
   const root = resolve(projectRoot);
+  signal?.throwIfAborted();
   let files;
   try {
-    files = await sourceFiles(root);
+    files = await sourceFiles(root, { signal });
   } catch (error) {
     if (error.code === "ENOENT") fail("project-absent", `Lean project does not exist: ${root}`);
     throw error;
@@ -446,16 +452,19 @@ export const analyzeLeanProject = async projectRoot => {
   );
   const inputs = [];
   for (const absolute of relevant) {
+    signal?.throwIfAborted();
     const bytes = await readFile(absolute);
     inputs.push({ path: relative(root, absolute).replaceAll("\\", "/"), bytes: bytes.length, sha256: sha256(bytes) });
   }
   inputs.sort((left, right) => left.path.localeCompare(right.path));
   const treeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
-  const [facts, environment] = await Promise.all([packageFacts(root), compiledEnvironment(root)]);
+  const [facts, environment] = await Promise.all([packageFacts(root), compiledEnvironment(root, { signal })]);
+  signal?.throwIfAborted();
   const compiledDeclarations = new Set(environment.modules.flatMap(module => module.declarations));
   const declarations = [];
   const imports = [];
   for (const input of inputs.filter(item => item.path.endsWith(".lean"))) {
+    signal?.throwIfAborted();
     const scanned = scanLeanSource(await readFile(join(root, input.path), "utf8"), input.path);
     declarations.push(...scanned.declarations);
     imports.push(...scanned.imports.map(module => ({ module, source: input.path })));
@@ -479,6 +488,7 @@ export const analyzeLeanProject = async projectRoot => {
     ) projectedNameCounts.set(declaration.name, (projectedNameCounts.get(declaration.name) ?? 0) + 1);
   }
   for (const declaration of declarations) {
+    signal?.throwIfAborted();
     if (!exportableDeclarationKinds.has(declaration.kind)) continue;
     const reasons = [];
     let shape = null;

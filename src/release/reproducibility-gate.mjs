@@ -426,8 +426,21 @@ export const runReproducibilityGate = async ({
   analyze = analyzeLeanProject,
   sourcePreparer = prepareCleanGitSources,
   now = () => Date.now(),
+  targets = [],
+  cache = { policy: "use", directory: null },
+  signal = undefined,
+  onProgress = undefined,
 } = {}) => {
   const project = resolve(projectRoot ?? process.cwd());
+  if (cache.directory !== null) {
+    fail("reproducibility-cache-directory-unsupported", "The reproducibility gate cannot share an explicit cache directory", {
+      hint: "Remove --cache-directory. The gate creates independent writable state for both builds.",
+    });
+  }
+  const selectedRunner = signal === undefined
+    ? runner
+    : Object.freeze({ capture: request => runner.capture({ ...request, signal }) });
+  signal?.throwIfAborted();
   const output = await assertOutputAbsent({
     projectRoot: project,
     outputRoot: outputRoot ?? join(project, "build", "reproducibility-gate"),
@@ -441,11 +454,16 @@ export const runReproducibilityGate = async ({
   let leftRoot = null;
   let state = null;
   try {
-    const prepared = await sourcePreparer({ projectRoot: project, scratchRoot: scratch, runner });
+    onProgress?.({ phase: "source", state: "started", message: "Preparing two independent clean source trees" });
+    const prepared = await sourcePreparer({ projectRoot: project, scratchRoot: scratch, runner: selectedRunner });
+    signal?.throwIfAborted();
+    onProgress?.({ phase: "source", state: "completed", message: "Independent source trees are clean and revision-locked" });
     source = prepared.source;
     report.source = source;
     state = new ReleaseCandidateState({ sourceIdentitySha256: sha256(canonicalJson(source)) });
-    const analysis = await analyze(prepared.roots[0]);
+    onProgress?.({ phase: "analysis", state: "started", message: "Analyzing the release binding contract" });
+    const analysis = await analyze(prepared.roots[0], { signal, targets });
+    signal?.throwIfAborted();
     const requiredHints = analysis.adapterHints.filter(item => item.required);
     if (analysis.bindingIr === null || requiredHints.length > 0) {
       fail("release-analysis-incomplete", "Release analysis did not produce a complete binding contract", {
@@ -455,10 +473,13 @@ export const runReproducibilityGate = async ({
     state.transition({ state: "analyze", evidenceSha256: sha256(canonicalJson(analysis)) });
     state.transition({ state: "generate", evidenceSha256: analysis.bindingIr.semanticSha256 });
     report.state = state.snapshot();
+    onProgress?.({ phase: "analysis", state: "completed", message: "Release binding contract is complete" });
     const built = [];
     for (const [index, name] of ["A", "B"].entries()) {
       const buildRoot = join(scratch, `build-${name.toLowerCase()}`);
       const started = now();
+      const buildPhase = `build-${name.toLowerCase()}`;
+      onProgress?.({ phase: buildPhase, state: "started", message: `Starting isolated build ${name}`, current: index, total: 2 });
       const result = await build({
         projectRoot: prepared.roots[index],
         outputRoot: buildRoot,
@@ -466,11 +487,17 @@ export const runReproducibilityGate = async ({
           ...environment,
           LEAN_BRIDGE_NIX_STORE: join(scratch, `nix-store-${name.toLowerCase()}`),
         },
+        targets,
+        cache,
+        signal,
+        onProgress: event => onProgress?.({ ...event, phase: `${buildPhase}/${event.phase}` }),
       });
+      signal?.throwIfAborted();
       const candidate = await readCandidate(buildRoot);
       built.push({ name, buildRoot, result, candidate, durationMs: Math.max(0, now() - started) });
       state.transition({ state: `build-${name.toLowerCase()}`, evidenceSha256: candidate.manifestSha256 });
       report.state = state.snapshot();
+      onProgress?.({ phase: buildPhase, state: "completed", message: `Isolated build ${name} completed`, current: index + 1, total: 2 });
     }
     const [left, right] = built;
     leftRoot = left.buildRoot;
@@ -496,6 +523,7 @@ export const runReproducibilityGate = async ({
     ) {
       fail("flake-lock-drift", "A build did not retain the committed flake lock bytes");
     }
+    onProgress?.({ phase: "compare", state: "started", message: "Comparing every release byte and file mode" });
     const comparison = compareReleaseInventories(left.candidate.inventory, right.candidate.inventory);
     report.artifacts = inventoryRecords(left.candidate.inventory, { candidate: left.candidate });
     report.differences = comparison.differences;
@@ -516,13 +544,18 @@ export const runReproducibilityGate = async ({
         hint: `Inspect ${portable(join(output, "evidence", "reproducibility.json"))} for hashes and bounded diffs.`,
       });
     }
+    onProgress?.({ phase: "compare", state: "completed", message: "Release inventories are byte-identical" });
+    signal?.throwIfAborted();
     state.transition({ state: "authorize", evidenceSha256: report.candidate.id, candidateId: report.candidate.id });
     report.state = state.snapshot();
     report.result = "passed";
     report.failure = null;
+    onProgress?.({ phase: "authorize", state: "started", message: "Writing authorization for the exact release candidate" });
     const evidence = await writeEvidence({ staging, report, candidateRoot: leftRoot });
     await verifyReleaseAuthorization({ authorizationRoot: staging, candidateRoot: join(staging, "release") });
+    signal?.throwIfAborted();
     await rename(staging, output);
+    onProgress?.({ phase: "authorize", state: "completed", message: "Release authorization written and independently verified" });
     return Object.freeze({
       output,
       result: report.result,

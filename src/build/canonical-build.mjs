@@ -42,17 +42,38 @@ const exactKeys = (value, keys, label) => {
   }
 };
 
-const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000 }) => new Promise((accept, reject) => {
+const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000, signal = undefined }) => new Promise((accept, reject) => {
+  if (signal?.aborted) {
+    reject(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? "Build cancelled before process start"));
+    return;
+  }
   const child = spawn(command, args, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
   const stdout = [];
   const stderr = [];
   let bytes = 0;
+  let settled = false;
   const maximum = 32 * 1024 * 1024;
+  const cleanup = () => {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", abort);
+  };
+  const rejectOnce = error => {
+    if (settled) return;
+    settled = true;
+    cleanup();
+    reject(error);
+  };
+  const acceptOnce = value => {
+    if (settled) return;
+    settled = true;
+    cleanup();
+    accept(value);
+  };
   const collect = target => chunk => {
     bytes += chunk.length;
     if (bytes > maximum) {
       child.kill("SIGKILL");
-      reject(new CanonicalBuildError("build-output-limit", `${command} exceeded the 32 MiB diagnostic limit`));
+      rejectOnce(new CanonicalBuildError("build-output-limit", `${command} exceeded the 32 MiB diagnostic limit`));
       return;
     }
     target.push(chunk);
@@ -61,21 +82,25 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
   child.stderr.on("data", collect(stderr));
   const timer = setTimeout(() => {
     child.kill("SIGKILL");
-    reject(new CanonicalBuildError("build-timeout", `${command} exceeded its execution deadline`));
+    rejectOnce(new CanonicalBuildError("build-timeout", `${command} exceeded its execution deadline`));
   }, timeoutMs);
+  const abort = () => {
+    child.kill("SIGTERM");
+    rejectOnce(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? `Build cancelled while running ${command}`));
+  };
+  signal?.addEventListener("abort", abort, { once: true });
+  if (signal?.aborted) abort();
   child.once("error", error => {
-    clearTimeout(timer);
-    reject(error);
+    rejectOnce(error);
   });
   child.once("close", code => {
-    clearTimeout(timer);
     const result = {
       code,
       stdout: Buffer.concat(stdout).toString("utf8"),
       stderr: Buffer.concat(stderr).toString("utf8"),
     };
-    if (code === 0) accept(result);
-    else reject(new CanonicalBuildError("build-command-failed", `${command} exited with status ${code}`, {
+    if (code === 0) acceptOnce(result);
+    else rejectOnce(new CanonicalBuildError("build-command-failed", `${command} exited with status ${code}`, {
       details: { command, args, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) },
     }));
   });
@@ -196,6 +221,7 @@ const runNativeNix = async ({ root, staging, selection, runner, environment }) =
   }
   const common = [
     "--extra-experimental-features", "nix-command flakes",
+    ...(environment.LEAN_BRIDGE_NIX_REFRESH === "1" ? ["--refresh"] : []),
     ...(storeRoot === null ? [] : ["--store", `local?root=${storeRoot}`]),
   ];
   await runner.capture({
@@ -236,7 +262,12 @@ const runNativeNix = async ({ root, staging, selection, runner, environment }) =
   }));
 };
 
-const runDockerNix = async ({ root, staging, selection, builder, runner, environment }) => {
+const runDockerNix = async ({ root, staging, selection, builder, runner, environment, cache }) => {
+  if (cache.directory !== null) {
+    fail("cache-directory-unsupported", "An explicit cache directory requires the native Nix backend", {
+      hint: "Select native Nix or omit --cache-directory when Docker is active.",
+    });
+  }
   const imageOverride = environment.LEAN_BRIDGE_BUILDER_IMAGE ?? null;
   let image = builder.manifest.image.localTag;
   if (imageOverride !== null) {
@@ -245,7 +276,7 @@ const runDockerNix = async ({ root, staging, selection, builder, runner, environ
     }
     image = imageOverride;
   } else image = (await buildPinnedBuilderImage({
-    projectRoot: root, dockerCommand: selection.command, runner, builder,
+    projectRoot: root, dockerCommand: selection.command, runner, builder, cachePolicy: cache.policy,
   })).image;
   if (root.includes(",") || staging.includes(",")) fail("unsupported-docker-mount-path", "Docker build paths cannot contain commas");
   await runner.capture({
@@ -268,6 +299,7 @@ export const buildPinnedBuilderImage = async ({
   dockerCommand = "docker",
   runner = processBuildRunner,
   builder = null,
+  cachePolicy = "use",
 } = {}) => {
   const root = resolve(projectRoot ?? process.cwd());
   const resolvedBuilder = builder ?? await readBuilderManifest(root);
@@ -275,7 +307,7 @@ export const buildPinnedBuilderImage = async ({
   await runner.capture({
     command: dockerCommand,
     args: [
-      "build", "--pull",
+      "build", "--pull", ...(cachePolicy === "use" ? [] : ["--no-cache"]),
       "--build-arg", `SOURCE_DATE_EPOCH=${resolvedBuilder.manifest.sourceDateEpoch}`,
       "--tag", image,
       resolvedBuilder.directory,
@@ -313,14 +345,62 @@ const validateBuildOutput = async staging => {
   return { manifest, manifestSha256, index, report };
 };
 
+const selectPublicationTargets = (index, requested) => {
+  const selected = requested.length === 0
+    ? index.packages.filter(item => item.status === "ready")
+    : index.packages.filter(item => requested.includes(item.ecosystem) || requested.includes(item.target));
+  for (const target of requested) {
+    if (!index.packages.some(item => item.ecosystem === target || item.target === target)) {
+      fail("unknown-package-target", `The canonical package manifest does not define target ${target}`, {
+        hint: `Choose one of: ${index.packages.map(item => item.ecosystem).sort().join(", ")}.`,
+      });
+    }
+  }
+  const ineligible = selected.filter(item => item.status !== "ready");
+  if (ineligible.length > 0) {
+    fail("package-target-ineligible", `Requested package target ${ineligible[0].ecosystem} is not eligible`, {
+      hint: ineligible[0].reason,
+      details: { targets: ineligible.map(item => ({ ecosystem: item.ecosystem, target: item.target, reason: item.reason })) },
+    });
+  }
+  return Object.freeze(selected
+    .map(item => Object.freeze({ ecosystem: item.ecosystem, target: item.target, name: item.name, version: item.version }))
+    .sort((left, right) => left.ecosystem.localeCompare(right.ecosystem)));
+};
+
 export const buildCanonicalProject = async ({
   projectRoot,
   outputRoot = null,
   environment = process.env,
   runner = processBuildRunner,
+  targets = [],
+  cache = { policy: "use", directory: null },
+  signal = undefined,
+  onProgress = undefined,
 } = {}) => {
   const root = resolve(projectRoot ?? process.cwd());
-  const selection = await detectBuildBackend({ environment, runner });
+  if (!Array.isArray(targets) || targets.some(target => typeof target !== "string" || target === "")) {
+    fail("invalid-package-targets", "Build targets must be an array of non-empty names");
+  }
+  if (new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
+  if (cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy)) {
+    fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
+  }
+  const normalizedCache = Object.freeze({ policy: cache.policy, directory: cache.directory ?? null });
+  if (normalizedCache.directory !== null && typeof normalizedCache.directory !== "string") {
+    fail("invalid-cache-directory", "Build cache directory must be a path or null");
+  }
+  if (normalizedCache.policy === "off" && normalizedCache.directory !== null) {
+    fail("invalid-cache-policy", "Build cache directory must be null when caching is off");
+  }
+  const selectedRunner = signal === undefined
+    ? runner
+    : Object.freeze({ capture: request => runner.capture({ ...request, signal }) });
+  signal?.throwIfAborted();
+  onProgress?.({ phase: "backend", state: "started", message: "Selecting Docker or native Nix" });
+  const selection = await detectBuildBackend({ environment, runner: selectedRunner });
+  onProgress?.({ phase: "backend", state: "completed", message: `Selected ${selection.backend}` });
+  signal?.throwIfAborted();
   const builder = await readBuilderManifest(root);
   const output = await assertOutputIsAbsent({
     projectRoot: root,
@@ -328,13 +408,28 @@ export const buildCanonicalProject = async ({
   });
   await mkdir(dirname(output), { recursive: true });
   const staging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
+  const isolatedStore = selection.backend === "nix" && normalizedCache.policy === "off" ? `${staging}-nix-store` : null;
   try {
+    const effectiveEnvironment = {
+      ...environment,
+      ...(isolatedStore !== null
+        ? { LEAN_BRIDGE_NIX_STORE: isolatedStore }
+        : normalizedCache.directory === null ? {} : { LEAN_BRIDGE_NIX_STORE: normalizedCache.directory }),
+      ...(normalizedCache.policy === "refresh" ? { LEAN_BRIDGE_NIX_REFRESH: "1" } : {}),
+    };
+    onProgress?.({ phase: "compile", state: "started", message: "Building the canonical flake outputs" });
     if (selection.backend === "docker") {
-      await runDockerNix({ root, staging, selection, builder, runner, environment });
+      await runDockerNix({ root, staging, selection, builder, runner: selectedRunner, environment: effectiveEnvironment, cache: normalizedCache });
     } else {
-      await runNativeNix({ root, staging, selection, runner, environment });
+      await runNativeNix({ root, staging, selection, runner: selectedRunner, environment: effectiveEnvironment });
     }
+    signal?.throwIfAborted();
+    onProgress?.({ phase: "compile", state: "completed", message: "Canonical flake outputs built" });
+    onProgress?.({ phase: "validate", state: "started", message: "Validating package identities and selected targets" });
     const checked = await validateBuildOutput(staging);
+    const selectedTargets = selectPublicationTargets(checked.index, targets);
+    signal?.throwIfAborted();
+    onProgress?.({ phase: "validate", state: "completed", message: "Package identities and selected targets validated" });
     await rename(staging, output);
     return Object.freeze({
       schemaVersion: 1,
@@ -351,7 +446,9 @@ export const buildCanonicalProject = async ({
         path: "packages",
         ready: checked.index.publication.ready,
         omitted: checked.index.publication.omitted,
+        selected: selectedTargets,
       },
+      cache: normalizedCache,
       builderDefinitionSha256: builder.manifest.definitionSha256,
       sourceReadOnly: true,
       componentBinariesRebuiltByProjection: false,
@@ -359,6 +456,8 @@ export const buildCanonicalProject = async ({
   } catch (error) {
     await rm(staging, { recursive: true, force: true });
     throw error;
+  } finally {
+    if (isolatedStore !== null) await rm(isolatedStore, { recursive: true, force: true });
   }
 };
 

@@ -9,19 +9,91 @@
     "command",
     "mode",
     "status",
+    "exitCode",
     "project",
     "interactive",
+    "configuration",
+    "selection",
+    "cache",
+    "progress",
     "result",
     "diagnostics",
+    "prompts",
     "nextActions"
   ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "command": { "enum": ["analyze", "build", "publish"] },
-    "mode": { "enum": ["execute", "dry-run"] },
-    "status": { "enum": ["ok", "blocked", "needs-input", "failed"] },
+    "schemaVersion": { "const": 2 },
+    "command": {
+      "oneOf": [
+        { "enum": ["analyze", "build", "publish"] },
+        { "type": "null" }
+      ]
+    },
+    "mode": {
+      "oneOf": [
+        { "enum": ["execute", "dry-run"] },
+        { "type": "null" }
+      ]
+    },
+    "status": { "enum": ["ok", "blocked", "needs-input", "failed", "cancelled"] },
+    "exitCode": { "enum": [0, 1, 2, 64, 130] },
     "project": { "type": "string", "minLength": 1 },
     "interactive": { "type": "boolean" },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sources"],
+      "properties": {
+        "path": { "type": ["string", "null"] },
+        "sources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["project", "format", "targets", "cachePolicy", "cacheDirectory", "progress"],
+          "properties": {
+            "project": { "$ref": "#/$defs/configurationSource" },
+            "format": { "$ref": "#/$defs/configurationSource" },
+            "targets": { "$ref": "#/$defs/configurationSource" },
+            "cachePolicy": { "$ref": "#/$defs/configurationSource" },
+            "cacheDirectory": { "$ref": "#/$defs/configurationSource" },
+            "progress": { "$ref": "#/$defs/configurationSource" }
+          }
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allTargets", "targets"],
+      "properties": {
+        "allTargets": { "type": "boolean" },
+        "targets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" }
+        }
+      }
+    },
+    "cache": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "directory"],
+      "properties": {
+        "policy": { "enum": ["use", "refresh", "off"] },
+        "directory": { "type": ["string", "null"] }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "events"],
+      "properties": {
+        "mode": { "enum": ["none", "plain", "json"] },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/progressEvent" }
+        }
+      }
+    },
     "result": {
       "oneOf": [
         { "type": "object" },
@@ -30,22 +102,63 @@
     },
     "diagnostics": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["code", "severity", "message", "path", "hint"],
-        "properties": {
-          "code": { "type": "string", "minLength": 1 },
-          "severity": { "enum": ["info", "warning", "error"] },
-          "message": { "type": "string", "minLength": 1 },
-          "path": { "type": ["string", "null"] },
-          "hint": { "type": ["string", "null"] }
-        }
-      }
+      "items": { "$ref": "#/$defs/diagnostic" }
+    },
+    "prompts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/prompt" }
     },
     "nextActions": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "configurationSource": { "enum": ["cli", "environment", "config", "default"] },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "message", "path", "hint"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string", "minLength": 1 },
+        "path": { "type": ["string", "null"] },
+        "hint": { "type": ["string", "null"] }
+      }
+    },
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "message", "choices", "required", "declaration"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "choices": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "required": { "type": "boolean" },
+        "declaration": { "type": ["string", "null"] }
+      }
+    },
+    "progressEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "type", "sequence", "command", "phase", "state", "message", "current", "total"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "type": { "const": "progress" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "command": { "enum": ["analyze", "build", "publish"] },
+        "phase": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["started", "completed", "blocked", "failed", "cancelled", "info"] },
+        "message": { "type": "string", "minLength": 1 },
+        "current": { "type": ["integer", "null"], "minimum": 0 },
+        "total": { "type": ["integer", "null"], "minimum": 0 }
+      }
     }
   }
 }

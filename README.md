@@ -68,11 +68,22 @@ The publishing workflow is designed around three commands:
 
 ```sh
 lean-bridge analyze
-lean-bridge build
+lean-bridge build --target npm
 lean-bridge publish --dry-run --output build/reproducibility-gate
 ```
 
 `analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output. `publish` rebuilds in an independent clean environment and blocks on any artifact difference before sending packages to configured registries.
+
+The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
+
+```sh
+lean-bridge analyze --json
+lean-bridge build --target npm --cache refresh --progress json --json
+```
+
+Every result records the resolved project, selected targets, cache policy, configuration source, structured adapter questions, ordered progress events, diagnostics, next actions, and exit code. Repeating `--target` selects several package projections. Omit it to validate every applicable target. A first interrupt cancels the active analyzer or spawned build process and returns exit code 130. A second interrupt terminates immediately.
+
+Command flags override `LEAN_BRIDGE_*` environment values, which override `lean-bridge.cli.json`, which overrides defaults. Configuration cannot enable interactive prompting. The developer must pass `--interactive` for a command to ask questions. [The CLI contract evidence](docs/evidence/zero-config-cli-contract.md) lists the fields, precedence rules, progress formats, cache behavior, and exit codes.
 
 Lean declarations remain the source of truth. Contributors do not maintain separate TypeScript declarations, PHP or Python stubs, C headers, Rust signatures, package docs, and validation schemas by hand.
 
@@ -459,7 +470,7 @@ The architecture-testing POC has established:
 - one compiler-free C package projection that emits deterministic archives with pkg-config and CMake discovery for eligible targets, while C and C++ publication remain blocked by explicit native artifact and binding capability gaps;
 - one no-publish release rehearsal that invokes every eligible backend, records explicit omissions, and emits a canonical publication index plus an in-toto statement tied to one bundle identity;
 - one clean-install gate that runs npm and C consumers through ordinary APIs, accounts for every installed package file, compares their public `Box` behavior, and executes packaging with child processes disabled;
-- one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, JSON agent output, and an operational no-publish dry run;
+- one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, closed JSON agent results, structured prompts and progress, target and cache selection, configuration provenance, cancellation, and an operational no-publish dry run;
 - one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, and blocks ambiguous ownership or effect boundaries;
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;
@@ -473,7 +484,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 358 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
+- 373 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 

@@ -9,6 +9,7 @@ import {
   buildCanonicalProject,
   CanonicalBuildError,
   detectBuildBackend,
+  processBuildRunner,
   readBuilderManifest,
 } from "../src/build/canonical-build.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
@@ -81,7 +82,9 @@ test("the reviewed Debian builder contains Nix, not a second compiler policy", a
 test("Docker orchestration returns one validated bundle and package projection closure", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-build-docker-"));
   const output = join(scratch, "result");
+  const ineligibleOutput = join(scratch, "ineligible");
   const calls = [];
+  const progress = [];
   const runner = {
     capture: async request => {
       calls.push({ command: request.command, args: [...request.args] });
@@ -125,22 +128,53 @@ test("Docker orchestration returns one validated bundle and package projection c
   try {
     const result = await buildCanonicalProject({
       projectRoot: process.cwd(), outputRoot: output, runner, environment: {},
+      targets: ["npm"],
+      cache: { policy: "refresh", directory: null },
+      onProgress: event => progress.push(event),
     });
     assert.equal(result.backend, "docker");
     assert.equal(result.bundle.component, "poc/lean-alpha@0.0.0");
     assert.equal(result.packages.ready, 1);
     assert.equal(result.packages.omitted, 4);
+    assert.deepEqual(result.packages.selected.map(item => item.ecosystem), ["npm"]);
+    assert.deepEqual(result.cache, { policy: "refresh", directory: null });
     assert.equal(result.sourceReadOnly, true);
     assert.equal(result.componentBinariesRebuiltByProjection, false);
     assert.ok(calls.some(call => call.args.includes("--pull")));
+    assert.ok(calls.some(call => call.args.includes("--no-cache")));
+    assert.deepEqual(progress.map(item => `${item.phase}:${item.state}`), [
+      "backend:started", "backend:completed", "compile:started", "compile:completed", "validate:started", "validate:completed",
+    ]);
     const run = calls.find(call => call.args[0] === "run");
     assert.ok(run.args.some(item => item.endsWith("target=/workspace/source,readonly")));
     assert.deepEqual(JSON.parse(await readFile(join(output, "build-report.json"), "utf8")).flakeOutputs, [
       "universal-release-bundle", "release-rehearsal",
     ]);
+    await assert.rejects(
+      buildCanonicalProject({
+        projectRoot: process.cwd(), outputRoot: ineligibleOutput, runner, environment: {}, targets: ["pypi"],
+      }),
+      error => error instanceof CanonicalBuildError && error.code === "package-target-ineligible" && /native component library/.test(error.hint),
+    );
+    await assert.rejects(access(ineligibleOutput, constants.F_OK), error => error.code === "ENOENT");
   } finally {
     await rm(scratch, { recursive: true, force: true });
   }
+});
+
+test("the process runner terminates a spawned build when cancellation is requested", async () => {
+  const cancellation = new AbortController();
+  const running = processBuildRunner.capture({
+    command: process.execPath,
+    args: ["-e", "setInterval(() => {}, 1000)"],
+    cwd: process.cwd(),
+    signal: cancellation.signal,
+  });
+  setTimeout(() => cancellation.abort(new Error("cancelled by test")), 25);
+  await assert.rejects(
+    running,
+    error => error instanceof CanonicalBuildError && error.code === "build-cancelled" && /cancelled by test/.test(error.message),
+  );
 });
 
 test("native Nix accepts only a private store beside generated build staging", async () => {
