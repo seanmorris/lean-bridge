@@ -28,6 +28,10 @@ const BACKENDS = Object.freeze([
   Object.freeze({ id: "rust", generate: generateRustBindingPackage }),
 ]);
 
+export const generateBindingPackages = ir => Object.freeze(Object.fromEntries(
+  BACKENDS.map(backend => [backend.id, Object.freeze({ ...backend.generate(ir) })]),
+));
+
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
 
 const packageManifest = (backend, files) => {

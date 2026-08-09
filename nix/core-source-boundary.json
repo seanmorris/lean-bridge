@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "includedDirectoryPrefixes": [
+    "patches",
+    "poc/lean-link-spike/capsules"
+  ],
+  "includedFiles": [
+    "poc/lean-link-spike/Alpha.lean",
+    "poc/lean-link-spike/Beta.lean",
+    "poc/lean-link-spike/Gamma.lean",
+    "poc/lean-link-spike/alpha_shim.c",
+    "poc/lean-link-spike/beta_shim.c",
+    "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+    "poc/lean-link-spike/gamma_shim.c",
+    "poc/lean-link-spike/graph-lock.json",
+    "poc/lean-link-spike/main.c",
+    "poc/lean-link-spike/runtime_lifecycle.cpp",
+    "scripts/binding-ir.mjs",
+    "scripts/build-lean-link-spike.sh",
+    "scripts/build-lean-runtime.sh",
+    "scripts/env.sh",
+    "scripts/generate-value-frame.mjs",
+    "scripts/lean-runtime-config.sh",
+    "scripts/resolve-lean-graph.mjs",
+    "scripts/verify-lean-artifacts.mjs",
+    "src/abi/value-frame.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs"
+  ]
+}

@@ -49,6 +49,30 @@
       packages = forAllSystems (pkgs:
         let
           wasmToolchain = import ./nix/wasm-toolchain.nix { inherit pkgs; };
+          coreSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/core-source-boundary.json);
+          sourceRoot = toString self;
+          relativeSourcePath = path:
+            let absolute = toString path;
+            in if absolute == sourceRoot then "" else pkgs.lib.removePrefix "${sourceRoot}/" absolute;
+          isWithin = directory: path: path == directory || pkgs.lib.hasPrefix "${directory}/" path;
+          coreSource = builtins.path {
+            name = "lean-wasm-core-source";
+            path = self;
+            filter = path: type:
+              let
+                relative = relativeSourcePath path;
+                includedDirectory = pkgs.lib.any (directory: isWithin directory relative)
+                  coreSourceBoundary.includedDirectoryPrefixes;
+                parentDirectory = relative == "" || pkgs.lib.any
+                  (directory: pkgs.lib.hasPrefix "${relative}/" directory)
+                  coreSourceBoundary.includedDirectoryPrefixes;
+                parentFile = relative == "" || pkgs.lib.any
+                  (file: pkgs.lib.hasPrefix "${relative}/" file)
+                  coreSourceBoundary.includedFiles;
+              in if type == "directory"
+                then includedDirectory || parentDirectory || parentFile
+                else includedDirectory || builtins.elem relative coreSourceBoundary.includedFiles;
+          };
           portablePackages = rec {
             capsule-graph = pkgs.stdenvNoCC.mkDerivation {
               pname = "lean-wasm-capsule-graph-poc";
@@ -153,6 +177,74 @@
             '';
           };
 
+          universal-core-artifacts = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-universal-core-artifacts";
+            version = "0.0.0";
+            src = coreSource;
+            nativeBuildInputs = with pkgs; [
+              bash
+              cmake
+              file
+              gawk
+              git
+              gnugrep
+              gnumake
+              gnused
+              jq
+              nodejs_22
+              openssl
+              patch
+              python3
+              libuv
+              llvm
+              wabt
+              wasm-tools
+            ];
+
+            dontConfigure = true;
+            buildPhase = ''
+              runHook preBuild
+              export LEAN_WASM_HOST_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_WASM_LEAN_SOURCE='${wasmToolchain.leanSource}'
+              export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
+              export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
+              export EM_CACHE="$TMPDIR/emscripten-cache"
+              cp -a '${wasmToolchain.emscriptenUpstream}/emscripten/cache' "$EM_CACHE"
+              chmod -R u+w "$EM_CACHE"
+              bash scripts/build-lean-link-spike.sh
+              runHook postBuild
+            '';
+
+            installPhase = ''
+              runHook preInstall
+              mkdir -p "$out/audit"
+              cp -a build/lean-link-spike/lazy "$out/lazy"
+              cp build/lean-link-spike/audit/artifact-manifest.json "$out/audit/"
+              runHook postInstall
+            '';
+          };
+
+          universal-release-bundle = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-universal-release-bundle";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+
+            installPhase = ''
+              runHook preInstall
+              revision='${builtins.substring 0 40 (self.rev or (self.dirtyRev or "0000000000000000000000000000000000000000"))}'
+              node scripts/build-universal-release-bundle.mjs \
+                --core '${universal-core-artifacts}' \
+                --output "$out" \
+                --revision "$revision" \
+                --source-date-epoch '${toString (self.lastModified or 1786261809)}' \
+                --builder 'nix-flake-v1'
+              runHook postInstall
+            '';
+          };
+
           php-native-package = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-php-native";
             version = "0.0.0";
@@ -197,6 +289,8 @@
         }
         // nixpkgs.lib.optionalAttrs (pkgs.system == "x86_64-linux") {
           wasm-poc = self.packages.${pkgs.system}.wasm-poc;
+          universal-core-artifacts = self.packages.${pkgs.system}.universal-core-artifacts;
+          universal-release-bundle = self.packages.${pkgs.system}.universal-release-bundle;
           php-native-package = self.packages.${pkgs.system}.php-native-package;
         });
     };
