@@ -55,14 +55,22 @@ jobs:
 
           result_args=()
           if [[ $code -eq 0 ]]; then
+            set +e
             node scripts/performance-ci.mjs manifest \
               --snapshot build/performance-ci/build-start.json \
               --output build/performance-ci/input/manifest.json
-            tar -cf build/performance-ci/build-graph.tar \
-              build/performance-wasm \
-              build/performance-scale \
-              build/lean-link-spike
-            result_args+=(--result build-manifest=build/performance-ci/input/manifest.json)
+            code=$?
+            if [[ $code -eq 0 ]]; then
+              tar -cf build/performance-ci/build-graph.tar \
+                build/performance-wasm \
+                build/performance-scale \
+                build/lean-link-spike
+              code=$?
+            fi
+            set -e
+            if [[ $code -eq 0 ]]; then
+              result_args+=(--result build-manifest=build/performance-ci/input/manifest.json)
+            fi
           fi
 
           node scripts/performance-ci.mjs job \

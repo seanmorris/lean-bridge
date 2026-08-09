@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -261,6 +261,10 @@ test("workflow runs the complete suite on pushes and publishes one job summary",
   assert.match(workflow, /performance-ci-build-graph-/);
   assert.match(workflow, /performance-evidence-\$\{\{ github\.sha \}\}-\$\{\{ github\.run_attempt \}\}/);
   assert.doesNotMatch(workflow, /\bccall\b|\bcwrap\b|module\._[A-Za-z]/);
+  await access("poc/lean-link-spike/bindings");
+  const collector = await readFile("scripts/performance-ci.mjs", "utf8");
+  assert.match(collector, /"poc\/lean-link-spike\/bindings"/);
+  assert.doesNotMatch(collector, /bindings\/generated/);
 });
 
 test("bootstrap pins the Wasm audit tools absent from clean GitHub runners", async () => {

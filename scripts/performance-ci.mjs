@@ -107,8 +107,7 @@ const collectArtifacts = async () => {
     "build/performance-scale",
     "build/lean-link-spike",
     "poc/lean-link-spike/graph-lock.json",
-    "poc/lean-link-spike/bindings/alpha.binding-ir.json",
-    "poc/lean-link-spike/bindings/generated",
+    "poc/lean-link-spike/bindings",
   ];
   const output = [];
   for (const path of roots) await walk(join(root, path), output);
