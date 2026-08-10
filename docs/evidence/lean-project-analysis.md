@@ -14,6 +14,7 @@ theorem cap_le_limit (limit value : Nat) : cap limit value ≤ limit := by
 
 ```sh
 lean-bridge analyze --format json
+lean-bridge analyze --check --output build/analysis
 ```
 
 The report inventories relevant Lean and build inputs by SHA-256, records imports and lockfiles, lists declarations, explains every export decision, and includes the proposed Binding IR plus its semantic hash. Paths remain relative to the project, so two copies of the same source produce the same report content.
@@ -21,6 +22,24 @@ The report inventories relevant Lean and build inputs by SHA-256, records import
 When Lake interface metadata exists under `.lake/build/lib/lean`, the analyzer reads each `*.ilean` file, records its module, direct imports, declarations, and hash, then correlates compiled declaration names with source candidates. The report does not treat interface presence as proof that the metadata matches the current source. The independent build gate must reject stale metadata.
 
 The analyzer treats one existing `*.binding-ir.json` file as an explicit component boundary. It validates that document and suppresses questions about unrelated declarations. Multiple Binding IR documents require a component selection.
+
+## Explicit output
+
+Analysis performs no writes by default. `--output <directory>` authorizes one new directory and produces canonical JSON:
+
+| File | Condition | Contents |
+|---|---|---|
+| `project-analysis.json` | always | Complete input hashes, candidate decisions, diagnostics, adapter hints, and nested Binding IR when available |
+| `binding-ir.json` | Binding IR available | Direct generator input with rich primitive types, ownership, documentation, and assurance metadata |
+| `policy-report.json` | `--check` or `--policy` | Policy identity, analysis identity, measured values, and ordered violations |
+
+The writer uses a sibling staging directory and one final rename. It refuses an existing destination and removes staging state after failure or cancellation. A blocked analysis can therefore preserve its evidence without overwriting source or pretending that a usable Binding IR exists.
+
+## Check mode
+
+The built-in policy requires a Binding IR, one or more proposed exports, zero required adapter hints, and zero error diagnostics. A versioned policy file may add warning, documentation, compiled-interface, Binding IR origin, and package-version requirements. Policy violations use exit code 1. Missing adapter decisions and unavailable Binding IR retain exit code 2 because a human or adapter author must resolve them. Invalid policy files are invocation errors with exit code 64.
+
+Each policy has a canonical SHA-256 identity. [`schema/analysis-policy.schema.json`](../../schema/analysis-policy.schema.json) closes the input. [`schema/analysis-policy-report.schema.json`](../../schema/analysis-policy-report.schema.json) closes the result. The report hashes the complete analysis document, which prevents a policy result from being attached to another source inventory.
 
 ## Conservative type inference
 
@@ -66,7 +85,11 @@ The build pipeline must elaborate the project, validate generated ABI code, and 
 - namespace preservation and compiled interface correlation;
 - explicit blockers for foreign declarations, IO, and unknown identity-bearing types;
 - existing Binding IR validation and component selection; and
-- CLI success and `needs-input` exit behavior.
+- CLI success and `needs-input` exit behavior;
+- atomic deterministic output and existing-destination refusal;
+- conditional Binding IR and policy report files;
+- built-in and custom policy thresholds with stable exit codes; and
+- cancellation without output or staging residue.
 
 [`schema/project-analysis.schema.json`](../../schema/project-analysis.schema.json) closes the version 1 report, candidate, hint, diagnostic, and Binding IR reference shapes.
 

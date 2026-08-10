@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/analysis-policy.schema.json",
+  "title": "Lean Bridge analysis policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "maxWarnings": { "type": ["integer", "null"], "minimum": 0 },
+    "maxUndocumentedExports": { "type": ["integer", "null"], "minimum": 0 },
+    "minimumExports": { "type": "integer", "minimum": 1 },
+    "requireCompiledExports": { "type": "boolean" },
+    "allowStaticallyInferredIr": { "type": "boolean" },
+    "requireSemanticVersion": { "type": "boolean" }
+  }
+}

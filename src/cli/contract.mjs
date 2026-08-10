@@ -1,6 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
+import {
+  AnalysisPolicyError,
+  builtinAnalysisPolicyRecord,
+  readAnalysisPolicy,
+} from "../analyze/policy.mjs";
+
 const commands = new Set(["analyze", "build", "publish"]);
 const formats = new Set(["human", "json"]);
 const statuses = new Set(["ok", "blocked", "needs-input", "failed", "cancelled"]);
@@ -59,6 +65,7 @@ const exactKeys = (value, keys, label, code = "invalid-cli-result") => {
 
 const commonCommands = commands;
 const buildCommands = new Set(["build", "publish"]);
+const analyzeCommands = new Set(["analyze"]);
 const optionDefinitions = Object.freeze({
   "--project": Object.freeze({ name: "project", value: true, commands: commonCommands }),
   "--config": Object.freeze({ name: "config", value: true, commands: commonCommands }),
@@ -71,7 +78,9 @@ const optionDefinitions = Object.freeze({
   "--cache": Object.freeze({ name: "cachePolicy", value: true, commands: buildCommands }),
   "--no-cache": Object.freeze({ name: "noCache", value: false, commands: buildCommands }),
   "--cache-directory": Object.freeze({ name: "cacheDirectory", value: true, commands: buildCommands }),
-  "--output": Object.freeze({ name: "output", value: true, commands: buildCommands }),
+  "--output": Object.freeze({ name: "output", value: true, commands: commonCommands }),
+  "--check": Object.freeze({ name: "check", value: false, commands: analyzeCommands }),
+  "--policy": Object.freeze({ name: "policy", value: true, commands: analyzeCommands }),
   "--bundle": Object.freeze({ name: "bundle", value: true, commands: new Set(["publish"]) }),
   "--authorization": Object.freeze({ name: "authorization", value: true, commands: new Set(["publish"]) }),
   "--dry-run": Object.freeze({ name: "dryRun", value: false, commands: new Set(["publish"]) }),
@@ -93,6 +102,11 @@ Common options:
   --progress <mode>     Progress mode: auto, none, plain, or json
   --interactive         Permit prompts for unresolved adapter hints
   --help                Show command help
+
+Analyze options:
+  --output <directory>  Atomically write the analysis, Binding IR, and policy report
+  --check               Enforce the built-in analysis policy
+  --policy <path>       Enforce a closed policy file; implies --check
 
 Build and publish options:
   --cache use|refresh|off  Select cache policy
@@ -207,6 +221,8 @@ export const parseCliArguments = (argv, {
     noCache: false,
     cacheDirectory: null,
     output: null,
+    check: false,
+    policy: null,
     bundle: null,
     authorization: null,
     dryRun: false,
@@ -274,6 +290,17 @@ export const parseCliArguments = (argv, {
   if (!progressModes.has(requestedProgress)) fail("invalid-progress-mode", `unsupported progress mode ${requestedProgress}`);
   const progress = requestedProgress === "auto" ? (format === "human" && stderrIsTTY ? "plain" : "none") : requestedProgress;
 
+  const policyPath = parsed.policy === null ? null : resolve(cwd, parsed.policy);
+  let analysisPolicy = null;
+  if (command === "analyze" && (parsed.check || policyPath !== null)) {
+    try {
+      analysisPolicy = policyPath === null ? builtinAnalysisPolicyRecord() : readAnalysisPolicy(policyPath);
+    } catch (error) {
+      if (!(error instanceof AnalysisPolicyError)) throw error;
+      fail(error.code, error.message, error.details);
+    }
+  }
+
   if (parsed.help) return Object.freeze({ kind: "help", command, format });
   const sources = Object.freeze({
     project: sourceOf(parsed.project, environmentProject, config.project),
@@ -302,6 +329,10 @@ export const parseCliArguments = (argv, {
     cache: Object.freeze({
       policy: cachePolicy,
       directory: cacheDirectoryValue === null ? null : resolve(cacheDirectoryBase, cacheDirectoryValue),
+    }),
+    analysis: Object.freeze({
+      check: analysisPolicy !== null,
+      policy: analysisPolicy,
     }),
     progress,
   });

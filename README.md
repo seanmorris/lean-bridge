@@ -67,21 +67,24 @@ end Acme.Limits
 The publishing workflow is designed around three commands:
 
 ```sh
-lean-bridge analyze
+lean-bridge analyze --check --output build/analysis
 lean-bridge build --target npm
 lean-bridge publish --dry-run --output build/reproducibility-gate
 ```
 
-`analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output. `publish` rebuilds in an independent clean environment and blocks on any artifact difference before sending packages to configured registries.
+`analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. Without `--output`, it writes nothing. An explicit output directory receives deterministic `project-analysis.json` and `binding-ir.json` files. Check mode also writes `policy-report.json`. The command publishes that directory atomically and refuses to mix new evidence with an existing destination. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output. `publish` rebuilds in an independent clean environment and blocks on any artifact difference before sending packages to configured registries.
 
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
 ```sh
 lean-bridge analyze --json
+lean-bridge analyze --policy analysis-policy.json --json
 lean-bridge build --target npm --cache refresh --progress json --json
 ```
 
-Every result records the resolved project, selected targets, cache policy, configuration source, structured adapter questions, ordered progress events, diagnostics, next actions, and exit code. Repeating `--target` selects several package projections. Omit it to validate every applicable target. A first interrupt cancels the active analyzer or spawned build process and returns exit code 130. A second interrupt terminates immediately.
+The built-in analysis policy requires a usable Binding IR, at least one export, no required adapter decisions, and no error diagnostics. A closed policy file can require compiled interface evidence, a declared semantic version, an existing reviewed Binding IR, or stricter warning and documentation limits. Source-level theorem references cannot satisfy a proof threshold because the analyzer has not elaborated them yet.
+
+Every result records the resolved project, selected targets, cache policy, configuration source, structured adapter questions, ordered progress events, diagnostics, next actions, and exit code. Policy diagnostics include the canonical policy hash. Repeating `--target` selects several package projections. Omit it to validate every applicable target. A first interrupt cancels the active analyzer or spawned build process and returns exit code 130. A second interrupt terminates immediately.
 
 Command flags override `LEAN_BRIDGE_*` environment values, which override `lean-bridge.cli.json`, which overrides defaults. Configuration cannot enable interactive prompting. The developer must pass `--interactive` for a command to ask questions. [The CLI contract evidence](docs/evidence/zero-config-cli-contract.md) lists the fields, precedence rules, progress formats, cache behavior, and exit codes.
 
@@ -471,7 +474,7 @@ The architecture-testing POC has established:
 - one no-publish release rehearsal that invokes every eligible backend, records explicit omissions, and emits a canonical publication index plus an in-toto statement tied to one bundle identity;
 - one clean-install gate that runs npm and C consumers through ordinary APIs, accounts for every installed package file, compares their public `Box` behavior, and executes packaging with child processes disabled;
 - one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, closed JSON agent results, structured prompts and progress, target and cache selection, configuration provenance, cancellation, and an operational no-publish dry run;
-- one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, and blocks ambiguous ownership or effect boundaries;
+- one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, blocks ambiguous ownership or effect boundaries, writes only an explicitly requested atomic output directory, and enforces hash-identified CI policies;
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;
 - one versioned spatial performance corpus with 2D, 4D, and 8D search contracts, evidence-scoped complexity claims, frozen correctness vectors, retained index identity, cross-component borrowing, and disposal semantics;

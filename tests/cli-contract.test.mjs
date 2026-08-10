@@ -44,6 +44,7 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     },
     selection: { allTargets: true, targets: [] },
     cache: { policy: "use", directory: null },
+    analysis: { check: false, policy: null },
     progress: "none",
   });
   assert.deepEqual(parseCliArguments([
@@ -72,10 +73,15 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     },
     selection: { allTargets: false, targets: ["cargo", "npm"] },
     cache: { policy: "refresh", directory: "/workspace/cache" },
+    analysis: { check: false, policy: null },
     progress: "json",
   });
   assert.throws(
     () => parseCliArguments(["analyze", "--dry-run"]),
+    error => error instanceof CliContractError && error.code === "unknown-option",
+  );
+  assert.throws(
+    () => parseCliArguments(["build", "--check"]),
     error => error instanceof CliContractError && error.code === "unknown-option",
   );
   assert.throws(
@@ -86,6 +92,81 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     () => parseCliArguments(["analyze", "--json", "--format", "human"]),
     error => error.code === "duplicate-option",
   );
+});
+
+test("analyze output and policy options resolve to one agent-safe request", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-cli-policy-"));
+  try {
+    const policyPath = join(root, "policy.json");
+    await writeFile(policyPath, JSON.stringify({
+      schemaVersion: 1,
+      maxWarnings: 0,
+      requireCompiledExports: true,
+    }));
+    const request = parseCliArguments([
+      "analyze", "--output", "analysis", "--policy", "policy.json", "--json",
+    ], { cwd: root, environment: {}, stderrIsTTY: false });
+    assert.equal(request.output, join(root, "analysis"));
+    assert.equal(request.analysis.check, true);
+    assert.equal(request.analysis.policy.source, "file");
+    assert.equal(request.analysis.policy.path, policyPath);
+    assert.match(request.analysis.policy.sha256, /^[0-9a-f]{64}$/);
+    assert.deepEqual(request.analysis.policy.document, {
+      schemaVersion: 1,
+      maxWarnings: 0,
+      maxUndocumentedExports: null,
+      minimumExports: 1,
+      requireCompiledExports: true,
+      allowStaticallyInferredIr: true,
+      requireSemanticVersion: false,
+    });
+
+    const builtin = parseCliArguments(["analyze", "--check"], {
+      cwd: root,
+      environment: {},
+      stderrIsTTY: false,
+    });
+    assert.equal(builtin.analysis.policy.source, "builtin");
+    assert.equal(builtin.analysis.policy.path, null);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("missing and malformed analysis policies are structured usage failures", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-cli-policy-invalid-"));
+  try {
+    const absent = await runCli({
+      argv: ["analyze", "--policy", "absent.json", "--json"],
+      cwd: root,
+      environment: {},
+      handlers: cliHandlers,
+    });
+    assert.equal(absent.exitCode, cliExitCodes.usage);
+    assert.equal(absent.response.diagnostics[0].code, "analysis-policy-not-found");
+
+    await writeFile(join(root, "invalid.json"), "{");
+    const invalidJson = await runCli({
+      argv: ["analyze", "--policy", "invalid.json", "--json"],
+      cwd: root,
+      environment: {},
+      handlers: cliHandlers,
+    });
+    assert.equal(invalidJson.exitCode, cliExitCodes.usage);
+    assert.equal(invalidJson.response.diagnostics[0].code, "invalid-analysis-policy-json");
+
+    await writeFile(join(root, "open.json"), JSON.stringify({ schemaVersion: 1, unknown: true }));
+    const open = await runCli({
+      argv: ["analyze", "--policy", "open.json", "--json"],
+      cwd: root,
+      environment: {},
+      handlers: cliHandlers,
+    });
+    assert.equal(open.exitCode, cliExitCodes.usage);
+    assert.equal(open.response.diagnostics[0].code, "invalid-analysis-policy");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("CLI configuration precedence is explicit and machine-readable", async () => {

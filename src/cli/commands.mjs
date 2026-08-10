@@ -1,5 +1,9 @@
+import { relative } from "node:path";
+
 import { diagnostic, prompt } from "./contract.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { AnalysisOutputError, writeAnalysisOutput } from "../analyze/output.mjs";
+import { evaluateAnalysisPolicy } from "../analyze/policy.mjs";
 import { buildCanonicalProject, CanonicalBuildError } from "../build/canonical-build.mjs";
 import {
   ReproducibilityGateError,
@@ -18,6 +22,34 @@ const deferred = (command, node) => ({
   nextActions: [],
 });
 
+const portablePolicyPath = (project, path) => path === null
+  ? null
+  : relative(project, path).replaceAll("\\", "/") || ".";
+
+const policyDiagnostics = report => {
+  if (report === null) return [];
+  const source = report.policy.source === "builtin"
+    ? "built-in policy"
+    : `policy ${report.policy.path}`;
+  const summary = diagnostic({
+    code: report.passed ? "analysis-policy-passed" : "analysis-policy-failed",
+    severity: report.passed ? "info" : "error",
+    message: `${source} ${report.policy.sha256} ${report.passed ? "passed" : "failed"}`,
+    path: report.policy.path,
+    hint: report.passed ? null : "Resolve the listed policy violations or select a reviewed policy.",
+  });
+  return [
+    summary,
+    ...report.violations.map(item => diagnostic({
+      code: item.code,
+      severity: "error",
+      message: `${item.message}; expected ${item.expected}, actual ${item.actual}`,
+      path: report.policy.path,
+      hint: null,
+    })),
+  ];
+};
+
 export const createCliHandlers = ({
   analyze = analyzeLeanProject,
   build = buildCanonicalProject,
@@ -30,22 +62,83 @@ export const createCliHandlers = ({
     const report = await analyze(request.project, { signal, targets: request.selection.targets });
     signal?.throwIfAborted();
     const requiredHints = report.adapterHints.filter(item => item.required);
-    const status = requiredHints.length > 0
+    let policyReport = null;
+    if (request.analysis.check) {
+      emitProgress?.({ phase: "policy", state: "started", message: "Evaluating the analysis policy" });
+      policyReport = evaluateAnalysisPolicy({
+        analysis: report,
+        policyRecord: request.analysis.policy,
+        policyPath: portablePolicyPath(request.project, request.analysis.policy.path),
+      });
+      emitProgress?.({
+        phase: "policy",
+        state: policyReport.passed ? "completed" : "failed",
+        message: policyReport.passed ? "Analysis policy passed" : "Analysis policy failed",
+        current: policyReport.violations.length,
+        total: policyReport.violations.length,
+      });
+    }
+    let status = requiredHints.length > 0
       ? "needs-input"
       : report.bindingIr === null
         ? "blocked"
         : "ok";
+    if (status === "ok" && policyReport !== null && !policyReport.passed) status = "failed";
+    const diagnostics = [
+      ...report.diagnostics.map(item => diagnostic(item)),
+      ...policyDiagnostics(policyReport),
+    ];
+    if (request.output !== null) {
+      emitProgress?.({ phase: "output", state: "started", message: "Writing the requested analysis output" });
+      try {
+        const output = await writeAnalysisOutput({
+          outputRoot: request.output,
+          analysis: report,
+          policyReport,
+          signal,
+        });
+        diagnostics.push(diagnostic({
+          code: "analysis-output-written",
+          severity: "info",
+          message: `Wrote ${output.files.join(", ")}`,
+          path: output.directory,
+        }));
+        emitProgress?.({
+          phase: "output",
+          state: "completed",
+          message: "Analysis output written atomically",
+          current: output.files.length,
+          total: output.files.length,
+        });
+      } catch (error) {
+        if (!(error instanceof AnalysisOutputError)) throw error;
+        diagnostics.push(diagnostic({
+          code: error.code,
+          message: error.message,
+          path: error.details.output ?? request.output,
+          hint: "Choose a path that does not exist.",
+        }));
+        emitProgress?.({ phase: "output", state: "blocked", message: "Analysis output was not written" });
+        status = error.code === "analysis-output-exists" ? "blocked" : "failed";
+      }
+    }
+    const analyzeState = status === "ok" ? "completed" : status === "failed" ? "failed" : "blocked";
+    const analyzeMessage = status === "ok"
+      ? "Analysis produced a binding contract"
+      : status === "failed"
+        ? "Analysis did not satisfy the selected policy"
+        : "Analysis requires an explicit decision";
     emitProgress?.({
       phase: "analyze",
-      state: status === "ok" ? "completed" : "blocked",
-      message: status === "ok" ? "Analysis produced a binding contract" : "Analysis requires an explicit decision",
+      state: analyzeState,
+      message: analyzeMessage,
       current: report.exportCandidates.length,
       total: report.exportCandidates.length,
     });
     return {
       status,
       result: report,
-      diagnostics: report.diagnostics.map(item => diagnostic(item)),
+      diagnostics,
       prompts: requiredHints.map(item => prompt({
         id: item.id,
         message: item.question,

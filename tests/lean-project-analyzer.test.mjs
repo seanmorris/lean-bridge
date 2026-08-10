@@ -6,6 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
+import { writeAnalysisOutput } from "../src/analyze/output.mjs";
 import { hashBindingIr, parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
 import { cliHandlers } from "../src/cli/commands.mjs";
@@ -172,6 +173,14 @@ test("the published analysis schema closes the report and adapter questions", as
   assert.equal(schema.$defs.candidate.additionalProperties, false);
   assert.equal(schema.$defs.hint.additionalProperties, false);
   assert.equal(schema.properties.bindingIr.oneOf[1].properties.document.$ref, "binding-ir.schema.json");
+
+  const policySchema = JSON.parse(await readFile("schema/analysis-policy.schema.json", "utf8"));
+  assert.equal(policySchema.additionalProperties, false);
+  assert.equal(policySchema.properties.schemaVersion.const, 1);
+  const reportSchema = JSON.parse(await readFile("schema/analysis-policy-report.schema.json", "utf8"));
+  assert.equal(reportSchema.additionalProperties, false);
+  assert.equal(reportSchema.properties.policy.additionalProperties, false);
+  assert.equal(reportSchema.properties.metrics.additionalProperties, false);
 });
 
 test("CLI analyze returns a complete report or minimal adapter questions", async () => {
@@ -192,5 +201,173 @@ test("CLI analyze returns a complete report or minimal adapter questions", async
   } finally {
     await rm(pure, { recursive: true, force: true });
     await rm(blocked, { recursive: true, force: true });
+  }
+});
+
+test("explicit analyze output is atomic, deterministic, and leaves project inputs unchanged", async () => {
+  const root = await makePureProject();
+  const copiedRoot = await makePureProject();
+  const artifacts = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-output-"));
+  try {
+    const before = await snapshot(root);
+    const copiedBefore = await snapshot(copiedRoot);
+    const firstPath = join(artifacts, "first");
+    const secondPath = join(artifacts, "second");
+    const first = await runCli({
+      argv: ["analyze", "--project", root, "--output", firstPath, "--json"],
+      handlers: cliHandlers,
+    });
+    const second = await runCli({
+      argv: ["analyze", "--project", copiedRoot, "--output", secondPath, "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(first.exitCode, 0);
+    assert.deepEqual(await snapshot(root), before);
+    assert.deepEqual(await snapshot(copiedRoot), copiedBefore);
+    assert.deepEqual(await readdir(firstPath), ["binding-ir.json", "project-analysis.json"]);
+    assert.deepEqual(await readdir(secondPath), ["binding-ir.json", "project-analysis.json"]);
+    assert.equal(
+      await readFile(join(firstPath, "project-analysis.json"), "utf8"),
+      await readFile(join(secondPath, "project-analysis.json"), "utf8"),
+    );
+    assert.equal(
+      await readFile(join(firstPath, "binding-ir.json"), "utf8"),
+      await readFile(join(secondPath, "binding-ir.json"), "utf8"),
+    );
+    assert.deepEqual(JSON.parse(await readFile(join(firstPath, "project-analysis.json"), "utf8")), first.response.result);
+    assert.deepEqual(JSON.parse(await readFile(join(firstPath, "binding-ir.json"), "utf8")), first.response.result.bindingIr.document);
+    assert.ok(first.response.diagnostics.some(item => item.code === "analysis-output-written"));
+
+    const original = await readFile(join(firstPath, "project-analysis.json"), "utf8");
+    const existing = await runCli({
+      argv: ["analyze", "--project", root, "--output", firstPath, "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(existing.exitCode, 2);
+    assert.equal(existing.response.status, "blocked");
+    assert.ok(existing.response.diagnostics.some(item => item.code === "analysis-output-exists"));
+    assert.equal(await readFile(join(firstPath, "project-analysis.json"), "utf8"), original);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(copiedRoot, { recursive: true, force: true });
+    await rm(artifacts, { recursive: true, force: true });
+  }
+});
+
+test("blocked analysis still writes its report and policy evidence without inventing a Binding IR", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-blocked-output-"));
+  const artifacts = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-blocked-artifacts-"));
+  try {
+    await writeFile(join(root, "Main.lean"), "def fetch (path : String) : IO String := pure path\n");
+    const before = await snapshot(root);
+    const output = join(artifacts, "analysis");
+    const result = await runCli({
+      argv: ["analyze", "--project", root, "--output", output, "--check", "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(result.exitCode, 2);
+    assert.equal(result.response.status, "needs-input");
+    assert.deepEqual(await snapshot(root), before);
+    assert.deepEqual(await readdir(output), ["policy-report.json", "project-analysis.json"]);
+    const report = JSON.parse(await readFile(join(output, "policy-report.json"), "utf8"));
+    assert.equal(report.passed, false);
+    assert.equal(report.policy.source, "builtin");
+    assert.ok(report.violations.some(item => item.code === "analysis-policy-binding-ir-required"));
+    assert.ok(result.response.diagnostics.some(item => item.code === "analysis-policy-failed"));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(artifacts, { recursive: true, force: true });
+  }
+});
+
+test("analysis policies tighten CI thresholds without weakening hard blockers", async () => {
+  const root = await makePureProject();
+  const artifacts = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-policy-output-"));
+  try {
+    const builtin = await runCli({
+      argv: ["analyze", "--project", root, "--check", "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(builtin.exitCode, 0);
+    assert.ok(builtin.response.diagnostics.some(item => item.code === "analysis-policy-passed"));
+
+    const policyPath = join(root, "strict-policy.json");
+    await writeFile(policyPath, JSON.stringify({
+      schemaVersion: 1,
+      minimumExports: 3,
+      requireCompiledExports: true,
+      allowStaticallyInferredIr: false,
+    }));
+    const output = join(artifacts, "strict");
+    const strict = await runCli({
+      argv: ["analyze", "--project", root, "--policy", policyPath, "--output", output, "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(strict.exitCode, 1);
+    assert.equal(strict.response.status, "failed");
+    assert.deepEqual(
+      strict.response.progress.events.filter(item => new Set(["policy", "analyze"]).has(item.phase)).map(item => [item.phase, item.state]),
+      [["analyze", "started"], ["policy", "started"], ["policy", "failed"], ["analyze", "failed"]],
+    );
+    const policyReport = JSON.parse(await readFile(join(output, "policy-report.json"), "utf8"));
+    assert.equal(policyReport.policy.path, "strict-policy.json");
+    assert.deepEqual(policyReport.violations.map(item => item.code), [
+      "analysis-policy-compiled-exports-required",
+      "analysis-policy-inferred-ir-forbidden",
+      "analysis-policy-minimum-exports",
+    ]);
+    assert.match(strict.response.diagnostics[0].code, /analysis-policy/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(artifacts, { recursive: true, force: true });
+  }
+});
+
+test("warning, documentation, and semantic-version policy thresholds use explicit metrics", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-policy-metrics-"));
+  try {
+    await writeFile(join(root, "Main.lean"), "def value (input : Nat) : Nat := input\n");
+    const policyPath = join(root, "policy.json");
+    await writeFile(policyPath, JSON.stringify({
+      schemaVersion: 1,
+      maxWarnings: 0,
+      maxUndocumentedExports: 0,
+      requireSemanticVersion: true,
+    }));
+    const result = await runCli({
+      argv: ["analyze", "--project", root, "--policy", policyPath, "--json"],
+      handlers: cliHandlers,
+    });
+    assert.equal(result.exitCode, 1);
+    assert.deepEqual(
+      result.response.diagnostics.filter(item => item.code.startsWith("analysis-policy-")).map(item => item.code),
+      [
+        "analysis-policy-failed",
+        "analysis-policy-semantic-version-required",
+        "analysis-policy-undocumented-export-limit",
+        "analysis-policy-warning-limit",
+      ],
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("cancelled output leaves no destination or staging directory", async () => {
+  const root = await makePureProject();
+  const artifacts = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-cancel-output-"));
+  try {
+    const analysis = await analyzeLeanProject(root);
+    const cancellation = new AbortController();
+    cancellation.abort(new Error("cancelled before output"));
+    const output = join(artifacts, "analysis");
+    await assert.rejects(
+      writeAnalysisOutput({ outputRoot: output, analysis, signal: cancellation.signal }),
+      /cancelled before output/,
+    );
+    assert.deepEqual(await readdir(artifacts), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(artifacts, { recursive: true, force: true });
   }
 });

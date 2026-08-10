@@ -12,9 +12,28 @@ lean-bridge publish
 
 `analyze` inventories a Lean project without changing it. It validates an existing Binding IR or proposes one for conservatively supported copied values. Ambiguous ownership, effects, names, or foreign boundaries produce structured adapter questions.
 
+`analyze --output <directory>` atomically writes `project-analysis.json` and, when available, `binding-ir.json`. `--check` adds `policy-report.json` and enforces the built-in analysis policy. `--policy <path>` selects a closed policy file and implies check mode. The command rejects an existing destination. Without `--output`, it creates no source, generated, lock, cache, or report file.
+
 `build` selects the pinned Debian Docker builder first and falls back to native Nix. It validates the canonical artifact set, package identities, and requested publication targets before moving the output into place.
 
 `publish --dry-run --output <path>` creates two independent source trees, runs two isolated builds, compares every file byte and mode, and writes an authorization for the exact candidate. External registry writes remain blocked under node 879.
+
+## Analysis output and policy
+
+The output directory is an explicit write boundary. The CLI writes each file in a sibling staging directory, checks cancellation between files, and renames the complete directory into place. A failed or cancelled write removes staging state. Analysis that needs input still emits `project-analysis.json` and a failing policy report when requested. It does not invent `binding-ir.json`.
+
+[`schema/analysis-policy.schema.json`](../../schema/analysis-policy.schema.json) defines six optional constraints over the non-negotiable safe baseline:
+
+- maximum warning count;
+- maximum undocumented export count;
+- minimum proposed export count;
+- compiled interface evidence for every export;
+- permission to use statically inferred Binding IR; and
+- a declared semantic package version.
+
+The baseline always requires a Binding IR, at least one export, zero required adapter hints, and zero error diagnostics. A policy cannot relax those rules. The analyzer does not offer theorem-count or proof-coverage thresholds. Static theorem references remain unverified until Lean elaboration and the build connect them to an artifact.
+
+[`schema/analysis-policy-report.schema.json`](../../schema/analysis-policy-report.schema.json) records the analysis hash, normalized policy and hash, measured counts, pass state, and ordered violations. The CLI also emits `analysis-policy-passed` or `analysis-policy-failed` as a structured diagnostic, so an agent can verify the applied policy without reading terminal prose.
 
 ## Agent result
 
@@ -109,7 +128,7 @@ The first `SIGINT` or `SIGTERM` aborts the command. The analyzer checks cancella
 |---:|---|
 | 0 | The command succeeded. |
 | 1 | The command executed and failed. |
-| 2 | Work is blocked or requires input. |
+| 2 | Work is blocked or requires input. An existing analysis output also uses this code. |
 | 64 | Syntax or configuration is invalid. |
 | 130 | The command was cancelled. |
 
@@ -117,13 +136,15 @@ Human output reports the same project, target, cache, diagnostics, prompts, and 
 
 ## Tests
 
-[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, structured prompts, progress streams, cancellation, JSON usage failures, dry-run authorization, external publication blocking, and both closed schemas.
+[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run authorization, external publication blocking, and the closed CLI schemas.
+
+[`tests/lean-project-analyzer.test.mjs`](../../tests/lean-project-analyzer.test.mjs) covers deterministic output directories, conditional Binding IR output, policy thresholds, stable violations, existing destinations, source-tree preservation, cancellation cleanup, and the closed policy schemas.
 
 [`tests/canonical-build.test.mjs`](../../tests/canonical-build.test.mjs) proves that selected package targets are validated, refresh bypasses the Docker build cache, ineligible targets fail closed, and cancellation terminates a spawned build process.
 
 Run the focused contract:
 
 ```sh
-node --test tests/cli-contract.test.mjs tests/canonical-build.test.mjs
+node --test tests/lean-project-analyzer.test.mjs tests/cli-contract.test.mjs tests/canonical-build.test.mjs
 npm run cli -- --help
 ```
