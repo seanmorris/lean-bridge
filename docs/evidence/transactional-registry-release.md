@@ -77,6 +77,8 @@ The policy sources are the [npm unpublish policy](https://docs.npmjs.com/policie
 
 The repository still leaves `registryAdapters` unset by default. This keeps the standalone POC from performing live registry writes while allowing a deployment to install reviewed adapters without replacing the transaction semantics.
 
+After a transaction reaches `complete`, the CLI passes its durable path and hash to the [`release receipt`](release-receipt.md) writer. The writer signs the post-publication coordinate and artifact map. Partial, blocked, and ambiguous states remain recovery records and cannot become consumer receipts.
+
 ## Acceptance coverage
 
 Run:

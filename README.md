@@ -16,7 +16,7 @@ npm, Composer, PyPI, Cargo, Nix, C, and C++ packages
 import, call, done
 ```
 
-The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript and PHP projections, locked composition, reproducible build foundations, an installable npm package, and durable multi-registry transaction semantics described in [Current status](#current-status). Reviewed live registry adapters and broader target coverage are the next product layer.
+The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript and PHP projections, locked composition, reproducible build foundations, an installable npm package, durable multi-registry transaction semantics, and signed release receipts described in [Current status](#current-status). Reviewed live registry adapters and broader target coverage are the next product layer.
 
 ## Why installable verified components matter
 
@@ -82,6 +82,8 @@ An installed registry backend receives credentials through a target-scoped capab
 Before the backend can read a credential value, the CLI requires an external signer to authorize the exact release closure. The signer receives only DSSE preauthentication bytes. Its private key never enters the build, publish manifest, CLI result, or signer audit. Lean Bridge verifies the returned Ed25519 signature against a closed public policy, then gives the backend the signed in-toto statement. That statement names the release authorization, source revision, flake lock, canonical manifest, artifact inventory, reproducibility evidence, SBOM, provenance, package archives, destinations, and idempotency keys. [The publication attestation evidence](docs/evidence/publication-attestation.md) records the contract and failure tests.
 
 The registry coordinator checks every selected target before the first write. It verifies permission, coordinate availability, immutable artifact identity, and dependency availability through target-specific adapters. It then writes targets in authorized order and persists `registry-transaction.json` after every transition. A retry rechecks the registry and skips exact coordinates. A timeout remains an unknown outcome until preflight proves whether the immutable coordinate was committed. The coordinator records npm deprecation, Cargo yanking, PyPI yanking, and local archive recovery guidance without claiming that several registries can commit atomically. The default CLI installs no live adapters, so the POC cannot publish externally without an explicit deployment integration. [The transactional registry evidence](docs/evidence/transactional-registry-release.md) records the state machine and failure tests.
+
+After every target completes, the CLI writes a signed, content-addressed `release-receipt.json`. The receipt connects each registry coordinate and reference to its package hashes, the authorized flake lock, the component graph lock, the reproducibility evidence, and the original publication authorization. It also records ordinary npm, Cargo, and PyPI install commands. A consumer or agent verifies the receipt with a separately trusted public policy and one command. Partial releases cannot produce receipts. [The release receipt evidence](docs/evidence/release-receipt.md) records the format, verification steps, and failure tests.
 
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
@@ -487,6 +489,7 @@ The architecture-testing POC has established:
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;
 - one durable multi-registry coordinator that preflights all targets before any write, persists partial success, resumes by immutable coordinate and idempotency key, and reports registry-specific recovery without claiming atomic commits;
+- one signed, content-addressed release receipt that connects completed registry references and package hashes to the flake lock, component graph, release authorization, and ordinary consumer install commands;
 - one versioned spatial performance corpus with 2D, 4D, and 8D search contracts, evidence-scoped complexity claims, frozen correctness vectors, retained index identity, cross-component borrowing, and disposal semantics;
 - one 1, 3, 10, and 50-library scaling suite built from real Lean modules, with lazy, startup, final-static, and isolated-runtime profiles;
 - one generated-call overhead suite covering retained methods, typed copied records, batching, identity reuse, callbacks, nested re-entry, iterators, Promises, cancellation, exceptions, and cleanup;
@@ -497,7 +500,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 406 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
+- 413 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 
@@ -539,7 +542,9 @@ npm run cli -- analyze --json
 npm run build:builder-image
 npm run test:canonical-build
 npm run test:release-authorization
+npm run test:release-receipt
 npm run release:reproducibility -- --output build/reproducibility-gate
+npm run verify:release-receipt -- --receipt build/reproducibility-gate/release-receipt.json --policy trusted-publication-signer-policy.json
 npm run verify:independent-release -- --repository https://github.com/seanmorris/lean-bridge --published build/reproducibility-gate.tar
 npm run cli -- --help
 npm test

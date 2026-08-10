@@ -27,6 +27,10 @@ import {
   createRegistryTransactionPublisher,
   RegistryTransactionError,
 } from "../release/registry-transaction.mjs";
+import {
+  ReleaseReceiptError,
+  writeReleaseReceipt,
+} from "../release/release-receipt.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -80,6 +84,7 @@ export const createCliHandlers = ({
   attestationPolicy = null,
   attestationSigner = null,
   authorizePublish = authorizePublication,
+  createReceipt = writeReleaseReceipt,
 } = {}) => Object.freeze({
   analyze: async (request, { signal, emitProgress } = {}) => {
     emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
@@ -236,6 +241,7 @@ export const createCliHandlers = ({
       let credentials = null;
       let publicationAttestation = null;
       let publisherInvoked = false;
+      let publishedResult = null;
       try {
         emitProgress?.({ phase: "authorize", state: "started", message: "Verifying the publish manifest and exact release candidate" });
         signal?.throwIfAborted();
@@ -312,8 +318,28 @@ export const createCliHandlers = ({
           throw new CredentialBoundaryError("invalid-publisher-result", "Registry publisher must return one result object");
         }
         credentials.assertSafe(result);
+        publishedResult = result;
         const credentialAudit = credentials.complete();
-        const safeResult = { ...result, credentialAudit, attestationAudit: publicationAttestation.audit };
+        let releaseReceipt = null;
+        if (result.transaction?.status === "complete") {
+          emitProgress?.({ phase: "receipt", state: "started", message: "Signing the completed registry result and consumer coordinates" });
+          releaseReceipt = await createReceipt({
+            verified,
+            transactionResult: result,
+            publicationAttestation,
+            policy: attestationPolicy,
+            signer: attestationSigner,
+            signal,
+          });
+          signal?.throwIfAborted();
+          emitProgress?.({ phase: "receipt", state: "completed", message: "Content-addressed release receipt verified" });
+        }
+        const safeResult = {
+          ...result,
+          ...(releaseReceipt === null ? {} : { releaseReceipt }),
+          credentialAudit,
+          attestationAudit: publicationAttestation.audit,
+        };
         credentials.assertSafe(safeResult);
         emitProgress?.({ phase: "publish", state: "completed", message: "Publication plan completed" });
         return { status: "ok", result: safeResult, diagnostics: [], prompts: [], nextActions: [] };
@@ -323,7 +349,8 @@ export const createCliHandlers = ({
           !(error instanceof ReproducibilityGateError) &&
           !(error instanceof CredentialBoundaryError) &&
           !(error instanceof PublicationAttestationError) &&
-          !(error instanceof RegistryTransactionError)
+          !(error instanceof RegistryTransactionError) &&
+          !(error instanceof ReleaseReceiptError)
         ) throw error;
         const blocked = new Set([
           "credential-provider-required",
@@ -355,10 +382,10 @@ export const createCliHandlers = ({
           "registry-dependency-unavailable",
           "registry-dependency-order-invalid",
         ]).has(error.code);
-        if (credentials !== null && !blocked) credentials.markFailed();
+        if (credentials !== null && !blocked && !(error instanceof ReleaseReceiptError)) credentials.markFailed();
         const transactionResult = error instanceof RegistryTransactionError
           ? error.details.result ?? null
-          : null;
+          : publishedResult;
         return {
           status: blocked ? "blocked" : "failed",
           result: credentials === null

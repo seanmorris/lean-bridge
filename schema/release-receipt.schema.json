@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/release-receipt.schema.json",
+  "title": "Lean Bridge signed release receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "predicateType",
+    "publicationAuthorization",
+    "statement",
+    "statementSha256",
+    "envelope",
+    "envelopeSha256",
+    "audit"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "predicateType": { "const": "https://lean-bridge.dev/release-receipt/v1" },
+    "publicationAuthorization": { "$ref": "#/$defs/publicationAuthorization" },
+    "statement": { "$ref": "#/$defs/statement" },
+    "statementSha256": { "$ref": "#/$defs/sha256" },
+    "envelope": { "$ref": "#/$defs/envelope" },
+    "envelopeSha256": { "$ref": "#/$defs/sha256" },
+    "audit": { "$ref": "#/$defs/audit" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "digest"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["payloadType", "payload", "signatures"],
+      "properties": {
+        "payloadType": { "const": "application/vnd.in-toto+json" },
+        "payload": { "type": "string", "minLength": 1 },
+        "signatures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["keyid", "sig"],
+            "properties": {
+              "keyid": { "$ref": "#/$defs/sha256" },
+              "sig": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "publicationAuthorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statementSha256", "envelopeSha256", "envelope"],
+      "properties": {
+        "statementSha256": { "$ref": "#/$defs/sha256" },
+        "envelopeSha256": { "$ref": "#/$defs/sha256" },
+        "envelope": { "$ref": "#/$defs/envelope" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "bytes", "sha256"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "backendPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "endpoint"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "endpoint": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "install": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "commands"],
+      "properties": {
+        "kind": { "enum": ["npm", "cargo", "pip", "retained-archive"] },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order",
+        "ecosystem",
+        "coordinate",
+        "operation",
+        "destination",
+        "status",
+        "registryReference",
+        "idempotencyKey",
+        "backendPlan",
+        "archives",
+        "install"
+      ],
+      "properties": {
+        "order": { "type": "integer", "minimum": 1 },
+        "ecosystem": { "type": "string", "minLength": 1 },
+        "coordinate": { "type": "string", "minLength": 1 },
+        "operation": { "enum": ["publish", "retain"] },
+        "destination": { "$ref": "#/$defs/destination" },
+        "status": { "enum": ["published", "already-published", "retained"] },
+        "registryReference": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "idempotencyKey": { "$ref": "#/$defs/sha256" },
+        "backendPlan": { "$ref": "#/$defs/backendPlan" },
+        "archives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/file" }
+        },
+        "install": { "$ref": "#/$defs/install" }
+      }
+    },
+    "acceptedSigner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "keyId", "algorithm"],
+      "properties": {
+        "identity": { "type": "string", "minLength": 1 },
+        "keyId": { "$ref": "#/$defs/sha256" },
+        "algorithm": { "const": "ed25519" }
+      }
+    },
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_type", "subject", "predicateType", "predicate"],
+      "properties": {
+        "_type": { "const": "https://in-toto.io/Statement/v1" },
+        "subject": {
+          "type": "array",
+          "minItems": 5,
+          "items": { "$ref": "#/$defs/subject" }
+        },
+        "predicateType": { "const": "https://lean-bridge.dev/attestations/release-receipt/v1" },
+        "predicate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schemaVersion",
+            "release",
+            "publicationAuthorization",
+            "registryTransaction",
+            "signerPolicy",
+            "verification"
+          ],
+          "properties": {
+            "schemaVersion": { "const": 1 },
+            "release": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["candidate", "authorization", "manifest", "flake", "componentGraph"],
+              "properties": {
+                "candidate": { "$ref": "reproducibility-report.schema.json#/$defs/candidate" },
+                "authorization": { "$ref": "#/$defs/artifact" },
+                "manifest": { "$ref": "#/$defs/artifact" },
+                "flake": { "$ref": "#/$defs/artifact" },
+                "componentGraph": { "$ref": "#/$defs/artifact" }
+              }
+            },
+            "publicationAuthorization": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["statementSha256", "envelopeSha256"],
+              "properties": {
+                "statementSha256": { "$ref": "#/$defs/sha256" },
+                "envelopeSha256": { "$ref": "#/$defs/sha256" }
+              }
+            },
+            "registryTransaction": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256", "id", "status", "atomicity", "completedAt", "targets"],
+              "properties": {
+                "path": { "type": "string", "minLength": 1 },
+                "sha256": { "$ref": "#/$defs/sha256" },
+                "id": { "$ref": "#/$defs/sha256" },
+                "status": { "const": "complete" },
+                "atomicity": { "const": "independent-registry-commits" },
+                "completedAt": { "type": "string", "format": "date-time" },
+                "targets": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": { "$ref": "#/$defs/target" }
+                }
+              }
+            },
+            "signerPolicy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sha256", "threshold", "acceptedSigners"],
+              "properties": {
+                "sha256": { "$ref": "#/$defs/sha256" },
+                "threshold": { "const": 1 },
+                "acceptedSigners": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": { "$ref": "#/$defs/acceptedSigner" }
+                }
+              }
+            },
+            "verification": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["command", "requiredInputs"],
+              "properties": {
+                "command": { "type": "string", "minLength": 1 },
+                "requiredInputs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "status",
+        "providerKind",
+        "signer",
+        "policySha256",
+        "publicationEnvelopeSha256",
+        "transactionSha256",
+        "statementSha256",
+        "envelopeSha256",
+        "privateMaterialReceived"
+      ],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "status": { "const": "verified" },
+        "providerKind": { "type": "string", "minLength": 1 },
+        "signer": { "$ref": "#/$defs/acceptedSigner" },
+        "policySha256": { "$ref": "#/$defs/sha256" },
+        "publicationEnvelopeSha256": { "$ref": "#/$defs/sha256" },
+        "transactionSha256": { "$ref": "#/$defs/sha256" },
+        "statementSha256": { "$ref": "#/$defs/sha256" },
+        "envelopeSha256": { "$ref": "#/$defs/sha256" },
+        "privateMaterialReceived": { "const": false }
+      }
+    }
+  }
+}

@@ -40,6 +40,8 @@ After name-only credential preflight, the CLI creates a signed [`publication att
 
 `createCliHandlers({ registryAdapters })` installs the [`transactional registry coordinator`](transactional-registry-release.md). It preflights every coordinate before the first write, persists each target transition, resumes partial releases by idempotency key, and returns registry-specific recovery guidance. Cross-registry commits are explicitly non-atomic. The default CLI leaves the adapter list unset, so this repository cannot perform a live registry write by itself.
 
+When the coordinator returns a complete transaction, the CLI invokes the [`release receipt`](release-receipt.md) writer before reporting success. The receipt result includes its path, content hash, signed statement hash, signed envelope hash, candidate identity, transaction identity, registry coordinates, archive hashes, and consumer install commands. Incomplete transactions never reach this step.
+
 ## Analysis output and policy
 
 The output directory is an explicit write boundary. The CLI writes each file in a sibling staging directory, checks cancellation between files, and renames the complete directory into place. A failed or cancelled write removes staging state. Analysis that needs input still emits `project-analysis.json` and a failing policy report when requested. It does not invent `binding-ir.json`.
@@ -158,7 +160,7 @@ Human output reports the same project, target, cache, diagnostics, prompts, and 
 
 ## Tests
 
-[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, signer authorization, credential isolation, registry coordinator installation, collision blocking, external publication blocking, and the closed CLI schemas.
+[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, signer authorization, credential isolation, registry coordinator installation, receipt generation after transaction completion, collision blocking, external publication blocking, and the closed CLI schemas.
 
 [`tests/credential-boundary.test.mjs`](../../tests/credential-boundary.test.mjs) covers environment providers, name-only preflight, target-scoped value access, missing credentials, result and error leak rejection, boundary state, and the closed credential audit schema.
 

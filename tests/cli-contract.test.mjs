@@ -17,6 +17,7 @@ import {
   validateCliResult,
 } from "../src/cli/contract.mjs";
 import { renderProgressEvent, runCli } from "../src/cli/run.mjs";
+import { ReleaseReceiptError } from "../src/release/release-receipt.mjs";
 
 const execute = promisify(execFile);
 const publicationAttestation = Object.freeze({
@@ -555,6 +556,123 @@ test("publish hands the verified immutable plan to an installed registry backend
   assert.equal(calls[3][1].plan, verified.manifest);
   assert.equal(calls[3][1].manifestSha256, "a".repeat(64));
   assert.equal(calls[3][1].attestation, publicationAttestation);
+});
+
+test("publish writes a receipt after a durable transaction completes", async () => {
+  const calls = [];
+  const target = {
+    order: 1,
+    ecosystem: "npm",
+    coordinate: "@lean-bridge/alpha@0.0.0",
+    operation: "publish",
+    idempotencyKey: "c".repeat(64),
+    credentialEnvironment: ["NPM_TOKEN"],
+  };
+  const verified = {
+    manifestPath: "/workspace/gate/publish-manifest.json",
+    manifestSha256: "a".repeat(64),
+    candidateRoot: "/workspace/gate/release",
+    authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+    manifest: { targets: [target] },
+  };
+  const transactionResult = {
+    transaction: {
+      path: "/workspace/gate/registry-transaction.json",
+      sha256: "1".repeat(64),
+      id: "2".repeat(64),
+      status: "complete",
+    },
+    externalRegistryWrites: true,
+  };
+  const receipt = {
+    path: "/workspace/gate/release-receipt.json",
+    hashPath: "/workspace/gate/release-receipt.sha256",
+    receiptSha256: "3".repeat(64),
+  };
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => verified,
+    credentialProvider: {
+      kind: "test-provider",
+      has: () => true,
+      read: () => "registry-secret",
+    },
+    authorizePublish: async () => publicationAttestation,
+    publisher: request => request.credentials.withTarget(target, credentials => {
+      credentials.get("NPM_TOKEN");
+      calls.push("publish");
+      return transactionResult;
+    }),
+    createReceipt: async request => {
+      calls.push("receipt");
+      assert.equal(request.verified, verified);
+      assert.equal(request.transactionResult, transactionResult);
+      assert.equal(request.publicationAttestation, publicationAttestation);
+      return receipt;
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "ok");
+  assert.deepEqual(calls, ["publish", "receipt"]);
+  assert.equal(outcome.response.result.releaseReceipt.receiptSha256, "3".repeat(64));
+  assert.equal(outcome.response.result.credentialAudit.status, "complete");
+});
+
+test("receipt failure preserves the completed transaction and honest write state", async () => {
+  const target = {
+    order: 1,
+    ecosystem: "npm",
+    coordinate: "@lean-bridge/alpha@0.0.0",
+    operation: "publish",
+    idempotencyKey: "c".repeat(64),
+    credentialEnvironment: ["NPM_TOKEN"],
+  };
+  const transactionResult = {
+    transaction: {
+      path: "/workspace/gate/registry-transaction.json",
+      sha256: "1".repeat(64),
+      id: "2".repeat(64),
+      status: "complete",
+    },
+    externalRegistryWrites: true,
+  };
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath: "/workspace/gate/publish-manifest.json",
+      manifestSha256: "a".repeat(64),
+      candidateRoot: "/workspace/gate/release",
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: { targets: [target] },
+    }),
+    credentialProvider: {
+      kind: "test-provider",
+      has: () => true,
+      read: () => "registry-secret",
+    },
+    authorizePublish: async () => publicationAttestation,
+    publisher: request => request.credentials.withTarget(target, credentials => {
+      credentials.get("NPM_TOKEN");
+      return transactionResult;
+    }),
+    createReceipt: async () => {
+      throw new ReleaseReceiptError("release-receipt-signer-failed", "Release receipt signer provider failed");
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "release-receipt-signer-failed");
+  assert.equal(outcome.response.result.transaction.status, "complete");
+  assert.equal(outcome.response.result.externalRegistryWrites, true);
+  assert.equal(outcome.response.result.credentialAudit.status, "complete");
 });
 
 test("publish installs the durable transaction coordinator from registry adapters", async t => {
