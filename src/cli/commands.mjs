@@ -23,6 +23,10 @@ import {
   PublicationAttestationError,
   authorizePublication,
 } from "../release/publication-attestation.mjs";
+import {
+  createRegistryTransactionPublisher,
+  RegistryTransactionError,
+} from "../release/registry-transaction.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -69,7 +73,8 @@ export const createCliHandlers = ({
   gate = runReproducibilityGate,
   createPublishPlan = writePublishManifest,
   verifyPublishPlan = verifyPublishManifest,
-  publisher = null,
+  registryAdapters = null,
+  publisher = registryAdapters === null ? null : createRegistryTransactionPublisher({ adapters: registryAdapters }),
   credentialProvider = createEnvironmentCredentialProvider(),
   createCredentialBoundary = createPublishCredentialBoundary,
   attestationPolicy = null,
@@ -298,6 +303,8 @@ export const createCliHandlers = ({
             onProgress: safePublisherProgress,
           });
         } catch (error) {
+          credentials.assertSafe(error);
+          if (error instanceof RegistryTransactionError) throw error;
           throw credentials.sanitize(error);
         }
         signal?.throwIfAborted();
@@ -315,7 +322,8 @@ export const createCliHandlers = ({
           !(error instanceof PublishManifestError) &&
           !(error instanceof ReproducibilityGateError) &&
           !(error instanceof CredentialBoundaryError) &&
-          !(error instanceof PublicationAttestationError)
+          !(error instanceof PublicationAttestationError) &&
+          !(error instanceof RegistryTransactionError)
         ) throw error;
         const blocked = new Set([
           "credential-provider-required",
@@ -337,15 +345,30 @@ export const createCliHandlers = ({
           "noncanonical-publication-signer-key",
           "publication-signer-key-drift",
           "invalid-publication-attestation",
+          "registry-adapter-unavailable",
+          "invalid-registry-adapters",
+          "registry-transaction-locked",
+          "registry-preflight-call-failed",
+          "registry-permission-denied",
+          "registry-immutability-unverified",
+          "registry-coordinate-collision",
+          "registry-dependency-unavailable",
+          "registry-dependency-order-invalid",
         ]).has(error.code);
         if (credentials !== null && !blocked) credentials.markFailed();
+        const transactionResult = error instanceof RegistryTransactionError
+          ? error.details.result ?? null
+          : null;
         return {
           status: blocked ? "blocked" : "failed",
-          result: credentials === null ? null : {
-            credentialAudit: credentials.snapshot(),
-            attestationAudit: publicationAttestation?.audit ?? null,
-            externalRegistryWrites: publisherInvoked ? "unknown" : false,
-          },
+          result: credentials === null
+            ? transactionResult
+            : {
+                ...(transactionResult ?? {}),
+                credentialAudit: credentials.snapshot(),
+                attestationAudit: publicationAttestation?.audit ?? null,
+                externalRegistryWrites: transactionResult?.externalRegistryWrites ?? (publisherInvoked ? "unknown" : false),
+              },
           diagnostics: [diagnostic({ code: error.code, message: error.message })],
           prompts: [],
           nextActions: [],

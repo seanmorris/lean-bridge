@@ -16,7 +16,7 @@ npm, Composer, PyPI, Cargo, Nix, C, and C++ packages
 import, call, done
 ```
 
-The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript and PHP projections, locked composition, reproducible build foundations, and an installable npm package described in [Current status](#current-status). Registry publication and broader target coverage are the next product layer.
+The current repository is an architecture-testing proof of concept. It already proves the shared-runtime, native JavaScript and PHP projections, locked composition, reproducible build foundations, an installable npm package, and durable multi-registry transaction semantics described in [Current status](#current-status). Reviewed live registry adapters and broader target coverage are the next product layer.
 
 ## Why installable verified components matter
 
@@ -75,11 +75,13 @@ lean-bridge publish --manifest build/reproducibility-gate/publish-manifest.json
 
 `analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. Without `--output`, it writes nothing. An explicit output directory receives deterministic `project-analysis.json` and `binding-ir.json` files. Check mode also writes `policy-report.json`. The command publishes that directory atomically and refuses to mix new evidence with an existing destination. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output.
 
-`publish --dry-run` rebuilds in two independent clean environments and blocks on any artifact difference. A passing run writes `publish-manifest.json`. That manifest fixes the candidate, source revision, package versions, archive hashes, registry destinations, credential variable names, publication order, and idempotency keys. It contains no credential values and performs no network or registry operation. `publish --manifest` verifies the manifest, authorization, and complete artifact inventory before it can invoke a registry backend. The current POC stops at that verified boundary until the transactional registry backends in plan node 879 are installed.
+`publish --dry-run` rebuilds in two independent clean environments and blocks on any artifact difference. A passing run writes `publish-manifest.json`. That manifest fixes the candidate, source revision, package versions, archive hashes, registry destinations, credential variable names, publication order, and idempotency keys. It contains no credential values and performs no network or registry operation. `publish --manifest` verifies the manifest, authorization, and complete artifact inventory before it can invoke a registry backend.
 
 An installed registry backend receives credentials through a target-scoped capability after verification. Preflight checks required environment names without reading their values. The CLI rejects any observed credential value in publisher results, errors, or structured progress, then emits a value-free access audit. Dry run cannot reach the provider.
 
 Before the backend can read a credential value, the CLI requires an external signer to authorize the exact release closure. The signer receives only DSSE preauthentication bytes. Its private key never enters the build, publish manifest, CLI result, or signer audit. Lean Bridge verifies the returned Ed25519 signature against a closed public policy, then gives the backend the signed in-toto statement. That statement names the release authorization, source revision, flake lock, canonical manifest, artifact inventory, reproducibility evidence, SBOM, provenance, package archives, destinations, and idempotency keys. [The publication attestation evidence](docs/evidence/publication-attestation.md) records the contract and failure tests.
+
+The registry coordinator checks every selected target before the first write. It verifies permission, coordinate availability, immutable artifact identity, and dependency availability through target-specific adapters. It then writes targets in authorized order and persists `registry-transaction.json` after every transition. A retry rechecks the registry and skips exact coordinates. A timeout remains an unknown outcome until preflight proves whether the immutable coordinate was committed. The coordinator records npm deprecation, Cargo yanking, PyPI yanking, and local archive recovery guidance without claiming that several registries can commit atomically. The default CLI installs no live adapters, so the POC cannot publish externally without an explicit deployment integration. [The transactional registry evidence](docs/evidence/transactional-registry-release.md) records the state machine and failure tests.
 
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
@@ -484,6 +486,7 @@ The architecture-testing POC has established:
 - one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, blocks ambiguous ownership or effect boundaries, writes only an explicitly requested atomic output directory, and enforces hash-identified CI policies;
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;
+- one durable multi-registry coordinator that preflights all targets before any write, persists partial success, resumes by immutable coordinate and idempotency key, and reports registry-specific recovery without claiming atomic commits;
 - one versioned spatial performance corpus with 2D, 4D, and 8D search contracts, evidence-scoped complexity claims, frozen correctness vectors, retained index identity, cross-component borrowing, and disposal semantics;
 - one 1, 3, 10, and 50-library scaling suite built from real Lean modules, with lazy, startup, final-static, and isolated-runtime profiles;
 - one generated-call overhead suite covering retained methods, typed copied records, batching, identity reuse, callbacks, nested re-entry, iterators, Promises, cancellation, exceptions, and cleanup;
@@ -494,7 +497,7 @@ The architecture-testing POC has established:
 - artifact integrity, version, symbol, initialization, and graph conflict checks;
 - reviewed JavaScript, PHP, Python, C, and Rust package reports with deterministic regeneration, file hashes, export maps, capability gaps, and forbidden-public-surface gates;
 - named lazy and prelinked loading that returns the same frozen API shape while keeping catalog, linker, and ABI state private;
-- 373 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
+- 406 passing behavioral and structural tests. The earlier 311-test architecture seam has a complete [JUnit review record](docs/evidence/test-suite-1e26785.md);
 - byte-identical browser and threaded artifacts across independent roots; and
 - complete fixed-input x86-64 Nix builds for the Wasm POC, immutable universal core, universal release bundle, npm package, and native PHP package.
 

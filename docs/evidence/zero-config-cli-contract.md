@@ -32,11 +32,13 @@ lean-bridge publish
 
 Dry run writes the manifest only after `verifyReleaseAuthorization` accepts the candidate. The manifest policy records that the command performed no network access, credential reads, or registry writes. Execute mode verifies the manifest hash record, canonical JSON, target selection, release authorization, candidate inventory, publication index, and every derived action. Separate `--bundle` or `--authorization` inputs are rejected because they could mix evidence from different release roots.
 
-An installed registry backend receives the verified plan, candidate root, authorization, manifest hash, abort signal, and progress callback. The default build has no registry backend yet. It returns `registry-publisher-unavailable` with ordered pending targets and keeps `externalRegistryWrites` false.
+An installed registry backend receives the verified plan, candidate root, authorization, manifest hash, abort signal, and progress callback. The default build has no live registry adapters. It returns `registry-publisher-unavailable` with ordered pending targets and keeps `externalRegistryWrites` false.
 
 When a registry backend is installed, the CLI creates a credential boundary after manifest verification. Preflight checks only the environment names declared for each target. The backend receives a target-scoped credential capability and a progress callback that rejects observed credential values. A successful result includes the closed [`credential audit`](publish-credential-boundary.md), which records names, availability, and access counts without values. Missing credentials block before the backend runs.
 
 After name-only credential preflight, the CLI creates a signed [`publication attestation`](publication-attestation.md). A closed public policy lists accepted signer identities and Ed25519 public keys. The external signer receives only DSSE preauthentication bytes. Lean Bridge verifies the signature locally before the backend receives the envelope or reads a registry credential value. Missing policy, an unauthorized key, a provider failure, an invalid signature, an artifact outside the authorized inventory, or closure drift blocks publication before the backend runs.
+
+`createCliHandlers({ registryAdapters })` installs the [`transactional registry coordinator`](transactional-registry-release.md). It preflights every coordinate before the first write, persists each target transition, resumes partial releases by idempotency key, and returns registry-specific recovery guidance. Cross-registry commits are explicitly non-atomic. The default CLI leaves the adapter list unset, so this repository cannot perform a live registry write by itself.
 
 ## Analysis output and policy
 
@@ -156,7 +158,7 @@ Human output reports the same project, target, cache, diagnostics, prompts, and 
 
 ## Tests
 
-[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, signer authorization, credential isolation, registry backend handoff, external publication blocking, and the closed CLI schemas.
+[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, signer authorization, credential isolation, registry coordinator installation, collision blocking, external publication blocking, and the closed CLI schemas.
 
 [`tests/credential-boundary.test.mjs`](../../tests/credential-boundary.test.mjs) covers environment providers, name-only preflight, target-scoped value access, missing credentials, result and error leak rejection, boundary state, and the closed credential audit schema.
 

@@ -49,6 +49,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Cross-language semantic parity evidence](../evidence/cross-language-semantic-parity.md)
 - [Direct-call and native-object conformance evidence](../evidence/direct-call-conformance.md)
 - [Shared PHP projection and transport boundary evidence](../evidence/php-projection-boundary.md)
+- [Transactional multi-registry release evidence](../evidence/transactional-registry-release.md)
 
 ## Permanent review lenses
 

@@ -20,6 +20,8 @@ import { renderProgressEvent, runCli } from "../src/cli/run.mjs";
 
 const execute = promisify(execFile);
 const publicationAttestation = Object.freeze({
+  statementSha256: "f".repeat(64),
+  envelopeSha256: "0".repeat(64),
   audit: Object.freeze({
     schemaVersion: 1,
     status: "verified",
@@ -553,6 +555,73 @@ test("publish hands the verified immutable plan to an installed registry backend
   assert.equal(calls[3][1].plan, verified.manifest);
   assert.equal(calls[3][1].manifestSha256, "a".repeat(64));
   assert.equal(calls[3][1].attestation, publicationAttestation);
+});
+
+test("publish installs the durable transaction coordinator from registry adapters", async t => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-cli-registry-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const manifestPath = join(root, "publish-manifest.json");
+  await writeFile(manifestPath, "{}", "utf8");
+  let publishCalled = false;
+  const target = {
+    order: 1,
+    candidateId: "b".repeat(64),
+    ecosystem: "npm",
+    coordinate: "@lean-bridge/alpha@0.0.0",
+    operation: "publish",
+    destination: { kind: "npm", endpoint: "https://registry.npmjs.org/" },
+    archives: [{ sha256: "d".repeat(64) }],
+    idempotencyKey: "c".repeat(64),
+    credentialEnvironment: ["NPM_TOKEN"],
+  };
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath,
+      manifestSha256: "a".repeat(64),
+      candidateRoot: join(root, "release"),
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: {
+        authorization: { candidateId: "b".repeat(64) },
+        targets: [target],
+      },
+    }),
+    credentialProvider: {
+      kind: "test-provider",
+      has: () => true,
+      read: () => "registry-secret",
+    },
+    authorizePublish,
+    registryAdapters: [{
+      ecosystem: "npm",
+      kind: "test-adapter",
+      preflight: () => ({
+        permission: "granted",
+        coordinateState: "collision",
+        immutable: true,
+        registryReference: "registry:occupied",
+        artifacts: [],
+        dependencies: [],
+      }),
+      publish: () => {
+        publishCalled = true;
+        return {};
+      },
+    }],
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "blocked");
+  assert.equal(outcome.response.diagnostics[0].code, "registry-coordinate-collision");
+  assert.equal(outcome.response.result.transaction.status, "blocked");
+  assert.equal(outcome.response.result.externalRegistryWrites, false);
+  assert.equal(outcome.response.result.credentialAudit.valuesRead, true);
+  assert.equal(outcome.response.result.attestationAudit.status, "verified");
+  assert.equal(JSON.stringify(outcome.response).includes("registry-secret"), false);
+  assert.equal(publishCalled, false);
 });
 
 test("publish blocks missing credentials before invoking a registry backend", async () => {
