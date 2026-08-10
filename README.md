@@ -70,9 +70,12 @@ The publishing workflow is designed around three commands:
 lean-bridge analyze --check --output build/analysis
 lean-bridge build --target npm
 lean-bridge publish --dry-run --output build/reproducibility-gate
+lean-bridge publish --manifest build/reproducibility-gate/publish-manifest.json
 ```
 
-`analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. Without `--output`, it writes nothing. An explicit output directory receives deterministic `project-analysis.json` and `binding-ir.json` files. Check mode also writes `policy-report.json`. The command publishes that directory atomically and refuses to mix new evidence with an existing destination. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output. `publish` rebuilds in an independent clean environment and blocks on any artifact difference before sending packages to configured registries.
+`analyze` reports the discovered API, inferred host types, theorem coverage, ownership decisions, and any missing documentation or adapter hints. Without `--output`, it writes nothing. An explicit output directory receives deterministic `project-analysis.json` and `binding-ir.json` files. Check mode also writes `policy-report.json`. The command publishes that directory atomically and refuses to mix new evidence with an existing destination. `build` produces the compiled library, binding IR, host bindings, types, docs, manifests, proof metadata, provenance, and flake output.
+
+`publish --dry-run` rebuilds in two independent clean environments and blocks on any artifact difference. A passing run writes `publish-manifest.json`. That manifest fixes the candidate, source revision, package versions, archive hashes, registry destinations, credential variable names, publication order, and idempotency keys. It contains no credential values and performs no network or registry operation. `publish --manifest` verifies the manifest, authorization, and complete artifact inventory before it can invoke a registry backend. The current POC stops at that verified boundary until the transactional registry backends in plan node 879 are installed.
 
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
@@ -473,7 +476,7 @@ The architecture-testing POC has established:
 - one compiler-free C package projection that emits deterministic archives with pkg-config and CMake discovery for eligible targets, while C and C++ publication remain blocked by explicit native artifact and binding capability gaps;
 - one no-publish release rehearsal that invokes every eligible backend, records explicit omissions, and emits a canonical publication index plus an in-toto statement tied to one bundle identity;
 - one clean-install gate that runs npm and C consumers through ordinary APIs, accounts for every installed package file, compares their public `Box` behavior, and executes packaging with child processes disabled;
-- one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, closed JSON agent results, structured prompts and progress, target and cache selection, configuration provenance, cancellation, and an operational no-publish dry run;
+- one installed `lean-bridge` CLI contract with noninteractive `analyze`, `build`, `publish`, closed JSON agent results, structured prompts and progress, target and cache selection, configuration provenance, cancellation, an operational no-publish dry run, and a hash-bound manifest that execute mode verifies before registry handoff;
 - one read-only project analyzer that validates an existing Binding IR or proposes a deterministic contract for copied primitive values, preserves theorem links as unverified evidence, blocks ambiguous ownership or effect boundaries, writes only an explicitly requested atomic output directory, and enforces hash-identified CI policies;
 - one Docker-first canonical build command with immutable Debian and Nix base images, a hash-locked builder definition, read-only source staging, native Nix fallback, and validated bundle plus package output;
 - one hard reproducibility gate that builds a committed source revision twice in independent writable environments, compares the full release inventory, retains bounded failure diagnostics, and authorizes only the exact matching candidate;

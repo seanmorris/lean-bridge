@@ -16,7 +16,23 @@ lean-bridge publish
 
 `build` selects the pinned Debian Docker builder first and falls back to native Nix. It validates the canonical artifact set, package identities, and requested publication targets before moving the output into place.
 
-`publish --dry-run --output <path>` creates two independent source trees, runs two isolated builds, compares every file byte and mode, and writes an authorization for the exact candidate. External registry writes remain blocked under node 879.
+`publish --dry-run --output <path>` creates two independent source trees, runs two isolated builds, compares every file byte and mode, and writes an authorization for the exact candidate. It then derives `publish-manifest.json` and `publish-manifest.sha256`. `publish --manifest <path>` verifies that handoff before any registry backend can read credentials or write externally. External registry writes remain owned by node 879.
+
+## Publish manifest
+
+[`schema/publish-manifest.schema.json`](../../schema/publish-manifest.schema.json) closes the dry-run handoff. The manifest records:
+
+- the release authorization hash, candidate identity, source revision, and artifact inventory hash;
+- the authorized publication index path and hash;
+- the exact dry-run target selection;
+- every ready package coordinate, archive, backend plan, destination, and publication order;
+- credential environment variable names without credential values;
+- one content-derived idempotency key per publication action; and
+- every omitted package projection and its reason.
+
+Dry run writes the manifest only after `verifyReleaseAuthorization` accepts the candidate. The manifest policy records that the command performed no network access, credential reads, or registry writes. Execute mode verifies the manifest hash record, canonical JSON, target selection, release authorization, candidate inventory, publication index, and every derived action. Separate `--bundle` or `--authorization` inputs are rejected because they could mix evidence from different release roots.
+
+An installed registry backend receives the verified plan, candidate root, authorization, manifest hash, abort signal, and progress callback. The default build has no registry backend yet. It returns `registry-publisher-unavailable` with ordered pending targets and keeps `externalRegistryWrites` false.
 
 ## Analysis output and policy
 
@@ -136,7 +152,7 @@ Human output reports the same project, target, cache, diagnostics, prompts, and 
 
 ## Tests
 
-[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run authorization, external publication blocking, and the closed CLI schemas.
+[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, registry backend handoff, external publication blocking, and the closed CLI schemas.
 
 [`tests/lean-project-analyzer.test.mjs`](../../tests/lean-project-analyzer.test.mjs) covers deterministic output directories, conditional Binding IR output, policy thresholds, stable violations, existing destinations, source-tree preservation, cancellation cleanup, and the closed policy schemas.
 

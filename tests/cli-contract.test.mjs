@@ -29,6 +29,7 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     output: null,
     bundle: null,
     authorization: null,
+    manifest: null,
     format: "human",
     interactive: false,
     configuration: {
@@ -58,6 +59,7 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     output: "/workspace/release",
     bundle: null,
     authorization: null,
+    manifest: null,
     format: "json",
     interactive: false,
     configuration: {
@@ -360,7 +362,7 @@ test("the executable analyzes the project and reports pending commands honestly"
   assert.deepEqual(progressResponse.selection.targets, ["npm"]);
   await assert.rejects(
     execute("node", ["scripts/lean-bridge.mjs", "publish"], { cwd: process.cwd() }),
-    error => error.code === 2 && /publish-authorization-required/.test(error.stderr),
+    error => error.code === 2 && /publish-manifest-required/.test(error.stderr),
   );
 });
 
@@ -377,6 +379,22 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
         externalRegistryWrites: false,
       };
     },
+    createPublishPlan: async request => {
+      calls.push({ createPublishPlan: request });
+      return {
+        path: "/workspace/gate/publish-manifest.json",
+        manifestSha256: "b".repeat(64),
+        manifest: {
+          targets: [{
+            order: 1,
+            ecosystem: "npm",
+            coordinate: "@lean-bridge/alpha@0.0.0",
+            operation: "publish",
+            idempotencyKey: "c".repeat(64),
+          }],
+        },
+      };
+    },
   });
   const outcome = await runCli({
     argv: ["publish", "--dry-run", "--output", "gate", "--json"],
@@ -388,11 +406,15 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
   assert.equal(outcome.response.status, "ok");
   assert.equal(outcome.response.result.externalRegistryWrites, false);
   assert.equal(outcome.response.result.candidate.id, "a".repeat(64));
-  assert.equal(calls.length, 1);
+  assert.equal(outcome.response.result.publishManifest, "/workspace/gate/publish-manifest.json");
+  assert.equal(outcome.response.result.publishManifestSha256, "b".repeat(64));
+  assert.equal(calls.length, 2);
   assert.equal(calls[0].projectRoot, "/workspace");
   assert.equal(calls[0].outputRoot, "/workspace/gate");
   assert.deepEqual(calls[0].targets, []);
   assert.deepEqual(calls[0].cache, { policy: "use", directory: null });
+  assert.equal(calls[1].createPublishPlan.gateRoot, "/workspace/gate");
+  assert.deepEqual(calls[1].createPublishPlan.requestedTargets, []);
 
   const oldShape = await runCli({
     argv: ["publish", "--dry-run", "--bundle", "bundle", "--output", "gate", "--json"],
@@ -404,27 +426,72 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
   assert.equal(oldShape.response.diagnostics[0].code, "dry-run-input-required");
 });
 
-test("external publish verifies the exact candidate before reaching the deferred registry step", async () => {
+test("external publish verifies one manifest before reaching the deferred registry step", async () => {
   const calls = [];
   const handlers = createCliHandlers({
-    verifyAuthorization: async request => {
+    verifyPublishPlan: async request => {
       calls.push(request);
-      return { status: "authorized", candidate: { id: "b".repeat(64) } };
+      return {
+        manifestPath: "/workspace/gate/publish-manifest.json",
+        manifestSha256: "a".repeat(64),
+        candidateRoot: "/workspace/gate/release",
+        authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+        manifest: {
+          targets: [{ order: 1, ecosystem: "npm", coordinate: "@lean-bridge/alpha@0.0.0", idempotencyKey: "c".repeat(64) }],
+        },
+      };
     },
   });
   const outcome = await runCli({
-    argv: ["publish", "--authorization", "gate", "--bundle", "gate/release", "--json"],
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
     cwd: "/workspace",
     environment: {},
     handlers,
   });
   assert.equal(outcome.response.status, "blocked");
-  assert.equal(outcome.response.diagnostics[0].code, "publish-implementation-pending");
+  assert.equal(outcome.response.diagnostics[0].code, "registry-publisher-unavailable");
   assert.equal(outcome.response.result.authorization.status, "authorized");
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].authorizationRoot, "/workspace/gate");
-  assert.equal(calls[0].candidateRoot, "/workspace/gate/release");
-  assert.deepEqual(calls[0].targets, []);
+  assert.equal(calls[0].manifestPath, "/workspace/gate/publish-manifest.json");
+  assert.deepEqual(calls[0].requestedTargets, []);
+});
+
+test("publish hands the verified immutable plan to an installed registry backend", async () => {
+  const calls = [];
+  const verified = {
+    manifestPath: "/workspace/gate/publish-manifest.json",
+    manifestSha256: "a".repeat(64),
+    candidateRoot: "/workspace/gate/release",
+    authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+    manifest: {
+      targets: [{ order: 1, ecosystem: "npm", coordinate: "@lean-bridge/alpha@0.0.0", idempotencyKey: "c".repeat(64) }],
+    },
+  };
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async request => {
+      calls.push(["verify", request]);
+      return verified;
+    },
+    publisher: async request => {
+      calls.push(["publish", request]);
+      return {
+        candidateId: "b".repeat(64),
+        results: [{ ecosystem: "npm", status: "already-published", idempotencyKey: "c".repeat(64) }],
+        externalRegistryWrites: false,
+      };
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "ok");
+  assert.equal(outcome.response.result.results[0].status, "already-published");
+  assert.deepEqual(calls.map(item => item[0]), ["verify", "publish"]);
+  assert.equal(calls[1][1].plan, verified.manifest);
+  assert.equal(calls[1][1].manifestSha256, "a".repeat(64));
 });
 
 test("the published CLI result schema is closed", async () => {

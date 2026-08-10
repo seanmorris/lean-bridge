@@ -8,8 +8,12 @@ import { buildCanonicalProject, CanonicalBuildError } from "../build/canonical-b
 import {
   ReproducibilityGateError,
   runReproducibilityGate,
-  verifyReleaseAuthorization,
 } from "../release/reproducibility-gate.mjs";
+import {
+  PublishManifestError,
+  verifyPublishManifest,
+  writePublishManifest,
+} from "../release/publish-manifest.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -54,7 +58,9 @@ export const createCliHandlers = ({
   analyze = analyzeLeanProject,
   build = buildCanonicalProject,
   gate = runReproducibilityGate,
-  verifyAuthorization = verifyReleaseAuthorization,
+  createPublishPlan = writePublishManifest,
+  verifyPublishPlan = verifyPublishManifest,
+  publisher = null,
 } = {}) => Object.freeze({
   analyze: async (request, { signal, emitProgress } = {}) => {
     emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
@@ -182,40 +188,97 @@ export const createCliHandlers = ({
   },
   publish: async (request, { signal, emitProgress } = {}) => {
     if (request.mode !== "dry-run") {
-      if (request.authorization === null || request.bundle === null) {
+      if (request.manifest === null) {
         return {
           status: "blocked",
           result: null,
           diagnostics: [diagnostic({
-            code: "publish-authorization-required",
-            message: "publish requires a reproducibility authorization and its exact candidate",
-            hint: "Pass --authorization <gate directory> and --bundle <gate directory>/release.",
+            code: "publish-manifest-required",
+            message: "publish requires the manifest produced by an authorized dry run",
+            hint: "Run publish --dry-run --output <gate>, then pass --manifest <gate>/publish-manifest.json.",
           })],
           prompts: [],
           nextActions: [],
         };
       }
-      emitProgress?.({ phase: "authorize", state: "started", message: "Verifying the exact release candidate authorization" });
-      signal?.throwIfAborted();
-      const verified = await verifyAuthorization({
-        authorizationRoot: request.authorization,
-        candidateRoot: request.bundle,
-        targets: request.selection.targets,
-        signal,
-      });
-      signal?.throwIfAborted();
-      emitProgress?.({ phase: "authorize", state: "completed", message: "Release candidate authorization verified" });
-      const pending = deferred("publish", 879);
-      return { ...pending, result: { authorization: verified, externalRegistryWrites: false } };
+      if (request.output !== null || request.bundle !== null || request.authorization !== null) {
+        return {
+          status: "blocked",
+          result: null,
+          diagnostics: [diagnostic({
+            code: "publish-input-conflict",
+            message: "publish consumes one manifest and does not accept separate candidate or authorization paths",
+            hint: "Pass only --manifest and optional matching --target values.",
+          })],
+          prompts: [],
+          nextActions: [],
+        };
+      }
+      try {
+        emitProgress?.({ phase: "authorize", state: "started", message: "Verifying the publish manifest and exact release candidate" });
+        signal?.throwIfAborted();
+        const verified = await verifyPublishPlan({
+          manifestPath: request.manifest,
+          requestedTargets: request.selection.targets,
+          signal,
+        });
+        signal?.throwIfAborted();
+        emitProgress?.({ phase: "authorize", state: "completed", message: "Publish manifest and release authorization verified" });
+        if (publisher === null) {
+          const pending = deferred("publish", 879);
+          return {
+            ...pending,
+            diagnostics: [diagnostic({
+              code: "registry-publisher-unavailable",
+              message: "The authorized publication plan is valid, but no registry publisher is installed",
+              hint: "Complete plan node 879 to enable credential access and external registry writes.",
+            })],
+            result: {
+              publishManifest: { path: verified.manifestPath, sha256: verified.manifestSha256 },
+              authorization: verified.authorization,
+              targets: verified.manifest.targets.map(item => ({
+                order: item.order,
+                ecosystem: item.ecosystem,
+                coordinate: item.coordinate,
+                idempotencyKey: item.idempotencyKey,
+                status: "pending",
+              })),
+              externalRegistryWrites: false,
+            },
+          };
+        }
+        emitProgress?.({ phase: "publish", state: "started", message: "Executing the verified idempotent publication plan" });
+        const result = await publisher({
+          plan: verified.manifest,
+          manifestPath: verified.manifestPath,
+          manifestSha256: verified.manifestSha256,
+          authorization: verified.authorization,
+          candidateRoot: verified.candidateRoot,
+          signal,
+          onProgress: emitProgress,
+        });
+        signal?.throwIfAborted();
+        emitProgress?.({ phase: "publish", state: "completed", message: "Publication plan completed" });
+        return { status: "ok", result, diagnostics: [], prompts: [], nextActions: [] };
+      } catch (error) {
+        if (!(error instanceof PublishManifestError) && !(error instanceof ReproducibilityGateError)) throw error;
+        return {
+          status: "failed",
+          result: null,
+          diagnostics: [diagnostic({ code: error.code, message: error.message })],
+          prompts: [],
+          nextActions: [],
+        };
+      }
     }
-    if (request.output === null || request.bundle !== null || request.authorization !== null) {
+    if (request.output === null || request.bundle !== null || request.authorization !== null || request.manifest !== null) {
       return {
         status: "blocked",
         result: null,
         diagnostics: [diagnostic({
           code: "dry-run-input-required",
           message: "publish --dry-run requires --output and builds its own release candidate",
-          hint: "Remove --bundle and pass one empty output path for the candidate and gate evidence.",
+          hint: "Pass one empty --output path. Do not pass --manifest, --bundle, or --authorization.",
         })],
         prompts: [],
         nextActions: [],
@@ -234,13 +297,40 @@ export const createCliHandlers = ({
       });
       signal?.throwIfAborted();
       emitProgress?.({ phase: "reproducibility", state: "completed", message: "Release candidate is reproducible and authorized" });
-      return { status: "ok", result, diagnostics: [], prompts: [], nextActions: [] };
+      emitProgress?.({ phase: "plan", state: "started", message: "Deriving the immutable publication plan" });
+      const plan = await createPublishPlan({
+        gateRoot: request.output,
+        requestedTargets: request.selection.targets,
+        signal,
+      });
+      signal?.throwIfAborted();
+      emitProgress?.({ phase: "plan", state: "completed", message: "Publish manifest is ready for execute mode" });
+      return {
+        status: "ok",
+        result: {
+          ...result,
+          publishManifest: plan.path,
+          publishManifestSha256: plan.manifestSha256,
+          plannedTargets: plan.manifest.targets.map(item => ({
+            order: item.order,
+            ecosystem: item.ecosystem,
+            coordinate: item.coordinate,
+            operation: item.operation,
+            idempotencyKey: item.idempotencyKey,
+          })),
+          externalRegistryWrites: false,
+        },
+        diagnostics: [],
+        prompts: [],
+        nextActions: [],
+      };
     } catch (error) {
-      if (!(error instanceof ReproducibilityGateError)) throw error;
+      if (!(error instanceof ReproducibilityGateError) && !(error instanceof PublishManifestError)) throw error;
       const blocked = new Set([
         "source-not-git", "source-tree-dirty", "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
         "reproducibility-cache-directory-unsupported", "cache-directory-unsupported",
         "unknown-package-target", "package-target-ineligible",
+        "no-publishable-targets", "unsupported-publication-target", "unknown-publication-target",
       ]).has(error.code);
       return {
         status: blocked ? "blocked" : "failed",

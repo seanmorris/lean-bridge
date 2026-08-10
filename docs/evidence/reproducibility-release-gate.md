@@ -66,12 +66,14 @@ reproducibility-gate/
 │   ├── bundle/
 │   └── packages/
 ├── release-authorization.json
-└── release-authorization.sha256
+├── release-authorization.sha256
+├── publish-manifest.json
+└── publish-manifest.sha256
 ```
 
 The authorization inventories every file permitted to reach publication. It names the exact candidate and hashes the machine report, human report, and in-toto statement. `verifyReleaseAuthorization` rejects a changed report, changed authorization hash record, changed canonical manifest, missing artifact, extra artifact, byte change, or mode change.
 
-The gate performs no registry writes. The later external publisher must verify this authorization against the candidate before it reads credentials or uploads a package.
+The CLI derives the publish manifest after the gate verifies the authorization. The manifest binds ordered package actions and idempotency keys to the candidate and publication index. It names required credential environment variables but contains no values. The gate and manifest writer perform no network access, credential reads, or registry writes.
 
 ## CLI and CI
 
@@ -79,9 +81,10 @@ Run the complete local path with:
 
 ```sh
 lean-bridge publish --dry-run --output build/reproducibility-gate
+lean-bridge publish --manifest build/reproducibility-gate/publish-manifest.json
 ```
 
-The command builds its own release candidate. It rejects `--bundle` in dry-run mode because accepting a prebuilt bundle would skip clean build A.
+Dry run builds its own release candidate. It rejects `--bundle`, `--authorization`, and `--manifest` because accepting prebuilt inputs would skip or mix clean-build evidence. Execute mode consumes only the generated manifest and optional target constraints that exactly match the dry run.
 
 The GitHub workflow runs the same gate with repository read permission. It verifies the authorization, archives the release directory to retain Unix modes, and uploads one immutable workflow artifact. A separate `release-ready` job downloads that archive and verifies the authorization again. Future registry jobs must depend on `release-ready`; no current job receives registry credentials or writes to a registry.
 
@@ -105,7 +108,7 @@ The machine report records the platform, backend version, builder definition dig
 
 ## Tests
 
-[`tests/reproducibility-gate.test.mjs`](../../tests/reproducibility-gate.test.mjs), [`tests/independent-verifier.test.mjs`](../../tests/independent-verifier.test.mjs), and [`tests/independent-confirmation.test.mjs`](../../tests/independent-confirmation.test.mjs) verify independent clean cloning, byte differences, mode differences, bounded diagnostics, complete authorization generation, changed-candidate rejection, failed-report retention, archive safety, one-command verification, append-only confirmation records, and closed report schemas.
+[`tests/reproducibility-gate.test.mjs`](../../tests/reproducibility-gate.test.mjs), [`tests/independent-verifier.test.mjs`](../../tests/independent-verifier.test.mjs), and [`tests/independent-confirmation.test.mjs`](../../tests/independent-confirmation.test.mjs) verify independent clean cloning, byte differences, mode differences, bounded diagnostics, complete authorization generation, publish manifest derivation, target-selection locking, changed-candidate rejection, failed-report retention, archive safety, one-command verification, append-only confirmation records, and closed report schemas.
 
 Run the focused gate without compiling the full toolchain twice:
 

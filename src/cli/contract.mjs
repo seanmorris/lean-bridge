@@ -83,6 +83,7 @@ const optionDefinitions = Object.freeze({
   "--policy": Object.freeze({ name: "policy", value: true, commands: analyzeCommands }),
   "--bundle": Object.freeze({ name: "bundle", value: true, commands: new Set(["publish"]) }),
   "--authorization": Object.freeze({ name: "authorization", value: true, commands: new Set(["publish"]) }),
+  "--manifest": Object.freeze({ name: "manifest", value: true, commands: new Set(["publish"]) }),
   "--dry-run": Object.freeze({ name: "dryRun", value: false, commands: new Set(["publish"]) }),
 });
 
@@ -115,9 +116,8 @@ Build and publish options:
   --output <path>       Local build, gate, or publication output
 
 Publish options:
-  --bundle <path>       Authorized candidate for a future external publish
-  --authorization <path> Reproducibility gate directory for that candidate
-  --dry-run             Build twice, compare, and authorize without registry writes
+  --manifest <path>     Consume the exact manifest produced by publish --dry-run
+  --dry-run             Build twice, compare, authorize, and plan without registry writes
 
 Exit codes:
   0                     Command succeeded
@@ -225,6 +225,7 @@ export const parseCliArguments = (argv, {
     policy: null,
     bundle: null,
     authorization: null,
+    manifest: null,
     dryRun: false,
   };
   const seen = new Set();
@@ -322,6 +323,7 @@ export const parseCliArguments = (argv, {
     output: parsed.output === null ? null : resolve(cwd, parsed.output),
     bundle: parsed.bundle === null ? null : resolve(cwd, parsed.bundle),
     authorization: parsed.authorization === null ? null : resolve(cwd, parsed.authorization),
+    manifest: parsed.manifest === null ? null : resolve(cwd, parsed.manifest),
     format,
     interactive: parsed.interactive,
     configuration: Object.freeze({ path: configuration.path, sources }),
