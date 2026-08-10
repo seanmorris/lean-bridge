@@ -368,6 +368,7 @@ test("the executable analyzes the project and reports pending commands honestly"
 
 test("publish dry-run executes the full reproducibility gate through the CLI contract", async () => {
   const calls = [];
+  const credentialCalls = [];
   const handlers = createCliHandlers({
     gate: async request => {
       calls.push(request);
@@ -395,6 +396,17 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
         },
       };
     },
+    credentialProvider: {
+      kind: "must-not-run",
+      has(name) {
+        credentialCalls.push(["has", name]);
+        throw new Error("dry run reached credentials");
+      },
+      read(name) {
+        credentialCalls.push(["read", name]);
+        throw new Error("dry run reached credentials");
+      },
+    },
   });
   const outcome = await runCli({
     argv: ["publish", "--dry-run", "--output", "gate", "--json"],
@@ -415,6 +427,7 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
   assert.deepEqual(calls[0].cache, { policy: "use", directory: null });
   assert.equal(calls[1].createPublishPlan.gateRoot, "/workspace/gate");
   assert.deepEqual(calls[1].createPublishPlan.requestedTargets, []);
+  assert.deepEqual(credentialCalls, []);
 
   const oldShape = await runCli({
     argv: ["publish", "--dry-run", "--bundle", "bundle", "--output", "gate", "--json"],
@@ -464,7 +477,14 @@ test("publish hands the verified immutable plan to an installed registry backend
     candidateRoot: "/workspace/gate/release",
     authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
     manifest: {
-      targets: [{ order: 1, ecosystem: "npm", coordinate: "@lean-bridge/alpha@0.0.0", idempotencyKey: "c".repeat(64) }],
+      targets: [{
+        order: 1,
+        ecosystem: "npm",
+        coordinate: "@lean-bridge/alpha@0.0.0",
+        operation: "publish",
+        idempotencyKey: "c".repeat(64),
+        credentialEnvironment: ["NPM_TOKEN"],
+      }],
     },
   };
   const handlers = createCliHandlers({
@@ -472,8 +492,25 @@ test("publish hands the verified immutable plan to an installed registry backend
       calls.push(["verify", request]);
       return verified;
     },
+    credentialProvider: {
+      kind: "test-provider",
+      has(name) {
+        calls.push(["has", name]);
+        return true;
+      },
+      read(name) {
+        calls.push(["read", name]);
+        return "registry-secret";
+      },
+    },
     publisher: async request => {
       calls.push(["publish", request]);
+      const preflight = await request.credentials.withTarget(request.plan.targets[0], credentials => {
+        assert.deepEqual(credentials.names, ["NPM_TOKEN"]);
+        assert.equal(credentials.get("NPM_TOKEN"), "registry-secret");
+        return { status: "authenticated" };
+      });
+      assert.deepEqual(preflight, { status: "authenticated" });
       return {
         candidateId: "b".repeat(64),
         results: [{ ecosystem: "npm", status: "already-published", idempotencyKey: "c".repeat(64) }],
@@ -489,9 +526,144 @@ test("publish hands the verified immutable plan to an installed registry backend
   });
   assert.equal(outcome.response.status, "ok");
   assert.equal(outcome.response.result.results[0].status, "already-published");
-  assert.deepEqual(calls.map(item => item[0]), ["verify", "publish"]);
-  assert.equal(calls[1][1].plan, verified.manifest);
-  assert.equal(calls[1][1].manifestSha256, "a".repeat(64));
+  assert.equal(outcome.response.result.credentialAudit.status, "complete");
+  assert.equal(outcome.response.result.credentialAudit.valuesRead, true);
+  assert.equal(outcome.response.result.credentialAudit.valuesRetained, false);
+  assert.equal(JSON.stringify(outcome.response).includes("registry-secret"), false);
+  assert.deepEqual(calls.map(item => item[0]), ["verify", "has", "publish", "read"]);
+  assert.equal(calls[2][1].plan, verified.manifest);
+  assert.equal(calls[2][1].manifestSha256, "a".repeat(64));
+});
+
+test("publish blocks missing credentials before invoking a registry backend", async () => {
+  let publisherCalled = false;
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath: "/workspace/gate/publish-manifest.json",
+      manifestSha256: "a".repeat(64),
+      candidateRoot: "/workspace/gate/release",
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: {
+        targets: [{
+          order: 1,
+          ecosystem: "npm",
+          coordinate: "@lean-bridge/alpha@0.0.0",
+          operation: "publish",
+          idempotencyKey: "c".repeat(64),
+          credentialEnvironment: ["NPM_TOKEN"],
+        }],
+      },
+    }),
+    credentialProvider: {
+      kind: "empty-provider",
+      has: () => false,
+      read: () => {
+        throw new Error("credential read must not run");
+      },
+    },
+    publisher: async () => {
+      publisherCalled = true;
+      return {};
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "blocked");
+  assert.equal(outcome.response.diagnostics[0].code, "publish-credentials-missing");
+  assert.equal(outcome.response.result.credentialAudit.status, "blocked");
+  assert.equal(outcome.response.result.credentialAudit.valuesRead, false);
+  assert.equal(outcome.response.result.externalRegistryWrites, false);
+  assert.equal(publisherCalled, false);
+});
+
+test("publish rejects a credential value returned by a registry backend", async () => {
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath: "/workspace/gate/publish-manifest.json",
+      manifestSha256: "a".repeat(64),
+      candidateRoot: "/workspace/gate/release",
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: {
+        targets: [{
+          order: 1,
+          ecosystem: "npm",
+          coordinate: "@lean-bridge/alpha@0.0.0",
+          operation: "publish",
+          idempotencyKey: "c".repeat(64),
+          credentialEnvironment: ["NPM_TOKEN"],
+        }],
+      },
+    }),
+    credentialProvider: {
+      kind: "test-provider",
+      has: () => true,
+      read: () => "registry-secret",
+    },
+    publisher: request => request.credentials.withTarget(request.plan.targets[0], credentials => ({
+      externalRegistryWrites: false,
+      accidentalLeak: credentials.get("NPM_TOKEN"),
+    })),
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "credential-value-leak");
+  assert.equal(outcome.response.result.credentialAudit.status, "failed");
+  assert.equal(outcome.response.result.externalRegistryWrites, "unknown");
+  assert.equal(JSON.stringify(outcome.response).includes("registry-secret"), false);
+});
+
+test("publish rejects a credential value before it reaches progress output", async () => {
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath: "/workspace/gate/publish-manifest.json",
+      manifestSha256: "a".repeat(64),
+      candidateRoot: "/workspace/gate/release",
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: {
+        targets: [{
+          order: 1,
+          ecosystem: "npm",
+          coordinate: "@lean-bridge/alpha@0.0.0",
+          operation: "publish",
+          idempotencyKey: "c".repeat(64),
+          credentialEnvironment: ["NPM_TOKEN"],
+        }],
+      },
+    }),
+    credentialProvider: {
+      kind: "test-provider",
+      has: () => true,
+      read: () => "registry-secret",
+    },
+    publisher: request => request.credentials.withTarget(request.plan.targets[0], credentials => {
+      request.onProgress({
+        phase: "registry",
+        state: "info",
+        message: `using ${credentials.get("NPM_TOKEN")}`,
+      });
+      return { externalRegistryWrites: false };
+    }),
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json", "--progress", "json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "credential-value-leak");
+  assert.equal(outcome.response.result.externalRegistryWrites, "unknown");
+  assert.equal(JSON.stringify(outcome.response.progress.events).includes("registry-secret"), false);
+  assert.equal(outcome.stderr.includes("registry-secret"), false);
 });
 
 test("the published CLI result schema is closed", async () => {

@@ -77,6 +77,8 @@ lean-bridge publish --manifest build/reproducibility-gate/publish-manifest.json
 
 `publish --dry-run` rebuilds in two independent clean environments and blocks on any artifact difference. A passing run writes `publish-manifest.json`. That manifest fixes the candidate, source revision, package versions, archive hashes, registry destinations, credential variable names, publication order, and idempotency keys. It contains no credential values and performs no network or registry operation. `publish --manifest` verifies the manifest, authorization, and complete artifact inventory before it can invoke a registry backend. The current POC stops at that verified boundary until the transactional registry backends in plan node 879 are installed.
 
+An installed registry backend receives credentials through a target-scoped capability after verification. Preflight checks required environment names without reading their values. The CLI rejects any observed credential value in publisher results, errors, or structured progress, then emits a value-free access audit. Dry run cannot reach the provider.
+
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
 ```sh

@@ -14,6 +14,11 @@ import {
   verifyPublishManifest,
   writePublishManifest,
 } from "../release/publish-manifest.mjs";
+import {
+  CredentialBoundaryError,
+  createEnvironmentCredentialProvider,
+  createPublishCredentialBoundary,
+} from "../release/credentials.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -61,6 +66,8 @@ export const createCliHandlers = ({
   createPublishPlan = writePublishManifest,
   verifyPublishPlan = verifyPublishManifest,
   publisher = null,
+  credentialProvider = createEnvironmentCredentialProvider(),
+  createCredentialBoundary = createPublishCredentialBoundary,
 } = {}) => Object.freeze({
   analyze: async (request, { signal, emitProgress } = {}) => {
     emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
@@ -214,6 +221,8 @@ export const createCliHandlers = ({
           nextActions: [],
         };
       }
+      let credentials = null;
+      let publisherInvoked = false;
       try {
         emitProgress?.({ phase: "authorize", state: "started", message: "Verifying the publish manifest and exact release candidate" });
         signal?.throwIfAborted();
@@ -247,28 +256,70 @@ export const createCliHandlers = ({
             },
           };
         }
-        emitProgress?.({ phase: "publish", state: "started", message: "Executing the verified idempotent publication plan" });
-        const result = await publisher({
-          plan: verified.manifest,
-          manifestPath: verified.manifestPath,
-          manifestSha256: verified.manifestSha256,
-          authorization: verified.authorization,
-          candidateRoot: verified.candidateRoot,
-          signal,
-          onProgress: emitProgress,
-        });
+        credentials = createCredentialBoundary({ plan: verified.manifest, provider: credentialProvider });
+        emitProgress?.({ phase: "credentials", state: "started", message: "Checking required registry credential names" });
+        const credentialPreflight = await credentials.preflight();
         signal?.throwIfAborted();
+        emitProgress?.({ phase: "credentials", state: "completed", message: "Registry credential requirements are available" });
+        emitProgress?.({ phase: "publish", state: "started", message: "Executing the verified idempotent publication plan" });
+        let result;
+        try {
+          const safePublisherProgress = event => {
+            credentials.assertSafe(event);
+            return emitProgress?.(event);
+          };
+          publisherInvoked = true;
+          result = await publisher({
+            plan: verified.manifest,
+            manifestPath: verified.manifestPath,
+            manifestSha256: verified.manifestSha256,
+            authorization: verified.authorization,
+            candidateRoot: verified.candidateRoot,
+            credentials,
+            credentialPreflight,
+            signal,
+            onProgress: safePublisherProgress,
+          });
+        } catch (error) {
+          throw credentials.sanitize(error);
+        }
+        signal?.throwIfAborted();
+        if (result === null || typeof result !== "object" || Array.isArray(result)) {
+          throw new CredentialBoundaryError("invalid-publisher-result", "Registry publisher must return one result object");
+        }
+        credentials.assertSafe(result);
+        const credentialAudit = credentials.complete();
+        const safeResult = { ...result, credentialAudit };
+        credentials.assertSafe(safeResult);
         emitProgress?.({ phase: "publish", state: "completed", message: "Publication plan completed" });
-        return { status: "ok", result, diagnostics: [], prompts: [], nextActions: [] };
+        return { status: "ok", result: safeResult, diagnostics: [], prompts: [], nextActions: [] };
       } catch (error) {
-        if (!(error instanceof PublishManifestError) && !(error instanceof ReproducibilityGateError)) throw error;
+        if (
+          !(error instanceof PublishManifestError) &&
+          !(error instanceof ReproducibilityGateError) &&
+          !(error instanceof CredentialBoundaryError)
+        ) throw error;
+        const blocked = new Set([
+          "credential-provider-required",
+          "invalid-credential-provider",
+          "credential-provider-failed",
+          "invalid-credential-provider-value",
+          "publish-credentials-missing",
+          "publish-credentials-changed",
+        ]).has(error.code);
+        if (credentials !== null && !blocked) credentials.markFailed();
         return {
-          status: "failed",
-          result: null,
+          status: blocked ? "blocked" : "failed",
+          result: credentials === null ? null : {
+            credentialAudit: credentials.snapshot(),
+            externalRegistryWrites: publisherInvoked ? "unknown" : false,
+          },
           diagnostics: [diagnostic({ code: error.code, message: error.message })],
           prompts: [],
           nextActions: [],
         };
+      } finally {
+        credentials?.close();
       }
     }
     if (request.output === null || request.bundle !== null || request.authorization !== null || request.manifest !== null) {
