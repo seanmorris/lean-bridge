@@ -661,6 +661,9 @@ export const verifyReleaseAuthorization = async ({ authorizationRoot, candidateR
     fail("authorization-hash-drift", "Release authorization hash record differs from its bytes");
   }
   const authorization = JSON.parse(authorizationSource);
+  if (authorizationSource !== canonicalJson(authorization)) {
+    fail("noncanonical-release-authorization", "Release authorization JSON is not canonical");
+  }
   validateReleaseAuthorization(authorization);
   const inventory = await collectCandidateInventory(resolve(candidateRoot));
   const actualArtifacts = inventoryRecords(inventory);

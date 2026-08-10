@@ -412,8 +412,9 @@ export const verifyPublishManifest = async ({ manifestPath, requestedTargets = [
     fail("publish-index-drift", "Publication index differs from the publish manifest");
   }
   const publicationIndex = parsePublicationIndex(publicationSource);
+  const authorizationDocument = JSON.parse(authorizationSource);
   const expected = createPublishManifest({
-    authorization: JSON.parse(authorizationSource),
+    authorization: authorizationDocument,
     authorizationSha256: authorization.authorizationSha256,
     publicationIndex,
     requestedTargets: manifest.selection.requested,
@@ -424,6 +425,7 @@ export const verifyPublishManifest = async ({ manifestPath, requestedTargets = [
     manifestPath: path,
     manifestSha256,
     authorization,
+    authorizationDocument,
     authorizationRoot,
     candidateRoot,
     publicationIndexPath: publicationPath,

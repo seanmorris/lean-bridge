@@ -86,6 +86,7 @@
     "test:php-release": "node scripts/check-php-release-gate.mjs",
     "test:reproducibility": "bash scripts/check-cross-root-reproducibility.sh",
     "test:release-authorization": "node --test tests/reproducibility-gate.test.mjs tests/release-candidate-state.test.mjs tests/independent-confirmation.test.mjs tests/independent-verifier.test.mjs",
+    "test:publication-attestation": "node --test tests/publication-attestation.test.mjs tests/credential-boundary.test.mjs tests/cli-contract.test.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

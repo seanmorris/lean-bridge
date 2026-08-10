@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { constants } from "node:fs";
 import { access, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -27,6 +27,11 @@ import {
   verifyPublishManifest,
   writePublishManifest,
 } from "../src/release/publish-manifest.mjs";
+import {
+  authorizePublication,
+  createPublicationSignerPolicy,
+  verifyPublicationAttestation,
+} from "../src/release/publication-attestation.mjs";
 import { rehearseRelease } from "../src/release/release-rehearsal.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
@@ -344,6 +349,31 @@ test("dry run derives one credential-free manifest that execute mode can verify"
     });
     assert.equal(verified.manifestSha256, written.manifestSha256);
     assert.equal(verified.authorization.candidate.id, written.manifest.authorization.candidateId);
+    assert.equal(verified.authorizationDocument.candidate.id, written.manifest.authorization.candidateId);
+    assert.equal(verified.authorizationDocument.evidence.attestationSha256.length, 64);
+    const keys = generateKeyPairSync("ed25519");
+    const signerPolicy = createPublicationSignerPolicy({
+      identity: "https://example.test/reproducibility-release-signer",
+      publicKeyPem: keys.publicKey.export({ type: "spki", format: "pem" }).toString(),
+    });
+    const signed = await authorizePublication({
+      verified,
+      policy: signerPolicy,
+      signer: {
+        kind: "test-ed25519",
+        keyId: signerPolicy.signers[0].keyId,
+        sign: bytes => sign(null, bytes, keys.privateKey),
+      },
+    });
+    assert.equal(signed.statement.predicate.authorization.candidate.id, written.manifest.authorization.candidateId);
+    assert.equal(signed.statement.predicate.publication.targets[0].ecosystem, "npm");
+    assert.ok(signed.statement.predicate.assuranceArtifacts.sbom.length > 0);
+    assert.ok(signed.statement.predicate.assuranceArtifacts.provenance.length > 0);
+    assert.equal(verifyPublicationAttestation({
+      policy: signerPolicy,
+      envelope: signed.envelope,
+      verified,
+    }).status, "verified");
 
     await assert.rejects(
       verifyPublishManifest({ manifestPath: written.path, requestedTargets: ["cargo"] }),

@@ -13,6 +13,8 @@ create credential boundary from verified target requirements
   ↓
 check that each required environment name is available
   ↓
+verify a signed publication authorization for the exact release closure
+  ↓
 grant one target-scoped registry callback
   ↓
 read only that target's declared values
@@ -30,7 +32,7 @@ Dry run never creates or calls the boundary. A missing registry publisher also s
 
 Preflight calls `has(name)`. It does not call `read(name)`. Missing names produce `publish-credentials-missing` with ecosystem, package coordinate, and environment names. The diagnostic contains no values.
 
-An installed publisher receives a `credentials` capability. It must perform authenticated work inside `credentials.withTarget(target, callback)`. The callback receives only the names authorized for that target and a guarded `get(name)` method. The boundary rejects concurrent target leases, targets outside the verified plan, archive-only targets, undeclared names, empty provider values, and credentials that disappear after preflight.
+An installed publisher receives a `credentials` capability after the [`publication attestation`](publication-attestation.md) passes. It must perform authenticated work inside `credentials.withTarget(target, callback)`. The callback receives only the names authorized for that target and a guarded `get(name)` method. The boundary rejects concurrent target leases, targets outside the verified plan, archive-only targets, undeclared names, empty provider values, and credentials that disappear after preflight.
 
 ## Output controls
 

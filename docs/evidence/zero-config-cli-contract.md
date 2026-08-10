@@ -36,6 +36,8 @@ An installed registry backend receives the verified plan, candidate root, author
 
 When a registry backend is installed, the CLI creates a credential boundary after manifest verification. Preflight checks only the environment names declared for each target. The backend receives a target-scoped credential capability and a progress callback that rejects observed credential values. A successful result includes the closed [`credential audit`](publish-credential-boundary.md), which records names, availability, and access counts without values. Missing credentials block before the backend runs.
 
+After name-only credential preflight, the CLI creates a signed [`publication attestation`](publication-attestation.md). A closed public policy lists accepted signer identities and Ed25519 public keys. The external signer receives only DSSE preauthentication bytes. Lean Bridge verifies the signature locally before the backend receives the envelope or reads a registry credential value. Missing policy, an unauthorized key, a provider failure, an invalid signature, an artifact outside the authorized inventory, or closure drift blocks publication before the backend runs.
+
 ## Analysis output and policy
 
 The output directory is an explicit write boundary. The CLI writes each file in a sibling staging directory, checks cancellation between files, and renames the complete directory into place. A failed or cancelled write removes staging state. Analysis that needs input still emits `project-analysis.json` and a failing policy report when requested. It does not invent `binding-ir.json`.
@@ -154,9 +156,11 @@ Human output reports the same project, target, cache, diagnostics, prompts, and 
 
 ## Tests
 
-[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, credential isolation, registry backend handoff, external publication blocking, and the closed CLI schemas.
+[`tests/cli-contract.test.mjs`](../../tests/cli-contract.test.mjs) covers configuration precedence, target and cache parsing, analysis policy resolution, malformed policy usage failures, structured prompts, progress streams, cancellation, dry-run manifest generation, execute-time verification, signer authorization, credential isolation, registry backend handoff, external publication blocking, and the closed CLI schemas.
 
 [`tests/credential-boundary.test.mjs`](../../tests/credential-boundary.test.mjs) covers environment providers, name-only preflight, target-scoped value access, missing credentials, result and error leak rejection, boundary state, and the closed credential audit schema.
+
+[`tests/publication-attestation.test.mjs`](../../tests/publication-attestation.test.mjs) covers signer policy identity, DSSE encoding, in-toto subjects, release-closure binding, Ed25519 verification, provider failures, unauthorized keys, artifact drift, and the closed attestation schemas.
 
 [`tests/lean-project-analyzer.test.mjs`](../../tests/lean-project-analyzer.test.mjs) covers deterministic output directories, conditional Binding IR output, policy thresholds, stable violations, existing destinations, source-tree preservation, cancellation cleanup, and the closed policy schemas.
 

@@ -79,6 +79,8 @@ lean-bridge publish --manifest build/reproducibility-gate/publish-manifest.json
 
 An installed registry backend receives credentials through a target-scoped capability after verification. Preflight checks required environment names without reading their values. The CLI rejects any observed credential value in publisher results, errors, or structured progress, then emits a value-free access audit. Dry run cannot reach the provider.
 
+Before the backend can read a credential value, the CLI requires an external signer to authorize the exact release closure. The signer receives only DSSE preauthentication bytes. Its private key never enters the build, publish manifest, CLI result, or signer audit. Lean Bridge verifies the returned Ed25519 signature against a closed public policy, then gives the backend the signed in-toto statement. That statement names the release authorization, source revision, flake lock, canonical manifest, artifact inventory, reproducibility evidence, SBOM, provenance, package archives, destinations, and idempotency keys. [The publication attestation evidence](docs/evidence/publication-attestation.md) records the contract and failure tests.
+
 The command line defaults to noninteractive execution. Agents can request one closed JSON result without scraping terminal prose:
 
 ```sh
@@ -365,7 +367,7 @@ analyze → generate → build A → clean build B → compare → report → pu
 
 The default path uses a pinned Debian Docker environment. Native Nix provides the supported fallback. Build A and build B use clean source trees and separate writable state. The comparison covers binaries, bindings, types, docs, manifests, schemas, proof metadata, package projections, and provenance inputs.
 
-Any difference blocks publication. The release receives machine-readable and human-readable reports with both hashes, differing paths, likely entropy categories, and exact reproduction commands. Registry credentials remain unavailable until the comparison passes.
+Any difference blocks publication. The release receives machine-readable and human-readable reports with both hashes, differing paths, likely entropy categories, and exact reproduction commands. Registry credentials remain unavailable until the comparison and signed publication authorization pass.
 
 The zero-configuration gate now clones one committed source revision twice, gives each build separate writable state, compares every file and mode under the canonical bundle and package projections, and writes a content-addressed authorization for the exact matching inventory. A failed comparison retains JSON and Markdown diagnostics but cannot produce an authorization. [The release gate evidence](docs/evidence/reproducibility-release-gate.md) records the contract and verification commands. The POC also passes its earlier cross-root gate for 24 browser artifacts and 24 threaded artifacts. The PHP release gate rebuilds 48 native files and 63 files for each PHP-Wasm profile, compares every byte, verifies both hash inventories, executes one semantic corpus through all three profiles, then runs the two-component shared-runtime test. [The PHP release gate evidence](docs/evidence/php-release-gate.md) records the 174-file result.
 

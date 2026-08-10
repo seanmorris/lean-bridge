@@ -19,6 +19,19 @@ import {
 import { renderProgressEvent, runCli } from "../src/cli/run.mjs";
 
 const execute = promisify(execFile);
+const publicationAttestation = Object.freeze({
+  audit: Object.freeze({
+    schemaVersion: 1,
+    status: "verified",
+    providerKind: "test-signer",
+    signer: Object.freeze({ identity: "test-release-signer", keyId: "d".repeat(64), algorithm: "ed25519" }),
+    policySha256: "e".repeat(64),
+    statementSha256: "f".repeat(64),
+    envelopeSha256: "0".repeat(64),
+    privateMaterialReceived: false,
+  }),
+});
+const authorizePublish = async () => publicationAttestation;
 
 test("CLI parsing is noninteractive by default and keeps command options closed", () => {
   assert.deepEqual(parseCliArguments(["analyze"], { cwd: "/workspace", environment: {}, stderrIsTTY: false }), {
@@ -503,6 +516,10 @@ test("publish hands the verified immutable plan to an installed registry backend
         return "registry-secret";
       },
     },
+    authorizePublish: async request => {
+      calls.push(["attest", request]);
+      return publicationAttestation;
+    },
     publisher: async request => {
       calls.push(["publish", request]);
       const preflight = await request.credentials.withTarget(request.plan.targets[0], credentials => {
@@ -529,10 +546,13 @@ test("publish hands the verified immutable plan to an installed registry backend
   assert.equal(outcome.response.result.credentialAudit.status, "complete");
   assert.equal(outcome.response.result.credentialAudit.valuesRead, true);
   assert.equal(outcome.response.result.credentialAudit.valuesRetained, false);
+  assert.equal(outcome.response.result.attestationAudit.status, "verified");
+  assert.equal(outcome.response.result.attestationAudit.privateMaterialReceived, false);
   assert.equal(JSON.stringify(outcome.response).includes("registry-secret"), false);
-  assert.deepEqual(calls.map(item => item[0]), ["verify", "has", "publish", "read"]);
-  assert.equal(calls[2][1].plan, verified.manifest);
-  assert.equal(calls[2][1].manifestSha256, "a".repeat(64));
+  assert.deepEqual(calls.map(item => item[0]), ["verify", "has", "attest", "publish", "read"]);
+  assert.equal(calls[3][1].plan, verified.manifest);
+  assert.equal(calls[3][1].manifestSha256, "a".repeat(64));
+  assert.equal(calls[3][1].attestation, publicationAttestation);
 });
 
 test("publish blocks missing credentials before invoking a registry backend", async () => {
@@ -603,6 +623,7 @@ test("publish rejects a credential value returned by a registry backend", async 
       has: () => true,
       read: () => "registry-secret",
     },
+    authorizePublish,
     publisher: request => request.credentials.withTarget(request.plan.targets[0], credentials => ({
       externalRegistryWrites: false,
       accidentalLeak: credentials.get("NPM_TOKEN"),
@@ -644,6 +665,7 @@ test("publish rejects a credential value before it reaches progress output", asy
       has: () => true,
       read: () => "registry-secret",
     },
+    authorizePublish,
     publisher: request => request.credentials.withTarget(request.plan.targets[0], credentials => {
       request.onProgress({
         phase: "registry",
@@ -664,6 +686,55 @@ test("publish rejects a credential value before it reaches progress output", asy
   assert.equal(outcome.response.result.externalRegistryWrites, "unknown");
   assert.equal(JSON.stringify(outcome.response.progress.events).includes("registry-secret"), false);
   assert.equal(outcome.stderr.includes("registry-secret"), false);
+});
+
+test("publish requires signer policy after name-only credential preflight and before registry access", async () => {
+  const calls = [];
+  const handlers = createCliHandlers({
+    verifyPublishPlan: async () => ({
+      manifestPath: "/workspace/gate/publish-manifest.json",
+      manifestSha256: "a".repeat(64),
+      candidateRoot: "/workspace/gate/release",
+      authorization: { status: "authorized", candidate: { id: "b".repeat(64) } },
+      manifest: {
+        targets: [{
+          order: 1,
+          ecosystem: "npm",
+          coordinate: "@lean-bridge/alpha@0.0.0",
+          operation: "publish",
+          idempotencyKey: "c".repeat(64),
+          credentialEnvironment: ["NPM_TOKEN"],
+        }],
+      },
+    }),
+    credentialProvider: {
+      kind: "test-provider",
+      has(name) {
+        calls.push(["has", name]);
+        return true;
+      },
+      read(name) {
+        calls.push(["read", name]);
+        return "must-not-be-read";
+      },
+    },
+    publisher: async () => {
+      calls.push(["publish"]);
+      return {};
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--manifest", "gate/publish-manifest.json", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "blocked");
+  assert.equal(outcome.response.diagnostics[0].code, "publication-signer-policy-required");
+  assert.equal(outcome.response.result.credentialAudit.valuesRead, false);
+  assert.equal(outcome.response.result.attestationAudit, null);
+  assert.equal(outcome.response.result.externalRegistryWrites, false);
+  assert.deepEqual(calls, [["has", "NPM_TOKEN"]]);
 });
 
 test("the published CLI result schema is closed", async () => {

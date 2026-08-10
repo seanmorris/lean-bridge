@@ -19,6 +19,10 @@ import {
   createEnvironmentCredentialProvider,
   createPublishCredentialBoundary,
 } from "../release/credentials.mjs";
+import {
+  PublicationAttestationError,
+  authorizePublication,
+} from "../release/publication-attestation.mjs";
 
 const deferred = (command, node) => ({
   status: "blocked",
@@ -68,6 +72,9 @@ export const createCliHandlers = ({
   publisher = null,
   credentialProvider = createEnvironmentCredentialProvider(),
   createCredentialBoundary = createPublishCredentialBoundary,
+  attestationPolicy = null,
+  attestationSigner = null,
+  authorizePublish = authorizePublication,
 } = {}) => Object.freeze({
   analyze: async (request, { signal, emitProgress } = {}) => {
     emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
@@ -222,6 +229,7 @@ export const createCliHandlers = ({
         };
       }
       let credentials = null;
+      let publicationAttestation = null;
       let publisherInvoked = false;
       try {
         emitProgress?.({ phase: "authorize", state: "started", message: "Verifying the publish manifest and exact release candidate" });
@@ -261,6 +269,14 @@ export const createCliHandlers = ({
         const credentialPreflight = await credentials.preflight();
         signal?.throwIfAborted();
         emitProgress?.({ phase: "credentials", state: "completed", message: "Registry credential requirements are available" });
+        emitProgress?.({ phase: "attestation", state: "started", message: "Authorizing the exact publication closure" });
+        publicationAttestation = await authorizePublish({
+          verified,
+          policy: attestationPolicy,
+          signer: attestationSigner,
+        });
+        signal?.throwIfAborted();
+        emitProgress?.({ phase: "attestation", state: "completed", message: "Publication closure signature verified" });
         emitProgress?.({ phase: "publish", state: "started", message: "Executing the verified idempotent publication plan" });
         let result;
         try {
@@ -277,6 +293,7 @@ export const createCliHandlers = ({
             candidateRoot: verified.candidateRoot,
             credentials,
             credentialPreflight,
+            attestation: publicationAttestation,
             signal,
             onProgress: safePublisherProgress,
           });
@@ -289,7 +306,7 @@ export const createCliHandlers = ({
         }
         credentials.assertSafe(result);
         const credentialAudit = credentials.complete();
-        const safeResult = { ...result, credentialAudit };
+        const safeResult = { ...result, credentialAudit, attestationAudit: publicationAttestation.audit };
         credentials.assertSafe(safeResult);
         emitProgress?.({ phase: "publish", state: "completed", message: "Publication plan completed" });
         return { status: "ok", result: safeResult, diagnostics: [], prompts: [], nextActions: [] };
@@ -297,7 +314,8 @@ export const createCliHandlers = ({
         if (
           !(error instanceof PublishManifestError) &&
           !(error instanceof ReproducibilityGateError) &&
-          !(error instanceof CredentialBoundaryError)
+          !(error instanceof CredentialBoundaryError) &&
+          !(error instanceof PublicationAttestationError)
         ) throw error;
         const blocked = new Set([
           "credential-provider-required",
@@ -306,12 +324,26 @@ export const createCliHandlers = ({
           "invalid-credential-provider-value",
           "publish-credentials-missing",
           "publish-credentials-changed",
+          "verified-publication-required",
+          "publication-signer-required",
+          "publication-signer-policy-required",
+          "invalid-publication-signer",
+          "publication-signer-not-authorized",
+          "publication-signer-failed",
+          "publication-signature-invalid",
+          "publication-signature-threshold",
+          "invalid-publication-signer-key",
+          "unsupported-publication-signer",
+          "noncanonical-publication-signer-key",
+          "publication-signer-key-drift",
+          "invalid-publication-attestation",
         ]).has(error.code);
         if (credentials !== null && !blocked) credentials.markFailed();
         return {
           status: blocked ? "blocked" : "failed",
           result: credentials === null ? null : {
             credentialAudit: credentials.snapshot(),
+            attestationAudit: publicationAttestation?.audit ?? null,
             externalRegistryWrites: publisherInvoked ? "unknown" : false,
           },
           diagnostics: [diagnostic({ code: error.code, message: error.message })],
