@@ -104,6 +104,7 @@
     "test:component-side-linker": "node --test tests/component-side-linker.test.mjs",
     "build:component-side": "node scripts/build-plain-component-side-module.mjs",
     "test:side-module-audit": "node --test tests/side-module-audit.test.mjs",
+    "test:component-artifact-manifest": "node --test tests/component-artifact-manifest.test.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

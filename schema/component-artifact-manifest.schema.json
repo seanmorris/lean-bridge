@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/component-artifact-manifest.v1.json",
+  "title": "Lean Bridge component artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "component", "source", "bindingIr", "compilerAdapters", "compilation", "runtime", "wasm", "structure", "policies"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-component-artifact" },
+    "component": { "$ref": "#/$defs/component" },
+    "source": { "$ref": "#/$defs/source" },
+    "bindingIr": { "$ref": "#/$defs/bindingIr" },
+    "compilerAdapters": { "$ref": "#/$defs/compilerAdapters" },
+    "compilation": { "$ref": "#/$defs/compilation" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "wasm": { "$ref": "#/$defs/wasm" },
+    "structure": { "$ref": "#/$defs/structure" },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compileOnce", "sourceReadOnly", "linksRuntime", "importsSharedMemory", "importsSharedTable", "publicGenericDispatch", "targetSpecificRebuild"],
+      "properties": {
+        "compileOnce": { "const": true },
+        "sourceReadOnly": { "const": true },
+        "linksRuntime": { "const": false },
+        "importsSharedMemory": { "const": true },
+        "importsSharedTable": { "const": true },
+        "publicGenericDispatch": { "const": false },
+        "targetSpecificRebuild": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "git": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "component": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "version"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 } }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["treeSha256", "toolchain", "inputCount", "inputsSha256"],
+      "properties": { "treeSha256": { "$ref": "#/$defs/sha256" }, "toolchain": { "type": "string", "minLength": 1 }, "inputCount": { "type": "integer", "minimum": 1 }, "inputsSha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "bindingIr": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "origin", "semanticSha256", "declarations"],
+      "properties": { "schemaVersion": { "type": "integer", "minimum": 1 }, "origin": { "enum": ["statically-inferred", "existing-validated"] }, "semanticSha256": { "$ref": "#/$defs/sha256" }, "declarations": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } }
+    },
+    "compilerAdapters": {
+      "type": "object", "additionalProperties": false, "required": ["planSha256", "leanSourceSha256", "privateAbiSha256", "directSymbols"],
+      "properties": { "planSha256": { "$ref": "#/$defs/sha256" }, "leanSourceSha256": { "$ref": "#/$defs/sha256" }, "privateAbiSha256": { "$ref": "#/$defs/sha256" }, "directSymbols": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" } } }
+    },
+    "tool": {
+      "type": "object", "additionalProperties": false, "required": ["version", "commit"],
+      "properties": { "version": { "type": "string", "minLength": 1 }, "commit": { "$ref": "#/$defs/git" } }
+    },
+    "compilation": {
+      "type": "object", "additionalProperties": false, "required": ["componentPlanSha256", "compilationPlanSha256", "targetCManifestSha256", "compiler"],
+      "properties": { "componentPlanSha256": { "$ref": "#/$defs/sha256" }, "compilationPlanSha256": { "$ref": "#/$defs/sha256" }, "targetCManifestSha256": { "$ref": "#/$defs/sha256" }, "compiler": { "$ref": "#/$defs/tool" } }
+    },
+    "runtime": {
+      "type": "object", "additionalProperties": false, "required": ["abiVersion", "leanCommit", "patchSetSha256", "profile", "shared"],
+      "properties": { "abiVersion": { "type": "integer", "minimum": 1 }, "leanCommit": { "$ref": "#/$defs/git" }, "patchSetSha256": { "$ref": "#/$defs/sha256" }, "profile": { "const": "side-lazy" }, "shared": { "const": true } }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false, "required": ["path", "bytes", "sha256"],
+      "properties": { "path": { "type": "string", "pattern": "^artifacts/.+\\.so\\.wasm$" }, "bytes": { "type": "integer", "minimum": 1 }, "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "wasm": {
+      "type": "object", "additionalProperties": false, "required": ["artifact", "linkManifestSha256", "auditSha256", "linker"],
+      "properties": { "artifact": { "$ref": "#/$defs/artifact" }, "linkManifestSha256": { "$ref": "#/$defs/sha256" }, "auditSha256": { "$ref": "#/$defs/sha256" }, "linker": { "$ref": "#/$defs/tool" } }
+    },
+    "structure": {
+      "type": "object", "additionalProperties": false, "required": ["imports", "exports", "definitions"],
+      "properties": {
+        "imports": { "type": "object", "additionalProperties": false, "required": ["memory", "table", "functions", "globals"], "properties": { "memory": { "const": 1 }, "table": { "const": 1 }, "functions": { "type": "array", "items": { "type": "string" } }, "globals": { "type": "array", "items": { "type": "string" } } } },
+        "exports": { "type": "object", "additionalProperties": false, "required": ["directSymbols", "initializer", "internalInitializer", "emscriptenInternals"], "properties": { "directSymbols": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" } }, "initializer": { "const": "initialize_LeanBridgeGenerated" }, "internalInitializer": { "type": "string", "pattern": "^lean_bridge_internal_initialize_[0-9a-f]{16}$" }, "emscriptenInternals": { "const": ["__wasm_apply_data_relocs", "__wasm_call_ctors"] } } },
+        "definitions": { "type": "object", "additionalProperties": false, "required": ["memory", "table"], "properties": { "memory": { "const": 0 }, "table": { "const": 0 } } }
+      }
+    }
+  }
+}
