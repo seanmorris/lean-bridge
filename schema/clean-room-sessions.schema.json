@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leanbridge.dev/schema/clean-room-sessions.schema.json",
+  "title": "Lean Bridge clean-room usability sessions",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "protocol", "sessions"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "protocol": { "type": "string", "minLength": 1 },
+    "sessions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/session" }
+    }
+  },
+  "$defs": {
+    "strings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "role", "participantType", "status", "cleanCheckout", "revision", "commands",
+        "publishingAnnotations", "handwrittenWrappers", "prompts", "unfamiliarConcepts",
+        "actionableDiagnostics", "familiarInstall", "reproducibleVerified", "evidence"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["lean-author", "javascript-consumer", "python-consumer", "automated-agent"] },
+        "participantType": { "enum": ["human", "agent"] },
+        "status": { "enum": ["pending", "passed", "blocked", "failed"] },
+        "cleanCheckout": { "type": "boolean" },
+        "revision": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$" },
+        "commands": { "$ref": "#/$defs/strings" },
+        "publishingAnnotations": { "type": "integer", "minimum": 0 },
+        "handwrittenWrappers": { "type": "integer", "minimum": 0 },
+        "prompts": { "type": "integer", "minimum": 0 },
+        "unfamiliarConcepts": { "$ref": "#/$defs/strings" },
+        "actionableDiagnostics": { "type": "boolean" },
+        "familiarInstall": { "type": "boolean" },
+        "reproducibleVerified": { "type": "boolean" },
+        "evidence": { "$ref": "#/$defs/strings" }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "session": "automated-agent-79e8a1e",
+  "role": "automated-agent",
+  "revision": "79e8a1e988a52eb0cbd1bcd1da18457af43b3e58",
+  "cleanBefore": true,
+  "cleanAfter": true,
+  "commands": [
+    "node scripts/lean-bridge.mjs analyze --project tests/fixtures/onboarding/small --output <temporary>/analysis --json --progress none",
+    "node scripts/lean-bridge.mjs build --project tests/fixtures/onboarding/small --output <temporary>/build --target npm --json --progress none"
+  ],
+  "analyze": {
+    "status": "ok",
+    "exitCode": 0,
+    "prompts": 0,
+    "generatedFiles": 2,
+    "diagnostics": ["analysis-output-written"]
+  },
+  "build": {
+    "status": "failed",
+    "exitCode": 1,
+    "diagnostics": ["invalid-builder-manifest"]
+  },
+  "checkoutChanges": []
+}

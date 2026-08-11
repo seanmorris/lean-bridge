@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "protocol": "docs/evidence/clean-room-usability-protocol.md",
+  "sessions": [
+    {
+      "id": "lean-author-pending",
+      "role": "lean-author",
+      "participantType": "human",
+      "status": "pending",
+      "cleanCheckout": false,
+      "revision": null,
+      "commands": [],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": [],
+      "actionableDiagnostics": false,
+      "familiarInstall": false,
+      "reproducibleVerified": false,
+      "evidence": []
+    },
+    {
+      "id": "javascript-consumer-pending",
+      "role": "javascript-consumer",
+      "participantType": "human",
+      "status": "pending",
+      "cleanCheckout": false,
+      "revision": null,
+      "commands": [],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": [],
+      "actionableDiagnostics": false,
+      "familiarInstall": false,
+      "reproducibleVerified": false,
+      "evidence": []
+    },
+    {
+      "id": "python-consumer-pending",
+      "role": "python-consumer",
+      "participantType": "human",
+      "status": "pending",
+      "cleanCheckout": false,
+      "revision": null,
+      "commands": [],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": [],
+      "actionableDiagnostics": false,
+      "familiarInstall": false,
+      "reproducibleVerified": false,
+      "evidence": []
+    },
+    {
+      "id": "automated-agent-79e8a1e",
+      "role": "automated-agent",
+      "participantType": "agent",
+      "status": "blocked",
+      "cleanCheckout": true,
+      "revision": "79e8a1e988a52eb0cbd1bcd1da18457af43b3e58",
+      "commands": [
+        "node scripts/lean-bridge.mjs analyze --project tests/fixtures/onboarding/small --output <temporary>/analysis --json --progress none",
+        "node scripts/lean-bridge.mjs build --project tests/fixtures/onboarding/small --output <temporary>/build --target npm --json --progress none"
+      ],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": ["builder-image", "flake"],
+      "actionableDiagnostics": false,
+      "familiarInstall": false,
+      "reproducibleVerified": false,
+      "evidence": ["docs/evidence/clean-room-agent-79e8a1e.json"]
+    }
+  ]
+}
