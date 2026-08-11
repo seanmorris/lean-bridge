@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/side-module-audit.v1.json",
+  "title": "Lean Bridge side-module audit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "passed", "component", "compilationPlanSha256", "linkManifestSha256", "artifact", "structure", "checks"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-side-module-audit" },
+    "passed": { "const": true },
+    "component": { "type": "string", "minLength": 1 },
+    "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
+    "linkManifestSha256": { "$ref": "#/$defs/sha256" },
+    "artifact": { "$ref": "side-module-link-manifest.schema.json#/$defs/artifact" },
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["imports", "exports", "definitions"],
+      "properties": {
+        "imports": { "type": "object" },
+        "exports": { "type": "object" },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["memory", "table"],
+          "properties": { "memory": { "const": 0 }, "table": { "const": 0 } }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validWasm", "artifactIdentity", "linkEvidenceIdentity", "noPrivateRuntime", "noPrivateMemory", "noPrivateTable", "directSymbolCoverage", "initializerCoverage", "closedImportDomains", "closedExportDomains", "noHostPaths", "noPublicGenericDispatch"],
+      "properties": {
+        "validWasm": { "const": true },
+        "artifactIdentity": { "const": true },
+        "linkEvidenceIdentity": { "const": true },
+        "noPrivateRuntime": { "const": true },
+        "noPrivateMemory": { "const": true },
+        "noPrivateTable": { "const": true },
+        "directSymbolCoverage": { "const": true },
+        "initializerCoverage": { "const": true },
+        "closedImportDomains": { "const": true },
+        "closedExportDomains": { "const": true },
+        "noHostPaths": { "const": true },
+        "noPublicGenericDispatch": { "const": true }
+      }
+    }
+  },
+  "$defs": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+}

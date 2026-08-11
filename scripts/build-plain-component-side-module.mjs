@@ -5,12 +5,13 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
-import { canonicalJson } from "../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import { compileLeanComponentSources } from "../src/build/lean-component-compiler.mjs";
 import { linkComponentSideModule } from "../src/build/component-side-linker.mjs";
+import { auditComponentSideModule } from "../src/build/side-module-audit.mjs";
 
 const arguments_ = process.argv.slice(2);
 const option = name => {
@@ -38,6 +39,7 @@ try {
   await writeComponentCompilationInputs({ projectRoot, outputRoot: `${staging}/inputs`, analysis, componentPlan, compilerAdapters });
   const compiled = await compileLeanComponentSources({ inputRoot: `${staging}/inputs`, outputRoot: `${staging}/target-c`, engineRoot, compilationPlan });
   const linked = await linkComponentSideModule({ targetCRoot: `${staging}/target-c`, outputRoot: `${staging}/side-module`, engineRoot, compilationPlan });
+  const audited = await auditComponentSideModule({ sideRoot: `${staging}/side-module`, compilationPlan, reportPath: `${staging}/side-module/audit/component-side-module-audit.json` });
   const report = Object.freeze({
     schemaVersion: 1,
     component: compilationPlan.document.component.id,
@@ -45,6 +47,7 @@ try {
     compilationPlanSha256: compilationPlan.sha256,
     targetCManifestSha256: compiled.manifestSha256,
     sideModuleLinkManifestSha256: linked.manifestSha256,
+    sideModuleAuditSha256: sha256(canonicalJson(audited)),
     sideModule: linked.manifest.artifact,
     sourceReadOnly: true,
     linksRuntime: false,
