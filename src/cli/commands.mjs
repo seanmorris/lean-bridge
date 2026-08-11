@@ -71,6 +71,29 @@ const policyDiagnostics = report => {
   ];
 };
 
+const blockedBuildCodes = new Set([
+  "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
+  "cache-directory-unsupported", "unknown-package-target", "package-target-ineligible",
+  "component-binding-ir-required", "component-adapter-hints-required",
+]);
+
+const internalBuildCodes = new Set([
+  "build-command-failed", "build-timeout", "build-output-limit",
+  "builder-image-drift", "builder-definition-drift", "builder-base-drift", "builder-output-drift",
+  "component-engine-store-path-invalid", "component-engine-cache-incomplete", "component-engine-output-invalid",
+  "unpinned-builder-image", "unsupported-docker-mount-path",
+]);
+
+const publicBuildDiagnostic = error => internalBuildCodes.has(error.code)
+  ? diagnostic({
+      code: error.code === "build-timeout" ? "package-build-timeout" : "package-build-failed",
+      message: error.code === "build-timeout"
+        ? "The package build exceeded its execution deadline"
+        : "Lean Bridge could not build and validate the requested package",
+      hint: "Run lean-bridge analyze, resolve any reported source issues, and retry the same build command.",
+    })
+  : diagnostic({ code: error.code, message: error.message, hint: error.hint });
+
 export const createCliHandlers = ({
   analyze = analyzeLeanProject,
   build = buildCanonicalProject,
@@ -197,15 +220,11 @@ export const createCliHandlers = ({
       emitProgress?.({ phase: "build", state: "completed", message: "Canonical build completed" });
       return { status: "ok", result, diagnostics: [], prompts: [], nextActions: [] };
     } catch (error) {
-      if (!(error instanceof CanonicalBuildError) || !new Set([
-        "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
-        "cache-directory-unsupported", "unknown-package-target", "package-target-ineligible",
-        "plain-component-compiler-pending", "component-binding-ir-required", "component-adapter-hints-required",
-      ]).has(error.code)) throw error;
+      if (!(error instanceof CanonicalBuildError)) throw error;
       return {
-        status: "blocked",
+        status: blockedBuildCodes.has(error.code) ? "blocked" : "failed",
         result: null,
-        diagnostics: [diagnostic({ code: error.code, message: error.message, hint: error.hint })],
+        diagnostics: [publicBuildDiagnostic(error)],
         prompts: [],
         nextActions: [],
       };
@@ -464,7 +483,7 @@ export const createCliHandlers = ({
         "source-not-git", "source-tree-dirty", "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
         "reproducibility-cache-directory-unsupported", "cache-directory-unsupported",
         "unknown-package-target", "package-target-ineligible",
-        "plain-component-compiler-pending", "component-binding-ir-required", "component-adapter-hints-required",
+        "component-binding-ir-required", "component-adapter-hints-required",
         "no-publishable-targets", "unsupported-publication-target", "unknown-publication-target",
       ]).has(error.code);
       return {
@@ -474,7 +493,7 @@ export const createCliHandlers = ({
           report: error.details.report,
           externalRegistryWrites: false,
         } : null,
-        diagnostics: [diagnostic({ code: error.code, message: error.message, hint: error.hint })],
+        diagnostics: [publicBuildDiagnostic(error)],
         prompts: [],
         nextActions: [],
       };

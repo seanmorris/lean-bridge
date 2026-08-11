@@ -17,7 +17,9 @@ import {
   validateCliResult,
 } from "../src/cli/contract.mjs";
 import { renderProgressEvent, runCli } from "../src/cli/run.mjs";
+import { CanonicalBuildError } from "../src/build/canonical-build.mjs";
 import { ReleaseReceiptError } from "../src/release/release-receipt.mjs";
+import { ReproducibilityGateError } from "../src/release/reproducibility-gate.mjs";
 
 const execute = promisify(execFile);
 const publicationAttestation = Object.freeze({
@@ -345,6 +347,26 @@ test("progress is ordered, retained in the result, and streamable without prose 
   assert.deepEqual(outcome.response.cache, { policy: "refresh", directory: null });
 });
 
+test("build failures stay package-oriented at the public CLI boundary", async () => {
+  const handlers = createCliHandlers({
+    build: async () => {
+      throw new CanonicalBuildError("build-command-failed", "docker exited with status 1", {
+        details: { stderr: "flake and image internals must remain private" },
+      });
+    },
+  });
+  const outcome = await runCli({
+    argv: ["build", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "package-build-failed");
+  assert.match(outcome.response.diagnostics[0].message, /requested package/);
+  assert.doesNotMatch(outcome.stdout, /docker|nix|flake|image|stderr/i);
+});
+
 test("cancellation has a stable status, diagnostic, progress state, and exit code", async () => {
   const cancellation = new AbortController();
   cancellation.abort(new Error("Stopped by test"));
@@ -453,6 +475,25 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
   });
   assert.equal(oldShape.response.status, "blocked");
   assert.equal(oldShape.response.diagnostics[0].code, "dry-run-input-required");
+});
+
+test("publish dry-run keeps isolated build failures package-oriented", async () => {
+  const handlers = createCliHandlers({
+    gate: async () => {
+      throw new ReproducibilityGateError("build-command-failed", "nix failed to evaluate a flake image", {
+        details: { stderr: "private build diagnostics" },
+      });
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--dry-run", "--output", "gate", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "package-build-failed");
+  assert.doesNotMatch(outcome.stdout, /docker|nix|flake|image|stderr/i);
 });
 
 test("external publish verifies one manifest before reaching the deferred registry step", async () => {

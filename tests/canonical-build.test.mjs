@@ -109,6 +109,7 @@ test("a plain project runs the isolated Nix engine without copying bridge infras
       "backend:started", "backend:completed", "prepare:started", "prepare:completed",
       "compile:started", "compile:completed", "validate:started", "validate:completed",
     ]);
+    assert.doesNotMatch(progress.map(item => item.message).join("\n"), /docker|nix|flake|image/i);
   } finally {
     await rm(scratch, { recursive: true, force: true });
   }

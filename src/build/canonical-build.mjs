@@ -607,9 +607,9 @@ export const buildCanonicalProject = async ({
     if (!(error instanceof ComponentBuildPlanError)) throw error;
     fail(error.code, error.message, { details: error.details });
   }
-  onProgress?.({ phase: "backend", state: "started", message: "Selecting Docker or native Nix" });
+  onProgress?.({ phase: "backend", state: "started", message: "Preparing the isolated build environment" });
   const selection = await detectBuildBackend({ environment, runner: selectedRunner });
-  onProgress?.({ phase: "backend", state: "completed", message: `Selected ${selection.backend}` });
+  onProgress?.({ phase: "backend", state: "completed", message: "Isolated build environment ready" });
   signal?.throwIfAborted();
   const output = await assertOutputIsAbsent({
     projectRoot: root,
@@ -633,14 +633,14 @@ export const buildCanonicalProject = async ({
         : normalizedCache.directory === null ? {} : { LEAN_BRIDGE_NIX_STORE: normalizedCache.directory }),
       ...(normalizedCache.policy === "refresh" ? { LEAN_BRIDGE_NIX_REFRESH: "1" } : {}),
     };
-    onProgress?.({ phase: "compile", state: "started", message: "Building the canonical flake outputs" });
+    onProgress?.({ phase: "compile", state: "started", message: "Building component and package artifacts" });
     if (selection.backend === "docker") {
       await runDockerNix({ root, staging, selection, builder, runner: selectedRunner, environment: effectiveEnvironment, cache: normalizedCache });
     } else {
       await runNativeNix({ root, staging, selection, runner: selectedRunner, environment: effectiveEnvironment });
     }
     signal?.throwIfAborted();
-    onProgress?.({ phase: "compile", state: "completed", message: "Canonical flake outputs built" });
+    onProgress?.({ phase: "compile", state: "completed", message: "Component and package artifacts built" });
     onProgress?.({ phase: "validate", state: "started", message: "Validating package identities and selected targets" });
     const checked = await validateBuildOutput(staging);
     const selectedTargets = selectPublicationTargets(checked.index, targets);
