@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leanbridge.dev/schema/compiler-adapter-plan.schema.json",
+  "title": "Lean Bridge generated compiler adapter plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "component", "componentPlanSha256", "module", "imports", "exports", "privateAbi", "leanSourceSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": { "type": "string", "minLength": 1 },
+    "componentPlanSha256": { "$ref": "#/$defs/sha256" },
+    "module": { "const": "LeanBridgeGenerated" },
+    "imports": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/export" } },
+    "privateAbi": { "$ref": "#/$defs/privateAbi" },
+    "leanSourceSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "leanType"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_']*$" },
+        "leanType": { "type": "string", "minLength": 1 }
+      }
+    },
+    "export": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect"
+      ],
+      "properties": {
+        "bindingId": { "type": "string", "minLength": 1 },
+        "sourceDeclaration": { "type": "string", "minLength": 1 },
+        "sourceModule": { "type": "string", "minLength": 1 },
+        "wrapper": { "type": "string", "pattern": "^export_[0-9a-f]{20}$" },
+        "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/parameter" } },
+        "leanResultType": { "type": "string", "minLength": 1 },
+        "resultMode": { "enum": ["value", "promise"] },
+        "leanEffect": { "type": ["string", "null"], "enum": ["IO", "Task", null] }
+      }
+    },
+    "privateExport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "symbol", "parameters", "result", "resultMode"],
+      "properties": {
+        "bindingId": { "type": "string", "minLength": 1 },
+        "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },
+        "parameters": { "type": "array", "items": { "$ref": "binding-ir.schema.json#/$defs/typeRef" } },
+        "result": { "$ref": "binding-ir.schema.json#/$defs/typeRef" },
+        "resultMode": { "enum": ["value", "promise"] }
+      }
+    },
+    "privateAbi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "dispatch", "exports"],
+      "properties": {
+        "version": { "const": 1 },
+        "dispatch": { "const": "direct-symbols" },
+        "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/privateExport" } }
+      }
+    }
+  }
+}
