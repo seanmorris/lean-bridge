@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/side-module-link-manifest.v1.json",
+  "title": "Lean Bridge side-module link manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": { "type": "string", "minLength": 1 },
+    "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
+    "targetCManifestSha256": { "$ref": "#/$defs/sha256" },
+    "linker": { "$ref": "#/$defs/tool" },
+    "profile": { "const": "side-module-2" },
+    "artifact": { "$ref": "#/$defs/artifact" },
+    "linkMap": { "$ref": "#/$defs/hashedPath" },
+    "generatedInitializer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "symbol"],
+      "properties": {
+        "path": { "const": "generated/component-initializer.c" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "symbol": { "type": "string", "pattern": "^lean_bridge_internal_initialize_[0-9a-f]{16}$" }
+      }
+    },
+    "exports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["directSymbols", "initializer", "internalInitializer"],
+      "properties": {
+        "directSymbols": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" } },
+        "initializer": { "const": "initialize_LeanBridgeGenerated" },
+        "internalInitializer": { "type": "string", "pattern": "^lean_bridge_internal_initialize_[0-9a-f]{16}$" }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["linksRuntime", "importsSharedMemory", "importsSharedTable", "publicGenericDispatch"],
+      "properties": {
+        "linksRuntime": { "const": false },
+        "importsSharedMemory": { "const": true },
+        "importsSharedTable": { "const": true },
+        "publicGenericDispatch": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "commit"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "hashedPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": { "path": { "type": "string", "minLength": 1 }, "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^artifacts/.+\\.so\\.wasm$" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}
