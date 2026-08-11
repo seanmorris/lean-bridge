@@ -99,6 +99,8 @@
     "test:component-build-plan": "node --test tests/component-build-plan.test.mjs tests/canonical-build.test.mjs",
     "test:compiler-adapters": "node --test tests/compiler-adapters.test.mjs",
     "test:component-compilation-plan": "node --test tests/component-compilation-plan.test.mjs",
+    "test:lean-component-compiler": "node --test tests/lean-component-compiler.test.mjs",
+    "build:component-target-c": "node scripts/compile-plain-component-target-c.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

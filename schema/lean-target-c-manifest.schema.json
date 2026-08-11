@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/lean-target-c-manifest.v1.json",
+  "title": "Lean Bridge target C manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "component", "compilationPlanSha256", "compiler", "target", "modules", "sourceReadOnly"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": { "type": "string", "minLength": 1 },
+    "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "commit"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "target": { "const": "wasm32-unknown-emscripten-c" },
+    "modules": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/module" } },
+    "sourceReadOnly": { "const": true }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module", "sourceSha256", "targetC", "targetCSha256", "olean", "oleanSha256"],
+      "properties": {
+        "module": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_']*(\\.[A-Za-z_][A-Za-z0-9_']*)*$" },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "targetC": { "type": "string", "pattern": "^c/.+\\.c$" },
+        "targetCSha256": { "$ref": "#/$defs/sha256" },
+        "olean": { "type": "string", "pattern": "^olean/.+\\.olean$" },
+        "oleanSha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}
