@@ -477,6 +477,39 @@ test("publish dry-run executes the full reproducibility gate through the CLI con
   assert.equal(oldShape.response.diagnostics[0].code, "dry-run-input-required");
 });
 
+test("plain component dry-run returns its verified installable package plan directly", async () => {
+  let createPlanCalled = false;
+  const componentResult = {
+    kind: "lean-bridge-component-reproducibility-gate",
+    result: "passed",
+    candidate: { id: "a".repeat(64) },
+    publishManifest: "/workspace/gate/publish-manifest.json",
+    publishManifestSha256: "b".repeat(64),
+    receipt: { verified: true },
+    packages: { runtime: "/workspace/runtime.tgz", component: "/workspace/component.tgz" },
+    plannedTargets: [{ ecosystem: "npm" }],
+    externalRegistryWrites: false,
+  };
+  const handlers = createCliHandlers({
+    gate: async () => componentResult,
+    createPublishPlan: async () => {
+      createPlanCalled = true;
+      throw new Error("component gate reached the legacy publication planner");
+    },
+  });
+  const outcome = await runCli({
+    argv: ["publish", "--dry-run", "--output", "gate", "--target", "npm", "--json"],
+    cwd: "/workspace",
+    environment: {},
+    handlers,
+  });
+  assert.equal(outcome.exitCode, 0);
+  assert.equal(outcome.response.result.kind, componentResult.kind);
+  assert.equal(outcome.response.result.receipt.verified, true);
+  assert.equal(outcome.response.result.packages.component, "/workspace/component.tgz");
+  assert.equal(createPlanCalled, false);
+});
+
 test("publish dry-run keeps isolated build failures package-oriented", async () => {
   const handlers = createCliHandlers({
     gate: async () => {

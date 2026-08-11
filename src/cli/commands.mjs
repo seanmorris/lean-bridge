@@ -1,4 +1,5 @@
-import { relative } from "node:path";
+import { dirname, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { diagnostic, prompt } from "./contract.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
@@ -9,6 +10,7 @@ import {
   ReproducibilityGateError,
   runReproducibilityGate,
 } from "../release/reproducibility-gate.mjs";
+import { runComponentReproducibilityGate } from "../release/component-reproducibility-gate.mjs";
 import {
   PublishManifestError,
   verifyPublishManifest,
@@ -42,6 +44,12 @@ const deferred = (command, node) => ({
   })],
   nextActions: [],
 });
+
+const installedEngineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const runSelectedReproducibilityGate = options =>
+  resolve(options.projectRoot) === installedEngineRoot
+    ? runReproducibilityGate(options)
+    : runComponentReproducibilityGate({ ...options, engineRoot: installedEngineRoot });
 
 const portablePolicyPath = (project, path) => path === null
   ? null
@@ -97,7 +105,7 @@ const publicBuildDiagnostic = error => internalBuildCodes.has(error.code)
 export const createCliHandlers = ({
   analyze = analyzeLeanProject,
   build = buildCanonicalProject,
-  gate = runReproducibilityGate,
+  gate = runSelectedReproducibilityGate,
   createPublishPlan = writePublishManifest,
   verifyPublishPlan = verifyPublishManifest,
   registryAdapters = null,
@@ -450,6 +458,15 @@ export const createCliHandlers = ({
       });
       signal?.throwIfAborted();
       emitProgress?.({ phase: "reproducibility", state: "completed", message: "Release candidate is reproducible and authorized" });
+      if (result.kind === "lean-bridge-component-reproducibility-gate") {
+        return {
+          status: "ok",
+          result,
+          diagnostics: [],
+          prompts: [],
+          nextActions: [],
+        };
+      }
       emitProgress?.({ phase: "plan", state: "started", message: "Deriving the immutable publication plan" });
       const plan = await createPublishPlan({
         gateRoot: request.output,
