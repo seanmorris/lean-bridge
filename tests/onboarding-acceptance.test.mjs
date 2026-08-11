@@ -24,8 +24,8 @@ test("plain Lean onboarding matrix covers the required project categories withou
   assert.equal(report.fixtureCount, 8);
   assert.equal(report.passed, true);
   assert.deepEqual(report.summary, {
-    baselineProjects: 2,
-    projectsRequiringHints: 5,
+    baselineProjects: 3,
+    projectsRequiringHints: 4,
     publishingAnnotations: 0,
     handwrittenWrappers: 0,
     mismatches: 0,
@@ -36,7 +36,7 @@ test("plain Lean onboarding matrix covers the required project categories withou
   ]);
   assert.deepEqual(
     report.fixtures.filter(item => item.actual.status === "ok").map(item => item.id),
-    ["small", "medium", "incomplete-docs"],
+    ["small", "medium", "async", "incomplete-docs"],
   );
   assert.equal(report.fixtures.find(item => item.id === "incomplete-docs").actual.warnings, 1);
   assert.deepEqual(
@@ -59,15 +59,14 @@ test("zero-configuration audit reports current blockers without treating reviewe
   const report = evaluateZeroConfigAudit(audit);
   assert.equal(report.passed, false);
   assert.deepEqual(report.summary, {
-    exceptions: 10,
+    exceptions: 9,
     unavoidableAmbiguities: 2,
     policyChoices: 3,
-    defects: 5,
+    defects: 4,
     defaults: 3,
-    violations: 6,
+    violations: 5,
   });
   assert.deepEqual(report.violations.map(item => [item.id, item.code]), [
-    ["async-projection", "blocking-zero-config-defect"],
     ["generic-projection", "blocking-zero-config-defect"],
     ["identity-projection", "blocking-zero-config-defect"],
     ["inactive-runtime-targets", "blocking-zero-config-defect"],

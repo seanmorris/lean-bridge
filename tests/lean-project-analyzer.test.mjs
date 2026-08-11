@@ -87,19 +87,46 @@ structure Secret where value : Nat
 def expose (secret : Secret) : Nat := secret.value
 `);
     const report = await analyzeLeanProject(root);
-    assert.equal(report.bindingIr, null);
+    assert.notEqual(report.bindingIr, null);
     assert.deepEqual(report.exportCandidates.map(item => [item.declaration, item.reasons]), [
       ["expose", ["unsupported-parameter-type"]],
-      ["fetch", ["effect-adapter-required"]],
+      ["fetch", []],
       ["foreignBox", ["foreign-contract-required"]],
     ]);
     assert.deepEqual(report.adapterHints.map(item => [item.declaration, item.choices]), [
       ["expose", ["exclude", "provide-adapter"]],
-      ["fetch", ["exclude", "provide-adapter"]],
       ["foreignBox", ["exclude", "provide-foreign-contract"]],
     ]);
+    const fetch = report.bindingIr.document.declarations.find(item => item.name === "fetch");
+    assert.deepEqual(fetch.effects, ["async"]);
+    assert.equal(fetch.resultMode, "promise");
+    assert.deepEqual(fetch.result.type, { kind: "primitive", name: "string" });
+    assert.equal(fetch.source.extensions["lean-lang.org/inferred-export"], "async-function");
+    assert.equal(fetch.source.extensions["lean-lang.org/effect"], "IO");
     assert.equal(JSON.stringify(report).includes('"ownership":"borrow"'), false);
-    assert.ok(report.diagnostics.some(item => item.code === "binding-ir-unavailable"));
+    assert.equal(report.diagnostics.some(item => item.code === "binding-ir-unavailable"), false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("analysis projects Task results as promises and keeps EIO fail-closed", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-effects-"));
+  try {
+    await writeFile(join(root, "Main.lean"), `/-- Return a scheduled value. -/
+def scheduled (value : UInt32) : Task UInt32 := Task.pure value
+/-- Return a typed effect error. -/
+def typed (value : UInt32) : EIO String UInt32 := pure value
+`);
+    const report = await analyzeLeanProject(root);
+    const scheduled = report.bindingIr.document.declarations.find(item => item.name === "scheduled");
+    assert.equal(scheduled.resultMode, "promise");
+    assert.deepEqual(scheduled.effects, ["async"]);
+    assert.equal(scheduled.source.extensions["lean-lang.org/effect"], "Task");
+    assert.deepEqual(
+      report.adapterHints.map(item => [item.declaration, item.reason]),
+      [["typed", "effect-adapter-required"]],
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -187,7 +214,7 @@ test("CLI analyze returns a complete report or minimal adapter questions", async
   const pure = await makePureProject();
   const blocked = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-cli-"));
   try {
-    await writeFile(join(blocked, "Main.lean"), "def fetch (path : String) : IO String := pure path\n");
+    await writeFile(join(blocked, "Main.lean"), "def fetch (path : String) : EIO String String := pure path\n");
     const accepted = await runCli({ argv: ["analyze", "--project", pure, "--json"], handlers: cliHandlers });
     assert.equal(accepted.exitCode, 0);
     assert.equal(accepted.response.status, "ok");
@@ -258,7 +285,7 @@ test("blocked analysis still writes its report and policy evidence without inven
   const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-blocked-output-"));
   const artifacts = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-blocked-artifacts-"));
   try {
-    await writeFile(join(root, "Main.lean"), "def fetch (path : String) : IO String := pure path\n");
+    await writeFile(join(root, "Main.lean"), "def fetch (path : String) : EIO String String := pure path\n");
     const before = await snapshot(root);
     const output = join(artifacts, "analysis");
     const result = await runCli({

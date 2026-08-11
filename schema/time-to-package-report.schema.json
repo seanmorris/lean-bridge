@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leanbridge.dev/schema/time-to-package-report.schema.json",
+  "title": "Lean Bridge time-to-package report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "passed", "budgetSha256", "hardware", "hardwareCompatibility", "summaries", "stages"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "passed": { "type": "boolean" },
+    "budgetSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hardware": { "$ref": "#/$defs/hardware" },
+    "hardwareCompatibility": { "$ref": "#/$defs/hardwareCompatibility" },
+    "summaries": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/summary" }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/stage" }
+    }
+  },
+  "$defs": {
+    "nonNegativeInteger": { "type": "integer", "minimum": 0 },
+    "nonNegativeNumber": { "type": "number", "minimum": 0 },
+    "strings": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "hardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "architecture", "logicalCpus", "memoryBytes", "cpuModel", "nodeVersion"],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1 },
+        "architecture": { "type": "string", "minLength": 1 },
+        "logicalCpus": { "type": "integer", "minimum": 1 },
+        "memoryBytes": { "type": "integer", "minimum": 1 },
+        "cpuModel": { "type": "string", "minLength": 1 },
+        "nodeVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "hardwareCompatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "minimumLogicalCpus", "minimumMemoryBytes"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "minimumLogicalCpus": { "type": "integer", "minimum": 1 },
+        "minimumMemoryBytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode", "durationMs", "maximumMs", "withinBudget", "prompts", "hints", "generatedFiles",
+        "manualFiles", "commands", "unfamiliarConcepts", "failures"
+      ],
+      "properties": {
+        "mode": { "enum": ["cold", "warm"] },
+        "durationMs": { "$ref": "#/$defs/nonNegativeNumber" },
+        "maximumMs": { "type": "integer", "minimum": 1 },
+        "withinBudget": { "type": "boolean" },
+        "prompts": { "$ref": "#/$defs/nonNegativeInteger" },
+        "hints": { "$ref": "#/$defs/nonNegativeInteger" },
+        "generatedFiles": { "$ref": "#/$defs/nonNegativeInteger" },
+        "manualFiles": { "$ref": "#/$defs/nonNegativeInteger" },
+        "commands": { "$ref": "#/$defs/nonNegativeInteger" },
+        "unfamiliarConcepts": { "$ref": "#/$defs/strings" },
+        "failures": { "$ref": "#/$defs/nonNegativeInteger" }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode", "stage", "durationMs", "maximumMs", "withinBudget", "status", "prompts", "hints",
+        "generatedFiles", "manualFiles", "commands", "unfamiliarConcepts", "failures", "diagnostics"
+      ],
+      "properties": {
+        "mode": { "enum": ["cold", "warm"] },
+        "stage": { "enum": ["analyze", "build", "dry-run", "publish"] },
+        "durationMs": { "$ref": "#/$defs/nonNegativeNumber" },
+        "maximumMs": { "type": "integer", "minimum": 1 },
+        "withinBudget": { "type": "boolean" },
+        "status": { "enum": ["ok", "blocked", "failed", "skipped"] },
+        "prompts": { "$ref": "#/$defs/nonNegativeInteger" },
+        "hints": { "$ref": "#/$defs/nonNegativeInteger" },
+        "generatedFiles": { "$ref": "#/$defs/nonNegativeInteger" },
+        "manualFiles": { "$ref": "#/$defs/nonNegativeInteger" },
+        "commands": { "$ref": "#/$defs/nonNegativeInteger" },
+        "unfamiliarConcepts": { "$ref": "#/$defs/strings" },
+        "failures": { "$ref": "#/$defs/nonNegativeInteger" },
+        "diagnostics": { "$ref": "#/$defs/strings" }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "supportedHardware": {
+    "minimumLogicalCpus": 2,
+    "minimumMemoryBytes": 4294967296
+  },
+  "modes": {
+    "cold": {
+      "maximumEndToEndMs": 1800000,
+      "stages": {
+        "analyze": 2000,
+        "build": 900000,
+        "dry-run": 780000,
+        "publish": 120000
+      }
+    },
+    "warm": {
+      "maximumEndToEndMs": 900000,
+      "stages": {
+        "analyze": 500,
+        "build": 300000,
+        "dry-run": 540000,
+        "publish": 60000
+      }
+    }
+  }
+}

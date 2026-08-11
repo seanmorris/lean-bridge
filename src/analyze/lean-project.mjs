@@ -315,11 +315,25 @@ const functionShape = declaration => {
   const resultMatch = tail.match(/^:\s*(.+)$/);
   if (!resultMatch) return { blocker: "result-type-absent" };
   const resultType = resultMatch[1].trim();
-  if (/^(?:IO|EIO|Task)\b/.test(resultType)) return { blocker: "effect-adapter-required", leanType: resultType };
+  const effect = splitTopLevel(resultType);
+  if (effect[0] === "EIO") return { blocker: "effect-adapter-required", leanType: resultType };
+  if (new Set(["IO", "Task"]).has(effect[0])) {
+    if (effect.length !== 2) return { blocker: "effect-adapter-required", leanType: resultType };
+    const result = typeRef(effect[1]);
+    if (result === null) return { blocker: "unsupported-result-type", leanType: effect[1] };
+    return {
+      parameters,
+      resultType: effect[1],
+      result,
+      resultMode: "promise",
+      effects: ["async"],
+      leanEffect: effect[0],
+    };
+  }
   if (/→|->/.test(resultType)) return { blocker: "callable-projection-required", leanType: resultType };
   const result = typeRef(resultType);
   if (result === null) return { blocker: "unsupported-result-type", leanType: resultType };
-  return { parameters, resultType, result };
+  return { parameters, resultType, result, resultMode: "value", effects: [], leanEffect: null };
 };
 
 const packageFacts = async root => {
@@ -345,7 +359,10 @@ const packageFacts = async root => {
 const sourceSite = declaration => ({
   producer: "lean",
   declaration: declaration.fullName,
-  extensions: { "lean-lang.org/inferred-export": "pure-function" },
+  extensions: {
+    "lean-lang.org/inferred-export": declaration.shape.leanEffect === null ? "pure-function" : "async-function",
+    ...(declaration.shape.leanEffect === null ? {} : { "lean-lang.org/effect": declaration.shape.leanEffect }),
+  },
 });
 
 const proposedIr = ({ facts, exports, theorems }) => {
@@ -395,9 +412,9 @@ const proposedIr = ({ facts, exports, theorems }) => {
     })),
     result: { type: item.shape.result, ownership: "copy", lifetime: null },
     mutability: "immutable",
-    effects: [],
+    effects: item.shape.effects,
     failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
-    resultMode: "value",
+    resultMode: item.shape.resultMode,
     capabilities: [capability.id],
     assurance: [assurance[index].id],
     documentation: {

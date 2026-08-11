@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leanbridge.dev/schema/time-to-package-budgets.schema.json",
+  "title": "Lean Bridge time-to-package budgets",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "supportedHardware", "modes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "supportedHardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumLogicalCpus", "minimumMemoryBytes"],
+      "properties": {
+        "minimumLogicalCpus": { "type": "integer", "minimum": 1 },
+        "minimumMemoryBytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "modes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cold", "warm"],
+      "properties": {
+        "cold": { "$ref": "#/$defs/mode" },
+        "warm": { "$ref": "#/$defs/mode" }
+      }
+    }
+  },
+  "$defs": {
+    "mode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximumEndToEndMs", "stages"],
+      "properties": {
+        "maximumEndToEndMs": { "type": "integer", "minimum": 1 },
+        "stages": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["analyze", "build", "dry-run", "publish"],
+          "properties": {
+            "analyze": { "type": "integer", "minimum": 1 },
+            "build": { "type": "integer", "minimum": 1 },
+            "dry-run": { "type": "integer", "minimum": 1 },
+            "publish": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

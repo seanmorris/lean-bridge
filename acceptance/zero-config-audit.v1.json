@@ -29,19 +29,6 @@
       "remediation": "Generate explicit specializations from type use or request only the concrete instantiations that cannot be inferred."
     },
     {
-      "id": "async-projection",
-      "stage": "analyze",
-      "fixture": "async",
-      "kind": "target-special-case",
-      "classification": "defect",
-      "mandatory": false,
-      "blocking": true,
-      "targetSpecificRebuild": false,
-      "description": "The analyzer does not connect IO and Task declarations to the existing async Binding IR conventions.",
-      "evidence": ["tests/fixtures/onboarding/async", "src/analyze/lean-project.mjs"],
-      "remediation": "Infer supported effect projections and preserve explicit errors and cancellation in the generated IR."
-    },
-    {
       "id": "identity-projection",
       "stage": "analyze",
       "fixture": "identity-bearing",

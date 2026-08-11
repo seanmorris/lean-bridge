@@ -31,10 +31,10 @@
     {
       "id": "async",
       "project": "async",
-      "category": "unsupported-safe-inference",
-      "expectedStatus": "needs-input",
-      "expectedExports": 0,
-      "expectedRequiredHints": ["effect-adapter-required"],
+      "category": "baseline",
+      "expectedStatus": "ok",
+      "expectedExports": 1,
+      "expectedRequiredHints": [],
       "expectedWarnings": 0
     },
     {
