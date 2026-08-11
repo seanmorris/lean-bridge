@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "scope": "Plain Lean project through verified multi-ecosystem package consumption",
+  "exceptions": [
+    {
+      "id": "plain-project-build-root",
+      "stage": "build",
+      "fixture": "small",
+      "kind": "manual-edit",
+      "classification": "defect",
+      "mandatory": true,
+      "blocking": true,
+      "targetSpecificRebuild": false,
+      "description": "The canonical builder currently expects bridge flake and container files inside the analyzed project root.",
+      "evidence": ["src/build/canonical-build.mjs", "tests/fixtures/onboarding/small"],
+      "remediation": "Load bridge-owned build infrastructure from the installed CLI while mounting the plain Lean project as the component source."
+    },
+    {
+      "id": "generic-projection",
+      "stage": "analyze",
+      "fixture": "generic",
+      "kind": "target-special-case",
+      "classification": "defect",
+      "mandatory": false,
+      "blocking": true,
+      "targetSpecificRebuild": false,
+      "description": "The analyzer cannot yet specialize or project generic declarations.",
+      "evidence": ["tests/fixtures/onboarding/generic", "src/analyze/lean-project.mjs"],
+      "remediation": "Generate explicit specializations from type use or request only the concrete instantiations that cannot be inferred."
+    },
+    {
+      "id": "async-projection",
+      "stage": "analyze",
+      "fixture": "async",
+      "kind": "target-special-case",
+      "classification": "defect",
+      "mandatory": false,
+      "blocking": true,
+      "targetSpecificRebuild": false,
+      "description": "The analyzer does not connect IO and Task declarations to the existing async Binding IR conventions.",
+      "evidence": ["tests/fixtures/onboarding/async", "src/analyze/lean-project.mjs"],
+      "remediation": "Infer supported effect projections and preserve explicit errors and cancellation in the generated IR."
+    },
+    {
+      "id": "identity-projection",
+      "stage": "analyze",
+      "fixture": "identity-bearing",
+      "kind": "target-special-case",
+      "classification": "defect",
+      "mandatory": false,
+      "blocking": true,
+      "targetSpecificRebuild": false,
+      "description": "The analyzer does not yet infer identity-bearing resource projections from Lean structures.",
+      "evidence": ["tests/fixtures/onboarding/identity-bearing", "src/analyze/lean-project.mjs"],
+      "remediation": "Infer native class and resource candidates, then fail closed only when ownership remains ambiguous."
+    },
+    {
+      "id": "custom-marshaling-policy",
+      "stage": "analyze",
+      "fixture": "custom-marshaling",
+      "kind": "hint",
+      "classification": "unavoidable-ambiguity",
+      "mandatory": true,
+      "blocking": false,
+      "targetSpecificRebuild": false,
+      "description": "The analyzer cannot choose a host decimal and currency policy from the Money structure alone.",
+      "evidence": ["tests/fixtures/onboarding/custom-marshaling"],
+      "remediation": "Ask one adapter-policy question and store the answer outside Lean source."
+    },
+    {
+      "id": "callback-lifetime-policy",
+      "stage": "analyze",
+      "fixture": "ambiguous-lifetime",
+      "kind": "hint",
+      "classification": "unavoidable-ambiguity",
+      "mandatory": true,
+      "blocking": false,
+      "targetSpecificRebuild": false,
+      "description": "A callback type does not establish whether the implementation retains the callback after return.",
+      "evidence": ["tests/fixtures/onboarding/ambiguous-lifetime"],
+      "remediation": "Ask one lifetime question and preserve the answer in generated ownership metadata."
+    },
+    {
+      "id": "incomplete-documentation",
+      "stage": "analyze",
+      "fixture": "incomplete-docs",
+      "kind": "hint",
+      "classification": "policy-choice",
+      "mandatory": false,
+      "blocking": false,
+      "targetSpecificRebuild": false,
+      "description": "An undocumented export produces a visible warning while permissive policy allows analysis to continue.",
+      "evidence": ["tests/fixtures/onboarding/incomplete-docs", "src/analyze/policy.mjs"],
+      "remediation": "Let release policy set the allowed undocumented-export count."
+    },
+    {
+      "id": "docker-or-nix",
+      "stage": "build",
+      "fixture": null,
+      "kind": "host-dependency",
+      "classification": "policy-choice",
+      "mandatory": true,
+      "blocking": false,
+      "targetSpecificRebuild": false,
+      "description": "A host needs Docker or Nix to execute the reproducible build closure.",
+      "evidence": ["src/build/canonical-build.mjs", "docs/evidence/docker-first-build.md"],
+      "remediation": "Keep Docker as the default, Nix as the fallback, and report one actionable installation command when both are absent."
+    },
+    {
+      "id": "registry-credentials",
+      "stage": "publish",
+      "fixture": null,
+      "kind": "registry-step",
+      "classification": "policy-choice",
+      "mandatory": true,
+      "blocking": false,
+      "targetSpecificRebuild": false,
+      "description": "External publication requires credentials for each selected registry.",
+      "evidence": ["src/release/credentials.mjs", "docs/evidence/publish-credential-boundary.md"],
+      "remediation": "Keep credentials outside generated artifacts and request them only after reproducibility authorization."
+    },
+    {
+      "id": "inactive-runtime-targets",
+      "stage": "generate",
+      "fixture": null,
+      "kind": "target-special-case",
+      "classification": "defect",
+      "mandatory": false,
+      "blocking": true,
+      "targetSpecificRebuild": false,
+      "description": "PyPI, Cargo, C, and C++ packaging mechanics exist, but the canonical release does not mark their runtime targets eligible.",
+      "evidence": ["src/release/release-rehearsal.mjs", "docs/evidence/universal-release-bundle.md"],
+      "remediation": "Complete real runtime adapters, then enable projections from the same canonical component bytes."
+    }
+  ],
+  "defaults": [
+    {
+      "id": "project-version-default",
+      "stage": "analyze",
+      "behavior": "Use 0.0.0-local when the project declares no semantic version.",
+      "visible": true,
+      "reversible": true,
+      "evidence": ["src/analyze/lean-project.mjs", "src/analyze/policy.mjs"]
+    },
+    {
+      "id": "build-backend-selection",
+      "stage": "build",
+      "behavior": "Select Docker when available, then use native Nix as the fallback.",
+      "visible": true,
+      "reversible": true,
+      "evidence": ["src/build/canonical-build.mjs", "docs/evidence/docker-first-build.md"]
+    },
+    {
+      "id": "applicable-target-selection",
+      "stage": "generate",
+      "behavior": "Select every eligible package target when the caller supplies no target flags.",
+      "visible": true,
+      "reversible": true,
+      "evidence": ["src/cli/contract.mjs", "src/build/canonical-build.mjs"]
+    }
+  ]
+}

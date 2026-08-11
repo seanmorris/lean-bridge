@@ -90,6 +90,8 @@
     "test:publication-attestation": "node --test tests/publication-attestation.test.mjs tests/credential-boundary.test.mjs tests/cli-contract.test.mjs",
     "test:registry-transaction": "node --test tests/registry-transaction.test.mjs tests/cli-contract.test.mjs",
     "test:release-receipt": "node --test tests/release-receipt.test.mjs tests/cli-contract.test.mjs",
+    "test:onboarding-acceptance": "node --test tests/onboarding-acceptance.test.mjs",
+    "acceptance:zero-config": "node scripts/check-zero-config-acceptance.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

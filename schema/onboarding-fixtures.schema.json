@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leanbridge.dev/schema/onboarding-fixtures.schema.json",
+  "title": "Lean Bridge onboarding fixture manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "fixtures"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/fixture" }
+    }
+  },
+  "$defs": {
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "project", "category", "expectedStatus", "expectedExports",
+        "expectedRequiredHints", "expectedWarnings"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "project": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "category": {
+          "enum": ["baseline", "unsupported-safe-inference", "unavoidable-ambiguity", "policy-choice"]
+        },
+        "expectedStatus": { "enum": ["ok", "blocked", "needs-input"] },
+        "expectedExports": { "type": "integer", "minimum": 0 },
+        "expectedRequiredHints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "expectedWarnings": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

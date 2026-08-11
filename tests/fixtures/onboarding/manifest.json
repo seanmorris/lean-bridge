@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "fixtures": [
+    {
+      "id": "small",
+      "project": "small",
+      "category": "baseline",
+      "expectedStatus": "ok",
+      "expectedExports": 2,
+      "expectedRequiredHints": [],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "medium",
+      "project": "medium",
+      "category": "baseline",
+      "expectedStatus": "ok",
+      "expectedExports": 5,
+      "expectedRequiredHints": [],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "generic",
+      "project": "generic",
+      "category": "unsupported-safe-inference",
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": ["implicit-or-instance-parameter"],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "async",
+      "project": "async",
+      "category": "unsupported-safe-inference",
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": ["effect-adapter-required"],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "identity-bearing",
+      "project": "identity-bearing",
+      "category": "unsupported-safe-inference",
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "custom-marshaling",
+      "project": "custom-marshaling",
+      "category": "unavoidable-ambiguity",
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedWarnings": 0
+    },
+    {
+      "id": "incomplete-docs",
+      "project": "incomplete-docs",
+      "category": "policy-choice",
+      "expectedStatus": "ok",
+      "expectedExports": 1,
+      "expectedRequiredHints": [],
+      "expectedWarnings": 1
+    },
+    {
+      "id": "ambiguous-lifetime",
+      "project": "ambiguous-lifetime",
+      "category": "unavoidable-ambiguity",
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedWarnings": 0
+    }
+  ]
+}
