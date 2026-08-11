@@ -1,6 +1,6 @@
 # Lean library scaling evidence
 
-Status: executable architecture measurement. The suite measures 1, 3, 10, and 50 independently compiled Lean libraries through generated `ping` functions. It does not define a release budget.
+Status: executable architecture measurement. The suite measures 1, 3, 10, and 50 independently compiled Lean libraries through generated `ping` functions.
 
 ## Public call boundary
 

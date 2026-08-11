@@ -23,3 +23,11 @@ Documentation changes must:
 - replace broad claims with named systems, measurements, consequences, or explicit unknowns;
 - link historical and technical claims to primary sources; and
 - avoid presenting tests, reproducible builds, provenance, or type checking as behavioral proof.
+
+Run the local documentation and downstream-support contract before opening a change:
+
+```sh
+npm run test:docs
+```
+
+The dedicated consumer workflow runs the heavier clean-package checks through the pinned Nix and Docker toolchains.

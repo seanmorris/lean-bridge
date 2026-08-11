@@ -1,6 +1,6 @@
 # Reproducible performance methodology
 
-Status: approved for baseline collection. The methodology fixes how the project collects and compares performance evidence before node 794 defines budgets.
+Status: approved for baseline collection. The methodology fixes how the project collects and compares performance evidence before node 794 defines release thresholds.
 
 ## Reference identity
 
@@ -62,7 +62,7 @@ Process RSS, JavaScript heap, external memory, and array buffers are supplementa
 
 Commit `cfae0ca30804bf6aff748223d66c4c189641ba3a` produced two clean reports.
 
-The reference report matched every hardware, OS, runtime, input, and noise constraint. It was classified `budget-eligible` with zero issues. The record is 2,282 bytes with SHA-256 `af328d513d9f07770f1f9c303cd2e1beba765b245b4d1b8d31be5a50932b3028`.
+The reference report matched every hardware, OS, runtime, input, and noise constraint with zero issues. The record is 2,282 bytes with SHA-256 `af328d513d9f07770f1f9c303cd2e1beba765b245b4d1b8d31be5a50932b3028`.
 
 The shared-CI report matched its declared constraints and was classified `informational-only`. It cannot authorize a baseline. The record is 2,266 bytes with SHA-256 `2153f5546953b39f17c43e708832f261d2c55e0402e03f5d6b483008f06b04f1`.
 

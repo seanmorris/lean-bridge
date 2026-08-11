@@ -4,7 +4,7 @@ Status: measured architecture POC evidence. This record covers the browser-profi
 
 The versioned [canonical spatial performance corpus](performance-corpus.md) fixes the operations, ownership rules, complexity evidence, and correctness vectors for the next timing suite. The independent Lean components now execute through generated native APIs in the [shared-runtime spatial harness](spatial-performance-harness.md). This page remains the earlier `Box` timing baseline until the spatial methodology and baseline receive review.
 
-The spatial correctness gate builds a 1,301,915 byte main runtime, a 5,296 byte ordered-search module, a 26,292 byte spatial-index module, and a 2,116 byte independent consumer module. The test loads components on demand, checks one runtime initialization and one initialization per loaded library, passes the same retained index into the consumer, and reaches zero live resources before shutdown. These sizes are architecture evidence. They are not performance budgets.
+The spatial correctness gate builds a 1,301,915 byte main runtime, a 5,296 byte ordered-search module, a 26,292 byte spatial-index module, and a 2,116 byte independent consumer module. The test loads components on demand, checks one runtime initialization and one initialization per loaded library, passes the same retained index into the consumer, and reaches zero live resources before shutdown. These sizes are architecture evidence.
 
 Date: 2026-08-08 UTC.
 
@@ -47,9 +47,9 @@ Warm measurements perform 10,000 complete lifecycle operations before sampling. 
 | warm `box.read()` | 60 batches | 45.3 ns | 256.0 ns | 43.9 ns | 426.8 ns |
 | warm `Box` construct, read, and dispose | 60 batches | 1.604 µs | 7.412 µs | 1.319 µs | 9.458 µs |
 
-The 12-sample p95 is the maximum sample. More cold samples and separate process runs are required before setting a production p95 budget.
+The 12-sample p95 is the maximum sample. More cold samples and separate process runs are required before setting a production p95 threshold.
 
-The generation-safe registry changed the earlier WP4 median from 16.4 ns to 45.3 ns for a warm read and from 0.218 µs to 1.604 µs for a warm lifecycle. The added work includes token validation, wrapper lookup, borrow accounting, lease accounting, weak-reference registration, and stale-use protection. The absolute medians remain below 0.046 µs per read and 1.7 µs per lifecycle on this machine. The relative regression is recorded and requires optimization before a production budget can be accepted.
+The generation-safe registry changed the earlier WP4 median from 16.4 ns to 45.3 ns for a warm read and from 0.218 µs to 1.604 µs for a warm lifecycle. The added work includes token validation, wrapper lookup, borrow accounting, lease accounting, weak-reference registration, and stale-use protection. The absolute medians remain below 0.046 µs per read and 1.7 µs per lifecycle on this machine. The relative change is recorded for future optimization.
 
 ## Size results
 

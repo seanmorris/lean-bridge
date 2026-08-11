@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-import { resolve } from "node:path";
+import { execFile } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { promisify } from "node:util";
 
 const option = name => {
   const index = process.argv.indexOf(name);
@@ -10,23 +14,55 @@ const option = name => {
 
 const packageRoot = resolve(option("--package") ?? "build/php-wasm-package");
 const phpWasmRoot = resolve(option("--php-wasm") ?? "build/php-wasm-host/node_modules/php-wasm");
-const [{ PhpNode }, { default: leanAlpha }] = await Promise.all([
-  import(pathToFileURL(`${phpWasmRoot}/PhpNode.mjs`)),
-  import(pathToFileURL(`${packageRoot}/index.mjs`)),
-]);
+const run = promisify(execFile);
+const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-consumer-"));
 
-const php = new PhpNode({ version: "8.4", sharedLibs: [leanAlpha] });
-let stdout = "";
-let stderr = "";
-php.addEventListener("output", event => {
-  for (const line of event.detail) stdout += line;
-});
-php.addEventListener("error", event => {
-  for (const line of event.detail) stderr += line;
-});
+try {
+  await writeFile(join(consumer, "package.json"), `${JSON.stringify({
+    name: "lean-bridge-php-wasm-consumer",
+    private: true,
+    type: "module",
+  }, null, 2)}\n`);
+  const pack = async root => {
+    const { stdout } = await run("npm", [
+      "pack",
+      "--json",
+      "--ignore-scripts",
+      "--pack-destination", consumer,
+      root,
+    ], { cwd: consumer, maxBuffer: 64 * 1024 * 1024 });
+    const records = JSON.parse(stdout);
+    if (records.length !== 1 || typeof records[0].filename !== "string") {
+      throw new Error(`npm pack returned an invalid record for ${root}`);
+    }
+    return join(consumer, records[0].filename);
+  };
+  const phpWasmArchive = await pack(phpWasmRoot);
+  const packageArchive = await pack(packageRoot);
+  await run("npm", [
+    "install",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund",
+    phpWasmArchive,
+    packageArchive,
+  ], { cwd: consumer, maxBuffer: 64 * 1024 * 1024 });
+  const [{ PhpNode }, { default: leanAlpha }] = await Promise.all([
+    import(pathToFileURL(join(consumer, "node_modules/php-wasm/PhpNode.mjs"))),
+    import(pathToFileURL(join(consumer, "node_modules/php-wasm-lean-alpha/index.mjs"))),
+  ]);
+  const php = new PhpNode({ version: "8.4", sharedLibs: [leanAlpha] });
+  let stdout = "";
+  let stderr = "";
+  php.addEventListener("output", event => {
+    for (const line of event.detail) stdout += line;
+  });
+  php.addEventListener("error", event => {
+    for (const line of event.detail) stderr += line;
+  });
 
-await php.binary;
-const status = await php.run(`<?php
+  await php.binary;
+  const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
 $box = new LeanAlpha\\Box(41);
 $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
@@ -56,24 +92,27 @@ $result['liveIdentities'] = $snapshot['liveIdentities'];
 echo json_encode($result, JSON_THROW_ON_ERROR);
 `);
 
-if (status !== 0 || stderr !== "") {
-  throw new Error(`PHP-Wasm host failed with status ${status}: ${stderr || stdout}`);
+  if (status !== 0 || stderr !== "") {
+    throw new Error(`PHP-Wasm host failed with status ${status}: ${stderr || stdout}`);
+  }
+  const result = JSON.parse(stdout);
+  const expected = {
+    extension: true,
+    box: 41,
+    identity: true,
+    betaRead: 41,
+    betaIdentity: true,
+    payload: [true, 9, "wasm", "007fff", [1, 5, 13]],
+    callback: 42,
+    closure: 42,
+    runtimeInitRuns: 1,
+    componentInitRuns: 2,
+    liveIdentities: 0,
+  };
+  if (JSON.stringify(result) !== JSON.stringify(expected)) {
+    throw new Error(`PHP-Wasm result mismatch: ${JSON.stringify(result)}`);
+  }
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+} finally {
+  await rm(consumer, { recursive: true, force: true });
 }
-const result = JSON.parse(stdout);
-const expected = {
-  extension: true,
-  box: 41,
-  identity: true,
-  betaRead: 41,
-  betaIdentity: true,
-  payload: [true, 9, "wasm", "007fff", [1, 5, 13]],
-  callback: 42,
-  closure: 42,
-  runtimeInitRuns: 1,
-  componentInitRuns: 2,
-  liveIdentities: 0,
-};
-if (JSON.stringify(result) !== JSON.stringify(expected)) {
-  throw new Error(`PHP-Wasm result mismatch: ${JSON.stringify(result)}`);
-}
-process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);

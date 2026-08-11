@@ -39,7 +39,7 @@ Every release candidate runs from clean consumer fixtures and records:
 | manual configuration fields | zero by default |
 | handwritten bridge/loader code | zero |
 | raw Wasm/Nix/Lean concepts required | zero |
-| elapsed install-to-first-call | measured and budgeted |
+| elapsed install-to-first-call | measured |
 | edits migrating an equivalent ordinary package call | minimal and documented |
 | diagnostic recovery steps for representative failures | bounded and actionable |
 | advanced escape hatches needed by happy-path examples | zero |

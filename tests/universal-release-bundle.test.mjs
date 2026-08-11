@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, extname, join, normalize } from "node:path";
 import test from "node:test";
 import { pathToFileURL } from "node:url";
 
@@ -22,6 +22,27 @@ import {
 
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
+
+const collectModuleClosure = async entry => {
+  const files = new Set();
+  const visit = async path => {
+    if (files.has(path)) return;
+    files.add(path);
+    const source = await readFile(path, "utf8");
+    const patterns = [
+      /\bfrom\s+["'](\.\.?\/[^"']+)["']/g,
+      /(?:^|\n)\s*import\s+["'](\.\.?\/[^"']+)["']/g,
+    ];
+    for (const pattern of patterns) {
+      for (const match of source.matchAll(pattern)) {
+        const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
+        await visit(imported);
+      }
+    }
+  };
+  await visit(entry);
+  return [...files].sort();
+};
 
 const withBundles = async operation => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-universal-bundle-"));
@@ -63,6 +84,10 @@ test("core source boundary includes compiler inputs and excludes packaging backe
     "poc/lean-link-spike/bindings/php-wasm.package.json",
     "tests/universal-release-bundle.test.mjs",
   ]) assert.equal(included(excluded), false, excluded);
+
+  for (const path of await collectModuleClosure("scripts/generate-lean-link-projection.mjs")) {
+    assert.equal(included(path), true, `core source boundary omits ${path}`);
+  }
 });
 
 test("universal bundle is byte-identical across clean assembly roots", async () => withBundles(async ({ first, second, firstResult, secondResult }) => {

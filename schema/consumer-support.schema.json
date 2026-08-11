@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:consumer-support:v1",
+  "title": "Lean Bridge downstream consumer support contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contractVersion", "verifiedAt", "states", "consumers"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "contractVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "verifiedAt": { "type": "string", "format": "date" },
+    "states": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported", "partial", "blocked"],
+      "properties": {
+        "supported": { "type": "string", "minLength": 1 },
+        "partial": { "type": "string", "minLength": 1 },
+        "blocked": { "type": "string", "minLength": 1 }
+      }
+    },
+    "consumers": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/consumer" }
+    }
+  },
+  "$defs": {
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "state", "scope", "packageInstallation", "realLeanExecution", "testCommand", "blocker", "evidence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["supported", "partial", "blocked"] },
+        "scope": { "type": "string", "minLength": 1 },
+        "packageInstallation": { "type": "boolean" },
+        "realLeanExecution": { "type": "boolean" },
+        "testCommand": { "type": "string", "pattern": "^npm run test:consumer:" },
+        "blocker": { "type": ["string", "null"] },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "1.0.0",
+  "verifiedAt": "2026-08-11",
+  "states": {
+    "supported": "A clean consumer installs the documented artifact and executes a real Lean component.",
+    "partial": "Package or interface behavior passes, but an ordinary package workflow remains incomplete.",
+    "blocked": "CI verifies the missing capability and the documentation does not claim support."
+  },
+  "consumers": [
+    {
+      "id": "node-javascript",
+      "name": "JavaScript on Node",
+      "state": "supported",
+      "scope": "Node 22 ESM with separate generated runtime and component npm archives",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:node",
+      "blocker": null,
+      "evidence": [
+        "docs/evidence/plain-project-package-acceptance.md",
+        "tests/component-npm-package.test.mjs",
+        "tests/consumer-node.test.mjs"
+      ]
+    },
+    {
+      "id": "node-typescript",
+      "name": "TypeScript on Node",
+      "state": "supported",
+      "scope": "TypeScript 5.9 strict compilation to Node 22 ESM",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:node",
+      "blocker": null,
+      "evidence": [
+        "docs/javascript-typescript.md",
+        "tests/consumer-node.test.mjs"
+      ]
+    },
+    {
+      "id": "browser-javascript",
+      "name": "Browser JavaScript",
+      "state": "partial",
+      "scope": "Raw ESM, module worker, Vite, Rollup, Webpack, and React fixture execution",
+      "packageInstallation": false,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:browser",
+      "blocker": "The npm package has no browser conditional export, so an installed package resolves its Node entry point.",
+      "evidence": [
+        "docs/evidence/browser-bundler-acceptance.md",
+        "tests/npm-package.test.mjs"
+      ]
+    },
+    {
+      "id": "php-native",
+      "name": "Native PHP",
+      "state": "supported",
+      "scope": "PHP 8.2 NTS on x86-64 Linux through the generated Zend extension",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:php",
+      "blocker": null,
+      "evidence": [
+        "docs/evidence/native-php-release-package.md",
+        "tests/php-native-package.test.mjs",
+        "scripts/test-php-native-package-consumer.mjs"
+      ]
+    },
+    {
+      "id": "php-wasm",
+      "name": "PHP-Wasm",
+      "state": "supported",
+      "scope": "PHP 8.4 in the Node-hosted php-wasm 0.1.0 runtime, lazy and startup profiles",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:php",
+      "blocker": null,
+      "evidence": [
+        "docs/evidence/php-release-gate.md",
+        "scripts/test-php-wasm-package-host.mjs"
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "state": "blocked",
+      "scope": "Generated Python package and PyPI projection",
+      "packageInstallation": false,
+      "realLeanExecution": false,
+      "testCommand": "npm run test:consumer:blocked",
+      "blocker": "The canonical bundle has no native component library or Python extension adapter.",
+      "evidence": [
+        "docs/evidence/pypi-package.md",
+        "tests/pypi-package.test.mjs"
+      ]
+    },
+    {
+      "id": "rust",
+      "name": "Rust",
+      "state": "blocked",
+      "scope": "Generated Rust crate and Cargo projection",
+      "packageInstallation": false,
+      "realLeanExecution": false,
+      "testCommand": "npm run test:consumer:blocked",
+      "blocker": "The canonical bundle has no native component library or Rust runtime adapter.",
+      "evidence": [
+        "docs/evidence/cargo-package.md",
+        "tests/cargo-package.test.mjs"
+      ]
+    },
+    {
+      "id": "c",
+      "name": "C",
+      "state": "blocked",
+      "scope": "Generated C11 sources and C package projection",
+      "packageInstallation": false,
+      "realLeanExecution": false,
+      "testCommand": "npm run test:consumer:blocked",
+      "blocker": "The canonical bundle has no native component library.",
+      "evidence": [
+        "docs/evidence/c-family-package.md",
+        "tests/c-family-package.test.mjs"
+      ]
+    },
+    {
+      "id": "cpp",
+      "name": "C++",
+      "state": "blocked",
+      "scope": "C++ package projection",
+      "packageInstallation": false,
+      "realLeanExecution": false,
+      "testCommand": "npm run test:consumer:blocked",
+      "blocker": "The canonical bundle has no native component library or generated C++ binding projection.",
+      "evidence": [
+        "docs/evidence/c-family-package.md",
+        "tests/c-family-package.test.mjs"
+      ]
+    },
+    {
+      "id": "wit-wasi",
+      "name": "WIT/WASI",
+      "state": "blocked",
+      "scope": "Generated WIT interface and nominal resource composition",
+      "packageInstallation": false,
+      "realLeanExecution": false,
+      "testCommand": "npm run test:consumer:blocked",
+      "blocker": "The build has no Component Model binary adapter or WASI execution path.",
+      "evidence": [
+        "docs/evidence/wit-projection.md",
+        "tests/wit-backend.test.mjs"
+      ]
+    }
+  ]
+}

@@ -14,11 +14,14 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             bash
+            bison
             binaryen
             cacert
             clang
             cmake
             curl
+            flex
+            gperf
             git
             jq
             lld
@@ -31,6 +34,7 @@
             php82Packages.composer
             pkg-config
             python3
+            re2c
             libuv
             llvm
             wabt

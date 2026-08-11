@@ -56,6 +56,8 @@ ${packageRows}
 
 The native package and both PHP-Wasm profiles executed the same Binding IR-derived conformance corpus. Their observation hash is \`${report.semantic?.observationSha256 ?? "unavailable"}\`. The eager and lazy PHP-Wasm packages also passed the two-component shared-runtime composition gate.
 
+The generated Composer package and both generated npm packages were installed into clean temporary consumers with lifecycle scripts disabled before execution.
+
 Reproduce this report with:
 
 \`\`\`sh
@@ -100,6 +102,7 @@ const report = {
   differences: [],
   semantic: null,
   composition: null,
+  consumerInstallations: [],
   likelyEntropySources: [
     "absolute compiler paths",
     "file timestamps",
@@ -168,6 +171,19 @@ try {
 
   if (report.differences.length > 0) throw new Error("release rebuilds produced byte-level differences");
   const [native, lazy, startup] = packageSpecs;
+  await run(process.execPath, [
+    "scripts/test-php-native-package-consumer.mjs",
+    "--package", native.left,
+  ]);
+  report.consumerInstallations.push({ profile: native.profile, packageInstalled: true, realLeanExecuted: true });
+  for (const spec of [lazy, startup]) {
+    await run(process.execPath, [
+      "scripts/test-php-wasm-package-host.mjs",
+      "--package", spec.left,
+      "--php-wasm", phpWasm,
+    ]);
+    report.consumerInstallations.push({ profile: spec.profile, packageInstalled: true, realLeanExecuted: true });
+  }
   for (const spec of [lazy, startup]) {
     await run(process.execPath, [
       "scripts/check-php-transport-parity.mjs",

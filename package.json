@@ -107,6 +107,13 @@
     "test:component-artifact-manifest": "node --test tests/component-artifact-manifest.test.mjs",
     "test:component-release-bundle": "node --test tests/component-release-bundle.test.mjs",
     "test:component-npm-package": "node --test tests/component-npm-package.test.mjs",
+    "test:docs": "node --test tests/documentation.test.mjs",
+    "test:consumer:node": "nix --extra-experimental-features 'nix-command flakes' build .#universal-core-artifacts --out-link build/consumer-ci-runtime && LEAN_BRIDGE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy node --test tests/consumer-node.test.mjs",
+    "test:consumer:browser": "npm run test:browser-bundlers && node --test tests/npm-package.test.mjs",
+    "test:consumer:php-native": "nix --extra-experimental-features 'nix-command flakes' build .#php-native-package --out-link build/consumer-php-native && nix --extra-experimental-features 'nix-command flakes' develop . --command node scripts/test-php-native-package-consumer.mjs --package build/consumer-php-native",
+    "test:consumer:php-wasm": "nix --extra-experimental-features 'nix-command flakes' develop . --command bash -c 'bash scripts/bootstrap-php-wasm-ci.sh && npm run bootstrap && npm run test:php-release'",
+    "test:consumer:php": "npm run test:consumer:php-native && npm run test:consumer:php-wasm",
+    "test:consumer:blocked": "node --test tests/pypi-package.test.mjs tests/cargo-package.test.mjs tests/c-family-package.test.mjs tests/wit-backend.test.mjs",
     "acceptance:plain-project-package": "node scripts/check-plain-project-package.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
@@ -121,6 +128,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "rollup": "4.62.4",
+    "typescript": "5.9.3",
     "vite": "8.2.1",
     "webpack": "5.109.2"
   }

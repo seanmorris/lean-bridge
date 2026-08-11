@@ -29,6 +29,10 @@ The current semantic observation hash is `5b4537ff7bbd450be84e26cce09fc642df62c8
 
 The PHP-Wasm composition stage also verifies that eager and lazy profiles pass one retained Alpha value through Beta, preserve canonical PHP identity, attach both components to one shared runtime, and reject a conflicting private runtime identity.
 
+## Clean consumer installation
+
+The current gate copies the native Composer package into a new temporary project, generates autoloading with scripts disabled, loads only the packaged Zend extension, and executes direct generated calls. It packs each generated PHP-Wasm npm directory into an archive, installs that archive and the pinned PHP-Wasm host archive with lifecycle scripts disabled, and executes the same Lean resources, callbacks, closures, and deterministic cleanup checks. Package-directory imports do not satisfy this check.
+
 ## Reproduce
 
 Run:

@@ -18,7 +18,7 @@ Every timing value names its unit and sample count. Every measured artifact reta
 
 ## Failure policy
 
-Shared GitHub runners cannot establish a baseline. Their processors, kernels, neighboring workloads, and power states may differ between jobs. Timing and memory changes therefore remain informational until an approved versioned budget authorizes a specific regression failure.
+Shared GitHub runners cannot establish a baseline. Their processors, kernels, neighboring workloads, and power states may differ between jobs. Timing and memory changes therefore remain informational until an approved versioned threshold record authorizes a specific regression failure.
 
 Evidence integrity is mandatory. CI fails when a required result is missing, a profile or library count is absent, correctness fails, semantic results drift, clean builds differ, source revisions disagree, schemas are unsupported, or reported artifact hashes do not match the build manifest.
 

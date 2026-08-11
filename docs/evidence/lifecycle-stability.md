@@ -67,7 +67,7 @@ The machine record is 33,451 bytes with SHA-256 `51cd726e4f178cbc0dced4434c4f5d5
 
 JavaScript does not provide deterministic finalizer timing. The suite uses an injected finalizer and weak-reference fixture to reproduce delayed collection. That fixture reads one private native live-handle diagnostic before and after the safe entry. Workload calls still use the generated package surface.
 
-WebAssembly memory grows by pages and does not shrink. Process memory depends on the host engine and allocator. The approved baseline collector repeats this suite in nine fresh processes. Release budgets treat Wasm pages and bridge counters as authoritative and preserve process-memory deltas as supplemental evidence.
+WebAssembly memory grows by pages and does not shrink. Process memory depends on the host engine and allocator. The approved baseline collector repeats this suite in nine fresh processes. Release comparisons treat Wasm pages and bridge counters as authoritative and preserve process-memory deltas as supplemental evidence.
 
 ## Commands
 

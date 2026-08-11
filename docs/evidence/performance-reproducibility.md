@@ -30,7 +30,7 @@ All three repetitions produced semantic SHA-256 `4533e9607ab120e961c62aaf83989b5
 
 The report contains 62 timing metrics. It records every raw value plus minimum, median, maximum, mean, standard deviation, coefficient of variation, and spread ratio. Timing variance does not alter semantic acceptance.
 
-The largest observed spread was the lazy profile's range p95, from 22,132 ns to 689,275 ns. Lazy loading of ordered search ranged from 1,888,118 ns to 42,793,681 ns. These values show why one warm-process run cannot establish a release budget. Nodes 793 and 794 must approve environments, repetition counts, summaries, and thresholds before timing can block a release.
+The largest observed spread was the lazy profile's range p95, from 22,132 ns to 689,275 ns. Lazy loading of ordered search ranged from 1,888,118 ns to 42,793,681 ns. These values show why one warm-process run cannot establish a release threshold. Nodes 793 and 794 must approve environments, repetition counts, summaries, and thresholds before timing can block a release.
 
 The self-consistency record is 26,025 bytes with SHA-256 `46049a2ffac057f6ccdd489d8f96a56f966e4a46c0e830d075f9bad4d860158d`.
 

@@ -1,6 +1,6 @@
 # Generated native call overhead
 
-Status: clean architecture measurement. This record measures generated JavaScript callables against one real Lean runtime and one independently compiled Alpha side module. It does not define a release budget.
+Status: clean architecture measurement. This record measures generated JavaScript callables against one real Lean runtime and one independently compiled Alpha side module.
 
 ## Public surface
 
@@ -80,7 +80,7 @@ The machine record is 17,293 bytes with SHA-256 `9fb1d2d367e8f2fb5f2f14b60121755
 
 ## Limits
 
-The Promise fixture schedules Lean work after one millisecond, so its latency includes that delay. Cancellation measures runtime shutdown, not an `AbortSignal` operation. The iterator uses the generated JavaScript cursor adapter and invokes a real Lean closure for every item. Node and the filesystem cache were warm after the first-call record. The approved baseline collector repeats this suite in nine fresh processes before a release budget uses its values.
+The Promise fixture schedules Lean work after one millisecond, so its latency includes that delay. Cancellation measures runtime shutdown, not an `AbortSignal` operation. The iterator uses the generated JavaScript cursor adapter and invokes a real Lean closure for every item. Node and the filesystem cache were warm after the first-call record. The approved baseline collector repeats this suite in nine fresh processes before release comparisons use its values.
 
 ## Commands
 

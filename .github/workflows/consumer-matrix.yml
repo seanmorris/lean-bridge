@@ -1,0 +1,291 @@
+name: Downstream consumer contract
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consumer-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  documentation:
+    name: Documentation contract
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Check documentation and the versioned support contract
+        run: npm run test:docs
+
+  node-consumers:
+    name: Node JavaScript and TypeScript
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Package and execute clean Node consumers
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:node
+      - name: Record Node observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
+      - name: Upload Node observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-node-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce Node support
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
+  browser-consumer:
+    name: Browser npm boundary
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Restore pinned compiler toolchains
+        uses: actions/cache@v5
+        with:
+          path: .toolchains
+          key: consumer-browser-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh', 'lean-toolchain') }}
+      - name: Install dependencies and browser
+        run: |
+          npm ci --ignore-scripts
+          npm run bootstrap
+          npx playwright install --with-deps chromium
+      - name: Execute real Lean in browser bundlers and verify the npm blocker
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:browser
+      - name: Record browser observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer browser-javascript --output build/consumer-ci/results/browser-javascript.json --test-result "$test_result" --package-installation false --real-lean-execution "$executed" --command "npm run test:consumer:browser"
+      - name: Upload browser observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-browser-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce the browser boundary
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
+  php-consumers:
+    name: Native PHP and PHP-Wasm
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Restore pinned PHP and compiler inputs
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains
+            build/php-wasm-sdk
+            build/php-wasm-host
+          key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Build twice, install, and execute every PHP transport
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:php
+      - name: Record PHP observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+      - name: Upload PHP observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-php-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce PHP support
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
+  blocked-consumers:
+    name: Blocked package evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Materialize the pinned core artifacts
+        run: nix --extra-experimental-features 'nix-command flakes' build .#universal-core-artifacts --out-link build/lean-link-spike
+      - name: Verify every blocked package and its exact missing capability
+        id: consumer
+        continue-on-error: true
+        run: nix --extra-experimental-features 'nix-command flakes' develop . --command npm run test:consumer:blocked
+      - name: Record blocked observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          for consumer in python rust c cpp wit-wasi; do
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --test-result "$test_result" --package-installation false --real-lean-execution false --command "npm run test:consumer:blocked"
+          done
+      - name: Upload blocked observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-blocked-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce blocked evidence
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
+  docker-engine:
+    name: Pinned Docker build path
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Restore pinned compiler toolchains
+        uses: actions/cache@v5
+        with:
+          path: .toolchains
+          key: consumer-docker-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh', 'containers/builder/manifest.json', 'lean-toolchain') }}
+      - name: Install dependencies and pinned toolchains
+        run: |
+          npm ci --ignore-scripts
+          npm run bootstrap
+      - name: Build the pinned builder image
+        run: npm run build:builder-image
+      - name: Execute the clean consumer through Docker
+        env:
+          LEAN_BRIDGE_BUILD_BACKEND: docker
+        run: npm run test:consumer:node
+
+  support-summary:
+    name: Publish consumer support summary
+    if: always()
+    needs:
+      - documentation
+      - node-consumers
+      - browser-consumer
+      - php-consumers
+      - blocked-consumers
+      - docker-engine
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the support reporter
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Download consumer observations
+        uses: actions/download-artifact@v5
+        with:
+          pattern: consumer-results-*-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results
+          merge-multiple: true
+      - name: Validate all ten targets and publish the table
+        run: node scripts/consumer-ci.mjs summary --results build/consumer-ci/results --output build/consumer-ci/report.json
+      - name: Upload the combined support report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-support-report-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/report.json
+          if-no-files-found: error
+          retention-days: 30

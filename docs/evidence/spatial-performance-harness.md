@@ -1,6 +1,6 @@
 # Shared-runtime spatial performance harness
 
-Status: executable harness. The harness runs the deterministic spatial workload through generated native JavaScript APIs. It emits measurements, but it does not define or approve a performance budget.
+Status: executable harness. The harness runs the deterministic spatial workload through generated native JavaScript APIs and emits measured results with its environment and workload identity.
 
 ## Command
 
@@ -50,4 +50,4 @@ The current browser-profile artifacts are:
 
 One runtime starts with 17,039,360 bytes of Wasm memory in this profile. The three-island comparison starts with 51,118,080 bytes. The threefold allocation follows directly from creating three independent memories. Process RSS includes Node and harness state, so the report keeps it separate from Wasm memory.
 
-The measurement methodology node must set fork counts, cache rules, noise limits, uncertainty calculations, and reference machines before this harness can produce an approved baseline or regression budget.
+The measurement methodology node must set fork counts, cache rules, noise limits, uncertainty calculations, and reference machines before this harness can produce an approved baseline or enforce a regression threshold.

@@ -1,6 +1,6 @@
 # PHP Transport Performance Baseline
 
-Status: measured POC evidence for the generated PHP API through native Zend, lazy PHP-Wasm, and startup PHP-Wasm. These results describe one machine and one fixture. They establish regression baselines, not production budgets.
+Status: measured POC evidence for the generated PHP API through native Zend, lazy PHP-Wasm, and startup PHP-Wasm. These results describe one machine and one fixture.
 
 Date: 2026-08-09 UTC.
 
