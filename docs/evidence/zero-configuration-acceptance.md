@@ -2,7 +2,7 @@
 
 ## Current result
 
-The committed fixture matrix passes. The product acceptance gate fails on four documented defects.
+The committed fixture matrix passes. The product acceptance gate fails on three documented defects.
 
 Eight plain Lean projects cover small and medium pure libraries, generic declarations, effects, identity-bearing values, custom marshaling, incomplete documentation, and an ambiguous callback lifetime. Their Lean source contains zero publishing annotations and zero handwritten host wrappers.
 
@@ -10,12 +10,11 @@ The analyzer produces complete Binding IR for the small, medium, async, and inco
 
 The audit rejects these defects:
 
-1. The installed engine creates a content-addressed component build plan but does not yet compile it into a shared-runtime side module.
-2. Generic declarations do not reach concrete generated host bindings.
-3. Identity-bearing Lean structures do not produce native resource classes.
-4. The canonical release keeps PyPI, Cargo, C, and C++ runtime targets ineligible.
+1. Generic declarations do not reach concrete generated host bindings.
+2. Identity-bearing Lean structures do not produce native resource classes.
+3. The canonical release keeps PyPI, Cargo, C, and C++ runtime targets ineligible.
 
-The CLI no longer looks for bridge build infrastructure in the plain project. It stops with `plain-component-compiler-pending` and tells the author that no project changes are required.
+The CLI compiles the small plain Lean project into a shared-runtime side module without changing the project. It generates deterministic npm archives and exposes the Lean declarations as native JavaScript callables.
 
 ## Gate behavior
 
@@ -31,12 +30,14 @@ npm run acceptance:zero-config
 
 The command exits with status 2 while a blocking exception remains. Its JSON output identifies every violation by stable code. CI tests the fixture expectations, closed audit format, evidence paths, and failure rules.
 
-## First timing record
+## Time-to-package record
 
-[`time-to-package-20260811.json`](time-to-package-20260811.json) records the first cold and warm run on an 8-core Intel i7-7700K host with 25,154,297,856 bytes of memory. The hardware exceeds the published minimum.
+[`time-to-package-20260811.json`](time-to-package-20260811.json) records a passing cold and warm run on an 8-core Intel i7-7700K host with 25,154,297,856 bytes of memory. The hardware exceeds the published minimum.
 
-Cold analysis took 25.097 ms. Warm analysis took 9.687 ms. Each run generated `project-analysis.json` and `binding-ir.json` with zero prompts, hints, manual files, or failures.
+Cold mode starts with clean analysis, build, package, publication, and consumer directories. It refreshes pinned Nix inputs while retaining immutable dependency objects in the Nix store. Warm mode starts with the same clean project outputs and permits the Nix evaluator to use its cache. The benchmark does not include toolchain installation or network publication.
 
-Cold build reached `invalid-builder-manifest` after 232.397 ms. Warm build reached the same defect after 63.964 ms. Dry-run and publish did not execute because they consume the authorized build output. The report marks both stages skipped and fails the end-to-end budget.
+The cold pipeline took 6,048.549 ms. The warm pipeline took 4,044.687 ms. Each profile ran four developer commands and required zero prompts, adapter hints, manual files, unfamiliar concepts, or failed stages.
 
-[`time-to-package-plan-20260811.json`](time-to-package-plan-20260811.json) records the next architecture seam. The installed engine generates a root-independent component plan before toolchain selection. Cold build reaches the explicit `plain-component-compiler-pending` boundary in 7.120 ms. Warm build reaches it in 4.552 ms. The CLI exposes zero flake or builder-image concepts and requires no project changes. The end-to-end gate still fails because no component or package was produced.
+The dry run rebuilt the Lean component in a separate clean output, generated both npm package closures, and compared every generated file and mode. The publication stage copied the receipt-bound archives into a local sandbox registry, verified the component receipt, installed both archives with npm scripts disabled, imported the generated native callables, and checked `add` and `isEmpty`. It did not write to an external registry.
+
+[`time-to-package-plan-20260811.json`](time-to-package-plan-20260811.json) preserves the earlier architecture-boundary run. That historical record stopped at `plain-component-compiler-pending` before the component engine and package projection existed.

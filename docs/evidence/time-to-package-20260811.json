@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "passed": false,
+  "passed": true,
   "budgetSha256": "b14163a97c2f5dcfc4fe2c89a7981de256ead23e5d1a7e184fc3405ce23551b1",
   "hardware": {
     "platform": "linux",
@@ -18,36 +18,36 @@
   "summaries": [
     {
       "mode": "cold",
-      "durationMs": 258.392,
+      "durationMs": 6048.549,
       "maximumMs": 1800000,
-      "withinBudget": false,
+      "withinBudget": true,
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 2,
+      "generatedFiles": 111,
       "manualFiles": 0,
-      "commands": 2,
-      "unfamiliarConcepts": ["builder-image", "flake"],
-      "failures": 3
+      "commands": 4,
+      "unfamiliarConcepts": [],
+      "failures": 0
     },
     {
       "mode": "warm",
-      "durationMs": 74.212,
+      "durationMs": 4044.687,
       "maximumMs": 900000,
-      "withinBudget": false,
+      "withinBudget": true,
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 2,
+      "generatedFiles": 111,
       "manualFiles": 0,
-      "commands": 2,
-      "unfamiliarConcepts": ["builder-image", "flake"],
-      "failures": 3
+      "commands": 4,
+      "unfamiliarConcepts": [],
+      "failures": 0
     }
   ],
   "stages": [
     {
       "mode": "cold",
       "stage": "analyze",
-      "durationMs": 25.097,
+      "durationMs": 22.397,
       "maximumMs": 2000,
       "withinBudget": true,
       "status": "ok",
@@ -58,60 +58,69 @@
       "commands": 1,
       "unfamiliarConcepts": [],
       "failures": 0,
-      "diagnostics": ["analysis-output-written"]
+      "diagnostics": [
+        "analysis-output-written"
+      ]
     },
     {
       "mode": "cold",
       "stage": "build",
-      "durationMs": 232.397,
+      "durationMs": 3712.027,
       "maximumMs": 900000,
-      "withinBudget": false,
-      "status": "failed",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 21,
       "manualFiles": 0,
       "commands": 1,
-      "unfamiliarConcepts": ["builder-image", "flake"],
-      "failures": 1,
-      "diagnostics": ["invalid-builder-manifest"]
+      "unfamiliarConcepts": [],
+      "failures": 0,
+      "diagnostics": []
     },
     {
       "mode": "cold",
       "stage": "dry-run",
-      "durationMs": 0.49,
+      "durationMs": 1905.391,
       "maximumMs": 780000,
-      "withinBudget": false,
-      "status": "skipped",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 63,
       "manualFiles": 0,
-      "commands": 0,
+      "commands": 1,
       "unfamiliarConcepts": [],
-      "failures": 1,
-      "diagnostics": ["upstream-build-blocked"]
+      "failures": 0,
+      "diagnostics": [
+        "deterministic-package-projection-passed",
+        "rebuild-byte-comparison-passed"
+      ]
     },
     {
       "mode": "cold",
       "stage": "publish",
-      "durationMs": 0.408,
+      "durationMs": 408.734,
       "maximumMs": 120000,
-      "withinBudget": false,
-      "status": "skipped",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 25,
       "manualFiles": 0,
-      "commands": 0,
+      "commands": 1,
       "unfamiliarConcepts": [],
-      "failures": 1,
-      "diagnostics": ["upstream-build-blocked"]
+      "failures": 0,
+      "diagnostics": [
+        "native-callables-verified",
+        "package-receipt-verified",
+        "sandbox-publication-complete"
+      ]
     },
     {
       "mode": "warm",
       "stage": "analyze",
-      "durationMs": 9.687,
+      "durationMs": 3.654,
       "maximumMs": 500,
       "withinBudget": true,
       "status": "ok",
@@ -122,55 +131,64 @@
       "commands": 1,
       "unfamiliarConcepts": [],
       "failures": 0,
-      "diagnostics": ["analysis-output-written"]
+      "diagnostics": [
+        "analysis-output-written"
+      ]
     },
     {
       "mode": "warm",
       "stage": "build",
-      "durationMs": 63.964,
+      "durationMs": 1759.981,
       "maximumMs": 300000,
-      "withinBudget": false,
-      "status": "failed",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 21,
       "manualFiles": 0,
       "commands": 1,
-      "unfamiliarConcepts": ["builder-image", "flake"],
-      "failures": 1,
-      "diagnostics": ["invalid-builder-manifest"]
+      "unfamiliarConcepts": [],
+      "failures": 0,
+      "diagnostics": []
     },
     {
       "mode": "warm",
       "stage": "dry-run",
-      "durationMs": 0.253,
+      "durationMs": 1871.813,
       "maximumMs": 540000,
-      "withinBudget": false,
-      "status": "skipped",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 63,
       "manualFiles": 0,
-      "commands": 0,
+      "commands": 1,
       "unfamiliarConcepts": [],
-      "failures": 1,
-      "diagnostics": ["upstream-build-blocked"]
+      "failures": 0,
+      "diagnostics": [
+        "deterministic-package-projection-passed",
+        "rebuild-byte-comparison-passed"
+      ]
     },
     {
       "mode": "warm",
       "stage": "publish",
-      "durationMs": 0.308,
+      "durationMs": 409.239,
       "maximumMs": 60000,
-      "withinBudget": false,
-      "status": "skipped",
+      "withinBudget": true,
+      "status": "ok",
       "prompts": 0,
       "hints": 0,
-      "generatedFiles": 0,
+      "generatedFiles": 25,
       "manualFiles": 0,
-      "commands": 0,
+      "commands": 1,
       "unfamiliarConcepts": [],
-      "failures": 1,
-      "diagnostics": ["upstream-build-blocked"]
+      "failures": 0,
+      "diagnostics": [
+        "native-callables-verified",
+        "package-receipt-verified",
+        "sandbox-publication-complete"
+      ]
     }
   ]
 }

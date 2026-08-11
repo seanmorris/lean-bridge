@@ -51,6 +51,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Shared PHP projection and transport boundary evidence](../evidence/php-projection-boundary.md)
 - [Transactional multi-registry release evidence](../evidence/transactional-registry-release.md)
 - [Plain project npm installation and receipt evidence](../evidence/plain-project-package-acceptance.md)
+- [Zero-configuration and time-to-package evidence](../evidence/zero-configuration-acceptance.md)
 
 ## Permanent review lenses
 

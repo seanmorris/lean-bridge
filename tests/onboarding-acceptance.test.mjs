@@ -59,18 +59,17 @@ test("zero-configuration audit reports current blockers without treating reviewe
   const report = evaluateZeroConfigAudit(audit);
   assert.equal(report.passed, false);
   assert.deepEqual(report.summary, {
-    exceptions: 9,
+    exceptions: 8,
     unavoidableAmbiguities: 2,
     policyChoices: 3,
-    defects: 4,
+    defects: 3,
     defaults: 3,
-    violations: 4,
+    violations: 3,
   });
   assert.deepEqual(report.violations.map(item => [item.id, item.code]), [
     ["generic-projection", "blocking-zero-config-defect"],
     ["identity-projection", "blocking-zero-config-defect"],
     ["inactive-runtime-targets", "blocking-zero-config-defect"],
-    ["plain-project-compiler", "blocking-zero-config-defect"],
   ]);
   assert.equal(report.violations.some(item => item.id === "callback-lifetime-policy"), false);
   assert.equal(report.violations.some(item => item.id === "custom-marshaling-policy"), false);

@@ -108,8 +108,25 @@ test("published time budgets schema stays closed", async () => {
   assert.equal(reportSchema.$defs.summary.additionalProperties, false);
   assert.equal(reportSchema.$defs.stage.additionalProperties, false);
   assert.equal(evidence.schemaVersion, 1);
-  assert.equal(evidence.passed, false);
+  assert.equal(evidence.passed, true);
   assert.equal(evidence.hardwareCompatibility.passed, true);
+  assert.ok(evidence.stages.every(item => item.status === "ok" && item.withinBudget));
+  assert.ok(evidence.summaries.every(item =>
+    item.withinBudget &&
+    item.prompts === 0 &&
+    item.hints === 0 &&
+    item.manualFiles === 0 &&
+    item.unfamiliarConcepts.length === 0 &&
+    item.failures === 0
+  ));
+  assert.ok(evidence.stages.filter(item => item.stage === "dry-run").every(item =>
+    item.diagnostics.includes("rebuild-byte-comparison-passed") &&
+    item.diagnostics.includes("deterministic-package-projection-passed")
+  ));
+  assert.ok(evidence.stages.filter(item => item.stage === "publish").every(item =>
+    item.diagnostics.includes("package-receipt-verified") &&
+    item.diagnostics.includes("native-callables-verified")
+  ));
   assert.equal(planEvidence.passed, false);
   assert.deepEqual(
     planEvidence.stages.filter(item => item.stage === "build").map(item => item.diagnostics),

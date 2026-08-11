@@ -3,19 +3,6 @@
   "scope": "Plain Lean project through verified multi-ecosystem package consumption",
   "exceptions": [
     {
-      "id": "plain-project-compiler",
-      "stage": "build",
-      "fixture": "small",
-      "kind": "target-special-case",
-      "classification": "defect",
-      "mandatory": false,
-      "blocking": true,
-      "targetSpecificRebuild": false,
-      "description": "The installed engine creates a hash-bound component plan but cannot yet compile that plan into a shared-runtime side module.",
-      "evidence": ["src/build/component-plan.mjs", "src/build/canonical-build.mjs", "tests/fixtures/onboarding/small"],
-      "remediation": "Compile the generated component plan with bridge-owned infrastructure while keeping the plain source read-only and separate."
-    },
-    {
       "id": "generic-projection",
       "stage": "analyze",
       "fixture": "generic",
