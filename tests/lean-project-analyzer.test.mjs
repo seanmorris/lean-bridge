@@ -78,6 +78,20 @@ test("analysis infers a deterministic copied-value Binding IR without changing t
   }
 });
 
+test("analysis excludes generated Lean Bridge working and closure-cache directories", async () => {
+  const root = await makePureProject();
+  try {
+    const generated = join(root, ".lean-bridge-docker-nix", "nix", "store");
+    await mkdir(generated, { recursive: true });
+    await writeFile(join(generated, "Injected.lean"), "def mustNotBeAnalyzed := true\n");
+    const report = await analyzeLeanProject(root);
+    assert.equal(report.inputs.some(input => input.path.includes(".lean-bridge-")), false);
+    assert.equal(report.declarations.some(declaration => declaration.fullName === "mustNotBeAnalyzed"), false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("analysis blocks foreign, effectful, and unknown representations without inventing ownership", async () => {
   const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-blocked-"));
   try {

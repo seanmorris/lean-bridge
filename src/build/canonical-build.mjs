@@ -1,4 +1,3 @@
-import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   cp,
@@ -10,27 +9,39 @@ import {
   stat,
   writeFile,
 } from "node:fs/promises";
-import { dirname, join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ComponentBuildPlanError, prepareComponentBuildPlan } from "./component-plan.mjs";
+import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { generateCompilerAdapters } from "./compiler-adapters.mjs";
+import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
+import { writeEngineExecutionRequest } from "./engine-execution-request.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
+import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
+import { CanonicalBuildError } from "./build-error.mjs";
+import { processBuildRunner } from "./process-runner.mjs";
+
+export { CanonicalBuildError, processBuildRunner };
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const backendNames = new Set(["auto", "docker", "nix"]);
 const installedEngineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
-export class CanonicalBuildError extends Error {
-  constructor(code, message, { hint = null, details = {} } = {}) {
-    super(message);
-    this.name = "CanonicalBuildError";
-    this.code = code;
-    this.hint = hint;
-    this.details = details;
+const componentEngineInstallable = async engineRoot => {
+  const root = resolve(engineRoot);
+  let gitWorktree = false;
+  try {
+    const git = await stat(join(root, ".git"));
+    gitWorktree = git.isDirectory() || git.isFile();
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
   }
-}
+  const flake = gitWorktree ? `git+${pathToFileURL(root).href}` : `path:${root}`;
+  return `${flake}#component-build-engine`;
+};
 
 const fail = (code, message, options) => {
   throw new CanonicalBuildError(code, message, options);
@@ -44,72 +55,6 @@ const exactKeys = (value, keys, label) => {
     fail("invalid-builder-manifest", `${label} fields must be closed`, { details: { actual, expected } });
   }
 };
-
-const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000, signal = undefined }) => new Promise((accept, reject) => {
-  if (signal?.aborted) {
-    reject(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? "Build cancelled before process start"));
-    return;
-  }
-  const child = spawn(command, args, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
-  const stdout = [];
-  const stderr = [];
-  let bytes = 0;
-  let settled = false;
-  const maximum = 32 * 1024 * 1024;
-  const cleanup = () => {
-    clearTimeout(timer);
-    signal?.removeEventListener("abort", abort);
-  };
-  const rejectOnce = error => {
-    if (settled) return;
-    settled = true;
-    cleanup();
-    reject(error);
-  };
-  const acceptOnce = value => {
-    if (settled) return;
-    settled = true;
-    cleanup();
-    accept(value);
-  };
-  const collect = target => chunk => {
-    bytes += chunk.length;
-    if (bytes > maximum) {
-      child.kill("SIGKILL");
-      rejectOnce(new CanonicalBuildError("build-output-limit", `${command} exceeded the 32 MiB diagnostic limit`));
-      return;
-    }
-    target.push(chunk);
-  };
-  child.stdout.on("data", collect(stdout));
-  child.stderr.on("data", collect(stderr));
-  const timer = setTimeout(() => {
-    child.kill("SIGKILL");
-    rejectOnce(new CanonicalBuildError("build-timeout", `${command} exceeded its execution deadline`));
-  }, timeoutMs);
-  const abort = () => {
-    child.kill("SIGTERM");
-    rejectOnce(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? `Build cancelled while running ${command}`));
-  };
-  signal?.addEventListener("abort", abort, { once: true });
-  if (signal?.aborted) abort();
-  child.once("error", error => {
-    rejectOnce(error);
-  });
-  child.once("close", code => {
-    const result = {
-      code,
-      stdout: Buffer.concat(stdout).toString("utf8"),
-      stderr: Buffer.concat(stderr).toString("utf8"),
-    };
-    if (code === 0) acceptOnce(result);
-    else rejectOnce(new CanonicalBuildError("build-command-failed", `${command} exited with status ${code}`, {
-      details: { command, args, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) },
-    }));
-  });
-});
-
-export const processBuildRunner = Object.freeze({ capture });
 
 const probe = async ({ runner, command, args }) => {
   try {
@@ -195,8 +140,8 @@ export const readBuilderManifest = async projectRoot => {
       fail("builder-base-drift", `Pinned builder base is absent from Dockerfile: ${base.reference}`);
     }
   }
-  if (JSON.stringify(manifest.flakeOutputs) !== JSON.stringify(["universal-release-bundle", "release-rehearsal"])) {
-    fail("builder-output-drift", "The builder must invoke the canonical bundle and release rehearsal flake outputs");
+  if (JSON.stringify(manifest.flakeOutputs) !== JSON.stringify(["universal-release-bundle", "release-rehearsal", "component-build-engine"])) {
+    fail("builder-output-drift", "The builder must expose the canonical bundle, release rehearsal, and component engine flake outputs");
   }
   return Object.freeze({ directory, manifest: Object.freeze(manifest) });
 };
@@ -263,6 +208,133 @@ const runNativeNix = async ({ root, staging, selection, runner, environment }) =
     sourceReadOnly: true,
     componentBinariesRebuiltByProjection: false,
   }));
+};
+
+export const runNativeComponentEngine = async ({
+  engineRoot,
+  inputRoot,
+  requestPath,
+  outputRoot,
+  selection,
+  runner,
+  environment,
+}) => {
+  const installable = await componentEngineInstallable(engineRoot);
+  const isolatedStore = environment.LEAN_BRIDGE_NIX_STORE ?? null;
+  const common = [
+    "--extra-experimental-features", "nix-command flakes",
+    ...(environment.LEAN_BRIDGE_NIX_REFRESH === "1" ? ["--refresh"] : []),
+    ...(isolatedStore === null ? [] : ["--store", `local?root=${resolve(isolatedStore)}`]),
+  ];
+  await runner.capture({
+    command: selection.command,
+    args: [
+      ...common,
+      "run", "--no-write-lock-file", installable, "--",
+      "--request", resolve(requestPath),
+      "--component", resolve(inputRoot),
+      "--output", resolve(outputRoot),
+      "--engine", resolve(engineRoot),
+      "--backend", "native-nix",
+    ],
+    cwd: resolve(engineRoot),
+    env: environment,
+    timeoutMs: 60 * 60 * 1000,
+  });
+};
+
+const prepareDockerNixClosureCache = async ({ engineRoot, selection, runner, environment, cache }) => {
+  if (cache.policy === "off" || selection.available.nix.available !== true) return null;
+  const nixCommand = environment.LEAN_BRIDGE_NIX ?? "nix";
+  const root = resolve(environment.LEAN_BRIDGE_DOCKER_NIX_CACHE_ROOT ?? join(engineRoot, ".lean-bridge-docker-nix"));
+  if (root.includes(",")) fail("unsupported-docker-mount-path", "Docker Nix cache path cannot contain commas");
+  await mkdir(root, { recursive: true });
+  const common = [
+    "--extra-experimental-features", "nix-command flakes",
+    ...(cache.policy === "refresh" ? ["--refresh"] : []),
+  ];
+  const installable = await componentEngineInstallable(engineRoot);
+  const info = await runner.capture({
+    command: nixCommand,
+    args: [...common, "path-info", "--no-write-lock-file", installable],
+    cwd: resolve(engineRoot),
+    timeoutMs: 60 * 60 * 1000,
+  });
+  const storePath = info.stdout.trim().split(/\s+/).at(-1);
+  if (!/^\/nix\/store\/[0-9a-z]{32}-lean-bridge-component-engine$/.test(storePath)) {
+    fail("component-engine-store-path-invalid", "Native Nix returned an invalid component engine store path", { details: { storePath } });
+  }
+  await runner.capture({
+    command: nixCommand,
+    args: [...common, "copy", "--to", `local?root=${root}&require-sigs=false`, storePath],
+    cwd: resolve(engineRoot),
+    timeoutMs: 60 * 60 * 1000,
+  });
+  const physicalStore = join(root, "nix", "store");
+  const program = `${storePath}/bin/lean-bridge-component-engine`;
+  try {
+    await stat(join(root, program.replace(/^\/+/, "")));
+  } catch (error) {
+    fail("component-engine-cache-incomplete", "Docker Nix closure cache does not contain the component engine program", { details: { root, program, cause: error.message } });
+  }
+  return Object.freeze({ physicalStore, program, storePath });
+};
+
+export const runDockerComponentEngine = async ({
+  engineRoot,
+  inputRoot,
+  requestPath,
+  outputRoot,
+  selection,
+  runner,
+  environment,
+  cache,
+}) => {
+  if (cache.directory !== null) {
+    fail("cache-directory-unsupported", "An explicit cache directory requires the native Nix backend", {
+      hint: "Select native Nix or omit --cache-directory when Docker is active.",
+    });
+  }
+  const builder = await readBuilderManifest(engineRoot);
+  const imageOverride = environment.LEAN_BRIDGE_BUILDER_IMAGE ?? null;
+  let image = builder.manifest.image.localTag;
+  if (imageOverride !== null) {
+    if (!/@sha256:[0-9a-f]{64}$/.test(imageOverride)) {
+      fail("unpinned-builder-image", "LEAN_BRIDGE_BUILDER_IMAGE must use an immutable sha256 digest");
+    }
+    image = imageOverride;
+  } else {
+    image = (await buildPinnedBuilderImage({
+      projectRoot: engineRoot,
+      dockerCommand: selection.command,
+      runner,
+      builder,
+      cachePolicy: cache.policy,
+    })).image;
+  }
+  const closureCache = await prepareDockerNixClosureCache({ engineRoot, selection, runner, environment, cache });
+  const paths = [engineRoot, inputRoot, dirname(requestPath), dirname(outputRoot), ...(closureCache === null ? [] : [closureCache.physicalStore])];
+  if (paths.some(path => path.includes(","))) fail("unsupported-docker-mount-path", "Docker build paths cannot contain commas");
+  await mkdir(dirname(outputRoot), { recursive: true });
+  await runner.capture({
+    command: selection.command,
+    args: [
+      "run", "--rm", "--platform", builder.manifest.platform, "--network", "bridge",
+      "--mount", `type=bind,source=${resolve(engineRoot)},target=/workspace/engine,readonly`,
+      "--mount", `type=bind,source=${resolve(inputRoot)},target=/workspace/component,readonly`,
+      "--mount", `type=bind,source=${resolve(dirname(requestPath))},target=/workspace/request,readonly`,
+      "--mount", `type=bind,source=${resolve(dirname(outputRoot))},target=/workspace/output`,
+      ...(closureCache === null ? [] : ["--mount", `type=bind,source=${closureCache.physicalStore},target=/nix/store,readonly`]),
+      "--env", `LEAN_BRIDGE_REQUEST=/workspace/request/${basename(requestPath)}`,
+      "--env", `LEAN_BRIDGE_OUTPUT=/workspace/output/${basename(outputRoot)}`,
+      ...(closureCache === null ? [] : ["--env", `LEAN_BRIDGE_ENGINE_PROGRAM=${closureCache.program}`]),
+      "--env", `LEAN_BRIDGE_OUTPUT_UID=${typeof process.getuid === "function" ? process.getuid() : 0}`,
+      "--env", `LEAN_BRIDGE_OUTPUT_GID=${typeof process.getgid === "function" ? process.getgid() : 0}`,
+      image, "component",
+    ],
+    cwd: resolve(engineRoot),
+    timeoutMs: 60 * 60 * 1000,
+  });
 };
 
 const runDockerNix = async ({ root, staging, selection, builder, runner, environment, cache }) => {
@@ -371,6 +443,132 @@ const selectPublicationTargets = (index, requested) => {
     .sort((left, right) => left.ecosystem.localeCompare(right.ecosystem)));
 };
 
+const readComponentEngineOutput = async ({ executionRoot, request }) => {
+  const bundleRoot = join(executionRoot, request.document.output.bundleDirectory);
+  const manifestPath = join(bundleRoot, "component-release-bundle.json");
+  const reportPath = join(executionRoot, request.document.output.executionReport);
+  let manifest;
+  let report;
+  try {
+    [manifest, report] = await Promise.all([
+      readFile(manifestPath, "utf8").then(JSON.parse),
+      readFile(reportPath, "utf8").then(JSON.parse),
+    ]);
+  } catch (error) {
+    fail("component-engine-output-invalid", "Component engine did not emit its bundle and execution report", { details: { cause: error.message } });
+  }
+  validateComponentReleaseBundleManifest(manifest);
+  const manifestSha256 = sha256(canonicalJson(manifest));
+  if (
+    report?.schemaVersion !== 1 ||
+    report.kind !== "lean-bridge-engine-execution-report" ||
+    report.requestSha256 !== request.sha256 ||
+    report.component !== request.document.component.id ||
+    report.bundleManifestSha256 !== manifestSha256 ||
+    report.sourceReadOnly !== true ||
+    report.authorizedOutputsOnly !== true ||
+    report.runtimeBinaryIncluded !== false
+  ) fail("component-engine-output-invalid", "Component execution report does not match the requested component bundle");
+  return Object.freeze({ bundleRoot, manifest: Object.freeze(manifest), manifestSha256, report: Object.freeze(report) });
+};
+
+const buildPlainComponentProject = async ({
+  root,
+  engine,
+  output,
+  componentPlan,
+  selection,
+  runner,
+  environment,
+  targets,
+  cache,
+  signal,
+  onProgress,
+}) => {
+  await mkdir(dirname(output), { recursive: true });
+  const workParent = selection.backend === "docker"
+    ? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? engine)
+    : dirname(output);
+  const work = await mkdtemp(join(workParent, ".lean-bridge-component-work-"));
+  const finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
+  const isolatedStore = selection.backend === "nix" && cache.policy === "off" ? `${work}-nix-store` : null;
+  try {
+    onProgress?.({ phase: "prepare", state: "started", message: "Preparing the verified component input" });
+    const analysis = await analyzeLeanProject(root, { signal, targets });
+    const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+    const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+    const inputRoot = join(work, "component");
+    await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
+    const requestPath = join(work, "request", "engine-execution-request.json");
+    const request = await writeEngineExecutionRequest({
+      output: requestPath,
+      engineRoot: engine,
+      inputRoot,
+      componentPlan,
+      compilationPlan,
+      cachePolicy: cache.policy,
+      targets,
+    });
+    onProgress?.({ phase: "prepare", state: "completed", message: "Verified component input prepared" });
+    signal?.throwIfAborted();
+    const effectiveEnvironment = {
+      ...environment,
+      ...(isolatedStore !== null
+        ? { LEAN_BRIDGE_NIX_STORE: isolatedStore }
+        : cache.directory === null ? {} : { LEAN_BRIDGE_NIX_STORE: cache.directory }),
+      ...(cache.policy === "refresh" ? { LEAN_BRIDGE_NIX_REFRESH: "1" } : {}),
+    };
+    const executionRoot = selection.backend === "docker"
+      ? join(work, "docker-output", "execution")
+      : join(work, "execution");
+    onProgress?.({ phase: "compile", state: "started", message: "Compiling the Lean component once" });
+    if (selection.backend === "docker") {
+      await runDockerComponentEngine({
+        engineRoot: engine, inputRoot, requestPath, outputRoot: executionRoot,
+        selection, runner, environment: effectiveEnvironment, cache,
+      });
+    } else {
+      await runNativeComponentEngine({ engineRoot: engine, inputRoot, requestPath, outputRoot: executionRoot, selection, runner, environment: effectiveEnvironment });
+    }
+    signal?.throwIfAborted();
+    onProgress?.({ phase: "compile", state: "completed", message: "Lean component compiled against the shared runtime contract" });
+    onProgress?.({ phase: "validate", state: "started", message: "Validating component and provenance identities" });
+    const checked = await readComponentEngineOutput({ executionRoot, request });
+    await cp(checked.bundleRoot, join(finalStaging, "bundle"), { recursive: true, dereference: true, preserveTimestamps: true });
+    await cp(join(executionRoot, request.document.output.executionReport), join(finalStaging, "engine-execution-report.json"));
+    await cp(requestPath, join(finalStaging, "engine-execution-request.json"));
+    onProgress?.({ phase: "validate", state: "completed", message: "Component and provenance identities validated" });
+    await rename(finalStaging, output);
+    return Object.freeze({
+      schemaVersion: 1,
+      backend: selection.backend,
+      backendVersion: selection.version,
+      output,
+      bundle: Object.freeze({
+        path: "bundle",
+        component: checked.manifest.component.id,
+        manifestSha256: checked.manifestSha256,
+        identitySha256: checked.manifest.identitySha256,
+        runtime: checked.manifest.runtime,
+      }),
+      targets: Object.freeze([...targets]),
+      cache,
+      engineIdentitySha256: request.document.engine.identitySha256,
+      executionRequestSha256: request.sha256,
+      componentPlanSha256: componentPlan.sha256,
+      compilationPlanSha256: compilationPlan.sha256,
+      sourceReadOnly: true,
+      componentBinariesRebuiltByProjection: false,
+    });
+  } catch (error) {
+    await rm(finalStaging, { recursive: true, force: true });
+    throw error;
+  } finally {
+    await rm(work, { recursive: true, force: true });
+    if (isolatedStore !== null) await rm(isolatedStore, { recursive: true, force: true });
+  }
+};
+
 export const buildCanonicalProject = async ({
   projectRoot,
   engineRoot = installedEngineRoot,
@@ -409,21 +607,21 @@ export const buildCanonicalProject = async ({
     if (!(error instanceof ComponentBuildPlanError)) throw error;
     fail(error.code, error.message, { details: error.details });
   }
-  if (root !== engine) {
-    fail("plain-component-compiler-pending", `Lean Bridge created component plan ${componentPlan.sha256}, but this release cannot compile an external plain project yet`, {
-      hint: "No project changes are required. Analyze is usable now; plain-project build support must be completed in the bridge engine.",
-      details: { component: componentPlan.document.component.id, componentPlanSha256: componentPlan.sha256 },
-    });
-  }
   onProgress?.({ phase: "backend", state: "started", message: "Selecting Docker or native Nix" });
   const selection = await detectBuildBackend({ environment, runner: selectedRunner });
   onProgress?.({ phase: "backend", state: "completed", message: `Selected ${selection.backend}` });
   signal?.throwIfAborted();
-  const builder = await readBuilderManifest(engine);
   const output = await assertOutputIsAbsent({
     projectRoot: root,
     outputRoot: outputRoot ?? join(root, "build", "lean-bridge-release"),
   });
+  if (root !== engine) {
+    return buildPlainComponentProject({
+      root, engine, output, componentPlan, selection, runner: selectedRunner,
+      environment, targets, cache: normalizedCache, signal, onProgress,
+    });
+  }
+  const builder = await readBuilderManifest(engine);
   await mkdir(dirname(output), { recursive: true });
   const staging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
   const isolatedStore = selection.backend === "nix" && normalizedCache.policy === "off" ? `${staging}-nix-store` : null;

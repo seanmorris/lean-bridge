@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "includedFiles": [
+    "poc/lean-link-spike/graph-lock.json",
+    "scripts/run-component-engine.mjs",
+    "src/analyze/lean-project.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/build-error.mjs",
+    "src/build/compiler-adapters.mjs",
+    "src/build/component-artifact-manifest.mjs",
+    "src/build/component-compilation-plan.mjs",
+    "src/build/component-engine.mjs",
+    "src/build/component-plan.mjs",
+    "src/build/component-side-linker.mjs",
+    "src/build/engine-execution-request.mjs",
+    "src/build/lean-component-compiler.mjs",
+    "src/build/process-runner.mjs",
+    "src/build/side-module-audit.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/component-release-bundle.mjs"
+  ]
+}

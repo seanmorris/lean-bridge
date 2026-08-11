@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { constants } from "node:fs";
-import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -12,6 +12,7 @@ import {
   processBuildRunner,
   readBuilderManifest,
 } from "../src/build/canonical-build.mjs";
+import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { rehearseRelease } from "../src/release/release-rehearsal.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
@@ -61,27 +62,138 @@ test("missing build tools stop before creating the requested output", async () =
   }
 });
 
-test("a plain project receives a content-addressed plan without copying bridge infrastructure", async () => {
+test("a plain project runs the isolated Nix engine without copying bridge infrastructure", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-plain-build-"));
   const output = join(scratch, "result");
-  let runnerCalled = false;
-  try {
-    await assert.rejects(
-      buildCanonicalProject({
-        projectRoot: "tests/fixtures/onboarding/small",
+  const calls = [];
+  const progress = [];
+  const runner = {
+    capture: async request => {
+      if (request.command === "docker") throw unavailable("docker");
+      if (request.args[0] === "--version") return { code: 0, stdout: "nix (Nix) 2.24.11\n", stderr: "" };
+      calls.push(request);
+      assert.equal(request.args.includes("run"), true);
+      const value = flag => request.args[request.args.indexOf(flag) + 1];
+      await executeComponentEngineRequest({
+        requestPath: value("--request"),
+        inputRoot: value("--component"),
+        outputRoot: value("--output"),
         engineRoot: process.cwd(),
-        outputRoot: output,
-        targets: ["npm"],
-        runner: { capture: async () => { runnerCalled = true; throw new Error("runner must not execute"); } },
-      }),
-      error => error instanceof CanonicalBuildError &&
-        error.code === "plain-component-compiler-pending" &&
-        /^[0-9a-f]{64}$/.test(error.details.componentPlanSha256) &&
-        error.details.component === "onboarding-small@1.0.0" &&
-        /No project changes are required/.test(error.hint),
-    );
-    assert.equal(runnerCalled, false);
-    await assert.rejects(access(output, constants.F_OK), error => error.code === "ENOENT");
+        backend: "native-nix-test-double",
+      });
+      return { code: 0, stdout: "", stderr: "" };
+    },
+  };
+  try {
+    const result = await buildCanonicalProject({
+      projectRoot: "tests/fixtures/onboarding/small",
+      engineRoot: process.cwd(),
+      outputRoot: output,
+      targets: ["npm"],
+      runner,
+      environment: { LEAN_BRIDGE_BUILD_BACKEND: "nix" },
+      onProgress: event => progress.push(event),
+    });
+    assert.equal(result.backend, "nix");
+    assert.equal(result.bundle.component, "onboarding-small@1.0.0");
+    assert.equal(result.bundle.runtime.artifactIncluded, false);
+    assert.deepEqual(result.targets, ["npm"]);
+    assert.match(result.executionRequestSha256, /^[0-9a-f]{64}$/);
+    assert.equal(calls.length, 1);
+    assert.match(calls[0].args.find(argument => argument.includes("#component-build-engine")), /^git\+file:\/\/\/.*#component-build-engine$/);
+    const requestPath = calls[0].args[calls[0].args.indexOf("--request") + 1];
+    const componentPath = calls[0].args[calls[0].args.indexOf("--component") + 1];
+    assert.notEqual(requestPath, componentPath);
+    assert.deepEqual((await readdir(output)).sort(), ["bundle", "engine-execution-report.json", "engine-execution-request.json"]);
+    assert.deepEqual(progress.map(item => `${item.phase}:${item.state}`), [
+      "backend:started", "backend:completed", "prepare:started", "prepare:completed",
+      "compile:started", "compile:completed", "validate:started", "validate:completed",
+    ]);
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});
+
+test("a plain project runs the same closed request through separate Docker mounts", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-plain-docker-build-"));
+  const output = join(scratch, "result");
+  const calls = [];
+  const sourceForMount = (args, target) => {
+    const mount = args.find(argument => argument.includes(`target=${target}`));
+    assert.ok(mount, `missing mount ${target}`);
+    return mount.match(/source=([^,]+)/)[1];
+  };
+  const runner = {
+    capture: async request => {
+      calls.push(request);
+      if (request.command === "nix") {
+        if (request.args[0] === "--version") return { code: 0, stdout: "nix (Nix) 2.24.11\n", stderr: "" };
+        const storePath = `/nix/store/${"a".repeat(32)}-lean-bridge-component-engine`;
+        if (request.args.includes("path-info")) return { code: 0, stdout: `${storePath}\n`, stderr: "" };
+        if (request.args.includes("copy")) {
+          const destination = request.args[request.args.indexOf("--to") + 1];
+          assert.match(destination, /^local\?root=.*&require-sigs=false$/);
+          const cacheRoot = destination.slice("local?root=".length).split("&")[0];
+          const program = join(cacheRoot, storePath.slice(1), "bin/lean-bridge-component-engine");
+          await mkdir(join(program, ".."), { recursive: true });
+          await writeFile(program, "#!/bin/sh\n", { mode: 0o755 });
+          return { code: 0, stdout: "", stderr: "" };
+        }
+      }
+      if (request.args[0] === "info") return { code: 0, stdout: "24.0.9\n", stderr: "" };
+      if (request.args[0] === "build") return { code: 0, stdout: "builder ready\n", stderr: "" };
+      if (request.args[0] === "image") return {
+        code: 0,
+        stdout: "sha256:93c7df682303a033e37acf2099b7bbdae0fd9d76103b993115f271469cd46325\n",
+        stderr: "",
+      };
+      if (request.args[0] === "run") {
+        const requestRoot = sourceForMount(request.args, "/workspace/request");
+        const componentRoot = sourceForMount(request.args, "/workspace/component");
+        const outputRoot = sourceForMount(request.args, "/workspace/output");
+        await executeComponentEngineRequest({
+          requestPath: join(requestRoot, "engine-execution-request.json"),
+          inputRoot: componentRoot,
+          outputRoot: join(outputRoot, "execution"),
+          engineRoot: process.cwd(),
+          backend: "docker-nix",
+        });
+        return { code: 0, stdout: "", stderr: "" };
+      }
+      throw new Error(`unexpected command: ${request.command} ${request.args.join(" ")}`);
+    },
+  };
+  try {
+    const result = await buildCanonicalProject({
+      projectRoot: "tests/fixtures/onboarding/small",
+      engineRoot: process.cwd(),
+      outputRoot: output,
+      targets: ["npm"],
+      runner,
+      environment: {
+        LEAN_BRIDGE_BUILD_BACKEND: "docker",
+        LEAN_BRIDGE_DOCKER_NIX_CACHE_ROOT: join(scratch, "cache"),
+      },
+    });
+    assert.equal(result.backend, "docker");
+    assert.equal(result.bundle.component, "onboarding-small@1.0.0");
+    const pathInfo = calls.find(call => call.command === "nix" && call.args.includes("path-info"));
+    assert.match(pathInfo.args.find(argument => argument.includes("#component-build-engine")), /^git\+file:\/\/\/.*#component-build-engine$/);
+    const run = calls.find(call => call.args[0] === "run");
+    assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/engine,readonly")));
+    assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/component,readonly")));
+    assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/request,readonly")));
+    assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/output")));
+    assert.ok(run.args.some(argument => argument.endsWith("target=/nix/store,readonly")));
+    assert.ok(run.args.some(argument => argument.startsWith("LEAN_BRIDGE_ENGINE_PROGRAM=/nix/store/")));
+    assert.equal(run.args.at(-1), "component");
+    const [executionRequest, executionReport] = await Promise.all([
+      readFile(join(output, "engine-execution-request.json"), "utf8").then(JSON.parse),
+      readFile(join(output, "engine-execution-report.json"), "utf8").then(JSON.parse),
+    ]);
+    assert.equal(executionReport.backend, "docker-nix");
+    assert.equal(executionReport.engineIdentitySha256, executionRequest.engine.identitySha256);
+    assert.equal(executionReport.inputClosureSha256, executionRequest.component.inputClosureSha256);
   } finally {
     await rm(scratch, { recursive: true, force: true });
   }
@@ -91,6 +203,7 @@ test("the reviewed Debian builder contains Nix, not a second compiler policy", a
   const { manifest } = await readBuilderManifest(process.cwd());
   const dockerfile = await readFile("containers/builder/Dockerfile", "utf8");
   const entrypoint = await readFile("containers/builder/entrypoint.sh", "utf8");
+  const flake = await readFile("flake.nix", "utf8");
   assert.equal(manifest.image.publicationStatus, "local-reproducible");
   assert.equal(manifest.image.publishedReference, null);
   assert.deepEqual(manifest.bases.map(item => item.role).sort(), ["nix-store", "runtime"]);
@@ -98,7 +211,11 @@ test("the reviewed Debian builder contains Nix, not a second compiler policy", a
   assert.doesNotMatch(dockerfile, /Lean 4|Emscripten|libuv|npm|PyPI|Cargo/);
   assert.match(entrypoint, /#universal-release-bundle/);
   assert.match(entrypoint, /#release-rehearsal/);
+  assert.match(entrypoint, /#component-build-engine/);
+  assert.match(entrypoint, /\/workspace\/component/);
+  assert.match(entrypoint, /\/workspace\/request/);
   assert.doesNotMatch(entrypoint, /build-lean|emcc|lake build/);
+  assert.match(flake, /component-build-engine = pkgs\.writeShellApplication[\s\S]*runtimeInputs = \[ pkgs\.coreutils pkgs\.nodejs_22 pkgs\.python3 \]/);
   const schema = JSON.parse(await readFile("schema/builder-manifest.schema.json", "utf8"));
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.properties.image.additionalProperties, false);
@@ -119,7 +236,7 @@ test("Docker orchestration returns one validated bundle and package projection c
       if (request.args[0] === "build") return { code: 0, stdout: "builder ready\n", stderr: "" };
       if (request.args[0] === "image") return {
         code: 0,
-        stdout: "sha256:c4202ef2601394eeffe06d8a988e617d9cc990f28334ee51b4feb277c262a927\n",
+        stdout: "sha256:93c7df682303a033e37acf2099b7bbdae0fd9d76103b993115f271469cd46325\n",
         stderr: "",
       };
       if (request.args[0] === "run") {

@@ -53,7 +53,7 @@ const sourceFiles = async (root, { signal = undefined } = {}) => {
     entries.sort((left, right) => left.name.localeCompare(right.name));
     for (const entry of entries) {
       signal?.throwIfAborted();
-      if (entry.isDirectory() && ignoredDirectories.has(entry.name)) continue;
+      if (entry.isDirectory() && (ignoredDirectories.has(entry.name) || entry.name.startsWith(".lean-bridge-"))) continue;
       const absolute = join(directory, entry.name);
       if (entry.isDirectory()) await visit(absolute);
       if (entry.isFile()) files.push(absolute);

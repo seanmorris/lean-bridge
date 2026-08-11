@@ -34,24 +34,12 @@ const safePath = path => typeof path === "string" && path !== "" && !path.starts
 export const engineIdentityFiles = Object.freeze([
   "flake.lock",
   "flake.nix",
+  "nix/component-engine-source-boundary.json",
+  "nix/core-source-boundary.json",
   "nix/wasm-toolchain.nix",
-  "poc/lean-link-spike/graph-lock.json",
   "scripts/build-lean-runtime.sh",
   "scripts/env.sh",
   "scripts/lean-runtime-config.sh",
-  "scripts/run-component-engine.mjs",
-  "src/analyze/lean-project.mjs",
-  "src/build/component-artifact-manifest.mjs",
-  "src/build/component-engine.mjs",
-  "src/build/component-compilation-plan.mjs",
-  "src/build/component-plan.mjs",
-  "src/build/component-side-linker.mjs",
-  "src/build/compiler-adapters.mjs",
-  "src/build/engine-execution-request.mjs",
-  "src/build/lean-component-compiler.mjs",
-  "src/build/side-module-audit.mjs",
-  "src/capsule/node.mjs",
-  "src/release/component-release-bundle.mjs",
 ].sort());
 
 const fileRecord = async (root, path) => {
@@ -64,9 +52,52 @@ const fileRecord = async (root, path) => {
   return Object.freeze({ path, bytes: bytes.length, sha256: sha256(bytes) });
 };
 
+const readBoundary = async (root, path) => {
+  let boundary;
+  try {
+    boundary = JSON.parse(await readFile(join(root, path), "utf8"));
+  } catch (error) {
+    fail("engine-identity-boundary-invalid", `Engine source boundary is unavailable or invalid: ${path}`, { path, cause: error.message });
+  }
+  if (
+    boundary?.schemaVersion !== 1 ||
+    !Array.isArray(boundary.includedFiles) ||
+    (boundary.includedDirectoryPrefixes !== undefined && !Array.isArray(boundary.includedDirectoryPrefixes))
+  ) fail("engine-identity-boundary-invalid", `Engine source boundary has an unsupported shape: ${path}`, { path });
+  return boundary;
+};
+
+const listBoundaryDirectory = async (root, prefix) => {
+  const files = [];
+  const visit = async relative => {
+    for (const entry of await readdir(join(root, relative), { withFileTypes: true })) {
+      const path = `${relative}/${entry.name}`;
+      if (entry.isDirectory()) await visit(path);
+      else if (entry.isFile()) files.push(path);
+      else fail("engine-identity-input-unsupported-entry", `Engine identity boundary contains a non-file entry: ${path}`, { path });
+    }
+  };
+  await visit(prefix);
+  return files;
+};
+
+const resolveEngineIdentityFiles = async root => {
+  const boundaryPaths = ["nix/component-engine-source-boundary.json", "nix/core-source-boundary.json"];
+  const files = new Set(engineIdentityFiles);
+  for (const path of boundaryPaths) {
+    const boundary = await readBoundary(root, path);
+    for (const file of boundary.includedFiles) files.add(file);
+    for (const prefix of boundary.includedDirectoryPrefixes ?? []) {
+      for (const file of await listBoundaryDirectory(root, prefix)) files.add(file);
+    }
+  }
+  return [...files].sort();
+};
+
 export const identifyBuildEngine = async engineRoot => {
   const root = resolve(engineRoot);
-  const files = Object.freeze(await Promise.all(engineIdentityFiles.map(path => fileRecord(root, path))));
+  const paths = await resolveEngineIdentityFiles(root);
+  const files = Object.freeze(await Promise.all(paths.map(path => fileRecord(root, path))));
   return Object.freeze({
     identitySha256: sha256(canonicalJson(files)),
     fileCount: files.length,

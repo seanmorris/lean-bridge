@@ -50,6 +50,7 @@
         let
           wasmToolchain = import ./nix/wasm-toolchain.nix { inherit pkgs; };
           coreSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/core-source-boundary.json);
+          componentEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/component-engine-source-boundary.json);
           sourceRoot = toString self;
           relativeSourcePath = path:
             let absolute = toString path;
@@ -72,6 +73,19 @@
               in if type == "directory"
                 then includedDirectory || parentDirectory || parentFile
                 else includedDirectory || builtins.elem relative coreSourceBoundary.includedFiles;
+          };
+          componentEngineSource = builtins.path {
+            name = "lean-bridge-component-engine-source";
+            path = self;
+            filter = path: type:
+              let
+                relative = relativeSourcePath path;
+                parentFile = relative == "" || pkgs.lib.any
+                  (file: pkgs.lib.hasPrefix "${relative}/" file)
+                  componentEngineSourceBoundary.includedFiles;
+              in if type == "directory"
+                then parentFile
+                else builtins.elem relative componentEngineSourceBoundary.includedFiles;
           };
           portablePackages = rec {
             capsule-graph = pkgs.stdenvNoCC.mkDerivation {
@@ -109,6 +123,62 @@
         };
         x86WasmPackages = nixpkgs.lib.optionalAttrs (pkgs.system == "x86_64-linux") rec {
           wasm-toolchain = wasmToolchain.emsdk;
+
+          component-runtime = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-bridge-component-runtime";
+            version = "0.0.0";
+            src = coreSource;
+            nativeBuildInputs = with pkgs; [
+              bash
+              cmake
+              file
+              gawk
+              git
+              gnumake
+              gnused
+              nodejs_22
+              patch
+              python3
+              libuv
+              llvm
+            ];
+
+            dontConfigure = true;
+            buildPhase = ''
+              runHook preBuild
+              export LEAN_WASM_HOST_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_WASM_LEAN_SOURCE='${wasmToolchain.leanSource}'
+              export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
+              export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
+              export EM_CACHE="$TMPDIR/emscripten-cache"
+              cp -a '${wasmToolchain.emscriptenUpstream}/emscripten/cache' "$EM_CACHE"
+              chmod -R u+w "$EM_CACHE"
+              bash scripts/build-lean-runtime.sh
+              runHook postBuild
+            '';
+
+            installPhase = ''
+              runHook preInstall
+              runtime_root=$(find build/lean-runtime -mindepth 1 -maxdepth 1 -type d -name '*-browser' -print -quit)
+              if [ -z "$runtime_root" ]; then
+                echo "component engine runtime was not built" >&2
+                exit 1
+              fi
+              mkdir -p \
+                "$out/audit" \
+                "$out/cmake/include" \
+                "$out/cmake/lib/lean" \
+                "$out/source/src/include"
+              cp -a "$runtime_root/audit/." "$out/audit/"
+              cp -a "$runtime_root/cmake/include/." "$out/cmake/include/"
+              cp \
+                "$runtime_root/cmake/lib/lean/libInit.a" \
+                "$runtime_root/cmake/lib/lean/libleanrt.a" \
+                "$out/cmake/lib/lean/"
+              cp -a "$runtime_root/source/src/include/." "$out/source/src/include/"
+              runHook postInstall
+            '';
+          };
 
           wasm-poc = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-wasm-architecture-poc";
@@ -217,14 +287,8 @@
 
             installPhase = ''
               runHook preInstall
-              runtime_root=$(find build/lean-runtime -mindepth 1 -maxdepth 1 -type d -name '*-browser' -print -quit)
-              if [ -z "$runtime_root" ]; then
-                echo "component engine runtime was not built" >&2
-                exit 1
-              fi
-              mkdir -p "$out/audit" "$out/runtime"
+              mkdir -p "$out/audit"
               cp -a build/lean-link-spike/lazy "$out/lazy"
-              cp -a "$runtime_root/." "$out/runtime/"
               cp build/lean-link-spike/audit/artifact-manifest.json "$out/audit/"
               runHook postInstall
             '';
@@ -232,8 +296,13 @@
 
           component-build-engine = pkgs.writeShellApplication {
             name = "lean-bridge-component-engine";
-            runtimeInputs = [ pkgs.coreutils pkgs.nodejs_22 ];
+            runtimeInputs = [ pkgs.coreutils pkgs.nodejs_22 pkgs.python3 ];
             text = ''
+              export EMSDK='${wasmToolchain.emsdk}'
+              export EM_CONFIG='${wasmToolchain.emsdk}/.emscripten'
+              export EMSCRIPTEN_ROOT='${wasmToolchain.emscriptenUpstream}/emscripten'
+              export EMSDK_NODE='${wasmToolchain.node}/bin/node'
+              export PATH='${wasmToolchain.emscriptenUpstream}/emscripten:${wasmToolchain.emscriptenUpstream}/bin:${wasmToolchain.node}/bin':"$PATH"
               engine_cache=$(mktemp -d "''${TMPDIR:-/tmp}/lean-bridge-em-cache.XXXXXX")
               trap 'rm -rf "$engine_cache"' EXIT
               cp -a '${wasmToolchain.emscriptenUpstream}/emscripten/cache/.' "$engine_cache/"
@@ -245,8 +314,8 @@
               export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
               export LEAN_BRIDGE_LEAN='${wasmToolchain.leanHost}/bin/lean'
               export LEAN_BRIDGE_EMCC='${wasmToolchain.emsdk}/upstream/emscripten/emcc'
-              export LEAN_BRIDGE_RUNTIME_ROOT='${universal-core-artifacts}/runtime'
-              exec '${pkgs.nodejs_22}/bin/node' '${self}/scripts/run-component-engine.mjs' "$@"
+              export LEAN_BRIDGE_RUNTIME_ROOT='${component-runtime}'
+              '${pkgs.nodejs_22}/bin/node' '${componentEngineSource}/scripts/run-component-engine.mjs' "$@"
             '';
           };
 

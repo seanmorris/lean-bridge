@@ -4,8 +4,8 @@
   "platform": "linux/amd64",
   "sourceDateEpoch": 1786261809,
   "image": {
-    "localTag": "lean-bridge-builder:146bfec6b72184f1",
-    "configSha256": "c4202ef2601394eeffe06d8a988e617d9cc990f28334ee51b4feb277c262a927",
+    "localTag": "lean-bridge-builder:c557918fec8ab3ca",
+    "configSha256": "93c7df682303a033e37acf2099b7bbdae0fd9d76103b993115f271469cd46325",
     "publishedReference": null,
     "publicationStatus": "local-reproducible"
   },
@@ -32,14 +32,14 @@
     },
     {
       "path": "entrypoint.sh",
-      "sha256": "9c45101913fa09ca01e64dfdf8685ea266773bdaed55b137876d968497906c55"
+      "sha256": "e2e589306acaced9f169bea9277abfce2e9e28543874ce62f54f4f9dde0da68f"
     },
     {
       "path": "nix.conf",
       "sha256": "b17d03bcbb0824a40e19a3802d105e4931d0c0f51d226767c2ff4708ec741406"
     }
   ],
-  "definitionSha256": "146bfec6b72184f1d9d40cdee00c641f5b4f59008166fd2b886fd21fbf17fd0b",
+  "definitionSha256": "c557918fec8ab3ca97e79b5b3acfdfb833b136b93507d4e4062d4a3ace412413",
   "execution": {
     "user": "root",
     "uid": 0,
@@ -49,10 +49,11 @@
     "sourceMount": "read-only",
     "outputMount": "read-write with host ownership restored",
     "network": "Nix fetch access; build derivations use the locked flake closure",
-    "entrypoint": "/usr/local/bin/lean-bridge-builder build"
+    "entrypoint": "/usr/local/bin/lean-bridge-builder build|component"
   },
   "flakeOutputs": [
     "universal-release-bundle",
-    "release-rehearsal"
+    "release-rehearsal",
+    "component-build-engine"
   ]
 }
