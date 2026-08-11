@@ -10,12 +10,12 @@ The analyzer produces complete Binding IR for the small, medium, async, and inco
 
 The audit rejects these defects:
 
-1. The canonical builder expects bridge-owned flake and container files in the Lean project root.
+1. The installed engine creates a content-addressed component build plan but does not yet compile it into a shared-runtime side module.
 2. Generic declarations do not reach concrete generated host bindings.
 3. Identity-bearing Lean structures do not produce native resource classes.
 4. The canonical release keeps PyPI, Cargo, C, and C++ runtime targets ineligible.
 
-The first defect also counts as a mandatory manual edit. A package author would need to copy build infrastructure into the project. The acceptance policy blocks that path.
+The CLI no longer looks for bridge build infrastructure in the plain project. It stops with `plain-component-compiler-pending` and tells the author that no project changes are required.
 
 ## Gate behavior
 
@@ -38,3 +38,5 @@ The command exits with status 2 while a blocking exception remains. Its JSON out
 Cold analysis took 25.097 ms. Warm analysis took 9.687 ms. Each run generated `project-analysis.json` and `binding-ir.json` with zero prompts, hints, manual files, or failures.
 
 Cold build reached `invalid-builder-manifest` after 232.397 ms. Warm build reached the same defect after 63.964 ms. Dry-run and publish did not execute because they consume the authorized build output. The report marks both stages skipped and fails the end-to-end budget.
+
+[`time-to-package-plan-20260811.json`](time-to-package-plan-20260811.json) records the next architecture seam. The installed engine generates a root-independent component plan before toolchain selection. Cold build reaches the explicit `plain-component-compiler-pending` boundary in 7.120 ms. Warm build reaches it in 4.552 ms. The CLI exposes zero flake or builder-image concepts and requires no project changes. The end-to-end gate still fails because no component or package was produced.

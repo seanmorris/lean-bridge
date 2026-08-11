@@ -99,6 +99,7 @@ test("published time budgets schema stays closed", async () => {
   const schema = JSON.parse(await readFile("schema/time-to-package-budgets.schema.json", "utf8"));
   const reportSchema = JSON.parse(await readFile("schema/time-to-package-report.schema.json", "utf8"));
   const evidence = JSON.parse(await readFile("docs/evidence/time-to-package-20260811.json", "utf8"));
+  const planEvidence = JSON.parse(await readFile("docs/evidence/time-to-package-plan-20260811.json", "utf8"));
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.properties.supportedHardware.additionalProperties, false);
   assert.equal(schema.properties.modes.additionalProperties, false);
@@ -109,4 +110,10 @@ test("published time budgets schema stays closed", async () => {
   assert.equal(evidence.schemaVersion, 1);
   assert.equal(evidence.passed, false);
   assert.equal(evidence.hardwareCompatibility.passed, true);
+  assert.equal(planEvidence.passed, false);
+  assert.deepEqual(
+    planEvidence.stages.filter(item => item.stage === "build").map(item => item.diagnostics),
+    [["plain-component-compiler-pending"], ["plain-component-compiler-pending"]],
+  );
+  assert.ok(planEvidence.stages.filter(item => item.stage === "build").every(item => item.unfamiliarConcepts.length === 0));
 });

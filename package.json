@@ -96,6 +96,7 @@
     "benchmark:time-to-package": "node scripts/benchmark-time-to-package.mjs",
     "test:usability-gate": "node --test tests/usability-gate.test.mjs",
     "acceptance:clean-room": "node scripts/check-clean-room-usability.mjs",
+    "test:component-build-plan": "node --test tests/component-build-plan.test.mjs tests/canonical-build.test.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

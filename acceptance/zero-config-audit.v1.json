@@ -3,17 +3,17 @@
   "scope": "Plain Lean project through verified multi-ecosystem package consumption",
   "exceptions": [
     {
-      "id": "plain-project-build-root",
+      "id": "plain-project-compiler",
       "stage": "build",
       "fixture": "small",
-      "kind": "manual-edit",
+      "kind": "target-special-case",
       "classification": "defect",
-      "mandatory": true,
+      "mandatory": false,
       "blocking": true,
       "targetSpecificRebuild": false,
-      "description": "The canonical builder currently expects bridge flake and container files inside the analyzed project root.",
-      "evidence": ["src/build/canonical-build.mjs", "tests/fixtures/onboarding/small"],
-      "remediation": "Load bridge-owned build infrastructure from the installed CLI while mounting the plain Lean project as the component source."
+      "description": "The installed engine creates a hash-bound component plan but cannot yet compile that plan into a shared-runtime side module.",
+      "evidence": ["src/build/component-plan.mjs", "src/build/canonical-build.mjs", "tests/fixtures/onboarding/small"],
+      "remediation": "Compile the generated component plan with bridge-owned infrastructure while keeping the plain source read-only and separate."
     },
     {
       "id": "generic-projection",

@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "passed": false,
+  "budgetSha256": "b14163a97c2f5dcfc4fe2c89a7981de256ead23e5d1a7e184fc3405ce23551b1",
+  "hardware": {
+    "platform": "linux",
+    "architecture": "x64",
+    "logicalCpus": 8,
+    "memoryBytes": 25154297856,
+    "cpuModel": "Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz",
+    "nodeVersion": "v22.23.1"
+  },
+  "hardwareCompatibility": {
+    "passed": true,
+    "minimumLogicalCpus": 2,
+    "minimumMemoryBytes": 4294967296
+  },
+  "summaries": [
+    {
+      "mode": "cold",
+      "durationMs": 31.878,
+      "maximumMs": 1800000,
+      "withinBudget": false,
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 2,
+      "manualFiles": 0,
+      "commands": 2,
+      "unfamiliarConcepts": [],
+      "failures": 3
+    },
+    {
+      "mode": "warm",
+      "durationMs": 10.878,
+      "maximumMs": 900000,
+      "withinBudget": false,
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 2,
+      "manualFiles": 0,
+      "commands": 2,
+      "unfamiliarConcepts": [],
+      "failures": 3
+    }
+  ],
+  "stages": [
+    {
+      "mode": "cold",
+      "stage": "analyze",
+      "durationMs": 24.146,
+      "maximumMs": 2000,
+      "withinBudget": true,
+      "status": "ok",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 2,
+      "manualFiles": 0,
+      "commands": 1,
+      "unfamiliarConcepts": [],
+      "failures": 0,
+      "diagnostics": [
+        "analysis-output-written"
+      ]
+    },
+    {
+      "mode": "cold",
+      "stage": "build",
+      "durationMs": 7.12,
+      "maximumMs": 900000,
+      "withinBudget": false,
+      "status": "blocked",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 1,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "plain-component-compiler-pending"
+      ]
+    },
+    {
+      "mode": "cold",
+      "stage": "dry-run",
+      "durationMs": 0.329,
+      "maximumMs": 780000,
+      "withinBudget": false,
+      "status": "skipped",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 0,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "upstream-build-blocked"
+      ]
+    },
+    {
+      "mode": "cold",
+      "stage": "publish",
+      "durationMs": 0.283,
+      "maximumMs": 120000,
+      "withinBudget": false,
+      "status": "skipped",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 0,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "upstream-build-blocked"
+      ]
+    },
+    {
+      "mode": "warm",
+      "stage": "analyze",
+      "durationMs": 5.854,
+      "maximumMs": 500,
+      "withinBudget": true,
+      "status": "ok",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 2,
+      "manualFiles": 0,
+      "commands": 1,
+      "unfamiliarConcepts": [],
+      "failures": 0,
+      "diagnostics": [
+        "analysis-output-written"
+      ]
+    },
+    {
+      "mode": "warm",
+      "stage": "build",
+      "durationMs": 4.552,
+      "maximumMs": 300000,
+      "withinBudget": false,
+      "status": "blocked",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 1,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "plain-component-compiler-pending"
+      ]
+    },
+    {
+      "mode": "warm",
+      "stage": "dry-run",
+      "durationMs": 0.227,
+      "maximumMs": 540000,
+      "withinBudget": false,
+      "status": "skipped",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 0,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "upstream-build-blocked"
+      ]
+    },
+    {
+      "mode": "warm",
+      "stage": "publish",
+      "durationMs": 0.245,
+      "maximumMs": 60000,
+      "withinBudget": false,
+      "status": "skipped",
+      "prompts": 0,
+      "hints": 0,
+      "generatedFiles": 0,
+      "manualFiles": 0,
+      "commands": 0,
+      "unfamiliarConcepts": [],
+      "failures": 1,
+      "diagnostics": [
+        "upstream-build-blocked"
+      ]
+    }
+  ]
+}

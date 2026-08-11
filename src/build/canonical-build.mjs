@@ -11,13 +11,16 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { dirname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
+import { ComponentBuildPlanError, prepareComponentBuildPlan } from "./component-plan.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const backendNames = new Set(["auto", "docker", "nix"]);
+const installedEngineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 export class CanonicalBuildError extends Error {
   constructor(code, message, { hint = null, details = {} } = {}) {
@@ -370,6 +373,7 @@ const selectPublicationTargets = (index, requested) => {
 
 export const buildCanonicalProject = async ({
   projectRoot,
+  engineRoot = installedEngineRoot,
   outputRoot = null,
   environment = process.env,
   runner = processBuildRunner,
@@ -379,6 +383,7 @@ export const buildCanonicalProject = async ({
   onProgress = undefined,
 } = {}) => {
   const root = resolve(projectRoot ?? process.cwd());
+  const engine = resolve(engineRoot);
   if (!Array.isArray(targets) || targets.some(target => typeof target !== "string" || target === "")) {
     fail("invalid-package-targets", "Build targets must be an array of non-empty names");
   }
@@ -397,11 +402,24 @@ export const buildCanonicalProject = async ({
     ? runner
     : Object.freeze({ capture: request => runner.capture({ ...request, signal }) });
   signal?.throwIfAborted();
+  let componentPlan;
+  try {
+    componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal });
+  } catch (error) {
+    if (!(error instanceof ComponentBuildPlanError)) throw error;
+    fail(error.code, error.message, { details: error.details });
+  }
+  if (root !== engine) {
+    fail("plain-component-compiler-pending", `Lean Bridge created component plan ${componentPlan.sha256}, but this release cannot compile an external plain project yet`, {
+      hint: "No project changes are required. Analyze is usable now; plain-project build support must be completed in the bridge engine.",
+      details: { component: componentPlan.document.component.id, componentPlanSha256: componentPlan.sha256 },
+    });
+  }
   onProgress?.({ phase: "backend", state: "started", message: "Selecting Docker or native Nix" });
   const selection = await detectBuildBackend({ environment, runner: selectedRunner });
   onProgress?.({ phase: "backend", state: "completed", message: `Selected ${selection.backend}` });
   signal?.throwIfAborted();
-  const builder = await readBuilderManifest(root);
+  const builder = await readBuilderManifest(engine);
   const output = await assertOutputIsAbsent({
     projectRoot: root,
     outputRoot: outputRoot ?? join(root, "build", "lean-bridge-release"),
@@ -450,6 +468,7 @@ export const buildCanonicalProject = async ({
       },
       cache: normalizedCache,
       builderDefinitionSha256: builder.manifest.definitionSha256,
+      componentPlanSha256: componentPlan.sha256,
       sourceReadOnly: true,
       componentBinariesRebuiltByProjection: false,
     });

@@ -61,6 +61,32 @@ test("missing build tools stop before creating the requested output", async () =
   }
 });
 
+test("a plain project receives a content-addressed plan without copying bridge infrastructure", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-plain-build-"));
+  const output = join(scratch, "result");
+  let runnerCalled = false;
+  try {
+    await assert.rejects(
+      buildCanonicalProject({
+        projectRoot: "tests/fixtures/onboarding/small",
+        engineRoot: process.cwd(),
+        outputRoot: output,
+        targets: ["npm"],
+        runner: { capture: async () => { runnerCalled = true; throw new Error("runner must not execute"); } },
+      }),
+      error => error instanceof CanonicalBuildError &&
+        error.code === "plain-component-compiler-pending" &&
+        /^[0-9a-f]{64}$/.test(error.details.componentPlanSha256) &&
+        error.details.component === "onboarding-small@1.0.0" &&
+        /No project changes are required/.test(error.hint),
+    );
+    assert.equal(runnerCalled, false);
+    await assert.rejects(access(output, constants.F_OK), error => error.code === "ENOENT");
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});
+
 test("the reviewed Debian builder contains Nix, not a second compiler policy", async () => {
   const { manifest } = await readBuilderManifest(process.cwd());
   const dockerfile = await readFile("containers/builder/Dockerfile", "utf8");

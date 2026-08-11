@@ -79,7 +79,9 @@ const runStage = async ({ mode, stage }) => {
         ],
         handlers: cliHandlers,
       });
-      const outcome = await outcomeFromCli({ result, output, concepts: result.exitCode === 0 ? [] : ["flake", "builder-image"] });
+      const codes = result.response.diagnostics.map(item => item.code);
+      const concepts = codes.includes("invalid-builder-manifest") ? ["flake", "builder-image"] : [];
+      const outcome = await outcomeFromCli({ result, output, concepts });
       stageState.set(`${mode}:build`, outcome.status);
       return outcome;
     }

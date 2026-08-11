@@ -200,6 +200,7 @@ export const createCliHandlers = ({
       if (!(error instanceof CanonicalBuildError) || !new Set([
         "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
         "cache-directory-unsupported", "unknown-package-target", "package-target-ineligible",
+        "plain-component-compiler-pending", "component-binding-ir-required", "component-adapter-hints-required",
       ]).has(error.code)) throw error;
       return {
         status: "blocked",
@@ -463,6 +464,7 @@ export const createCliHandlers = ({
         "source-not-git", "source-tree-dirty", "build-tools-unavailable", "docker-unavailable", "nix-unavailable",
         "reproducibility-cache-directory-unsupported", "cache-directory-unsupported",
         "unknown-package-target", "package-target-ineligible",
+        "plain-component-compiler-pending", "component-binding-ir-required", "component-adapter-hints-required",
         "no-publishable-targets", "unsupported-publication-target", "unknown-publication-target",
       ]).has(error.code);
       return {
