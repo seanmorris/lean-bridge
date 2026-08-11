@@ -1,6 +1,7 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/heap.h>
 #include <lean/lean.h>
+#include <dlfcn.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +25,12 @@ typedef uint8_t (*lean_link_payload_enabled_fn)(lean_object *);
 typedef uint32_t (*lean_link_payload_count_fn)(lean_object *);
 typedef lean_object *(*lean_link_payload_object_fn)(lean_object *);
 typedef lean_object *(*lean_link_initializer_fn)(uint8_t);
+typedef lean_object *(*lean_component_nat2_nat_fn)(lean_object *, lean_object *);
+typedef uint8_t (*lean_component_string_bool_fn)(lean_object *);
+
+static uint32_t bridge_run_library_initializer(
+    lean_link_initializer_fn initialize
+);
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern void lean_initialize_runtime_module(void);
@@ -62,6 +69,71 @@ static uint32_t active_frames = 0;
 static uint32_t native_pending_operations = 0;
 static uint32_t native_late_settlements = 0;
 static uint32_t native_cancelled_operations = 0;
+static uint32_t component_call_error = 0;
+
+static void *bridge_lean_component_symbol(char const *symbol) {
+  void *resolved;
+
+  component_call_error = 0;
+  if (!symbol || symbol[0] == '\0') {
+    component_call_error = 1;
+    return 0;
+  }
+  resolved = dlsym(RTLD_DEFAULT, symbol);
+  if (!resolved) component_call_error = 2;
+  return resolved;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_component_last_error(void) {
+  return component_call_error;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_component_initialize(char const *symbol) {
+  lean_link_initializer_fn initialize =
+    (lean_link_initializer_fn)bridge_lean_component_symbol(symbol);
+
+  if (!initialize) return 0;
+  if (!bridge_run_library_initializer(initialize)) {
+    component_call_error = 3;
+    return 0;
+  }
+  return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint64_t bridge_lean_component_call_nat2_nat(
+    char const *symbol,
+    uint64_t left,
+    uint64_t right
+) {
+  lean_component_nat2_nat_fn function =
+    (lean_component_nat2_nat_fn)bridge_lean_component_symbol(symbol);
+  lean_object *result;
+  uint64_t value;
+
+  if (!function) return 0;
+  result = function(lean_uint64_to_nat(left), lean_uint64_to_nat(right));
+  value = lean_uint64_of_nat(result);
+  lean_dec(result);
+  return value;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_component_call_string_bool(
+    char const *symbol,
+    char const *input,
+    uint32_t input_size
+) {
+  lean_component_string_bool_fn function =
+    (lean_component_string_bool_fn)bridge_lean_component_symbol(symbol);
+  uint32_t value;
+
+  if (!function) return 0;
+  value = (uint32_t)function(lean_mk_string_from_bytes(input, input_size));
+  return value;
+}
 
 typedef struct bridge_lean_pending_u32 {
   uint32_t token;

@@ -106,6 +106,8 @@
     "test:side-module-audit": "node --test tests/side-module-audit.test.mjs",
     "test:component-artifact-manifest": "node --test tests/component-artifact-manifest.test.mjs",
     "test:component-release-bundle": "node --test tests/component-release-bundle.test.mjs",
+    "test:component-npm-package": "node --test tests/component-npm-package.test.mjs",
+    "acceptance:plain-project-package": "node scripts/check-plain-project-package.mjs",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
     "check": "npm run env:check && npm test"
   },

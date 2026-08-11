@@ -37,7 +37,8 @@ test("a plain project produces a root-independent shared-runtime component plan"
       targetSpecificRebuild: false,
     });
     assert.ok(first.document.source.inputs.every(item => !item.path.startsWith("/") && !item.path.includes("Alpha")));
-    assert.doesNotMatch(JSON.stringify(first), /\/app|lean-link-spike|Alpha/);
+    assert.equal(JSON.stringify(first).includes(resolve(".")), false);
+    assert.doesNotMatch(JSON.stringify(first), /lean-link-spike|Alpha/);
   } finally {
     await rm(copyRoot, { recursive: true, force: true });
   }

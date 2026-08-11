@@ -121,6 +121,10 @@ BRIDGE_EXPORTS=(
   _bridge_lean_runtime_init_runs
   _bridge_lean_library_init_runs
   _bridge_lean_runtime_shutdown
+  _bridge_lean_component_initialize
+  _bridge_lean_component_call_nat2_nat
+  _bridge_lean_component_call_string_bool
+  _bridge_lean_component_last_error
   _bridge_test_lean_runtime_force_init_error
   _bridge_test_lean_heap_size
   _bridge_test_lean_grow_heap

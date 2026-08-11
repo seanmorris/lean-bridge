@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/component-package-receipt.v1.json",
+  "title": "Lean Bridge component package receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "component", "source", "bindingIrSha256", "provenanceSha256", "componentBundleSha256", "componentIdentitySha256", "componentArtifactSha256", "runtimeRequirementSha256", "runtime", "package", "policies", "verificationCommand"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-component-package-receipt" },
+    "component": { "$ref": "#/$defs/component" },
+    "source": { "$ref": "#/$defs/source" },
+    "bindingIrSha256": { "$ref": "#/$defs/hash" },
+    "provenanceSha256": { "$ref": "#/$defs/hash" },
+    "componentBundleSha256": { "$ref": "#/$defs/hash" },
+    "componentIdentitySha256": { "$ref": "#/$defs/hash" },
+    "componentArtifactSha256": { "$ref": "#/$defs/hash" },
+    "runtimeRequirementSha256": { "$ref": "#/$defs/hash" },
+    "runtime": { "$ref": "#/$defs/package" },
+    "package": { "$ref": "#/$defs/package" },
+    "policies": { "$ref": "#/$defs/policies" },
+    "verificationCommand": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["treeSha256"],
+      "properties": { "treeSha256": { "$ref": "#/$defs/hash" } }
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "archive", "sha256"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "archive": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentCompiledOnce", "runtimeShared", "runtimeBinaryInComponent", "nativeCallablesOnly"],
+      "properties": {
+        "componentCompiledOnce": { "const": true },
+        "runtimeShared": { "const": true },
+        "runtimeBinaryInComponent": { "const": false },
+        "nativeCallablesOnly": { "const": true }
+      }
+    }
+  }
+}
