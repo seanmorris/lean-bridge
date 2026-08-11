@@ -217,10 +217,36 @@
 
             installPhase = ''
               runHook preInstall
-              mkdir -p "$out/audit"
+              runtime_root=$(find build/lean-runtime -mindepth 1 -maxdepth 1 -type d -name '*-browser' -print -quit)
+              if [ -z "$runtime_root" ]; then
+                echo "component engine runtime was not built" >&2
+                exit 1
+              fi
+              mkdir -p "$out/audit" "$out/runtime"
               cp -a build/lean-link-spike/lazy "$out/lazy"
+              cp -a "$runtime_root/." "$out/runtime/"
               cp build/lean-link-spike/audit/artifact-manifest.json "$out/audit/"
               runHook postInstall
+            '';
+          };
+
+          component-build-engine = pkgs.writeShellApplication {
+            name = "lean-bridge-component-engine";
+            runtimeInputs = [ pkgs.coreutils pkgs.nodejs_22 ];
+            text = ''
+              engine_cache=$(mktemp -d "''${TMPDIR:-/tmp}/lean-bridge-em-cache.XXXXXX")
+              trap 'rm -rf "$engine_cache"' EXIT
+              cp -a '${wasmToolchain.emscriptenUpstream}/emscripten/cache/.' "$engine_cache/"
+              chmod -R u+w "$engine_cache"
+              export EM_CACHE="$engine_cache"
+              export LEAN_WASM_HOST_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_WASM_LEAN_SOURCE='${wasmToolchain.leanSource}'
+              export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
+              export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
+              export LEAN_BRIDGE_LEAN='${wasmToolchain.leanHost}/bin/lean'
+              export LEAN_BRIDGE_EMCC='${wasmToolchain.emsdk}/upstream/emscripten/emcc'
+              export LEAN_BRIDGE_RUNTIME_ROOT='${universal-core-artifacts}/runtime'
+              exec '${pkgs.nodejs_22}/bin/node' '${self}/scripts/run-component-engine.mjs' "$@"
             '';
           };
 
@@ -323,6 +349,14 @@
         };
         in
         portablePackages // x86WasmPackages);
+
+      apps = forAllSystems (pkgs:
+        nixpkgs.lib.optionalAttrs (pkgs.system == "x86_64-linux") {
+          component-build-engine = {
+            type = "app";
+            program = "${self.packages.${pkgs.system}.component-build-engine}/bin/lean-bridge-component-engine";
+          };
+        });
 
       checks = forAllSystems (pkgs:
         {

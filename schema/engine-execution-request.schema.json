@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/engine-execution-request.v1.json",
+  "title": "Lean Bridge isolated engine execution request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "engine", "component", "source", "output", "cache", "targets", "policies"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-engine-execution" },
+    "engine": {
+      "type": "object", "additionalProperties": false,
+      "required": ["identitySha256", "fileCount"],
+      "properties": { "identitySha256": { "$ref": "#/$defs/sha256" }, "fileCount": { "type": "integer", "minimum": 1 } }
+    },
+    "component": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "componentPlanSha256", "compilationPlanSha256", "sourceTreeSha256", "inputClosureSha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "componentPlanSha256": { "$ref": "#/$defs/sha256" },
+        "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
+        "sourceTreeSha256": { "$ref": "#/$defs/sha256" },
+        "inputClosureSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "mount", "readOnly"],
+      "properties": { "kind": { "const": "closed-component-input" }, "mount": { "const": "component" }, "readOnly": { "const": true } }
+    },
+    "output": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "bundleDirectory", "executionReport", "authorizedFiles"],
+      "properties": {
+        "kind": { "const": "component-neutral-release-bundle" },
+        "bundleDirectory": { "const": "bundle" },
+        "executionReport": { "const": "engine-execution-report.json" },
+        "authorizedFiles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "cache": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy"], "properties": { "policy": { "enum": ["use", "refresh", "off"] } }
+    },
+    "targets": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "policies": {
+      "type": "object", "additionalProperties": false,
+      "required": ["backendNeutral", "sameRequestBytes", "sourceReadOnly", "compileOnce", "sharedRuntime", "copyAuthorizedOutputsOnly"],
+      "properties": {
+        "backendNeutral": { "const": true }, "sameRequestBytes": { "const": true }, "sourceReadOnly": { "const": true },
+        "compileOnce": { "const": true }, "sharedRuntime": { "const": true }, "copyAuthorizedOutputsOnly": { "const": true }
+      }
+    }
+  },
+  "$defs": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+}
