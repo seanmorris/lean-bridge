@@ -13,6 +13,7 @@ import { compileLeanComponentSources } from "../src/build/lean-component-compile
 import { linkComponentSideModule } from "../src/build/component-side-linker.mjs";
 import { auditComponentSideModule } from "../src/build/side-module-audit.mjs";
 import { writeComponentArtifactManifest } from "../src/build/component-artifact-manifest.mjs";
+import { buildComponentReleaseBundle } from "../src/release/component-release-bundle.mjs";
 
 const arguments_ = process.argv.slice(2);
 const option = name => {
@@ -42,6 +43,7 @@ try {
   const linked = await linkComponentSideModule({ targetCRoot: `${staging}/target-c`, outputRoot: `${staging}/side-module`, engineRoot, compilationPlan });
   const audited = await auditComponentSideModule({ sideRoot: `${staging}/side-module`, compilationPlan, reportPath: `${staging}/side-module/audit/component-side-module-audit.json` });
   const componentArtifact = await writeComponentArtifactManifest({ sideRoot: `${staging}/side-module`, analysis, componentPlan, compilerAdapters, compilationPlan, compiled, linked, audited });
+  const bundle = await buildComponentReleaseBundle({ projectRoot, inputRoot: `${staging}/inputs`, targetCRoot: `${staging}/target-c`, sideRoot: `${staging}/side-module`, outputRoot: `${staging}/bundle`, analysis, componentPlan, compilerAdapters, compilationPlan, compiled, linked, audited, componentArtifact });
   const report = Object.freeze({
     schemaVersion: 1,
     component: compilationPlan.document.component.id,
@@ -51,6 +53,7 @@ try {
     sideModuleLinkManifestSha256: linked.manifestSha256,
     sideModuleAuditSha256: sha256(canonicalJson(audited)),
     componentArtifactManifestSha256: componentArtifact.sha256,
+    componentReleaseBundleManifestSha256: bundle.manifestSha256,
     sideModule: linked.manifest.artifact,
     sourceReadOnly: true,
     linksRuntime: false,
