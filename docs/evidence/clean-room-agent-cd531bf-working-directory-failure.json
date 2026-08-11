@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "session": "automated-agent-cd531bf-working-directory-failure",
+  "role": "automated-agent",
+  "revision": "cd531bf5523c1eb774780cfa845d6da7bca2c075",
+  "status": "failed",
+  "cleanBefore": true,
+  "cleanAfter": true,
+  "publishingAnnotations": 0,
+  "handwrittenWrappers": 0,
+  "prompts": 0,
+  "analyze": {
+    "status": "ok",
+    "exitCode": 0,
+    "generatedFiles": 2,
+    "diagnostics": ["analysis-output-written"]
+  },
+  "build": {
+    "status": "ok",
+    "exitCode": 0,
+    "component": "onboarding-small@1.0.0"
+  },
+  "publishDryRun": {
+    "status": "ok",
+    "exitCode": 0,
+    "candidateId": "a79d7860fa7909a555e3ae6f6bcf5182b218b4b7397b5d7b9266a4e44b0c46ac",
+    "inventorySha256": "dc8f554967c8d6b2bd49ea2ef0f004ce8fc70d630a90cff9aba837ba833d34f0",
+    "receiptSha256": "01973d37052f821d7694c2c6356b6083e487b103c496174d6c9c7064533eee9f",
+    "componentIdentitySha256": "3839bed53a7833a39816de80e4960c6378d94e54ecaf528f3257db7939685789",
+    "receiptVerified": true,
+    "externalRegistryWrites": false
+  },
+  "installation": {
+    "packageManager": "npm",
+    "installScripts": false,
+    "status": "passed"
+  },
+  "invocation": {
+    "status": "failed",
+    "diagnostic": "ERR_MODULE_NOT_FOUND",
+    "cause": "The invocation ran outside the generated consumer project directory."
+  },
+  "checkoutChanges": []
+}

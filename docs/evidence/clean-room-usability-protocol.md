@@ -35,6 +35,8 @@ A session passes when all of these statements are supported by attached evidence
 
 Any failure remains in the session record. A later passing rerun adds a new record instead of rewriting the failed evidence.
 
+The gate requires at least one passing session for each role. Once a role passes, its earlier attempts remain visible as history but no longer block that role. Every passing record must independently satisfy all conditions above.
+
 ## Gate
 
 [`acceptance/clean-room-sessions.v1.json`](../../acceptance/clean-room-sessions.v1.json) is the machine-readable session index. Pending records reserve each required role without claiming evidence.
@@ -50,3 +52,9 @@ The command exits with status 2 until every required role has a passing session.
 ## First agent attempt
 
 [`clean-room-agent-79e8a1e.json`](clean-room-agent-79e8a1e.json) records a detached clean-checkout run. Analysis generated two files with zero prompts and left the checkout clean. Build stopped at `invalid-builder-manifest`. The session is blocked because it exposed `flake` and `builder-image`, provided no ordinary package installation, and produced no release receipt to verify.
+
+## Current agent result
+
+[`clean-room-agent-cd531bf-working-directory-failure.json`](clean-room-agent-cd531bf-working-directory-failure.json) preserves a later failed attempt. Analyze, build, publish dry-run, receipt verification, and npm installation passed. The native import ran outside the generated consumer directory and failed with Node's `ERR_MODULE_NOT_FOUND` diagnostic.
+
+[`clean-room-agent-cd531bf-passed.json`](clean-room-agent-cd531bf-passed.json) records the fresh rerun at the same revision. The agent used the documented CLI commands, produced two byte-identical package builds, verified the receipt, installed the runtime and component with npm scripts disabled, and called `add` and `isEmpty` through native imports. The source checkout remained clean. The three human sessions remain pending.

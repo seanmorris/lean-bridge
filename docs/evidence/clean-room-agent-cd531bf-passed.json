@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "session": "automated-agent-cd531bf-passed",
+  "role": "automated-agent",
+  "revision": "cd531bf5523c1eb774780cfa845d6da7bca2c075",
+  "status": "passed",
+  "cleanBefore": true,
+  "cleanAfter": true,
+  "publishingAnnotations": 0,
+  "handwrittenWrappers": 0,
+  "prompts": 0,
+  "unfamiliarConcepts": [],
+  "analyze": {
+    "status": "ok",
+    "exitCode": 0,
+    "generatedFiles": 2,
+    "diagnostics": ["analysis-output-written"]
+  },
+  "build": {
+    "status": "ok",
+    "exitCode": 0,
+    "component": "onboarding-small@1.0.0"
+  },
+  "publishDryRun": {
+    "status": "ok",
+    "exitCode": 0,
+    "builds": 2,
+    "comparedArtifacts": 40,
+    "differences": 0,
+    "candidateId": "a79d7860fa7909a555e3ae6f6bcf5182b218b4b7397b5d7b9266a4e44b0c46ac",
+    "inventorySha256": "dc8f554967c8d6b2bd49ea2ef0f004ce8fc70d630a90cff9aba837ba833d34f0",
+    "reportSha256": "f9c38434bc3a90fe6ab022a4a77c0d6d9393b17fff0b779126305f187754c5ae",
+    "publishManifestSha256": "710cb67ca779306a473f89ebc74ebe9a764bebb792fcd07bd2591ba840adf371",
+    "receiptSha256": "01973d37052f821d7694c2c6356b6083e487b103c496174d6c9c7064533eee9f",
+    "componentIdentitySha256": "3839bed53a7833a39816de80e4960c6378d94e54ecaf528f3257db7939685789",
+    "receiptVerified": true,
+    "externalRegistryWrites": false
+  },
+  "installation": {
+    "packageManager": "npm",
+    "installScripts": false,
+    "packageLockSha256": "130fd1ebdde40fb5b9be78f16c5c0b433b62f11e315ed2ac9ffd56e5752db80a",
+    "status": "passed"
+  },
+  "nativeCalls": {
+    "add": "123",
+    "empty": true,
+    "nonempty": false,
+    "resultSha256": "f0644ccc439972a320f0f2312015798598cbe53949260a7c1136c1d6df0eba62"
+  },
+  "checkoutChanges": []
+}

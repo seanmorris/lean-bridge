@@ -91,6 +91,7 @@ const violation = (session, code, message) => Object.freeze({
 export const evaluateUsabilityGate = document => {
   validateUsabilitySessions(document);
   const violations = [];
+  const passingRoles = new Set(document.sessions.filter(session => session.status === "passed").map(session => session.role));
   for (const role of roles) {
     const matches = document.sessions.filter(session => session.role === role);
     if (matches.length === 0) {
@@ -98,6 +99,7 @@ export const evaluateUsabilityGate = document => {
     }
   }
   for (const session of document.sessions) {
+    if (passingRoles.has(session.role) && session.status !== "passed") continue;
     if (session.status !== "passed") violations.push(violation(session, `session-${session.status}`, `The ${session.role} session is ${session.status}`));
     if (session.status !== "pending" && !session.cleanCheckout) violations.push(violation(session, "checkout-not-clean", "The session did not start and end on a clean checkout"));
     if (session.publishingAnnotations > 0) violations.push(violation(session, "publishing-annotation-required", "The session added publishing annotations"));
@@ -118,6 +120,8 @@ export const evaluateUsabilityGate = document => {
       passedSessions: document.sessions.filter(session => session.status === "passed").length,
       pendingSessions: document.sessions.filter(session => session.status === "pending").length,
       blockedSessions: document.sessions.filter(session => session.status === "blocked").length,
+      failedSessions: document.sessions.filter(session => session.status === "failed").length,
+      passedRoles: passingRoles.size,
       violations: violations.length,
     }),
     violations: Object.freeze(violations),

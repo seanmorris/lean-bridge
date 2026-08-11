@@ -11,36 +11,29 @@ import {
 
 const sessionsPath = "acceptance/clean-room-sessions.v1.json";
 
-test("pending human sessions and a blocked agent cannot pass the clean-room gate", async () => {
+test("a passing agent retires historical agent failures while human sessions remain pending", async () => {
   const sessions = await readUsabilitySessions(sessionsPath);
   const report = evaluateUsabilityGate(sessions);
   assert.equal(report.passed, false);
   assert.deepEqual(report.summary, {
     requiredRoles: 4,
-    sessions: 4,
-    passedSessions: 0,
+    sessions: 6,
+    passedSessions: 1,
     pendingSessions: 3,
     blockedSessions: 1,
-    violations: 8,
+    failedSessions: 1,
+    passedRoles: 1,
+    violations: 3,
   });
-  assert.deepEqual(
-    report.violations.filter(item => item.role === "automated-agent").map(item => item.code),
-    [
-      "diagnostics-not-actionable",
-      "install-not-familiar",
-      "reproducibility-not-verified",
-      "session-blocked",
-      "unfamiliar-concepts-exposed",
-    ],
-  );
+  assert.deepEqual(report.violations.filter(item => item.role === "automated-agent"), []);
   assert.equal(report.violations.filter(item => item.code === "session-pending").length, 3);
 });
 
 test("four evidenced ordinary sessions pass without bridge-specific work", async () => {
   const sessions = await readUsabilitySessions(sessionsPath);
   const revision = "1".repeat(40);
-  for (const session of sessions.sessions) {
-    session.id = `${session.role}-passed`;
+  for (const [index, session] of sessions.sessions.entries()) {
+    session.id = `${session.role}-passed-${index}`;
     session.status = "passed";
     session.cleanCheckout = true;
     session.revision = revision;
@@ -53,14 +46,15 @@ test("four evidenced ordinary sessions pass without bridge-specific work", async
   }
   const report = evaluateUsabilityGate(sessions);
   assert.equal(report.passed, true);
-  assert.equal(report.summary.passedSessions, 4);
+  assert.equal(report.summary.passedSessions, 6);
+  assert.equal(report.summary.passedRoles, 4);
   assert.deepEqual(report.violations, []);
 });
 
 test("the gate rejects wrapper work, implementation concepts, and unverified receipts", async () => {
   const sessions = await readUsabilitySessions(sessionsPath);
-  const agent = sessions.sessions.find(item => item.role === "automated-agent");
-  agent.status = "blocked";
+  const agent = sessions.sessions.find(item => item.role === "automated-agent" && item.status === "passed");
+  agent.status = "passed";
   agent.cleanCheckout = true;
   agent.revision = "2".repeat(40);
   agent.commands = ["lean-bridge build"];
@@ -79,7 +73,6 @@ test("the gate rejects wrapper work, implementation concepts, and unverified rec
     "handwritten-wrapper-required",
     "install-not-familiar",
     "reproducibility-not-verified",
-    "session-blocked",
     "unfamiliar-concepts-exposed",
   ]);
 });

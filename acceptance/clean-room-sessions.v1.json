@@ -72,6 +72,56 @@
       "familiarInstall": false,
       "reproducibleVerified": false,
       "evidence": ["docs/evidence/clean-room-agent-79e8a1e.json"]
+    },
+    {
+      "id": "automated-agent-cd531bf-working-directory-failure",
+      "role": "automated-agent",
+      "participantType": "agent",
+      "status": "failed",
+      "cleanCheckout": true,
+      "revision": "cd531bf5523c1eb774780cfa845d6da7bca2c075",
+      "commands": [
+        "lean-bridge --help",
+        "lean-bridge analyze --project plain-lean-project --output <temporary>/analysis --json --progress none",
+        "lean-bridge build --project plain-lean-project --output <temporary>/build --target npm --json --progress none",
+        "lean-bridge publish --dry-run --project plain-lean-project --output <temporary>/publish --target npm --json --progress none",
+        "npm init -y",
+        "npm install --ignore-scripts <runtime.tgz> <component.tgz>",
+        "node --input-type=module -e <native import and calls>"
+      ],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": [],
+      "actionableDiagnostics": true,
+      "familiarInstall": true,
+      "reproducibleVerified": true,
+      "evidence": ["docs/evidence/clean-room-agent-cd531bf-working-directory-failure.json"]
+    },
+    {
+      "id": "automated-agent-cd531bf-passed",
+      "role": "automated-agent",
+      "participantType": "agent",
+      "status": "passed",
+      "cleanCheckout": true,
+      "revision": "cd531bf5523c1eb774780cfa845d6da7bca2c075",
+      "commands": [
+        "lean-bridge --help",
+        "lean-bridge analyze --project plain-lean-project --output <temporary>/analysis --json --progress none",
+        "lean-bridge build --project plain-lean-project --output <temporary>/build --target npm --json --progress none",
+        "lean-bridge publish --dry-run --project plain-lean-project --output <temporary>/publish --target npm --json --progress none",
+        "npm init -y",
+        "npm install --ignore-scripts <runtime.tgz> <component.tgz>",
+        "node --input-type=module -e <native import and calls>"
+      ],
+      "publishingAnnotations": 0,
+      "handwrittenWrappers": 0,
+      "prompts": 0,
+      "unfamiliarConcepts": [],
+      "actionableDiagnostics": true,
+      "familiarInstall": true,
+      "reproducibleVerified": true,
+      "evidence": ["docs/evidence/clean-room-agent-cd531bf-passed.json"]
     }
   ]
 }
