@@ -10,6 +10,14 @@ import { promisify } from "node:util";
 import { chromium } from "playwright";
 import { build } from "vite";
 
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
+
 const execute = promisify(execFile);
 const options = new Map();
 for (let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
@@ -35,7 +43,15 @@ const callback = withCallback(40, current => current + 2);
 const addTwo = makeAdder(2);
 const closure = addTwo(40);
 addTwo.dispose();
-document.querySelector("#result").textContent = JSON.stringify({ value, identity, count: payload.count, callback, closure });
+const benchmarkBox = new Box(${STEADY_STATE_BOX_VALUE});
+const iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+for (let index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; index += 1) benchmarkBox.read();
+let checksum = 0;
+const started = performance.now();
+for (let index = 0; index < iterations; index += 1) checksum += benchmarkBox.read();
+const durationNanoseconds = (performance.now() - started) * 1000000;
+benchmarkBox.dispose();
+document.querySelector("#result").textContent = JSON.stringify({ value, identity, count: payload.count, callback, closure, checksum, performance: { iterations, durationNanoseconds } });
 `);
 const dist = join(scratch, "dist");
 await build({ root: scratch, logLevel: "silent", build: { outDir: dist } });
@@ -69,9 +85,17 @@ try {
     throw new Error(`browser consumer did not complete: ${browserLog.join(" | ") || "no browser diagnostics"}`, { cause: error });
   }
   const result = JSON.parse(await page.textContent("#result"));
-  if (JSON.stringify(result) !== JSON.stringify({ value: 42, identity: true, count: 42, callback: 44, closure: 42 })) {
+  if (JSON.stringify({ value: result.value, identity: result.identity, count: result.count, callback: result.callback, closure: result.closure }) !== JSON.stringify({ value: 42, identity: true, count: 42, callback: 44, closure: 42 })) {
     throw new Error(`unexpected browser result: ${JSON.stringify(result)}`);
   }
+  if (result.checksum !== STEADY_STATE_BOX_VALUE * result.performance.iterations) throw new Error("browser performance checksum failed");
+  await writeConsumerPerformance({
+    consumer: "browser-javascript",
+    operation: STEADY_STATE_OPERATION,
+    timingMode: "steady-state",
+    scope: "steady-state generated browser API call in Chromium",
+    ...result.performance,
+  });
   process.stdout.write(`${JSON.stringify({ result: "passed", packageInstallation: true, realLeanExecution: true, browserCondition: true, value: 42 }, null, 2)}\n`);
 } finally {
   await browser.close();

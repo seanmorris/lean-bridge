@@ -7,6 +7,14 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
+
 const option = name => {
   const index = process.argv.indexOf(name);
   return index === -1 ? null : process.argv[index + 1];
@@ -64,7 +72,7 @@ try {
   await php.binary;
   const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
-$box = new LeanAlpha\\Box(41);
+$box = new LeanAlpha\\Box(${STEADY_STATE_BOX_VALUE});
 $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
     false,
     8,
@@ -73,6 +81,12 @@ $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
     [1, 5, 13],
 ));
 $adder = LeanAlpha\\makeAdder(2);
+$iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+for ($index = 0; $index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++$index) $box->read();
+$checksum = 0;
+$started = hrtime(true);
+for ($index = 0; $index < $iterations; ++$index) $checksum += $box->read();
+$durationNanoseconds = hrtime(true) - $started;
 $result = [
     'extension' => extension_loaded('lean_alpha'),
     'box' => $box->read(),
@@ -82,6 +96,7 @@ $result = [
     'payload' => [$payload->enabled, $payload->count, $payload->label, bin2hex($payload->bytes->toString()), $payload->values],
     'callback' => LeanAlpha\\withCallback(40, static fn(int $value): int => $value),
     'closure' => $adder(40),
+    'performance' => ['iterations' => $iterations, 'durationNanoseconds' => $durationNanoseconds, 'checksum' => $checksum],
 ];
 $adder->close();
 $box->close();
@@ -96,11 +111,13 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
     throw new Error(`PHP-Wasm host failed with status ${status}: ${stderr || stdout}`);
   }
   const result = JSON.parse(stdout);
+  const performance = result.performance;
+  delete result.performance;
   const expected = {
     extension: true,
-    box: 41,
+    box: STEADY_STATE_BOX_VALUE,
     identity: true,
-    betaRead: 41,
+    betaRead: STEADY_STATE_BOX_VALUE,
     betaIdentity: true,
     payload: [true, 9, "wasm", "007fff", [1, 5, 13]],
     callback: 42,
@@ -111,6 +128,17 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   };
   if (JSON.stringify(result) !== JSON.stringify(expected)) {
     throw new Error(`PHP-Wasm result mismatch: ${JSON.stringify(result)}`);
+  }
+  if (performance.checksum !== STEADY_STATE_BOX_VALUE * performance.iterations) throw new Error("PHP-Wasm performance checksum failed");
+  if (process.env.LEAN_BRIDGE_CONSUMER_PHP_WASM_PROFILE !== "side-startup") {
+    await writeConsumerPerformance({
+      consumer: "php-wasm",
+      operation: STEADY_STATE_OPERATION,
+      timingMode: "steady-state",
+      scope: "steady-state generated PHP API call through the lazy PHP-Wasm transport",
+      iterations: performance.iterations,
+      durationNanoseconds: performance.durationNanoseconds,
+    });
   }
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
 } finally {

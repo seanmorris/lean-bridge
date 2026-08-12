@@ -14,6 +14,7 @@ concurrency:
 
 env:
   NODE_VERSION: "22"
+  LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
 
 jobs:
   documentation:
@@ -64,15 +65,16 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-node-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-node-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce Node support
         if: steps.consumer.outcome != 'success'
@@ -108,14 +110,15 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer browser-javascript --output build/consumer-ci/results/browser-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:browser"
+          node scripts/consumer-ci.mjs record --consumer browser-javascript --output build/consumer-ci/results/browser-javascript.json --performance build/consumer-ci/performance/browser-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:browser"
       - name: Upload browser observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-browser-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-browser-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce the browser boundary
         if: steps.consumer.outcome != 'success'
@@ -158,15 +161,16 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
-          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
       - name: Upload PHP observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-php-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-php-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce PHP support
         if: steps.consumer.outcome != 'success'
@@ -201,15 +205,16 @@ jobs:
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
           for consumer in python rust c cpp; do
-            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:native"
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:native"
           done
       - name: Upload native consumer observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-native-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-native-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
         if: steps.consumer.outcome != 'success'
@@ -243,14 +248,15 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi"
       - name: Upload WIT and WASI observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-wasi-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-wasi-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce WIT and WASI support
         if: steps.consumer.outcome != 'success'
@@ -313,7 +319,7 @@ jobs:
       - name: Download consumer observations
         uses: actions/download-artifact@v5
         with:
-          pattern: consumer-results-*-${{ github.sha }}-${{ github.run_attempt }}
+          pattern: consumer-results-*-${{ github.sha }}
           path: build/consumer-ci/results
           merge-multiple: true
       - name: Validate all ten targets and publish the table
@@ -322,7 +328,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-support-report-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-support-report-${{ github.sha }}
           path: build/consumer-ci/report.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30

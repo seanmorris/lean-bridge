@@ -70,20 +70,47 @@ console.assert(isEmpty("") === true);
 
 The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives with lifecycle scripts disabled, runs these calls in a clean project, compiles the TypeScript surface in strict mode, and verifies the component receipt. The [PHP guide](docs/php.md) covers native Zend and PHP-Wasm through one generated PHP API.
 
+## Type conversions
+
+Generated bindings preserve ranges, precision, field structure, and ownership instead of routing values through JSON. The high-level package projections use these host representations:
+
+| Lean type | JavaScript and TypeScript | PHP | Python | Boundary behavior |
+|---|---|---|---|---|
+| `Bool` | `boolean` | `bool` | `bool` | Direct scalar conversion. |
+| `UInt8`, `UInt16`, `UInt32` | validated `number` | validated `int` | validated `int` | Values outside the declared range are rejected. |
+| `Int8`, `Int16`, `Int32` | validated `number` | validated `int` | validated `int` | Signed ranges are preserved. |
+| `Int64` | `bigint` | `int` on the supported 64-bit build | `int` | The full signed 64-bit range is preserved. |
+| `UInt64`, `Nat`, `Int` | `bigint` | generated `BigInteger` | `int` | Full-width or arbitrary precision is preserved. |
+| `Float32`, `Float` | `number` | `float` | `float` | Conversion follows the declared IEEE width. |
+| `String` | `string` | `string` | `str` | UTF-8 text is copied directly. |
+| `ByteArray` | `Uint8Array` | generated `Bytes` | `bytes` | Binary data remains distinct from text. |
+| `Array T` | `ReadonlyArray<T>` | typed `list<T>` | `tuple[T, ...]` | Elements use the generated mapping for `T`. |
+| `Except E T` | generated result union | generated `Result` value | generated result union | Error values remain structured. |
+| structure | generated interface or value class | readonly value object | frozen value class | Field names and mapped field types are preserved. |
+| identity-bearing value | generated class | generated resource class | generated class and context manager | One live wrapper refers to one retained Lean identity. |
+
+`Option T` maps to a nullable host value in the current high-level projections. Nested nullable shapes require an explicit adapter decision. Richer mappings and target-specific C, C++, Rust, and WIT types are generated from the same [native binding contract](docs/architecture/native-bindings.md#primitive-and-copied-value-mapping). An unsupported target mapping stops package generation.
+
 ## Runtime performance
 
-Direct warm scalar calls through the generated APIs complete in hundreds of nanoseconds on the reference machine. Callback and PHP-Wasm warm calls remain in the low single-digit microseconds. Sharing one runtime across 50 Lean libraries cuts Wasm linear-memory allocation from 851,968,000 bytes to 17,039,360 bytes, a 50-fold reduction.
+Generated native calls are single-digit nanoseconds in C and C++, 9.3 ns in Rust, hundreds of nanoseconds in PHP and JavaScript, and under 2 µs in Python and PHP-Wasm on the reference machine. Sharing one runtime across 50 Lean libraries cuts Wasm linear-memory allocation from 851,968,000 bytes to 17,039,360 bytes, a 50-fold reduction.
 
-These August 2026 measurements used Linux x86-64, Node 22.23.1, an Intel Core i7-7700K, eight logical CPUs, and 25 GB of memory.
+The downstream measurements below ran on 12 August 2026 using Linux x86-64, Node 22.23.1, and an Intel Core i7-7700K. Each steady-state row reads the same retained Lean `Box` through the installed generated API after 10,000 warm-up calls, then measures 100,000 calls.
 
-| Measurement | Result | Limitation | Evidence |
-|---|---:|---|---|
-| Generated retained Lean method, median | 302 ns | Warm Node process and one Alpha fixture | [native call overhead](docs/evidence/native-call-overhead.md) |
-| Generated JavaScript callback invoked by Lean, median | 1.694 µs | Warm Node process | [native call overhead](docs/evidence/native-call-overhead.md) |
-| Native PHP retained read, median | 179.5 ns | Warm PHP process on the supported native target | [PHP transport performance](docs/evidence/php-transport-performance.md) |
-| PHP-Wasm retained read, median | 1.580 µs | Warm startup profile in the Node-hosted PHP-Wasm runtime | [PHP transport performance](docs/evidence/php-transport-performance.md) |
-| 50 libraries with one shared runtime | 17,039,360 bytes | Wasm linear memory only | [library scaling](docs/evidence/library-scaling.md) |
-| 50 libraries with isolated runtimes | 851,968,000 bytes | Comparison profile, not a supported package layout | [library scaling](docs/evidence/library-scaling.md) |
+| Installed consumer | Generated API result |
+|---|---:|
+| C11, Release | 5.5 ns/call |
+| C++20, Release | 5.9 ns/call |
+| Rust, release profile | 9.3 ns/call |
+| Native PHP | 259.6 ns/call |
+| Browser JavaScript in Chromium | 353.0 ns/call |
+| TypeScript on Node | 399.0 ns/call |
+| JavaScript on Node | 408.1 ns/call |
+| Python | 1.66 µs/call |
+| PHP-Wasm | 1.94 µs/call |
+| WIT/WASI | 8.66 ms/invocation, including host process and component startup |
+
+These are observational end-user API measurements, not cross-machine comparisons. The [downstream performance record](docs/evidence/downstream-consumer-performance-20260812.md) contains exact durations, scope, revision, and limitations. The [library scaling record](docs/evidence/library-scaling.md) contains the shared-runtime memory measurements.
 
 ## Documentation
 

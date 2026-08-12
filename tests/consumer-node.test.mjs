@@ -6,9 +6,18 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
+
 const execute = promisify(execFile);
 const repository = resolve(".");
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_RUNTIME_ROOT ?? "build/consumer-ci-runtime/lazy");
+const alphaPackageRoot = resolve(process.env.LEAN_BRIDGE_ALPHA_NPM_PACKAGE_ROOT ?? "build/consumer-node-alpha-package");
 const maxBuffer = 64 * 1024 * 1024;
 
 const run = (command, args, options = {}) => execute(command, args, { maxBuffer, ...options });
@@ -92,8 +101,10 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     const packageFiles = (await readdir(release)).sort();
     const runtimeArchive = packageFiles.find(path => /^lean-bridge-runtime-.+\.tgz$/.test(path));
     const componentArchive = packageFiles.find(path => /^onboarding-small-.+\.tgz$/.test(path));
+    const alphaArchive = (await readdir(alphaPackageRoot)).find(path => /^lean-bridge-alpha-.+\.tgz$/.test(path));
     assert.ok(runtimeArchive);
     assert.ok(componentArchive);
+    assert.ok(alphaArchive);
     assert.ok(packageFiles.includes("component-package-receipt.json"));
 
     await mkdir(consumer);
@@ -101,23 +112,58 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     await run("npm", ["pkg", "set", "type=module"], { cwd: consumer });
     await run("npm", [
       "install", "--ignore-scripts", "--no-audit", "--no-fund",
-      join(release, runtimeArchive), join(release, componentArchive),
+      join(release, runtimeArchive), join(release, componentArchive), join(alphaPackageRoot, alphaArchive),
     ], { cwd: consumer });
 
     const javascript = await run("node", ["--input-type=module", "-e", [
-      'import { add, isEmpty } from "onboarding-small";',
-      'process.stdout.write(JSON.stringify({ add: String(add(100n, 23n)), empty: isEmpty(""), nonempty: isEmpty("Lean") }));',
+      'import { Box } from "@lean-bridge/alpha";',
+      `const box = new Box(${STEADY_STATE_BOX_VALUE});`,
+      `const iterations = ${STEADY_STATE_MEASURED_ITERATIONS};`,
+      `for (let index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; index += 1) box.read();`,
+      "let checksum = 0;",
+      "const started = performance.now();",
+      "for (let index = 0; index < iterations; index += 1) checksum += box.read();",
+      "const durationNanoseconds = (performance.now() - started) * 1000000;",
+      "box.dispose();",
+      'const { add, isEmpty } = await import("onboarding-small");',
+      'process.stdout.write(JSON.stringify({ add: String(add(100n, 23n)), empty: isEmpty(""), nonempty: isEmpty("Lean"), checksum, performance: { iterations, durationNanoseconds } }));',
     ].join("\n")], { cwd: consumer });
-    assert.deepEqual(JSON.parse(javascript.stdout), { add: "123", empty: true, nonempty: false });
+    const javascriptResult = JSON.parse(javascript.stdout);
+    assert.deepEqual({
+      add: javascriptResult.add,
+      empty: javascriptResult.empty,
+      nonempty: javascriptResult.nonempty,
+    }, { add: "123", empty: true, nonempty: false });
+    assert.equal(javascriptResult.checksum, STEADY_STATE_BOX_VALUE * javascriptResult.performance.iterations);
+    await writeConsumerPerformance({
+      consumer: "node-javascript",
+      operation: STEADY_STATE_OPERATION,
+      timingMode: "steady-state",
+      scope: "steady-state generated JavaScript API call through the Alpha npm package",
+      ...javascriptResult.performance,
+    });
 
     const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
     assert.doesNotMatch(declarations, /\bany\b/);
     assert.match(declarations, /add\(left: bigint, right: bigint\): bigint/);
+    const alphaDeclarations = await readFile(join(consumer, "node_modules/@lean-bridge/alpha/index.d.ts"), "utf8");
+    assert.doesNotMatch(alphaDeclarations, /\bany\b/);
+    assert.match(alphaDeclarations, /class Box/);
     await writeFile(join(consumer, "index.ts"), [
-      'import { add, isEmpty } from "onboarding-small";',
+      'import { Box } from "@lean-bridge/alpha";',
+      `const box: Box = new Box(${STEADY_STATE_BOX_VALUE});`,
+      `const iterations: number = ${STEADY_STATE_MEASURED_ITERATIONS};`,
+      `for (let index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; index += 1) box.read();`,
+      "let checksum: number = 0;",
+      "const started: number = performance.now();",
+      "for (let index = 0; index < iterations; index += 1) checksum += box.read();",
+      "const durationNanoseconds: number = (performance.now() - started) * 1000000;",
+      "box.dispose();",
+      'const { add, isEmpty } = await import("onboarding-small");',
       "const sum: bigint = add(20n, 22n);",
       'const empty: boolean = isEmpty("");',
       'if (sum !== 42n || !empty) throw new Error("unexpected Lean result");',
+      "console.log(JSON.stringify({ iterations, durationNanoseconds, checksum }));",
       "",
     ].join("\n"));
     await writeFile(join(consumer, "tsconfig.json"), `${JSON.stringify({
@@ -125,6 +171,7 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
         target: "ES2022",
         module: "NodeNext",
         moduleResolution: "NodeNext",
+        lib: ["ES2022", "DOM", "ESNext.Disposable"],
         strict: true,
         noImplicitAny: true,
         skipLibCheck: false,
@@ -133,7 +180,16 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
       include: ["index.ts"],
     }, null, 2)}\n`);
     await run(join(repository, "node_modules/.bin/tsc"), ["--project", "tsconfig.json"], { cwd: consumer });
-    await run("node", ["dist/index.js"], { cwd: consumer });
+    const typescript = JSON.parse((await run("node", ["dist/index.js"], { cwd: consumer })).stdout);
+    assert.equal(typescript.checksum, STEADY_STATE_BOX_VALUE * typescript.iterations);
+    await writeConsumerPerformance({
+      consumer: "node-typescript",
+      operation: STEADY_STATE_OPERATION,
+      timingMode: "steady-state",
+      scope: "steady-state generated TypeScript API call through the Alpha npm package after compilation",
+      iterations: typescript.iterations,
+      durationNanoseconds: typescript.durationNanoseconds,
+    });
 
     const verification = JSON.parse((await run("node", [
       join(repository, "scripts/verify-component-package-receipt.mjs"),
