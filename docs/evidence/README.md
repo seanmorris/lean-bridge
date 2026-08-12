@@ -45,6 +45,7 @@ Evidence documents record commands, artifact identities, measured results, and l
 
 ## Performance
 
+- [Downstream consumer performance, 12 August 2026](downstream-consumer-performance-20260812.md)
 - [Time-to-package raw record](time-to-package-20260811.json)
 - [Generated native call overhead](native-call-overhead.md)
 - [Library scaling](library-scaling.md)
