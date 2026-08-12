@@ -68,6 +68,10 @@ test("an external Lean component installs as native callables over one shared ru
 
     const componentRoot = join(first.output, "component/package");
     const runtimeRoot = join(first.output, "runtime/package");
+    const componentManifest = JSON.parse(await readFile(join(componentRoot, "package.json"), "utf8"));
+    const runtimeManifest = JSON.parse(await readFile(join(runtimeRoot, "package.json"), "utf8"));
+    assert.equal(componentManifest.exports["."].browser, "./index.mjs");
+    assert.equal(runtimeManifest.exports["."].browser, "./index.mjs");
     const componentFiles = await list(componentRoot);
     assert.equal(componentFiles.filter(path => path.endsWith(".wasm")).length, 1);
     assert.equal(componentFiles.some(path => path.endsWith("main.wasm")), false);

@@ -4,7 +4,7 @@ Status: the compile-once handoff now has a closed, versioned, language-neutral s
 
 ## Boundary
 
-The canonical package manifest sits between the pinned flake build and registry packaging backends. The flake and resolved graph write it. Npm, Cargo, PyPI, C, C++, and later backends read it. A backend cannot add semantic fields, select another component version, replace the dependency graph, or change a core artifact hash.
+The canonical package manifest sits between the pinned flake build and registry packaging backends. The flake and resolved graph write it. npm, Cargo, PyPI, C, C++, and WIT/WASI backends read it. A backend cannot add semantic fields, select another component version, replace the dependency graph, or change a core artifact hash.
 
 The manifest records:
 
@@ -17,7 +17,7 @@ The manifest records:
 - target eligibility, platform constraints, capabilities, reasons, and entry points;
 - dependency manifest identities;
 - provided capabilities, required hosts, and explicit target gaps;
-- npm, Cargo, PyPI, C, and C++ names, versions, targets, eligibility, and public artifact selections;
+- npm, Cargo, PyPI, C, C++, and WIT/WASI names, versions, targets, eligibility, and public artifact selections;
 - generated documentation and license files;
 - proved, trusted-boundary, and unverified claims with theorem, assumption, subject, and artifact links; and
 - builder, toolchain, source epoch, closure, SBOM, and provenance identities.
@@ -40,11 +40,11 @@ The validator rejects:
 - source, lock, Binding IR, closure, SBOM, assurance, or provenance identity drift; and
 - self-dependencies or repeated registry names.
 
-The Alpha fixture hash is `4b63e4b7ffe618093df36a46a71ebb885ee17c500cb380fa3bf72e9caaa737ea`. Canonical serialization sorts object keys, so insertion order cannot change that identity. Array order remains meaningful for entry points, dependency resolution, and package projections.
+The Alpha fixture hash is `3bdd977fe975f8d573b44b9c4d51adfdef8d82d14767b87be75522b8937d1146`. Canonical serialization sorts object keys, so insertion order cannot change that identity. Array order remains meaningful for entry points, dependency resolution, and package projections.
 
 ## Current fixture
 
-The fixture marks the browser target and npm package eligible. It marks native FFI and WASI targets ineligible with specific reasons. This reflects the fixture's current artifact inventory. It does not claim that the generated C, Rust, or Python bindings are impossible to package. Node 829 will build the first complete release bundle. Node 830 will add non-JavaScript package projections from that same bundle.
+The small fixture marks the browser target and npm package eligible while keeping native FFI and WASI ineligible with specific reasons. The full Nix bundle adds the native and Component Model artifacts and makes all six package mappings eligible. Keeping both forms tests success and fail-closed behavior.
 
 ## Reproduce
 

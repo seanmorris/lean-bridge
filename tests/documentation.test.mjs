@@ -33,15 +33,15 @@ test("versioned consumer support contract is closed and honest", async () => {
   assert.equal(schema.$defs.consumer.additionalProperties, false);
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "supported").map(item => item.id),
-    ["node-javascript", "node-typescript", "php-native", "php-wasm"],
+    ["node-javascript", "node-typescript", "browser-javascript", "php-native", "php-wasm", "python", "rust", "c", "cpp", "wit-wasi"],
   );
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "partial").map(item => item.id),
-    ["browser-javascript"],
+    [],
   );
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "blocked").map(item => item.id),
-    ["python", "rust", "c", "cpp", "wit-wasi"],
+    [],
   );
   for (const consumer of contract.consumers) {
     for (const path of consumer.evidence) await access(path);
@@ -53,7 +53,7 @@ test("versioned consumer support contract is closed and honest", async () => {
     error => error instanceof ConsumerSupportError && error.code === "invalid-consumer-support",
   );
   const unsupported = structuredClone(contract);
-  unsupported.consumers.find(item => item.id === "python").state = "supported";
+  unsupported.consumers.find(item => item.id === "python").packageInstallation = false;
   assert.throws(
     () => validateConsumerSupport(unsupported),
     error => error instanceof ConsumerSupportError && error.code === "unsupported-support-claim",
@@ -97,7 +97,7 @@ test("public examples contain no private ABI or generic runtime surface", async 
   }
 });
 
-test("generated onboarding TypeScript has no public any and npm has no browser condition", async () => {
+test("generated onboarding TypeScript has no public any", async () => {
   const analysis = await analyzeLeanProject("tests/fixtures/onboarding/small", { targets: ["npm"] });
   assert.ok(analysis.bindingIr);
   const generated = generateJavaScriptPackage(analysis.bindingIr.document);
@@ -107,18 +107,18 @@ test("generated onboarding TypeScript has no public any and npm has no browser c
   assert.equal("browser" in packageJson, false);
 });
 
-test("blocked package evidence retains each exact runtime capability gap", async () => {
+test("promoted package evidence names each executable runtime path", async () => {
   const checks = [
-    ["tests/pypi-package.test.mjs", "no native component library or Python extension adapter"],
-    ["tests/cargo-package.test.mjs", "no native component library"],
-    ["tests/c-family-package.test.mjs", "no native component library"],
-    ["tests/c-family-package.test.mjs", "binding-artifacts-absent"],
-    ["docs/evidence/wit-projection.md", "Component Model adapter"],
+    ["scripts/test-native-consumers.mjs", "buildPyPiPackage"],
+    ["scripts/test-native-consumers.mjs", "buildCargoPackage"],
+    ["scripts/test-native-consumers.mjs", "buildCPackage"],
+    ["scripts/test-native-consumers.mjs", "buildCppPackage"],
+    ["scripts/test-wasi-consumer.mjs", "componentResult"],
   ];
   for (const [path, pattern] of checks) assert.match(await readFile(path, "utf8"), new RegExp(pattern), path);
 });
 
-test("CI result contract detects support loss and newly runnable blocked targets", async () => {
+test("CI result contract detects support loss", async () => {
   const contract = await readConsumerSupport();
   const results = contract.consumers.map(item => ({
     schemaVersion: 1,
@@ -139,13 +139,6 @@ test("CI result contract detects support loss and newly runnable blocked targets
     error => error.code === "supported-consumer-not-executed",
   );
 
-  const runnable = structuredClone(results);
-  runnable.find(item => item.consumer === "python").realLeanExecution = true;
-  assert.throws(
-    () => evaluateConsumerResults({ contract, results: runnable }),
-    error => error.code === "blocked-consumer-runnable",
-  );
-
   const failed = structuredClone(results);
   failed.find(item => item.consumer === "php-wasm").testResult = "failed";
   assert.equal(evaluateConsumerResults({ contract, results: failed }).result, "failed");
@@ -161,7 +154,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);
   assert.match(workflow, /NODE_VERSION: "22"/);
   assert.match(workflow, /npm run build:builder-image/);
-  assert.match(workflow, /\.\#universal-core-artifacts/);
+  assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
+  assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
+  assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   const contract = await readConsumerSupport();

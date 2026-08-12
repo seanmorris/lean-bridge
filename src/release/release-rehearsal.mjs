@@ -14,9 +14,10 @@ import { buildCargoPackage } from "./cargo-package.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
 import { buildNpmPackage } from "./npm-package.mjs";
 import { buildPyPiPackage } from "./pypi-package.mjs";
+import { buildWasiPackage } from "./wasi-package.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
-const predicateType = "https://lean-bridge.dev/attestations/publication-rehearsal/v1";
+const predicateType = "urn:lean-bridge:attestation:publication-rehearsal:v1";
 
 export class PublicationIndexError extends Error {
   constructor(code, message, details = {}) {
@@ -193,6 +194,7 @@ const builders = Object.freeze({
   pypi: buildPyPiPackage,
   c: buildCPackage,
   cpp: buildCppPackage,
+  "wit-wasi": buildWasiPackage,
 });
 
 const backendPlans = Object.freeze({
@@ -201,6 +203,7 @@ const backendPlans = Object.freeze({
   pypi: "pypi-projection.json",
   c: "c-projection.json",
   cpp: "cpp-projection.json",
+  "wit-wasi": "wit-wasi-projection.json",
 });
 
 const archiveProperties = Object.freeze({
@@ -209,6 +212,7 @@ const archiveProperties = Object.freeze({
   pypi: [["wheel", "wheel"], ["sdist", "sdist"]],
   c: [["archive", "archive"]],
   cpp: [["archive", "archive"]],
+  "wit-wasi": [["archive", "archive"]],
 });
 
 const archiveRecord = async ({ output, kind, absolute }) => {

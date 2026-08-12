@@ -56,7 +56,7 @@ const makeVerified = manifestPath => {
   };
   const authorizationDocument = {
     schemaVersion: 1,
-    predicateType: "https://lean-bridge.dev/attestations/release-authorization/v1",
+    predicateType: "urn:lean-bridge:attestation:release-authorization:v1",
     status: "authorized",
     candidate,
     evidence: {
@@ -141,7 +141,7 @@ const makeVerified = manifestPath => {
 
 const transactionFor = (verified, publicationAttestation, status = "complete") => ({
   schemaVersion: 1,
-  predicateType: "https://lean-bridge.dev/registry-transaction/v1",
+  predicateType: "urn:lean-bridge:registry-transaction:v1",
   transactionId: hash("8"),
   candidateId: verified.authorization.candidate.id,
   manifest: { path: "publish-manifest.json", sha256: verified.manifestSha256 },

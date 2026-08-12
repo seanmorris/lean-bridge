@@ -1,6 +1,6 @@
 # Implementation status
 
-Status as of 2026-08-11: the repository is an architecture-testing proof of concept. Node JavaScript, Node TypeScript, native PHP on one target, and Node-hosted PHP-Wasm have clean consumers that execute real Lean. Other generated bindings remain partial or blocked according to the [consumer support contract](consumer-support.v1.json).
+Status as of 2026-08-11: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer.
 
 ## Lean project intake
 
@@ -56,7 +56,7 @@ One application runtime owns the Lean heap, Wasm memory, function table, symbol 
 
 The canonical Alpha npm projection installs into a clean Node project with scripts disabled and executes the real Lean runtime. Plain Lake projects produce separate runtime and component archives plus a component receipt. The component archive contains no runtime binary. The runtime archive is shared. Package export maps keep internal runtime paths closed.
 
-Browser source fixtures execute the same native API through raw ESM, a module worker, Vite, Rollup, Webpack, and React. The npm generator does not yet emit browser conditional exports, so browser npm remains partial. [npm evidence](evidence/npm-package.md), [plain project acceptance](evidence/plain-project-package-acceptance.md), and [browser evidence](evidence/browser-bundler-acceptance.md) record the two boundaries.
+Browser source fixtures execute the same native API through raw ESM, a module worker, Vite, Rollup, Webpack, and React. The installed npm archive also exposes a browser conditional export and executes through Vite and Chromium. [npm evidence](evidence/npm-package.md), [plain project acceptance](evidence/plain-project-package-acceptance.md), and [browser package acceptance](evidence/browser-package-acceptance.md) record these paths.
 
 ### PHP
 
@@ -66,13 +66,13 @@ The PHP-Wasm builder emits the same Composer API, a PHP 8.4 extension, one share
 
 [Native PHP evidence](evidence/native-php-release-package.md), [PHP-Wasm package evidence](evidence/php-wasm-release-package.md), [shared PHP-Wasm runtime evidence](evidence/php-wasm-shared-runtime-composition.md), and [transport parity evidence](evidence/php-transport-parity.md) retain the package and execution records.
 
-### Python, Rust, C, C++, and WIT
+### Python, Rust, C, C++, and WIT/WASI
 
-Binding IR generates typed Python, Rust, and C APIs. Focused tests compile or import them and execute against typed test runtime implementations. Compiler-free projection tests validate deterministic PyPI, Cargo, and C archive behavior after adding synthetic eligible targets. The canonical bundle omits those archives because it lacks their native component and runtime adapters.
+One native foundation produces a process-wide Lean runtime and an Alpha component library. The canonical bundle records both by hash and makes the Python wheel, Rust crate, C11 package, and C++20 package eligible. Python loads the component lazily, Rust supplies a generated runtime implementation, C calls its generated API, and C++ adds move-only RAII wrappers. All four clean consumers cover real Lean resources, copied values, callbacks, closures, and disposal.
 
-The repository has no generated C++ projection. The WIT backend emits and validates a portable interface plus nominal cross-package resource identity, but it emits no Component Model binary adapter. None of these targets executes the real Lean component through an installed native package.
+The WIT/WASI package includes the generated portable WIT subset, a Component Model adapter, the pinned Wasmtime C API, and an independent host. Its clean consumer enters the component and calls real Lean through the generated C API.
 
-[Python evidence](evidence/generated-python-backend.md), [Rust evidence](evidence/generated-rust-backend.md), [C evidence](evidence/generated-c-backend.md), [package blockers](evidence/generated-package-gate.md), and [WIT evidence](evidence/wit-projection.md) record the generated surfaces and missing capabilities.
+[Native consumer acceptance](evidence/native-consumer-acceptance.md) and [WIT/WASI consumer acceptance](evidence/wasi-consumer-acceptance.md) record the package and execution evidence.
 
 ## Release controls
 
@@ -102,10 +102,8 @@ Current blockers include:
 
 - elaborator-backed extraction for the full supported Lean language surface;
 - reviewed adapters for additional numeric, generic, effect, callback, and ownership shapes;
-- browser conditional npm exports;
-- native component and runtime adapters for Python, Rust, and C;
-- a generated C++ binding projection;
-- a Component Model binary adapter and WASI execution;
+- additional native operating systems and architectures;
+- broader Component Model coverage for callbacks and borrowed identity results;
 - PHP ZTS, AArch64, macOS, Windows, browser PHP, and broader libuv effects;
 - live registry adapters and an operated signer policy; and
 - independent release rebuild attestations outside this repository.

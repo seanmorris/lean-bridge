@@ -4,9 +4,9 @@
 
 The release rehearsal reads one verified canonical bundle, invokes every eligible registry backend, and writes registry-ready archives under one local output directory. It does not contact a registry, open network access, sign with an external key, or publish an artifact.
 
-The real Alpha bundle currently produces one npm tarball. Cargo, PyPI, C, and C++ remain omitted because their canonical package mappings are ineligible. The publication index records each omission and its manifest-supplied reason. An omitted package receives no archive or backend plan.
+The full Nix Alpha bundle produces ready npm, Cargo, PyPI, C, C++, and WIT/WASI packages with no omission. A source-only unit fixture produces npm and records five explicit omissions, preserving coverage of the fail-closed path. An omitted package receives no archive or backend plan.
 
-A reviewed test fixture enables the generated C source package without changing any artifact byte. That rehearsal produces npm and C archives from one canonical manifest. The fixture demonstrates multi-ecosystem orchestration while keeping the real native publication gap visible.
+A reviewed test fixture enables the generated C source package without changing any artifact byte. That rehearsal produces npm and C archives from one canonical manifest and exercises deterministic multi-ecosystem orchestration without compiling package contents.
 
 ## Publication index
 
@@ -28,7 +28,7 @@ The timestamp comes from the canonical source date epoch. Paths are output-relat
 
 [`tests/release-rehearsal.test.mjs`](../../tests/release-rehearsal.test.mjs) verifies:
 
-- the real bundle invokes npm and records four explicit omissions;
+- the source-only bundle invokes npm and records five explicit omissions;
 - no package directory is created for an ineligible backend;
 - the reviewed C fixture invokes npm and C from one bundle identity;
 - independent rehearsals produce identical indexes, attestations, and archives;
@@ -40,6 +40,7 @@ Run the focused gate:
 
 ```sh
 npm run test:release-rehearsal
+nix --extra-experimental-features 'nix-command flakes' build .#release-rehearsal --no-link
 ```
 
 Run the CLI against an existing bundle:

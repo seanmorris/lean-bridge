@@ -1,6 +1,6 @@
 # Cross-Language Semantic Parity Evidence
 
-Status: JavaScript, PHP, Python, C, and Rust packages derive from one semantic contract. JavaScript and Python also pass a fixture that combines finite generic instantiation with asynchronous delivery. PHP passes an executed fixture for the same copied values, resources, callbacks, returned callables, and cleanup counters.
+Status: JavaScript, PHP, Python, C, C++, and Rust packages derive from one semantic contract. JavaScript and Python also pass a fixture that combines finite generic instantiation with asynchronous delivery. PHP passes an executed fixture for the same copied values, resources, callbacks, returned callables, and cleanup counters.
 
 ## Run the gate
 
@@ -8,7 +8,7 @@ Status: JavaScript, PHP, Python, C, and Rust packages derive from one semantic c
 npm run binding-parity
 ```
 
-The command reads the Alpha Binding IR, generates all five packages, and emits a machine-readable report. The report contains one semantic contract hash and one package record per target. Each package record must identify the same component and canonical Binding IR hash.
+The command reads the Alpha Binding IR, generates all six packages, and emits a machine-readable report. The report contains one semantic contract hash and one package record per target. Each package record must identify the same component and canonical Binding IR hash.
 
 ## Shared contract
 
@@ -36,6 +36,7 @@ The parity report states the host form used for each semantic category:
 | PHP | readonly value objects | canonical classes | exceptions | `close` and destructor fallback |
 | Python | frozen dataclasses | classes and context managers | exceptions | `close`, context management, and finalization |
 | C | typed structs | opaque structs | status and typed error output | generated clear and dispose functions |
+| C++ | typed values | move-only RAII classes | exceptions | destructors and `close` |
 | Rust | owned structs | structs with borrowed receivers | `Result` | `Drop` |
 
 Result delivery also stays explicit. JavaScript maps a promise result to `Promise`. PHP and Python map the same contract to `Awaitable`. PHP maps synchronous iteration to `Traversable`. C and Rust currently accept the synchronous value profile. A backend cannot appear in a report if it generated a package without a declared delivery mapping.
@@ -49,7 +50,7 @@ Result delivery also stays explicit. JavaScript maps a promise result to `Promis
 `tests/binding-semantic-parity.test.mjs` checks:
 
 - callable shape, ownership, lifetimes, errors, documentation, and assurance resolution;
-- one Binding IR and semantic contract identity across JavaScript, PHP, Python, C, and Rust;
+- one Binding IR and semantic contract identity across JavaScript, PHP, Python, C, C++, and Rust;
 - finite `uint32` and string instantiations across JavaScript and Python;
 - `Promise` and `Awaitable` delivery from one asynchronous declaration;
 - identical copied-value, object-identity, callback, closure, and cleanup-counter results in generated JavaScript and Python packages;

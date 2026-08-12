@@ -2,14 +2,16 @@
 
 ## Result
 
-The flake exposes two separate outputs:
+The flake exposes separate compiled and assembled outputs:
 
 - `universal-core-artifacts` compiles the side-lazy shared runtime and Alpha, Beta, and Gamma components.
+- `native-core-artifacts` compiles the process-wide native Lean runtime and Alpha component.
+- `wasi-component-artifacts` builds the Component Model adapter and independent Wasmtime host.
 - `universal-release-bundle` arranges those immutable artifacts with generated bindings and release evidence.
 
 The second derivation has no Lean, C, C++, Emscripten, linker, or Wasm compiler in its build inputs. It receives the core output as a read-only Nix store path and writes a new bundle.
 
-The current bundle contains 78 inventoried artifacts. It includes the Emscripten runtime loader and Wasm runtime, three independently compiled side modules, the Lean source, graph and flake locks, Binding IR, JavaScript and TypeScript, PHP, Python, C, and Rust binding sources, schemas, an executable validator module tree, generated documentation, the MIT license, assurance metadata, an SPDX 2.3 SBOM, and an in-toto statement using the SLSA provenance predicate. The bundle also carries the generated Alpha loader descriptor, browser-safe Binding IR hashing, and the exact JavaScript runtime modules required to consume it. An npm backend can therefore project the package without reading source files outside the bundle.
+The full bundle contains 97 inventoried artifacts. It includes the Emscripten runtime and components, native runtime and component libraries, the Component Model adapter and host, the Lean source, locks, Binding IR, all generated host bindings, schemas, validators, documentation, license, assurance, SBOM, and provenance. Packaging backends can project all six ecosystem packages without reading source files outside the bundle.
 
 ## Compilation boundary
 
@@ -35,7 +37,7 @@ Its identity is the SHA-256 hash of the canonical file records and graph profile
 
 The verified Nix build produced core identity `6d35a6ea087f84f9390e5faf5d60526c4b657c551f2a7345616387bff4489c24`. The canonical manifest identity changes when the recorded source revision changes, while the isolated core identity remains stable.
 
-The bundle marks the npm package eligible because it contains every compiled artifact, generated binding, loader contract, license, and provenance record required by that projection. The package targets Node 22 ESM. The `browser` name in compiled artifact paths identifies the unthreaded Wasm memory profile and does not claim browser execution. A browser bundler fixture remains required. Cargo, PyPI, C, and C++ mappings remain ineligible because this core derivation does not contain a native component library. The manifest reports each limit directly.
+The full Nix bundle marks npm, Cargo, PyPI, C, C++, and WIT/WASI eligible. The source-only unit fixture omits native and WASI inputs so tests can continue to verify fail-closed target behavior. Browser support is established separately by installing the npm archive and executing its conditional export in Chromium.
 
 ## Tests
 
@@ -45,7 +47,7 @@ The bundle marks the npm package eligible because it contains every compiled art
 - two empty output roots receive byte-identical bundles;
 - every manifest artifact matches the actual file size and SHA-256 hash;
 - the bundled validator imports from the finished tree and validates its own manifest;
-- JavaScript, PHP, Python, C, and Rust generated bindings are present;
+- JavaScript, PHP, Python, C, C++, Rust, and WIT generated bindings are present;
 - the npm mapping names the Node ESM target and its packaged loader artifacts;
 - provenance and SBOM records name the exact core identity; and
 - a valid changed packaging plan cannot alter the compiled file set.

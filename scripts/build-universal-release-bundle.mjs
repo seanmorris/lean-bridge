@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const allowed = new Set(["--core", "--output", "--revision", "--source-date-epoch", "--builder"]);
+const allowed = new Set(["--core", "--native", "--wasi", "--output", "--revision", "--source-date-epoch", "--builder"]);
 const options = new Map();
 for (let index = 2; index < process.argv.length; index += 2) {
   const flag = process.argv[index];
@@ -23,6 +23,8 @@ if (!Number.isSafeInteger(sourceDateEpoch) || sourceDateEpoch < 1) throw new Err
 const result = await buildUniversalReleaseBundle({
   projectRoot,
   coreRoot: options.get("--core"),
+  nativeRoot: options.get("--native") ?? null,
+  wasiRoot: options.get("--wasi") ?? null,
   outputRoot: options.get("--output"),
   revision: options.get("--revision"),
   sourceDateEpoch,

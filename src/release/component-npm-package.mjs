@@ -202,7 +202,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
       type: "module",
       sideEffects: true,
       engines: { node: ">=22" },
-      exports: { ".": "./index.mjs" },
+      exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } },
       files: ["index.mjs", "internal"],
       leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime },
     })),
@@ -214,12 +214,20 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
     await writeFile(join(componentPackage, path), contents);
   }
   const componentPackageJson = JSON.parse(generated["package.json"]);
+  const componentExports = componentPackageJson.exports?.["."] ?? {};
   await writeFile(join(componentPackage, "package.json"), json({
     name: ir.component.name,
     ...componentPackageJson,
     version: ir.component.version,
     description: ir.documentation.summary,
     engines: { node: ">=22" },
+    exports: {
+      ...componentPackageJson.exports,
+      ".": {
+        ...componentExports,
+        browser: componentExports.import ?? "./index.mjs",
+      },
+    },
     dependencies: { "@lean-bridge/runtime": version },
     leanBridge: {
       component: ir.component.id,

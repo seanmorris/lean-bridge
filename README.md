@@ -17,16 +17,18 @@ The current implementation gives package authors:
 |---|---|---|
 | JavaScript on Node | `supported` | Node 22 ESM installs the runtime and component npm archives. |
 | TypeScript on Node | `supported` | Strict TypeScript compiles the generated declarations and runs on Node 22. |
-| Browser JavaScript | `partial` | Browser fixtures execute Lean, but the npm package has no browser conditional export. |
+| Browser JavaScript | `supported` | The installed npm archive resolves its browser export and executes Lean in Chromium. |
 | Native PHP | `supported` | PHP 8.2 NTS on x86-64 Linux uses the generated Zend extension. |
 | PHP-Wasm | `supported` | PHP 8.4 uses the same generated PHP API in the Node-hosted PHP-Wasm runtime. |
-| Python | `blocked` | The bundle lacks a native component library and Python extension adapter. |
-| Rust | `blocked` | The bundle lacks a native component library and Rust runtime adapter. |
-| C | `blocked` | The bundle lacks a native component library. |
-| C++ | `blocked` | The bundle also lacks a generated C++ binding projection. |
-| WIT/WASI | `blocked` | The build emits WIT but has no Component Model binary adapter or WASI execution path. |
+| Python | `supported` | The x86-64 Linux wheel for glibc 2.38 or newer loads the packaged native component through its generated adapter. |
+| Rust | `supported` | The crate uses the packaged native component through its generated runtime adapter. |
+| C | `supported` | The C11 package links the generated API to the shared native Lean component. |
+| C++ | `supported` | The C++20 package adds typed RAII wrappers over the same native component. |
+| WIT/WASI | `supported` | A Wasmtime Component Model adapter calls real Lean through the generated native API. |
 
 The versioned [consumer support contract](docs/consumer-support.v1.json) is the source for CI and documentation checks. [Consumer status and API previews](docs/consumers.md) explain the evidence for every row.
+
+The pinned native package profile targets x86-64 Linux with glibc 2.38 or newer.
 
 ## Package a Lean library
 

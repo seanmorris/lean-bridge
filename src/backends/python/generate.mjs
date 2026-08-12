@@ -724,12 +724,175 @@ const emitRuntime = ir => {
     "        if _state == \"ready\" and _runtime is not None: return _runtime",
     "        if _state == \"failed\":",
     "            raise RuntimeError(\"shared runtime initialization failed and will not be retried\") from _failure",
-    "        from . import RuntimeUnavailableError",
-    "        raise RuntimeUnavailableError(\"the shared runtime is not installed\")",
+    "        from ._native import NativeRuntime",
+    "        install_runtime(NativeRuntime())",
+    "        assert _runtime is not None",
+    "        return _runtime",
     "",
   );
   return lines.join("\n");
 };
+
+const emitNativeRuntime = () => `from __future__ import annotations
+
+import ctypes
+from pathlib import Path
+from typing import Callable
+
+
+class _Error(ctypes.Structure):
+    _fields_ = [("code", ctypes.c_int), ("message", ctypes.c_void_p), ("message_length", ctypes.c_size_t)]
+
+
+class _String(ctypes.Structure):
+    _fields_ = [("data", ctypes.c_void_p), ("length", ctypes.c_size_t), ("owner", ctypes.c_void_p), ("release", ctypes.c_void_p)]
+
+
+class _Bytes(ctypes.Structure):
+    _fields_ = _String._fields_
+
+
+class _Values(ctypes.Structure):
+    _fields_ = _String._fields_
+
+
+class _Payload(ctypes.Structure):
+    _fields_ = [("enabled", ctypes.c_bool), ("count", ctypes.c_uint32), ("label", _String), ("bytes", _Bytes), ("values", _Values)]
+
+
+_Callback = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(_Error))
+
+
+class _Transform(ctypes.Structure):
+    _fields_ = [("call", _Callback), ("context", ctypes.c_void_p)]
+
+
+def _library_path() -> Path:
+    return Path(__file__).parent / "lean_bridge" / "artifacts" / "artifacts" / "native" / "lib" / "liblean_alpha_component.so"
+
+
+class NativeRuntime:
+    def __init__(self) -> None:
+        self._library = ctypes.CDLL(str(_library_path()))
+        pointer = ctypes.c_void_p
+        error = ctypes.POINTER(_Error)
+        self._library.lean_alpha_box_create.argtypes = [ctypes.c_uint32, ctypes.POINTER(pointer), error]
+        self._library.lean_alpha_box_create.restype = ctypes.c_int
+        self._library.lean_alpha_box_read.argtypes = [pointer, ctypes.POINTER(ctypes.c_uint32), error]
+        self._library.lean_alpha_box_read.restype = ctypes.c_int
+        self._library.lean_alpha_box_identity.argtypes = [pointer, ctypes.POINTER(pointer), error]
+        self._library.lean_alpha_box_identity.restype = ctypes.c_int
+        self._library.lean_alpha_box_dispose.argtypes = [ctypes.POINTER(pointer)]
+        self._library.lean_alpha_round_trip.argtypes = [ctypes.POINTER(_Payload), ctypes.POINTER(_Payload), error]
+        self._library.lean_alpha_round_trip.restype = ctypes.c_int
+        self._library.lean_alpha_payload_clear.argtypes = [ctypes.POINTER(_Payload)]
+        self._library.lean_alpha_with_callback.argtypes = [ctypes.c_uint32, ctypes.POINTER(_Transform), ctypes.POINTER(ctypes.c_uint32), error]
+        self._library.lean_alpha_with_callback.restype = ctypes.c_int
+        self._library.lean_alpha_make_adder.argtypes = [ctypes.c_uint32, ctypes.POINTER(pointer), error]
+        self._library.lean_alpha_make_adder.restype = ctypes.c_int
+        self._library.lean_alpha_owned_transform_call.argtypes = [pointer, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), error]
+        self._library.lean_alpha_owned_transform_call.restype = ctypes.c_int
+        self._library.lean_alpha_owned_transform_dispose.argtypes = [ctypes.POINTER(pointer)]
+
+    def initialize(self) -> None:
+        pass
+
+    @staticmethod
+    def _check(status: int, error: _Error) -> None:
+        if status == 0:
+            return
+        from . import CallbackThrewError, DisposedResourceError, UnexpectedError
+        message = ctypes.string_at(error.message, error.message_length).decode("utf-8") if error.message else "Lean call failed"
+        if error.code == 100:
+            raise DisposedResourceError(message)
+        if error.code == 101:
+            raise CallbackThrewError(message)
+        raise UnexpectedError(message)
+
+    def box_new(self, value: int) -> int:
+        result = ctypes.c_void_p()
+        error = _Error()
+        self._check(self._library.lean_alpha_box_create(value, ctypes.byref(result), ctypes.byref(error)), error)
+        return int(result.value or 0)
+
+    def box_read(self, identity: int) -> int:
+        result = ctypes.c_uint32()
+        error = _Error()
+        self._check(self._library.lean_alpha_box_read(identity, ctypes.byref(result), ctypes.byref(error)), error)
+        return result.value
+
+    def box_identity(self, identity: int) -> int:
+        result = ctypes.c_void_p()
+        error = _Error()
+        self._check(self._library.lean_alpha_box_identity(identity, ctypes.byref(result), ctypes.byref(error)), error)
+        return int(result.value or 0)
+
+    def dispose_box(self, identity: int) -> None:
+        value = ctypes.c_void_p(identity)
+        self._library.lean_alpha_box_dispose(ctypes.byref(value))
+
+    def round_trip(self, payload: object) -> object:
+        from . import Payload
+        label_bytes = payload.label.encode("utf-8")
+        label = ctypes.create_string_buffer(label_bytes)
+        byte_values = (ctypes.c_uint8 * len(payload.bytes))(*payload.bytes)
+        values = (ctypes.c_uint32 * len(payload.values))(*payload.values)
+        input_value = _Payload(
+            payload.enabled,
+            payload.count,
+            _String(ctypes.cast(label, ctypes.c_void_p), len(label_bytes), None, None),
+            _Bytes(ctypes.cast(byte_values, ctypes.c_void_p), len(payload.bytes), None, None),
+            _Values(ctypes.cast(values, ctypes.c_void_p), len(payload.values), None, None),
+        )
+        output = _Payload()
+        error = _Error()
+        self._check(self._library.lean_alpha_round_trip(ctypes.byref(input_value), ctypes.byref(output), ctypes.byref(error)), error)
+        try:
+            return Payload(
+                bool(output.enabled),
+                int(output.count),
+                ctypes.string_at(output.label.data, output.label.length).decode("utf-8"),
+                ctypes.string_at(output.bytes.data, output.bytes.length),
+                tuple(ctypes.cast(output.values.data, ctypes.POINTER(ctypes.c_uint32))[index] for index in range(output.values.length)),
+            )
+        finally:
+            self._library.lean_alpha_payload_clear(ctypes.byref(output))
+
+    def with_callback(self, value: int, transform: Callable[[int], int]) -> int:
+        callback_error: list[BaseException] = []
+        @_Callback
+        def invoke(_context: int, current: int, output: object, _error: object) -> int:
+            try:
+                output[0] = transform(current)
+                return 0
+            except BaseException as exception:
+                callback_error.append(exception)
+                return 4
+        native = _Transform(invoke, None)
+        result = ctypes.c_uint32()
+        error = _Error()
+        status = self._library.lean_alpha_with_callback(value, ctypes.byref(native), ctypes.byref(result), ctypes.byref(error))
+        if callback_error:
+            raise callback_error[0]
+        self._check(status, error)
+        return result.value
+
+    def make_adder(self, base: int) -> int:
+        result = ctypes.c_void_p()
+        error = _Error()
+        self._check(self._library.lean_alpha_make_adder(base, ctypes.byref(result), ctypes.byref(error)), error)
+        return int(result.value or 0)
+
+    def call_transform(self, identity: int, value: int) -> int:
+        result = ctypes.c_uint32()
+        error = _Error()
+        self._check(self._library.lean_alpha_owned_transform_call(identity, value, ctypes.byref(result), ctypes.byref(error)), error)
+        return result.value
+
+    def dispose_transform(self, identity: int) -> None:
+        value = ctypes.c_void_p(identity)
+        self._library.lean_alpha_owned_transform_dispose(ctypes.byref(value))
+`;
 
 const emitStub = ir => {
   const errorBase = `${namedTypeBase(ir)}Error`;
@@ -841,6 +1004,7 @@ export const generatePythonBindingPackage = ir => {
     "pyproject.toml": `[build-system]\nrequires = [\"setuptools>=65\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"${packageDir.replaceAll("_", "-")}\"\nversion = \"${ir.component.version}\"\nrequires-python = \">=3.11\"\n\n[tool.setuptools.package-data]\n\"${packageDir}\" = [\"py.typed\", \"*.pyi\"]\n`,
     [publicModule]: publicOutput.source,
     [`${packageDir}/_runtime.py`]: emitRuntime(ir),
+    [`${packageDir}/_native.py`]: emitNativeRuntime(ir),
     [typeStub]: emitStub(ir),
     [`${packageDir}/py.typed`]: "",
     "README.md": emitReadme(ir),
@@ -855,7 +1019,7 @@ export const generatePythonBindingPackage = ir => {
     typeStub,
     exports: publicOutput.exports,
     capabilityGaps: [],
-    files: ["pyproject.toml", publicModule, `${packageDir}/_runtime.py`, typeStub, `${packageDir}/py.typed`, "README.md", "binding-manifest.json"],
+    files: ["pyproject.toml", publicModule, `${packageDir}/_runtime.py`, `${packageDir}/_native.py`, typeStub, `${packageDir}/py.typed`, "README.md", "binding-manifest.json"],
   };
   files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
   auditPythonPackage(ir, files);

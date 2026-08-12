@@ -1,5 +1,5 @@
 import { gzipSync } from "node:zlib";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
 
 const splitTarPath = path => {
@@ -20,11 +20,11 @@ const writeText = (header, offset, length, value) => {
 
 const octal = (value, width) => `${value.toString(8).padStart(width - 1, "0")}\0`;
 
-const tarHeader = (path, size, epoch) => {
+const tarHeader = (path, size, epoch, mode) => {
   const header = Buffer.alloc(512);
   const { name, prefix } = splitTarPath(path);
   writeText(header, 0, 100, name);
-  writeText(header, 100, 8, octal(0o644, 8));
+  writeText(header, 100, 8, octal(mode, 8));
   writeText(header, 108, 8, octal(0, 8));
   writeText(header, 116, 8, octal(0, 8));
   writeText(header, 124, 12, octal(size, 12));
@@ -48,7 +48,14 @@ const collectFiles = async (root, archiveRoot) => {
       const path = prefix ? `${prefix}/${entry.name}` : entry.name;
       const absolute = join(directory, entry.name);
       if (entry.isDirectory()) await visit(absolute, path);
-      if (entry.isFile()) files.push({ path: `${archiveRoot}/${path}`, bytes: await readFile(absolute) });
+      if (entry.isFile()) {
+        const facts = await stat(absolute);
+        files.push({
+          path: `${archiveRoot}/${path}`,
+          bytes: await readFile(absolute),
+          mode: (facts.mode & 0o111) === 0 ? 0o644 : 0o755,
+        });
+      }
     }
   };
   await visit(root);
@@ -64,7 +71,7 @@ export const createDeterministicTarGz = async ({ directory, archiveRoot, sourceD
   }
   const chunks = [];
   for (const file of await collectFiles(directory, archiveRoot)) {
-    chunks.push(tarHeader(file.path, file.bytes.length, sourceDateEpoch), file.bytes);
+    chunks.push(tarHeader(file.path, file.bytes.length, sourceDateEpoch, file.mode), file.bytes);
     const remainder = file.bytes.length % 512;
     if (remainder !== 0) chunks.push(Buffer.alloc(512 - remainder));
   }

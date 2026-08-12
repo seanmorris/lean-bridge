@@ -4,13 +4,13 @@ Status: approved for baseline collection. The methodology fixes how the project 
 
 ## Reference identity
 
-`lean-bridge/reference-methodology@1` has SHA-256 `564493a81cb8f2938286a2d74ef38bf0611ecfecf70c94bacdfc70bf56bc3c7e`.
+`lean-bridge/reference-methodology@1` has SHA-256 `0593d49ff5395382e4e9ffdbbbac23d38cd8ad4e7b13251c47b75d80f8295aec`.
 
 The policy binds each result to the source revision, methodology hash, Lean and Emscripten closure, graph lock, compiled artifact hashes, corpus, workload, environment, and cache profile. Five locked input files must match before an environment report can pass:
 
 | Input | SHA-256 |
 |---|---|
-| `package-lock.json` | `5237a3e4037f48e675a571d95d3fa854eb64008fb7accd6a49cdb7d85079a8da` |
+| `package-lock.json` | `521a00df22410cbdcd7a37d7c6cd49f3f2f509d4f1c5c6e85b1103d91cc399ab` |
 | `flake.lock` | `81cffbee9e26c9a7a8f7a2aa6257252cc2efb1895513e4894d5a7c5257df7dc5` |
 | `poc/lean-link-spike/graph-lock.json` | `7a10491995e8023cb271521499049834437f6bddec7c2ce26f9a7aadf6156789` |
 | `poc/performance/corpus.v1.json` | `687e331391e60ef0fb49f1fc84e73dbdb3b70438646adf67d7c797160d5145ea` |

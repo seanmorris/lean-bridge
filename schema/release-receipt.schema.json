@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/release-receipt.schema.json",
+  "$id": "urn:lean-bridge:schema:release-receipt:v1",
   "title": "Lean Bridge signed release receipt",
   "type": "object",
   "additionalProperties": false,
@@ -16,7 +16,7 @@
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "predicateType": { "const": "https://lean-bridge.dev/release-receipt/v1" },
+    "predicateType": { "const": "urn:lean-bridge:release-receipt:v1" },
     "publicationAuthorization": { "$ref": "#/$defs/publicationAuthorization" },
     "statement": { "$ref": "#/$defs/statement" },
     "statementSha256": { "$ref": "#/$defs/sha256" },
@@ -195,7 +195,7 @@
           "minItems": 5,
           "items": { "$ref": "#/$defs/subject" }
         },
-        "predicateType": { "const": "https://lean-bridge.dev/attestations/release-receipt/v1" },
+        "predicateType": { "const": "urn:lean-bridge:attestation:release-receipt:v1" },
         "predicate": {
           "type": "object",
           "additionalProperties": false,

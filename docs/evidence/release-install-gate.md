@@ -6,7 +6,7 @@ One release rehearsal installs npm and C packages into empty consumer projects, 
 
 The npm consumer installs the local tarball with scripts disabled, network use disabled, and no registry audit. It imports `Box` from `@lean-bridge/alpha`, constructs a value, reads `42`, checks identity, and disposes the object.
 
-The C consumer extracts the local archive, locates `LeanBridgeAlpha` through generated CMake metadata, links `LeanBridge::Alpha`, constructs a `lean_alpha_box`, reads `42`, checks identity, and disposes the object. The C package uses the reviewed external runtime fixture because the canonical bundle does not yet contain a native Lean component. This test establishes C installation, generated call behavior, and parity of the public `Box` contract. It does not claim a native C call into Lean.
+The C consumer extracts the local archive, locates `LeanBridgeAlpha` through generated CMake metadata, links `LeanBridge::Alpha`, constructs a `lean_alpha_box`, reads `42`, checks identity, and disposes the object. This focused gate uses an explicit source runtime fixture, so it establishes package discovery and public API behavior, not real Lean execution. The separate native consumer acceptance gate supplies that evidence.
 
 Both consumers read generated documentation and version `0.0.0` from their package metadata. Their observations agree on the value and identity results.
 
@@ -54,4 +54,4 @@ npm run test:release-install-gate
 nix --extra-experimental-features 'nix-command flakes' build .#release-rehearsal --no-link
 ```
 
-The next native-package milestone replaces the C runtime fixture with a canonical native Lean runtime and component artifact. The current gate keeps that boundary explicit.
+See [native consumer acceptance](native-consumer-acceptance.md) for clean C, C++, Python, and Rust packages executing the canonical native Lean component.

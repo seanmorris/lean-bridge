@@ -4,7 +4,7 @@ import { basename, dirname, join, resolve } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";
 
-const predicateType = "https://lean-bridge.dev/registry-transaction/v1";
+const predicateType = "urn:lean-bridge:registry-transaction:v1";
 const atomicity = "independent-registry-commits";
 const safeCodePattern = /^[a-z0-9][a-z0-9._-]*$/;
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -33,13 +33,13 @@ const recoveryPolicies = Object.freeze({
     strategy: "replace-retained-archive-before-distribution",
     command: null,
     effect: "The local archive has no registry transaction and can be replaced only before a later distribution step.",
-    source: "https://lean-bridge.dev/policies/local-archive-retention/v1",
+    source: "urn:lean-bridge:policy:local-archive-retention:v1",
   }),
   cpp: Object.freeze({
     strategy: "replace-retained-archive-before-distribution",
     command: null,
     effect: "The local archive has no registry transaction and can be replaced only before a later distribution step.",
-    source: "https://lean-bridge.dev/policies/local-archive-retention/v1",
+    source: "urn:lean-bridge:policy:local-archive-retention:v1",
   }),
 });
 
@@ -109,7 +109,7 @@ const guidanceFor = target => {
     strategy: "consult-registry-policy-and-publish-a-new-version",
     command: null,
     effect: "Do not delete or overwrite a published coordinate without a registry-specific reviewed procedure.",
-    source: target.destination?.endpoint ?? "https://lean-bridge.dev/policies/registry-recovery/v1",
+    source: target.destination?.endpoint ?? "urn:lean-bridge:policy:registry-recovery:v1",
   });
   return { ...policy };
 };

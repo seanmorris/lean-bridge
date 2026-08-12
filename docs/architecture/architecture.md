@@ -125,7 +125,7 @@ Proof records distinguish theorem-checked behavior from trusted compiler/runtime
 
 JavaScript/TypeScript is the primary initial adapter and receives first-class object, closure, Promise, browser, Node, and bundler support. The canonical schema remains host-neutral for copied data, resources, errors, dependency graphs, and assurance metadata. JS-only features are capability tagged.
 
-The WIT probe projects portable records, nominal resources, and ordinary functions from the same Binding IR that feeds JavaScript and Python. It preserves the Binding IR hash and assurance identities, validates an independent consumer with the official WIT parser, and reports unsupported callbacks, escaping borrows, arbitrary-precision integers, and host capabilities as explicit gaps. It does not yet produce a Component Model binary adapter or execute the component through a WASI host. Version one does not weaken JS semantics to pretend every capability is portable.
+The WIT projection preserves portable records, nominal resources, and ordinary functions from the same Binding IR that feeds JavaScript and Python. It retains the Binding IR hash and assurance identities, validates independent WIT composition, and reports unsupported callbacks, escaping borrows, arbitrary-precision integers, and host capabilities as explicit gaps. The x86-64 Linux host profile also packages a Component Model binary adapter that calls real Lean through the generated native API in Wasmtime. Version one does not weaken JavaScript semantics to pretend every capability is portable.
 
 ## Packaging
 

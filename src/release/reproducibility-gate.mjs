@@ -24,8 +24,8 @@ import {
   hashReleaseInventory,
 } from "./reproducibility.mjs";
 
-const reportPredicate = "https://lean-bridge.dev/attestations/reproducibility/v1";
-const authorizationPredicate = "https://lean-bridge.dev/attestations/release-authorization/v1";
+const reportPredicate = "urn:lean-bridge:attestation:reproducibility:v1";
+const authorizationPredicate = "urn:lean-bridge:attestation:release-authorization:v1";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const portable = path => path.replaceAll("\\", "/");
 

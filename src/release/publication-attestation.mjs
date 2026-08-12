@@ -6,8 +6,8 @@ import {
 
 import { canonicalJson } from "../capsule/node.mjs";
 
-const policyPredicate = "https://lean-bridge.dev/policies/publication-signer/v1";
-const publicationPredicate = "https://lean-bridge.dev/attestations/publication-authorization/v1";
+const policyPredicate = "urn:lean-bridge:policy:publication-signer:v1";
+const publicationPredicate = "urn:lean-bridge:attestation:publication-authorization:v1";
 const statementType = "https://in-toto.io/Statement/v1";
 const payloadType = "application/vnd.in-toto+json";
 const sha256 = value => createHash("sha256").update(value).digest("hex");

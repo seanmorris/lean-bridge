@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/registry-transaction.schema.json",
+  "$id": "urn:lean-bridge:schema:registry-transaction:v1",
   "title": "Lean Bridge durable multi-registry transaction",
   "type": "object",
   "additionalProperties": false,
@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "predicateType": { "const": "https://lean-bridge.dev/registry-transaction/v1" },
+    "predicateType": { "const": "urn:lean-bridge:registry-transaction:v1" },
     "transactionId": { "$ref": "#/$defs/sha256" },
     "candidateId": { "$ref": "#/$defs/sha256" },
     "manifest": {

@@ -50,6 +50,7 @@ test("npm projection is deterministic and preserves every compiled core byte", a
   assert.equal(packageJson.sideEffects, false);
   assert.equal("scripts" in packageJson, false);
   assert.deepEqual(Object.keys(packageJson.exports), ["."]);
+  assert.equal(packageJson.exports["."].browser, "./index.mjs");
   const runtime = await readFile(join(scratch, "first/package/internal/runtime.mjs"), "utf8");
   assert.match(runtime, /new URL\("\.\/wasm\/main\.wasm", import\.meta\.url\)/);
   assert.match(runtime, /new URL\("\.\/wasm\/alpha\.so\.wasm", import\.meta\.url\)/);

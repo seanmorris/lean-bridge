@@ -30,7 +30,7 @@ test("fixture binds one component to locks, artifacts, targets, packages, assura
   assert.equal(manifest.targets.find(target => target.id === "browser").eligible, true);
   assert.equal(manifest.packages.find(item => item.ecosystem === "npm").eligible, true);
   assert.equal(manifest.packages.filter(item => item.eligible).length, 1);
-  assert.equal(hashCanonicalPackageManifest(manifest), "4b63e4b7ffe618093df36a46a71ebb885ee17c500cb380fa3bf72e9caaa737ea");
+  assert.equal(hashCanonicalPackageManifest(manifest), "3bdd977fe975f8d573b44b9c4d51adfdef8d82d14767b87be75522b8937d1146");
 });
 
 test("fixture source, locks, metadata, documentation, and license match recorded bytes", async () => {

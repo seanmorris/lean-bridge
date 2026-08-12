@@ -47,7 +47,7 @@ const verifiedFixture = () => {
   };
   const authorizationDocument = {
     schemaVersion: 1,
-    predicateType: "https://lean-bridge.dev/attestations/release-authorization/v1",
+    predicateType: "urn:lean-bridge:attestation:release-authorization:v1",
     status: "authorized",
     candidate,
     evidence: {

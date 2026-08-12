@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -92,6 +92,7 @@ test("C and C++ projections fail closed while native package targets are ineligi
 test("an eligible C binding target produces a deterministic package with pkg-config and CMake discovery", async () => withBundle(async ({ scratch, bundle }) => {
   const eligible = join(scratch, "eligible");
   await enableReviewedCBindingTarget(bundle, eligible);
+  await chmod(join(eligible, "bindings/c/include/lean_alpha.h"), 0o444);
   const first = await buildCPackage({ bundleRoot: eligible, outputRoot: join(scratch, "first") });
   const second = await buildCPackage({ bundleRoot: eligible, outputRoot: join(scratch, "second") });
   assert.equal(first.archiveSha256, second.archiveSha256);
@@ -153,7 +154,7 @@ test("C projection requires complete artifacts and an explicit source runtime co
   );
 }));
 
-test("C++ projection rejects an eligible target until generated C++ artifacts exist", async () => withBundle(async ({ scratch, bundle }) => {
+test("C++ projection rejects an eligible target without a native runtime artifact", async () => withBundle(async ({ scratch, bundle }) => {
   const eligible = join(scratch, "eligible-cpp");
   await cp(bundle, eligible, { recursive: true });
   const manifest = structuredClone(parseCanonicalPackageManifest(
@@ -175,6 +176,6 @@ test("C++ projection rejects an eligible target until generated C++ artifacts ex
   await rewriteIdentity(eligible, manifest);
   await assert.rejects(
     buildCppPackage({ bundleRoot: eligible, outputRoot: join(scratch, "cpp") }),
-    error => error.code === "binding-artifacts-absent" && /no generated C\+\+ binding projection/.test(error.message),
+    error => error.code === "binding-artifact-omitted" || error.code === "runtime-artifact-absent",
   );
 }));

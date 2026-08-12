@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/canonical-package-manifest.schema.json",
+  "$id": "urn:lean-bridge:schema:canonical-package-manifest:v1",
   "title": "Lean Bridge canonical release package manifest",
   "type": "object",
   "additionalProperties": false,
@@ -243,7 +243,7 @@
       "additionalProperties": false,
       "required": ["ecosystem", "name", "version", "target", "eligible", "reason", "publicArtifacts"],
       "properties": {
-        "ecosystem": { "enum": ["npm", "cargo", "pypi", "c", "cpp"] },
+        "ecosystem": { "enum": ["npm", "cargo", "pypi", "c", "cpp", "wit-wasi"] },
         "name": { "type": "string", "minLength": 1 },
         "version": { "$ref": "#/$defs/version" },
         "target": { "type": "string", "minLength": 1 },

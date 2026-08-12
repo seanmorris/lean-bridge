@@ -27,9 +27,10 @@ test("one reviewed report locks every generated host package", async () => {
     "php",
     "python",
     "c",
+    "cpp",
     "rust",
   ]);
-  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 5);
+  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 6);
   assert.equal(Object.isFrozen(actual.packages[0].files), true);
 });
 
@@ -71,6 +72,7 @@ test("the package gate CLI checks the reviewed report", async () => {
     "php",
     "python",
     "c",
+    "cpp",
     "rust",
   ]);
 });

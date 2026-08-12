@@ -1,6 +1,6 @@
 # Use the generated PHP package
 
-The native package supports PHP 8.2 NTS on x86-64 Linux. It contains one generated Composer package, one Zend extension, and one process-owned Lean runtime library. PHP-Wasm provides an alternate transport for PHP 8.4 behind the same `LeanAlpha` classes and functions.
+The native package supports PHP 8.2 NTS on x86-64 Linux with glibc 2.38 or newer. It contains one generated Composer package, one Zend extension, and one process-owned Lean runtime library. PHP-Wasm provides an alternate transport for PHP 8.4 behind the same `LeanAlpha` classes and functions.
 
 ## Build the pinned native package
 

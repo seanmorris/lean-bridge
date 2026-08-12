@@ -45,6 +45,7 @@ test("consumer fixtures, examples, and generated packages expose only native API
     "php",
     "python",
     "c",
+    "cpp",
     "rust",
   ]);
 });

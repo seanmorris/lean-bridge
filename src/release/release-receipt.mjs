@@ -25,8 +25,8 @@ import {
 } from "./publication-attestation.mjs";
 import { validateRegistryTransaction } from "./registry-transaction.mjs";
 
-const documentType = "https://lean-bridge.dev/release-receipt/v1";
-const receiptPredicateType = "https://lean-bridge.dev/attestations/release-receipt/v1";
+const documentType = "urn:lean-bridge:release-receipt:v1";
+const receiptPredicateType = "urn:lean-bridge:attestation:release-receipt:v1";
 const statementType = "https://in-toto.io/Statement/v1";
 const payloadType = "application/vnd.in-toto+json";
 const terminalStatuses = new Set(["published", "already-published", "retained"]);

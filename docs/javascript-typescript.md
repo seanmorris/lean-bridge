@@ -112,4 +112,4 @@ The verifier checks the receipt identity, component identity, shared-runtime req
 
 ## Browser boundary
 
-The browser fixtures execute a real Lean runtime through raw ESM, a module worker, Vite, Rollup, Webpack, and React. The published package generator currently supplies one Node entry point and no browser conditional export. Importing the installed npm archive in a browser application is therefore `partial`, not `supported`. See [consumer status](consumers.md#browser-javascript).
+The browser fixtures execute a real Lean runtime through raw ESM, a module worker, Vite, Rollup, Webpack, and React. The npm archive supplies a browser conditional export. `npm run test:consumer:browser` installs that archive with scripts disabled, bundles an ordinary bare-package import with Vite, and executes Lean in Chromium. See [browser package acceptance](evidence/browser-package-acceptance.md).

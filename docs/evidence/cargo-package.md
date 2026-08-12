@@ -2,42 +2,12 @@
 
 ## Result
 
-The Cargo backend projects generated Rust sources, package metadata, licenses, assurance records, provenance, and selected canonical artifacts into a deterministic `.crate` archive. The backend reads only the canonical bundle and writes into an empty output directory. It has no compiler access and does not run Cargo, Rust, Lean, C, C++, a linker, or a package build script.
+The canonical Alpha bundle is eligible for Cargo projection on x86-64 Linux with glibc 2.38 or newer. The backend writes a deterministic `.crate` containing generated Rust sources, the native runtime adapter, the Alpha component library, the shared Lean runtime, licenses, assurance, provenance, and canonical identities. Packaging has no compiler access and runs no Cargo, Rust, Lean, C, C++, or linker command.
 
-The current Alpha bundle is not eligible for Cargo publication. It contains generated Rust bindings, but it does not contain a native component library or a Rust runtime adapter. The backend returns `package-ineligible` before it copies or archives package files. This prevents a type-correct crate from being presented as a callable Lean component.
+The generated adapter locates its immutable component relative to `CARGO_MANIFEST_DIR`, loads its typed C symbols without a package build script, and installs one process-wide runtime implementation on the first public call.
 
-## Eligible package path
+## Consumer acceptance
 
-The successful packaging fixture adds a reviewed `rust-bindings` target to a copy of the canonical manifest. It keeps every artifact byte unchanged, selects every generated Rust file, updates the canonical identity, and declares that an external shared-runtime adapter is required.
+`npm run test:consumer:native` extracts the `.crate` into a clean vendor directory and builds an offline Rust 2021 consumer. The public crate executes real Lean for `Box`, `Payload`, a host closure invoked by Lean, and a returned Lean `Transform`. Rust `Drop` releases retained resources.
 
-The backend then writes:
-
-- `Cargo.toml` using the canonical package name, version, license, repository, target, and semantic hashes;
-- generated `src/lib.rs` and `src/__runtime.rs` without rewriting their binding semantics;
-- generated documentation and the binding manifest;
-- docs.rs metadata and a closed empty feature set;
-- the MIT license;
-- source revision metadata;
-- the canonical manifest, assurance data, SBOM, provenance, and core identity; and
-- byte-identical copies of every artifact selected by the Cargo mapping.
-
-The `.crate` archive uses the normal `name-version/` root. Its ustar headers use sorted paths, fixed ownership, fixed permissions, the canonical source date epoch, and fixed gzip settings.
-
-## Tests
-
-[`tests/cargo-package.test.mjs`](../../tests/cargo-package.test.mjs) verifies:
-
-- the real Alpha bundle fails with its specific native-runtime gap;
-- two empty output roots receive byte-identical `.crate` files for an eligible target;
-- the packaging plan has no compiler access, lifecycle scripts, Cargo command, or Rust compiler command;
-- generated Rust files, provenance, and assurance records remain in the archive;
-- Cargo compiles the expanded crate offline with warnings denied; and
-- omitting one generated Rust file from the reviewed selection blocks packaging.
-
-Run the focused gate:
-
-```sh
-node --test tests/cargo-package.test.mjs
-```
-
-The successful fixture proves registry layout and archive behavior. It does not prove a Rust call into the real Lean component. Cargo publication remains blocked until the canonical build adds a native component library and a generated Rust runtime adapter that pass the same semantic conformance corpus used by JavaScript and PHP.
+[`tests/cargo-package.test.mjs`](../../tests/cargo-package.test.mjs) verifies deterministic archive projection and failure-closed artifact selection. [Native consumer acceptance](native-consumer-acceptance.md) records installed execution.

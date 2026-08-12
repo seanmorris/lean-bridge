@@ -20,13 +20,16 @@ Evidence documents record commands, artifact identities, measured results, and l
 
 - [npm package](npm-package.md)
 - [Browser bundler acceptance](browser-bundler-acceptance.md)
+- [Browser package acceptance](browser-package-acceptance.md)
 - [Native PHP release](native-php-release-package.md)
 - [PHP-Wasm release](php-wasm-release-package.md)
 - [PHP release gate](php-release-gate.md)
-- [PyPI package and blocker](pypi-package.md)
-- [Cargo package and blocker](cargo-package.md)
-- [C and C++ packages and blockers](c-family-package.md)
-- [WIT projection and blocker](wit-projection.md)
+- [PyPI package](pypi-package.md)
+- [Cargo package](cargo-package.md)
+- [C and C++ packages](c-family-package.md)
+- [Native consumer acceptance](native-consumer-acceptance.md)
+- [WIT projection](wit-projection.md)
+- [WIT and WASI consumer acceptance](wasi-consumer-acceptance.md)
 - [Generated package gate](generated-package-gate.md)
 
 ## Runtime and generated APIs

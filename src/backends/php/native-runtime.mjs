@@ -601,7 +601,11 @@ void ${stem}_native_runtime_detach(void)
 `;
 };
 
-export const generatePhpNativeRuntimePackage = ir => {
+export const generateNativeRuntimePackage = (ir, {
+  generator = { id: "lean-bridge/native-runtime", version: 1 },
+  ownershipScope = "process",
+  threadPolicy = "synchronous host entry; locked runtime and identity administration",
+} = {}) => {
   validateBindingIr(ir);
   const projection = compilePhpProjection(ir);
   const shape = exactAlphaShape(ir, projection);
@@ -616,13 +620,19 @@ export const generatePhpNativeRuntimePackage = ir => {
     schemaVersion: 1,
     component: ir.component.id,
     bindingIrSha256: hashBindingIr(ir),
-    generator: { id: "lean-wasm/php-native-runtime", version: 1 },
+    generator,
     sharedRuntimeAbi: 1,
-    ownershipScope: "php-process",
-    threadPolicy: "php-nts-only; synchronous request entry; locked runtime and identity administration",
+    ownershipScope,
+    threadPolicy,
     componentProvider: `${stem}_native_runtime_v1`,
     sourceFiles,
     filesSha256: Object.fromEntries(sourceFiles.map(path => [path, sha256(files[path])])),
   }, null, 2)}\n`;
   return Object.freeze(files);
 };
+
+export const generatePhpNativeRuntimePackage = ir => generateNativeRuntimePackage(ir, {
+  generator: { id: "lean-wasm/php-native-runtime", version: 1 },
+  ownershipScope: "php-process",
+  threadPolicy: "php-nts-only; synchronous request entry; locked runtime and identity administration",
+});

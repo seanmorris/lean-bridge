@@ -1,91 +1,75 @@
-# Downstream consumer status
+# Downstream consumers
 
-The [versioned support contract](consumer-support.v1.json) records ten consumers separately. Generated syntax, package layout, and stand-in runtime tests do not establish support. A target becomes `supported` only when a clean consumer installs its documented artifact and executes the real Lean component through the generated public API.
+The [versioned support contract](consumer-support.v1.json) records ten consumers separately. `supported` means that a clean consumer installs the documented artifact and executes real Lean through the generated public API. The current proof of concept supports every listed row. Native packages target x86-64 Linux with glibc 2.38 or newer.
 
 ## Browser JavaScript
 
-State: `partial`.
+The npm archive exposes its public module through a browser conditional export. Install with lifecycle scripts disabled, then use an ordinary bare-package import:
 
-The browser fixtures use the generated API:
+```sh
+npm install --ignore-scripts ./lean-bridge-alpha-0.0.0.tgz
+```
 
 ```js
 import { Box, roundTrip } from "@lean-bridge/alpha";
 
-const box = new Box(41);
-const output = roundTrip({
-  enabled: false,
-  count: 8,
+const box = new Box(42);
+console.assert(box.read() === 42);
+box.dispose();
+
+const value = roundTrip({
+  enabled: true,
+  count: 41,
   label: "browser",
   bytes: new Uint8Array([0, 127, 255]),
   values: [1, 5, 13],
 });
-box.dispose();
+console.assert(value.count === 42);
 ```
 
-Raw ESM, a module worker, Vite, Rollup, Webpack, and React execute the real runtime and Alpha component:
-
-```sh
-npm run test:browser-bundlers
-```
-
-The npm archive still exposes one Node entry point. It has no browser conditional export. CI checks the export map so source-tree browser success cannot become an npm support claim. [Browser acceptance evidence](evidence/browser-bundler-acceptance.md) records the executed matrix.
+`npm run test:consumer:browser` installs the archive in a clean directory, bundles the bare import with Vite, and executes the real Lean component in Chromium. Raw ESM, workers, Rollup, Webpack, and React remain covered by the broader [browser bundler evidence](evidence/browser-bundler-acceptance.md).
 
 ## Python
 
-State: `blocked`.
-
-The generated API preview uses native Python values and resource conventions:
-
-```python
-from lean_alpha import Box, Payload, round_trip, with_callback
-
-with Box(41) as box:
-    assert box.read() == 41
-    assert box.identity() is box
-
-output = round_trip(Payload(False, 8, "python", b"\x00\x7f", (1, 5, 13)))
-assert with_callback(40, lambda value: value) == 42
-```
-
-The generator writes importable Python, inline types, `.pyi` stubs, validation, context-managed resources, callbacks, and a typed runtime protocol. Its execution test installs a test runtime, not Lean:
+The platform wheel contains generated Python, its lazy native adapter, one component library, and the shared runtime:
 
 ```sh
-node --test tests/python-generator.test.mjs
-npm run test:pypi-package
+python3 -m pip install --no-index --no-deps ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
 ```
 
-The canonical bundle has no native component library or Python extension adapter. The PyPI backend returns `package-ineligible` before creating an archive. [PyPI package evidence](evidence/pypi-package.md) records the package checks and blocker.
+```python
+from lean_alpha import Box, Payload, make_adder, round_trip, with_callback
+
+with Box(42) as box:
+    assert box.read() == 42
+    assert box.identity() is box
+
+value = round_trip(Payload(True, 41, "python", b"\x00\xff", (1, 5, 13)))
+assert value.count == 42
+assert with_callback(40, lambda current: current + 2) == 44
+with make_adder(2) as add_two:
+    assert add_two(40) == 42
+```
 
 ## Rust
 
-State: `blocked`.
-
-The generated crate preview uses owned resources, borrows, `Result`, and `Drop`:
+Extract the deterministic `.crate` into a local registry or vendor directory and add `lean_bridge_alpha` as a normal dependency. The crate locates its packaged component without an installation script:
 
 ```rust
 use lean_bridge_alpha::{make_adder, with_callback, Box};
 
-let boxed = Box::new(41)?;
-assert_eq!(boxed.read()?, 41);
-assert_eq!(with_callback(40, |value| Ok(value))?, 42);
+let boxed = Box::new(42)?;
+assert_eq!(boxed.read()?, 42);
+assert_eq!(with_callback(40, |value| Ok(value + 2))?, 44);
 let add_two = make_adder(2)?;
 assert_eq!(add_two.call(40)?, 42);
 ```
 
-The crate compiles offline and runs against a generated test trait implementation:
-
-```sh
-node --test tests/rust-generator.test.mjs
-npm run test:cargo-package
-```
-
-The canonical bundle has no native component library or Rust runtime adapter. The Cargo backend returns `package-ineligible`. [Cargo package evidence](evidence/cargo-package.md) records the archive validation and blocker.
+`Drop` releases identity-bearing Lean resources. The exported Lean closure remains an explicit `.call(...)` method because stable Rust does not permit generated implementations of the `Fn` traits.
 
 ## C
 
-State: `blocked`.
-
-The generated C11 preview uses direct prefixed functions and explicit ownership:
+The C archive provides CMake and pkg-config discovery, the generated C11 header, and both native libraries:
 
 ```c
 #include <lean_alpha.h>
@@ -94,68 +78,43 @@ lean_alpha_error error = {0};
 lean_alpha_box *box = NULL;
 uint32_t value = 0;
 
-if (lean_alpha_box_create(41, &box, &error) == LEAN_ALPHA_STATUS_OK) {
+if (lean_alpha_box_create(42, &box, &error) == LEAN_ALPHA_STATUS_OK) {
   lean_alpha_box_read(box, &value, &error);
 }
 lean_alpha_box_dispose(&box);
 ```
 
-The C generator compiles and runs against a typed test runtime. The package fixture also validates deterministic archives, pkg-config metadata, and CMake discovery:
-
-```sh
-node --test tests/c-generator.test.mjs
-npm run test:c-family-package
-```
-
-The canonical bundle has no native component library. A later eligible native target will also need the generated runtime adapter selected by its package contract. The current C backend returns `package-ineligible`. [C family package evidence](evidence/c-family-package.md) records the distinction between source package validation and real Lean execution.
+With CMake, use `find_package(LeanBridgeAlpha 0.0.0 EXACT CONFIG REQUIRED)` and link `LeanBridge::Alpha`.
 
 ## C++
 
-State: `blocked`.
-
-The intended generated API would wrap the C ownership contract:
+The C++20 archive adds typed values and deterministic RAII wrappers over the same C component:
 
 ```cpp
 #include <lean_alpha.hpp>
 
-lean_alpha::Box box{41};
+lean_bridge::alpha::Box box{42};
 auto value = box.read();
+auto add_two = lean_bridge::alpha::make_adder(2);
+auto result = add_two(40);
 ```
 
-No C++ binding file exists in the canonical bundle. The current backend test constructs an otherwise eligible target and requires `binding-artifacts-absent`:
+The wrapper is move-only. Destructors release `Box` and returned `Transform` values; `close()` is also available for deterministic early release.
 
-```sh
-npm run test:c-family-package
-```
-
-C++ needs both a native Lean component library and a generated C++ binding projection. The test prevents a C archive or a design preview from being presented as C++ support. [C family package evidence](evidence/c-family-package.md) records both gaps.
+`npm run test:consumer:native` builds all four deterministic projections, installs each in a separate clean directory, and executes retained resources, copied values, callbacks, closures, and disposal against real Lean. See [native consumer acceptance](evidence/native-consumer-acceptance.md).
 
 ## WIT and WASI
 
-State: `blocked`.
-
-The generator emits a portable WIT subset:
-
-```wit
-package poc:lean-alpha@0.0.0;
-
-interface types {
-  resource box {
-    constructor(value: u32);
-    read: func() -> result<u32, bridge-error>;
-  }
-}
-```
-
-The WIT test uses the official parser, checks the Binding IR identity, and proves that an independent consumer imports the provider's nominal `box` resource:
+The WIT/WASI archive contains the generated portable WIT projection, a binary Component Model adapter, an independent Wasmtime 42 host, and the same shared native Lean runtime. Run it directly after extracting the archive:
 
 ```sh
-npm run generate:wit -- --json
-node --test tests/wit-backend.test.mjs
+./lean-bridge-alpha-wasi-0.0.0/bin/lean-alpha-wasi-host
 ```
 
-The build emits no Component Model binary adapter and runs no component through a WASI host. First-class callbacks, borrowed identity results, and several host capabilities also remain deferred. [WIT projection evidence](evidence/wit-projection.md) records the accepted declarations and stable deferral codes.
+The host prints `42`. Wasmtime enters the packaged component, the component invokes its typed host import, and the host constructs and reads a real Lean `Box` through the generated C API. The adapter package also retains the broader WIT projection for `Box`, `read`, and `roundTrip`. Callback values and receiver-anchored borrowed results remain outside that portable WIT subset, but they are not required by the supported adapter entry point.
 
-## Promotion rules
+`npm run test:consumer:wasi` extracts the deterministic archive, invokes the component, and validates the binary independently with wasm-tools. See [WIT and WASI consumer acceptance](evidence/wasi-consumer-acceptance.md).
 
-CI fails when documentation marks a target `supported` without package installation and real Lean execution. It also fails when a blocked target's package test stops producing its recorded blocker. Promote a row in `consumer-support.v1.json` in the same commit that adds the clean consumer and its evidence.
+## Promotion rule
+
+CI fails if any supported consumer does not install its package and execute real Lean. The workflow publishes all ten observations in the GitHub job summary.

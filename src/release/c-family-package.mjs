@@ -212,6 +212,7 @@ const build = async ({ bundleRoot, outputRoot, ecosystem }) => {
   for (const path of generatedManifest.files) {
     await copy(join(bundle, `${prefix}${path}`), join(packageRoot, path));
   }
+  await mkdir(join(packageRoot, "internal"), { recursive: true });
   await copy(join(bundle, "LICENSE"), join(packageRoot, "LICENSE"));
 
   const libraries = nativeLibraries(selected);
@@ -222,6 +223,22 @@ const build = async ({ bundleRoot, outputRoot, ecosystem }) => {
     fail("runtime-artifact-absent", `${label} source package must declare its generated source and external runtime adapter`);
   }
   for (const artifact of libraries) await copy(join(bundle, artifact.path), join(packageRoot, "lib", basename(artifact.path)));
+  const installedHeaders = new Map(generatedManifest.files
+    .filter(path => path.endsWith(".h") || path.endsWith(".hpp"))
+    .map(path => [basename(path), join(bundle, `${prefix}${path}`)]));
+  for (const artifact of selected.filter(artifact => artifact.path.endsWith(".h") || artifact.path.endsWith(".hpp"))) {
+    const name = basename(artifact.path);
+    const source = join(bundle, artifact.path);
+    const installed = installedHeaders.get(name);
+    if (installed !== undefined) {
+      if (!(await readFile(installed)).equals(await readFile(source))) {
+        fail("header-destination-collision", `${label} package maps different headers to include/${name}`);
+      }
+      continue;
+    }
+    await copy(source, join(packageRoot, "include", name));
+    installedHeaders.set(name, source);
+  }
   const names = cmakeNames(manifest);
   await mkdir(join(packageRoot, "lib/pkgconfig"), { recursive: true });
   await writeFile(join(packageRoot, "lib/pkgconfig", `${mapping.name}.pc`), pkgConfig({ mapping, manifest, generatedManifest, libraries }));

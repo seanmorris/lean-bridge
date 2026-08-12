@@ -62,4 +62,4 @@ The machine-readable report records each run instead of enforcing these host-dep
 
 A JavaScript application can replace an unverified package with the generated package at its import site and keep normal function and class calls. Handwritten Wasm loaders and wrapper functions disappear. The package retains the runtime singleton, asset map, marshaling, identity cache, and cleanup protocol.
 
-The Python projection already emits ordinary modules, frozen value classes, context-managed resources, callables, exceptions, iterators, awaitables, and stubs from the same Binding IR. The current universal release bundle blocks PyPI publication because it lacks a native Python extension adapter and native component artifact. [The PyPI package evidence](pypi-package.md) records that exact release blocker.
+The Python projection emits ordinary modules, frozen value classes, context-managed resources, callables, exceptions, iterators, awaitables, and stubs from the same Binding IR. The native Python wheel now installs this projection with its component and lazy runtime adapter. [PyPI package evidence](pypi-package.md) records that release path.

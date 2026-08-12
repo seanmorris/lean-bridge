@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/independent-confirmation.schema.json",
+  "$id": "urn:lean-bridge:schema:independent-confirmation:v1",
   "title": "Lean Bridge independent rebuild confirmation",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "predicateType", "status", "candidate", "verifier", "evidence", "confirmedAt"],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "predicateType": { "const": "https://lean-bridge.dev/attestations/independent-confirmation/v1" },
+    "predicateType": { "const": "urn:lean-bridge:attestation:independent-confirmation:v1" },
     "status": { "const": "confirmed" },
     "candidate": {
       "type": "object",

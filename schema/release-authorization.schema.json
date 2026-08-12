@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/release-authorization.schema.json",
+  "$id": "urn:lean-bridge:schema:release-authorization:v1",
   "title": "Lean Bridge release authorization",
   "type": "object",
   "additionalProperties": false,
@@ -15,7 +15,7 @@
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "predicateType": { "const": "https://lean-bridge.dev/attestations/release-authorization/v1" },
+    "predicateType": { "const": "urn:lean-bridge:attestation:release-authorization:v1" },
     "status": { "const": "authorized" },
     "candidate": { "$ref": "reproducibility-report.schema.json#/$defs/candidate" },
     "evidence": {

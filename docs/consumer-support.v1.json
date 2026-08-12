@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "1.0.0",
+  "contractVersion": "1.1.0",
   "verifiedAt": "2026-08-11",
   "states": {
     "supported": "A clean consumer installs the documented artifact and executes a real Lean component.",
@@ -40,22 +40,24 @@
     {
       "id": "browser-javascript",
       "name": "Browser JavaScript",
-      "state": "partial",
-      "scope": "Raw ESM, module worker, Vite, Rollup, Webpack, and React fixture execution",
-      "packageInstallation": false,
+      "state": "supported",
+      "scope": "Installed npm archive selected through a browser conditional export and bundled with Vite",
+      "packageInstallation": true,
       "realLeanExecution": true,
       "testCommand": "npm run test:consumer:browser",
-      "blocker": "The npm package has no browser conditional export, so an installed package resolves its Node entry point.",
+      "blocker": null,
       "evidence": [
         "docs/evidence/browser-bundler-acceptance.md",
-        "tests/npm-package.test.mjs"
+        "docs/evidence/browser-package-acceptance.md",
+        "tests/npm-package.test.mjs",
+        "scripts/test-browser-package-consumer.mjs"
       ]
     },
     {
       "id": "php-native",
       "name": "Native PHP",
       "state": "supported",
-      "scope": "PHP 8.2 NTS on x86-64 Linux through the generated Zend extension",
+      "scope": "PHP 8.2 NTS on x86-64 Linux with glibc 2.38 or newer through the generated Zend extension",
       "packageInstallation": true,
       "realLeanExecution": true,
       "testCommand": "npm run test:consumer:php",
@@ -83,71 +85,77 @@
     {
       "id": "python",
       "name": "Python",
-      "state": "blocked",
-      "scope": "Generated Python package and PyPI projection",
-      "packageInstallation": false,
-      "realLeanExecution": false,
-      "testCommand": "npm run test:consumer:blocked",
-      "blocker": "The canonical bundle has no native component library or Python extension adapter.",
+      "state": "supported",
+      "scope": "Python 3.11 or newer on x86-64 Linux with glibc 2.38 or newer through the generated wheel and native runtime adapter",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:native",
+      "blocker": null,
       "evidence": [
         "docs/evidence/pypi-package.md",
-        "tests/pypi-package.test.mjs"
+        "tests/pypi-package.test.mjs",
+        "docs/evidence/native-consumer-acceptance.md"
       ]
     },
     {
       "id": "rust",
       "name": "Rust",
-      "state": "blocked",
-      "scope": "Generated Rust crate and Cargo projection",
-      "packageInstallation": false,
-      "realLeanExecution": false,
-      "testCommand": "npm run test:consumer:blocked",
-      "blocker": "The canonical bundle has no native component library or Rust runtime adapter.",
+      "state": "supported",
+      "scope": "Rust 2021 crate on x86-64 Linux with glibc 2.38 or newer and the packaged native runtime adapter",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:native",
+      "blocker": null,
       "evidence": [
         "docs/evidence/cargo-package.md",
-        "tests/cargo-package.test.mjs"
+        "tests/cargo-package.test.mjs",
+        "docs/evidence/native-consumer-acceptance.md"
       ]
     },
     {
       "id": "c",
       "name": "C",
-      "state": "blocked",
-      "scope": "Generated C11 sources and C package projection",
-      "packageInstallation": false,
-      "realLeanExecution": false,
-      "testCommand": "npm run test:consumer:blocked",
-      "blocker": "The canonical bundle has no native component library.",
+      "state": "supported",
+      "scope": "C11 package on x86-64 Linux with glibc 2.38 or newer, CMake, and pkg-config discovery",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:native",
+      "blocker": null,
       "evidence": [
         "docs/evidence/c-family-package.md",
-        "tests/c-family-package.test.mjs"
+        "tests/c-family-package.test.mjs",
+        "docs/evidence/native-consumer-acceptance.md"
       ]
     },
     {
       "id": "cpp",
       "name": "C++",
-      "state": "blocked",
-      "scope": "C++ package projection",
-      "packageInstallation": false,
-      "realLeanExecution": false,
-      "testCommand": "npm run test:consumer:blocked",
-      "blocker": "The canonical bundle has no native component library or generated C++ binding projection.",
+      "state": "supported",
+      "scope": "C++20 package on x86-64 Linux with glibc 2.38 or newer, typed RAII wrappers, and CMake discovery",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:native",
+      "blocker": null,
       "evidence": [
         "docs/evidence/c-family-package.md",
-        "tests/c-family-package.test.mjs"
+        "tests/c-family-package.test.mjs",
+        "tests/cpp-generator.test.mjs",
+        "docs/evidence/native-consumer-acceptance.md"
       ]
     },
     {
       "id": "wit-wasi",
       "name": "WIT/WASI",
-      "state": "blocked",
-      "scope": "Generated WIT interface and nominal resource composition",
-      "packageInstallation": false,
-      "realLeanExecution": false,
-      "testCommand": "npm run test:consumer:blocked",
-      "blocker": "The build has no Component Model binary adapter or WASI execution path.",
+      "state": "supported",
+      "scope": "Component Model adapter in the pinned Wasmtime 42 host profile on x86-64 Linux with glibc 2.38 or newer",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:wasi",
+      "blocker": null,
       "evidence": [
         "docs/evidence/wit-projection.md",
-        "tests/wit-backend.test.mjs"
+        "tests/wit-backend.test.mjs",
+        "docs/evidence/wasi-consumer-acceptance.md"
       ]
     }
   ]

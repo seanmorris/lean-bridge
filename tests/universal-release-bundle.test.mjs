@@ -104,13 +104,13 @@ test("canonical manifest inventories every release artifact with its actual byte
   const manifest = parseCanonicalPackageManifest(source);
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
-  assert.equal(firstResult.artifactCount, 78);
+  assert.equal(firstResult.artifactCount, 86);
   for (const artifact of manifest.artifacts) {
     const bytes = await readFile(join(first, artifact.path));
     assert.equal(bytes.length, artifact.bytes, artifact.path);
     assert.equal(sha256(bytes), artifact.sha256, artifact.path);
   }
-  assert.deepEqual(firstResult.generatedBackends, ["c", "javascript", "php", "python", "rust"]);
+  assert.deepEqual(firstResult.generatedBackends, ["c", "cpp", "javascript", "php", "python", "rust", "wit"]);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/javascript/index.d.ts"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/c/include/lean_alpha.h"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "runtime/javascript/alpha-descriptor.json"), true);

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { compileFiniteGenericSpecializations } from "../abi/generic-specialization.mjs";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
+import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
 import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
@@ -84,6 +85,15 @@ const BACKENDS = Object.freeze({
     errors: "status and typed error output",
     cleanup: "generated clear and dispose functions",
     delivery: Object.freeze({ value: "value and output parameter" }),
+  }),
+  cpp: Object.freeze({
+    generate: generateCppBindingPackage,
+    values: "typed values",
+    resources: "move-only RAII classes",
+    callbacks: "callables",
+    errors: "exceptions",
+    cleanup: "destructors and close",
+    delivery: Object.freeze({ value: "value" }),
   }),
   rust: Object.freeze({
     generate: generateRustBindingPackage,

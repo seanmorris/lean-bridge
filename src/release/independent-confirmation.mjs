@@ -5,7 +5,7 @@ import { dirname, join, resolve, sep } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";
 
-const predicateType = "https://lean-bridge.dev/attestations/independent-confirmation/v1";
+const predicateType = "urn:lean-bridge:attestation:independent-confirmation:v1";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 
 export class IndependentConfirmationError extends Error {

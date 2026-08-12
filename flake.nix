@@ -12,6 +12,8 @@
     in {
       devShells = forAllSystems (pkgs: {
         default = pkgs.mkShell {
+          LEAN_BRIDGE_TEST_GLIBC_LIBRARY_PATH = "${pkgs.glibc}/lib";
+          LEAN_BRIDGE_TEST_GLIBC_LOADER = "${pkgs.glibc}/lib/ld-linux-x86-64.so.2";
           packages = with pkgs; [
             bash
             bison
@@ -20,6 +22,7 @@
             clang
             cmake
             curl
+            cargo
             flex
             gperf
             git
@@ -33,8 +36,9 @@
             php82.unwrapped.dev
             php82Packages.composer
             pkg-config
-            python3
+            (python3.withPackages (pythonPackages: [ pythonPackages.pip ]))
             re2c
+            rustc
             libuv
             llvm
             wabt
@@ -53,6 +57,16 @@
       packages = forAllSystems (pkgs:
         let
           wasmToolchain = import ./nix/wasm-toolchain.nix { inherit pkgs; };
+          wasmtimeCapiArchive = pkgs.fetchurl {
+            url = "https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz";
+            hash = "sha256-IJekc1GRikRrJsfmX0hyePY7yUdZG3GJfbVHzZDAUII=";
+          };
+          wasmtimeCapi = pkgs.runCommand "wasmtime-42.0.1-x86_64-linux-c-api" {
+            nativeBuildInputs = [ pkgs.gnutar pkgs.xz ];
+          } ''
+            mkdir -p "$out"
+            tar -xJf '${wasmtimeCapiArchive}' --strip-components=1 -C "$out"
+          '';
           coreSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/core-source-boundary.json);
           componentEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/component-engine-source-boundary.json);
           sourceRoot = toString self;
@@ -323,6 +337,53 @@
             '';
           };
 
+          native-core-artifacts = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-native-core-artifacts";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = with pkgs; [
+              bash
+              clang
+              cmake
+              gnumake
+              libuv
+              llvm
+              nodejs_22
+              openssl
+              patchelf
+              pkg-config
+            ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+
+            installPhase = ''
+              runHook preInstall
+              export LEAN_NATIVE_HOST_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_NATIVE_SOURCE='${wasmToolchain.leanSource}'
+              node scripts/build-native-ffi-artifacts.mjs --output "$out"
+              runHook postInstall
+            '';
+          };
+
+          wasi-component-artifacts = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-wasi-component-artifacts";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = with pkgs; [ clang nodejs_22 patchelf wasm-tools ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-wasi-component-artifacts.mjs \
+                --native '${native-core-artifacts}' \
+                --wasmtime '${wasmtimeCapi}' \
+                --output "$out"
+              runHook postInstall
+            '';
+          };
+
           universal-release-bundle = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-universal-release-bundle";
             version = "0.0.0";
@@ -330,12 +391,15 @@
             nativeBuildInputs = [ pkgs.nodejs_22 ];
             dontConfigure = true;
             dontBuild = true;
+            dontFixup = true;
 
             installPhase = ''
               runHook preInstall
               revision='${builtins.substring 0 40 (self.rev or (self.dirtyRev or "0000000000000000000000000000000000000000"))}'
               node scripts/build-universal-release-bundle.mjs \
                 --core '${universal-core-artifacts}' \
+                --native '${native-core-artifacts}' \
+                --wasi '${wasi-component-artifacts}' \
                 --output "$out" \
                 --revision "$revision" \
                 --source-date-epoch '1786261809' \
@@ -357,6 +421,20 @@
               node scripts/build-npm-package.mjs \
                 --bundle '${universal-release-bundle}' \
                 --output "$out"
+              runHook postInstall
+            '';
+          };
+
+          wasi-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-wasi-package";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-wasi-package.mjs --bundle '${universal-release-bundle}' --output "$out"
               runHook postInstall
             '';
           };
@@ -438,8 +516,11 @@
         // nixpkgs.lib.optionalAttrs (pkgs.system == "x86_64-linux") {
           wasm-poc = self.packages.${pkgs.system}.wasm-poc;
           universal-core-artifacts = self.packages.${pkgs.system}.universal-core-artifacts;
+          native-core-artifacts = self.packages.${pkgs.system}.native-core-artifacts;
+          wasi-component-artifacts = self.packages.${pkgs.system}.wasi-component-artifacts;
           universal-release-bundle = self.packages.${pkgs.system}.universal-release-bundle;
           npm-package = self.packages.${pkgs.system}.npm-package;
+          wasi-package = self.packages.${pkgs.system}.wasi-package;
           release-rehearsal = self.packages.${pkgs.system}.release-rehearsal;
           php-native-package = self.packages.${pkgs.system}.php-native-package;
         });

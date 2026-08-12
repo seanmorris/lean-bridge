@@ -33,6 +33,8 @@ const alphaWasm = new URL("./wasm/alpha.so.wasm", import.meta.url);
 const assets = Object.freeze({
   "main.wasm": mainWasm.href,
   "alpha.so.wasm": alphaWasm.href,
+  [decodeURIComponent(mainWasm.pathname.split("/").at(-1))]: mainWasm.href,
+  [decodeURIComponent(alphaWasm.pathname.split("/").at(-1))]: alphaWasm.href,
 });
 const module = await createMain({ locateFile: path => assets[path] ?? path });
 const descriptor = Object.freeze({
@@ -196,6 +198,7 @@ export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
     exports: {
       ".": {
         types: "./index.d.ts",
+        browser: "./index.mjs",
         import: "./index.mjs",
         default: "./index.mjs",
       },

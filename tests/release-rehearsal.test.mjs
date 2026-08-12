@@ -79,23 +79,23 @@ const enableReviewedCBindingTarget = async (bundle, destination) => {
   await rewriteIdentity(destination, manifest);
 };
 
-test("the real bundle rehearses every applicable backend and records explicit omissions", async () => withBundle(async ({ scratch, bundle }) => {
+test("the source-only bundle rehearses npm and records explicit omissions", async () => withBundle(async ({ scratch, bundle }) => {
   const output = join(scratch, "release");
   const result = await rehearseRelease({ bundleRoot: bundle, outputRoot: output });
   assert.equal(result.ready, 1);
-  assert.equal(result.omitted, 4);
+  assert.equal(result.omitted, 5);
   const indexSource = await readFile(result.index, "utf8");
   const index = parsePublicationIndex(indexSource);
   assert.equal(index.mode, "no-publish");
   assert.deepEqual(index.publication, {
     externalRegistryWrites: false,
     networkAccess: false,
-    omitted: 4,
+    omitted: 5,
     ready: 1,
   });
   assert.deepEqual(await readdir(join(output, "packages")), ["npm"]);
   assert.deepEqual(index.packages.filter(item => item.status === "ready").map(item => item.ecosystem), ["npm"]);
-  assert.deepEqual(index.packages.filter(item => item.status === "omitted").map(item => item.ecosystem), ["c", "cargo", "cpp", "pypi"]);
+  assert.deepEqual(index.packages.filter(item => item.status === "omitted").map(item => item.ecosystem), ["c", "cargo", "cpp", "pypi", "wit-wasi"]);
   const npm = index.packages.find(item => item.ecosystem === "npm");
   assert.equal(npm.archives.length, 1);
   assert.equal(npm.archives[0].sha256, (await readFile(join(output, "publication-index.intoto.json"), "utf8").then(JSON.parse)).subject.find(subject => subject.name === npm.archives[0].path).digest.sha256);
@@ -109,7 +109,7 @@ test("one bundle identity produces deterministic npm and C rehearsal archives pl
   const first = await rehearseRelease({ bundleRoot: eligible, outputRoot: join(scratch, "first") });
   const second = await rehearseRelease({ bundleRoot: eligible, outputRoot: join(scratch, "second") });
   assert.equal(first.ready, 2);
-  assert.equal(first.omitted, 3);
+  assert.equal(first.omitted, 4);
   assert.equal(first.indexSha256, second.indexSha256);
   assert.equal(first.attestationSha256, second.attestationSha256);
   assert.deepEqual(await readFile(first.index), await readFile(second.index));

@@ -217,7 +217,7 @@
         "make_adder"
       ],
       "capabilityGaps": [],
-      "fileSetSha256": "8de98b28f318fae300a5404d18c38a26d65765c329a5b928570174d7dc82237a",
+      "fileSetSha256": "c45562064dd236ed9cae15cd8577f7cb790f68f26c27292052c7f50c355fdea7",
       "files": [
         {
           "path": "README.md",
@@ -226,8 +226,8 @@
         },
         {
           "path": "binding-manifest.json",
-          "bytes": 851,
-          "sha256": "705fc056c053065d1596a5c8aeb2dadb13581bf7d196cc608156b3ed03b6f6a9"
+          "bytes": 880,
+          "sha256": "24d789f737ac2d6411169fbcad5b499d8e1f5608c127a4732fd551148d3cc2fc"
         },
         {
           "path": "lean_alpha/__init__.py",
@@ -240,9 +240,14 @@
           "sha256": "a364d0c147c3a4880742e6ad37d8f2712b91f43c750020dae40cbd233d31129a"
         },
         {
+          "path": "lean_alpha/_native.py",
+          "bytes": 7285,
+          "sha256": "897af4d93ca8d7f2aeb30d5afa41bc3a0383b3b60269080cddacd498b84eafa2"
+        },
+        {
           "path": "lean_alpha/_runtime.py",
-          "bytes": 1882,
-          "sha256": "5da84311347fc9d7e5208c991b15eede2793f7a230b68ac9a253a47da145ccc1"
+          "bytes": 1903,
+          "sha256": "581070bf51a514959d12f44904ea06b95d6b5c03a983ba65956d116733a93af6"
         },
         {
           "path": "lean_alpha/py.typed",
@@ -302,6 +307,45 @@
       ]
     },
     {
+      "backend": "cpp",
+      "generator": {
+        "id": "lean-wasm/cpp",
+        "version": 1
+      },
+      "exports": [
+        "Box",
+        "Payload",
+        "Transform",
+        "round_trip",
+        "with_callback",
+        "make_adder"
+      ],
+      "capabilityGaps": [],
+      "fileSetSha256": "6207f0d958cae903ee8a90a59ffe4f912de078f9dc1ed00b93fb0efa8430ca29",
+      "files": [
+        {
+          "path": "README.md",
+          "bytes": 119,
+          "sha256": "c470cd4fd14fd9d410f3e3bf72c3549462f1ccfcb3d7e350e48e8745ced0814e"
+        },
+        {
+          "path": "binding-manifest.json",
+          "bytes": 598,
+          "sha256": "b055efe84b217b24c2f97138b1c774e599e033293278a2cb008ad0eb7ee00707"
+        },
+        {
+          "path": "include/lean_alpha.hpp",
+          "bytes": 5651,
+          "sha256": "7b65b7029227d18397879434cd88c6ca887f1bb917500a4bd9e25a94db5a6007"
+        },
+        {
+          "path": "src/lean_alpha.cpp",
+          "bytes": 26,
+          "sha256": "fa2771a605c038155c63fad04f1d829cbbcfa3e671bbf8e047704126c1c02102"
+        }
+      ]
+    },
+    {
       "backend": "rust",
       "generator": {
         "id": "lean-wasm/rust",
@@ -322,7 +366,7 @@
           "reason": "Stable Rust does not allow generated resource types to implement Fn traits."
         }
       ],
-      "fileSetSha256": "d2f97fd98411f13b26572404ab956a26a85114294cdd34eb73dc39f303aae5d8",
+      "fileSetSha256": "0b77ac9d04582d6a08ca130bc19e4e540e5ef31923c151c93a3985dc539b7395",
       "files": [
         {
           "path": "Cargo.toml",
@@ -341,8 +385,8 @@
         },
         {
           "path": "src/__runtime.rs",
-          "bytes": 1929,
-          "sha256": "fb5d36cbc488937d04dd39f360d6ab8511d3440468c3b130a3caec781fa49b91"
+          "bytes": 11333,
+          "sha256": "4d90481f614abc7fb760a777fa0a00d4576e9f037054d3998b3e206ff3428029"
         },
         {
           "path": "src/lib.rs",

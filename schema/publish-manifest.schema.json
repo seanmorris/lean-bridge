@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/publish-manifest.schema.json",
+  "$id": "urn:lean-bridge:schema:publish-manifest:v1",
   "title": "Lean Bridge authorized publication plan",
   "type": "object",
   "additionalProperties": false,
@@ -17,7 +17,7 @@
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "predicateType": { "const": "https://lean-bridge.dev/publication-plan/v1" },
+    "predicateType": { "const": "urn:lean-bridge:publication-plan:v1" },
     "mode": { "const": "authorized-no-publish" },
     "createdAt": { "type": "string", "format": "date-time" },
     "authorization": {

@@ -279,7 +279,7 @@ test("Docker orchestration returns one validated bundle and package projection c
     assert.equal(result.backend, "docker");
     assert.equal(result.bundle.component, "poc/lean-alpha@0.0.0");
     assert.equal(result.packages.ready, 1);
-    assert.equal(result.packages.omitted, 4);
+    assert.equal(result.packages.omitted, 5);
     assert.deepEqual(result.packages.selected.map(item => item.ecosystem), ["npm"]);
     assert.deepEqual(result.cache, { policy: "refresh", directory: null });
     assert.equal(result.sourceReadOnly, true);

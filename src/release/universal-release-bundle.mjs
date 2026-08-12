@@ -12,6 +12,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { parseBindingIr } from "../binding-ir/canonical.mjs";
 import { generateBindingPackages } from "../binding-ir/package-gate.mjs";
 import { compileJavaScriptProjection } from "../backends/javascript/projection.mjs";
+import { generateWitPackage } from "../backends/wit/generate.mjs";
 import { alphaPrivateAbi } from "../../poc/lean-link-spike/private-abi.mjs";
 import {
   canonicalPackageManifestJson,
@@ -37,6 +38,7 @@ const mediaTypeFor = path => {
   if (path.endsWith(".rs")) return "text/x-rust";
   if (path.endsWith(".py")) return "text/x-python";
   if (path.endsWith(".php")) return "application/x-httpd-php";
+  if (path.endsWith(".so")) return "application/vnd.lean-bridge.shared-library";
   return "text/plain";
 };
 
@@ -91,6 +93,8 @@ const ensureEmptyOutput = async output => {
 export const buildUniversalReleaseBundle = async ({
   projectRoot,
   coreRoot,
+  nativeRoot = null,
+  wasiRoot = null,
   outputRoot,
   revision,
   sourceDateEpoch = 1786261809,
@@ -98,6 +102,8 @@ export const buildUniversalReleaseBundle = async ({
 }) => {
   const root = resolve(projectRoot);
   const core = resolve(coreRoot);
+  const native = nativeRoot === null ? null : resolve(nativeRoot);
+  const wasi = wasiRoot === null ? null : resolve(wasiRoot);
   const output = resolve(outputRoot);
   if (output === root || output === dirname(root)) throw new Error("refusing to replace the project tree with a release bundle");
   if (!/^[0-9a-f]{40}$/.test(revision)) throw new Error("source revision must be a 40-character Git identity");
@@ -122,6 +128,40 @@ export const buildUniversalReleaseBundle = async ({
   for (const item of coreLayout) {
     await copy(output, item.path, join(core, item.source));
     artifacts.push(await record(output, { ...item, target: "node-esm", core: true }));
+  }
+
+  const nativeArtifactIds = [];
+  let nativeGlibcMinimumVersion = null;
+  if (native !== null) {
+    const nativeManifest = JSON.parse(await readFile(join(native, "native-artifacts.json"), "utf8"));
+    if (
+      nativeManifest.schemaVersion !== 1 ||
+      nativeManifest.component !== ir.component.id ||
+      nativeManifest.bindingIrSha256 !== alphaLibrary.bindingIr.semanticSha256 ||
+      nativeManifest.target?.operatingSystem !== "linux" ||
+      nativeManifest.target?.architecture !== "x86_64" ||
+      !/^\d+\.\d+$/.test(nativeManifest.target?.glibcMinimumVersion)
+    ) {
+      throw new Error("native artifact manifest does not match the canonical component target");
+    }
+    nativeGlibcMinimumVersion = nativeManifest.target.glibcMinimumVersion;
+    const layout = [
+      { source: "lib/liblean_bridge_native.so", path: "artifacts/native/lib/liblean_bridge_native.so", id: "native-runtime-library", role: "runtime", core: true },
+      { source: "lib/liblean_alpha_component.so", path: "artifacts/native/lib/liblean_alpha_component.so", id: "native-component-library", role: "component", core: true },
+      { source: "include/lean_alpha.h", path: "artifacts/native/include/lean_alpha.h", id: "native-public-header", role: "binding", core: false },
+      { source: "native-artifacts.json", path: "artifacts/native/native-artifacts.json", id: "native-artifact-manifest", role: "provenance", core: false },
+    ];
+    const sourceRecords = new Map(nativeManifest.files.map(file => [file.path, file]));
+    for (const item of layout) {
+      const bytes = await readFile(join(native, item.source));
+      const expected = item.source === "native-artifacts.json" ? null : sourceRecords.get(item.source);
+      if (expected !== null && (!expected || expected.bytes !== bytes.length || expected.sha256 !== sha256(bytes))) {
+        throw new Error(`native artifact changed after its manifest was written: ${item.source}`);
+      }
+      await copy(output, item.path, join(native, item.source));
+      artifacts.push(await record(output, { ...item, target: "native-ffi" }));
+      nativeArtifactIds.push(item.id);
+    }
   }
 
   const fixedFiles = [
@@ -161,6 +201,47 @@ export const buildUniversalReleaseBundle = async ({
       ids.push(id);
     }
     bindingArtifacts.set(backend, ids);
+  }
+  const witPackage = generateWitPackage(ir);
+  const witIds = [];
+  for (const [packagePath, source] of Object.entries(witPackage.files).sort(([left], [right]) => left.localeCompare(right))) {
+    const path = `bindings/wit/${packagePath}`;
+    const id = artifactId("binding-wit", packagePath);
+    await write(output, path, source);
+    artifacts.push(await record(output, { id, path, role: "binding", target: "wit-wasi" }));
+    witIds.push(id);
+  }
+  bindingArtifacts.set("wit", witIds);
+
+  const wasiArtifactIds = [];
+  if (wasi !== null) {
+    const wasiManifest = JSON.parse(await readFile(join(wasi, "wasi-artifacts.json"), "utf8"));
+    if (
+      wasiManifest.schemaVersion !== 1 ||
+      wasiManifest.component !== ir.component.id ||
+      wasiManifest.bindingIrSha256 !== alphaLibrary.bindingIr.semanticSha256 ||
+      wasiManifest.engine?.name !== "wasmtime"
+    ) throw new Error("WASI artifact manifest does not match the canonical component");
+    const layout = [
+      { source: "component/lean-alpha.component.wasm", path: "artifacts/wasi/component/lean-alpha.component.wasm", id: "wasi-component-adapter", role: "component", core: true },
+      { source: "bin/lean-alpha-wasi-host", path: "artifacts/wasi/bin/lean-alpha-wasi-host", id: "wasi-component-host", role: "runtime", core: true },
+      { source: "lib/libwasmtime.so", path: "artifacts/wasi/lib/libwasmtime.so", id: "wasi-engine-library", role: "runtime", core: false },
+      { source: "lib/liblean_bridge_native.so", path: "artifacts/wasi/lib/liblean_bridge_native.so", id: "wasi-native-runtime-library", role: "runtime", core: true },
+      { source: "lib/liblean_alpha_component.so", path: "artifacts/wasi/lib/liblean_alpha_component.so", id: "wasi-native-component-library", role: "component", core: true },
+      { source: "wit/lean-alpha-adapter.wit", path: "artifacts/wasi/wit/lean-alpha-adapter.wit", id: "wasi-adapter-wit", role: "binding", core: false },
+      { source: "wasi-artifacts.json", path: "artifacts/wasi/wasi-artifacts.json", id: "wasi-artifact-manifest", role: "provenance", core: false },
+    ];
+    const sourceRecords = new Map(wasiManifest.files.map(file => [file.path, file]));
+    for (const item of layout) {
+      const bytes = await readFile(join(wasi, item.source));
+      const expected = item.source === "wasi-artifacts.json" ? null : sourceRecords.get(item.source);
+      if (expected !== null && (!expected || expected.bytes !== bytes.length || expected.sha256 !== sha256(bytes))) {
+        throw new Error(`WASI artifact changed after its manifest was written: ${item.source}`);
+      }
+      await copy(output, item.path, join(wasi, item.source));
+      artifacts.push(await record(output, { ...item, target: "wit-wasi" }));
+      wasiArtifactIds.push(item.id);
+    }
   }
 
   const alphaCapsule = JSON.parse(await readFile(join(root, "poc/lean-link-spike/capsules/alpha.json"), "utf8"));
@@ -215,7 +296,7 @@ export const buildUniversalReleaseBundle = async ({
     dataLicense: "CC0-1.0",
     SPDXID: "SPDXRef-DOCUMENT",
     name: `${ir.component.id}-release-bundle`,
-    documentNamespace: `https://lean-bridge.invalid/spdx/${coreManifest.identitySha256}`,
+    documentNamespace: `urn:lean-bridge:spdx:${coreManifest.identitySha256}`,
     creationInfo: { creators: ["Tool: lean-bridge-universal-bundle/1"] },
     packages: [
       {
@@ -234,13 +315,19 @@ export const buildUniversalReleaseBundle = async ({
 
   const inputClosureSha256 = sha256(flakeSource);
   const toolchainSha256 = sha256(Buffer.concat([toolchainSource, graphSource]));
+  const additionalCoreSubjects = artifacts
+    .filter(artifact => artifact.core && !artifact.path.startsWith("artifacts/browser/"))
+    .map(artifact => ({ name: artifact.path, digest: { sha256: artifact.sha256 } }));
   const provenance = {
     _type: "https://in-toto.io/Statement/v1",
-    subject: coreManifest.files.map(file => ({ name: file.path, digest: { sha256: file.sha256 } })),
+    subject: [
+      ...coreManifest.files.map(file => ({ name: file.path, digest: { sha256: file.sha256 } })),
+      ...additionalCoreSubjects,
+    ],
     predicateType: "https://slsa.dev/provenance/v1",
     predicate: {
       buildDefinition: {
-        buildType: "https://lean-bridge.invalid/build-types/nix-flake-v1",
+        buildType: "urn:lean-bridge:build-type:nix-flake:v1",
         externalParameters: { component: ir.component.id, profile: "side-lazy" },
         resolvedDependencies: [
           { uri: "git+https://github.com/seanmorris/lean-bridge", digest: { gitCommit: revision } },
@@ -254,6 +341,9 @@ export const buildUniversalReleaseBundle = async ({
   await write(output, "metadata/provenance.intoto.json", json(provenance));
   artifacts.push(await record(output, { id: "provenance", path: "metadata/provenance.intoto.json", role: "provenance" }));
 
+  const commonPackageArtifacts = ["license", "assurance", "core-artifact-set", "sbom", "provenance"];
+  const nativeEligible = native !== null;
+  const wasiEligible = nativeEligible && wasi !== null;
   const packages = [
     {
       ecosystem: "npm",
@@ -276,19 +366,32 @@ export const buildUniversalReleaseBundle = async ({
       ],
     },
     ...[
-      ["cargo", "lean_bridge_alpha", "native-ffi", "The canonical bundle has no native component library or Rust runtime adapter."],
-      ["pypi", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library or Python extension adapter."],
-      ["c", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library."],
-      ["cpp", "lean-bridge-alpha", "native-ffi", "The canonical bundle has no native component library or C++ binding projection."],
-    ].map(([ecosystem, name, target, reason]) => ({
+      ["cargo", "lean_bridge_alpha", "The canonical bundle has no native component library or Rust runtime adapter.", "rust"],
+      ["pypi", "lean-bridge-alpha", "The canonical bundle has no native component library or Python extension adapter.", "python"],
+      ["c", "lean-bridge-alpha", "The canonical bundle has no native component library.", "c"],
+      ["cpp", "lean-bridge-alpha", "The canonical bundle has no native component library or C++ binding projection.", "cpp"],
+    ].map(([ecosystem, name, reason, backend]) => ({
       ecosystem,
       name,
       version: ir.component.version,
-      target,
-      eligible: false,
-      reason,
-      publicArtifacts: [],
+      target: "native-ffi",
+      eligible: nativeEligible,
+      reason: nativeEligible ? null : reason,
+      publicArtifacts: nativeEligible
+        ? [...bindingArtifacts.get(backend), ...nativeArtifactIds, ...commonPackageArtifacts]
+        : [],
     })),
+    {
+      ecosystem: "wit-wasi",
+      name: "lean-bridge-alpha-wasi",
+      version: ir.component.version,
+      target: "wit-wasi",
+      eligible: wasiEligible,
+      reason: wasiEligible ? null : "The canonical bundle has no Component Model binary adapter and independent WASI host.",
+      publicArtifacts: wasiEligible
+        ? [...bindingArtifacts.get("wit"), ...wasiArtifactIds, ...commonPackageArtifacts]
+        : [],
+    },
   ];
   const docs = artifacts.filter(item => item.role === "documentation").map(item => item.id);
   const manifest = {
@@ -335,18 +438,47 @@ export const buildUniversalReleaseBundle = async ({
       },
       {
         id: "native-ffi",
-        eligible: false,
-        reason: "This bundle contains generated native bindings but no native component library.",
-        platforms: [],
-        capabilities: ["copied-values", "identity-resources"],
-        entryPoints: [],
+        eligible: nativeEligible,
+        reason: nativeEligible ? null : "This bundle contains generated native bindings but no native component library.",
+        platforms: nativeEligible ? ["x86_64-linux-gnu"] : [],
+        capabilities: nativeEligible
+          ? ["callbacks", "copied-values", `glibc:>=${nativeGlibcMinimumVersion}`, "identity-resources", "native-component-library", "shared-runtime", "typed-bindings", `wheel-tag:py3-none-manylinux_${nativeGlibcMinimumVersion.replace(".", "_")}_x86_64`]
+          : ["copied-values", "identity-resources"],
+        entryPoints: nativeEligible
+          ? [
+              { name: "runtime", kind: "library", artifact: "native-runtime-library" },
+              { name: "component", kind: "library", artifact: "native-component-library" },
+              { name: "types", kind: "types", artifact: "binding-ir" },
+              { name: "metadata", kind: "metadata", artifact: "native-artifact-manifest" },
+            ]
+          : [],
+      },
+      {
+        id: "wit-wasi",
+        eligible: wasiEligible,
+        reason: wasiEligible ? null : "This bundle contains WIT declarations but no executable Component Model adapter and host.",
+        platforms: wasiEligible ? ["wasm32-component-model", "x86_64-linux-gnu"] : [],
+        capabilities: wasiEligible
+          ? ["component-model", "copied-values", "native-component-library", "shared-runtime", "wasi-host"]
+          : ["copied-values"],
+        entryPoints: wasiEligible
+          ? [
+              { name: "component", kind: "library", artifact: "wasi-component-adapter" },
+              { name: "host", kind: "library", artifact: "wasi-component-host" },
+              { name: "types", kind: "types", artifact: bindingArtifacts.get("wit")[0] },
+              { name: "metadata", kind: "metadata", artifact: "wasi-artifact-manifest" },
+            ]
+          : [],
       },
     ],
     dependencies: [],
     capabilities: {
       provided: ["callbacks", "copied-values", "identity-resources", "promises", "shared-runtime", "typed-bindings"],
-      requiredHosts: ["javascript"],
-      gaps: [{ target: "native-ffi", feature: "native-library-artifact", reason: "The current core derivation builds the Wasm shared-runtime profile." }],
+      requiredHosts: nativeEligible ? ["javascript", "native-ffi"] : ["javascript"],
+      gaps: [
+        ...nativeEligible ? [] : [{ target: "native-ffi", feature: "native-library-artifact", reason: "The current core derivation builds the Wasm shared-runtime profile." }],
+        ...wasiEligible ? [] : [{ target: "wit-wasi", feature: "component-model", reason: "The current bundle has WIT declarations but no executable Component Model adapter and host." }],
+      ],
     },
     packages,
     documentation: { generated: true, artifacts: docs },

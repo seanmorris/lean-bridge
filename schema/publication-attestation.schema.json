@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lean-bridge.dev/schema/publication-attestation.schema.json",
+  "$id": "urn:lean-bridge:schema:publication-attestation:v1",
   "title": "Lean Bridge signed publication authorization",
   "type": "object",
   "additionalProperties": false,
@@ -109,7 +109,7 @@
       "properties": {
         "_type": { "const": "https://in-toto.io/Statement/v1" },
         "subject": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/subject" } },
-        "predicateType": { "const": "https://lean-bridge.dev/attestations/publication-authorization/v1" },
+        "predicateType": { "const": "urn:lean-bridge:attestation:publication-authorization:v1" },
         "predicate": {
           "type": "object",
           "additionalProperties": false,

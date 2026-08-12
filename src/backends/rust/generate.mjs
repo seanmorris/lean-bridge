@@ -299,6 +299,175 @@ const runtimeParameters = (ir, declaration) => declaration.parameters.map(parame
   return `${snake(parameter.name)}: ${runtimeRustType(ir, parameter.type)}`;
 });
 
+const nativeRustRuntime = String.raw`
+use std::ffi::{c_void, CStr, CString};
+use std::os::raw::{c_char, c_int};
+use std::path::PathBuf;
+use std::ptr;
+
+#[repr(C)]
+struct NativeError { code: c_int, message: *const c_char, message_length: usize }
+#[repr(C)]
+struct NativeSpan { data: *const c_void, length: usize, owner: *mut c_void, release: Option<unsafe extern "C" fn(*mut c_void)> }
+#[repr(C)]
+struct NativePayload { enabled: bool, count: u32, label: NativeSpan, bytes: NativeSpan, values: NativeSpan }
+type CallbackFn = unsafe extern "C" fn(*mut c_void, u32, *mut u32, *mut NativeError) -> c_int;
+#[repr(C)]
+struct NativeTransform { call: Option<CallbackFn>, context: *mut c_void }
+
+extern "C" {
+    fn dlopen(filename: *const c_char, flags: c_int) -> *mut c_void;
+    fn dlsym(handle: *mut c_void, symbol: *const c_char) -> *mut c_void;
+    fn dlerror() -> *const c_char;
+}
+
+type BoxCreate = unsafe extern "C" fn(u32, *mut *mut c_void, *mut NativeError) -> c_int;
+type BoxRead = unsafe extern "C" fn(*mut c_void, *mut u32, *mut NativeError) -> c_int;
+type BoxIdentity = unsafe extern "C" fn(*mut c_void, *mut *mut c_void, *mut NativeError) -> c_int;
+type BoxDispose = unsafe extern "C" fn(*mut *mut c_void);
+type RoundTrip = unsafe extern "C" fn(*const NativePayload, *mut NativePayload, *mut NativeError) -> c_int;
+type PayloadClear = unsafe extern "C" fn(*mut NativePayload);
+type WithCallback = unsafe extern "C" fn(u32, *const NativeTransform, *mut u32, *mut NativeError) -> c_int;
+type MakeAdder = unsafe extern "C" fn(u32, *mut *mut c_void, *mut NativeError) -> c_int;
+type TransformCall = unsafe extern "C" fn(*mut c_void, u32, *mut u32, *mut NativeError) -> c_int;
+type TransformDispose = unsafe extern "C" fn(*mut *mut c_void);
+
+struct NativeRuntime {
+    _handle: *mut c_void,
+    box_create: BoxCreate,
+    box_read: BoxRead,
+    box_identity: BoxIdentity,
+    box_dispose: BoxDispose,
+    round_trip: RoundTrip,
+    payload_clear: PayloadClear,
+    with_callback: WithCallback,
+    make_adder: MakeAdder,
+    transform_call: TransformCall,
+    transform_dispose: TransformDispose,
+}
+
+unsafe impl Send for NativeRuntime {}
+unsafe impl Sync for NativeRuntime {}
+
+impl NativeRuntime {
+    fn load() -> Result<Self, Error> {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("lean-bridge/artifacts/artifacts/native/lib/liblean_alpha_component.so");
+        let path = CString::new(path.to_string_lossy().as_bytes()).map_err(|_| Error::Unexpected("native component path contains NUL".into()))?;
+        unsafe {
+            let handle = dlopen(path.as_ptr(), 2);
+            if handle.is_null() { return Err(Error::Unexpected(Self::loader_error())); }
+            macro_rules! load {
+                ($name:literal, $type:ty) => {{
+                    let name = concat!($name, "\0");
+                    let value = dlsym(handle, name.as_ptr().cast());
+                    if value.is_null() { return Err(Error::Unexpected(format!("native component omits {}", $name))); }
+                    std::mem::transmute::<*mut c_void, $type>(value)
+                }};
+            }
+            Ok(Self {
+                _handle: handle,
+                box_create: load!("lean_alpha_box_create", BoxCreate),
+                box_read: load!("lean_alpha_box_read", BoxRead),
+                box_identity: load!("lean_alpha_box_identity", BoxIdentity),
+                box_dispose: load!("lean_alpha_box_dispose", BoxDispose),
+                round_trip: load!("lean_alpha_round_trip", RoundTrip),
+                payload_clear: load!("lean_alpha_payload_clear", PayloadClear),
+                with_callback: load!("lean_alpha_with_callback", WithCallback),
+                make_adder: load!("lean_alpha_make_adder", MakeAdder),
+                transform_call: load!("lean_alpha_owned_transform_call", TransformCall),
+                transform_dispose: load!("lean_alpha_owned_transform_dispose", TransformDispose),
+            })
+        }
+    }
+
+    unsafe fn loader_error() -> String {
+        let value = dlerror();
+        if value.is_null() { "cannot load native Lean component".into() } else { CStr::from_ptr(value).to_string_lossy().into_owned() }
+    }
+
+    fn check(status: c_int, error: &NativeError) -> Result<(), Error> {
+        if status == 0 { return Ok(()); }
+        let message = if error.message.is_null() {
+            "Lean call failed".into()
+        } else {
+            unsafe { String::from_utf8_lossy(std::slice::from_raw_parts(error.message.cast(), error.message_length)).into_owned() }
+        };
+        match error.code {
+            100 => Err(Error::DisposedResource),
+            101 => Err(Error::CallbackThrew),
+            _ => Err(Error::Unexpected(message)),
+        }
+    }
+
+    fn error() -> NativeError { NativeError { code: 0, message: ptr::null(), message_length: 0 } }
+}
+
+struct CallbackFrame<'a> { callback: &'a mut dyn FnMut(u32) -> Result<u32, Error>, error: Option<Error> }
+
+unsafe extern "C" fn invoke_callback(context: *mut c_void, value: u32, output: *mut u32, _error: *mut NativeError) -> c_int {
+    let frame = &mut *context.cast::<CallbackFrame<'_>>();
+    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| (frame.callback)(value))) {
+        Ok(Ok(result)) => { *output = result; 0 }
+        Ok(Err(error)) => { frame.error = Some(error); 4 }
+        Err(_) => { frame.error = Some(Error::CallbackThrew); 4 }
+    }
+}
+
+impl Runtime for NativeRuntime {
+    fn initialize(&self) -> Result<(), Error> { Ok(()) }
+    fn box_new(&self, value: u32) -> Result<u64, Error> {
+        let mut output = ptr::null_mut(); let mut error = Self::error();
+        Self::check(unsafe { (self.box_create)(value, &mut output, &mut error) }, &error)?;
+        Ok(output as u64)
+    }
+    fn box_read(&self, identity: u64) -> Result<u32, Error> {
+        let mut output = 0; let mut error = Self::error();
+        Self::check(unsafe { (self.box_read)(identity as *mut c_void, &mut output, &mut error) }, &error)?; Ok(output)
+    }
+    fn box_identity(&self, identity: u64) -> Result<u64, Error> {
+        let mut output = ptr::null_mut(); let mut error = Self::error();
+        Self::check(unsafe { (self.box_identity)(identity as *mut c_void, &mut output, &mut error) }, &error)?; Ok(output as u64)
+    }
+    fn round_trip(&self, payload: crate::Payload) -> Result<crate::Payload, Error> {
+        let input = NativePayload {
+            enabled: payload.enabled, count: payload.count,
+            label: NativeSpan { data: payload.label.as_ptr().cast(), length: payload.label.len(), owner: ptr::null_mut(), release: None },
+            bytes: NativeSpan { data: payload.bytes.as_ptr().cast(), length: payload.bytes.len(), owner: ptr::null_mut(), release: None },
+            values: NativeSpan { data: payload.values.as_ptr().cast(), length: payload.values.len(), owner: ptr::null_mut(), release: None },
+        };
+        let mut output = NativePayload { enabled: false, count: 0, label: NativeSpan { data: ptr::null(), length: 0, owner: ptr::null_mut(), release: None }, bytes: NativeSpan { data: ptr::null(), length: 0, owner: ptr::null_mut(), release: None }, values: NativeSpan { data: ptr::null(), length: 0, owner: ptr::null_mut(), release: None } };
+        let mut error = Self::error();
+        Self::check(unsafe { (self.round_trip)(&input, &mut output, &mut error) }, &error)?;
+        let result = unsafe { crate::Payload {
+            enabled: output.enabled, count: output.count,
+            label: String::from_utf8_lossy(std::slice::from_raw_parts(output.label.data.cast(), output.label.length)).into_owned(),
+            bytes: std::slice::from_raw_parts(output.bytes.data.cast(), output.bytes.length).to_vec(),
+            values: std::slice::from_raw_parts(output.values.data.cast(), output.values.length).to_vec(),
+        }};
+        unsafe { (self.payload_clear)(&mut output) }; Ok(result)
+    }
+    fn with_callback(&self, value: u32, transform: &mut dyn FnMut(u32) -> Result<u32, Error>) -> Result<u32, Error> {
+        let mut frame = CallbackFrame { callback: transform, error: None };
+        let callback = NativeTransform { call: Some(invoke_callback), context: (&mut frame as *mut CallbackFrame<'_>).cast() };
+        let mut output = 0; let mut error = Self::error();
+        let status = unsafe { (self.with_callback)(value, &callback, &mut output, &mut error) };
+        if let Some(error) = frame.error { return Err(error); }
+        Self::check(status, &error)?; Ok(output)
+    }
+    fn make_adder(&self, base: u32) -> Result<u64, Error> {
+        let mut output = ptr::null_mut(); let mut error = Self::error();
+        Self::check(unsafe { (self.make_adder)(base, &mut output, &mut error) }, &error)?; Ok(output as u64)
+    }
+    fn dispose_box(&self, identity: u64) { let mut value = identity as *mut c_void; unsafe { (self.box_dispose)(&mut value) } }
+    fn call_transform(&self, identity: u64, value: u32) -> Result<u32, Error> {
+        let mut output = 0; let mut error = Self::error();
+        Self::check(unsafe { (self.transform_call)(identity as *mut c_void, value, &mut output, &mut error) }, &error)?; Ok(output)
+    }
+    fn dispose_transform(&self, identity: u64) { let mut value = identity as *mut c_void; unsafe { (self.transform_dispose)(&mut value) } }
+}
+`;
+
 const emitRuntime = ir => {
   const lines = [
     "use std::sync::{Arc, Mutex};",
@@ -357,14 +526,20 @@ const emitRuntime = ir => {
     "}",
     "",
     "pub(crate) fn runtime() -> Result<Arc<dyn Runtime>, Error> {",
-    "    let state = RUNTIME.lock().map_err(|_| Error::Unexpected(\"runtime lock is poisoned\".into()))?;",
-    "    match &*state {",
-    "        State::Ready(runtime) => Ok(Arc::clone(runtime)),",
-    "        State::Failed(error) => Err(error.clone()),",
-    "        State::Empty => Err(Error::RuntimeUnavailable),",
+    "    {",
+    "        let state = RUNTIME.lock().map_err(|_| Error::Unexpected(\"runtime lock is poisoned\".into()))?;",
+    "        match &*state {",
+    "            State::Ready(runtime) => return Ok(Arc::clone(runtime)),",
+    "            State::Failed(error) => return Err(error.clone()),",
+    "            State::Empty => {}",
+    "        }",
     "    }",
+    "    let native: Arc<dyn Runtime> = Arc::new(NativeRuntime::load()?);",
+    "    install_runtime(Arc::clone(&native))?;",
+    "    Ok(native)",
     "}",
     "",
+    nativeRustRuntime,
   );
   return lines.join("\n");
 };

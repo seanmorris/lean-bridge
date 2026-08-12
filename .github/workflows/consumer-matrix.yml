@@ -92,17 +92,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Restore pinned compiler toolchains
-        uses: actions/cache@v5
-        with:
-          path: .toolchains
-          key: consumer-browser-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh', 'lean-toolchain') }}
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
       - name: Install dependencies and browser
         run: |
           npm ci --ignore-scripts
-          npm run bootstrap
           npx playwright install --with-deps chromium
-      - name: Execute real Lean in browser bundlers and verify the npm blocker
+      - name: Install the npm archive and execute real Lean in Chromium
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:browser
@@ -112,7 +108,7 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer browser-javascript --output build/consumer-ci/results/browser-javascript.json --test-result "$test_result" --package-installation false --real-lean-execution "$executed" --command "npm run test:consumer:browser"
+          node scripts/consumer-ci.mjs record --consumer browser-javascript --output build/consumer-ci/results/browser-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:browser"
       - name: Upload browser observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -176,8 +172,8 @@ jobs:
         if: steps.consumer.outcome != 'success'
         run: exit 1
 
-  blocked-consumers:
-    name: Blocked package evidence
+  native-consumers:
+    name: Python, Rust, C, and C++
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -194,29 +190,69 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
-      - name: Materialize the pinned core artifacts
-        run: nix --extra-experimental-features 'nix-command flakes' build .#universal-core-artifacts --out-link build/lean-link-spike
-      - name: Verify every blocked package and its exact missing capability
+      - name: Install every package and execute real Lean
         id: consumer
         continue-on-error: true
-        run: nix --extra-experimental-features 'nix-command flakes' develop . --command npm run test:consumer:blocked
-      - name: Record blocked observations
+        run: npm run test:consumer:native
+      - name: Record native consumer observations
         if: always()
         shell: bash
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
-          for consumer in python rust c cpp wit-wasi; do
-            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --test-result "$test_result" --package-installation false --real-lean-execution false --command "npm run test:consumer:blocked"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          for consumer in python rust c cpp; do
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:native"
           done
-      - name: Upload blocked observations
+      - name: Upload native consumer observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-blocked-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-native-${{ github.sha }}-${{ github.run_attempt }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
           retention-days: 30
-      - name: Enforce blocked evidence
+      - name: Enforce native consumer support
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
+  wasi-consumer:
+    name: WIT and WASI Component Model
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Install the archive and invoke the component through Wasmtime
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:wasi
+      - name: Record WIT and WASI observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi"
+      - name: Upload WIT and WASI observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-wasi-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce WIT and WASI support
         if: steps.consumer.outcome != 'success'
         run: exit 1
 
@@ -261,7 +297,8 @@ jobs:
       - node-consumers
       - browser-consumer
       - php-consumers
-      - blocked-consumers
+      - native-consumers
+      - wasi-consumer
       - docker-engine
     runs-on: ubuntu-24.04
     steps:

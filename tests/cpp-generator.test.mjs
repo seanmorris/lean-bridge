@@ -1,0 +1,64 @@
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import test from "node:test";
+
+import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { generateCppBindingPackage } from "../src/backends/cpp/generate.mjs";
+
+const run = promisify(execFile);
+
+test("the C++20 projection is deterministic and contains callback exceptions at the C boundary", async () => {
+  const first = generateCppBindingPackage(alpha.bindingIr);
+  assert.deepEqual(first, generateCppBindingPackage(structuredClone(alpha.bindingIr)));
+  assert.match(first["include/lean_alpha.hpp"], /class Box final/);
+  assert.match(first["include/lean_alpha.hpp"], /class Transform final/);
+  assert.match(first["include/lean_alpha.hpp"], /std::rethrow_exception/);
+
+  const directory = await mkdtemp(join(tmpdir(), "lean-bridge-cpp-generator-"));
+  try {
+    const c = generateCBindingPackage(alpha.bindingIr);
+    await mkdir(join(directory, "include"), { recursive: true });
+    await writeFile(join(directory, "include/lean_alpha.h"), c["include/lean_alpha.h"]);
+    await writeFile(join(directory, "include/lean_alpha.hpp"), first["include/lean_alpha.hpp"]);
+    await writeFile(join(directory, "consumer.cpp"), `#include "lean_alpha.hpp"
+#include <cassert>
+#include <stdexcept>
+
+extern "C" lean_alpha_status lean_alpha_with_callback(
+    uint32_t value,
+    const lean_alpha_transform *transform,
+    uint32_t *out,
+    lean_alpha_error *error)
+{
+  return transform->call(transform->context, value, out, error);
+}
+
+int main()
+{
+  bool caught = false;
+  try {
+    (void)lean_bridge::alpha::with_callback(41, [](uint32_t) -> uint32_t {
+      throw std::runtime_error("host callback failed");
+    });
+  } catch (const std::runtime_error& error) {
+    caught = std::string(error.what()) == "host callback failed";
+  }
+  assert(caught);
+}
+`);
+    const executable = join(directory, "consumer");
+    await run("c++", [
+      "-std=c++20", "-Wall", "-Wextra", "-Werror",
+      "-I", join(directory, "include"),
+      join(directory, "consumer.cpp"), "-o", executable,
+    ]);
+    await run(executable);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

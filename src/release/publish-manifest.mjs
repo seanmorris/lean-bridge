@@ -9,7 +9,7 @@ import {
 } from "./reproducibility-gate.mjs";
 import { parsePublicationIndex, validatePublicationIndex } from "./release-rehearsal.mjs";
 
-const predicateType = "https://lean-bridge.dev/publication-plan/v1";
+const predicateType = "urn:lean-bridge:publication-plan:v1";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 
 const destinations = Object.freeze({
