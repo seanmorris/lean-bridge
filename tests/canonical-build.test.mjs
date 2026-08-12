@@ -145,7 +145,7 @@ test("a plain project runs the same closed request through separate Docker mount
       if (request.command === "nix") {
         if (request.args[0] === "--version") return { code: 0, stdout: "nix (Nix) 2.24.11\n", stderr: "" };
         const storePath = `/nix/store/${"a".repeat(32)}-lean-bridge-component-engine`;
-        if (request.args.includes("path-info")) return { code: 0, stdout: `${storePath}\n`, stderr: "" };
+        if (request.args.includes("build")) return { code: 0, stdout: `${storePath}\n`, stderr: "" };
         if (request.args.includes("copy")) {
           const destination = request.args[request.args.indexOf("--to") + 1];
           assert.match(destination, /^local\?root=.*&require-sigs=false$/);
@@ -193,8 +193,12 @@ test("a plain project runs the same closed request through separate Docker mount
     });
     assert.equal(result.backend, "docker");
     assert.equal(result.bundle.component, "onboarding-small@1.0.0");
-    const pathInfo = calls.find(call => call.command === "nix" && call.args.includes("path-info"));
-    assert.match(pathInfo.args.find(argument => argument.includes("#component-build-engine")), /^git\+file:\/\/\/.*#component-build-engine$/);
+    const realize = calls.find(call => call.command === "nix" && call.args.includes("build"));
+    assert.ok(realize.args.includes("--no-link"));
+    assert.ok(realize.args.includes("--print-out-paths"));
+    assert.match(realize.args.find(argument => argument.includes("#component-build-engine")), /^git\+file:\/\/\/.*#component-build-engine$/);
+    const copy = calls.find(call => call.command === "nix" && call.args.includes("copy"));
+    assert.ok(calls.indexOf(realize) < calls.indexOf(copy));
     const run = calls.find(call => call.args[0] === "run");
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/engine,readonly")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/component,readonly")));

@@ -42,6 +42,7 @@
             libuv
             llvm
             wabt
+            wasm-tools
             xz
             zip
             zstd

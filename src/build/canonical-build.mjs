@@ -254,13 +254,13 @@ const prepareDockerNixClosureCache = async ({ engineRoot, selection, runner, env
     ...(cache.policy === "refresh" ? ["--refresh"] : []),
   ];
   const installable = await componentEngineInstallable(engineRoot);
-  const info = await runner.capture({
+  const realized = await runner.capture({
     command: nixCommand,
-    args: [...common, "path-info", "--no-write-lock-file", installable],
+    args: [...common, "build", "--no-link", "--print-out-paths", "--no-write-lock-file", installable],
     cwd: resolve(engineRoot),
     timeoutMs: 60 * 60 * 1000,
   });
-  const storePath = info.stdout.trim().split(/\s+/).at(-1);
+  const storePath = realized.stdout.trim().split(/\s+/).at(-1);
   if (!/^\/nix\/store\/[0-9a-z]{32}-lean-bridge-component-engine$/.test(storePath)) {
     fail("component-engine-store-path-invalid", "Native Nix returned an invalid component engine store path", { details: { storePath } });
   }
