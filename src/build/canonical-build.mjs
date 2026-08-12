@@ -391,12 +391,34 @@ export const buildPinnedBuilderImage = async ({
   });
   const inspected = await runner.capture({
     command: dockerCommand,
-    args: ["image", "inspect", "--format", "{{.Id}}", image],
+    args: ["image", "inspect", "--format", "{{json .Config}}", image],
     cwd: root,
   });
-  const actual = inspected.stdout.trim().replace(/^sha256:/, "");
+  let config;
+  try {
+    config = JSON.parse(inspected.stdout);
+  } catch (error) {
+    fail("builder-image-inspect-invalid", "Docker returned an invalid builder runtime configuration", {
+      details: { cause: error.message },
+    });
+  }
+  const runtimeConfig = {
+    cmd: config.Cmd ?? null,
+    entrypoint: config.Entrypoint ?? null,
+    environment: config.Env ?? [],
+    exposedPorts: Object.keys(config.ExposedPorts ?? {}).sort(),
+    healthcheck: config.Healthcheck ?? null,
+    labels: config.Labels ?? {},
+    onBuild: config.OnBuild ?? [],
+    shell: config.Shell ?? null,
+    stopSignal: config.StopSignal ?? null,
+    user: config.User ?? "",
+    volumes: Object.keys(config.Volumes ?? {}).sort(),
+    workingDirectory: config.WorkingDir ?? "",
+  };
+  const actual = sha256(canonicalJson(runtimeConfig));
   if (actual !== resolvedBuilder.manifest.image.configSha256) {
-    fail("builder-image-drift", "The locally built builder image differs from its reviewed config digest", {
+    fail("builder-image-drift", "The locally built builder runtime configuration differs from its reviewed digest", {
       details: { expected: resolvedBuilder.manifest.image.configSha256, actual },
     });
   }
