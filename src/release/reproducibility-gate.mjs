@@ -482,6 +482,7 @@ export const runReproducibilityGate = async ({
       onProgress?.({ phase: buildPhase, state: "started", message: `Starting isolated build ${name}`, current: index, total: 2 });
       const result = await build({
         projectRoot: prepared.roots[index],
+        engineRoot: prepared.roots[index],
         outputRoot: buildRoot,
         environment: {
           ...environment,

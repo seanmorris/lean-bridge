@@ -210,7 +210,8 @@ const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation =
   const coreRoot = await createCoreFixture(join(outputRoot, "..", "core-fixture"));
   let buildNumber = 0;
   const seen = [];
-  const build = async ({ projectRoot, outputRoot: buildRoot, environment }) => {
+  const build = async ({ projectRoot, engineRoot, outputRoot: buildRoot, environment }) => {
+    assert.equal(engineRoot, projectRoot);
     buildNumber += 1;
     seen.push({ projectRoot, buildRoot, store: environment.LEAN_BRIDGE_NIX_STORE });
     if (inspectIsolation && buildNumber === 1) {
