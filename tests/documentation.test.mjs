@@ -218,6 +218,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
+  assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
+  assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 6);
   const contract = await readConsumerSupport();
   for (const consumer of contract.consumers) {
     assert.match(workflow, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));

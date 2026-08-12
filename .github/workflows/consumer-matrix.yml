@@ -71,9 +71,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-node-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-node-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce Node support
         if: steps.consumer.outcome != 'success'
@@ -114,9 +115,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-browser-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-browser-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce the browser boundary
         if: steps.consumer.outcome != 'success'
@@ -165,9 +167,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-php-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-php-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce PHP support
         if: steps.consumer.outcome != 'success'
@@ -208,9 +211,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-native-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-native-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
         if: steps.consumer.outcome != 'success'
@@ -249,9 +253,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-wasi-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-results-wasi-${{ github.sha }}
           path: build/consumer-ci/results/*.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
       - name: Enforce WIT and WASI support
         if: steps.consumer.outcome != 'success'
@@ -314,7 +319,7 @@ jobs:
       - name: Download consumer observations
         uses: actions/download-artifact@v5
         with:
-          pattern: consumer-results-*-${{ github.sha }}-${{ github.run_attempt }}
+          pattern: consumer-results-*-${{ github.sha }}
           path: build/consumer-ci/results
           merge-multiple: true
       - name: Validate all ten targets and publish the table
@@ -323,7 +328,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-support-report-${{ github.sha }}-${{ github.run_attempt }}
+          name: consumer-support-report-${{ github.sha }}
           path: build/consumer-ci/report.json
           if-no-files-found: error
+          overwrite: true
           retention-days: 30
