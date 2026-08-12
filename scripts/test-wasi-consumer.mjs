@@ -33,7 +33,7 @@ const invoke = () => testLoader
 const invocation = await invoke();
 if (invocation.stdout.trim() !== "42") throw new Error(`Component Model consumer returned ${invocation.stdout.trim()}`);
 await invoke();
-const iterations = 5;
+const iterations = 20;
 const started = process.hrtime.bigint();
 for (let index = 0; index < iterations; index += 1) {
   const measured = await invoke();
@@ -42,7 +42,8 @@ for (let index = 0; index < iterations; index += 1) {
 const durationNanoseconds = Number(process.hrtime.bigint() - started);
 await writeConsumerPerformance({
   consumer: "wit-wasi",
-  operation: "component host invocation",
+  operation: "read-box host process",
+  timingMode: "whole-invocation",
   scope: "installed Wasmtime host process and component startup",
   iterations,
   durationNanoseconds,

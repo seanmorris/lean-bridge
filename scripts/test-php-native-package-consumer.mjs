@@ -6,7 +6,13 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 
-import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
 
 const option = name => {
   const index = process.argv.indexOf(name);
@@ -51,12 +57,12 @@ use function LeanAlpha\\makeAdder;
 use function LeanAlpha\\roundTrip;
 use function LeanAlpha\\withCallback;
 
-$box = new Box(41);
+$box = new Box(${STEADY_STATE_BOX_VALUE});
 $same = $box->identity();
 $payload = roundTrip(new Payload(false, 8, 'consumer', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
 $addTwo = makeAdder(2);
-$iterations = 20000;
-for ($index = 0; $index < 2000; ++$index) $box->read();
+$iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+for ($index = 0; $index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++$index) $box->read();
 $checksum = 0;
 $started = hrtime(true);
 for ($index = 0; $index < $iterations; ++$index) $checksum += $box->read();
@@ -89,7 +95,7 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   delete result.performance;
   const expected = {
     extension: true,
-    box: 41,
+    box: STEADY_STATE_BOX_VALUE,
     identity: true,
     payload: [true, 9, "consumer", "007fff", [1, 5, 13]],
     callback: 42,
@@ -101,10 +107,11 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   if (JSON.stringify(result) !== JSON.stringify(expected)) {
     throw new Error(`native PHP result mismatch: ${JSON.stringify(result)}`);
   }
-  if (performance.checksum !== 41 * performance.iterations) throw new Error("native PHP performance checksum failed");
+  if (performance.checksum !== STEADY_STATE_BOX_VALUE * performance.iterations) throw new Error("native PHP performance checksum failed");
   await writeConsumerPerformance({
     consumer: "php-native",
-    operation: "Box::read()",
+    operation: STEADY_STATE_OPERATION,
+    timingMode: "steady-state",
     scope: "steady-state generated PHP API call through the native Zend extension",
     iterations: performance.iterations,
     durationNanoseconds: performance.durationNanoseconds,

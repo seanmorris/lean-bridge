@@ -9,7 +9,13 @@ import { promisify } from "node:util";
 import { buildCargoPackage } from "../src/release/cargo-package.mjs";
 import { buildCPackage, buildCppPackage } from "../src/release/c-family-package.mjs";
 import { buildPyPiPackage } from "../src/release/pypi-package.mjs";
-import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
 
 const execute = promisify(execFile);
 const options = new Map();
@@ -25,22 +31,22 @@ const cConsumer = join(scratch, "c-consumer");
 await mkdir(cConsumer);
 await writeFile(join(cConsumer, "main.c"), `#define _POSIX_C_SOURCE 200809L
 #include "lean_alpha.h"
-#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
+#define REQUIRE(condition) do { if (!(condition)) return 1; } while (0)
 static unsigned long long now_ns(void) {
   struct timespec value; clock_gettime(CLOCK_MONOTONIC, &value);
   return ((unsigned long long)value.tv_sec * 1000000000ull) + (unsigned long long)value.tv_nsec;
 }
 int main(void) {
   lean_alpha_error error = {0}; lean_alpha_box *box = 0; uint32_t value = 0;
-  assert(lean_alpha_box_create(42, &box, &error) == LEAN_ALPHA_STATUS_OK);
-  assert(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK && value == 42);
-  const unsigned int iterations = 100000;
-  for (unsigned int index = 0; index < 5000; ++index) assert(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK);
+  REQUIRE(lean_alpha_box_create(${STEADY_STATE_BOX_VALUE}, &box, &error) == LEAN_ALPHA_STATUS_OK);
+  REQUIRE(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK && value == ${STEADY_STATE_BOX_VALUE});
+  const unsigned int iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+  for (unsigned int index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++index) REQUIRE(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK);
   unsigned long long checksum = 0; unsigned long long started = now_ns();
-  for (unsigned int index = 0; index < iterations; ++index) { assert(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK); checksum += value; }
+  for (unsigned int index = 0; index < iterations; ++index) { REQUIRE(lean_alpha_box_read(box, &value, &error) == LEAN_ALPHA_STATUS_OK); checksum += value; }
   unsigned long long duration = now_ns() - started;
   lean_alpha_box_dispose(&box);
   printf("{\\\"iterations\\\":%u,\\\"durationNanoseconds\\\":%llu,\\\"checksum\\\":%llu}\\n", iterations, duration, checksum);
@@ -53,14 +59,15 @@ find_package(LeanBridgeAlpha 0.0.0 EXACT CONFIG REQUIRED PATHS "${cRoot}/lib/cma
 add_executable(consumer main.c)
 target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 `);
-await run("cmake", ["-S", cConsumer, "-B", join(cConsumer, "build")]);
+await run("cmake", ["-S", cConsumer, "-B", join(cConsumer, "build"), "-DCMAKE_BUILD_TYPE=Release"]);
 await run("cmake", ["--build", join(cConsumer, "build")]);
 const cPerformance = JSON.parse((await run(join(cConsumer, "build/consumer"), [])).stdout);
-if (cPerformance.checksum !== 42 * cPerformance.iterations) throw new Error("C performance checksum failed");
+if (cPerformance.checksum !== STEADY_STATE_BOX_VALUE * cPerformance.iterations) throw new Error("C performance checksum failed");
 await writeConsumerPerformance({
   consumer: "c",
-  operation: "lean_alpha_box_read",
-  scope: "steady-state generated C API call",
+  operation: STEADY_STATE_OPERATION,
+  timingMode: "steady-state",
+  scope: "steady-state generated C API call from a Release consumer",
   iterations: cPerformance.iterations,
   durationNanoseconds: cPerformance.durationNanoseconds,
 });
@@ -70,16 +77,15 @@ const cppRoot = join(scratch, "cpp-release/lean-bridge-alpha-0.0.0-cpp");
 const cppConsumer = join(scratch, "cpp-consumer");
 await mkdir(cppConsumer);
 await writeFile(join(cppConsumer, "main.cpp"), `#include "lean_alpha.hpp"
-#include <cassert>
 #include <chrono>
 #include <cstdint>
 #include <iostream>
 int main() {
-  lean_bridge::alpha::Box box(42); assert(box.read() == 42); assert(&box.identity() == &box);
-  auto add_two = lean_bridge::alpha::make_adder(2); assert(add_two(40) == 42);
-  assert(lean_bridge::alpha::with_callback(40, [](auto value) { return value + 2; }) == 44);
-  constexpr std::uint32_t iterations = 100000;
-  for (std::uint32_t index = 0; index < 5000; ++index) (void)box.read();
+  lean_bridge::alpha::Box box(${STEADY_STATE_BOX_VALUE}); if (box.read() != ${STEADY_STATE_BOX_VALUE} || &box.identity() != &box) return 1;
+  auto add_two = lean_bridge::alpha::make_adder(2); if (add_two(40) != 42) return 1;
+  if (lean_bridge::alpha::with_callback(40, [](auto value) { return value + 2; }) != 44) return 1;
+  constexpr std::uint32_t iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+  for (std::uint32_t index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++index) (void)box.read();
   std::uint64_t checksum = 0; const auto started = std::chrono::steady_clock::now();
   for (std::uint32_t index = 0; index < iterations; ++index) checksum += box.read();
   const auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - started).count();
@@ -93,14 +99,15 @@ find_package(LeanBridgeAlpha 0.0.0 EXACT CONFIG REQUIRED PATHS "${cppRoot}/lib/c
 add_executable(consumer main.cpp)
 target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 `);
-await run("cmake", ["-S", cppConsumer, "-B", join(cppConsumer, "build")]);
+await run("cmake", ["-S", cppConsumer, "-B", join(cppConsumer, "build"), "-DCMAKE_BUILD_TYPE=Release"]);
 await run("cmake", ["--build", join(cppConsumer, "build")]);
 const cppPerformance = JSON.parse((await run(join(cppConsumer, "build/consumer"), [])).stdout);
-if (cppPerformance.checksum !== 42 * cppPerformance.iterations) throw new Error("C++ performance checksum failed");
+if (cppPerformance.checksum !== STEADY_STATE_BOX_VALUE * cppPerformance.iterations) throw new Error("C++ performance checksum failed");
 await writeConsumerPerformance({
   consumer: "cpp",
-  operation: "Box::read",
-  scope: "steady-state generated C++ API call",
+  operation: STEADY_STATE_OPERATION,
+  timingMode: "steady-state",
+  scope: "steady-state generated C++ API call from a Release consumer",
   iterations: cppPerformance.iterations,
   durationNanoseconds: cppPerformance.durationNanoseconds,
 });
@@ -111,12 +118,13 @@ await run("python3", ["-m", "pip", "install", "--no-index", "--no-deps", "--targ
 const pythonPerformance = JSON.parse((await run("python3", ["-B", "-c", `import json
 from time import perf_counter_ns
 from lean_alpha import Box, Payload, make_adder, round_trip, with_callback
-with Box(42) as box:
-    assert box.read() == 42 and box.identity() is box
-    iterations = 20000
-    for _ in range(2000): box.read()
+with Box(${STEADY_STATE_BOX_VALUE}) as box:
+    assert box.read() == ${STEADY_STATE_BOX_VALUE} and box.identity() is box
+    iterations = ${STEADY_STATE_MEASURED_ITERATIONS}
+    for _ in range(${STEADY_STATE_WARMUP_ITERATIONS}): box.read()
     started = perf_counter_ns()
-    checksum = sum(box.read() for _ in range(iterations))
+    checksum = 0
+    for _ in range(iterations): checksum += box.read()
     duration = perf_counter_ns() - started
 assert round_trip(Payload(True, 41, "Lean λ", bytes([0, 255]), (0, 2**32 - 1))).count == 42
 assert with_callback(40, lambda value: value + 2) == 44
@@ -124,10 +132,11 @@ with make_adder(2) as add_two:
     assert add_two(40) == 42
 print(json.dumps({"iterations": iterations, "durationNanoseconds": duration, "checksum": checksum}))
 `], { env: { ...process.env, PYTHONPATH: pythonRoot } })).stdout);
-if (pythonPerformance.checksum !== 42 * pythonPerformance.iterations) throw new Error("Python performance checksum failed");
+if (pythonPerformance.checksum !== STEADY_STATE_BOX_VALUE * pythonPerformance.iterations) throw new Error("Python performance checksum failed");
 await writeConsumerPerformance({
   consumer: "python",
-  operation: "Box.read()",
+  operation: STEADY_STATE_OPERATION,
+  timingMode: "steady-state",
   scope: "steady-state generated Python API call",
   iterations: pythonPerformance.iterations,
   durationNanoseconds: pythonPerformance.durationNanoseconds,
@@ -149,12 +158,12 @@ lean_bridge_alpha = { path = "vendor/lean_bridge_alpha-0.0.0" }
 await writeFile(join(rustRoot, "src/main.rs"), `use lean_bridge_alpha::{make_adder, round_trip, with_callback, Box, Payload};
 use std::time::Instant;
 fn main() -> Result<(), std::boxed::Box<dyn std::error::Error>> {
-    let box_value = Box::new(42)?; assert_eq!(box_value.read()?, 42); assert!(std::ptr::eq(box_value.identity()?, &box_value));
+    let box_value = Box::new(${STEADY_STATE_BOX_VALUE})?; assert_eq!(box_value.read()?, ${STEADY_STATE_BOX_VALUE}); assert!(std::ptr::eq(box_value.identity()?, &box_value));
     let payload = round_trip(Payload { enabled: true, count: 41, label: "Lean λ".into(), bytes: vec![0, 255], values: vec![0, u32::MAX] })?;
     assert_eq!(payload.count, 42); assert_eq!(with_callback(40, |value| Ok(value + 2))?, 44);
     let add_two = make_adder(2)?; assert_eq!(add_two.call(40)?, 42);
-    let iterations: u32 = 100_000;
-    for _ in 0..5_000 { let _ = box_value.read()?; }
+    let iterations: u32 = ${STEADY_STATE_MEASURED_ITERATIONS};
+    for _ in 0..${STEADY_STATE_WARMUP_ITERATIONS} { let _ = box_value.read()?; }
     let mut checksum: u64 = 0; let started = Instant::now();
     for _ in 0..iterations { checksum += u64::from(box_value.read()?); }
     let duration = started.elapsed().as_nanos();
@@ -162,12 +171,13 @@ fn main() -> Result<(), std::boxed::Box<dyn std::error::Error>> {
     Ok(())
 }
 `);
-const rustPerformance = JSON.parse((await run("cargo", ["run", "--offline", "--quiet"], { cwd: rustRoot })).stdout);
-if (rustPerformance.checksum !== 42 * rustPerformance.iterations) throw new Error("Rust performance checksum failed");
+const rustPerformance = JSON.parse((await run("cargo", ["run", "--release", "--offline", "--quiet"], { cwd: rustRoot })).stdout);
+if (rustPerformance.checksum !== STEADY_STATE_BOX_VALUE * rustPerformance.iterations) throw new Error("Rust performance checksum failed");
 await writeConsumerPerformance({
   consumer: "rust",
-  operation: "Box::read",
-  scope: "steady-state generated Rust API call",
+  operation: STEADY_STATE_OPERATION,
+  timingMode: "steady-state",
+  scope: "steady-state generated Rust API call from a release-profile consumer",
   iterations: rustPerformance.iterations,
   durationNanoseconds: rustPerformance.durationNanoseconds,
 });

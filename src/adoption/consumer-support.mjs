@@ -113,12 +113,15 @@ export const validateConsumerResult = (result, contract, { allowFailed = false }
   if (result.blocker !== declared.blocker) fail("consumer-blocker-drift", `${result.consumer} blocker differs from the contract`);
   if (result.performance !== null) {
     exactKeys(result.performance, [
-      "schemaVersion", "consumer", "operation", "scope", "iterations",
-      "durationNanoseconds", "nanosecondsPerOperation",
+      "schemaVersion", "consumer", "operation", "timingMode", "scope", "iterations",
+      "durationNanoseconds", "nanosecondsPerOperation", "environment",
     ], `performance ${result.consumer}`);
     const performance = result.performance;
-    if (performance.schemaVersion !== 1 || performance.consumer !== result.consumer) {
+    if (performance.schemaVersion !== 2 || performance.consumer !== result.consumer) {
       fail("invalid-consumer-performance", `${result.consumer} performance identity is invalid`);
+    }
+    if (!new Set(["steady-state", "whole-invocation"]).has(performance.timingMode)) {
+      fail("invalid-consumer-performance", `${result.consumer} performance timing mode is invalid`);
     }
     if (typeof performance.operation !== "string" || performance.operation === "" ||
       typeof performance.scope !== "string" || performance.scope === "") {
@@ -132,6 +135,10 @@ export const validateConsumerResult = (result, contract, { allowFailed = false }
     const calculated = performance.durationNanoseconds / performance.iterations;
     if (Math.abs(calculated - performance.nanosecondsPerOperation) > Math.max(1e-9, calculated * 1e-12)) {
       fail("invalid-consumer-performance", `${result.consumer} performance latency does not match its duration and iterations`);
+    }
+    exactKeys(performance.environment, ["platform", "architecture", "cpu"], `performance environment ${result.consumer}`);
+    if (Object.values(performance.environment).some(value => typeof value !== "string" || value === "")) {
+      fail("invalid-consumer-performance", `${result.consumer} performance environment is invalid`);
     }
   }
   if (result.testResult !== "passed" && !allowFailed) fail("consumer-test-failed", `${result.consumer} consumer test failed`);
@@ -172,11 +179,12 @@ const yesNo = value => value ? "yes" : "no";
 const performanceValue = performance => {
   if (performance === null) return "not measured";
   const nanoseconds = performance.nanosecondsPerOperation;
+  const unit = performance.timingMode === "whole-invocation" ? "invocation" : "call";
   const value = nanoseconds < 1_000
-    ? `${nanoseconds.toFixed(1)} ns/op`
+    ? `${nanoseconds.toFixed(1)} ns/${unit}`
     : nanoseconds < 1_000_000
-      ? `${(nanoseconds / 1_000).toFixed(2)} µs/op`
-      : `${(nanoseconds / 1_000_000).toFixed(2)} ms/op`;
+      ? `${(nanoseconds / 1_000).toFixed(2)} µs/${unit}`
+      : `${(nanoseconds / 1_000_000).toFixed(2)} ms/${unit}`;
   return `${value} (${performance.iterations.toLocaleString("en-US")} iterations)`;
 };
 
@@ -185,14 +193,26 @@ export const consumerSummaryMarkdown = report => [
   "",
   `Contract ${report.contractVersion}. Result: **${report.result}**.`,
   "",
-  "Performance values are observational measurements from installed generated APIs on this runner. The operation column identifies what each target measured; exact scope and total duration are retained in the JSON report.",
+  "Performance values are observational measurements from installed generated APIs. Jobs can run on different workers, so compare rows only when their operation, timing mode, and recorded CPU match. Measurement context is shown below, and total duration is retained in the JSON report.",
   "",
-  "| Consumer | Declared state | Test | Package installed | Real Lean executed | Operation | Performance | Blocker |",
-  "|---|---|---|---|---|---|---:|---|",
+  "| Consumer | Declared state | Test | Package installed | Real Lean executed | Operation | Timing | Performance | Blocker |",
+  "|---|---|---|---|---|---|---|---:|---|",
   ...report.consumers.map(item => {
     const blocker = item.blocker === null ? "None" : item.blocker.replaceAll("|", "\\|");
     const operation = item.performance?.operation.replaceAll("|", "\\|") ?? "not measured";
-    return `| ${item.consumer} | ${item.declaredState} | ${item.testResult} | ${yesNo(item.packageInstallation)} | ${yesNo(item.realLeanExecution)} | ${operation} | ${performanceValue(item.performance)} | ${blocker} |`;
+    const timing = item.performance?.timingMode ?? "not measured";
+    return `| ${item.consumer} | ${item.declaredState} | ${item.testResult} | ${yesNo(item.packageInstallation)} | ${yesNo(item.realLeanExecution)} | ${operation} | ${timing} | ${performanceValue(item.performance)} | ${blocker} |`;
+  }),
+  "",
+  "## Measurement context",
+  "",
+  "| Consumer | Scope | Platform | Architecture | CPU |",
+  "|---|---|---|---|---|",
+  ...report.consumers.map(item => {
+    if (item.performance === null) return `| ${item.consumer} | not measured | not measured | not measured | not measured |`;
+    const scope = item.performance.scope.replaceAll("|", "\\|");
+    const cpu = item.performance.environment.cpu.replaceAll("|", "\\|");
+    return `| ${item.consumer} | ${scope} | ${item.performance.environment.platform} | ${item.performance.environment.architecture} | ${cpu} |`;
   }),
   "",
 ].join("\n");

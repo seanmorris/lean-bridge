@@ -10,7 +10,13 @@ import { promisify } from "node:util";
 import { chromium } from "playwright";
 import { build } from "vite";
 
-import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  writeConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
 
 const execute = promisify(execFile);
 const options = new Map();
@@ -37,9 +43,9 @@ const callback = withCallback(40, current => current + 2);
 const addTwo = makeAdder(2);
 const closure = addTwo(40);
 addTwo.dispose();
-const benchmarkBox = new Box(73);
-const iterations = 20000;
-for (let index = 0; index < 2000; index += 1) benchmarkBox.read();
+const benchmarkBox = new Box(${STEADY_STATE_BOX_VALUE});
+const iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
+for (let index = 0; index < ${STEADY_STATE_WARMUP_ITERATIONS}; index += 1) benchmarkBox.read();
 let checksum = 0;
 const started = performance.now();
 for (let index = 0; index < iterations; index += 1) checksum += benchmarkBox.read();
@@ -82,10 +88,11 @@ try {
   if (JSON.stringify({ value: result.value, identity: result.identity, count: result.count, callback: result.callback, closure: result.closure }) !== JSON.stringify({ value: 42, identity: true, count: 42, callback: 44, closure: 42 })) {
     throw new Error(`unexpected browser result: ${JSON.stringify(result)}`);
   }
-  if (result.checksum !== 73 * result.performance.iterations) throw new Error("browser performance checksum failed");
+  if (result.checksum !== STEADY_STATE_BOX_VALUE * result.performance.iterations) throw new Error("browser performance checksum failed");
   await writeConsumerPerformance({
     consumer: "browser-javascript",
-    operation: "Box.read()",
+    operation: STEADY_STATE_OPERATION,
+    timingMode: "steady-state",
     scope: "steady-state generated browser API call in Chromium",
     ...result.performance,
   });

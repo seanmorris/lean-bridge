@@ -12,7 +12,13 @@ import {
   readConsumerSupport,
   validateConsumerSupport,
 } from "../src/adoption/consumer-support.mjs";
-import { createConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+import {
+  STEADY_STATE_BOX_VALUE,
+  STEADY_STATE_MEASURED_ITERATIONS,
+  STEADY_STATE_OPERATION,
+  STEADY_STATE_WARMUP_ITERATIONS,
+  createConsumerPerformance,
+} from "../src/adoption/consumer-performance.mjs";
 
 const publicDocuments = Object.freeze([
   "README.md",
@@ -120,6 +126,31 @@ test("promoted package evidence names each executable runtime path", async () =>
   for (const [path, pattern] of checks) assert.match(await readFile(path, "utf8"), new RegExp(pattern), path);
 });
 
+test("steady-state consumers share one retained Box workload", async () => {
+  assert.equal(STEADY_STATE_BOX_VALUE, 73);
+  assert.equal(STEADY_STATE_OPERATION, "retained Box read");
+  assert.equal(STEADY_STATE_WARMUP_ITERATIONS, 10_000);
+  assert.equal(STEADY_STATE_MEASURED_ITERATIONS, 100_000);
+  for (const path of [
+    "tests/consumer-node.test.mjs",
+    "scripts/test-browser-package-consumer.mjs",
+    "scripts/test-native-consumers.mjs",
+    "scripts/test-php-native-package-consumer.mjs",
+    "scripts/test-php-wasm-package-host.mjs",
+  ]) {
+    const source = await readFile(path, "utf8");
+    assert.match(source, /STEADY_STATE_BOX_VALUE/, path);
+    assert.match(source, /STEADY_STATE_OPERATION/, path);
+    assert.match(source, /STEADY_STATE_WARMUP_ITERATIONS/, path);
+    assert.match(source, /STEADY_STATE_MEASURED_ITERATIONS/, path);
+  }
+  const native = await readFile("scripts/test-native-consumers.mjs", "utf8");
+  assert.match(native, /-DCMAKE_BUILD_TYPE=Release/);
+  assert.match(native, /"cargo", \["run", "--release"/);
+  assert.doesNotMatch(native, /assert\(lean_alpha_/);
+  assert.doesNotMatch(native, /sum\(box\.read/);
+});
+
 test("CI result contract detects support loss", async () => {
   const contract = await readConsumerSupport();
   const results = contract.consumers.map((item, index) => ({
@@ -132,7 +163,8 @@ test("CI result contract detects support loss", async () => {
     performance: createConsumerPerformance({
       consumer: item.id,
       operation: "generated API fixture call",
-      scope: "steady-state installed consumer",
+      timingMode: item.id === "wit-wasi" ? "whole-invocation" : "steady-state",
+      scope: item.id === "wit-wasi" ? "installed process and component startup" : "steady-state installed consumer",
       iterations: 1000,
       durationNanoseconds: (index + 1) * 100000,
     }),
@@ -161,9 +193,12 @@ test("CI result contract detects support loss", async () => {
 
   const markdown = consumerSummaryMarkdown(evaluateConsumerResults({ contract, results }));
   for (const consumer of contract.consumers) assert.match(markdown, new RegExp(`\\| ${consumer.id} \\|`));
-  assert.match(markdown, /Operation \| Performance/);
-  assert.match(markdown, /ns\/op|µs\/op|ms\/op/);
-  assert.match(markdown, /observational measurements from installed generated APIs/);
+  assert.match(markdown, /Operation \| Timing \| Performance/);
+  assert.match(markdown, /ns\/call|µs\/call|ms\/call/);
+  assert.match(markdown, /\/invocation/);
+  assert.match(markdown, /operation, timing mode, and recorded CPU match/);
+  assert.match(markdown, /## Measurement context/);
+  assert.match(markdown, /Consumer \| Scope \| Platform \| Architecture \| CPU/);
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
@@ -179,6 +214,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /npm run build:builder-image/);
   assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
+  assert.match(packageDocument.scripts["test:consumer:node"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
