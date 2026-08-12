@@ -58,7 +58,7 @@ jobs:
       - name: Install JavaScript dependencies
         run: npm ci
       - name: Download immutable gate artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: reproducibility-gate.tar
           path: build

@@ -324,7 +324,7 @@ test("read-only build directories do not override a successful reproducibility r
 test("release workflow downloads the direct artifact by its filename", async () => {
   const workflow = await readFile(".github/workflows/reproducible-release.yml", "utf8");
   assert.match(workflow, /path: build\/reproducibility-gate\.tar\n\s+archive: false/);
-  assert.match(workflow, /uses: actions\/download-artifact@v5\n\s+with:\n\s+name: reproducibility-gate\.tar\n\s+path: build/);
+  assert.match(workflow, /uses: actions\/download-artifact@v8\n\s+with:\n\s+name: reproducibility-gate\.tar\n\s+path: build/);
   assert.doesNotMatch(workflow, /name: reproducibility-gate-\$\{\{ github\.sha \}\}/);
 });
 
