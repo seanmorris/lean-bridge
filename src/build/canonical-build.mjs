@@ -254,13 +254,13 @@ const prepareDockerNixClosureCache = async ({ engineRoot, selection, runner, env
     ...(cache.policy === "refresh" ? ["--refresh"] : []),
   ];
   const installable = await componentEngineInstallable(engineRoot);
-  const info = await runner.capture({
+  const realized = await runner.capture({
     command: nixCommand,
-    args: [...common, "path-info", "--no-write-lock-file", installable],
+    args: [...common, "build", "--no-link", "--print-out-paths", "--no-write-lock-file", installable],
     cwd: resolve(engineRoot),
     timeoutMs: 60 * 60 * 1000,
   });
-  const storePath = info.stdout.trim().split(/\s+/).at(-1);
+  const storePath = realized.stdout.trim().split(/\s+/).at(-1);
   if (!/^\/nix\/store\/[0-9a-z]{32}-lean-bridge-component-engine$/.test(storePath)) {
     fail("component-engine-store-path-invalid", "Native Nix returned an invalid component engine store path", { details: { storePath } });
   }
@@ -391,12 +391,34 @@ export const buildPinnedBuilderImage = async ({
   });
   const inspected = await runner.capture({
     command: dockerCommand,
-    args: ["image", "inspect", "--format", "{{.Id}}", image],
+    args: ["image", "inspect", "--format", "{{json .Config}}", image],
     cwd: root,
   });
-  const actual = inspected.stdout.trim().replace(/^sha256:/, "");
+  let config;
+  try {
+    config = JSON.parse(inspected.stdout);
+  } catch (error) {
+    fail("builder-image-inspect-invalid", "Docker returned an invalid builder runtime configuration", {
+      details: { cause: error.message },
+    });
+  }
+  const runtimeConfig = {
+    cmd: config.Cmd ?? null,
+    entrypoint: config.Entrypoint ?? null,
+    environment: config.Env ?? [],
+    exposedPorts: Object.keys(config.ExposedPorts ?? {}).sort(),
+    healthcheck: config.Healthcheck ?? null,
+    labels: config.Labels ?? {},
+    onBuild: config.OnBuild ?? [],
+    shell: config.Shell ?? null,
+    stopSignal: config.StopSignal ?? null,
+    user: config.User ?? "",
+    volumes: Object.keys(config.Volumes ?? {}).sort(),
+    workingDirectory: config.WorkingDir ?? "",
+  };
+  const actual = sha256(canonicalJson(runtimeConfig));
   if (actual !== resolvedBuilder.manifest.image.configSha256) {
-    fail("builder-image-drift", "The locally built builder image differs from its reviewed config digest", {
+    fail("builder-image-drift", "The locally built builder runtime configuration differs from its reviewed digest", {
       details: { expected: resolvedBuilder.manifest.image.configSha256, actual },
     });
   }

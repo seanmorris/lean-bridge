@@ -14,7 +14,7 @@ RUNTIME_SOURCE="$RUNTIME_ROOT/source"
 LEAN_RUNTIME="$RUNTIME_BUILD/lib/lean/libleanrt.a"
 LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
 
-"$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
+bash "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
 
 SOURCE_DIR="$LEAN_WASM_PROJECT_ROOT/poc/lean-link-spike"
 GRAPH_LOCK="$SOURCE_DIR/graph-lock.json"

@@ -106,6 +106,7 @@ make \
   -C "$LEAN_NATIVE_SOURCE/src" \
   -f "$LEAN_NATIVE_CMAKE_BUILD/stdlib.make" \
   Init \
+  LEAN_BASH="$(command -v bash)" \
   LAKE_EXTRA_ARGS=Init:static
 
 if [[ ! -f "$LEAN_NATIVE_ARCHIVE" || ! -f "$LEAN_NATIVE_INIT_ARCHIVE" ]]; then

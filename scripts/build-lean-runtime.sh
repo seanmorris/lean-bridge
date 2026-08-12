@@ -92,6 +92,7 @@ make \
   -C "$PATCHED_SOURCE/src" \
   -f "$CMAKE_BUILD/stdlib.make" \
   Init \
+  LEAN_BASH="$(command -v bash)" \
   LAKE_EXTRA_ARGS=Init:static
 
 LEAN_INIT_ARCHIVE="$CMAKE_BUILD/lib/lean/libInit.a"

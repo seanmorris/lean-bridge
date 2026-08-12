@@ -193,7 +193,7 @@ test("native runtime generator emits one process broker and a hash-bound compone
 test("two native PHP components execute through one real Lean runtime and identity domain", async context => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-native-php-"));
   try {
-    const { stdout: buildOutput } = await run(join(process.cwd(), "scripts/build-lean-native-runtime.sh"), [], {
+    const { stdout: buildOutput } = await run("bash", [join(process.cwd(), "scripts/build-lean-native-runtime.sh")], {
       cwd: process.cwd(),
       maxBuffer: 16 * 1024 * 1024,
     });

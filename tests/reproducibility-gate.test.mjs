@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { constants } from "node:fs";
-import { access, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, chmod, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -184,12 +184,34 @@ test("source preparation creates two independent clean clones of one commit", as
   }
 });
 
-const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation = false }) => {
+const createCoreFixture = async root => {
+  await Promise.all([
+    mkdir(join(root, "audit"), { recursive: true }),
+    mkdir(join(root, "lazy"), { recursive: true }),
+  ]);
+  const emptyWasm = Buffer.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00]);
+  await Promise.all([
+    writeFile(join(root, "audit/artifact-manifest.json"), `${JSON.stringify({
+      schemaVersion: 1,
+      graphId: "poc/lean-link-spike@1",
+    })}\n`),
+    writeFile(join(root, "lazy/main.mjs"), "export default async () => ({ fixture: true });\n"),
+    writeFile(join(root, "lazy/main.wasm"), emptyWasm),
+    writeFile(join(root, "lazy/alpha.so.wasm"), emptyWasm),
+    writeFile(join(root, "lazy/beta.so.wasm"), emptyWasm),
+    writeFile(join(root, "lazy/gamma.so.wasm"), emptyWasm),
+  ]);
+  return root;
+};
+
+const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation = false, readOnlySecondBuild = false }) => {
   const revision = "1".repeat(40);
   const flakeLockSha256 = createHash("sha256").update(await readFile("flake.lock")).digest("hex");
+  const coreRoot = await createCoreFixture(join(outputRoot, "..", "core-fixture"));
   let buildNumber = 0;
   const seen = [];
-  const build = async ({ projectRoot, outputRoot: buildRoot, environment }) => {
+  const build = async ({ projectRoot, engineRoot, outputRoot: buildRoot, environment }) => {
+    assert.equal(engineRoot, projectRoot);
     buildNumber += 1;
     seen.push({ projectRoot, buildRoot, store: environment.LEAN_BRIDGE_NIX_STORE });
     if (inspectIsolation && buildNumber === 1) {
@@ -205,7 +227,7 @@ const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation =
     }
     await buildUniversalReleaseBundle({
       projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
+      coreRoot,
       outputRoot: join(buildRoot, "bundle"),
       revision,
       sourceDateEpoch: 1786261809,
@@ -228,6 +250,7 @@ const fixtureGate = async ({ outputRoot, mutateSecond = null, inspectIsolation =
       componentBinariesRebuiltByProjection: false,
     }));
     if (buildNumber === 2 && mutateSecond !== null) await mutateSecond(buildRoot);
+    if (buildNumber === 2 && readOnlySecondBuild) await chmod(join(buildRoot, "packages", "packages"), 0o555);
     const publication = JSON.parse(await readFile(join(buildRoot, "packages", "publication-index.json"), "utf8"));
     return {
       backend: "docker",
@@ -285,6 +308,24 @@ test("build B cannot inherit build A source, output, or writable store markers",
   } finally {
     await rm(scratch, { recursive: true, force: true });
   }
+});
+
+test("read-only build directories do not override a successful reproducibility result during cleanup", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-release-read-only-cleanup-"));
+  try {
+    const result = await fixtureGate({ outputRoot: join(scratch, "gate"), readOnlySecondBuild: true });
+    assert.equal(result.result, "passed");
+    assert.deepEqual((await readdir(scratch)).filter(name => name.startsWith(".lean-bridge-repro-")), []);
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+});
+
+test("release workflow downloads the direct artifact by its filename", async () => {
+  const workflow = await readFile(".github/workflows/reproducible-release.yml", "utf8");
+  assert.match(workflow, /path: build\/reproducibility-gate\.tar\n\s+archive: false/);
+  assert.match(workflow, /uses: actions\/download-artifact@v8\n\s+with:\n\s+name: reproducibility-gate\.tar\n\s+path: build/);
+  assert.doesNotMatch(workflow, /name: reproducibility-gate-\$\{\{ github\.sha \}\}/);
 });
 
 test("two clean candidate builds produce one content-addressed release authorization", async () => {

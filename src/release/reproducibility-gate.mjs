@@ -1,9 +1,12 @@
 import { createHash } from "node:crypto";
 import {
+  chmod,
   cp,
+  lstat,
   mkdir,
   mkdtemp,
   readFile,
+  readdir,
   rename,
   rm,
   stat,
@@ -349,6 +352,25 @@ const assertOutputAbsent = async ({ projectRoot, outputRoot }) => {
   return output;
 };
 
+const removeScratchTree = async root => {
+  const makeDirectoriesWritable = async directory => {
+    let facts;
+    try {
+      facts = await lstat(directory);
+    } catch (error) {
+      if (error.code === "ENOENT") return;
+      throw error;
+    }
+    if (!facts.isDirectory()) return;
+    await chmod(directory, (facts.mode & 0o777) | 0o700);
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      if (entry.isDirectory()) await makeDirectoriesWritable(join(directory, entry.name));
+    }
+  };
+  await makeDirectoriesWritable(root);
+  await rm(root, { recursive: true, force: true });
+};
+
 const writeEvidence = async ({ staging, report, candidateRoot }) => {
   const evidence = join(staging, "evidence");
   await mkdir(evidence, { recursive: true });
@@ -482,6 +504,7 @@ export const runReproducibilityGate = async ({
       onProgress?.({ phase: buildPhase, state: "started", message: `Starting isolated build ${name}`, current: index, total: 2 });
       const result = await build({
         projectRoot: prepared.roots[index],
+        engineRoot: prepared.roots[index],
         outputRoot: buildRoot,
         environment: {
           ...environment,
@@ -576,7 +599,7 @@ export const runReproducibilityGate = async ({
       details: { output, report: join(output, "evidence", "reproducibility.json"), reportSha256: evidence.reportSha256 },
     });
   } finally {
-    await rm(scratch, { recursive: true, force: true });
+    await removeScratchTree(scratch);
   }
 };
 
