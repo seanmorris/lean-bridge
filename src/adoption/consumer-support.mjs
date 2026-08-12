@@ -100,9 +100,9 @@ export const readConsumerSupport = async (path = "docs/consumer-support.v1.json"
 export const validateConsumerResult = (result, contract, { allowFailed = false } = {}) => {
   exactKeys(result, [
     "schemaVersion", "consumer", "declaredState", "testResult", "packageInstallation",
-    "realLeanExecution", "blocker", "command",
+    "realLeanExecution", "performance", "blocker", "command",
   ], `result ${result?.consumer ?? "unknown"}`);
-  if (result.schemaVersion !== 1 || !resultStates.has(result.testResult)) fail("invalid-consumer-result", "consumer result status is invalid");
+  if (result.schemaVersion !== 2 || !resultStates.has(result.testResult)) fail("invalid-consumer-result", "consumer result status is invalid");
   const declared = contract.consumers.find(item => item.id === result.consumer);
   if (!declared) fail("invalid-consumer-result", `unknown consumer ${result.consumer}`);
   if (result.declaredState !== declared.state) fail("consumer-state-drift", `${result.consumer} result used ${result.declaredState}, expected ${declared.state}`);
@@ -111,8 +111,32 @@ export const validateConsumerResult = (result, contract, { allowFailed = false }
   }
   if (typeof result.command !== "string" || result.command === "") fail("invalid-consumer-result", `${result.consumer} result needs a command`);
   if (result.blocker !== declared.blocker) fail("consumer-blocker-drift", `${result.consumer} blocker differs from the contract`);
+  if (result.performance !== null) {
+    exactKeys(result.performance, [
+      "schemaVersion", "consumer", "operation", "scope", "iterations",
+      "durationNanoseconds", "nanosecondsPerOperation",
+    ], `performance ${result.consumer}`);
+    const performance = result.performance;
+    if (performance.schemaVersion !== 1 || performance.consumer !== result.consumer) {
+      fail("invalid-consumer-performance", `${result.consumer} performance identity is invalid`);
+    }
+    if (typeof performance.operation !== "string" || performance.operation === "" ||
+      typeof performance.scope !== "string" || performance.scope === "") {
+      fail("invalid-consumer-performance", `${result.consumer} performance needs an operation and scope`);
+    }
+    if (!Number.isSafeInteger(performance.iterations) || performance.iterations < 1 ||
+      !Number.isFinite(performance.durationNanoseconds) || performance.durationNanoseconds <= 0 ||
+      !Number.isFinite(performance.nanosecondsPerOperation) || performance.nanosecondsPerOperation <= 0) {
+      fail("invalid-consumer-performance", `${result.consumer} performance measurements are invalid`);
+    }
+    const calculated = performance.durationNanoseconds / performance.iterations;
+    if (Math.abs(calculated - performance.nanosecondsPerOperation) > Math.max(1e-9, calculated * 1e-12)) {
+      fail("invalid-consumer-performance", `${result.consumer} performance latency does not match its duration and iterations`);
+    }
+  }
   if (result.testResult !== "passed" && !allowFailed) fail("consumer-test-failed", `${result.consumer} consumer test failed`);
   if (result.testResult !== "passed") return true;
+  if (result.performance === null) fail("consumer-performance-missing", `${result.consumer} passed without an end-user performance measurement`);
   if (declared.state === "supported" && (!result.packageInstallation || !result.realLeanExecution)) {
     fail("supported-consumer-not-executed", `${result.consumer} did not install its package and execute Lean`);
   }
@@ -136,7 +160,7 @@ export const evaluateConsumerResults = ({ contract, results }) => {
   const missing = contract.consumers.filter(item => !byId.has(item.id)).map(item => item.id);
   if (missing.length > 0) fail("missing-consumer-results", `consumer results are missing: ${missing.join(", ")}`);
   return Object.freeze({
-    schemaVersion: 1,
+    schemaVersion: 2,
     contractVersion: contract.contractVersion,
     result: results.every(item => item.testResult === "passed") ? "passed" : "failed",
     consumers: Object.freeze(contract.consumers.map(item => Object.freeze({ ...byId.get(item.id) }))),
@@ -145,16 +169,30 @@ export const evaluateConsumerResults = ({ contract, results }) => {
 
 const yesNo = value => value ? "yes" : "no";
 
+const performanceValue = performance => {
+  if (performance === null) return "not measured";
+  const nanoseconds = performance.nanosecondsPerOperation;
+  const value = nanoseconds < 1_000
+    ? `${nanoseconds.toFixed(1)} ns/op`
+    : nanoseconds < 1_000_000
+      ? `${(nanoseconds / 1_000).toFixed(2)} µs/op`
+      : `${(nanoseconds / 1_000_000).toFixed(2)} ms/op`;
+  return `${value} (${performance.iterations.toLocaleString("en-US")} iterations)`;
+};
+
 export const consumerSummaryMarkdown = report => [
   "# Downstream consumer support",
   "",
   `Contract ${report.contractVersion}. Result: **${report.result}**.`,
   "",
-  "| Consumer | Declared state | Test | Package installed | Real Lean executed | Blocker |",
-  "|---|---|---|---|---|---|",
+  "Performance values are observational measurements from installed generated APIs on this runner. The operation column identifies what each target measured; exact scope and total duration are retained in the JSON report.",
+  "",
+  "| Consumer | Declared state | Test | Package installed | Real Lean executed | Operation | Performance | Blocker |",
+  "|---|---|---|---|---|---|---:|---|",
   ...report.consumers.map(item => {
     const blocker = item.blocker === null ? "None" : item.blocker.replaceAll("|", "\\|");
-    return `| ${item.consumer} | ${item.declaredState} | ${item.testResult} | ${yesNo(item.packageInstallation)} | ${yesNo(item.realLeanExecution)} | ${blocker} |`;
+    const operation = item.performance?.operation.replaceAll("|", "\\|") ?? "not measured";
+    return `| ${item.consumer} | ${item.declaredState} | ${item.testResult} | ${yesNo(item.packageInstallation)} | ${yesNo(item.realLeanExecution)} | ${operation} | ${performanceValue(item.performance)} | ${blocker} |`;
   }),
   "",
 ].join("\n");

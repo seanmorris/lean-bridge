@@ -6,6 +6,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 
+import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+
 const option = name => {
   const index = process.argv.indexOf(name);
   return index === -1 ? null : process.argv[index + 1];
@@ -53,6 +55,12 @@ $box = new Box(41);
 $same = $box->identity();
 $payload = roundTrip(new Payload(false, 8, 'consumer', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
 $addTwo = makeAdder(2);
+$iterations = 20000;
+for ($index = 0; $index < 2000; ++$index) $box->read();
+$checksum = 0;
+$started = hrtime(true);
+for ($index = 0; $index < $iterations; ++$index) $checksum += $box->read();
+$durationNanoseconds = hrtime(true) - $started;
 $result = [
     'extension' => extension_loaded('lean_alpha'),
     'box' => $box->read(),
@@ -60,6 +68,7 @@ $result = [
     'payload' => [$payload->enabled, $payload->count, $payload->label, bin2hex($payload->bytes->toString()), $payload->values],
     'callback' => withCallback(40, static fn(int $value): int => $value),
     'closure' => $addTwo(40),
+    'performance' => ['iterations' => $iterations, 'durationNanoseconds' => $durationNanoseconds, 'checksum' => $checksum],
 ];
 $addTwo->close();
 $box->close();
@@ -76,6 +85,8 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   });
   if (stderr !== "") throw new Error(`native PHP consumer wrote to stderr: ${stderr}`);
   const result = JSON.parse(stdout);
+  const performance = result.performance;
+  delete result.performance;
   const expected = {
     extension: true,
     box: 41,
@@ -90,6 +101,14 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   if (JSON.stringify(result) !== JSON.stringify(expected)) {
     throw new Error(`native PHP result mismatch: ${JSON.stringify(result)}`);
   }
+  if (performance.checksum !== 41 * performance.iterations) throw new Error("native PHP performance checksum failed");
+  await writeConsumerPerformance({
+    consumer: "php-native",
+    operation: "Box::read()",
+    scope: "steady-state generated PHP API call through the native Zend extension",
+    iterations: performance.iterations,
+    durationNanoseconds: performance.durationNanoseconds,
+  });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
 } finally {
   await rm(consumer, { recursive: true, force: true });

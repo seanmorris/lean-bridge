@@ -42,13 +42,23 @@ if (command === "validate") {
   if (!id || !output) throw new Error("record requires --consumer and --output");
   const declared = contract.consumers.find(item => item.id === id);
   if (!declared) throw new Error(`unknown consumer ${id}`);
+  let performance = null;
+  const performancePath = options.get("--performance");
+  if (performancePath) {
+    try {
+      performance = JSON.parse(await readFile(resolve(performancePath), "utf8"));
+    } catch (error) {
+      if (error.code !== "ENOENT" || (options.get("--test-result") ?? "passed") === "passed") throw error;
+    }
+  }
   const result = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     consumer: id,
     declaredState: declared.state,
     testResult: options.get("--test-result") ?? "passed",
     packageInstallation: bool("--package-installation", declared.packageInstallation),
     realLeanExecution: bool("--real-lean-execution", declared.realLeanExecution),
+    performance,
     blocker: declared.blocker,
     command: options.get("--command") ?? declared.testCommand,
   };

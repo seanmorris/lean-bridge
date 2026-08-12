@@ -7,6 +7,8 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
+import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+
 const option = name => {
   const index = process.argv.indexOf(name);
   return index === -1 ? null : process.argv[index + 1];
@@ -73,6 +75,12 @@ $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
     [1, 5, 13],
 ));
 $adder = LeanAlpha\\makeAdder(2);
+$iterations = 20000;
+for ($index = 0; $index < 2000; ++$index) $box->read();
+$checksum = 0;
+$started = hrtime(true);
+for ($index = 0; $index < $iterations; ++$index) $checksum += $box->read();
+$durationNanoseconds = hrtime(true) - $started;
 $result = [
     'extension' => extension_loaded('lean_alpha'),
     'box' => $box->read(),
@@ -82,6 +90,7 @@ $result = [
     'payload' => [$payload->enabled, $payload->count, $payload->label, bin2hex($payload->bytes->toString()), $payload->values],
     'callback' => LeanAlpha\\withCallback(40, static fn(int $value): int => $value),
     'closure' => $adder(40),
+    'performance' => ['iterations' => $iterations, 'durationNanoseconds' => $durationNanoseconds, 'checksum' => $checksum],
 ];
 $adder->close();
 $box->close();
@@ -96,6 +105,8 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
     throw new Error(`PHP-Wasm host failed with status ${status}: ${stderr || stdout}`);
   }
   const result = JSON.parse(stdout);
+  const performance = result.performance;
+  delete result.performance;
   const expected = {
     extension: true,
     box: 41,
@@ -111,6 +122,16 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
   };
   if (JSON.stringify(result) !== JSON.stringify(expected)) {
     throw new Error(`PHP-Wasm result mismatch: ${JSON.stringify(result)}`);
+  }
+  if (performance.checksum !== 41 * performance.iterations) throw new Error("PHP-Wasm performance checksum failed");
+  if (process.env.LEAN_BRIDGE_CONSUMER_PHP_WASM_PROFILE !== "side-startup") {
+    await writeConsumerPerformance({
+      consumer: "php-wasm",
+      operation: "Box::read()",
+      scope: "steady-state generated PHP API call through the lazy PHP-Wasm transport",
+      iterations: performance.iterations,
+      durationNanoseconds: performance.durationNanoseconds,
+    });
   }
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
 } finally {

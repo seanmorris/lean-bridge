@@ -6,6 +6,8 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
+import { writeConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
+
 const execute = promisify(execFile);
 const repository = resolve(".");
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_RUNTIME_ROOT ?? "build/consumer-ci-runtime/lazy");
@@ -106,9 +108,27 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
 
     const javascript = await run("node", ["--input-type=module", "-e", [
       'import { add, isEmpty } from "onboarding-small";',
-      'process.stdout.write(JSON.stringify({ add: String(add(100n, 23n)), empty: isEmpty(""), nonempty: isEmpty("Lean") }));',
+      "const iterations = 20000;",
+      "for (let index = 0; index < 2000; index += 1) add(BigInt(index), 2n);",
+      "let checksum = 0n;",
+      "const started = performance.now();",
+      "for (let index = 0; index < iterations; index += 1) checksum += add(BigInt(index), 2n);",
+      "const durationNanoseconds = (performance.now() - started) * 1000000;",
+      'process.stdout.write(JSON.stringify({ add: String(add(100n, 23n)), empty: isEmpty(""), nonempty: isEmpty("Lean"), checksum: String(checksum), performance: { iterations, durationNanoseconds } }));',
     ].join("\n")], { cwd: consumer });
-    assert.deepEqual(JSON.parse(javascript.stdout), { add: "123", empty: true, nonempty: false });
+    const javascriptResult = JSON.parse(javascript.stdout);
+    assert.deepEqual({
+      add: javascriptResult.add,
+      empty: javascriptResult.empty,
+      nonempty: javascriptResult.nonempty,
+    }, { add: "123", empty: true, nonempty: false });
+    assert.notEqual(javascriptResult.checksum, "0");
+    await writeConsumerPerformance({
+      consumer: "node-javascript",
+      operation: "add(BigInt, BigInt)",
+      scope: "steady-state generated JavaScript API call",
+      ...javascriptResult.performance,
+    });
 
     const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
     assert.doesNotMatch(declarations, /\bany\b/);
@@ -118,6 +138,13 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
       "const sum: bigint = add(20n, 22n);",
       'const empty: boolean = isEmpty("");',
       'if (sum !== 42n || !empty) throw new Error("unexpected Lean result");',
+      "const iterations: number = 20000;",
+      "for (let index = 0; index < 2000; index += 1) add(BigInt(index), 2n);",
+      "let checksum: bigint = 0n;",
+      "const started: number = performance.now();",
+      "for (let index = 0; index < iterations; index += 1) checksum += add(BigInt(index), 2n);",
+      "const durationNanoseconds: number = (performance.now() - started) * 1000000;",
+      "console.log(JSON.stringify({ iterations, durationNanoseconds, checksum: String(checksum) }));",
       "",
     ].join("\n"));
     await writeFile(join(consumer, "tsconfig.json"), `${JSON.stringify({
@@ -133,7 +160,15 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
       include: ["index.ts"],
     }, null, 2)}\n`);
     await run(join(repository, "node_modules/.bin/tsc"), ["--project", "tsconfig.json"], { cwd: consumer });
-    await run("node", ["dist/index.js"], { cwd: consumer });
+    const typescript = JSON.parse((await run("node", ["dist/index.js"], { cwd: consumer })).stdout);
+    assert.notEqual(typescript.checksum, "0");
+    await writeConsumerPerformance({
+      consumer: "node-typescript",
+      operation: "add(BigInt, BigInt)",
+      scope: "steady-state generated TypeScript API call after compilation",
+      iterations: typescript.iterations,
+      durationNanoseconds: typescript.durationNanoseconds,
+    });
 
     const verification = JSON.parse((await run("node", [
       join(repository, "scripts/verify-component-package-receipt.mjs"),

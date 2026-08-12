@@ -7,10 +7,12 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import {
   ConsumerSupportError,
+  consumerSummaryMarkdown,
   evaluateConsumerResults,
   readConsumerSupport,
   validateConsumerSupport,
 } from "../src/adoption/consumer-support.mjs";
+import { createConsumerPerformance } from "../src/adoption/consumer-performance.mjs";
 
 const publicDocuments = Object.freeze([
   "README.md",
@@ -120,13 +122,20 @@ test("promoted package evidence names each executable runtime path", async () =>
 
 test("CI result contract detects support loss", async () => {
   const contract = await readConsumerSupport();
-  const results = contract.consumers.map(item => ({
-    schemaVersion: 1,
+  const results = contract.consumers.map((item, index) => ({
+    schemaVersion: 2,
     consumer: item.id,
     declaredState: item.state,
     testResult: "passed",
     packageInstallation: item.packageInstallation,
     realLeanExecution: item.realLeanExecution,
+    performance: createConsumerPerformance({
+      consumer: item.id,
+      operation: "generated API fixture call",
+      scope: "steady-state installed consumer",
+      iterations: 1000,
+      durationNanoseconds: (index + 1) * 100000,
+    }),
     blocker: item.blocker,
     command: item.testCommand,
   }));
@@ -142,6 +151,19 @@ test("CI result contract detects support loss", async () => {
   const failed = structuredClone(results);
   failed.find(item => item.consumer === "php-wasm").testResult = "failed";
   assert.equal(evaluateConsumerResults({ contract, results: failed }).result, "failed");
+
+  const unmeasured = structuredClone(results);
+  unmeasured.find(item => item.consumer === "rust").performance = null;
+  assert.throws(
+    () => evaluateConsumerResults({ contract, results: unmeasured }),
+    error => error.code === "consumer-performance-missing",
+  );
+
+  const markdown = consumerSummaryMarkdown(evaluateConsumerResults({ contract, results }));
+  for (const consumer of contract.consumers) assert.match(markdown, new RegExp(`\\| ${consumer.id} \\|`));
+  assert.match(markdown, /Operation \| Performance/);
+  assert.match(markdown, /ns\/op|µs\/op|ms\/op/);
+  assert.match(markdown, /observational measurements from installed generated APIs/);
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
@@ -153,6 +175,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);
   assert.match(workflow, /NODE_VERSION: "22"/);
+  assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
   assert.match(workflow, /npm run build:builder-image/);
   assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
@@ -162,5 +185,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const contract = await readConsumerSupport();
   for (const consumer of contract.consumers) {
     assert.match(workflow, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    if (["python", "rust", "c", "cpp"].includes(consumer.id)) {
+      assert.match(workflow, /--performance "build\/consumer-ci\/performance\/\$consumer\.json"/);
+    } else {
+      assert.match(workflow, new RegExp(`--performance [^\\n]*${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));
+    }
   }
 });

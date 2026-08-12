@@ -181,7 +181,7 @@ try {
       "scripts/test-php-wasm-package-host.mjs",
       "--package", spec.left,
       "--php-wasm", phpWasm,
-    ]);
+    ], { env: { ...process.env, LEAN_BRIDGE_CONSUMER_PHP_WASM_PROFILE: spec.graphProfile } });
     report.consumerInstallations.push({ profile: spec.profile, packageInstalled: true, realLeanExecuted: true });
   }
   for (const spec of [lazy, startup]) {
