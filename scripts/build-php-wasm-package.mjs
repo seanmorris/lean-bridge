@@ -280,7 +280,7 @@ const build = async ({ manifest: manifestPath, output: outputPath, phpSource: ph
     LEAN_WASM_RUNTIME_VARIANT: inputs.manifest.phpWasm.emscripten.runtimeVariant,
     LEAN_WASM_ARTIFACT_TARGET: inputs.manifest.graphLock.target,
   };
-  await run(join(projectRoot, "scripts/build-lean-link-spike.sh"), [], {
+  await run("bash", [join(projectRoot, "scripts/build-lean-link-spike.sh")], {
     cwd: projectRoot,
     env: targetEnvironment,
   });

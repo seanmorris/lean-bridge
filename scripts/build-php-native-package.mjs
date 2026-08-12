@@ -171,7 +171,7 @@ const build = async ({ manifest: manifestPath, output: outputPath }) => {
     ZERO_AR_DATE: "1",
   };
   try {
-    const { stdout: runtimeOutput } = await run(join(projectRoot, "scripts/build-lean-native-runtime.sh"), [], {
+    const { stdout: runtimeOutput } = await run("bash", [join(projectRoot, "scripts/build-lean-native-runtime.sh")], {
       cwd: projectRoot,
       env: epochEnvironment,
     });

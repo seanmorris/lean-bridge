@@ -172,7 +172,7 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
     ZERO_AR_DATE: "1",
   };
   try {
-    const { stdout } = await run(join(projectRoot, "scripts/build-lean-native-runtime.sh"), [], {
+    const { stdout } = await run("bash", [join(projectRoot, "scripts/build-lean-native-runtime.sh")], {
       cwd: projectRoot,
       env: environment,
     });

@@ -8,7 +8,7 @@ source "$LEAN_BRIDGE_ROOT/scripts/env.sh"
 # shellcheck source=lean-runtime-config.sh
 source "$LEAN_BRIDGE_ROOT/scripts/lean-runtime-config.sh"
 
-"$LEAN_BRIDGE_ROOT/scripts/build-lean-runtime.sh"
+bash "$LEAN_BRIDGE_ROOT/scripts/build-lean-runtime.sh"
 node "$LEAN_BRIDGE_ROOT/scripts/generate-performance-scale-fixtures.mjs"
 
 SOURCE_DIR="$LEAN_BRIDGE_ROOT/poc/performance/scale"
