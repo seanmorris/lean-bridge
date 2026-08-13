@@ -16,6 +16,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Canonical binding IR](binding-ir.md)
 - [Component and lifecycle diagrams](diagrams.md)
 - [Architecture decisions](adr/README.md)
+- [Managed runtime target profiles](adr/23-managed-runtime-target-profiles.md)
 - [Proof-of-concept plan](poc-plan.md)
 - [Risk register](risks.md)
 - [Commit-pinned source dossier](sources.md)

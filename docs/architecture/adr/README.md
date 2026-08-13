@@ -26,6 +26,7 @@ The complete working ADR bodies are mirrored in Virtual Office. This index recor
 | 20 | Rust as the second semantic-parity backend; C++ remains a later packaging backend | Accepted for POC |
 | 21 | One generated PHP projection over closed native Zend and PHP-Wasm transport interfaces | Accepted for POC |
 | 22 | Compile each component once; registry backends package an immutable canonical release bundle without compiler access | Accepted for POC |
+| 23 | .NET, JVM, and Ruby share one generated C boundary and process-wide runtime through idiomatic private FFI profiles | Accepted for POC |
 
 ## ADR 1: Generated native binding surface
 
@@ -119,6 +120,10 @@ The release bundle becomes the handoff between expensive trusted compilation and
 ### Unresolved work
 
 Node 828 defines the closed canonical manifest. Node 829 builds the flake bundle. Nodes 830 through 832 implement packaging backends, release rehearsal, clean installs, and build tracing.
+
+## ADR 23: Managed runtime target profiles
+
+The accepted .NET, JVM, and Ruby execution profiles, capability gaps, and common acceptance contract are recorded in [ADR 23](23-managed-runtime-target-profiles.md). The closed machine-readable contract is [target-runtime-profiles.v1.json](../../target-runtime-profiles.v1.json).
 
 ## Amendment rule
 

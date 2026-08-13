@@ -110,6 +110,7 @@
     "test:component-release-bundle": "node --test tests/component-release-bundle.test.mjs",
     "test:component-npm-package": "node --test tests/component-npm-package.test.mjs",
     "test:docs": "node --test tests/documentation.test.mjs",
+    "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
     "test:consumer:node": "nix --extra-experimental-features 'nix-command flakes' build .#universal-core-artifacts --out-link build/consumer-ci-runtime && nix --extra-experimental-features 'nix-command flakes' build .#npm-package --out-link build/consumer-node-alpha-package && LEAN_BRIDGE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_ALPHA_NPM_PACKAGE_ROOT=build/consumer-node-alpha-package node --test tests/consumer-node.test.mjs",
     "test:consumer:browser": "nix --extra-experimental-features 'nix-command flakes' build .#npm-package --out-link build/consumer-browser-package && node scripts/test-browser-package-consumer.mjs --package build/consumer-browser-package",
     "test:consumer:php-native": "nix --extra-experimental-features 'nix-command flakes' build .#php-native-package --out-link build/consumer-php-native && nix --extra-experimental-features 'nix-command flakes' develop . --command node scripts/test-php-native-package-consumer.mjs --package build/consumer-php-native",
