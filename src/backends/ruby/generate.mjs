@@ -100,17 +100,25 @@ module LeanBridge
       root = File.expand_path("../native/linux-x64", __dir__) if root.nil? || root.empty?
       runtime_path = File.join(root, "liblean_bridge_native.so")
       component_path = File.join(root, "liblean_alpha_component.so")
+      composition_path = File.join(root, "liblean_beta_component.so")
       flags = Fiddle::RTLD_NOW | Fiddle::RTLD_GLOBAL
       RUNTIME_LIBRARY = Fiddle::Handle.new(runtime_path, flags)
       COMPONENT_LIBRARY = Fiddle::Handle.new(component_path, flags)
+      COMPOSITION_LIBRARY = Fiddle::Handle.new(composition_path, flags)
 
       def bind(name, arguments, result = Fiddle::TYPE_INT)
         Fiddle::Function.new(COMPONENT_LIBRARY[name], arguments, result)
       end
 
+      def bind_composition(name, arguments, result = Fiddle::TYPE_INT)
+        Fiddle::Function.new(COMPOSITION_LIBRARY[name], arguments, result)
+      end
+
       BOX_CREATE = bind("lean_alpha_box_create", [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
       BOX_READ = bind("lean_alpha_box_read", [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
       BOX_IDENTITY = bind("lean_alpha_box_identity", [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
+      COMPOSITION_READ = bind_composition("lean_beta_composition_read", [Fiddle::TYPE_VOIDP])
+      SNAPSHOT_READ = Fiddle::Function.new(RUNTIME_LIBRARY["lean_bridge_native_snapshot_read"], [Fiddle::TYPE_VOIDP], Fiddle::TYPE_VOID)
       ROUND_TRIP = bind("lean_alpha_round_trip", [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
       WITH_CALLBACK = bind("lean_alpha_with_callback", [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
       MAKE_ADDER = bind("lean_alpha_make_adder", [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP])
@@ -210,6 +218,21 @@ module LeanBridge
         nil
       end
 
+      def composition_read(state)
+        COMPOSITION_READ.call(state.require_open)
+      end
+
+      def snapshot
+        output = buffer(40)
+        SNAPSHOT_READ.call(output)
+        values = output[0, 40].unpack("L<6Q<2")
+        {
+          runtime_init_runs: values[2], component_init_runs: values[3],
+          attached_components: values[4], live_identities: values[5],
+          runtime_instance_id: values[6], identity_domain_id: values[7]
+        }.freeze
+      end
+
       def write_slice(payload, offset, data, length)
         write_pointer(payload, offset, data.nil? ? 0 : data)
         write_pointer(payload, offset + 8, length)
@@ -299,7 +322,7 @@ module LeanBridge
         output[0, 4].unpack1("L<")
       end
 
-      private_constant :RUNTIME_LIBRARY, :COMPONENT_LIBRARY
+      private_constant :RUNTIME_LIBRARY, :COMPONENT_LIBRARY, :COMPOSITION_LIBRARY
     end
   end
 end

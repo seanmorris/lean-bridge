@@ -142,7 +142,7 @@ const lockArtifact = (authorization, name) => {
   return { path: matches[0].path, sha256: matches[0].sha256 };
 };
 
-const installFor = target => {
+export const releaseInstallFor = target => {
   if (target.operation === "retain") {
     return {
       kind: "retained-archive",
@@ -153,6 +153,9 @@ const installFor = target => {
     npm: `npm install ${target.coordinate}`,
     cargo: `cargo add ${target.name}@${target.version}`,
     pypi: `python -m pip install ${target.coordinate}`,
+    nuget: `dotnet add package ${target.name} --version ${target.version}`,
+    maven: `mvn dependency:get -Dartifact=${target.coordinate}`,
+    rubygems: `gem install ${target.name} --version ${target.version}`,
   };
   const command = commands[target.ecosystem];
   if (command === undefined) {
@@ -220,7 +223,7 @@ const assertTransaction = ({ verified, transaction, transactionPath, transaction
       idempotencyKey: target.idempotencyKey,
       backendPlan: target.backendPlan,
       archives: target.archives,
-      install: installFor(target),
+      install: releaseInstallFor(target),
     };
   });
 };

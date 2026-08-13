@@ -156,6 +156,51 @@ static void lean_alpha_component_detach(void)
 }
 `;
 
+const compositionUnwrapSource = `
+
+uintptr_t lean_alpha_composition_unwrap(const lean_alpha_box *box)
+{
+  return box == NULL ? 0 : box->value;
+}
+`;
+
+const betaCompositionSource = `#include "lean_alpha.h"
+#include "lean_bridge_native_runtime.h"
+
+#include <lean/lean.h>
+#include <stdint.h>
+
+extern lean_object *initialize_Beta(uint8_t builtin);
+extern uint32_t lean_link_beta_read(lean_object *box);
+extern uintptr_t lean_alpha_composition_unwrap(const lean_alpha_box *box);
+
+static const char beta_component_id[] = "poc/lean-beta@0.0.0";
+
+__attribute__((constructor))
+static void lean_beta_component_attach(void)
+{
+  (void)lean_bridge_native_component_initialize(
+    beta_component_id,
+    (lean_bridge_native_initializer)initialize_Beta
+  );
+}
+
+__attribute__((destructor))
+static void lean_beta_component_detach(void)
+{
+  lean_bridge_native_component_detach(beta_component_id);
+}
+
+__attribute__((visibility("default")))
+uint32_t lean_beta_composition_read(const lean_alpha_box *box)
+{
+  lean_object *value = (lean_object *)lean_alpha_composition_unwrap(box);
+  if (value == NULL) return 0;
+  lean_inc(value);
+  return lean_link_beta_read(value);
+}
+`;
+
 export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = defaultManifest, output: outputPath }) => {
   const output = resolve(process.cwd(), outputPath);
   if (output === projectRoot || output === dirname(projectRoot)) throw new Error("refusing to use the project or its parent as native output");
@@ -182,8 +227,10 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
     const source = join(scratch, "source");
     await writeFiles(source, {
       ...c,
+      "src/lean_alpha.c": `${c["src/lean_alpha.c"]}${compositionUnwrapSource}`,
       ...native,
       "src/lean_alpha_component.c": installerSource,
+      "src/lean_beta_composition.c": betaCompositionSource,
     });
     const leanPrefix = dirname(facts.lean_include_dir);
     const libuvArchive = join(leanPrefix, "lib/libuv.a");
@@ -197,6 +244,14 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
       "-c", leanC,
       inputs.leanSourceAbsolute,
     ], { cwd: projectRoot, env: environment });
+    const betaLean = join(dirname(inputs.leanSourceAbsolute), "Beta.lean");
+    const betaC = join(source, "Beta.c");
+    await run(join(leanPrefix, "bin/lean"), [
+      "-R", dirname(inputs.leanSourceAbsolute),
+      "-o", join(source, "Beta.olean"),
+      "-c", betaC,
+      betaLean,
+    ], { cwd: projectRoot, env: { ...environment, LEAN_PATH: source } });
 
     const prefixFlags = [
       `-ffile-prefix-map=${scratch}=/build/native-ffi`,
@@ -232,6 +287,8 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
       compile("src/lean_alpha_native.c", "lean_alpha_native.o"),
       compile("src/lean_alpha_component.c", "lean_alpha_component.o"),
       compile("Alpha.c", "Alpha.o"),
+      compile("Beta.c", "Beta.o"),
+      compile("src/lean_beta_composition.c", "lean_beta_composition.o"),
     ]);
     const componentLibrary = join(scratch, "liblean_alpha_component.so");
     await run("clang++", [
@@ -246,19 +303,33 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
       "-Wl,-rpath,$ORIGIN", "-Wl,-soname,liblean_alpha_component.so",
       "-o", componentLibrary,
     ], { env: environment });
+    const compositionLibrary = join(scratch, "liblean_beta_component.so");
+    await run("clang++", [
+      "-shared",
+      join(scratch, "lean_beta_composition.o"),
+      join(scratch, "Beta.o"),
+      "-L", scratch,
+      "-Wl,--no-as-needed", "-llean_alpha_component", "-llean_bridge_native",
+      "-Wl,--as-needed", "-Wl,--build-id=none", "-Wl,-z,defs",
+      "-Wl,-rpath,$ORIGIN", "-Wl,-soname,liblean_beta_component.so",
+      "-o", compositionLibrary,
+    ], { env: environment });
     await Promise.all([
       run("llvm-strip", ["--strip-debug", runtimeLibrary]),
       run("llvm-strip", ["--strip-debug", componentLibrary]),
+      run("llvm-strip", ["--strip-debug", compositionLibrary]),
     ]);
     await Promise.all([
       run("patchelf", ["--set-rpath", "$ORIGIN", runtimeLibrary]),
       run("patchelf", ["--set-rpath", "$ORIGIN", componentLibrary]),
+      run("patchelf", ["--set-rpath", "$ORIGIN", compositionLibrary]),
     ]);
     await Promise.all([
       assertPortableElf(runtimeLibrary),
       assertPortableElf(componentLibrary),
+      assertPortableElf(compositionLibrary),
     ]);
-    const minimumGlibc = await glibcMinimumVersion([runtimeLibrary, componentLibrary]);
+    const minimumGlibc = await glibcMinimumVersion([runtimeLibrary, componentLibrary, compositionLibrary]);
 
     await Promise.all([
       mkdir(join(output, "include"), { recursive: true }),
@@ -272,11 +343,13 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
       copyFile(join(source, "include/lean_bridge_native_runtime.h"), join(output, "include/lean_bridge_native_runtime.h")),
       copyFile(runtimeLibrary, join(output, "lib/liblean_bridge_native.so")),
       copyFile(componentLibrary, join(output, "lib/liblean_alpha_component.so")),
+      copyFile(compositionLibrary, join(output, "lib/liblean_beta_component.so")),
       writeFile(join(output, "metadata/native-runtime-manifest.json"), native["native-runtime-manifest.json"]),
     ]);
     await Promise.all([
       chmod(join(output, "lib/liblean_bridge_native.so"), 0o755),
       chmod(join(output, "lib/liblean_alpha_component.so"), 0o755),
+      chmod(join(output, "lib/liblean_beta_component.so"), 0o755),
     ]);
     const payload = await collectFiles(output);
     const manifest = {
@@ -292,6 +365,7 @@ export const buildNativeFfiArtifacts = async ({ manifest: manifestPath = default
       },
       runtime: "lib/liblean_bridge_native.so",
       componentLibrary: "lib/liblean_alpha_component.so",
+      compositionProbeLibrary: "lib/liblean_beta_component.so",
       publicHeader: "include/lean_alpha.h",
       sourceDateEpoch: inputs.manifest.sourceDateEpoch,
       files: payload,

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "1.1.0",
-  "verifiedAt": "2026-08-11",
+  "contractVersion": "1.2.0",
+  "verifiedAt": "2026-08-13",
   "states": {
     "supported": "A clean consumer installs the documented artifact and executes a real Lean component.",
     "partial": "Package or interface behavior passes, but an ordinary package workflow remains incomplete.",
@@ -80,6 +80,54 @@
       "evidence": [
         "docs/evidence/php-release-gate.md",
         "scripts/test-php-wasm-package-host.mjs"
+      ]
+    },
+    {
+      "id": "dotnet",
+      "name": ".NET",
+      "state": "supported",
+      "scope": ".NET 8 on x86-64 Linux with glibc 2.38 or newer through the generated LibraryImport transport and NuGet package",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:managed",
+      "blocker": null,
+      "evidence": [
+        "docs/dotnet-jvm-ruby.md",
+        "docs/evidence/managed-consumer-acceptance.md",
+        "tests/managed-registry-package.test.mjs",
+        "scripts/test-managed-registry-consumers.mjs"
+      ]
+    },
+    {
+      "id": "jvm",
+      "name": "JVM",
+      "state": "supported",
+      "scope": "JDK 22 on x86-64 Linux with glibc 2.38 or newer through finalized FFM and a Maven package",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:managed",
+      "blocker": null,
+      "evidence": [
+        "docs/dotnet-jvm-ruby.md",
+        "docs/evidence/managed-consumer-acceptance.md",
+        "tests/managed-registry-package.test.mjs",
+        "scripts/test-managed-registry-consumers.mjs"
+      ]
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "state": "supported",
+      "scope": "MRI Ruby 3.3 on x86-64 Linux with glibc 2.38 or newer through Fiddle and a RubyGem without a native extension build",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:managed",
+      "blocker": null,
+      "evidence": [
+        "docs/dotnet-jvm-ruby.md",
+        "docs/evidence/managed-consumer-acceptance.md",
+        "tests/managed-registry-package.test.mjs",
+        "scripts/test-managed-registry-consumers.mjs"
       ]
     },
     {

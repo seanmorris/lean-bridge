@@ -82,7 +82,7 @@ const artifactRoles = new Set([
   "runtime", "component", "source", "lock", "binding", "schema", "validator",
   "documentation", "license", "assurance", "sbom", "provenance",
 ]);
-const ecosystems = new Set(["npm", "cargo", "pypi", "c", "cpp", "wit-wasi"]);
+const ecosystems = new Set(["npm", "cargo", "pypi", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi"]);
 const claimStates = new Set(["proved", "trusted-boundary", "unverified"]);
 
 const validateReference = ({ id, artifacts, label, role = null }) => {

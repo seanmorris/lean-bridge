@@ -13,7 +13,10 @@ import { buildCPackage, buildCppPackage } from "./c-family-package.mjs";
 import { buildCargoPackage } from "./cargo-package.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
 import { buildNpmPackage } from "./npm-package.mjs";
+import { buildNugetPackage } from "./nuget-package.mjs";
 import { buildPyPiPackage } from "./pypi-package.mjs";
+import { buildMavenPackage } from "./maven-package.mjs";
+import { buildRubyGemsPackage } from "./rubygems-package.mjs";
 import { buildWasiPackage } from "./wasi-package.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -194,6 +197,9 @@ const builders = Object.freeze({
   pypi: buildPyPiPackage,
   c: buildCPackage,
   cpp: buildCppPackage,
+  nuget: buildNugetPackage,
+  maven: buildMavenPackage,
+  rubygems: buildRubyGemsPackage,
   "wit-wasi": buildWasiPackage,
 });
 
@@ -203,6 +209,9 @@ const backendPlans = Object.freeze({
   pypi: "pypi-projection.json",
   c: "c-projection.json",
   cpp: "cpp-projection.json",
+  nuget: "nuget-projection.json",
+  maven: "maven-projection.json",
+  rubygems: "rubygems-projection.json",
   "wit-wasi": "wit-wasi-projection.json",
 });
 
@@ -212,6 +221,9 @@ const archiveProperties = Object.freeze({
   pypi: [["wheel", "wheel"], ["sdist", "sdist"]],
   c: [["archive", "archive"]],
   cpp: [["archive", "archive"]],
+  nuget: [["nupkg", "archive"]],
+  maven: [["jar", "jar"], ["pom", "pom"]],
+  rubygems: [["gem", "archive"]],
   "wit-wasi": [["archive", "archive"]],
 });
 

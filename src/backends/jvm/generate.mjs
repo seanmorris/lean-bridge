@@ -54,6 +54,7 @@ public final class Box implements AutoCloseable {
     public Box(long value) { state = new Runtime.BoxState(this, Runtime.createBox(value)); }
     public long read() { return Runtime.readBox(state); }
     public Box identity() { Runtime.verifyIdentity(state); return this; }
+    Runtime.BoxState compositionState() { return state; }
     @Override public void close() { state.close(); }
 }
 `,
@@ -115,8 +116,10 @@ final class Runtime {
     private static final Cleaner CLEANER = Cleaner.create();
 
     private static final MethodHandle BOX_CREATE = downcall("lean_alpha_box_create", FunctionDescriptor.of(JAVA_INT, JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle SNAPSHOT_READ = downcall("lean_bridge_native_snapshot_read", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle BOX_READ = downcall("lean_alpha_box_read", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle BOX_IDENTITY = downcall("lean_alpha_box_identity", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle COMPOSITION_READ = downcall("lean_beta_composition_read", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle ROUND_TRIP = downcall("lean_alpha_round_trip", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle WITH_CALLBACK = downcall("lean_alpha_with_callback", FunctionDescriptor.of(JAVA_INT, JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MAKE_ADDER = downcall("lean_alpha_make_adder", FunctionDescriptor.of(JAVA_INT, JAVA_INT, ADDRESS, ADDRESS));
@@ -138,6 +141,17 @@ final class Runtime {
     private Runtime() { }
 
     record TransformAddress(MemorySegment value) { }
+    record Snapshot(int runtimeInitRuns, int componentInitRuns, int attachedComponents, int liveIdentities, long runtimeInstanceId, long identityDomainId) { }
+
+    static Snapshot snapshot() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment value = arena.allocate(40, 8);
+            SNAPSHOT_READ.invokeExact(value);
+            return new Snapshot(
+                value.get(JAVA_INT, 8), value.get(JAVA_INT, 12), value.get(JAVA_INT, 16), value.get(JAVA_INT, 20),
+                value.get(JAVA_LONG, 24), value.get(JAVA_LONG, 32));
+        } catch (Throwable throwable) { throw propagate(throwable); }
+    }
 
     private static final class ResourceCleanup implements Runnable {
         private MemorySegment value;
@@ -212,6 +226,13 @@ final class Runtime {
             int status = (int) BOX_IDENTITY.invokeExact(expected, output, error);
             check(status, error, null);
             if (output.get(ADDRESS, 0).address() != expected.address()) throw new LeanBridgeException("Lean returned a different Box identity");
+        } catch (Throwable throwable) { throw propagate(throwable); }
+    }
+
+    static long compositionRead(Box box) {
+        try {
+            int value = (int) COMPOSITION_READ.invokeExact(box.compositionState().require());
+            return Integer.toUnsignedLong(value);
         } catch (Throwable throwable) { throw propagate(throwable); }
     }
 
@@ -343,8 +364,11 @@ final class Runtime {
                 Path configured = configuredRoot();
                 Path runtime = configured == null ? extract("liblean_bridge_native.so") : configured.resolve("liblean_bridge_native.so");
                 Path component = configured == null ? extract("liblean_alpha_component.so") : configured.resolve("liblean_alpha_component.so");
-                SymbolLookup.libraryLookup(runtime, Arena.global());
-                return SymbolLookup.libraryLookup(component, Arena.global());
+                Path composition = configured == null ? extract("liblean_beta_component.so") : configured.resolve("liblean_beta_component.so");
+                SymbolLookup runtimeLookup = SymbolLookup.libraryLookup(runtime, Arena.global());
+                SymbolLookup componentLookup = SymbolLookup.libraryLookup(component, Arena.global());
+                SymbolLookup compositionLookup = SymbolLookup.libraryLookup(composition, Arena.global());
+                return runtimeLookup.or(componentLookup).or(compositionLookup);
             } catch (IOException exception) { throw new ExceptionInInitializerError(exception); }
         }
         private static Path configuredRoot() {

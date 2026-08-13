@@ -23,10 +23,13 @@
             cmake
             curl
             cargo
+            dotnet-sdk_8
             flex
             gperf
             git
+            jdk22_headless
             jq
+            kotlin
             lld
             ninja
             nodejs_22
@@ -41,6 +44,8 @@
             rustc
             libuv
             llvm
+            maven
+            ruby_3_3
             wabt
             wasm-tools
             xz
@@ -367,6 +372,24 @@
             '';
           };
 
+          managed-binding-artifacts = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-managed-binding-artifacts";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.dotnet-sdk_8 pkgs.jdk22_headless pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-managed-binding-artifacts.mjs \
+                --output "$out" \
+                --dotnet '${pkgs.dotnet-sdk_8}/bin/dotnet' \
+                --javac '${pkgs.jdk22_headless}/bin/javac'
+              runHook postInstall
+            '';
+          };
+
           wasi-component-artifacts = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-wasi-component-artifacts";
             version = "0.0.0";
@@ -400,6 +423,7 @@
               node scripts/build-universal-release-bundle.mjs \
                 --core '${universal-core-artifacts}' \
                 --native '${native-core-artifacts}' \
+                --managed '${managed-binding-artifacts}' \
                 --wasi '${wasi-component-artifacts}' \
                 --output "$out" \
                 --revision "$revision" \
@@ -426,6 +450,54 @@
             '';
           };
 
+          nuget-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-nuget-package";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-nuget-package.mjs --bundle '${universal-release-bundle}' --output "$out"
+              runHook postInstall
+            '';
+          };
+
+          maven-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-maven-package";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-maven-package.mjs --bundle '${universal-release-bundle}' --output "$out"
+              runHook postInstall
+            '';
+          };
+
+          rubygems-package = pkgs.stdenvNoCC.mkDerivation {
+            pname = "lean-alpha-rubygems-package";
+            version = "0.0.0";
+            src = self;
+            nativeBuildInputs = [ pkgs.nodejs_22 pkgs.ruby_3_3 ];
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              runHook preInstall
+              node scripts/build-rubygems-package.mjs \
+                --bundle '${universal-release-bundle}' \
+                --output "$out" \
+                --gem '${pkgs.ruby_3_3}/bin/gem'
+              runHook postInstall
+            '';
+          };
+
           wasi-package = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-wasi-package";
             version = "0.0.0";
@@ -444,13 +516,15 @@
             pname = "lean-alpha-release-rehearsal";
             version = "0.0.0";
             src = self;
-            nativeBuildInputs = [ pkgs.nodejs_22 ];
+            nativeBuildInputs = [ pkgs.nodejs_22 pkgs.ruby_3_3 ];
             dontConfigure = true;
             dontBuild = true;
+            dontFixup = true;
 
             installPhase = ''
               runHook preInstall
               node --experimental-permission \
+                --allow-child-process \
                 --allow-fs-read="$PWD" \
                 --allow-fs-read='${universal-release-bundle}' \
                 --allow-fs-read="$out" \
@@ -518,9 +592,13 @@
           wasm-poc = self.packages.${pkgs.system}.wasm-poc;
           universal-core-artifacts = self.packages.${pkgs.system}.universal-core-artifacts;
           native-core-artifacts = self.packages.${pkgs.system}.native-core-artifacts;
+          managed-binding-artifacts = self.packages.${pkgs.system}.managed-binding-artifacts;
           wasi-component-artifacts = self.packages.${pkgs.system}.wasi-component-artifacts;
           universal-release-bundle = self.packages.${pkgs.system}.universal-release-bundle;
           npm-package = self.packages.${pkgs.system}.npm-package;
+          nuget-package = self.packages.${pkgs.system}.nuget-package;
+          maven-package = self.packages.${pkgs.system}.maven-package;
+          rubygems-package = self.packages.${pkgs.system}.rubygems-package;
           wasi-package = self.packages.${pkgs.system}.wasi-package;
           release-rehearsal = self.packages.${pkgs.system}.release-rehearsal;
           php-native-package = self.packages.${pkgs.system}.php-native-package;

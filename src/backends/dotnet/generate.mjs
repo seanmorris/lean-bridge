@@ -135,6 +135,12 @@ internal sealed class CallbackState : IDisposable
 
 internal static class Runtime
 {
+    internal static uint[] Snapshot()
+    {
+        var snapshot = Native.Snapshot();
+        return [snapshot.RuntimeInitRuns, snapshot.ComponentInitRuns, snapshot.AttachedComponents, snapshot.LiveIdentities];
+    }
+
     internal static BoxState CreateBox(uint value)
     {
         var status = Native.BoxCreate(value, out var handle, out var error);
@@ -148,6 +154,8 @@ internal static class Runtime
         Check(status, error);
         return value;
     }
+
+    internal static uint CompositionRead(BoxState box) => Native.BetaRead(box.Require());
 
     internal static void VerifyIdentity(BoxState box)
     {
@@ -273,10 +281,24 @@ internal struct NativeSlice { internal nint Data; internal nuint Length; interna
 internal struct NativePayload { internal byte Enabled; private byte p1, p2, p3; internal uint Count; internal NativeSlice Label; internal NativeSlice Bytes; internal NativeSlice Values; }
 [StructLayout(LayoutKind.Sequential)]
 internal struct NativeTransform { internal nint Call; internal nint Context; }
+[StructLayout(LayoutKind.Sequential)]
+internal struct NativeSnapshot
+{
+    internal uint AbiVersion;
+    internal uint RuntimeState;
+    internal uint RuntimeInitRuns;
+    internal uint ComponentInitRuns;
+    internal uint AttachedComponents;
+    internal uint LiveIdentities;
+    internal ulong RuntimeInstanceId;
+    internal ulong IdentityDomainId;
+}
 
 internal static partial class Native
 {
+    private const string RuntimeLibrary = "liblean_bridge_native.so";
     private const string ComponentLibrary = "liblean_alpha_component.so";
+    private const string CompositionLibrary = "liblean_beta_component.so";
     private static nint runtimeHandle;
     private static nint componentHandle;
 
@@ -287,12 +309,23 @@ internal static partial class Native
 
     private static nint ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
     {
-        if (libraryName != ComponentLibrary) return 0;
-        var root = AppContext.BaseDirectory;
-        runtimeHandle = NativeLibrary.Load(Path.Combine(root, "liblean_bridge_native.so"));
+        if (libraryName != RuntimeLibrary && libraryName != ComponentLibrary && libraryName != CompositionLibrary) return 0;
+        var root = Environment.GetEnvironmentVariable("LEAN_BRIDGE_NATIVE_ROOT");
+        if (string.IsNullOrWhiteSpace(root))
+        {
+            var packaged = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native");
+            root = File.Exists(Path.Combine(packaged, ComponentLibrary)) ? packaged : AppContext.BaseDirectory;
+        }
+        runtimeHandle = NativeLibrary.Load(Path.Combine(root, RuntimeLibrary));
         componentHandle = NativeLibrary.Load(Path.Combine(root, ComponentLibrary));
-        return componentHandle;
+        if (libraryName == RuntimeLibrary) return runtimeHandle;
+        return libraryName == ComponentLibrary ? componentHandle : NativeLibrary.Load(Path.Combine(root, CompositionLibrary));
     }
+
+    [LibraryImport(RuntimeLibrary, EntryPoint = "lean_bridge_native_snapshot_read")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial void SnapshotRead(out NativeSnapshot snapshot);
+    internal static NativeSnapshot Snapshot() { SnapshotRead(out var snapshot); return snapshot; }
 
     [LibraryImport(ComponentLibrary, EntryPoint = "lean_alpha_box_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -300,6 +333,9 @@ internal static partial class Native
     [LibraryImport(ComponentLibrary, EntryPoint = "lean_alpha_box_read")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     internal static partial int BoxRead(nint self, out uint result, out NativeError error);
+    [LibraryImport(CompositionLibrary, EntryPoint = "lean_beta_composition_read")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    internal static partial uint BetaRead(nint self);
     [LibraryImport(ComponentLibrary, EntryPoint = "lean_alpha_box_identity")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     internal static partial int BoxIdentity(nint self, out nint result, out NativeError error);
