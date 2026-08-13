@@ -239,7 +239,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "enum": ["javascript", "python"] }
+          "items": { "enum": ["javascript", "python", "dotnet", "jvm", "ruby"] }
         },
         "identity": { "enum": ["weak-canonical", "strong-canonical"] },
         "dynamic": { "type": "boolean" }

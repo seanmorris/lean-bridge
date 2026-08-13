@@ -85,7 +85,7 @@ test("one semantic contract resolves callable, ownership, error, documentation, 
   assert.equal(Object.isFrozen(contract.declarations), true);
 });
 
-test("JavaScript, PHP, Python, C, C++, and Rust packages bind to one semantic contract", () => {
+test("all generated host packages bind to one semantic contract", () => {
   const report = compileCrossLanguageSemanticParity(alpha.bindingIr);
   assert.deepEqual(report.packages.map(item => item.backend), [
     "javascript",
@@ -94,6 +94,9 @@ test("JavaScript, PHP, Python, C, C++, and Rust packages bind to one semantic co
     "c",
     "cpp",
     "rust",
+    "dotnet",
+    "jvm",
+    "ruby",
   ]);
   assert.equal(new Set(report.packages.map(item => item.bindingIrSha256)).size, 1);
   assert.equal(new Set(report.packages.map(item => item.semanticContractSha256)).size, 1);
@@ -102,6 +105,9 @@ test("JavaScript, PHP, Python, C, C++, and Rust packages bind to one semantic co
     { value: "value" },
     { value: "value" },
     { value: "value and output parameter" },
+    { value: "value" },
+    { value: "value" },
+    { value: "value" },
     { value: "value" },
     { value: "value" },
   ]);

@@ -10,7 +10,7 @@ import {
 } from "../src/binding-ir/semantic-parity.mjs";
 
 const usage = () => {
-  process.stderr.write("usage: binding-semantic-parity <binding-ir.json> [javascript,python,c,rust]\n");
+  process.stderr.write("usage: binding-semantic-parity <binding-ir.json> [javascript,php,python,c,cpp,rust,dotnet,jvm,ruby]\n");
   process.exitCode = 2;
 };
 
