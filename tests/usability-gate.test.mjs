@@ -3,10 +3,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  evaluateUsabilityGate,
-  readUsabilitySessions,
-  UsabilityGateError,
-  validateUsabilitySessions,
+	evaluateUsabilityGate,
+	readUsabilitySessions,
+	UsabilityGateError,
+	validateUsabilitySessions,
 } from "../src/adoption/usability-gate.mjs";
 
 const sessionsPath = "acceptance/clean-room-sessions.v1.json";
@@ -16,14 +16,14 @@ test("a passing agent retires historical agent failures while human sessions rem
   const report = evaluateUsabilityGate(sessions);
   assert.equal(report.passed, false);
   assert.deepEqual(report.summary, {
-    requiredRoles: 4,
-    sessions: 6,
-    passedSessions: 1,
-    pendingSessions: 3,
-    blockedSessions: 1,
-    failedSessions: 1,
-    passedRoles: 1,
-    violations: 3,
+    requiredRoles: 4
+    , sessions: 6
+    , passedSessions: 1
+    , pendingSessions: 3
+    , blockedSessions: 1
+    , failedSessions: 1
+    , passedRoles: 1
+    , violations: 3
   });
   assert.deepEqual(report.violations.filter(item => item.role === "automated-agent"), []);
   assert.equal(report.violations.filter(item => item.code === "session-pending").length, 3);
@@ -32,7 +32,8 @@ test("a passing agent retires historical agent failures while human sessions rem
 test("four evidenced ordinary sessions pass without bridge-specific work", async () => {
   const sessions = await readUsabilitySessions(sessionsPath);
   const revision = "1".repeat(40);
-  for (const [index, session] of sessions.sessions.entries()) {
+  for(const [index, session] of sessions.sessions.entries())
+{
     session.id = `${session.role}-passed-${index}`;
     session.status = "passed";
     session.cleanCheckout = true;
@@ -43,7 +44,7 @@ test("four evidenced ordinary sessions pass without bridge-specific work", async
     session.reproducibleVerified = true;
     session.unfamiliarConcepts = [];
     session.evidence = ["docs/evidence/clean-room-usability-protocol.md"];
-  }
+}
   const report = evaluateUsabilityGate(sessions);
   assert.equal(report.passed, true);
   assert.equal(report.summary.passedSessions, 6);
@@ -69,11 +70,11 @@ test("the gate rejects wrapper work, implementation concepts, and unverified rec
     .map(item => item.code)
     .sort();
   assert.deepEqual(codes, [
-    "diagnostics-not-actionable",
-    "handwritten-wrapper-required",
-    "install-not-familiar",
-    "reproducibility-not-verified",
-    "unfamiliar-concepts-exposed",
+    "diagnostics-not-actionable"
+    , "handwritten-wrapper-required"
+    , "install-not-familiar"
+    , "reproducibility-not-verified"
+    , "unfamiliar-concepts-exposed"
   ]);
 });
 

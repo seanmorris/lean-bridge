@@ -3,54 +3,54 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  readTimeToPackageBudgets,
-  runTimeToPackageBenchmark,
-  TimeToPackageError,
-  validateTimeToPackageBudgets,
+	readTimeToPackageBudgets,
+	runTimeToPackageBenchmark,
+	TimeToPackageError,
+	validateTimeToPackageBudgets,
 } from "../src/adoption/time-to-package.mjs";
 
 const budgetPath = "acceptance/time-to-package-budgets.v1.json";
 const hardware = {
-  platform: "linux",
-  architecture: "x64",
-  logicalCpus: 4,
-  memoryBytes: 8 * 1024 * 1024 * 1024,
-  cpuModel: "test cpu",
-  nodeVersion: "v22.0.0",
+	platform: "linux"
+	, architecture: "x64"
+	, logicalCpus: 4
+	, memoryBytes: 8 * 1024 * 1024 * 1024
+	, cpuModel: "test cpu"
+	, nodeVersion: "v22.0.0"
 };
 
 const successfulOutcome = ({ stage }) => ({
-  status: "ok",
-  prompts: stage === "analyze" ? 0 : 0,
-  hints: 0,
-  generatedFiles: stage === "analyze" ? 2 : 1,
-  manualFiles: 0,
-  commands: 1,
-  unfamiliarConcepts: [],
-  failures: 0,
-  diagnostics: [],
+	status: "ok"
+	, prompts: stage === "analyze" ? 0 : 0
+	, hints: 0
+	, generatedFiles: stage === "analyze" ? 2 : 1
+	, manualFiles: 0
+	, commands: 1
+	, unfamiliarConcepts: []
+	, failures: 0
+	, diagnostics: []
 });
 
 test("cold and warm package stages report budgets and developer effort", async () => {
   const budgets = await readTimeToPackageBudgets(budgetPath);
   let time = 0;
   const report = await runTimeToPackageBenchmark({
-    budgets,
-    hardware,
-    runStage: successfulOutcome,
-    clock: () => { time += 10; return time; },
+    budgets
+    , hardware
+    , runStage: successfulOutcome
+    , clock: () => { time += 10; return time; }
   });
   assert.equal(report.passed, true);
   assert.equal(report.stages.length, 8);
   assert.ok(report.stages.every(item => item.durationMs === 10 && item.withinBudget));
   assert.deepEqual(report.summaries.map(item => ({
-    mode: item.mode,
-    durationMs: item.durationMs,
-    commands: item.commands,
-    manualFiles: item.manualFiles,
+    mode: item.mode
+    , durationMs: item.durationMs
+    , commands: item.commands
+    , manualFiles: item.manualFiles
   })), [
-    { mode: "cold", durationMs: 40, commands: 4, manualFiles: 0 },
-    { mode: "warm", durationMs: 40, commands: 4, manualFiles: 0 },
+    { mode: "cold", durationMs: 40, commands: 4, manualFiles: 0 }
+    , { mode: "warm", durationMs: 40, commands: 4, manualFiles: 0 }
   ]);
   assert.match(report.budgetSha256, /^[0-9a-f]{64}$/);
 });
@@ -59,16 +59,16 @@ test("a blocked build fails its stage and the end-to-end budget", async () => {
   const budgets = await readTimeToPackageBudgets(budgetPath);
   let time = 0;
   const report = await runTimeToPackageBenchmark({
-    budgets,
-    hardware,
-    runStage: ({ stage }) => stage === "build" ? {
+    budgets
+    , hardware
+    , runStage: ({ stage }) => stage === "build" ? {
       ...successfulOutcome({ stage }),
-      status: "blocked",
-      failures: 1,
-      unfamiliarConcepts: ["flake", "builder-image", "flake"],
-      diagnostics: ["invalid-builder-manifest"],
-    } : successfulOutcome({ stage }),
-    clock: () => { time += 1; return time; },
+      status: "blocked"
+      , failures: 1
+      , unfamiliarConcepts: ["flake", "builder-image", "flake"]
+      , diagnostics: ["invalid-builder-manifest"]
+    } : successfulOutcome({ stage })
+    , clock: () => { time += 1; return time; }
   });
   assert.equal(report.passed, false);
   assert.ok(report.summaries.every(item => !item.withinBudget && item.failures === 1));
@@ -79,10 +79,10 @@ test("unsupported hardware and closed budget drift fail explicitly", async () =>
   const budgets = await readTimeToPackageBudgets(budgetPath);
   let time = 0;
   const report = await runTimeToPackageBenchmark({
-    budgets,
-    hardware: { ...hardware, logicalCpus: 1 },
-    runStage: successfulOutcome,
-    clock: () => { time += 1; return time; },
+    budgets
+    , hardware: { ...hardware, logicalCpus: 1 }
+    , runStage: successfulOutcome
+    , clock: () => { time += 1; return time; }
   });
   assert.equal(report.hardwareCompatibility.passed, false);
   assert.equal(report.passed, false);
@@ -112,20 +112,20 @@ test("published time budgets schema stays closed", async () => {
   assert.equal(evidence.hardwareCompatibility.passed, true);
   assert.ok(evidence.stages.every(item => item.status === "ok" && item.withinBudget));
   assert.ok(evidence.summaries.every(item =>
-    item.withinBudget &&
-    item.prompts === 0 &&
-    item.hints === 0 &&
-    item.manualFiles === 0 &&
-    item.unfamiliarConcepts.length === 0 &&
-    item.failures === 0
+    item.withinBudget
+    && item.prompts === 0
+    && item.hints === 0
+    && item.manualFiles === 0
+    && item.unfamiliarConcepts.length === 0
+    && item.failures === 0
   ));
   assert.ok(evidence.stages.filter(item => item.stage === "dry-run").every(item =>
-    item.diagnostics.includes("rebuild-byte-comparison-passed") &&
-    item.diagnostics.includes("deterministic-package-projection-passed")
+    item.diagnostics.includes("rebuild-byte-comparison-passed")
+    && item.diagnostics.includes("deterministic-package-projection-passed")
   ));
   assert.ok(evidence.stages.filter(item => item.stage === "publish").every(item =>
-    item.diagnostics.includes("package-receipt-verified") &&
-    item.diagnostics.includes("native-callables-verified")
+    item.diagnostics.includes("package-receipt-verified")
+    && item.diagnostics.includes("native-callables-verified")
   ));
   assert.equal(planEvidence.passed, false);
   assert.deepEqual(

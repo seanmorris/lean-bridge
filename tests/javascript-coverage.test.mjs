@@ -9,16 +9,16 @@ import { JavaScriptProjectionError } from "../src/backends/javascript/projection
 const clone = value => structuredClone(value);
 
 const roundTrip = ir =>
-  ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
+	ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
 
 const expectGap = (ir, code) => {
-  const coverage = analyzeJavaScriptCoverage(ir);
-  assert.equal(coverage.supported, false);
-  assert.equal(coverage.gaps.some(item => item.code === code), true);
-  assert.throws(
-    () => generateJavaScriptPackage(ir),
-    error => error instanceof JavaScriptProjectionError && error.code === coverage.gaps[0].code,
-  );
+	const coverage = analyzeJavaScriptCoverage(ir);
+	assert.equal(coverage.supported, false);
+	assert.equal(coverage.gaps.some(item => item.code === code), true);
+	assert.throws(
+		() => generateJavaScriptPackage(ir),
+		error => error instanceof JavaScriptProjectionError && error.code === coverage.gaps[0].code,
+	);
 };
 
 test("the reviewed Alpha surface has complete JavaScript lowering coverage", () => {
@@ -52,9 +52,9 @@ test("generic and constructed values fail without runtime specialization", () =>
   const generic = clone(alpha.bindingIr);
   const declaration = roundTrip(generic);
   declaration.typeParameters.push({
-    id: "T",
-    representation: "copied",
-    constraints: [],
+    id: "T"
+    , representation: "copied"
+    , constraints: []
   });
   declaration.parameters[0].type = { kind: "parameter", id: "T" };
   declaration.result.type = { kind: "parameter", id: "T" };
@@ -62,9 +62,9 @@ test("generic and constructed values fail without runtime specialization", () =>
 
   const option = clone(alpha.bindingIr);
   roundTrip(option).parameters[0].type = {
-    kind: "apply",
-    constructor: "option",
-    arguments: [{ kind: "primitive", name: "uint32" }],
+    kind: "apply"
+    , constructor: "option"
+    , arguments: [{ kind: "primitive", name: "uint32" }]
   };
   expectGap(option, "unsupported-type-constructor");
 });
@@ -82,24 +82,24 @@ test("optional arguments and ambiguous overload groups fail before generation", 
   declaration.overloadKey = "roundTrip(uint32)";
   declaration.parameters = [
     {
-      name: "count",
-      type: { kind: "primitive", name: "uint32" },
-      ownership: "copy",
-      lifetime: null,
-      mutability: "immutable",
-      optional: false,
-      default: null,
-    },
+      name: "count"
+      , type: { kind: "primitive", name: "uint32" }
+      , ownership: "copy"
+      , lifetime: null
+      , mutability: "immutable"
+      , optional: false
+      , default: null
+    }
   ];
   declaration.result = {
-    type: { kind: "primitive", name: "uint32" },
-    ownership: "copy",
-    lifetime: null,
+    type: { kind: "primitive", name: "uint32" }
+    , ownership: "copy"
+    , lifetime: null
   };
   declaration.source = {
-    producer: "bridge",
-    declaration: "Alpha.roundTripCount",
-    extensions: { "lean-wasm.org/intrinsic": "coverage-probe" },
+    producer: "bridge"
+    , declaration: "Alpha.roundTripCount"
+    , extensions: { "lean-wasm.org/intrinsic": "coverage-probe" }
   };
   overloaded.declarations.push(declaration);
   expectGap(overloaded, "ambiguous-overload-group");
@@ -113,8 +113,8 @@ test("callback domain errors and nonscalar payloads fail outside envelope covera
 
   const payload = clone(alpha.bindingIr);
   payload.errors.find(error => error.id === "error:callback-threw").payload = {
-    kind: "primitive",
-    name: "string",
+    kind: "primitive"
+    , name: "string"
   };
   expectGap(payload, "unsupported-error-envelope");
 });

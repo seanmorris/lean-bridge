@@ -4,9 +4,9 @@ import test from "node:test";
 
 import { performanceProfiles, runPerformanceSuite } from "../src/performance/harness.mjs";
 import {
-  analyzePerformanceSelfConsistency,
-  collectPerformanceInventory,
-  comparePerformanceInventories,
+	analyzePerformanceSelfConsistency,
+	collectPerformanceInventory,
+	comparePerformanceInventories,
 } from "../src/performance/reproducibility.mjs";
 
 const manifest = JSON.parse(await readFile("poc/performance/workloads.v1.json", "utf8"));
@@ -45,44 +45,46 @@ test("inventory comparison accepts equality and reports exact artifact drift", (
   assert.equal(comparePerformanceInventories(first, first).accepted, true);
   const changed = Object.freeze({
     ...first,
-    entries: Object.freeze([{ ...entry, sha256: "c".repeat(64) }]),
-    sha256: "d".repeat(64),
+    entries: Object.freeze([{ ...entry, sha256: "c".repeat(64) }])
+    , sha256: "d".repeat(64)
   });
   const comparison = comparePerformanceInventories(first, changed);
   assert.equal(comparison.accepted, false);
   assert.deepEqual(comparison.differences.map(item => [item.path, item.kind]), [
-    ["build/performance-wasm/main.wasm", "content-drift"],
+    ["build/performance-wasm/main.wasm", "content-drift"]
   ]);
 });
 
 test("fixed workloads preserve semantics while timing remains measured variance", async () => {
   const suites = [];
-  for (let repetition = 0; repetition < 2; repetition += 1) {
+  for(let repetition = 0; repetition < 2; repetition += 1)
+{
     suites.push(await runPerformanceSuite({
-      manifest,
-      workload: "interactive-clustered-2d",
-      profiles: performanceProfiles,
+      manifest
+      , workload: "interactive-clustered-2d"
+      , profiles: performanceProfiles
     }));
-  }
+}
   const result = analyzePerformanceSelfConsistency(suites);
   assert.equal(result.accepted, true);
   assert.equal(result.repetitions, 2);
   assert.equal(new Set(result.semanticHashes).size, 1);
   assert.match(result.semanticSha256, /^[a-f0-9]{64}$/);
   assert.ok(Object.keys(result.timingVariance).length > 20);
-  for (const metric of Object.values(result.timingVariance)) {
+  for(const metric of Object.values(result.timingVariance))
+{
     assert.equal(metric.repetitions, 2);
     assert.equal(metric.valuesNs.length, 2);
     assert.ok(metric.maximumNs >= metric.minimumNs);
     assert.ok(metric.coefficientOfVariation >= 0);
-  }
+}
 });
 
 test("semantic drift fails independently from timing noise", async () => {
   const first = await runPerformanceSuite({
-    manifest,
-    workload: "interactive-clustered-2d",
-    profiles: ["lazy"],
+    manifest
+    , workload: "interactive-clustered-2d"
+    , profiles: ["lazy"]
   });
   const changed = structuredClone(first);
   changed.runs[0].correctness.resultSha256 = "0".repeat(64);
@@ -94,17 +96,18 @@ test("semantic drift fails independently from timing noise", async () => {
 
 test("performance reproducibility clients never reach private dispatch", async () => {
   const paths = [
-    "src/performance/reproducibility.mjs",
-    "scripts/compare-performance-builds.mjs",
-    "scripts/benchmark-self-consistency.mjs",
+    "src/performance/reproducibility.mjs"
+    , "scripts/compare-performance-builds.mjs"
+    , "scripts/benchmark-self-consistency.mjs"
   ];
-  for (const path of paths) {
+  for(const path of paths)
+{
     const source = await readFile(path, "utf8");
     assert.doesNotMatch(
       source,
       /\bccall\b|\bcwrap\b|_bridge_|generic\s+(?:invoke|dispatch)|numeric handle/i,
     );
-  }
+}
 });
 
 test("the clean build gate isolates two committed source and build roots", async () => {

@@ -5,19 +5,29 @@ import { ReleaseCandidateState } from "../src/release/release-candidate-state.mj
 
 test("one candidate advances through the required release states in order", () => {
   const state = new ReleaseCandidateState({ sourceIdentitySha256: "1".repeat(64) });
-  for (const [index, name] of ["analyze", "generate", "build-a", "build-b"].entries()) {
+  for(const [index, name] of ["analyze", "generate", "build-a", "build-b"].entries())
+{
     state.transition({ state: name, evidenceSha256: String(index + 2).repeat(64) });
-  }
+}
   const candidateId = "6".repeat(64);
   state.transition({ state: "compare", evidenceSha256: "7".repeat(64), candidateId });
-  for (const [evidence, name] of [["8", "report"], ["9", "authorize"], ["a", "publish"]]) {
+  for(const [evidence, name] of [["8", "report"], ["9", "authorize"], ["a", "publish"]])
+{
     state.transition({ state: name, evidenceSha256: evidence.repeat(64), candidateId });
-  }
+}
   const snapshot = state.snapshot();
   assert.equal(snapshot.current, "publish");
   assert.equal(snapshot.candidateId, candidateId);
   assert.deepEqual(snapshot.history.map(item => item.state), [
-    "created", "analyze", "generate", "build-a", "build-b", "compare", "report", "authorize", "publish",
+    "created"
+    , "analyze"
+    , "generate"
+    , "build-a"
+    , "build-b"
+    , "compare"
+    , "report"
+    , "authorize"
+    , "publish"
   ]);
 });
 

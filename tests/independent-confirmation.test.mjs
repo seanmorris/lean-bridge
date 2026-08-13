@@ -5,32 +5,33 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  createIndependentConfirmation,
-  writeIndependentConfirmation,
+	createIndependentConfirmation,
+	writeIndependentConfirmation,
 } from "../src/release/independent-confirmation.mjs";
 
 const candidate = Object.freeze({
-  id: "1".repeat(64),
-  sourceRevision: "2".repeat(40),
-  sourceTree: "3".repeat(40),
-  artifactInventorySha256: "4".repeat(64),
+	id: "1".repeat(64)
+	, sourceRevision: "2".repeat(40)
+	, sourceTree: "3".repeat(40)
+	, artifactInventorySha256: "4".repeat(64)
 });
 
 test("an independent rebuild produces one content-addressed confirmation record", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-confirmation-"));
   const output = join(scratch, "record");
-  try {
+  try
+{
     const confirmation = createIndependentConfirmation({
-      published: { candidate, authorizationSha256: "5".repeat(64) },
-      rebuilt: {
-        candidate,
-        authorizationSha256: "6".repeat(64),
-        reportSha256: "7".repeat(64),
-      },
-      verifierIdentity: "example-auditor",
-      reportUrl: "https://example.invalid/reports/1",
-      environment: { builderDefinitionSha256: "8".repeat(64), backend: "docker" },
-      confirmedAt: "2026-08-09T00:00:00.000Z",
+      published: { candidate, authorizationSha256: "5".repeat(64) }
+      , rebuilt: {
+        candidate
+        , authorizationSha256: "6".repeat(64)
+        , reportSha256: "7".repeat(64)
+      }
+      , verifierIdentity: "example-auditor"
+      , reportUrl: "https://example.invalid/reports/1"
+      , environment: { builderDefinitionSha256: "8".repeat(64), backend: "docker" }
+      , confirmedAt: "2026-08-09T00:00:00.000Z"
     });
     const written = await writeIndependentConfirmation({ outputRoot: output, confirmation });
     assert.match(written.confirmationSha256, /^[0-9a-f]{64}$/);
@@ -42,21 +43,22 @@ test("an independent rebuild produces one content-addressed confirmation record"
       writeIndependentConfirmation({ outputRoot: output, confirmation }),
       error => error.code === "confirmation-output-exists",
     );
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("a different independent candidate cannot become a confirmation", async () => {
   assert.throws(
     () => createIndependentConfirmation({
-      published: { candidate, authorizationSha256: "5".repeat(64) },
-      rebuilt: {
-        candidate: { ...candidate, id: "9".repeat(64) },
-        authorizationSha256: "6".repeat(64),
-        reportSha256: "7".repeat(64),
-      },
-      environment: {},
+      published: { candidate, authorizationSha256: "5".repeat(64) }
+      , rebuilt: {
+        candidate: { ...candidate, id: "9".repeat(64) }
+        , authorizationSha256: "6".repeat(64)
+        , reportSha256: "7".repeat(64)
+      }
+      , environment: {}
     }),
     error => error.code === "independent-candidate-drift",
   );

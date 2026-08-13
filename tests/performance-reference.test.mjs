@@ -5,9 +5,9 @@ import test from "node:test";
 
 test("independent Lean performance components compile and execute corpus vectors", async () => {
   const output = execFileSync("bash", ["scripts/test-performance-reference.sh"], {
-    cwd: process.cwd(),
-    encoding: "utf8",
-    env: { ...process.env, NO_COLOR: "1" },
+    cwd: process.cwd()
+    , encoding: "utf8"
+    , env: { ...process.env, NO_COLOR: "1" }
   });
   assert.match(output, /performance reference vectors passed/);
 

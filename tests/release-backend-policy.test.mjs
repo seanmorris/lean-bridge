@@ -2,28 +2,28 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  packagingBackendPolicy,
-  validatePackagingBackendPlan,
+	packagingBackendPolicy,
+	validatePackagingBackendPlan,
 } from "../src/release/backend-policy.mjs";
 
 const hash = "1".repeat(64);
 const validPlan = () => ({
-  schemaVersion: 1,
-  backend: "npm-v1",
-  ecosystem: "npm",
-  bundle: { id: "poc/lean-alpha@0.0.0", manifestSha256: hash },
-  compilerAccess: false,
-  scriptPolicy: "disabled",
-  versionSource: "canonical-manifest",
-  semanticSource: "canonical-manifest",
-  operations: ["select", "arrange", "copy", "render-registry-metadata", "archive", "attest"],
-  commands: ["npm pack --ignore-scripts"],
-  coreArtifacts: [{
-    sourcePath: "artifacts/alpha.wasm",
-    packagePath: "dist/alpha.wasm",
-    sourceSha256: hash,
-    packageSha256: hash,
-  }],
+	schemaVersion: 1
+	, backend: "npm-v1"
+	, ecosystem: "npm"
+	, bundle: { id: "poc/lean-alpha@0.0.0", manifestSha256: hash }
+	, compilerAccess: false
+	, scriptPolicy: "disabled"
+	, versionSource: "canonical-manifest"
+	, semanticSource: "canonical-manifest"
+	, operations: ["select", "arrange", "copy", "render-registry-metadata", "archive", "attest"]
+	, commands: ["npm pack --ignore-scripts"]
+	, coreArtifacts: [{
+		sourcePath: "artifacts/alpha.wasm"
+		, packagePath: "dist/alpha.wasm"
+		, sourceSha256: hash
+		, packageSha256: hash
+	}]
 });
 
 test("compile-once policy accepts a hash-preserving registry projection", () => {
@@ -33,22 +33,24 @@ test("compile-once policy accepts a hash-preserving registry projection", () => 
 });
 
 test("packaging backends cannot compile, link, or regenerate semantics", () => {
-  for (const operation of ["compile", "link", "regenerate-bindings", "resolve-graph"]) {
+  for(const operation of ["compile", "link", "regenerate-bindings", "resolve-graph"])
+{
     const plan = validPlan();
     plan.operations.push(operation);
     assert.throws(
       () => validatePackagingBackendPlan(plan),
       error => error.code === "backend-operation-forbidden",
     );
-  }
-  for (const command of ["lean Alpha.lean", "emcc alpha.c", "/usr/bin/wasm-ld alpha.o", "cargo package"]) {
+}
+  for(const command of ["lean Alpha.lean", "emcc alpha.c", "/usr/bin/wasm-ld alpha.o", "cargo package"])
+{
     const plan = validPlan();
     plan.commands.push(command);
     assert.throws(
       () => validatePackagingBackendPlan(plan),
       error => error.code === "backend-compiler-command",
     );
-  }
+}
 });
 
 test("canonical manifest owns package versions and binding semantics", () => {
@@ -81,10 +83,10 @@ test("a packaging backend cannot mutate or collide core artifacts", () => {
   );
   const collision = validPlan();
   collision.coreArtifacts.push({
-    sourcePath: "artifacts/beta.wasm",
-    packagePath: "dist/alpha.wasm",
-    sourceSha256: hash,
-    packageSha256: hash,
+    sourcePath: "artifacts/beta.wasm"
+    , packagePath: "dist/alpha.wasm"
+    , sourceSha256: hash
+    , packageSha256: hash
   });
   assert.throws(
     () => validatePackagingBackendPlan(collision),

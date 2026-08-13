@@ -7,9 +7,9 @@ import test from "node:test";
 import { promisify } from "node:util";
 
 import {
-  canonicalPackageManifestJson,
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
+	canonicalPackageManifestJson,
+	hashCanonicalPackageManifest,
+	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 import { buildPyPiPackage } from "../src/release/pypi-package.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
@@ -18,64 +18,66 @@ const execute = promisify(execFile);
 const revision = "d95de399beb69b6a92d132b38f6813342ecce9f5";
 
 const withBundle = async operation => {
-  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-pypi-package-"));
-  try {
-    const bundle = join(scratch, "bundle");
-    await buildUniversalReleaseBundle({
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      outputRoot: bundle,
-      revision,
-      sourceDateEpoch: 1786261809,
-    });
-    return await operation({ scratch, bundle });
-  } finally {
-    await rm(scratch, { recursive: true, force: true });
-  }
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-pypi-package-"));
+	try
+	{
+		const bundle = join(scratch, "bundle");
+		await buildUniversalReleaseBundle({
+			projectRoot: process.cwd()
+			, coreRoot: "build/lean-link-spike"
+			, outputRoot: bundle
+			, revision
+			, sourceDateEpoch: 1786261809
+		});
+		return await operation({ scratch, bundle });
+	} finally
+	{
+		await rm(scratch, { recursive: true, force: true });
+	}
 };
 
 const rewriteIdentity = async (directory, manifest) => {
-  const manifestSha256 = hashCanonicalPackageManifest(manifest);
-  await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
-  await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
-  const identityPath = join(directory, "bundle-identity.json");
-  const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  identity.canonicalManifestSha256 = manifestSha256;
-  await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
+	const manifestSha256 = hashCanonicalPackageManifest(manifest);
+	await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+	await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
+	const identityPath = join(directory, "bundle-identity.json");
+	const identity = JSON.parse(await readFile(identityPath, "utf8"));
+	identity.canonicalManifestSha256 = manifestSha256;
+	await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
 };
 
 const enableReviewedPythonBindingTarget = async (bundle, destination) => {
-  await cp(bundle, destination, { recursive: true });
-  const manifest = structuredClone(parseCanonicalPackageManifest(
-    await readFile(join(destination, "canonical-package.json"), "utf8"),
-  ));
-  const pythonArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/python/"));
-  pythonArtifacts.forEach(artifact => { artifact.target = "python-bindings"; });
-  manifest.targets.push({
-    id: "python-bindings",
-    eligible: true,
-    reason: null,
-    platforms: ["python3"],
-    capabilities: ["external-runtime-adapter", "pure-python-bindings", "typed-bindings"],
-    entryPoints: [
-      { name: "library", kind: "library", artifact: pythonArtifacts.find(artifact => artifact.path.endsWith("lean_alpha/__init__.py")).id },
-      { name: "types", kind: "types", artifact: "binding-ir" },
-      { name: "documentation", kind: "documentation", artifact: pythonArtifacts.find(artifact => artifact.path.endsWith("README.md")).id },
-    ],
-  });
-  const mapping = manifest.packages.find(candidate => candidate.ecosystem === "pypi");
-  mapping.target = "python-bindings";
-  mapping.eligible = true;
-  mapping.reason = null;
-  mapping.publicArtifacts = [
-    ...pythonArtifacts.map(artifact => artifact.id),
-    "license",
-    "assurance",
-    "core-artifact-set",
-    "sbom",
-    "provenance",
-  ];
-  await rewriteIdentity(destination, manifest);
+	await cp(bundle, destination, { recursive: true });
+	const manifest = structuredClone(parseCanonicalPackageManifest(
+		await readFile(join(destination, "canonical-package.json"), "utf8"),
+	));
+	const pythonArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/python/"));
+	pythonArtifacts.forEach(artifact => { artifact.target = "python-bindings"; });
+	manifest.targets.push({
+		id: "python-bindings"
+		, eligible: true
+		, reason: null
+		, platforms: ["python3"]
+		, capabilities: ["external-runtime-adapter", "pure-python-bindings", "typed-bindings"]
+		, entryPoints: [
+			{ name: "library", kind: "library", artifact: pythonArtifacts.find(artifact => artifact.path.endsWith("lean_alpha/__init__.py")).id }
+			, { name: "types", kind: "types", artifact: "binding-ir" }
+			, { name: "documentation", kind: "documentation", artifact: pythonArtifacts.find(artifact => artifact.path.endsWith("README.md")).id }
+		]
+	});
+	const mapping = manifest.packages.find(candidate => candidate.ecosystem === "pypi");
+	mapping.target = "python-bindings";
+	mapping.eligible = true;
+	mapping.reason = null;
+	mapping.publicArtifacts = [
+		...pythonArtifacts.map(artifact => artifact.id)
+		, "license"
+		, "assurance"
+		, "core-artifact-set"
+		, "sbom"
+		, "provenance"
+	];
+	await rewriteIdentity(destination, manifest);
 };
 
 test("PyPI projection fails closed while the canonical native target is ineligible", async () => withBundle(async ({ scratch, bundle }) => {
@@ -110,12 +112,13 @@ test("an eligible Python binding target produces deterministic wheel and source 
 
   const installed = join(scratch, "installed");
   await execute("python3", ["-m", "pip", "install", "--no-index", "--no-deps", "--target", installed, first.wheel]);
-  const { stdout } = await execute("python3", ["-B", "-c", [
-    "from lean_alpha import Payload",
-    "value = Payload(True, 7, 'typed', bytearray([0, 255]), [1, 2])",
-    "assert value.bytes == bytes([0, 255])",
-    "assert value.values == (1, 2)",
-    "print(value.count)",
+  const { stdout } = await execute("python3", ["-B", "-c"
+  , [
+    "from lean_alpha import Payload"
+    , "value = Payload(True, 7, 'typed', bytearray([0, 255]), [1, 2])"
+    , "assert value.bytes == bytes([0, 255])"
+    , "assert value.values == (1, 2)"
+    , "print(value.count)"
   ].join("; ")], { env: { ...process.env, PYTHONPATH: installed } });
   assert.equal(stdout.trim(), "7");
 }));

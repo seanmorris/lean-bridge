@@ -3,22 +3,22 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PendingOperationGenerationError,
-  compilePendingOperationV1,
+	PendingOperationGenerationError,
+	compilePendingOperationV1,
 } from "../src/abi/pending-operation.mjs";
 import {
-  PendingOperationError,
-  PendingOperationRegistry,
+	PendingOperationError,
+	PendingOperationRegistry,
 } from "../src/runtime/pending-operations.mjs";
 
 const clone = value => structuredClone(value);
 
 const promiseFixture = () => {
-  const ir = clone(alpha.bindingIr);
-  const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
-  declaration.resultMode = "promise";
-  declaration.effects.push("async");
-  return { ir, declaration };
+	const ir = clone(alpha.bindingIr);
+	const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+	declaration.resultMode = "promise";
+	declaration.effects.push("async");
+	return { ir, declaration };
 };
 
 test("pending plans come from Promise delivery and ownership semantics", () => {
@@ -26,26 +26,26 @@ test("pending plans come from Promise delivery and ownership semantics", () => {
   const plan = compilePendingOperationV1(ir, declaration.id);
 
   assert.deepEqual(plan.execution, {
-    suspension: "stackless",
-    pendingStack: "empty",
-    reentry: "same-agent",
+    suspension: "stackless"
+    , pendingStack: "empty"
+    , reentry: "same-agent"
   });
   assert.deepEqual(plan.settlement, {
-    cardinality: "exactly-once",
-    late: "reject",
-    cleanup: "reverse-capture-order",
+    cardinality: "exactly-once"
+    , late: "reject"
+    , cleanup: "reverse-capture-order"
   });
   assert.deepEqual(plan.captures, [
     {
-      source: "parameter",
-      name: "payload",
-      type: { kind: "named", id: "lean:Alpha.Payload" },
-      representation: "copied",
-      ownership: "copy",
-      lifetime: null,
-      capture: "copy-into-operation",
-      cleanup: "none",
-    },
+      source: "parameter"
+      , name: "payload"
+      , type: { kind: "named", id: "lean:Alpha.Payload" }
+      , representation: "copied"
+      , ownership: "copy"
+      , lifetime: null
+      , capture: "copy-into-operation"
+      , cleanup: "none"
+    }
   ]);
   assert.equal(plan.result.delivery, "lift-copy");
   assert.equal(Object.isFrozen(plan), true);
@@ -56,27 +56,27 @@ test("identity borrows receive a generated operation lease", () => {
   const { ir, declaration } = promiseFixture();
   declaration.parameters = [
     {
-      name: "box",
-      type: { kind: "named", id: "lean:Alpha.Box" },
-      ownership: "borrow",
-      lifetime: { scope: "call", anchor: null },
-      mutability: "read",
-      optional: false,
-      default: null,
-    },
+      name: "box"
+      , type: { kind: "named", id: "lean:Alpha.Box" }
+      , ownership: "borrow"
+      , lifetime: { scope: "call", anchor: null }
+      , mutability: "read"
+      , optional: false
+      , default: null
+    }
   ];
 
   const plan = compilePendingOperationV1(ir, declaration.id);
   assert.deepEqual(
     {
-      representation: plan.captures[0].representation,
-      capture: plan.captures[0].capture,
-      cleanup: plan.captures[0].cleanup,
+      representation: plan.captures[0].representation
+      , capture: plan.captures[0].capture
+      , cleanup: plan.captures[0].cleanup
     },
     {
-      representation: "identity",
-      capture: "retain-borrow-until-settlement",
-      cleanup: "release-after-settlement",
+      representation: "identity"
+      , capture: "retain-borrow-until-settlement"
+      , cleanup: "release-after-settlement"
     },
   );
 });
@@ -97,7 +97,7 @@ test("pending operations settle once and reject late settlement", async () => {
   const plan = compilePendingOperationV1(ir, declaration.id);
   const transitions = [];
   const registry = new PendingOperationRegistry({
-    onTransition: transition => transitions.push(transition.event),
+    onTransition: transition => transitions.push(transition.event)
   });
   const pending = registry.begin(plan);
 
@@ -113,18 +113,18 @@ test("pending operations settle once and reject late settlement", async () => {
   );
   assert.deepEqual(transitions, ["begin", "resolve"]);
   assert.deepEqual(registry.snapshot(), {
-    state: "open",
-    epoch: 1,
-    capacity: 1024,
-    live: 0,
-    begun: 1,
-    resolved: 1,
-    rejected: 0,
-    cancelled: 0,
-    late: 1,
-    cleanupRuns: 0,
-    cleanupFailures: 0,
-    observerFailures: 0,
+    state: "open"
+    , epoch: 1
+    , capacity: 1024
+    , live: 0
+    , begun: 1
+    , resolved: 1
+    , rejected: 0
+    , cancelled: 0
+    , late: 1
+    , cleanupRuns: 0
+    , cleanupFailures: 0
+    , observerFailures: 0
   });
 });
 
@@ -132,9 +132,13 @@ test("diagnostic observers cannot change settlement semantics", async () => {
   const { ir, declaration } = promiseFixture();
   const plan = compilePendingOperationV1(ir, declaration.id);
   const registry = new PendingOperationRegistry({
-    onTransition() {
+    onTransition:
+      /**
+       * Captures lifecycle transitions so the pending-operation test can assert their exact order and outcomes.
+       */
+      function() {
       throw new Error("observer failed");
-    },
+      }
   });
   const pending = registry.begin(plan);
 
@@ -149,7 +153,7 @@ test("cancellation runs cleanup in reverse order and rejects late results", asyn
   const cleanup = [];
   const registry = new PendingOperationRegistry();
   const pending = registry.begin(plan, {
-    cleanup: [() => cleanup.push("first"), () => cleanup.push("second")],
+    cleanup: [() => cleanup.push("first"), () => cleanup.push("second")]
   });
   const rejected = assert.rejects(pending.promise, error => {
     assert.equal(error.code, "operation-cancelled");
@@ -172,7 +176,7 @@ test("cleanup failure replaces a successful settlement with a boundary error", a
   const pending = registry.begin(plan, {
     cleanup: [() => {
       throw new Error("release failed");
-    }],
+    }]
   });
   const rejected = assert.rejects(pending.promise, error => {
     assert.equal(error.code, "pending-cleanup-failed");
@@ -192,8 +196,8 @@ test("shutdown cancels every operation and rejects new work", async () => {
   const first = registry.begin(plan);
   const second = registry.begin(plan);
   const rejected = Promise.all([
-    assert.rejects(first.promise, error => error.code === "operation-cancelled"),
-    assert.rejects(second.promise, error => error.code === "operation-cancelled"),
+    assert.rejects(first.promise, error => error.code === "operation-cancelled")
+    , assert.rejects(second.promise, error => error.code === "operation-cancelled")
   ]);
 
   assert.equal(registry.shutdown(), true);

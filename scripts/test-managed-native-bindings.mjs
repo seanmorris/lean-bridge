@@ -7,11 +7,11 @@ import { dirname, join, resolve } from "node:path";
 import { promisify } from "node:util";
 
 import {
-  STEADY_STATE_BOX_VALUE,
-  STEADY_STATE_MEASURED_ITERATIONS,
-  STEADY_STATE_OPERATION,
-  STEADY_STATE_WARMUP_ITERATIONS,
-  writeConsumerPerformance,
+	STEADY_STATE_BOX_VALUE,
+	STEADY_STATE_MEASURED_ITERATIONS,
+	STEADY_STATE_OPERATION,
+	STEADY_STATE_WARMUP_ITERATIONS,
+	writeConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 import { generateDotnetBindingPackage } from "../src/backends/dotnet/generate.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
@@ -21,9 +21,9 @@ import { readFile } from "node:fs/promises";
 
 const execute = promisify(execFile);
 const options = new Map();
-for (let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
+for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
 const nativeOption = options.get("--native-root");
-if (!nativeOption) throw new Error("Usage: test-managed-native-bindings.mjs --native-root PATH [--dotnet PATH] [--javac PATH] [--java PATH] [--ruby PATH]");
+if(!nativeOption) throw new Error("Usage: test-managed-native-bindings.mjs --native-root PATH [--dotnet PATH] [--javac PATH] [--java PATH] [--ruby PATH]");
 const nativeRoot = resolve(nativeOption);
 const dotnet = options.get("--dotnet") ?? process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
 const javac = options.get("--javac") ?? process.env.LEAN_BRIDGE_JAVAC ?? "javac";
@@ -33,29 +33,32 @@ const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-managed-native-"));
 const ir = parseBindingIr(await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json", "utf8"));
 
 const run = async (command, args, settings = {}) => {
-  try {
-    return await execute(command, args, { maxBuffer: 32 * 1024 * 1024, ...settings });
-  } catch (error) {
-    throw new Error(`${command} failed\n${error.stdout ?? ""}${error.stderr ?? ""}`, { cause: error });
-  }
+	try
+	{
+		return await execute(command, args, { maxBuffer: 32 * 1024 * 1024, ...settings });
+	} catch(error)
+	{
+		throw new Error(`${command} failed\n${error.stdout ?? ""}${error.stderr ?? ""}`, { cause: error });
+	}
 };
 
 const writePackage = async (root, files) => {
-  for (const [path, source] of Object.entries(files)) {
-    const destination = join(root, path);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [path, source] of Object.entries(files))
+	{
+		const destination = join(root, path);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 const parseMeasurement = stdout => {
-  const value = JSON.parse(stdout.trim().split("\n").at(-1));
-  if (
-    !Number.isSafeInteger(value.iterations) || value.iterations !== STEADY_STATE_MEASURED_ITERATIONS ||
-    !Number.isFinite(value.durationNanoseconds) || value.durationNanoseconds <= 0 ||
-    value.checksum !== STEADY_STATE_BOX_VALUE * value.iterations
-  ) throw new Error(`invalid managed performance result: ${stdout}`);
-  return value;
+	const value = JSON.parse(stdout.trim().split("\n").at(-1));
+	if(
+		!Number.isSafeInteger(value.iterations) || value.iterations !== STEADY_STATE_MEASURED_ITERATIONS
+    || !Number.isFinite(value.durationNanoseconds) || value.durationNanoseconds <= 0
+    || value.checksum !== STEADY_STATE_BOX_VALUE * value.iterations
+	) throw new Error(`invalid managed performance result: ${stdout}`);
+	return value;
 };
 
 const dotnetRoot = join(scratch, "dotnet");
@@ -93,12 +96,12 @@ Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { iterations = $
 `);
 const dotnetHome = join(scratch, "dotnet-home");
 await run(dotnet, ["build", join(dotnetRoot, "Consumer.csproj"), "--configuration", "Release", "--nologo", "--ignore-failed-sources", "--disable-build-servers"], {
-  env: { ...process.env, DOTNET_CLI_HOME: dotnetHome, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(scratch, "nuget-packages") },
+	env: { ...process.env, DOTNET_CLI_HOME: dotnetHome, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(scratch, "nuget-packages") }
 });
 const dotnetOutput = join(dotnetRoot, "bin/Release/net8.0");
-for (const name of ["liblean_bridge_native.so", "liblean_alpha_component.so", "liblean_beta_component.so"]) await copyFile(join(nativeRoot, name), join(dotnetOutput, name));
+for(const name of ["liblean_bridge_native.so", "liblean_alpha_component.so", "liblean_beta_component.so"]) await copyFile(join(nativeRoot, name), join(dotnetOutput, name));
 const dotnetMeasurement = parseMeasurement((await run(dotnet, [join(dotnetOutput, "Consumer.dll")], {
-  env: { ...process.env, DOTNET_CLI_HOME: dotnetHome, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" },
+	env: { ...process.env, DOTNET_CLI_HOME: dotnetHome, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" }
 })).stdout);
 
 const jvmRoot = join(scratch, "jvm");
@@ -133,7 +136,7 @@ const classes = join(jvmRoot, "classes");
 await mkdir(classes);
 await run(javac, ["--release", "22", "-g:none", "-encoding", "UTF-8", "-d", classes, ...javaSources, join(jvmRoot, "Consumer.java")]);
 const jvmMeasurement = parseMeasurement((await run(java, ["--enable-native-access=ALL-UNNAMED", "-cp", classes, "org.leanbridge.alpha.Consumer"], {
-  env: { ...process.env, LEAN_BRIDGE_NATIVE_ROOT: nativeRoot },
+	env: { ...process.env, LEAN_BRIDGE_NATIVE_ROOT: nativeRoot }
 })).stdout);
 
 const rubyRoot = join(scratch, "ruby");
@@ -161,18 +164,19 @@ raise "native cleanup snapshot failed" unless Alpha::Native.snapshot[:live_ident
 require "json"; puts JSON.generate(iterations: ${STEADY_STATE_MEASURED_ITERATIONS}, durationNanoseconds: duration, checksum: checksum)
 `);
 const rubyMeasurement = parseMeasurement((await run(ruby, ["-I", join(rubyRoot, "lib"), join(rubyRoot, "consumer.rb")], {
-  env: { ...process.env, LEAN_BRIDGE_NATIVE_ROOT: nativeRoot },
+	env: { ...process.env, LEAN_BRIDGE_NATIVE_ROOT: nativeRoot }
 })).stdout);
 
 const measurements = { dotnet: dotnetMeasurement, jvm: jvmMeasurement, ruby: rubyMeasurement };
-for (const [consumer, measurement] of Object.entries(measurements)) {
-  await writeConsumerPerformance({
-    consumer,
-    operation: STEADY_STATE_OPERATION,
-    timingMode: "steady-state",
-    scope: `steady-state installed-style generated ${consumer} API call`,
-    iterations: measurement.iterations,
-    durationNanoseconds: measurement.durationNanoseconds,
-  });
+for(const [consumer, measurement] of Object.entries(measurements))
+{
+	await writeConsumerPerformance({
+		consumer
+		, operation: STEADY_STATE_OPERATION
+		, timingMode: "steady-state"
+		, scope: `steady-state installed-style generated ${consumer} API call`
+		, iterations: measurement.iterations
+		, durationNanoseconds: measurement.durationNanoseconds
+	});
 }
 process.stdout.write(`${JSON.stringify({ result: "passed", realLeanExecution: true, consumers: Object.keys(measurements), measurements }, null, 2)}\n`);

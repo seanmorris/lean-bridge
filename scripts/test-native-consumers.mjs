@@ -10,17 +10,17 @@ import { buildCargoPackage } from "../src/release/cargo-package.mjs";
 import { buildCPackage, buildCppPackage } from "../src/release/c-family-package.mjs";
 import { buildPyPiPackage } from "../src/release/pypi-package.mjs";
 import {
-  STEADY_STATE_BOX_VALUE,
-  STEADY_STATE_MEASURED_ITERATIONS,
-  STEADY_STATE_OPERATION,
-  STEADY_STATE_WARMUP_ITERATIONS,
-  writeConsumerPerformance,
+	STEADY_STATE_BOX_VALUE,
+	STEADY_STATE_MEASURED_ITERATIONS,
+	STEADY_STATE_OPERATION,
+	STEADY_STATE_WARMUP_ITERATIONS,
+	writeConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
 const execute = promisify(execFile);
 const options = new Map();
-for (let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
-if (!options.get("--bundle")) throw new Error("Usage: test-native-consumers.mjs --bundle PATH");
+for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
+if(!options.get("--bundle")) throw new Error("Usage: test-native-consumers.mjs --bundle PATH");
 const bundle = resolve(options.get("--bundle"));
 const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-native-consumers-"));
 const run = (command, args, settings = {}) => execute(command, args, { maxBuffer: 16 * 1024 * 1024, ...settings });
@@ -62,14 +62,14 @@ target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 await run("cmake", ["-S", cConsumer, "-B", join(cConsumer, "build"), "-DCMAKE_BUILD_TYPE=Release"]);
 await run("cmake", ["--build", join(cConsumer, "build")]);
 const cPerformance = JSON.parse((await run(join(cConsumer, "build/consumer"), [])).stdout);
-if (cPerformance.checksum !== STEADY_STATE_BOX_VALUE * cPerformance.iterations) throw new Error("C performance checksum failed");
+if(cPerformance.checksum !== STEADY_STATE_BOX_VALUE * cPerformance.iterations) throw new Error("C performance checksum failed");
 await writeConsumerPerformance({
-  consumer: "c",
-  operation: STEADY_STATE_OPERATION,
-  timingMode: "steady-state",
-  scope: "steady-state generated C API call from a Release consumer",
-  iterations: cPerformance.iterations,
-  durationNanoseconds: cPerformance.durationNanoseconds,
+	consumer: "c"
+	, operation: STEADY_STATE_OPERATION
+	, timingMode: "steady-state"
+	, scope: "steady-state generated C API call from a Release consumer"
+	, iterations: cPerformance.iterations
+	, durationNanoseconds: cPerformance.durationNanoseconds
 });
 
 const cppRelease = await buildCppPackage({ bundleRoot: bundle, outputRoot: join(scratch, "cpp-release") });
@@ -102,20 +102,23 @@ target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 await run("cmake", ["-S", cppConsumer, "-B", join(cppConsumer, "build"), "-DCMAKE_BUILD_TYPE=Release"]);
 await run("cmake", ["--build", join(cppConsumer, "build")]);
 const cppPerformance = JSON.parse((await run(join(cppConsumer, "build/consumer"), [])).stdout);
-if (cppPerformance.checksum !== STEADY_STATE_BOX_VALUE * cppPerformance.iterations) throw new Error("C++ performance checksum failed");
+if(cppPerformance.checksum !== STEADY_STATE_BOX_VALUE * cppPerformance.iterations) throw new Error("C++ performance checksum failed");
 await writeConsumerPerformance({
-  consumer: "cpp",
-  operation: STEADY_STATE_OPERATION,
-  timingMode: "steady-state",
-  scope: "steady-state generated C++ API call from a Release consumer",
-  iterations: cppPerformance.iterations,
-  durationNanoseconds: cppPerformance.durationNanoseconds,
+	consumer: "cpp"
+	, operation: STEADY_STATE_OPERATION
+	, timingMode: "steady-state"
+	, scope: "steady-state generated C++ API call from a Release consumer"
+	, iterations: cppPerformance.iterations
+	, durationNanoseconds: cppPerformance.durationNanoseconds
 });
 
 const pythonRelease = await buildPyPiPackage({ bundleRoot: bundle, outputRoot: join(scratch, "python-release") });
 const pythonRoot = join(scratch, "python-consumer");
 await run("python3", ["-m", "pip", "install", "--no-index", "--no-deps", "--target", pythonRoot, pythonRelease.wheel]);
-const pythonPerformance = JSON.parse((await run("python3", ["-B", "-c", `import json
+const pythonPerformance = JSON.parse((await run("python3", [
+	"-B"
+	, "-c"
+	, `import json
 from time import perf_counter_ns
 from lean_alpha import Box, Payload, make_adder, round_trip, with_callback
 with Box(${STEADY_STATE_BOX_VALUE}) as box:
@@ -132,14 +135,14 @@ with make_adder(2) as add_two:
     assert add_two(40) == 42
 print(json.dumps({"iterations": iterations, "durationNanoseconds": duration, "checksum": checksum}))
 `], { env: { ...process.env, PYTHONPATH: pythonRoot } })).stdout);
-if (pythonPerformance.checksum !== STEADY_STATE_BOX_VALUE * pythonPerformance.iterations) throw new Error("Python performance checksum failed");
+if(pythonPerformance.checksum !== STEADY_STATE_BOX_VALUE * pythonPerformance.iterations) throw new Error("Python performance checksum failed");
 await writeConsumerPerformance({
-  consumer: "python",
-  operation: STEADY_STATE_OPERATION,
-  timingMode: "steady-state",
-  scope: "steady-state generated Python API call",
-  iterations: pythonPerformance.iterations,
-  durationNanoseconds: pythonPerformance.durationNanoseconds,
+	consumer: "python"
+	, operation: STEADY_STATE_OPERATION
+	, timingMode: "steady-state"
+	, scope: "steady-state generated Python API call"
+	, iterations: pythonPerformance.iterations
+	, durationNanoseconds: pythonPerformance.durationNanoseconds
 });
 
 const cargoRelease = await buildCargoPackage({ bundleRoot: bundle, outputRoot: join(scratch, "cargo-release") });
@@ -172,20 +175,20 @@ fn main() -> Result<(), std::boxed::Box<dyn std::error::Error>> {
 }
 `);
 const rustPerformance = JSON.parse((await run("cargo", ["run", "--release", "--offline", "--quiet"], { cwd: rustRoot })).stdout);
-if (rustPerformance.checksum !== STEADY_STATE_BOX_VALUE * rustPerformance.iterations) throw new Error("Rust performance checksum failed");
+if(rustPerformance.checksum !== STEADY_STATE_BOX_VALUE * rustPerformance.iterations) throw new Error("Rust performance checksum failed");
 await writeConsumerPerformance({
-  consumer: "rust",
-  operation: STEADY_STATE_OPERATION,
-  timingMode: "steady-state",
-  scope: "steady-state generated Rust API call from a release-profile consumer",
-  iterations: rustPerformance.iterations,
-  durationNanoseconds: rustPerformance.durationNanoseconds,
+	consumer: "rust"
+	, operation: STEADY_STATE_OPERATION
+	, timingMode: "steady-state"
+	, scope: "steady-state generated Rust API call from a release-profile consumer"
+	, iterations: rustPerformance.iterations
+	, durationNanoseconds: rustPerformance.durationNanoseconds
 });
 
 process.stdout.write(`${JSON.stringify({
-  result: "passed",
-  consumers: ["c", "cpp", "python", "rust"],
-  packages: [cRelease.archive, cppRelease.archive, pythonRelease.wheel, cargoRelease.archive].map(path => path.split("/").at(-1)),
-  cleanRoots: (await readdir(scratch)).sort(),
-  realLeanExecution: true,
+	result: "passed"
+	, consumers: ["c", "cpp", "python", "rust"]
+	, packages: [cRelease.archive, cppRelease.archive, pythonRelease.wheel, cargoRelease.archive].map(path => path.split("/").at(-1))
+	, cleanRoots: (await readdir(scratch)).sort()
+	, realLeanExecution: true
 }, null, 2)}\n`);

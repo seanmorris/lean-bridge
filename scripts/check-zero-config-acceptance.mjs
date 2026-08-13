@@ -8,10 +8,10 @@ import { evaluateZeroConfigAudit, readZeroConfigAudit } from "../src/adoption/ze
 const fixtures = await runOnboardingFixtureMatrix({ fixtureRoot: resolve("tests/fixtures/onboarding") });
 const audit = evaluateZeroConfigAudit(await readZeroConfigAudit(resolve("acceptance/zero-config-audit.v1.json")));
 const result = {
-  schemaVersion: 1,
-  passed: fixtures.passed && audit.passed,
-  fixtures,
-  audit,
+	schemaVersion: 1
+	, passed: fixtures.passed && audit.passed
+	, fixtures
+	, audit
 };
 
 process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);

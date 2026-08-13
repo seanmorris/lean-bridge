@@ -4,10 +4,10 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PhpWasmPackageError,
-  generatePhpWasmReleaseSources,
-  readPhpWasmPackageInputs,
-  validatePhpWasmPackageManifest,
+	PhpWasmPackageError,
+	generatePhpWasmReleaseSources,
+	readPhpWasmPackageInputs,
+	validatePhpWasmPackageManifest,
 } from "../src/backends/php/php-wasm-package.mjs";
 
 const manifestPath = "poc/lean-link-spike/bindings/php-wasm.package.json";
@@ -24,16 +24,16 @@ test("PHP-Wasm package manifest closes the graph, host, identity map, and releas
   assert.equal(inputs.graph.profile, "side-lazy");
   assert.equal(inputs.manifest.graphLock.target, "php-wasm-emscripten-3.1.68");
   assert.deepEqual(inputs.graph.order, [
-    "poc/lean-alpha@0.0.0",
-    "poc/lean-beta@0.0.0",
-    "poc/lean-gamma@0.0.0",
+    "poc/lean-alpha@0.0.0"
+    , "poc/lean-beta@0.0.0"
+    , "poc/lean-gamma@0.0.0"
   ]);
   assert.equal(inputs.manifest.phpWasm.sourceCommit, "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89");
   assert.deepEqual(inputs.manifest.phpWasm.emscripten, {
-    version: "3.1.68",
-    emsdkCommit: "54ef088329e5a329614b3659a579d2ccd31fd621",
-    sourceCommit: "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
-    runtimeVariant: "php-wasm-3.1.68",
+    version: "3.1.68"
+    , emsdkCommit: "54ef088329e5a329614b3659a579d2ccd31fd621"
+    , sourceCommit: "ceee49d2ecdab36a3feb85a684f8e5a453dde910"
+    , runtimeVariant: "php-wasm-3.1.68"
   });
   assert.equal(inputs.manifest.weaker.packageVersion, "0.0.10");
 
@@ -54,19 +54,19 @@ test("PHP-Wasm package manifest closes the graph, host, identity map, and releas
 test("one PHP-Wasm manifest generates the descriptor, Composer surface, stubs, docs, and provenance", async () => {
   const inputs = await readPhpWasmPackageInputs({ projectRoot: process.cwd(), manifestPath });
   const files = generatePhpWasmReleaseSources({
-    inputs,
-    runtime: {
-      name: "liblean_bridge_runtime.so",
-      file: "lib/liblean_bridge_runtime.so",
-      sha256: "1".repeat(64),
-    },
-    extensions: {
+    inputs
+    , runtime: {
+      name: "liblean_bridge_runtime.so"
+      , file: "lib/liblean_bridge_runtime.so"
+      , sha256: "1".repeat(64)
+    }
+    , extensions: {
       "8.4": {
-        name: "php8.4-lean-alpha.so",
-        file: "lib/php8.4-lean-alpha.so",
-        sha256: "2".repeat(64),
-      },
-    },
+        name: "php8.4-lean-alpha.so"
+        , file: "lib/php8.4-lean-alpha.so"
+        , sha256: "2".repeat(64)
+      }
+    }
   });
   const descriptor = JSON.parse(files["php-wasm-manifest.json"]);
   const composer = JSON.parse(files["composer/composer.json"]);
@@ -74,11 +74,11 @@ test("one PHP-Wasm manifest generates the descriptor, Composer surface, stubs, d
 
   assert.equal(descriptor.bindingIrSha256, alpha.bindingIrSha256);
   assert.deepEqual(descriptor.versions["8.4"].libraries.map(library => library.file), [
-    "lib/liblean_bridge_runtime.so",
-    "lib/components/alpha.so.wasm",
-    "lib/components/beta.so.wasm",
-    "lib/components/gamma.so.wasm",
-    "lib/php8.4-lean-alpha.so",
+    "lib/liblean_bridge_runtime.so"
+    , "lib/components/alpha.so.wasm"
+    , "lib/components/beta.so.wasm"
+    , "lib/components/gamma.so.wasm"
+    , "lib/php8.4-lean-alpha.so"
   ]);
   assert.equal(composer.name, "poc/lean-alpha");
   assert.ok(files["composer/stubs/lean_alpha.php"]);

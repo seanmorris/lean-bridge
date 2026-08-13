@@ -4,17 +4,29 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compilePhpProjection } from "./projection.mjs";
 
-export class PhpNativeRuntimeGenerationError extends Error {
-  constructor(code, message, details = {}) {
-    super(message);
-    this.name = "PhpNativeRuntimeGenerationError";
-    this.code = code;
-    this.details = Object.freeze(structuredClone(details));
-  }
+/**
+ * Reports PHP native runtime generation failures with stable machine-readable codes and structured diagnostic context.
+ */
+export class PhpNativeRuntimeGenerationError extends Error
+{
+	/**
+   * Initializes the error used to report PHP native runtime generation failures, preserving its code, message, and diagnostic context.
+   *
+   * @param code - Stable machine-readable code that identifies the failure category.
+   * @param message - Human-readable explanation of the failure.
+   * @param details - Structured diagnostic fields associated with the failure.
+   */
+	constructor(code, message, details = {})
+	{
+		super(message);
+		this.name = "PhpNativeRuntimeGenerationError";
+		this.code = code;
+		this.details = Object.freeze(structuredClone(details));
+	}
 }
 
 const fail = (code, message, details = {}) => {
-  throw new PhpNativeRuntimeGenerationError(code, message, details);
+	throw new PhpNativeRuntimeGenerationError(code, message, details);
 };
 
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
@@ -28,31 +40,31 @@ const packageName = ir => ir.component.id.slice(0, ir.component.id.lastIndexOf("
 const packageStem = ir => snake(packageName(ir).split("/").at(-1));
 
 const exactAlphaShape = (ir, projection) => {
-  const expected = [
-    "lean:Alpha.box",
-    "lean:Alpha.Box.read",
-    "bridge:Alpha.Box.identity",
-    "lean:Alpha.roundTrip",
-    "lean:Alpha.withCallback",
-    "lean:Alpha.makeAdder",
-  ];
-  const payload = ir.types.find(type => type.kind === "record");
-  const resource = ir.types.find(type => type.kind === "resource");
-  const callback = ir.types.find(type => type.kind === "callback");
-  const payloadFields = payload?.fields.map(field => `${field.name}:${field.type.kind === "primitive" ? field.type.name : field.type.constructor}`).join(",");
-  if (
-    ir.types.filter(type => type.kind === "record").length !== 1 ||
-    ir.types.filter(type => type.kind === "resource").length !== 1 ||
-    ir.types.filter(type => type.kind === "callback").length !== 1 ||
-    payloadFields !== "enabled:bool,count:uint32,label:string,bytes:bytes,values:array" ||
-    JSON.stringify(projection.operations.map(operation => operation.id)) !== JSON.stringify(expected)
-  ) {
-    fail("unsupported-native-runtime-shape", "the native runtime POC requires the reviewed Alpha value, resource, and callback fixture", {
-      operations: projection.operations.map(operation => operation.id),
-      payloadFields,
-    });
-  }
-  return { payload, resource, callback };
+	const expected = [
+		"lean:Alpha.box"
+		, "lean:Alpha.Box.read"
+		, "bridge:Alpha.Box.identity"
+		, "lean:Alpha.roundTrip"
+		, "lean:Alpha.withCallback"
+		, "lean:Alpha.makeAdder"
+	];
+	const payload = ir.types.find(type => type.kind === "record");
+	const resource = ir.types.find(type => type.kind === "resource");
+	const callback = ir.types.find(type => type.kind === "callback");
+	const payloadFields = payload?.fields.map(field => `${field.name}:${field.type.kind === "primitive" ? field.type.name : field.type.constructor}`).join(",");
+	if(
+		ir.types.filter(type => type.kind === "record").length !== 1
+    || ir.types.filter(type => type.kind === "resource").length !== 1
+    || ir.types.filter(type => type.kind === "callback").length !== 1
+    || payloadFields !== "enabled:bool,count:uint32,label:string,bytes:bytes,values:array"
+    || JSON.stringify(projection.operations.map(operation => operation.id)) !== JSON.stringify(expected)
+	) {
+		fail("unsupported-native-runtime-shape", "the native runtime POC requires the reviewed Alpha value, resource, and callback fixture", {
+			operations: projection.operations.map(operation => operation.id)
+			, payloadFields
+		});
+	}
+	return { payload, resource, callback };
 };
 
 const brokerHeader = `#ifndef LEAN_BRIDGE_NATIVE_RUNTIME_H
@@ -392,13 +404,12 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_
 `;
 
 const providerSource = (ir, shape) => {
-  const stem = packageStem(ir);
-  const macro = upper(stem);
-  const payload = snake(shape.payload.name);
-  const resource = snake(shape.resource.name);
-  const callback = snake(shape.callback.name);
-  const componentId = `${ir.component.id}#${hashBindingIr(ir)}`;
-  return `#include "${stem}_runtime.h"
+	const stem = packageStem(ir);
+	const macro = upper(stem);
+	const payload = snake(shape.payload.name);
+	const callback = snake(shape.callback.name);
+	const componentId = `${ir.component.id}#${hashBindingIr(ir)}`;
+	return `#include "${stem}_runtime.h"
 #include "lean_bridge_native_runtime.h"
 
 #include <lean/lean.h>
@@ -641,38 +652,52 @@ void ${stem}_native_runtime_detach(void)
 `;
 };
 
+/**
+ * Generates native runtime package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ * @param root0 - Named inputs and dependency overrides used to generate native runtime package.
+ * @param root0.generator - Generator identity recorded in the native runtime package manifest.
+ * @param root0.ownershipScope - Runtime ownership policy controlling which layer allocates and releases native values.
+ * @param root0.threadPolicy - Declared runtime thread model encoded into generated native package metadata.
+ */
 export const generateNativeRuntimePackage = (ir, {
-  generator = { id: "lean-bridge/native-runtime", version: 1 },
-  ownershipScope = "process",
-  threadPolicy = "synchronous host entry; locked runtime and identity administration",
+	generator = { id: "lean-bridge/native-runtime", version: 1 }
+	, ownershipScope = "process"
+	, threadPolicy = "synchronous host entry; locked runtime and identity administration"
 } = {}) => {
-  validateBindingIr(ir);
-  const projection = compilePhpProjection(ir);
-  const shape = exactAlphaShape(ir, projection);
-  const stem = packageStem(ir);
-  const files = {
-    "include/lean_bridge_native_runtime.h": brokerHeader,
-    "src/lean_bridge_native_runtime.c": brokerSource,
-    [`src/${stem}_native.c`]: providerSource(ir, shape),
-  };
-  const sourceFiles = Object.keys(files).sort();
-  files["native-runtime-manifest.json"] = `${JSON.stringify({
-    schemaVersion: 1,
-    component: ir.component.id,
-    bindingIrSha256: hashBindingIr(ir),
-    generator,
-    sharedRuntimeAbi: 1,
-    ownershipScope,
-    threadPolicy,
-    componentProvider: `${stem}_native_runtime_v1`,
-    sourceFiles,
-    filesSha256: Object.fromEntries(sourceFiles.map(path => [path, sha256(files[path])])),
-  }, null, 2)}\n`;
-  return Object.freeze(files);
+	validateBindingIr(ir);
+	const projection = compilePhpProjection(ir);
+	const shape = exactAlphaShape(ir, projection);
+	const stem = packageStem(ir);
+	const files = {
+		"include/lean_bridge_native_runtime.h": brokerHeader
+		, "src/lean_bridge_native_runtime.c": brokerSource
+		, [`src/${stem}_native.c`]: providerSource(ir, shape)
+	};
+	const sourceFiles = Object.keys(files).sort();
+	files["native-runtime-manifest.json"] = `${JSON.stringify({
+		schemaVersion: 1
+		, component: ir.component.id
+		, bindingIrSha256: hashBindingIr(ir)
+		, generator
+		, sharedRuntimeAbi: 1
+		, ownershipScope
+		, threadPolicy
+		, componentProvider: `${stem}_native_runtime_v1`
+		, sourceFiles
+		, filesSha256: Object.fromEntries(sourceFiles.map(path => [path, sha256(files[path])]))
+	}, null, 2)}\n`;
+	return Object.freeze(files);
 };
 
+/**
+ * Generates PHP native runtime package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
 export const generatePhpNativeRuntimePackage = ir => generateNativeRuntimePackage(ir, {
-  generator: { id: "lean-wasm/php-native-runtime", version: 1 },
-  ownershipScope: "php-process",
-  threadPolicy: "php-nts-only; synchronous request entry; locked runtime and identity administration",
+	generator: { id: "lean-wasm/php-native-runtime", version: 1 }
+	, ownershipScope: "php-process"
+	, threadPolicy: "php-nts-only; synchronous request entry; locked runtime and identity administration"
 });

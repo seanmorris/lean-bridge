@@ -7,35 +7,35 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PhpConformanceError,
-  comparePhpConformanceResults,
-  generatePhpConformanceCorpus,
+	PhpConformanceError,
+	comparePhpConformanceResults,
+	generatePhpConformanceCorpus,
 } from "../src/backends/php/conformance.mjs";
 
 const run = promisify(execFile);
 
 const observation = corpus => ({
-  bindingIrSha256: corpus.bindingIrSha256,
-  metadata: {
-    reflectionSha256: "1".repeat(64),
-    assuranceSha256: "2".repeat(64),
-    documentationSha256: "3".repeat(64),
-    reflectionComponent: corpus.component.id,
-    assuranceComponent: corpus.component.id,
-  },
-  reflection: corpus.reflection,
-  values: {
-    resourceRead: 41,
-    payload: { enabled: true, count: 9, label: "parity", bytes: "007fff", values: [1, 5, 13] },
-    callback: 42,
-    closure: 42,
-  },
-  identity: true,
-  failures: {
-    callback: ["error:callback-threw", "parity callback failed at 41"],
-    closedResource: "error:disposed-resource",
-  },
-  runtime: { runtimeInitRuns: 1, componentInitRuns: 1, liveIdentities: 0 },
+	bindingIrSha256: corpus.bindingIrSha256
+	, metadata: {
+		reflectionSha256: "1".repeat(64)
+		, assuranceSha256: "2".repeat(64)
+		, documentationSha256: "3".repeat(64)
+		, reflectionComponent: corpus.component.id
+		, assuranceComponent: corpus.component.id
+	}
+	, reflection: corpus.reflection
+	, values: {
+		resourceRead: 41
+		, payload: { enabled: true, count: 9, label: "parity", bytes: "007fff", values: [1, 5, 13] }
+		, callback: 42
+		, closure: 42
+	}
+	, identity: true
+	, failures: {
+		callback: ["error:callback-threw", "parity callback failed at 41"]
+		, closedResource: "error:disposed-resource"
+	}
+	, runtime: { runtimeInitRuns: 1, componentInitRuns: 1, liveIdentities: 0 }
 });
 
 test("Binding IR generates one transport-neutral PHP conformance corpus", async () => {
@@ -51,8 +51,8 @@ test("Binding IR generates one transport-neutral PHP conformance corpus", async 
   assert.equal(first.manifest.featureCoverage.properties, false);
   assert.equal(first.manifest.featureCoverage.genericSpecializations, false);
   assert.deepEqual(first.manifest.capabilityGaps.map(gap => gap.feature), [
-    "properties",
-    "generic-specializations",
+    "properties"
+    , "generic-specializations"
   ]);
   assert.doesNotMatch(first.files["conformance.php"], /NativeTransport|PHP-Wasm|Wasm URL|\bccall\b|\bcwrap\b/);
   assert.match(first.files["conformance.php"], /LEAN_BRIDGE_CONFORMANCE_AUTOLOAD/);
@@ -61,15 +61,17 @@ test("Binding IR generates one transport-neutral PHP conformance corpus", async 
 
   await mkdir("build", { recursive: true });
   const directory = await mkdtemp(join(process.cwd(), "build/php-conformance-test-"));
-  try {
+  try
+{
     const path = join(directory, "conformance.php");
     await writeFile(path, first.files["conformance.php"]);
     const { stdout, stderr } = await run("php", ["-l", path]);
     assert.equal(stderr, "");
     assert.match(stdout, /No syntax errors detected/);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("PHP conformance comparison rejects undocumented transport differences", () => {
@@ -84,8 +86,8 @@ test("PHP conformance comparison rejects undocumented transport differences", ()
   assert.throws(
     () => comparePhpConformanceResults({ corpus: manifest, native, phpWasm }),
     error =>
-      error instanceof PhpConformanceError &&
-      error.code === "php-transport-semantic-mismatch" &&
-      error.details.differences.some(difference => difference.path === "result.values.callback"),
+      error instanceof PhpConformanceError
+      && error.code === "php-transport-semantic-mismatch"
+      && error.details.differences.some(difference => difference.path === "result.values.callback"),
   );
 });

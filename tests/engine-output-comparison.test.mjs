@@ -7,24 +7,25 @@ import test from "node:test";
 import { compareComponentEngineOutputs, EngineOutputComparisonError } from "../src/build/engine-output-comparison.mjs";
 
 const writeOutput = async ({ root, backend }) => {
-  await mkdir(join(root, "bundle"), { recursive: true });
-  const request = Buffer.from('{"kind":"request"}\n');
-  await writeFile(join(root, "engine-execution-request.json"), request);
-  await writeFile(join(root, "bundle", "component.wasm"), Buffer.from([0, 97, 115, 109]));
-  await writeFile(join(root, "bundle", "metadata.json"), '{"sharedRuntime":true}\n');
-  await writeFile(join(root, "engine-execution-report.json"), JSON.stringify({
-    schemaVersion: 1,
-    backend,
-    requestSha256: "6721fbcbba2282b9a20a3ac6d5cd3c9a95de3d24f760ecf22aa7247f374a6a80",
-    engineIdentitySha256: "a".repeat(64),
-    bundleManifestSha256: "b".repeat(64),
-    bundleIdentitySha256: "c".repeat(64),
-  }));
+	await mkdir(join(root, "bundle"), { recursive: true });
+	const request = Buffer.from('{"kind":"request"}\n');
+	await writeFile(join(root, "engine-execution-request.json"), request);
+	await writeFile(join(root, "bundle", "component.wasm"), Buffer.from([0, 97, 115, 109]));
+	await writeFile(join(root, "bundle", "metadata.json"), '{"sharedRuntime":true}\n');
+	await writeFile(join(root, "engine-execution-report.json"), JSON.stringify({
+		schemaVersion: 1
+		, backend
+		, requestSha256: "6721fbcbba2282b9a20a3ac6d5cd3c9a95de3d24f760ecf22aa7247f374a6a80"
+		, engineIdentitySha256: "a".repeat(64)
+		, bundleManifestSha256: "b".repeat(64)
+		, bundleIdentitySha256: "c".repeat(64)
+	}));
 };
 
 test("component engine output comparison permits only the backend report label", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-engine-compare-"));
-  try {
+  try
+{
     const nativeRoot = join(scratch, "native");
     const dockerRoot = join(scratch, "docker");
     await writeOutput({ root: nativeRoot, backend: "native-nix" });
@@ -42,7 +43,8 @@ test("component engine output comparison permits only the backend report label",
       compareComponentEngineOutputs({ nativeRoot, dockerRoot }),
       error => error instanceof EngineOutputComparisonError && error.code === "engine-authorized-output-drift",
     );
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });

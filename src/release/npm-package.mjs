@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import {
-  copyFile,
-  mkdir,
-  readdir,
-  writeFile,
+	copyFile,
+	mkdir,
+	readdir,
+	writeFile,
 } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
@@ -15,13 +15,13 @@ const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
 
 const ensureEmptyOutput = async output => {
-  await mkdir(output, { recursive: true });
-  if ((await readdir(output)).length !== 0) throw new Error(`npm package output is not empty: ${output}`);
+	await mkdir(output, { recursive: true });
+	if((await readdir(output)).length !== 0) throw new Error(`npm package output is not empty: ${output}`);
 };
 
 const copy = async (source, destination) => {
-  await mkdir(dirname(destination), { recursive: true });
-  await copyFile(source, destination);
+	await mkdir(dirname(destination), { recursive: true });
+	await copyFile(source, destination);
 };
 
 const runtimeModule = () => `import createMain from "./wasm/main.mjs";
@@ -147,111 +147,118 @@ export const runtime = Object.freeze({
 });
 `;
 
+/**
+ * Builds npm package from validated inputs with deterministic output suitable for the deterministic release and independent-verification pipeline.
+ *
+ * @param root0 - Named inputs and dependency overrides used to build npm package.
+ * @param root0.bundleRoot - Filesystem root containing the bundle.
+ * @param root0.outputRoot - Filesystem root containing the output.
+ */
 export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
-  const bundle = resolve(bundleRoot);
-  const output = resolve(outputRoot);
-  if (output === bundle || output === dirname(bundle)) throw new Error("refusing to replace the canonical bundle with an npm package");
-  await ensureEmptyOutput(output);
-  const { manifest, manifestSha256 } = await readVerifiedCanonicalBundle(bundle);
-  const npm = manifest.packages.find(packageMapping => packageMapping.ecosystem === "npm");
-  if (!npm?.eligible) throw new Error(`canonical bundle is not eligible for npm projection: ${npm?.reason ?? "mapping absent"}`);
+	const bundle = resolve(bundleRoot);
+	const output = resolve(outputRoot);
+	if(output === bundle || output === dirname(bundle)) throw new Error("refusing to replace the canonical bundle with an npm package");
+	await ensureEmptyOutput(output);
+	const { manifest, manifestSha256 } = await readVerifiedCanonicalBundle(bundle);
+	const npm = manifest.packages.find(packageMapping => packageMapping.ecosystem === "npm");
+	if(!npm?.eligible) throw new Error(`canonical bundle is not eligible for npm projection: ${npm?.reason ?? "mapping absent"}`);
 
-  const packageRoot = join(output, "package");
-  const copies = [
-    ["bindings/javascript/index.mjs", "index.mjs"],
-    ["bindings/javascript/index.d.ts", "index.d.ts"],
-    ["bindings/javascript/internal/validators.mjs", "internal/validators.mjs"],
-    ["bindings/javascript/README.md", "README.md"],
-    ["bindings/javascript/binding-manifest.json", "binding-manifest.json"],
-    ["artifacts/browser/runtime.mjs", "internal/wasm/main.mjs"],
-    ["artifacts/browser/runtime.wasm", "internal/wasm/main.wasm"],
-    ["artifacts/browser/alpha.so.wasm", "internal/wasm/alpha.so.wasm"],
-    ["runtime/javascript/alpha-descriptor.json", "internal/descriptor.json"],
-    ["runtime/javascript/poc/link-spike/loader.mjs", "internal/bridge/poc/link-spike/loader.mjs"],
-    ["runtime/javascript/src/runtime/pending-operations.mjs", "internal/bridge/src/runtime/pending-operations.mjs"],
-    ["runtime/javascript/src/runtime/callbacks.mjs", "internal/bridge/src/runtime/callbacks.mjs"],
-    ["runtime/javascript/src/runtime/weak-value-map.mjs", "internal/bridge/src/runtime/weak-value-map.mjs"],
-    ["runtime/javascript/src/binding-ir/canonical.mjs", "internal/bridge/src/binding-ir/canonical.mjs"],
-    ["runtime/javascript/src/binding-ir/contract.mjs", "internal/bridge/src/binding-ir/contract.mjs"],
-    ["runtime/javascript/src/binding-ir/sha256.mjs", "internal/bridge/src/binding-ir/sha256.mjs"],
-    ["LICENSE", "LICENSE"],
-    ["canonical-package.json", "metadata/canonical-package.json"],
-    ["canonical-package.sha256", "metadata/canonical-package.sha256"],
-    ["bundle-identity.json", "metadata/bundle-identity.json"],
-    ["metadata/assurance.json", "metadata/assurance.json"],
-    ["metadata/core-artifact-set.json", "metadata/core-artifact-set.json"],
-    ["metadata/sbom.spdx.json", "metadata/sbom.spdx.json"],
-    ["metadata/provenance.intoto.json", "metadata/provenance.intoto.json"],
-  ];
-  for (const [source, destination] of copies) await copy(join(bundle, source), join(packageRoot, destination));
-  await writeFile(join(packageRoot, "internal/runtime.mjs"), runtimeModule());
+	const packageRoot = join(output, "package");
+	const copies = [
+		["bindings/javascript/index.mjs", "index.mjs"]
+		, ["bindings/javascript/index.d.ts", "index.d.ts"]
+		, ["bindings/javascript/internal/validators.mjs", "internal/validators.mjs"]
+		, ["bindings/javascript/README.md", "README.md"]
+		, ["bindings/javascript/binding-manifest.json", "binding-manifest.json"]
+		, ["artifacts/browser/runtime.mjs", "internal/wasm/main.mjs"]
+		, ["artifacts/browser/runtime.wasm", "internal/wasm/main.wasm"]
+		, ["artifacts/browser/alpha.so.wasm", "internal/wasm/alpha.so.wasm"]
+		, ["runtime/javascript/alpha-descriptor.json", "internal/descriptor.json"]
+		, ["runtime/javascript/poc/link-spike/loader.mjs", "internal/bridge/poc/link-spike/loader.mjs"]
+		, ["runtime/javascript/src/runtime/pending-operations.mjs", "internal/bridge/src/runtime/pending-operations.mjs"]
+		, ["runtime/javascript/src/runtime/callbacks.mjs", "internal/bridge/src/runtime/callbacks.mjs"]
+		, ["runtime/javascript/src/runtime/weak-value-map.mjs", "internal/bridge/src/runtime/weak-value-map.mjs"]
+		, ["runtime/javascript/src/binding-ir/canonical.mjs", "internal/bridge/src/binding-ir/canonical.mjs"]
+		, ["runtime/javascript/src/binding-ir/contract.mjs", "internal/bridge/src/binding-ir/contract.mjs"]
+		, ["runtime/javascript/src/binding-ir/sha256.mjs", "internal/bridge/src/binding-ir/sha256.mjs"]
+		, ["LICENSE", "LICENSE"]
+		, ["canonical-package.json", "metadata/canonical-package.json"]
+		, ["canonical-package.sha256", "metadata/canonical-package.sha256"]
+		, ["bundle-identity.json", "metadata/bundle-identity.json"]
+		, ["metadata/assurance.json", "metadata/assurance.json"]
+		, ["metadata/core-artifact-set.json", "metadata/core-artifact-set.json"]
+		, ["metadata/sbom.spdx.json", "metadata/sbom.spdx.json"]
+		, ["metadata/provenance.intoto.json", "metadata/provenance.intoto.json"]
+	];
+	for(const [source, destination] of copies) await copy(join(bundle, source), join(packageRoot, destination));
+	await writeFile(join(packageRoot, "internal/runtime.mjs"), runtimeModule());
 
-  const packageJson = {
-    name: npm.name,
-    version: npm.version,
-    description: "Generated Lean bindings backed by one shared WebAssembly runtime.",
-    license: manifest.licenses.expression,
-    type: "module",
-    sideEffects: false,
-    engines: { node: ">=22" },
-    types: "./index.d.ts",
-    exports: {
-      ".": {
-        types: "./index.d.ts",
-        browser: "./index.mjs",
-        import: "./index.mjs",
-        default: "./index.mjs",
-      },
-    },
-    files: ["index.mjs", "index.d.ts", "README.md", "LICENSE", "binding-manifest.json", "internal", "metadata"],
-    leanBridge: {
-      component: manifest.component.id,
-      canonicalManifestSha256: manifestSha256,
-      bindingIrSha256: manifest.bindingIr.semanticSha256,
-      sharedRuntime: true,
-    },
-  };
-  await writeFile(join(packageRoot, "package.json"), json(packageJson));
+	const packageJson = {
+		name: npm.name
+		, version: npm.version
+		, description: "Generated Lean bindings backed by one shared WebAssembly runtime."
+		, license: manifest.licenses.expression
+		, type: "module"
+		, sideEffects: false
+		, engines: { node: ">=22" }
+		, types: "./index.d.ts"
+		, exports: {
+			".": {
+				types: "./index.d.ts"
+				, browser: "./index.mjs"
+				, import: "./index.mjs"
+				, default: "./index.mjs"
+			}
+		}
+		, files: ["index.mjs", "index.d.ts", "README.md", "LICENSE", "binding-manifest.json", "internal", "metadata"]
+		, leanBridge: {
+			component: manifest.component.id
+			, canonicalManifestSha256: manifestSha256
+			, bindingIrSha256: manifest.bindingIr.semanticSha256
+			, sharedRuntime: true
+		}
+	};
+	await writeFile(join(packageRoot, "package.json"), json(packageJson));
 
-  const coreArtifacts = copies.slice(5, 8).map(([sourcePath, packagePath]) => {
+	const coreArtifacts = copies.slice(5, 8).map(([sourcePath, packagePath]) => {
     const artifact = manifest.artifacts.find(candidate => candidate.path === sourcePath);
-    if (!artifact) throw new Error(`canonical manifest does not inventory ${sourcePath}`);
+    if(!artifact) throw new Error(`canonical manifest does not inventory ${sourcePath}`);
     return {
-      sourcePath,
-      packagePath,
-      sourceSha256: artifact.sha256,
-      packageSha256: artifact.sha256,
+      sourcePath
+      , packagePath
+      , sourceSha256: artifact.sha256
+      , packageSha256: artifact.sha256
     };
-  });
-  const plan = {
-    schemaVersion: 1,
-    backend: "npm-v1",
-    ecosystem: "npm",
-    bundle: { id: manifest.component.id, manifestSha256 },
-    compilerAccess: false,
-    scriptPolicy: "disabled",
-    versionSource: "canonical-manifest",
-    semanticSource: "canonical-manifest",
-    operations: ["select", "arrange", "copy", "rename", "render-registry-metadata", "archive", "compress"],
-    commands: ["internal-ustar package", "internal-gzip package.tar"],
-    coreArtifacts,
-  };
-  validatePackagingBackendPlan(plan);
-  await writeFile(join(output, "npm-projection.json"), json(plan));
+	});
+	const plan = {
+		schemaVersion: 1
+		, backend: "npm-v1"
+		, ecosystem: "npm"
+		, bundle: { id: manifest.component.id, manifestSha256 }
+		, compilerAccess: false
+		, scriptPolicy: "disabled"
+		, versionSource: "canonical-manifest"
+		, semanticSource: "canonical-manifest"
+		, operations: ["select", "arrange", "copy", "rename", "render-registry-metadata", "archive", "compress"]
+		, commands: ["internal-ustar package", "internal-gzip package.tar"]
+		, coreArtifacts
+	};
+	validatePackagingBackendPlan(plan);
+	await writeFile(join(output, "npm-projection.json"), json(plan));
 
-  const archiveName = `${npm.name.replace(/^@/, "").replace("/", "-")}-${npm.version}.tgz`;
-  const archive = await createDeterministicTarGz({
-    directory: packageRoot,
-    archiveRoot: "package",
-    sourceDateEpoch: manifest.provenance.sourceDateEpoch,
-  });
-  await writeFile(join(output, archiveName), archive);
-  return Object.freeze({
-    package: `${npm.name}@${npm.version}`,
-    output,
-    archive: join(output, archiveName),
-    archiveSha256: sha256(archive),
-    canonicalManifestSha256: manifestSha256,
-    coreArtifacts: Object.freeze(coreArtifacts),
-  });
+	const archiveName = `${npm.name.replace(/^@/, "").replace("/", "-")}-${npm.version}.tgz`;
+	const archive = await createDeterministicTarGz({
+		directory: packageRoot
+		, archiveRoot: "package"
+		, sourceDateEpoch: manifest.provenance.sourceDateEpoch
+	});
+	await writeFile(join(output, archiveName), archive);
+	return Object.freeze({
+		package: `${npm.name}@${npm.version}`
+		, output
+		, archive: join(output, archiveName)
+		, archiveSha256: sha256(archive)
+		, canonicalManifestSha256: manifestSha256
+		, coreArtifacts: Object.freeze(coreArtifacts)
+	});
 };

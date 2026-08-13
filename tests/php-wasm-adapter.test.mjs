@@ -7,39 +7,40 @@ import test from "node:test";
 import { readLockedGraph } from "../src/capsule/node.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PhpWasmGenerationError,
-  generatePhpWasmAdapterPackage,
+	PhpWasmGenerationError,
+	generatePhpWasmAdapterPackage,
 } from "../src/backends/php/php-wasm.mjs";
 
 const graph = await readLockedGraph({
-  lockPath: "poc/lean-link-spike/graph-lock.json",
-  profile: "side-startup",
+	lockPath: "poc/lean-link-spike/graph-lock.json"
+	, profile: "side-startup"
 });
 
 const options = {
-  ir: alpha.bindingIr,
-  graph,
-  target: "browser",
-  runtime: {
-    name: "liblean_bridge_runtime.so",
-    file: "lib/liblean_bridge_runtime.so",
-    sha256: "1".repeat(64),
-  },
-  extensions: {
-    "8.4": {
-      name: "php8.4-lean-alpha.so",
-      file: "lib/php8.4-lean-alpha.so",
-      sha256: "2".repeat(64),
-    },
-  },
+	ir: alpha.bindingIr
+	, graph
+	, target: "browser"
+	, runtime: {
+		name: "liblean_bridge_runtime.so"
+		, file: "lib/liblean_bridge_runtime.so"
+		, sha256: "1".repeat(64)
+	}
+	, extensions: {
+		"8.4": {
+			name: "php8.4-lean-alpha.so"
+			, file: "lib/php8.4-lean-alpha.so"
+			, sha256: "2".repeat(64)
+		}
+	}
 };
 
 const writePackage = async (directory, files) => {
-  for (const [path, source] of Object.entries(files)) {
-    const destination = join(directory, path);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [path, source] of Object.entries(files))
+	{
+		const destination = join(directory, path);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 test("PHP-Wasm generator emits one flat PHP-Wasm library closure", () => {
@@ -48,16 +49,16 @@ test("PHP-Wasm generator emits one flat PHP-Wasm library closure", () => {
   const libraries = manifest.versions["8.4"].libraries;
 
   assert.deepEqual(libraries.map(library => [library.role, library.name, library.ini]), [
-    ["lean-runtime", "liblean_bridge_runtime.so", false],
-    ["lean-component", "alpha.so.wasm", false],
-    ["lean-component", "beta.so.wasm", false],
-    ["lean-component", "gamma.so.wasm", false],
-    ["php-extension", "php8.4-lean-alpha.so", true],
+    ["lean-runtime", "liblean_bridge_runtime.so", false]
+    , ["lean-component", "alpha.so.wasm", false]
+    , ["lean-component", "beta.so.wasm", false]
+    , ["lean-component", "gamma.so.wasm", false]
+    , ["php-extension", "php8.4-lean-alpha.so", true]
   ]);
   assert.deepEqual(manifest.graph.order, [
-    "poc/lean-alpha@0.0.0",
-    "poc/lean-beta@0.0.0",
-    "poc/lean-gamma@0.0.0",
+    "poc/lean-alpha@0.0.0"
+    , "poc/lean-beta@0.0.0"
+    , "poc/lean-gamma@0.0.0"
   ]);
   assert.equal(libraries.some(library => "getLibs" in library), false);
   assert.equal(manifest.transport.supported, true);
@@ -79,7 +80,8 @@ test("PHP-Wasm generator emits one flat PHP-Wasm library closure", () => {
 test("generated host keeps one runtime, component domain, and Vrzno-style identity index", async () => {
   await mkdir("build", { recursive: true });
   const directory = await mkdtemp(join(process.cwd(), "build/php-wasm-host-test-"));
-  try {
+  try
+{
     const files = generatePhpWasmAdapterPackage(options);
     await writePackage(directory, files);
     const generated = await import(`${pathToFileURL(join(directory, "index.mjs")).href}?test=${Date.now()}`);
@@ -87,11 +89,11 @@ test("generated host keeps one runtime, component domain, and Vrzno-style identi
     const libraries = generated.getLibs(wrapper);
     const preload = generated.getFiles(wrapper);
     assert.deepEqual(libraries.map(library => library.name), [
-      "liblean_bridge_runtime.so",
-      "alpha.so.wasm",
-      "beta.so.wasm",
-      "gamma.so.wasm",
-      "php8.4-lean-alpha.so",
+      "liblean_bridge_runtime.so"
+      , "alpha.so.wasm"
+      , "beta.so.wasm"
+      , "gamma.so.wasm"
+      , "php8.4-lean-alpha.so"
     ]);
     assert.equal(libraries.every(library => library.url instanceof URL), true);
     assert.equal(preload.length, 5);
@@ -101,9 +103,9 @@ test("generated host keeps one runtime, component domain, and Vrzno-style identi
     const table = new WebAssembly.Table({ initial: 1, element: "anyfunc" });
     const module = {
       ...wrapper.phpArgs,
-      HEAPU8: new Uint8Array(memory.buffer),
-      wasmTable: table,
-      onRefresh: new Set(),
+      HEAPU8: new Uint8Array(memory.buffer)
+      , wasmTable: table
+      , onRefresh: new Set()
     };
     const host = module.__leanBridgeInstallPhpWasmHostV1(module);
     assert.equal(module.__leanBridgeInstallPhpWasmHostV1(module), host);
@@ -146,28 +148,29 @@ test("generated host keeps one runtime, component domain, and Vrzno-style identi
     assert.equal(host.releaseTarget(fromAlpha), true);
     assert.equal(host.target(fromAlpha), undefined);
     assert.deepEqual(host.snapshot(), {
-      protocol: 1,
-      runtimeState: "ready",
-      runtimeInitRuns: 1,
-      graphs: 1,
-      components: [
-        "poc/lean-alpha@0.0.0",
-        "poc/lean-beta@0.0.0",
-        "poc/lean-gamma@0.0.0",
-      ],
-      identities: 0,
-      requestActive: false,
-      requestGeneration: 2,
+      protocol: 1
+      , runtimeState: "ready"
+      , runtimeInitRuns: 1
+      , graphs: 1
+      , components: [
+        "poc/lean-alpha@0.0.0"
+        , "poc/lean-beta@0.0.0"
+        , "poc/lean-gamma@0.0.0"
+      ]
+      , identities: 0
+      , requestActive: false
+      , requestGeneration: 2
     });
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("PHP-Wasm generation rejects graph, asset, and component drift", async () => {
   const lazy = await readLockedGraph({
-    lockPath: "poc/lean-link-spike/graph-lock.json",
-    profile: "side-lazy",
+    lockPath: "poc/lean-link-spike/graph-lock.json"
+    , profile: "side-lazy"
   });
   const lazyFiles = generatePhpWasmAdapterPackage({ ...options, graph: lazy });
   const lazyManifest = JSON.parse(lazyFiles["php-wasm-manifest.json"]);
@@ -179,8 +182,8 @@ test("PHP-Wasm generation rejects graph, asset, and component drift", async () =
   );
 
   const staticGraph = await readLockedGraph({
-    lockPath: "poc/lean-link-spike/graph-lock.json",
-    profile: "final-static",
+    lockPath: "poc/lean-link-spike/graph-lock.json"
+    , profile: "final-static"
   });
   assert.throws(
     () => generatePhpWasmAdapterPackage({ ...options, graph: staticGraph }),
@@ -190,7 +193,7 @@ test("PHP-Wasm generation rejects graph, asset, and component drift", async () =
   assert.throws(
     () => generatePhpWasmAdapterPackage({
       ...options,
-      runtime: { ...options.runtime, name: "alpha.so.wasm" },
+      runtime: { ...options.runtime, name: "alpha.so.wasm" }
     }),
     error => error instanceof PhpWasmGenerationError && error.code === "duplicate-php-wasm-library-name",
   );
@@ -198,7 +201,7 @@ test("PHP-Wasm generation rejects graph, asset, and component drift", async () =
   assert.throws(
     () => generatePhpWasmAdapterPackage({
       ...options,
-      runtime: { ...options.runtime, file: "lib/../escape.so" },
+      runtime: { ...options.runtime, file: "lib/../escape.so" }
     }),
     error => error instanceof PhpWasmGenerationError && error.code === "invalid-php-wasm-artifact",
   );

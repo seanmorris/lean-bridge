@@ -12,55 +12,55 @@ import { generateJavaScriptPackage } from "../../../src/backends/javascript/gene
 import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const propertyFixture = () => {
-  const ir = structuredClone(alpha.bindingIr);
-  ir.types.find(type => type.id === "lean:Alpha.Box").mutability = "write";
-  const getter = ir.declarations.find(
-    declaration => declaration.id === "lean:Alpha.Box.read",
-  );
-  getter.name = "value";
-  getter.kind = "property";
-  getter.overloadKey = "Box.value.get";
-  const setter = structuredClone(getter);
-  setter.id = "bridge:Alpha.Box.setValue";
-  setter.overloadKey = "Box.value.set(uint32)";
-  setter.parameters = [
-    {
-      name: "value",
-      type: { kind: "primitive", name: "uint32" },
-      ownership: "copy",
-      lifetime: null,
-      mutability: "immutable",
-      optional: false,
-      default: null,
-    },
-  ];
-  setter.result = {
-    type: { kind: "primitive", name: "unit" },
-    ownership: "copy",
-    lifetime: null,
-  };
-  setter.receiver.mutability = "write";
-  setter.mutability = "write";
-  setter.effects = ["writes-resource", "fails"];
-  setter.assurance = [];
-  setter.documentation = {
-    summary: "Replace the unsigned value stored in a Box.",
-    details: "The generated class exposes an ordinary property setter.",
-  };
-  setter.source = {
-    producer: "bridge",
-    declaration: "Alpha.Box.setValue",
-    extensions: { "lean-wasm.org/intrinsic": "property-setter-probe" },
-  };
-  ir.declarations.push(setter);
+	const ir = structuredClone(alpha.bindingIr);
+	ir.types.find(type => type.id === "lean:Alpha.Box").mutability = "write";
+	const getter = ir.declarations.find(
+		declaration => declaration.id === "lean:Alpha.Box.read",
+	);
+	getter.name = "value";
+	getter.kind = "property";
+	getter.overloadKey = "Box.value.get";
+	const setter = structuredClone(getter);
+	setter.id = "bridge:Alpha.Box.setValue";
+	setter.overloadKey = "Box.value.set(uint32)";
+	setter.parameters = [
+		{
+			name: "value"
+			, type: { kind: "primitive", name: "uint32" }
+			, ownership: "copy"
+			, lifetime: null
+			, mutability: "immutable"
+			, optional: false
+			, default: null
+		}
+	];
+	setter.result = {
+		type: { kind: "primitive", name: "unit" }
+		, ownership: "copy"
+		, lifetime: null
+	};
+	setter.receiver.mutability = "write";
+	setter.mutability = "write";
+	setter.effects = ["writes-resource", "fails"];
+	setter.assurance = [];
+	setter.documentation = {
+		summary: "Replace the unsigned value stored in a Box."
+		, details: "The generated class exposes an ordinary property setter."
+	};
+	setter.source = {
+		producer: "bridge"
+		, declaration: "Alpha.Box.setValue"
+		, extensions: { "lean-wasm.org/intrinsic": "property-setter-probe" }
+	};
+	ir.declarations.push(setter);
 
-  const privateAbi = structuredClone(alpha.privateAbi);
-  privateAbi.initialize = null;
-  privateAbi.declarations["bridge:Alpha.Box.setValue"] = {
-    symbol: "_bridge_box_set_value",
-    adapter: null,
-  };
-  return { ir, privateAbi };
+	const privateAbi = structuredClone(alpha.privateAbi);
+	privateAbi.initialize = null;
+	privateAbi.declarations["bridge:Alpha.Box.setValue"] = {
+		symbol: "_bridge_box_set_value"
+		, adapter: null
+	};
+	return { ir, privateAbi };
 };
 
 test("resource lifecycle groups native property getters and setters", () => {
@@ -71,8 +71,8 @@ test("resource lifecycle groups native property getters and setters", () => {
   assert.deepEqual(
     box.properties.map(property => [property.name, property.role]),
     [
-      ["value", "getter"],
-      ["value", "setter"],
+      ["value", "getter"]
+      , ["value", "setter"]
     ],
   );
   assert.equal(box.lifecycle.properties.length, 2);
@@ -90,8 +90,8 @@ test("property accessors reject duplicate roles and mismatched types", () => {
   duplicate.source.declaration = "Alpha.Box.duplicateValue";
   duplicateFixture.ir.declarations.push(duplicate);
   duplicateFixture.privateAbi.declarations[duplicate.id] = {
-    symbol: "_bridge_box_duplicate_value",
-    adapter: null,
+    symbol: "_bridge_box_duplicate_value"
+    , adapter: null
   };
   assert.throws(
     () => compileJavaScriptProjection(duplicateFixture.ir, duplicateFixture.privateAbi),
@@ -124,23 +124,36 @@ test("native classes expose property access without helper methods or handles", 
   const token = ((1 << 24) | (1 << 12) | 1) >>> 0;
   let stored = 0;
   const module = {
-    _bridge_lean_alpha_make(value) {
+    _bridge_lean_alpha_make:
+      /**
+       * Stores the constructor value and returns the fixed native token used by the projected resource test.
+       *
+       * @param value - Constructor argument captured for the fixture's native resource instance.
+       */
+      function(value) {
       stored = value;
       return token;
-    },
-    _bridge_lean_alpha_read: () => stored,
-    _bridge_box_set_value(_token, value) {
+      }
+    , _bridge_lean_alpha_read: () => stored
+    , _bridge_box_set_value:
+      /**
+       * Updates the fixture’s stored native value so the projected getter can observe the property write.
+       *
+       * @param _token - Test-double input accepted for interface compatibility but intentionally unused.
+       * @param value - Replacement property value exposed by the fixture's projected getter.
+       */
+      function(_token, value) {
       stored = value;
       return undefined;
-    },
-    _bridge_lean_handle_identity: value => value,
-    _bridge_lean_release: () => 0,
+      }
+    , _bridge_lean_handle_identity: value => value
+    , _bridge_lean_release: () => 0
   };
   const api = createLibrarySurface(module, {
-    id: "poc/property@0.0.0",
-    buildHash: "property-test",
-    bindingIr: ir,
-    bindings: Object.freeze([binding]),
+    id: "poc/property@0.0.0"
+    , buildHash: "property-test"
+    , bindingIr: ir
+    , bindings: Object.freeze([binding])
   });
 
   const box = new api.Box(7);
@@ -160,12 +173,13 @@ test("generated JavaScript and TypeScript use native property syntax", async () 
   const files = generateJavaScriptPackage(ir);
   assert.match(files["index.mjs"], /get value\(\)/);
   assert.match(files["index.mjs"], /set value\(value\)/);
-  assert.doesNotMatch(files["index.mjs"], /\n  (?:get|set)Value\(/);
-  assert.match(files["index.d.ts"], /\n  value: number;/);
+  assert.doesNotMatch(files["index.mjs"], /\n {2}(?:get|set)Value\(/);
+  assert.match(files["index.d.ts"], /\n {2}value: number;/);
 
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-property-"));
-  try {
-    for (const [relativePath, source] of Object.entries({
+  try
+{
+    for(const [relativePath, source] of Object.entries({
       ...files,
       "internal/runtime.mjs": `
 const values = new WeakMap();
@@ -180,7 +194,7 @@ export const runtime = Object.freeze({
   call() {},
   dispose(receiver) { values.delete(receiver); },
 });
-`,
+`
     })) {
       const destination = join(directory, relativePath);
       await mkdir(join(destination, ".."), { recursive: true });
@@ -193,9 +207,10 @@ export const runtime = Object.freeze({
     assert.equal(box.value, 3);
     box.value = 9;
     assert.equal(box.value, 9);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("a getter without a setter becomes a readonly TypeScript property", () => {
@@ -206,5 +221,5 @@ test("a getter without a setter becomes a readonly TypeScript property", () => {
   const files = generateJavaScriptPackage(ir);
   assert.match(files["index.mjs"], /get value\(\)/);
   assert.doesNotMatch(files["index.mjs"], /set value\(/);
-  assert.match(files["index.d.ts"], /\n  readonly value: number;/);
+  assert.match(files["index.d.ts"], /\n {2}readonly value: number;/);
 });

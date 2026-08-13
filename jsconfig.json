@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": false,
+		"forceConsistentCasingInFileNames": true,
+		"lib": ["ES2024", "DOM", "DOM.Iterable", "WebWorker"],
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2024",
+		"types": ["node"]
+	},
+	"include": [
+		"**/*.js",
+		"**/*.mjs",
+		"**/*.cjs",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.mts",
+		"**/*.cts"
+	],
+	"exclude": [
+		"**/node_modules/**",
+		".codex-sdl-probe.*/**",
+		".lean-bridge-docker-nix/**",
+		".toolchains/**",
+		"build/**",
+		"coverage/**",
+		"docs/**",
+		"result*/**"
+	]
+}

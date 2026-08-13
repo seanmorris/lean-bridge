@@ -12,34 +12,59 @@ test("Lean closure finalizers queue native release until a safe bridge entry", a
   const createControlledFinalizer = callback => {
     const holdings = [];
     const registry = {
-      callback,
-      holdings,
-      register(_target, holding) {
+      callback
+      , holdings
+      , register:
+        /**
+         * Associates the test target with its finalizer holding so simulated collection can deliver the correct lifecycle token.
+         *
+         * @param _target - Test-double input accepted for interface compatibility but intentionally unused.
+         * @param holding - Lifecycle token retained by the finalization registry until it is unregistered or delivered.
+         */
+        function(_target, holding) {
         holdings.push(holding);
-      },
-      unregister() {
+        }
+      , unregister:
+        /**
+         * Removes the captured finalizer holding and reports whether explicit lifecycle cleanup succeeded.
+         */
+        function() {
         return true;
-      },
+        }
     };
     registries.push(registry);
     return registry;
   };
   const libraries = createLibraryLoader(module, {
-    createWeakReference(target) {
+    createWeakReference:
+      /**
+       * Returns a controllable weak-reference stand-in whose referent the test can clear explicitly.
+       *
+       * @param target - Projected closure wrapper held until the test simulates collection.
+       */
+      function(target) {
       let value = target;
       const reference = {
-        clear() {
+        clear:
+          /**
+           * Clears all tracked entries and resets auxiliary lifecycle state without retaining stale handles.
+           */
+          function() {
           value = undefined;
-        },
-        deref() {
+          }
+        , deref:
+          /**
+           * Returns the test-controlled referent, including undefined after simulated collection.
+           */
+          function() {
           return value;
-        },
+          }
       };
       references.push(reference);
       return reference;
-    },
-    createClosureCacheFinalizationRegistry: createControlledFinalizer,
-    createClosureFinalizationRegistry: createControlledFinalizer,
+      }
+    , createClosureCacheFinalizationRegistry: createControlledFinalizer
+    , createClosureFinalizationRegistry: createControlledFinalizer
   });
   const loadedAlpha = await libraries.load(alpha);
   loadedAlpha.makeAdder(2);

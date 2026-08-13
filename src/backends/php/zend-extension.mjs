@@ -5,17 +5,29 @@ import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { generateCBindingPackage } from "../c/generate.mjs";
 import { compilePhpProjection } from "./projection.mjs";
 
-export class PhpZendGenerationError extends Error {
-  constructor(code, message, details = {}) {
-    super(message);
-    this.name = "PhpZendGenerationError";
-    this.code = code;
-    this.details = Object.freeze(structuredClone(details));
-  }
+/**
+ * Reports PHP Zend generation failures with stable machine-readable codes and structured diagnostic context.
+ */
+export class PhpZendGenerationError extends Error
+{
+	/**
+   * Initializes the error used to report PHP Zend generation failures, preserving its code, message, and diagnostic context.
+   *
+   * @param code - Stable machine-readable code that identifies the failure category.
+   * @param message - Human-readable explanation of the failure.
+   * @param details - Structured diagnostic fields associated with the failure.
+   */
+	constructor(code, message, details = {})
+	{
+		super(message);
+		this.name = "PhpZendGenerationError";
+		this.code = code;
+		this.details = Object.freeze(structuredClone(details));
+	}
 }
 
 const fail = (code, message, details = {}) => {
-  throw new PhpZendGenerationError(code, message, details);
+	throw new PhpZendGenerationError(code, message, details);
 };
 
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
@@ -29,36 +41,36 @@ const packageName = ir => ir.component.id.slice(0, ir.component.id.lastIndexOf("
 const packageStem = ir => snake(packageName(ir).split("/").at(-1));
 
 const exactAlphaShape = (ir, projection) => {
-  const types = Object.fromEntries(ir.types.map(type => [type.kind, type]));
-  const operationIds = projection.operations.map(operation => operation.id);
-  const expected = [
-    "lean:Alpha.box",
-    "lean:Alpha.Box.read",
-    "bridge:Alpha.Box.identity",
-    "lean:Alpha.roundTrip",
-    "lean:Alpha.withCallback",
-    "lean:Alpha.makeAdder",
-  ];
-  const payload = ir.types.find(type => type.kind === "record");
-  const resource = ir.types.find(type => type.kind === "resource");
-  const callback = ir.types.find(type => type.kind === "callback");
-  const payloadFields = payload?.fields.map(field => `${field.name}:${field.type.kind === "primitive" ? field.type.name : field.type.constructor}`).join(",");
-  if (
-    ir.types.filter(type => type.kind === "record").length !== 1 ||
-    ir.types.filter(type => type.kind === "resource").length !== 1 ||
-    ir.types.filter(type => type.kind === "callback").length !== 1 ||
-    payloadFields !== "enabled:bool,count:uint32,label:string,bytes:bytes,values:array" ||
-    resource.resource.disposal !== "required" ||
-    callback.callable.resultMode !== "value" ||
-    JSON.stringify(operationIds) !== JSON.stringify(expected)
-  ) {
-    fail("unsupported-zend-shape", "the Zend POC requires the reviewed Alpha value, resource, and callback fixture", {
-      types,
-      operationIds,
-      payloadFields,
-    });
-  }
-  return { payload, resource, callback };
+	const types = Object.fromEntries(ir.types.map(type => [type.kind, type]));
+	const operationIds = projection.operations.map(operation => operation.id);
+	const expected = [
+		"lean:Alpha.box"
+		, "lean:Alpha.Box.read"
+		, "bridge:Alpha.Box.identity"
+		, "lean:Alpha.roundTrip"
+		, "lean:Alpha.withCallback"
+		, "lean:Alpha.makeAdder"
+	];
+	const payload = ir.types.find(type => type.kind === "record");
+	const resource = ir.types.find(type => type.kind === "resource");
+	const callback = ir.types.find(type => type.kind === "callback");
+	const payloadFields = payload?.fields.map(field => `${field.name}:${field.type.kind === "primitive" ? field.type.name : field.type.constructor}`).join(",");
+	if(
+		ir.types.filter(type => type.kind === "record").length !== 1
+    || ir.types.filter(type => type.kind === "resource").length !== 1
+    || ir.types.filter(type => type.kind === "callback").length !== 1
+    || payloadFields !== "enabled:bool,count:uint32,label:string,bytes:bytes,values:array"
+    || resource.resource.disposal !== "required"
+    || callback.callable.resultMode !== "value"
+    || JSON.stringify(operationIds) !== JSON.stringify(expected)
+	) {
+		fail("unsupported-zend-shape", "the Zend POC requires the reviewed Alpha value, resource, and callback fixture", {
+			types
+			, operationIds
+			, payloadFields
+		});
+	}
+	return { payload, resource, callback };
 };
 
 const configM4 = stem => `PHP_ARG_ENABLE([${stem.replaceAll("_", "-")}], [whether to enable the Lean ${stem} extension],
@@ -84,17 +96,17 @@ extern zend_module_entry ${stem}_module_entry;
 `;
 
 const zendSource = (ir, projection, shape) => {
-  const stem = packageStem(ir);
-  const macro = upper(stem);
-  const namespace = projection.package.namespace;
-  const resource = shape.resource.name;
-  const callback = shape.callback.name;
-  const payload = shape.payload.name;
-  const transportMethods = Object.fromEntries(projection.operations.map(operation => [operation.id, operation.transportMethod]));
-  const closeResource = projection.lifecycle.find(operation => operation.kind === "resource-close").transportMethod;
-  const callCallback = projection.lifecycle.find(operation => operation.kind === "callable-call").transportMethod;
-  const closeCallback = projection.lifecycle.find(operation => operation.kind === "callable-close").transportMethod;
-  return `#ifdef HAVE_CONFIG_H
+	const stem = packageStem(ir);
+	const macro = upper(stem);
+	const namespace = projection.package.namespace;
+	const resource = shape.resource.name;
+	const callback = shape.callback.name;
+	const payload = shape.payload.name;
+	const transportMethods = Object.fromEntries(projection.operations.map(operation => [operation.id, operation.transportMethod]));
+	const closeResource = projection.lifecycle.find(operation => operation.kind === "resource-close").transportMethod;
+	const callCallback = projection.lifecycle.find(operation => operation.kind === "callable-call").transportMethod;
+	const closeCallback = projection.lifecycle.find(operation => operation.kind === "callable-close").transportMethod;
+	return `#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
@@ -797,41 +809,47 @@ ZEND_GET_MODULE(${stem})
 `;
 };
 
+/**
+ * Generates PHP zend extension package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
 export const generatePhpZendExtensionPackage = ir => {
-  validateBindingIr(ir);
-  const projection = compilePhpProjection(ir);
-  const shape = exactAlphaShape(ir, projection);
-  const cFiles = generateCBindingPackage(ir);
-  const stem = packageStem(ir);
-  const files = {
-    "config.m4": configM4(stem),
-    [`php_${stem}.h`]: extensionHeader(stem, hashBindingIr(ir), ir.component.version),
-    [`${stem}_zend.c`]: zendSource(ir, projection, shape),
-  };
-  for (const [path, source] of Object.entries(cFiles)) {
-    if (new Set(["README.md", "binding-manifest.json"]).has(path)) continue;
-    files[path] = source;
-  }
-  files[`${stem}.h`] = cFiles[`include/${stem}.h`];
-  files[`${stem}_runtime.h`] = cFiles[`internal/${stem}_runtime.h`];
-  const sourceFiles = Object.keys(files).sort();
-  const filesSha256 = Object.fromEntries(sourceFiles.map(path => [path, sha256(files[path])]));
-  files["zend-manifest.json"] = `${JSON.stringify({
-    schemaVersion: 1,
-    component: ir.component.id,
-    bindingIrSha256: hashBindingIr(ir),
-    generator: { id: "lean-wasm/php-zend", version: 1 },
-    extension: stem,
-    transportClass: `${projection.package.namespace}\\Internal\\NativeTransport`,
-    transportInterface: projection.transport.interface,
-    nativeRuntimeFactory: `${stem}_native_runtime_v1`,
-    operations: [
-      "initialize",
-      ...projection.operations.map(operation => operation.transportMethod),
-      ...projection.lifecycle.map(operation => operation.transportMethod),
-    ],
-    sourceFiles,
-    filesSha256,
-  }, null, 2)}\n`;
-  return Object.freeze(files);
+	validateBindingIr(ir);
+	const projection = compilePhpProjection(ir);
+	const shape = exactAlphaShape(ir, projection);
+	const cFiles = generateCBindingPackage(ir);
+	const stem = packageStem(ir);
+	const files = {
+		"config.m4": configM4(stem)
+		, [`php_${stem}.h`]: extensionHeader(stem, hashBindingIr(ir), ir.component.version)
+		, [`${stem}_zend.c`]: zendSource(ir, projection, shape)
+	};
+	for(const [path, source] of Object.entries(cFiles))
+	{
+		if(new Set(["README.md", "binding-manifest.json"]).has(path)) continue;
+		files[path] = source;
+	}
+	files[`${stem}.h`] = cFiles[`include/${stem}.h`];
+	files[`${stem}_runtime.h`] = cFiles[`internal/${stem}_runtime.h`];
+	const sourceFiles = Object.keys(files).sort();
+	const filesSha256 = Object.fromEntries(sourceFiles.map(path => [path, sha256(files[path])]));
+	files["zend-manifest.json"] = `${JSON.stringify({
+		schemaVersion: 1
+		, component: ir.component.id
+		, bindingIrSha256: hashBindingIr(ir)
+		, generator: { id: "lean-wasm/php-zend", version: 1 }
+		, extension: stem
+		, transportClass: `${projection.package.namespace}\\Internal\\NativeTransport`
+		, transportInterface: projection.transport.interface
+		, nativeRuntimeFactory: `${stem}_native_runtime_v1`
+		, operations: [
+			"initialize"
+			, ...projection.operations.map(operation => operation.transportMethod)
+			, ...projection.lifecycle.map(operation => operation.transportMethod)
+		]
+		, sourceFiles
+		, filesSha256
+	}, null, 2)}\n`;
+	return Object.freeze(files);
 };

@@ -7,19 +7,19 @@ import createModule from "../build/performance-wasm/main.mjs";
 import { createLibraries } from "../build/performance-wasm/bindings.mjs";
 
 const points2d = [
-  { id: 10, coordinates: [-3, 4] },
-  { id: 11, coordinates: [0, 0] },
-  { id: 12, coordinates: [0, 7] },
-  { id: 13, coordinates: [2, -1] },
-  { id: 14, coordinates: [2, -1] },
-  { id: 15, coordinates: [9, 9] },
+	{ id: 10, coordinates: [-3, 4] }
+	, { id: 11, coordinates: [0, 0] }
+	, { id: 12, coordinates: [0, 7] }
+	, { id: 13, coordinates: [2, -1] }
+	, { id: 14, coordinates: [2, -1] }
+	, { id: 15, coordinates: [9, 9] }
 ];
 
 const assertNativeSurface = (api, expected) => {
-  assert.equal(Object.isFrozen(api), true);
-  assert.deepEqual(Object.keys(api), expected);
-  assert.equal(Object.keys(api).some(name => name.startsWith("_")), false);
-  assert.equal("ccall" in api, false);
+	assert.equal(Object.isFrozen(api), true);
+	assert.deepEqual(Object.keys(api), expected);
+	assert.equal(Object.keys(api).some(name => name.startsWith("_")), false);
+	assert.equal("ccall" in api, false);
 };
 
 test("generated performance bindings load native callables lazily", async () => {
@@ -37,11 +37,11 @@ test("generated performance bindings load native callables lazily", async () => 
   assert.equal(ordered.lowerBound(points2d, [2, -1]), 3);
   assert.equal(ordered.lowerBound(points2d, [10, 0]), 6);
   assert.deepEqual(libraries.diagnostics(), {
-    runtimeState: 1,
-    runtimeInitializations: 1,
-    libraryInitializations: 1,
-    liveResources: 0,
-    rejectedHandles: 0,
+    runtimeState: 1
+    , runtimeInitializations: 1
+    , libraryInitializations: 1
+    , liveResources: 0
+    , rejectedHandles: 0
   });
   assert.equal(libraries.shutdown(), true);
 });
@@ -58,14 +58,14 @@ test("independent spatial components share one runtime and resource identity", a
   assert.equal("token" in index, false);
   assert.equal(index.size, 6);
   assert.deepEqual(index.nearest([1, 0]), {
-    pointId: 11,
-    coordinates: new Int32Array([0, 0]),
-    squaredDistance: 1n,
+    pointId: 11
+    , coordinates: new Int32Array([0, 0])
+    , squaredDistance: 1n
   });
   assert.deepEqual(index.nearest([2, -1]), {
-    pointId: 13,
-    coordinates: new Int32Array([2, -1]),
-    squaredDistance: 0n,
+    pointId: 13
+    , coordinates: new Int32Array([2, -1])
+    , squaredDistance: 0n
   });
   assert.deepEqual(
     index.range([0, -1], [2, 7]),
@@ -78,15 +78,15 @@ test("independent spatial components share one runtime and resource identity", a
   const consumer = await libraries.load("spatial-consumer");
   assertNativeSurface(consumer, ["rangeChecksum"]);
   assert.deepEqual(consumer.rangeChecksum(index, [0, -1], [2, 7]), {
-    pointIds: new Uint32Array([11, 12, 13, 14, 16]),
-    checksum: 66n,
+    pointIds: new Uint32Array([11, 12, 13, 14, 16])
+    , checksum: 66n
   });
   assert.deepEqual(libraries.diagnostics(), {
-    runtimeState: 1,
-    runtimeInitializations: 1,
-    libraryInitializations: 3,
-    liveResources: 1,
-    rejectedHandles: 0,
+    runtimeState: 1
+    , runtimeInitializations: 1
+    , libraryInitializations: 3
+    , liveResources: 1
+    , rejectedHandles: 0
   });
 
   assert.equal(index.dispose(), true);
@@ -101,34 +101,34 @@ test("independent spatial components share one runtime and resource identity", a
 });
 
 test("generated bindings preserve 4D and 8D typed values", async () => {
-  for (const fixture of [
+  for(const fixture of [
     {
-      dimensions: 4,
-      points: [
-        { id: 100, coordinates: [-1, -1, -1, -1] },
-        { id: 101, coordinates: [0, 0, 0, 0] },
-        { id: 102, coordinates: [0, 0, 0, 1] },
-        { id: 103, coordinates: [4, 3, 2, 1] },
-      ],
-      query: [1, 1, 1, 1],
-      nearest: { id: 102, coordinates: [0, 0, 0, 1], distance: 3n },
-      minimum: [0, 0, 0, 0],
-      maximum: [4, 3, 2, 1],
-      range: [101, 102, 103],
-    },
-    {
-      dimensions: 8,
-      points: [
-        { id: 200, coordinates: [0, 0, 0, 0, 0, 0, 0, 0] },
-        { id: 201, coordinates: [1, 1, 1, 1, 1, 1, 1, 1] },
-        { id: 202, coordinates: [2, 2, 2, 2, 2, 2, 2, 2] },
-      ],
-      query: [1, 1, 1, 1, 1, 1, 1, 1],
-      nearest: { id: 201, coordinates: [1, 1, 1, 1, 1, 1, 1, 1], distance: 0n },
-      minimum: [0, 0, 0, 0, 0, 0, 0, 0],
-      maximum: [1, 1, 1, 1, 1, 1, 1, 1],
-      range: [200, 201],
-    },
+      dimensions: 4
+      , points: [
+        { id: 100, coordinates: [-1, -1, -1, -1] }
+        , { id: 101, coordinates: [0, 0, 0, 0] }
+        , { id: 102, coordinates: [0, 0, 0, 1] }
+        , { id: 103, coordinates: [4, 3, 2, 1] }
+      ]
+      , query: [1, 1, 1, 1]
+      , nearest: { id: 102, coordinates: [0, 0, 0, 1], distance: 3n }
+      , minimum: [0, 0, 0, 0]
+      , maximum: [4, 3, 2, 1]
+      , range: [101, 102, 103]
+    }
+    , {
+      dimensions: 8
+      , points: [
+        { id: 200, coordinates: [0, 0, 0, 0, 0, 0, 0, 0] }
+        , { id: 201, coordinates: [1, 1, 1, 1, 1, 1, 1, 1] }
+        , { id: 202, coordinates: [2, 2, 2, 2, 2, 2, 2, 2] }
+      ]
+      , query: [1, 1, 1, 1, 1, 1, 1, 1]
+      , nearest: { id: 201, coordinates: [1, 1, 1, 1, 1, 1, 1, 1], distance: 0n }
+      , minimum: [0, 0, 0, 0, 0, 0, 0, 0]
+      , maximum: [1, 1, 1, 1, 1, 1, 1, 1]
+      , range: [200, 201]
+    }
   ]) {
     const module = await createModule();
     const libraries = createLibraries(module);
@@ -188,11 +188,12 @@ test("side modules import one shared memory and resolve inter-library symbols", 
     ["-x", "build/performance-wasm/spatial-consumer.so.wasm"],
     { encoding: "utf8" },
   );
-  for (const dump of [orderedDump, indexDump, consumerDump]) {
+  for(const dump of [orderedDump, indexDump, consumerDump])
+{
     assert.match(dump, /memory\[0\].*<- env\.memory/);
     assert.match(dump, /table\[0\].*<- env\.__indirect_function_table/);
     assert.doesNotMatch(dump, /Memory\[/);
-  }
+}
   assert.match(indexDump, /env\.l_LeanBridge_Performance_comparePoint/);
   assert.match(orderedDump, /-> "l_LeanBridge_Performance_comparePoint"/);
   assert.match(consumerDump, /env\.lean_bridge_performance_index_range/);

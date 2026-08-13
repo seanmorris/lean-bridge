@@ -4,15 +4,15 @@ import { resolve } from "node:path";
 import test from "node:test";
 
 import {
-  OnboardingAcceptanceError,
-  runOnboardingFixtureMatrix,
-  validateOnboardingManifest,
+	OnboardingAcceptanceError,
+	runOnboardingFixtureMatrix,
+	validateOnboardingManifest,
 } from "../src/adoption/onboarding.mjs";
 import {
-  evaluateZeroConfigAudit,
-  readZeroConfigAudit,
-  validateZeroConfigAudit,
-  ZeroConfigAuditError,
+	evaluateZeroConfigAudit,
+	readZeroConfigAudit,
+	validateZeroConfigAudit,
+	ZeroConfigAuditError,
 } from "../src/adoption/zero-config-audit.mjs";
 
 const fixtureRoot = resolve("tests/fixtures/onboarding");
@@ -24,15 +24,20 @@ test("plain Lean onboarding matrix covers the required project categories withou
   assert.equal(report.fixtureCount, 8);
   assert.equal(report.passed, true);
   assert.deepEqual(report.summary, {
-    baselineProjects: 3,
-    projectsRequiringHints: 4,
-    publishingAnnotations: 0,
-    handwrittenWrappers: 0,
-    mismatches: 0,
+    baselineProjects: 3
+    , projectsRequiringHints: 4
+    , publishingAnnotations: 0
+    , handwrittenWrappers: 0
+    , mismatches: 0
   });
   assert.deepEqual(report.fixtures.map(item => item.id), [
-    "small", "medium", "generic", "async", "identity-bearing", "custom-marshaling",
-    "incomplete-docs", "ambiguous-lifetime",
+    "small"
+    , "medium"
+    , "generic"
+    , "async"
+    , "identity-bearing"
+    , "custom-marshaling"
+    , "incomplete-docs", "ambiguous-lifetime"
   ]);
   assert.deepEqual(
     report.fixtures.filter(item => item.actual.status === "ok").map(item => item.id),
@@ -59,17 +64,17 @@ test("zero-configuration audit reports current blockers without treating reviewe
   const report = evaluateZeroConfigAudit(audit);
   assert.equal(report.passed, false);
   assert.deepEqual(report.summary, {
-    exceptions: 8,
-    unavoidableAmbiguities: 2,
-    policyChoices: 3,
-    defects: 3,
-    defaults: 3,
-    violations: 3,
+    exceptions: 8
+    , unavoidableAmbiguities: 2
+    , policyChoices: 3
+    , defects: 3
+    , defaults: 3
+    , violations: 3
   });
   assert.deepEqual(report.violations.map(item => [item.id, item.code]), [
-    ["generic-projection", "blocking-zero-config-defect"],
-    ["identity-projection", "blocking-zero-config-defect"],
-    ["inactive-runtime-targets", "blocking-zero-config-defect"],
+    ["generic-projection", "blocking-zero-config-defect"]
+    , ["identity-projection", "blocking-zero-config-defect"]
+    , ["inactive-runtime-targets", "blocking-zero-config-defect"]
   ]);
   assert.equal(report.violations.some(item => item.id === "callback-lifetime-policy"), false);
   assert.equal(report.violations.some(item => item.id === "custom-marshaling-policy"), false);
@@ -79,17 +84,17 @@ test("mandatory annotations, target rebuilds, and silent defaults always fail th
   const source = await readZeroConfigAudit(auditPath);
   const document = structuredClone(source);
   document.exceptions.push({
-    id: "bad-annotation",
-    stage: "analyze",
-    fixture: "small",
-    kind: "annotation",
-    classification: "policy-choice",
-    mandatory: true,
-    blocking: false,
-    targetSpecificRebuild: true,
-    description: "A convenience annotation was made mandatory.",
-    evidence: ["tests/fixtures/onboarding/small"],
-    remediation: "Infer the safe case.",
+    id: "bad-annotation"
+    , stage: "analyze"
+    , fixture: "small"
+    , kind: "annotation"
+    , classification: "policy-choice"
+    , mandatory: true
+    , blocking: false
+    , targetSpecificRebuild: true
+    , description: "A convenience annotation was made mandatory."
+    , evidence: ["tests/fixtures/onboarding/small"]
+    , remediation: "Infer the safe case."
   });
   document.defaults[0].visible = false;
   const report = evaluateZeroConfigAudit(document);
@@ -100,9 +105,10 @@ test("mandatory annotations, target rebuilds, and silent defaults always fail th
 
 test("audit evidence paths and published schemas remain present and closed", async () => {
   const audit = await readZeroConfigAudit(auditPath);
-  for (const item of [...audit.exceptions, ...audit.defaults]) {
-    for (const path of item.evidence) await stat(path);
-  }
+  for(const item of [...audit.exceptions, ...audit.defaults])
+{
+    for(const path of item.evidence) await stat(path);
+}
   const fixturesSchema = JSON.parse(await readFile("schema/onboarding-fixtures.schema.json", "utf8"));
   const auditSchema = JSON.parse(await readFile("schema/zero-config-audit.schema.json", "utf8"));
   assert.equal(fixturesSchema.additionalProperties, false);

@@ -13,7 +13,8 @@ import { writeEngineExecutionRequest } from "../src/build/engine-execution-reque
 
 test("the component engine consumes one request and emits only its authorized bundle and report", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-component-engine-"));
-  try {
+  try
+{
     const projectRoot = "tests/fixtures/onboarding/small";
     const analysis = await analyzeLeanProject(projectRoot);
     const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), targets: ["npm"] });
@@ -33,7 +34,8 @@ test("the component engine consumes one request and emits only its authorized bu
     const manifest = JSON.parse(await readFile(join(outputRoot, "bundle/component-release-bundle.json"), "utf8"));
     assert.equal(manifest.component.id, "onboarding-small@1.0.0");
     assert.equal(manifest.files.filter(file => file.mediaType === "application/wasm").length, 1);
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });

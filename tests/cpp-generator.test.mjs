@@ -20,7 +20,8 @@ test("the C++20 projection is deterministic and contains callback exceptions at 
   assert.match(first["include/lean_alpha.hpp"], /std::rethrow_exception/);
 
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-cpp-generator-"));
-  try {
+  try
+{
     const c = generateCBindingPackage(alpha.bindingIr);
     await mkdir(join(directory, "include"), { recursive: true });
     await writeFile(join(directory, "include/lean_alpha.h"), c["include/lean_alpha.h"]);
@@ -53,12 +54,13 @@ int main()
 `);
     const executable = join(directory, "consumer");
     await run("c++", [
-      "-std=c++20", "-Wall", "-Wextra", "-Werror",
-      "-I", join(directory, "include"),
-      join(directory, "consumer.cpp"), "-o", executable,
+      "-std=c++20", "-Wall", "-Wextra", "-Werror"
+      , "-I", join(directory, "include")
+      , join(directory, "consumer.cpp"), "-o", executable
     ]);
     await run(executable);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });

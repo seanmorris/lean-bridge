@@ -13,20 +13,22 @@ const execute = promisify(execFile);
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 
 const withBundle = async operation => {
-  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-npm-package-"));
-  try {
-    const bundle = join(scratch, "bundle");
-    await buildUniversalReleaseBundle({
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      outputRoot: bundle,
-      revision,
-      sourceDateEpoch: 1786261809,
-    });
-    return await operation({ scratch, bundle });
-  } finally {
-    await rm(scratch, { recursive: true, force: true });
-  }
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-npm-package-"));
+	try
+	{
+		const bundle = join(scratch, "bundle");
+		await buildUniversalReleaseBundle({
+			projectRoot: process.cwd()
+			, coreRoot: "build/lean-link-spike"
+			, outputRoot: bundle
+			, revision
+			, sourceDateEpoch: 1786261809
+		});
+		return await operation({ scratch, bundle });
+	} finally
+	{
+		await rm(scratch, { recursive: true, force: true });
+	}
 };
 
 test("npm projection is deterministic and preserves every compiled core byte", async () => withBundle(async ({ scratch, bundle }) => {
@@ -35,14 +37,15 @@ test("npm projection is deterministic and preserves every compiled core byte", a
   assert.equal(first.archiveSha256, second.archiveSha256);
   assert.deepEqual(await readFile(first.archive), await readFile(second.archive));
   assert.equal(first.coreArtifacts.length, 3);
-  for (const artifact of first.coreArtifacts) {
+  for(const artifact of first.coreArtifacts)
+{
     assert.equal(artifact.sourceSha256, artifact.packageSha256, artifact.packagePath);
     assert.deepEqual(
       await readFile(join(bundle, artifact.sourcePath)),
       await readFile(join(scratch, "first/package", artifact.packagePath)),
       artifact.packagePath,
     );
-  }
+}
 
   const packageJson = JSON.parse(await readFile(join(scratch, "first/package/package.json"), "utf8"));
   assert.equal(packageJson.name, "@lean-bridge/alpha");
@@ -90,18 +93,18 @@ test("a clean npm consumer installs, imports, and calls the generated native sur
   await writeFile(consumer, source);
   const { stdout } = await execute("node", [consumer], { cwd: scratch });
   assert.deepEqual(JSON.parse(stdout), {
-    exports: ["Box", "roundTrip", "withCallback", "makeAdder"],
-    value: 42,
-    identity: true,
-    payload: {
-      enabled: false,
-      count: 42,
-      label: "Lean λ bridge",
-      bytes: [0, 127, 255],
-      values: [0, 0xffffffff],
-    },
-    callback: 42,
-    closure: 42,
+    exports: ["Box", "roundTrip", "withCallback", "makeAdder"]
+    , value: 42
+    , identity: true
+    , payload: {
+      enabled: false
+      , count: 42
+      , label: "Lean λ bridge"
+      , bytes: [0, 127, 255]
+      , values: [0, 0xffffffff]
+    }
+    , callback: 42
+    , closure: 42
   });
   await assert.rejects(
     execute("node", ["--input-type=module", "-e", "import '@lean-bridge/alpha/internal/runtime.mjs'"], { cwd: scratch }),

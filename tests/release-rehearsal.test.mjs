@@ -5,78 +5,80 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  canonicalPackageManifestJson,
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
+	canonicalPackageManifestJson,
+	hashCanonicalPackageManifest,
+	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 import {
-  parsePublicationIndex,
-  rehearseRelease,
-  validatePublicationIndex,
+	parsePublicationIndex,
+	rehearseRelease,
+	validatePublicationIndex,
 } from "../src/release/release-rehearsal.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
 const revision = "831ca2661cf8e38f31c94b69deb6458171e08139";
 
 const withBundle = async operation => {
-  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-release-rehearsal-"));
-  try {
-    const bundle = join(scratch, "bundle");
-    await buildUniversalReleaseBundle({
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      outputRoot: bundle,
-      revision,
-      sourceDateEpoch: 1786261809,
-    });
-    return await operation({ scratch, bundle });
-  } finally {
-    await rm(scratch, { recursive: true, force: true });
-  }
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-release-rehearsal-"));
+	try
+	{
+		const bundle = join(scratch, "bundle");
+		await buildUniversalReleaseBundle({
+			projectRoot: process.cwd()
+			, coreRoot: "build/lean-link-spike"
+			, outputRoot: bundle
+			, revision
+			, sourceDateEpoch: 1786261809
+		});
+		return await operation({ scratch, bundle });
+	} finally
+	{
+		await rm(scratch, { recursive: true, force: true });
+	}
 };
 
 const rewriteIdentity = async (directory, manifest) => {
-  const manifestSha256 = hashCanonicalPackageManifest(manifest);
-  await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
-  await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
-  const identityPath = join(directory, "bundle-identity.json");
-  const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  identity.canonicalManifestSha256 = manifestSha256;
-  await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
+	const manifestSha256 = hashCanonicalPackageManifest(manifest);
+	await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+	await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
+	const identityPath = join(directory, "bundle-identity.json");
+	const identity = JSON.parse(await readFile(identityPath, "utf8"));
+	identity.canonicalManifestSha256 = manifestSha256;
+	await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
 };
 
 const enableReviewedCBindingTarget = async (bundle, destination) => {
-  await cp(bundle, destination, { recursive: true });
-  const manifest = structuredClone(parseCanonicalPackageManifest(
-    await readFile(join(destination, "canonical-package.json"), "utf8"),
-  ));
-  const cArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/c/"));
-  cArtifacts.forEach(artifact => { artifact.target = "c-bindings"; });
-  manifest.targets.push({
-    id: "c-bindings",
-    eligible: true,
-    reason: null,
-    platforms: ["c11"],
-    capabilities: ["external-runtime-adapter", "source-bindings", "typed-bindings"],
-    entryPoints: [
-      { name: "library", kind: "library", artifact: cArtifacts.find(artifact => artifact.path.endsWith("include/lean_alpha.h")).id },
-      { name: "types", kind: "types", artifact: "binding-ir" },
-      { name: "documentation", kind: "documentation", artifact: cArtifacts.find(artifact => artifact.path.endsWith("README.md")).id },
-    ],
-  });
-  const mapping = manifest.packages.find(candidate => candidate.ecosystem === "c");
-  mapping.target = "c-bindings";
-  mapping.eligible = true;
-  mapping.reason = null;
-  mapping.publicArtifacts = [
-    ...cArtifacts.map(artifact => artifact.id),
-    "license",
-    "assurance",
-    "core-artifact-set",
-    "sbom",
-    "provenance",
-  ];
-  await rewriteIdentity(destination, manifest);
+	await cp(bundle, destination, { recursive: true });
+	const manifest = structuredClone(parseCanonicalPackageManifest(
+		await readFile(join(destination, "canonical-package.json"), "utf8"),
+	));
+	const cArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/c/"));
+	cArtifacts.forEach(artifact => { artifact.target = "c-bindings"; });
+	manifest.targets.push({
+		id: "c-bindings"
+		, eligible: true
+		, reason: null
+		, platforms: ["c11"]
+		, capabilities: ["external-runtime-adapter", "source-bindings", "typed-bindings"]
+		, entryPoints: [
+			{ name: "library", kind: "library", artifact: cArtifacts.find(artifact => artifact.path.endsWith("include/lean_alpha.h")).id }
+			, { name: "types", kind: "types", artifact: "binding-ir" }
+			, { name: "documentation", kind: "documentation", artifact: cArtifacts.find(artifact => artifact.path.endsWith("README.md")).id }
+		]
+	});
+	const mapping = manifest.packages.find(candidate => candidate.ecosystem === "c");
+	mapping.target = "c-bindings";
+	mapping.eligible = true;
+	mapping.reason = null;
+	mapping.publicArtifacts = [
+		...cArtifacts.map(artifact => artifact.id)
+		, "license"
+		, "assurance"
+		, "core-artifact-set"
+		, "sbom"
+		, "provenance"
+	];
+	await rewriteIdentity(destination, manifest);
 };
 
 test("the source-only bundle rehearses npm and records explicit omissions", async () => withBundle(async ({ scratch, bundle }) => {
@@ -88,10 +90,10 @@ test("the source-only bundle rehearses npm and records explicit omissions", asyn
   const index = parsePublicationIndex(indexSource);
   assert.equal(index.mode, "no-publish");
   assert.deepEqual(index.publication, {
-    externalRegistryWrites: false,
-    networkAccess: false,
-    omitted: 8,
-    ready: 1,
+    externalRegistryWrites: false
+    , networkAccess: false
+    , omitted: 8
+    , ready: 1
   });
   assert.deepEqual(await readdir(join(output, "packages")), ["npm"]);
   assert.deepEqual(index.packages.filter(item => item.status === "ready").map(item => item.ecosystem), ["npm"]);
@@ -123,13 +125,15 @@ test("one bundle identity produces deterministic npm and C rehearsal archives pl
   assert.equal(new Set(ready.map(item => item.identity.graphLockSha256)).size, 1);
   assert.equal(new Set(ready.map(item => item.identity.bindingIrSha256)).size, 1);
   assert.equal(new Set(ready.map(item => item.identity.coreArtifactSetSha256)).size, 1);
-  for (const item of ready) {
-    for (const archive of item.archives) {
+  for(const item of ready)
+{
+    for(const archive of item.archives)
+{
       const firstBytes = await readFile(join(scratch, "first", archive.path));
       const secondBytes = await readFile(join(scratch, "second", archive.path));
       assert.deepEqual(firstBytes, secondBytes, archive.path);
-    }
-  }
+}
+}
   const attestation = JSON.parse(await readFile(first.attestation, "utf8"));
   assert.equal(attestation.predicateType, index.attestation.predicateType);
   assert.equal(attestation.predicate.externalRegistryWrites, false);

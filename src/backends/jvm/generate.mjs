@@ -2,7 +2,7 @@ import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alp
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
 
 const publicSources = model => ({
-  "src/main/java/org/leanbridge/alpha/Payload.java": `package org.leanbridge.alpha;
+	"src/main/java/org/leanbridge/alpha/Payload.java": `package org.leanbridge.alpha;
 
 import java.util.Objects;
 
@@ -18,35 +18,35 @@ public record Payload(boolean enabled, long count, String label, byte[] bytes, l
     @Override public byte[] bytes() { return bytes.clone(); }
     @Override public long[] values() { return values.clone(); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/Transform.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/Transform.java": `package org.leanbridge.alpha;
 
 /** A synchronous host or Lean transform. */
 @FunctionalInterface
 public interface Transform {
     long apply(long value);
 }
-`,
-  "src/main/java/org/leanbridge/alpha/LeanBridgeException.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/LeanBridgeException.java": `package org.leanbridge.alpha;
 
 public class LeanBridgeException extends RuntimeException {
     LeanBridgeException(String message) { super(message); }
     LeanBridgeException(String message, Throwable cause) { super(message, cause); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/DisposedResourceException.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/DisposedResourceException.java": `package org.leanbridge.alpha;
 
 public final class DisposedResourceException extends LeanBridgeException {
     DisposedResourceException(String message) { super(message); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/CallbackThrewException.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/CallbackThrewException.java": `package org.leanbridge.alpha;
 
 public final class CallbackThrewException extends LeanBridgeException {
     CallbackThrewException(String message, Throwable cause) { super(message, cause); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/Box.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/Box.java": `package org.leanbridge.alpha;
 
 /** An identity-bearing Lean Box owned by this wrapper. */
 public final class Box implements AutoCloseable {
@@ -57,8 +57,8 @@ public final class Box implements AutoCloseable {
     Runtime.BoxState compositionState() { return state; }
     @Override public void close() { state.close(); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/OwnedTransform.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/OwnedTransform.java": `package org.leanbridge.alpha;
 
 /** An owned callable returned by Lean. */
 public final class OwnedTransform implements AutoCloseable {
@@ -67,8 +67,8 @@ public final class OwnedTransform implements AutoCloseable {
     public long apply(long value) { return Runtime.callTransform(state, value); }
     @Override public void close() { state.close(); }
 }
-`,
-  "src/main/java/org/leanbridge/alpha/Alpha.java": `package org.leanbridge.alpha;
+`
+	, "src/main/java/org/leanbridge/alpha/Alpha.java": `package org.leanbridge.alpha;
 
 /** Direct functions exported by ${model.component.name}. */
 public final class Alpha {
@@ -77,7 +77,7 @@ public final class Alpha {
     public static long withCallback(long value, Transform transform) { return Runtime.withCallback(value, transform); }
     public static OwnedTransform makeAdder(long base) { return new OwnedTransform(Runtime.makeAdder(base)); }
 }
-`,
+`
 });
 
 const runtimeSource = () => `package org.leanbridge.alpha;
@@ -410,27 +410,32 @@ const pomSource = model => `<project xmlns="http://maven.apache.org/POM/4.0.0" x
 </project>
 `;
 
+/**
+ * Generates JVM binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
 export const generateJvmBindingPackage = ir => {
-  const model = compileManagedAlphaModel(ir, "jvm");
-  const publicEntries = publicSources(model);
-  const publicFiles = Object.keys(publicEntries).sort();
-  const internalFiles = ["src/main/java/org/leanbridge/alpha/Runtime.java"];
-  const packageFiles = ["pom.xml"];
-  const files = {
-    ...publicEntries,
-    [internalFiles[0]]: runtimeSource(),
-    [packageFiles[0]]: pomSource(model),
-    "README.md": `# ${model.component.name} JVM binding\n\nGenerated direct Java APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`,
-  };
-  const manifest = managedBindingManifest({
-    model,
-    generator: "jvm",
-    files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"],
-    publicFiles,
-    internalFiles,
-    packageFiles,
-  });
-  files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-  auditManagedBindingPackage(ir, files, "jvm");
-  return Object.freeze(files);
+	const model = compileManagedAlphaModel(ir, "jvm");
+	const publicEntries = publicSources(model);
+	const publicFiles = Object.keys(publicEntries).sort();
+	const internalFiles = ["src/main/java/org/leanbridge/alpha/Runtime.java"];
+	const packageFiles = ["pom.xml"];
+	const files = {
+		...publicEntries,
+		[internalFiles[0]]: runtimeSource()
+		, [packageFiles[0]]: pomSource(model)
+		, "README.md": `# ${model.component.name} JVM binding\n\nGenerated direct Java APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`
+	};
+	const manifest = managedBindingManifest({
+		model
+		, generator: "jvm"
+		, files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"]
+		, publicFiles
+		, internalFiles
+		, packageFiles
+	});
+	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
+	auditManagedBindingPackage(ir, files, "jvm");
+	return Object.freeze(files);
 };

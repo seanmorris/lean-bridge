@@ -1,7 +1,7 @@
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
 
-const publicSource = model => `# frozen_string_literal: true
+const publicSource = () => `# frozen_string_literal: true
 
 require_relative "alpha/native"
 
@@ -375,27 +375,32 @@ const gemspecSource = model => `Gem::Specification.new do |spec|
 end
 `;
 
+/**
+ * Generates ruby binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
 export const generateRubyBindingPackage = ir => {
-  const model = compileManagedAlphaModel(ir, "ruby");
-  const publicFiles = ["lib/lean_bridge/alpha.rb", "sig/lean_bridge/alpha.rbs"];
-  const internalFiles = ["lib/lean_bridge/alpha/native.rb"];
-  const packageFiles = ["lean_bridge_alpha.gemspec"];
-  const files = {
-    [publicFiles[0]]: publicSource(model),
-    [publicFiles[1]]: rbsSource(),
-    [internalFiles[0]]: nativeSource(),
-    [packageFiles[0]]: gemspecSource(model),
-    "README.md": `# ${model.component.name} Ruby binding\n\nGenerated direct Ruby APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`,
-  };
-  const manifest = managedBindingManifest({
-    model,
-    generator: "ruby",
-    files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"],
-    publicFiles,
-    internalFiles,
-    packageFiles,
-  });
-  files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-  auditManagedBindingPackage(ir, files, "ruby");
-  return Object.freeze(files);
+	const model = compileManagedAlphaModel(ir, "ruby");
+	const publicFiles = ["lib/lean_bridge/alpha.rb", "sig/lean_bridge/alpha.rbs"];
+	const internalFiles = ["lib/lean_bridge/alpha/native.rb"];
+	const packageFiles = ["lean_bridge_alpha.gemspec"];
+	const files = {
+		[publicFiles[0]]: publicSource()
+		, [publicFiles[1]]: rbsSource()
+		, [internalFiles[0]]: nativeSource()
+		, [packageFiles[0]]: gemspecSource(model)
+		, "README.md": `# ${model.component.name} Ruby binding\n\nGenerated direct Ruby APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`
+	};
+	const manifest = managedBindingManifest({
+		model
+		, generator: "ruby"
+		, files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"]
+		, publicFiles
+		, internalFiles
+		, packageFiles
+	});
+	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
+	auditManagedBindingPackage(ir, files, "ruby");
+	return Object.freeze(files);
 };

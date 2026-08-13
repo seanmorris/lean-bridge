@@ -3,22 +3,22 @@ import test from "node:test";
 
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
-  ResourceLifecycleGenerationError,
-  compileResourceLifecycleV1,
+	ResourceLifecycleGenerationError,
+	compileResourceLifecycleV1,
 } from "../../../src/abi/resource-lifecycle.mjs";
 import {
-  JavaScriptProjectionError,
-  compileJavaScriptProjection,
+	JavaScriptProjectionError,
+	compileJavaScriptProjection,
 } from "../../../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
 
 const lifecycleError = (operation, code, ErrorType) => {
-  assert.throws(operation, error => {
+	assert.throws(operation, error => {
     assert.equal(error instanceof ErrorType, true);
     assert.equal(error.code, code);
     return true;
-  });
+	});
 };
 
 test("resource lifecycle is generated from ownership and lifetime semantics", () => {
@@ -31,63 +31,63 @@ test("resource lifecycle is generated from ownership and lifetime semantics", ()
 
   assert.deepEqual(plan.handle, { side: "lean", kind: 1 });
   assert.deepEqual(plan.identity, {
-    projection: "canonical-wrapper",
-    cache: "weak-per-runtime-token",
+    projection: "canonical-wrapper"
+    , cache: "weak-per-runtime-token"
   });
   assert.deepEqual(plan.disposal, {
-    policy: "required",
-    explicit: true,
-    runtimeShutdown: true,
-    fallback: "queued-finalizer",
-    cycles: "explicit-cut",
-    symbol: "_bridge_lean_release",
+    policy: "required"
+    , explicit: true
+    , runtimeShutdown: true
+    , fallback: "queued-finalizer"
+    , cycles: "explicit-cut"
+    , symbol: "_bridge_lean_release"
   });
   assert.deepEqual(
     {
-      ownership: plan.constructor.result.ownership,
-      lifetime: plan.constructor.result.lifetime,
-      transport: plan.constructor.result.transport,
-      transition: plan.constructor.result.transition,
-      projection: plan.constructor.result.projection,
+      ownership: plan.constructor.result.ownership
+      , lifetime: plan.constructor.result.lifetime
+      , transport: plan.constructor.result.transport
+      , transition: plan.constructor.result.transition
+      , projection: plan.constructor.result.projection
     },
     {
-      ownership: "lease",
-      lifetime: { scope: "explicit", anchor: null },
-      transport: "handle",
-      transition: "acquire-lease",
-      projection: "canonical-owner",
+      ownership: "lease"
+      , lifetime: { scope: "explicit", anchor: null }
+      , transport: "handle"
+      , transition: "acquire-lease"
+      , projection: "canonical-owner"
     },
   );
 
   const read = plan.methods.find(method => method.name === "read");
   assert.deepEqual(
     {
-      ownership: read.receiver.ownership,
-      lifetime: read.receiver.lifetime,
-      transport: read.receiver.transport,
-      transition: read.receiver.transition,
+      ownership: read.receiver.ownership
+      , lifetime: read.receiver.lifetime
+      , transport: read.receiver.transport
+      , transition: read.receiver.transition
     },
     {
-      ownership: "borrow",
-      lifetime: { scope: "call", anchor: null },
-      transport: "handle",
-      transition: "borrow",
+      ownership: "borrow"
+      , lifetime: { scope: "call", anchor: null }
+      , transport: "handle"
+      , transition: "borrow"
     },
   );
 
   const identity = plan.methods.find(method => method.name === "identity");
   assert.deepEqual(
     {
-      typeId: identity.result.typeId,
-      ownership: identity.result.ownership,
-      lifetime: identity.result.lifetime,
-      projection: identity.result.projection,
+      typeId: identity.result.typeId
+      , ownership: identity.result.ownership
+      , lifetime: identity.result.lifetime
+      , projection: identity.result.projection
     },
     {
-      typeId: "lean:Alpha.Box",
-      ownership: "borrow",
-      lifetime: { scope: "receiver", anchor: "receiver" },
-      projection: "canonical-borrow",
+      typeId: "lean:Alpha.Box"
+      , ownership: "borrow"
+      , lifetime: { scope: "receiver", anchor: "receiver" }
+      , projection: "canonical-borrow"
     },
   );
   assert.equal(Object.isFrozen(plan), true);
@@ -105,16 +105,16 @@ test("resource disposal policy changes the generated cleanup plan", () => {
   const plan = compileResourceLifecycleV1(ir, box.id, alpha.privateAbi);
   assert.deepEqual(
     {
-      policy: plan.disposal.policy,
-      explicit: plan.disposal.explicit,
-      fallback: plan.disposal.fallback,
-      runtimeShutdown: plan.disposal.runtimeShutdown,
+      policy: plan.disposal.policy
+      , explicit: plan.disposal.explicit
+      , fallback: plan.disposal.fallback
+      , runtimeShutdown: plan.disposal.runtimeShutdown
     },
     {
-      policy: "runtime",
-      explicit: false,
-      fallback: "none",
-      runtimeShutdown: true,
+      policy: "runtime"
+      , explicit: false
+      , fallback: "none"
+      , runtimeShutdown: true
     },
   );
   lifecycleError(

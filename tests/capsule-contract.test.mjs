@@ -4,63 +4,63 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  CapsuleContractError,
-  resolveLockedGraph,
-  validateCapsule,
+	CapsuleContractError,
+	resolveLockedGraph,
+	validateCapsule,
 } from "../src/capsule/contract.mjs";
 
 const lock = JSON.parse(
-  await readFile("poc/lean-link-spike/graph-lock.json", "utf8"),
+	await readFile("poc/lean-link-spike/graph-lock.json", "utf8"),
 );
 const capsules = await Promise.all(
-  lock.libraries.map(async library =>
-    JSON.parse(
-      await readFile(`poc/lean-link-spike/${library.capsule.path}`, "utf8"),
-    ),
-  ),
+	lock.libraries.map(async library =>
+		JSON.parse(
+			await readFile(`poc/lean-link-spike/${library.capsule.path}`, "utf8"),
+		),
+	),
 );
 const digests = new Map(
-  await Promise.all(
-    lock.libraries.map(async library => [
-      library.id,
-      createHash("sha256")
+	await Promise.all(
+		lock.libraries.map(async library => [
+			library.id
+			, createHash("sha256")
         .update(await readFile(`poc/lean-link-spike/${library.capsule.path}`))
-        .digest("hex"),
-    ]),
-  ),
+        .digest("hex")
+		]),
+	),
 );
 
 const clone = value => structuredClone(value);
 const resolve = ({
-  candidateLock = lock,
-  candidateCapsules = capsules,
-  capsuleDigests = digests,
-  profile = "side-lazy",
-  roots,
+	candidateLock = lock
+	, candidateCapsules = capsules
+	, capsuleDigests = digests
+	, profile = "side-lazy"
+	, roots
 } = {}) =>
-  resolveLockedGraph({
-    lock: candidateLock,
-    capsules: candidateCapsules,
-    capsuleDigests,
-    profile,
-    roots,
-  });
+	resolveLockedGraph({
+		lock: candidateLock
+		, capsules: candidateCapsules
+		, capsuleDigests
+		, profile
+		, roots
+	});
 
 const contractError = (operation, code) => {
-  assert.throws(operation, error => {
+	assert.throws(operation, error => {
     assert.equal(error instanceof CapsuleContractError, true);
     assert.equal(error.code, code);
     return true;
-  });
+	});
 };
 
 test("resolver is dependency-first and stable across capsule input order", () => {
   const forward = resolve();
   const reverse = resolve({ candidateCapsules: [...capsules].reverse() });
   assert.deepEqual(forward.order, [
-    "poc/lean-alpha@0.0.0",
-    "poc/lean-beta@0.0.0",
-    "poc/lean-gamma@0.0.0",
+    "poc/lean-alpha@0.0.0"
+    , "poc/lean-beta@0.0.0"
+    , "poc/lean-gamma@0.0.0"
   ]);
   assert.deepEqual(reverse.order, forward.order);
 });
@@ -68,7 +68,7 @@ test("resolver is dependency-first and stable across capsule input order", () =>
 test("resolver selects only the requested transitive closure", () => {
   const alpha = lock.libraries[0];
   const graph = resolve({
-    roots: [{ id: alpha.id, sha256: alpha.capsule.sha256 }],
+    roots: [{ id: alpha.id, sha256: alpha.capsule.sha256 }]
   });
   assert.deepEqual(graph.order, ["poc/lean-alpha@0.0.0"]);
 });
@@ -115,8 +115,8 @@ test("resolver rejects duplicate library symbols", () => {
 test("resolver rejects duplicate initializer symbols", () => {
   const candidateCapsules = clone(capsules);
   candidateCapsules[1].initializer = {
-    mode: "required",
-    symbol: "initialize_Alpha",
+    mode: "required"
+    , symbol: "initialize_Alpha"
   };
   contractError(
     () => resolve({ candidateCapsules, capsuleDigests: null }),
@@ -137,8 +137,8 @@ test("resolver reports the complete dependency cycle", () => {
   const candidateLock = clone(lock);
   const candidateCapsules = clone(capsules);
   candidateLock.libraries[0].dependencies.push({
-    id: candidateLock.libraries[2].id,
-    sha256: candidateLock.libraries[2].capsule.sha256,
+    id: candidateLock.libraries[2].id
+    , sha256: candidateLock.libraries[2].capsule.sha256
   });
   candidateCapsules[0].dependencies.push({ id: candidateLock.libraries[2].id });
   assert.throws(
@@ -146,10 +146,10 @@ test("resolver reports the complete dependency cycle", () => {
     error => {
       assert.equal(error.code, "dependency-cycle");
       assert.deepEqual(error.details.cycle, [
-        "poc/lean-gamma@0.0.0",
-        "poc/lean-beta@0.0.0",
-        "poc/lean-alpha@0.0.0",
-        "poc/lean-gamma@0.0.0",
+        "poc/lean-gamma@0.0.0"
+        , "poc/lean-beta@0.0.0"
+        , "poc/lean-alpha@0.0.0"
+        , "poc/lean-gamma@0.0.0"
       ]);
       return true;
     },
@@ -157,9 +157,9 @@ test("resolver reports the complete dependency cycle", () => {
 });
 
 test("capsule and graph-lock JSON schemas are valid JSON documents", async () => {
-  for (const path of [
-    "schema/library-capsule.schema.json",
-    "schema/library-graph-lock.schema.json",
+  for(const path of [
+    "schema/library-capsule.schema.json"
+    , "schema/library-graph-lock.schema.json"
   ]) {
     const schema = JSON.parse(await readFile(path, "utf8"));
     assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");

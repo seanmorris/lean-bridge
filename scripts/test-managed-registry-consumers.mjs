@@ -8,17 +8,17 @@ import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
 import {
-  STEADY_STATE_BOX_VALUE,
-  STEADY_STATE_MEASURED_ITERATIONS,
-  STEADY_STATE_OPERATION,
-  STEADY_STATE_WARMUP_ITERATIONS,
-  writeConsumerPerformance,
+	STEADY_STATE_BOX_VALUE,
+	STEADY_STATE_MEASURED_ITERATIONS,
+	STEADY_STATE_OPERATION,
+	STEADY_STATE_WARMUP_ITERATIONS,
+	writeConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
 const execute = promisify(execFile);
 const options = new Map();
-for (let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
-for (const required of ["--nuget", "--maven", "--rubygem"]) if (!options.has(required)) throw new Error(`missing ${required}`);
+for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
+for(const required of ["--nuget", "--maven", "--rubygem"]) if(!options.has(required)) throw new Error(`missing ${required}`);
 const dotnet = options.get("--dotnet") ?? process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
 const java = options.get("--java") ?? process.env.LEAN_BRIDGE_JAVA ?? "java";
 const javac = options.get("--javac") ?? process.env.LEAN_BRIDGE_JAVAC ?? "javac";
@@ -33,29 +33,31 @@ const rubyGem = resolve(options.get("--rubygem"));
 const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-managed-registry-"));
 
 const run = async (command, args, settings = {}) => {
-  try {
-    return await execute(command, args, { maxBuffer: 32 * 1024 * 1024, ...settings });
-  } catch (error) {
-    throw new Error(`${command} failed\n${error.stdout ?? ""}${error.stderr ?? ""}`, { cause: error });
-  }
+	try
+	{
+		return await execute(command, args, { maxBuffer: 32 * 1024 * 1024, ...settings });
+	} catch(error)
+	{
+		throw new Error(`${command} failed\n${error.stdout ?? ""}${error.stderr ?? ""}`, { cause: error });
+	}
 };
 
 const write = async (path, value) => {
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, value);
+	await mkdir(dirname(path), { recursive: true });
+	await writeFile(path, value);
 };
 
 const parseMeasurement = stdout => {
-  const value = JSON.parse(stdout.trim().split("\n").at(-1));
-  if (
-    value.iterations !== STEADY_STATE_MEASURED_ITERATIONS ||
-    !Number.isFinite(value.durationNanoseconds) || value.durationNanoseconds <= 0 ||
-    value.checksum !== STEADY_STATE_BOX_VALUE * value.iterations ||
-    value.operationIterations !== 10_000 ||
-    ["initializationNanoseconds", "copiedValueNanoseconds", "callbackNanoseconds", "callableNanoseconds", "peakRssBytes"]
+	const value = JSON.parse(stdout.trim().split("\n").at(-1));
+	if(
+		value.iterations !== STEADY_STATE_MEASURED_ITERATIONS
+    || !Number.isFinite(value.durationNanoseconds) || value.durationNanoseconds <= 0
+    || value.checksum !== STEADY_STATE_BOX_VALUE * value.iterations
+    || value.operationIterations !== 10_000
+    || ["initializationNanoseconds", "copiedValueNanoseconds", "callbackNanoseconds", "callableNanoseconds", "peakRssBytes"]
       .some(field => !Number.isFinite(value[field]) || value[field] <= 0)
-  ) throw new Error(`invalid managed registry performance result: ${stdout}`);
-  return value;
+	) throw new Error(`invalid managed registry performance result: ${stdout}`);
+	return value;
 };
 
 const dotnetRoot = join(scratch, "dotnet");
@@ -235,17 +237,18 @@ require "json"; puts JSON.generate(iterations: ${STEADY_STATE_MEASURED_ITERATION
 const rubyMeasurement = parseMeasurement((await run(ruby, [join(rubyRoot, "consumer.rb")], { env: { ...process.env, GEM_HOME: gemHome, GEM_PATH: gemHome } })).stdout);
 
 const measurements = { dotnet: dotnetMeasurement, jvm: jvmMeasurement, ruby: rubyMeasurement };
-for (const [consumer, measurement] of Object.entries(measurements)) {
-  await writeConsumerPerformance({ consumer, operation: STEADY_STATE_OPERATION, timingMode: "steady-state", scope: `steady-state clean ${consumer} registry consumer`, iterations: measurement.iterations, durationNanoseconds: measurement.durationNanoseconds });
+for(const [consumer, measurement] of Object.entries(measurements))
+{
+	await writeConsumerPerformance({ consumer, operation: STEADY_STATE_OPERATION, timingMode: "steady-state", scope: `steady-state clean ${consumer} registry consumer`, iterations: measurement.iterations, durationNanoseconds: measurement.durationNanoseconds });
 }
 const receipts = {
-  dotnet: JSON.parse(await readFile(join(nugetRoot, "package/lean-bridge/package-receipt.json"), "utf8")),
-  jvm: JSON.parse(await readFile(join(mavenRoot, "jar/META-INF/lean-bridge/package-receipt.json"), "utf8")),
-  ruby: JSON.parse(await readFile(join(gemHome, "gems/lean_bridge_alpha-0.0.0/lean-bridge/package-receipt.json"), "utf8")),
+	dotnet: JSON.parse(await readFile(join(nugetRoot, "package/lean-bridge/package-receipt.json"), "utf8"))
+	, jvm: JSON.parse(await readFile(join(mavenRoot, "jar/META-INF/lean-bridge/package-receipt.json"), "utf8"))
+	, ruby: JSON.parse(await readFile(join(gemHome, "gems/lean_bridge_alpha-0.0.0/lean-bridge/package-receipt.json"), "utf8"))
 };
 const packageBytes = {
-  dotnet: (await stat(join(nugetRoot, "LeanBridge.Alpha.0.0.0.nupkg"))).size,
-  jvm: (await stat(join(mavenRoot, "repository/org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar"))).size,
-  ruby: (await stat(rubyGem)).size,
+	dotnet: (await stat(join(nugetRoot, "LeanBridge.Alpha.0.0.0.nupkg"))).size
+	, jvm: (await stat(join(mavenRoot, "repository/org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar"))).size
+	, ruby: (await stat(rubyGem)).size
 };
 process.stdout.write(`${JSON.stringify({ result: "passed", packageInstallation: true, realLeanExecution: true, consumers: Object.keys(measurements), measurements, packageBytes, receipts }, null, 2)}\n`);

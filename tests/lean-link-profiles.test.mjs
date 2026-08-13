@@ -4,17 +4,17 @@ import test from "node:test";
 import createThreadedLazyModule from "../build/lean-link-spike-threaded/lazy/main.mjs";
 import { createAlphaDescriptor } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  inspectFinalStaticProfile,
-  inspectLeanLinkProfile,
+	inspectFinalStaticProfile,
+	inspectLeanLinkProfile,
 } from "./helpers/lean-link-structure.mjs";
 import { createLibraryLoader } from "../poc/link-spike/loader.mjs";
 
 const threadedAlpha = createAlphaDescriptor({
-  target: "threaded",
-  sideModule: new URL(
-    "../build/lean-link-spike-threaded/lazy/alpha.so.wasm",
-    import.meta.url,
-  ),
+	target: "threaded"
+	, sideModule: new URL(
+		"../build/lean-link-spike-threaded/lazy/alpha.so.wasm",
+		import.meta.url,
+	)
 });
 
 test("threaded lazy side module loads into the existing shared memory", async () => {
@@ -36,18 +36,18 @@ test("threaded lazy side module loads into the existing shared memory", async ()
 
   assert.deepEqual(
     alpha.roundTrip({
-      enabled: false,
-      count: 72,
-      label: "threaded",
-      bytes: new Uint8Array([7, 3]),
-      values: new Uint32Array([11, 13]),
+      enabled: false
+      , count: 72
+      , label: "threaded"
+      , bytes: new Uint8Array([7, 3])
+      , values: new Uint32Array([11, 13])
     }),
     {
-      enabled: true,
-      count: 73,
-      label: "threaded",
-      bytes: new Uint8Array([7, 3]),
-      values: [11, 13],
+      enabled: true
+      , count: 73
+      , label: "threaded"
+      , bytes: new Uint8Array([7, 3])
+      , values: [11, 13]
     },
   );
   assert.equal(alpha.withCallback(40, value => value), 42);
@@ -59,17 +59,17 @@ test("threaded lazy side module loads into the existing shared memory", async ()
 
 test("threaded side modules bind the main shared memory and runtime", async () => {
   await inspectLeanLinkProfile({
-    root: "build/lean-link-spike-threaded",
-    profile: "startup",
-    mainMemoryMode: "imported",
+    root: "build/lean-link-spike-threaded"
+    , profile: "startup"
+    , mainMemoryMode: "imported"
   });
   await inspectLeanLinkProfile({
-    root: "build/lean-link-spike-threaded",
-    profile: "lazy",
-    mainMemoryMode: "imported",
+    root: "build/lean-link-spike-threaded"
+    , profile: "lazy"
+    , mainMemoryMode: "imported"
   });
   await inspectFinalStaticProfile({
-    root: "build/lean-link-spike-threaded",
-    mainMemoryMode: "imported",
+    root: "build/lean-link-spike-threaded"
+    , mainMemoryMode: "imported"
   });
 });

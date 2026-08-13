@@ -10,19 +10,20 @@ import test from "node:test";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import {
-  PhpNativeRuntimeGenerationError,
-  generatePhpNativeRuntimePackage,
+	PhpNativeRuntimeGenerationError,
+	generatePhpNativeRuntimePackage,
 } from "../src/backends/php/native-runtime.mjs";
 import { generatePhpZendExtensionPackage } from "../src/backends/php/zend-extension.mjs";
 
 const run = promisify(execFile);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 const parseFacts = output => Object.fromEntries(output
@@ -32,13 +33,13 @@ const parseFacts = output => Object.fromEntries(output
   .map(match => [match[1], match[2]]));
 
 const configureExtension = ({ config, sources, leanIncludes, runtimeDirectory, variable }) => config.replace(
-  /  PHP_NEW_EXTENSION\([^\n]+/,
-  [
-    ...leanIncludes.map(include => `  PHP_ADD_INCLUDE([${include}])`),
-    `  PHP_ADD_LIBRARY_WITH_PATH([lean_bridge_native], [${runtimeDirectory}], [${variable}])`,
-    `  PHP_SUBST([${variable}])`,
-    `  PHP_NEW_EXTENSION([${variable === "LEAN_ALPHA_SHARED_LIBADD" ? "lean_alpha" : "lean_beta_probe"}], [${sources.join(" ")}], [$ext_shared])`,
-  ].join("\n"),
+	/ {2}PHP_NEW_EXTENSION\([^\n]+/,
+	[
+		...leanIncludes.map(include => `  PHP_ADD_INCLUDE([${include}])`)
+		, `  PHP_ADD_LIBRARY_WITH_PATH([lean_bridge_native], [${runtimeDirectory}], [${variable}])`
+		, `  PHP_SUBST([${variable}])`
+		, `  PHP_NEW_EXTENSION([${variable === "LEAN_ALPHA_SHARED_LIBADD" ? "lean_alpha" : "lean_beta_probe"}], [${sources.join(" ")}], [$ext_shared])`
+	].join("\n"),
 );
 
 const betaProbeSource = `#ifdef HAVE_CONFIG_H
@@ -165,13 +166,14 @@ test("native runtime generator emits one process broker and a hash-bound compone
   assert.equal(manifest.ownershipScope, "php-process");
   assert.equal(manifest.sharedRuntimeAbi, 1);
   assert.deepEqual(manifest.sourceFiles, [
-    "include/lean_bridge_native_runtime.h",
-    "src/lean_alpha_native.c",
-    "src/lean_bridge_native_runtime.c",
+    "include/lean_bridge_native_runtime.h"
+    , "src/lean_alpha_native.c"
+    , "src/lean_bridge_native_runtime.c"
   ]);
-  for (const [path, hash] of Object.entries(manifest.filesSha256)) {
+  for(const [path, hash] of Object.entries(manifest.filesSha256))
+{
     assert.equal(createHash("sha256").update(files[path], "utf8").digest("hex"), hash);
-  }
+}
   assert.match(files["src/lean_bridge_native_runtime.c"], /runtime_init_runs\+\+/);
   assert.match(files["src/lean_bridge_native_runtime.c"], /lean_bridge_native_identity_acquire/);
   assert.match(files["src/lean_alpha_native.c"], /lean_link_alpha_round_trip/);
@@ -179,10 +181,10 @@ test("native runtime generator emits one process broker and a hash-bound compone
 
   const unsupported = structuredClone(alpha.bindingIr);
   unsupported.types.find(type => type.id === "lean:Alpha.Payload").fields.push({
-    name: "extra",
-    type: { kind: "primitive", name: "uint32" },
-    mutability: "immutable",
-    documentation: { summary: "Unsupported fixture field.", details: "" },
+    name: "extra"
+    , type: { kind: "primitive", name: "uint32" }
+    , mutability: "immutable"
+    , documentation: { summary: "Unsupported fixture field.", details: "" }
   });
   assert.throws(
     () => generatePhpNativeRuntimePackage(unsupported),
@@ -192,10 +194,11 @@ test("native runtime generator emits one process broker and a hash-bound compone
 
 test("two native PHP components execute through one real Lean runtime and identity domain", async context => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-native-php-"));
-  try {
+  try
+{
     const { stdout: buildOutput } = await run("bash", [join(process.cwd(), "scripts/build-lean-native-runtime.sh")], {
-      cwd: process.cwd(),
-      maxBuffer: 16 * 1024 * 1024,
+      cwd: process.cwd()
+      , maxBuffer: 16 * 1024 * 1024
     });
     const facts = parseFacts(buildOutput);
     assert.ok(facts.native_runtime_archive);
@@ -211,14 +214,32 @@ test("two native PHP components execute through one real Lean runtime and identi
     await mkdir(runtimeLibraryDirectory, { recursive: true });
     const brokerObject = join(runtimeDirectory, "lean_bridge_native_runtime.o");
     await run("clang", [
-      "-O2", "-fPIC", "-I", join(runtimeDirectory, "include"), "-I", facts.lean_config_include_dir, "-I", facts.lean_include_dir,
-      "-c", join(runtimeDirectory, "src/lean_bridge_native_runtime.c"), "-o", brokerObject,
+      "-O2"
+      , "-fPIC"
+      , "-I"
+      , join(runtimeDirectory, "include")
+      , "-I"
+      , facts.lean_config_include_dir
+      , "-I"
+      , facts.lean_include_dir
+      , "-c"
+      , join(runtimeDirectory, "src/lean_bridge_native_runtime.c")
+      , "-o"
+      , brokerObject
     ]);
     const runtimeLibrary = join(runtimeLibraryDirectory, "liblean_bridge_native.so");
     await run("clang++", [
-      "-shared", brokerObject,
-      "-Wl,--whole-archive", facts.lean_init_archive, facts.native_runtime_archive, "-Wl,--no-whole-archive",
-      "-pthread", "-luv", "-ldl", "-Wl,-soname,liblean_bridge_native.so", "-o", runtimeLibrary,
+      "-shared", brokerObject
+      , "-Wl,--whole-archive"
+      , facts.lean_init_archive
+      , facts.native_runtime_archive
+      , "-Wl,--no-whole-archive"
+      , "-pthread"
+      , "-luv"
+      , "-ldl"
+      , "-Wl,-soname,liblean_bridge_native.so"
+      , "-o"
+      , runtimeLibrary
     ]);
 
     const alphaDirectory = join(directory, "alpha");
@@ -226,18 +247,18 @@ test("two native PHP components execute through one real Lean runtime and identi
     alphaFiles["lean_bridge_native_runtime.h"] = generated["include/lean_bridge_native_runtime.h"];
     alphaFiles["src/lean_alpha_native.c"] = generated["src/lean_alpha_native.c"];
     alphaFiles["config.m4"] = configureExtension({
-      config: alphaFiles["config.m4"],
-      sources: ["lean_alpha_zend.c", "src/lean_alpha.c", "src/lean_alpha_native.c", "Alpha.c"],
-      leanIncludes: [facts.lean_config_include_dir, facts.lean_include_dir],
-      runtimeDirectory: runtimeLibraryDirectory,
-      variable: "LEAN_ALPHA_SHARED_LIBADD",
+      config: alphaFiles["config.m4"]
+      , sources: ["lean_alpha_zend.c", "src/lean_alpha.c", "src/lean_alpha_native.c", "Alpha.c"]
+      , leanIncludes: [facts.lean_config_include_dir, facts.lean_include_dir]
+      , runtimeDirectory: runtimeLibraryDirectory
+      , variable: "LEAN_ALPHA_SHARED_LIBADD"
     });
     await writePackage(alphaDirectory, alphaFiles);
     await run(leanExecutable, [
-      "-R", join(process.cwd(), "poc/lean-link-spike"),
-      "-o", join(alphaDirectory, "Alpha.olean"),
-      "-c", join(alphaDirectory, "Alpha.c"),
-      join(process.cwd(), "poc/lean-link-spike/Alpha.lean"),
+      "-R", join(process.cwd(), "poc/lean-link-spike")
+      , "-o", join(alphaDirectory, "Alpha.olean")
+      , "-c", join(alphaDirectory, "Alpha.c")
+      , join(process.cwd(), "poc/lean-link-spike/Alpha.lean")
     ]);
     await run("phpize", [], { cwd: alphaDirectory });
     await run("./configure", ["--enable-lean-alpha"], { cwd: alphaDirectory });
@@ -246,20 +267,20 @@ test("two native PHP components execute through one real Lean runtime and identi
     const betaDirectory = join(directory, "beta");
     await writePackage(betaDirectory, {
       "config.m4": configureExtension({
-        config: `PHP_ARG_ENABLE([lean-beta-probe], [whether to enable the Lean beta probe], [AS_HELP_STRING([--enable-lean-beta-probe], [Enable the Lean beta probe])], [no])\nif test "$PHP_LEAN_BETA_PROBE" != "no"; then\n  PHP_NEW_EXTENSION([lean_beta_probe], [lean_beta_probe.c RuntimeProbe.c], [$ext_shared])\nfi\n`,
-        sources: ["lean_beta_probe.c", "RuntimeProbe.c"],
-        leanIncludes: [facts.lean_config_include_dir, facts.lean_include_dir],
-        runtimeDirectory: runtimeLibraryDirectory,
-        variable: "LEAN_BETA_PROBE_SHARED_LIBADD",
-      }),
-      "lean_beta_probe.c": betaProbeSource,
-      "lean_bridge_native_runtime.h": generated["include/lean_bridge_native_runtime.h"],
+        config: `PHP_ARG_ENABLE([lean-beta-probe], [whether to enable the Lean beta probe], [AS_HELP_STRING([--enable-lean-beta-probe], [Enable the Lean beta probe])], [no])\nif test "$PHP_LEAN_BETA_PROBE" != "no"; then\n  PHP_NEW_EXTENSION([lean_beta_probe], [lean_beta_probe.c RuntimeProbe.c], [$ext_shared])\nfi\n`
+        , sources: ["lean_beta_probe.c", "RuntimeProbe.c"]
+        , leanIncludes: [facts.lean_config_include_dir, facts.lean_include_dir]
+        , runtimeDirectory: runtimeLibraryDirectory
+        , variable: "LEAN_BETA_PROBE_SHARED_LIBADD"
+      })
+      , "lean_beta_probe.c": betaProbeSource
+      , "lean_bridge_native_runtime.h": generated["include/lean_bridge_native_runtime.h"]
     });
     await run(leanExecutable, [
-      "-R", join(process.cwd(), "poc/php-native-runtime"),
-      "-o", join(betaDirectory, "RuntimeProbe.olean"),
-      "-c", join(betaDirectory, "RuntimeProbe.c"),
-      join(process.cwd(), "poc/php-native-runtime/RuntimeProbe.lean"),
+      "-R", join(process.cwd(), "poc/php-native-runtime")
+      , "-o", join(betaDirectory, "RuntimeProbe.olean")
+      , "-c", join(betaDirectory, "RuntimeProbe.c")
+      , join(process.cwd(), "poc/php-native-runtime/RuntimeProbe.lean")
     ]);
     await run("phpize", [], { cwd: betaDirectory });
     await run("./configure", ["--enable-lean-beta-probe"], { cwd: betaDirectory });
@@ -325,52 +346,56 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
     const betaExtension = join(betaDirectory, "modules/lean_beta_probe.so");
     const phpEnvironment = {
       ...process.env,
-      LD_LIBRARY_PATH: [runtimeLibraryDirectory, process.env.LD_LIBRARY_PATH].filter(Boolean).join(":"),
+      LD_LIBRARY_PATH: [runtimeLibraryDirectory, process.env.LD_LIBRARY_PATH].filter(Boolean).join(":")
     };
     let execution;
-    try {
+    try
+{
       execution = await run("php", [
-        "-n",
-        "-d", `extension=${alphaExtension}`,
-        "-d", `extension=${betaExtension}`,
-        "consumer.php",
+        "-n"
+        , "-d", `extension=${alphaExtension}`
+        , "-d", `extension=${betaExtension}`
+        , "consumer.php"
       ], { cwd: directory, env: phpEnvironment });
-    } catch (error) {
+} catch(error)
+{
       throw new Error(`native PHP consumer failed\nstdout:\n${error.stdout ?? ""}\nstderr:\n${error.stderr ?? ""}`, { cause: error });
-    }
+}
     const { stdout, stderr } = execution;
     assert.equal(stderr, "");
     assert.deepEqual(JSON.parse(stdout), {
-      read: 41,
-      identity: true,
-      payload: [true, 9, "native", "007fff", [1, 5, 13]],
-      callback: 42,
-      callbackFailure: "real callback failed at 41",
-      usableAfterCallbackFailure: 41,
-      closure: 42,
-      probe: 42,
-      sameRuntime: true,
-      sameIdentityDomain: true,
-      runtimeInitRuns: 1,
-      componentInitRuns: 2,
-      attachedComponents: 2,
-      liveIdentitySlope: [2, 3, 2],
-      liveAfterClose: 0,
+      read: 41
+      , identity: true
+      , payload: [true, 9, "native", "007fff", [1, 5, 13]]
+      , callback: 42
+      , callbackFailure: "real callback failed at 41"
+      , usableAfterCallbackFailure: 41
+      , closure: 42
+      , probe: 42
+      , sameRuntime: true
+      , sameIdentityDomain: true
+      , runtimeInitRuns: 1
+      , componentInitRuns: 2
+      , attachedComponents: 2
+      , liveIdentitySlope: [2, 3, 2]
+      , liveAfterClose: 0
     });
 
-    for (const extension of [alphaExtension, betaExtension]) {
+    for(const extension of [alphaExtension, betaExtension])
+{
       const { stdout: dynamicSection } = await run("readelf", ["-d", extension]);
       assert.match(dynamicSection, /Shared library: \[liblean_bridge_native\.so\]/);
-    }
+}
     const sizes = {
-      sharedRuntime: (await stat(runtimeLibrary)).size,
-      alphaExtension: (await stat(alphaExtension)).size,
-      betaExtension: (await stat(betaExtension)).size,
+      sharedRuntime: (await stat(runtimeLibrary)).size
+      , alphaExtension: (await stat(alphaExtension)).size
+      , betaExtension: (await stat(betaExtension)).size
     };
     assert.ok(sizes.sharedRuntime > sizes.alphaExtension);
     context.diagnostic(`native PHP artifact bytes ${JSON.stringify(sizes)}`);
     assert.match(await readFile(join(facts.build_root, "audit/build-facts.txt"), "utf8"), /tls_model=initial-exec/);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });

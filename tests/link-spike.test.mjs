@@ -10,8 +10,8 @@ test("a named lazy load returns one native API and resolves dependencies once", 
   const libraries = createLibraryLoader(module, { libraries: [beta] });
 
   const [loadedBeta, sameLoadedBeta] = await Promise.all([
-    libraries.load("beta"),
-    libraries.load("beta"),
+    libraries.load("beta")
+    , libraries.load("beta")
   ]);
   assert.equal(sameLoadedBeta, loadedBeta);
   assert.equal(libraries.loaded.size, 2);

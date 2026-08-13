@@ -81,7 +81,7 @@ public static class Alpha
 }
 `;
 
-const runtimeSource = model => `using System;
+const runtimeSource = () => `using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -377,26 +377,31 @@ const projectSource = model => `<Project Sdk="Microsoft.NET.Sdk">
 </Project>
 `;
 
+/**
+ * Generates dotnet binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
 export const generateDotnetBindingPackage = ir => {
-  const model = compileManagedAlphaModel(ir, "dotnet");
-  const publicFiles = ["src/LeanBridge.Alpha/Alpha.cs"];
-  const internalFiles = ["src/LeanBridge.Alpha/Runtime.cs"];
-  const packageFiles = ["src/LeanBridge.Alpha/LeanBridge.Alpha.csproj"];
-  const files = {
-    [publicFiles[0]]: publicSource(model),
-    [internalFiles[0]]: runtimeSource(model),
-    [packageFiles[0]]: projectSource(model),
-    "README.md": `# ${model.component.name} .NET binding\n\nGenerated direct C# APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`,
-  };
-  const manifest = managedBindingManifest({
-    model,
-    generator: "dotnet",
-    files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"],
-    publicFiles,
-    internalFiles,
-    packageFiles,
-  });
-  files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-  auditManagedBindingPackage(ir, files, "dotnet");
-  return Object.freeze(files);
+	const model = compileManagedAlphaModel(ir, "dotnet");
+	const publicFiles = ["src/LeanBridge.Alpha/Alpha.cs"];
+	const internalFiles = ["src/LeanBridge.Alpha/Runtime.cs"];
+	const packageFiles = ["src/LeanBridge.Alpha/LeanBridge.Alpha.csproj"];
+	const files = {
+		[publicFiles[0]]: publicSource(model)
+		, [internalFiles[0]]: runtimeSource()
+		, [packageFiles[0]]: projectSource(model)
+		, "README.md": `# ${model.component.name} .NET binding\n\nGenerated direct C# APIs over one process-wide Lean runtime.\n\nBinding IR SHA-256: \`${model.bindingIrSha256}\`\n`
+	};
+	const manifest = managedBindingManifest({
+		model
+		, generator: "dotnet"
+		, files: [...publicFiles, ...internalFiles, ...packageFiles, "README.md"]
+		, publicFiles
+		, internalFiles
+		, packageFiles
+	});
+	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
+	auditManagedBindingPackage(ir, files, "dotnet");
+	return Object.freeze(files);
 };
