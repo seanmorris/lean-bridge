@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import {
+	canonicalPackageManifestJson,
 	hashCanonicalPackageManifest,
 	parseCanonicalPackageManifest,
 } from "./canonical-package-manifest.mjs";
@@ -24,7 +25,16 @@ export const readVerifiedCanonicalBundle = async bundleRoot => {
 	const root = resolve(bundleRoot);
 	const source = await readFile(join(root, "canonical-package.json"), "utf8");
 	const manifest = parseCanonicalPackageManifest(source);
+	const canonical = canonicalPackageManifestJson(manifest);
+	if(source !== canonical)
+	{
+		throw new Error("canonical package manifest is not canonical JSON");
+	}
 	const manifestSha256 = hashCanonicalPackageManifest(manifest);
+	if(sha256(source) !== manifestSha256)
+	{
+		throw new Error("canonical package manifest bytes do not match its identity");
+	}
 	const inventory = await readFile(join(root, "canonical-package.sha256"), "utf8");
 	if(inventory !== `${manifestSha256}  canonical-package.json\n`)
 	{

@@ -1,41 +1,50 @@
-# Implementation Approval Checkpoint
+# Implementation approval checkpoint
 
-## Decision
+## Architecture-testing decision
 
-The project owner approved the architecture-testing POC on 2026-08-08 UTC. The decision authorizes the ordered work in [the POC plan](poc-plan.md). It does not authorize a production-stability claim or public package release.
+The project owner approved the falsification-driven proof of concept on 8 August 2026. That decision authorized the ordered work in [the POC plan](poc-plan.md). It did not authorize a production-stability claim or live package publication.
 
-## Evidence completed after approval
+## Current production decision
 
-- The pinned Lean runtime and complete `Init` closure build for the browser and threaded Wasm profiles.
-- Alpha, Beta, and Gamma compile independently without private Lean runtimes.
-- All three libraries share one memory, table, runtime, initialization domain, and retained object identity.
-- Startup, lazy dynamic, and final-static composition consume one canonical locked graph.
-- The POC loader returns native JavaScript functions and classes while keeping raw ABI symbols and handles private.
-- Browser and threaded clean rebuilds each produce 23 byte-identical artifacts across independent checkout roots.
-- The complete x86-64 graph builds and passes 35 tests in a fixed-input Nix environment.
-- The native JavaScript POC has a reproducible [performance baseline](../evidence/performance.md).
+Production approval remains withheld as of 14 August 2026. The [production-hardening review](../evidence/production-hardening-review-20260814.md) records the executed workflows, all eight architecture-lens results, and the remaining approval conditions.
 
-## Work that remains inside the approved POC
+The repository may build, rehearse, install, and measure local artifacts. No repository workflow holds registry credentials or performs a live registry write.
 
-- Generate the binding IR, descriptors, ESM, strict TypeScript declarations, Python stubs, C/C++ headers, Rust bindings, validators, docs, and assurance metadata from Lean declarations.
-- Complete the primitive, copied-value, identity, callback, closure, exception, promise, cancellation, iterator, and streaming matrices.
-- Validate raw ESM, browsers, workers, Vite, Rollup, Webpack, React, Python, and a second generated host backend.
-- Build and measure 1, 3, 10, and 50-library graphs against standalone-runtime controls.
-- Attach theorem provenance and trusted-boundary metadata to exact generated wrappers and artifacts.
-- Implement the zero-configuration analyze, build, clean-rebuild, compare, report, and publish pipeline.
-- Add AArch64 and declared WASI portability profiles.
+## Evidence completed after POC approval
 
-## Architecture accepted by the decision
+- A pinned Lean 4.32.2 toolchain builds the browser, threaded Wasm, native, and Component Model artifact profiles used by the fixtures.
+- Independently compiled Alpha, Beta, and Gamma components share the declared runtime, memory, table, initialization, and identity domains.
+- Startup, lazy, final-static, native, managed, browser, and WIT/WASI consumers use reviewed graph, runtime, package, and receipt identities.
+- Binding IR produces direct generated APIs for JavaScript, TypeScript, PHP, Python, Rust, C, C++, .NET, JVM, Ruby, and WIT.
+- Clean package consumers execute real Lean for every row in the versioned consumer support contract.
+- Two isolated clean builds compare every package byte and file mode before release authorization.
+- Performance CI records generated-call overhead, startup, shared and isolated runtime memory, lifecycle behavior, composition scaling, and clean-build reproducibility with environment identity.
+- The automated clean-room role completed analyze, build, publish dry-run, package installation, native calls, and receipt verification without annotations, wrappers, or source changes.
+
+The [evidence index](../evidence/README.md) owns the executed commands, artifacts, measurements, and limitations behind these statements.
+
+## Conditions before production approval
+
+1. A real Lean author completes the clean-room author workflow.
+2. Real JavaScript and Python consumers complete their clean package workflows.
+3. An independent party reconstructs the release outside this repository's workflow and administration boundary.
+4. The owner approves an explicit production deployment profile, including operating systems, architectures, runtime versions, and excluded capabilities.
+5. Live publication receives an operated registry adapter, credential boundary, signer policy, and recovery procedure.
+6. A human reviewer accepts the assurance chain, trusted boundaries, open risks, and production decision.
+
+The clean-room protocol requires actual human participants. An automated agent cannot satisfy conditions 1 or 2 by generating session records.
+
+## Accepted architecture invariants
 
 1. One application owns one Lean runtime and ownership domain.
-2. PHP-Wasm-style recursive side-module loading binds runtime-free libraries into that application.
-3. Final-static composition uses the same capsule graph and semantic lock.
-4. Lean declarations and binding metadata generate host APIs, validators, docs, schemas, tests, and assurance records.
-5. Generation-safe registries and deterministic disposal control cross-runtime lifetimes.
+2. Runtime-loaded components and final-static composition consume one canonical graph and semantic lock.
+3. Binding IR and ABI plans generate host APIs, validators, schemas, documentation, and assurance references.
+4. Generated public APIs expose named host-language declarations and keep transport handles, raw symbols, pointers, and generic dispatch private.
+5. Generation-safe registries and deterministic disposal control cross-runtime lifetimes; finalization is fallback cleanup.
 6. Promise and callback protocols leave no suspended Wasm stack across host asynchronous work.
-7. Nix and the semantic lock identify sources, dependencies, tools, proofs, wrappers, targets, and artifacts.
-8. JavaScript receives a first-class API through a host-neutral core that can support Python, C, C++, Rust, and WASI projections.
-9. Accessibility, diagnostics, install effort, and time to first call are release requirements.
-10. Reproducibility blocks publication when two clean builds differ.
+7. The flake, graph, source closure, toolchain, proof references, generated files, and artifact hashes remain joined by canonical identities.
+8. Registry packages project one compiler-free canonical bundle and do not rebuild component artifacts.
+9. Accessibility, diagnostics, clean installation, and receipt verification are release evidence.
+10. Reproducibility blocks release authorization when two clean builds differ.
 
-The repository history records the evolving design package. Evidence documents bind measured claims to toolchain and artifact hashes. Material architecture changes still require review before production hardening.
+Material architecture changes still require evidence, risk review, migration analysis, and owner approval.

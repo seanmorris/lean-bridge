@@ -31,6 +31,8 @@ Release code may arrange reviewed files, render registry metadata, and create de
 
 [`canonical-package-manifest.mjs`](canonical-package-manifest.mjs) validates and hashes the manifest that joins component, Binding IR, graph, runtime, provenance, assurance, and target identities. [`canonical-bundle-input.mjs`](canonical-bundle-input.mjs) reads that input through a verified boundary. [`core-artifact-set.mjs`](core-artifact-set.mjs) identifies files that package projections may copy but not change.
 
+The canonical input boundary requires the manifest file to equal its canonical newline-terminated serialization byte for byte. Its adjacent SHA-256 inventory therefore works with ordinary file hashing and rejects extra whitespace.
+
 [`component-release-bundle.mjs`](component-release-bundle.mjs) builds the component-level bundle. [`universal-release-bundle.mjs`](universal-release-bundle.mjs) assembles the complete package-neutral file set used by ecosystem builders.
 
 ### Deterministic archive construction
@@ -58,7 +60,7 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 
 [`release-rehearsal.mjs`](release-rehearsal.mjs) installs package projections into clean local consumers before any registry action. [`release-candidate-state.mjs`](release-candidate-state.mjs) tracks candidate transitions. [`publish-manifest.mjs`](publish-manifest.mjs) fixes coordinates and destinations.
 
-[`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`release-receipt.mjs`](release-receipt.mjs) and [`component-package-receipt.mjs`](component-package-receipt.mjs) let consumers verify the installed artifact against the reviewed release.
+[`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`release-receipt.mjs`](release-receipt.mjs) and [`component-package-receipt.mjs`](component-package-receipt.mjs) let consumers verify the installed artifact against the reviewed release. Component package output includes a standalone verifier beside its receipt and archives.
 
 ## Release invariants
 

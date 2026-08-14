@@ -44,7 +44,7 @@ One content-addressed lock describes sources, tools, generators, flags, features
 
 ## ADR 15: Host-neutral core
 
-TypeScript is the first-class initial projection, not the only canonical interface. The portable schema covers copied values, resources, ownership, errors, package graphs, and assurance data. JS objects, prototypes, callbacks, Promises, DOM and Node APIs are explicit host capabilities. A future WIT/WASI projection must be possible for the portable subset without changing Lean declaration or proof identity.
+TypeScript is the first-class initial projection, not the only canonical interface. The portable schema covers copied values, resources, ownership, errors, package graphs, and assurance data. JS objects, prototypes, callbacks, Promises, DOM and Node APIs are explicit host capabilities. The implemented WIT/WASI projection packages and executes the portable subset without changing Lean declaration or proof identity.
 
 ## ADR 16: AI-native reuse
 
@@ -66,11 +66,11 @@ Lean is the first producer adapter. Lean declaration identities, elaborator deta
 
 ## ADR 20: Rust semantic-parity backend
 
-Rust is the second high-level binding backend for the POC. Rust expresses copied values through ownership, receiver-anchored results through borrows, failures through `Result`, host callbacks through closure traits, and deterministic resource cleanup through `Drop`. These projections expose Binding IR lifetime decisions in the host type system and make semantic drift visible during compilation.
+Rust is the second high-level semantic-parity backend for the POC. Rust expresses copied values through ownership, receiver-anchored results through borrows, failures through `Result`, host callbacks through closure traits, and deterministic resource cleanup through `Drop`. These projections expose Binding IR lifetime decisions in the host type system and make semantic drift visible during compilation.
 
-The generator emits a crate with a hidden typed runtime trait containing one method per declaration. The public module contains no generic dispatcher or runtime identity value. Finite generic declarations produce concrete functions for the declared specializations. Unsupported arbitrary integers, asynchronous delivery, rich error payloads, and other uncovered shapes fail generation.
+The generator emits a crate with a hidden typed runtime trait containing one method per declaration. The public module contains no generic dispatcher or runtime identity value. Finite generic declarations produce concrete functions for the declared specializations. A shape outside the selected Rust profile produces a closed capability gap instead of an incomplete package.
 
-Stable Rust cannot implement the `Fn` traits for a generated owned resource. A returned Lean closure therefore exposes `.call(...)`, and the package manifest records that capability gap. C++ remains a later backend for package reach. It is not needed to establish that two high-level host projections can consume the same Binding IR.
+Stable Rust cannot implement the `Fn` traits for a generated owned resource. A returned Lean closure therefore exposes `.call(...)`, and the package manifest records that capability gap. The implemented C++20 backend now adds move-only RAII resources over the canonical C transport and passes the same clean native consumer workflow. Rust remains the semantic-parity decision because its type system exposes ownership and lifetime drift during compilation.
 
 ## ADR 21: Shared PHP projection
 
@@ -117,9 +117,9 @@ The release bundle becomes the handoff between expensive trusted compilation and
 7. Accessibility: consumers install ordinary ecosystem packages. Contributors do not maintain several build systems.
 8. Composition: every package resolves the same dependency graph and declares the same semantic compatibility facts.
 
-### Unresolved work
+### POC evidence
 
-Node 828 defines the closed canonical manifest. Node 829 builds the flake bundle. Nodes 830 through 832 implement packaging backends, release rehearsal, clean installs, and build tracing.
+The closed canonical manifest, content-addressed flake bundle, compiler-free package backends, release rehearsal, clean installs, and build tracing are implemented. [Universal bundle evidence](../../evidence/universal-release-bundle.md), [release rehearsal evidence](../../evidence/release-rehearsal.md), and [reproducibility evidence](../../evidence/reproducibility-release-gate.md) record the current outputs and limitations. Live registry publication remains outside the POC authorization.
 
 ## ADR 23: Managed runtime target profiles
 

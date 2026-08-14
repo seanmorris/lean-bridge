@@ -74,7 +74,7 @@ const enableReviewedRustBindingTarget = async (bundle, destination) => {
 		, "provenance"
 	];
 	const manifestSha256 = hashCanonicalPackageManifest(manifest);
-	await writeFile(join(destination, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+	await writeFile(join(destination, "canonical-package.json"), canonicalPackageManifestJson(manifest));
 	await writeFile(join(destination, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
 	const identityPath = join(destination, "bundle-identity.json");
 	const identity = JSON.parse(await readFile(identityPath, "utf8"));
@@ -131,7 +131,7 @@ test("Cargo projection requires every generated Rust file in the reviewed select
   const omitted = manifest.artifacts.find(artifact => artifact.path === "bindings/rust/src/lib.rs");
   mapping.publicArtifacts = mapping.publicArtifacts.filter(id => id !== omitted.id);
   const manifestSha256 = hashCanonicalPackageManifest(manifest);
-  await writeFile(join(eligible, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+  await writeFile(join(eligible, "canonical-package.json"), canonicalPackageManifestJson(manifest));
   await writeFile(join(eligible, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
   const identityPath = join(eligible, "bundle-identity.json");
   const identity = JSON.parse(await readFile(identityPath, "utf8"));

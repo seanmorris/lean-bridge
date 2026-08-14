@@ -1,30 +1,34 @@
-# Technical Risk Register
+# Technical risk register
 
-Scores are provisional before the POC. `L` is likelihood and `I` is impact on a low/medium/high scale.
+The original likelihood and impact scores were provisional before implementation. This register now records observed POC state and the evidence or production action attached to each risk. A controlled POC risk remains subject to regression and executable gates.
 
-| Risk | L | I | Early mitigation or falsification |
-|---|---|---|---|
-| Full Lean runtime cannot link cleanly as an Emscripten main module with runtime-free side libraries | M | H | First spike builds main + two sides, audits symbol ownership, init, memory/table, and repeat calls before API work. |
-| Side-module symbols retained too broadly or omitted under DCE | H | H | Compare `MAIN_MODULE=2`, explicit export/import manifests, load-time and lazy paths; store nm/wasm-tools reports. |
-| Lean runtime/version mismatch between capsule and main module | M | H | Exact ABI/toolchain/build hashes and compatibility ranges; reject before loading. |
-| Duplicate module initialization or inconsistent builtin flags | M | H | Generated DAG, idempotent registration, one owning agent, counters and duplicate-load tests. |
-| Lean RC root leak, double release, or use-after-free | H | H | Generated borrow/lease operations, cleanup ledger, generation tokens, sentinels, 100k-cycle stress, shutdown audit. |
-| JS GC↔Lean RC cycle remains live | H | M | Document no automatic cycle collection; explicit owner/cut APIs; cycle diagnostics and tests. |
-| `FinalizationRegistry` timing is mistaken for correctness | M | H | Explicit disposal/scopes are authoritative; forced GC tests are supplemental only. |
-| Callback signature/table mismatch | M | H | Generated finite signature IDs/adapters; table import/export audit; wrong-signature negative tests. |
-| Nested re-entry corrupts arenas or ownership frames | M | H | Per-call frame/arena stack, depth budgets, same-agent rule, nested success/throw/dispose stress. |
-| Promise cancellation, late settlement, or shutdown completes twice | H | H | Explicit pending state machine, call IDs, exactly-once assertions, adversarial timing suite. |
-| Cross-agent/thread semantics are unsafe or require COOP/COEP | M | M | Stackless same-agent baseline; worker communication async; threads a later explicit profile. |
-| Dynamic loading causes unacceptable startup/download/relocation overhead | M | H | 1/3/10/50 profiles, cached/cold stages, static-final comparison, lazy capability loading. |
-| Bundlers fail to discover or relocate side-module assets | M | H | Literal `new URL` descriptors, locator override, raw ESM/Vite/Rollup/Webpack fixtures, PHP-Wasm pattern reuse. |
-| Resolver graph differs from static/Nix graph | M | H | One canonical lock/library IDs; graph/schema hashes compared before execution and in CI. |
-| Nix build is not bit reproducible because tools embed nondeterminism | M | H | Clean builds, normalized paths/timestamps/order, binary diff evidence; do not overclaim Nix guarantees. |
-| Proof metadata describes source but not shipped wrapper/binary | M | H | End-to-end identity chain from declaration/theorems through generator/ABI/lock to artifact hashes. |
-| Assurance wording overclaims compiler/runtime/browser correctness | M | H | Three-state proved/trusted-boundary/unverified graph and named assumptions in generated docs. |
-| Type generation cannot represent dependent/higher-order declarations | H | M | Explicit export subset/adapters; generator diagnostics; checked manifest fallback, never public `any`. |
-| Host-neutral schema weakens JavaScript object semantics | M | M | Separate portable types from JS capability types; WIT projection is a test, not a lowest-common-denominator mandate. |
-| Unsafe dynamic/global host access expands attack surface | M | H | Capability-first safe API, decoder budgets, explicit unsafe escape hatch, integrity-checked descriptors. |
-| Private runtime sneaks into a convenience dependency | M | H | Capsule symbol audit, package export policy, runtime-count tests, standalone entries excluded from resolver. |
-| Unrelated work in a dirty checkout is overwritten | L | H | Change only named project paths, inspect the worktree before editing, preserve unrelated modifications, and stop on an overlapping conflict. |
+| Risk | Current state | Evidence or remaining action |
+|---|---|---|
+| The full Lean runtime cannot link with runtime-free side components | Controlled in the POC | The [Lean runtime link spike](../evidence/lean-runtime-link-spike.md) and [component engine evidence](../evidence/native-component-engine.md) execute the pinned runtime and independent components. Toolchain updates rerun both paths. |
+| Dead-code elimination omits required side symbols or retains private symbols | Controlled in the POC | [Side-module audit evidence](../evidence/plain-component-side-module-audit.md) records imports, exports, memory, table, and forbidden definitions before packaging. |
+| A capsule and application select incompatible Lean runtime identities | Controlled in the POC | The [capsule graph](../evidence/capsule-graph.md), artifact manifests, and clean consumers reject mismatched ABI, toolchain, patch-set, runtime, and graph identities. |
+| Duplicate initialization or inconsistent runtime flags corrupt shared state | Controlled in the POC | The [initialization adapter](../evidence/initialization-adapter.md) and startup, lazy, and final-static fixtures verify dependency order and exactly-once initialization. |
+| Reference-count roots leak, release twice, or remain usable after disposal | Controlled for the tested surface | Generated lifecycle plans, stale-generation checks, repeated cleanup, and [lifecycle evidence](../evidence/lifecycle-stability.md) cover supported resources. New ownership shapes require equivalent stress tests. |
+| A host GC and Lean reference-count cycle remains live | Open limitation | Explicit ownership and `close()` remain authoritative. The supported runtime does not claim automatic cross-runtime cycle collection. Public documentation must retain that limitation. |
+| Finalizer timing becomes a correctness dependency | Controlled in the POC | Explicit disposal defines correctness. Deterministic substitutes test fallback cleanup without relying on collector timing. [Registry evidence](../evidence/generation-safe-registries.md) records the behavior. |
+| Callback signatures or table entries disagree | Controlled for generated signatures | The [callback signature plan](../evidence/callback-signature-plan.md) validates finite generated adapters and rejects stale or incompatible callback identities. |
+| Nested re-entry corrupts ownership frames | Controlled for the bounded same-agent profile | Callback and [direct-call conformance](../evidence/direct-call-conformance.md) cover bounded nested calls, errors, disposal, and frame cleanup. Cross-agent synchronous re-entry is outside the profile. |
+| Cancellation, late settlement, or shutdown completes an operation twice | Controlled for the stackless profile | The [pending-operation state machine](../evidence/pending-operation-state-machine.md) exercises success, rejection, cancellation, stale settlement, cleanup, and shutdown. |
+| Cross-agent or threaded behavior requires unsafe semantics or browser isolation | Open limitation | Same-agent stackless execution is the supported baseline. Threaded Wasm remains an explicit profile with separate platform requirements. |
+| Dynamic loading adds unacceptable startup, relocation, or memory cost | Measured, not closed | [Library scaling](../evidence/library-scaling.md), [generated-call overhead](../evidence/native-call-overhead.md), and [lifecycle evidence](../evidence/lifecycle-stability.md) retain the measured operations and environments. |
+| Bundlers cannot discover or relocate component assets | Controlled for tested npm profiles | [Browser package acceptance](../evidence/browser-package-acceptance.md) covers the installed archive through Vite and Chromium; browser fixture evidence also covers raw ESM, workers, Rollup, Webpack, and React. |
+| Runtime, static, and package graphs resolve different component identities | Controlled in the POC | Graph locks, package manifests, receipts, and startup profile tests compare canonical semantic and artifact identities. |
+| Nix or archive tooling embeds nondeterministic data | Controlled inside project CI; external confirmation pending | The [reproducibility release gate](../evidence/reproducibility-release-gate.md) compares every package byte and mode across isolated clean builds. Production approval requires an outside reconstruction. |
+| Proof metadata names source declarations but not shipped wrappers and binaries | Partially controlled | Canonical manifests join source, Binding IR, assurance, graph, toolchain, and artifact identities. The analyzer still records theorem references as unverified candidates, and human assurance review remains pending. |
+| Generated documentation overclaims compiler, runtime, or host assurance | Partially controlled | Assurance records distinguish proved, trusted-boundary, and unverified states. Production approval requires a human review of the complete shipped chain. |
+| Dependent, higher-order, or effectful Lean declarations exceed the export model | Open product limitation | Analysis emits adapter questions or unsupported diagnostics. It does not publish an incomplete mapping or public `any`. Additional shapes require reviewed semantic and lifecycle adapters. |
+| A host-neutral schema weakens target-specific semantics | Controlled for the supported corpus | [Cross-language semantic parity](../evidence/cross-language-semantic-parity.md) compares values, identity, ownership, failures, callbacks, delivery, documentation, and assurance before package generation. |
+| Dynamic or global host access expands the attack surface | Outside the supported public surface | Current packages expose generated declarations and bounded conversion plans. Any future unsafe host escape hatch requires a separate capability profile, threat review, and tests. |
+| A convenience package introduces a private runtime | Controlled in clean consumers | Canonical bundle and package audits reject private runtime copies. Component packages reference the shared runtime, and composition tests check runtime identity. |
+| Tooling overwrites unrelated work in a dirty checkout | Controlled at release boundaries | Analysis writes only a selected output directory. Reproducibility authorization requires a clean committed tree, and clean consumers use temporary projects. Contributor workflows still inspect and preserve unrelated local changes. |
 
-No risk may be closed by documentation alone when the POC can measure it. Passing runtime tests are evidence, not machine-checked proof.
+## Production blockers
+
+The [production-hardening review](../evidence/production-hardening-review-20260814.md) keeps production approval withheld for human clean-room evidence, independent external reconstruction, an explicit deployment profile, operated publication controls, and human assurance review.
+
+Documentation cannot close a measurable risk. A passing runtime or package gate is evidence for the named profile, not proof for untested platforms or declaration shapes.

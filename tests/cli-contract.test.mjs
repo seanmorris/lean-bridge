@@ -390,7 +390,30 @@ test("build failures stay package-oriented at the public CLI boundary", async ()
   assert.equal(outcome.response.status, "failed");
   assert.equal(outcome.response.diagnostics[0].code, "package-build-failed");
   assert.match(outcome.response.diagnostics[0].message, /requested package/);
+  assert.match(outcome.response.diagnostics[0].hint, /--json --progress json/);
+  assert.doesNotMatch(outcome.response.diagnostics[0].hint, /analyze/);
   assert.doesNotMatch(outcome.stdout, /docker|nix|flake|image|stderr/i);
+});
+
+test("dependency download failures provide a safe and actionable package diagnostic", async () => {
+  const handlers = createCliHandlers({
+    build: async () => {
+      throw new CanonicalBuildError("build-command-failed", "private builder command failed", {
+        details: { stderr: "curl: HTTP server does not support byte ranges. Cannot resume. Cannot download source." }
+      });
+    }
+  });
+  const outcome = await runCli({
+    argv: ["build", "--json"]
+    , cwd: "/workspace"
+    , environment: {}
+    , handlers
+  });
+  assert.equal(outcome.response.status, "failed");
+  assert.equal(outcome.response.diagnostics[0].code, "package-dependency-download-failed");
+  assert.match(outcome.response.diagnostics[0].message, /dependency.*downloaded/);
+  assert.match(outcome.response.diagnostics[0].hint, /network access.*incomplete download.*build cache/i);
+  assert.doesNotMatch(outcome.stdout, /curl|http server|byte ranges|stderr/i);
 });
 
 test("cancellation has a stable status, diagnostic, progress state, and exit code", async () => {

@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
 
@@ -61,10 +61,20 @@ const publicDocuments = Object.freeze([
 	, "docs/consumers.md"
 	, "docs/status.md"
 	, "docs/evidence/README.md"
+	, "docs/evidence/production-hardening-review-20260814.md"
+	, "docs/architecture/approval.md"
+	, "docs/architecture/risks.md"
+	, "docs/architecture/patches.md"
+	, "docs/architecture/adr/README.md"
 	, ...directoryDocuments
 ]);
 
 const codeFences = source => [...source.matchAll(/^```[^\n]*\n([\s\S]*?)^```\s*$/gm)].map(match => match[1]);
+
+test("the packaged CLI entry point is executable", async () => {
+	const entry = await stat("scripts/lean-bridge.mjs");
+	assert.notEqual(entry.mode & 0o111, 0);
+});
 
 test("source and operational directories have boundary indexes", async () => {
 	const sourceDirectories = (await readdir("src", { withFileTypes: true }))

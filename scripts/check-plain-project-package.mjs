@@ -121,6 +121,7 @@ try
 	await mkdir(output, { recursive: true });
 	await writeFile(join(output, "acceptance.json"), `${JSON.stringify(report, null, 2)}\n`);
 	await cp(receiptPath, join(output, "component-package-receipt.json"));
+	await cp(join(builds[0].packages.output, "verify-component-package-receipt.mjs"), join(output, "verify-component-package-receipt.mjs"));
 	await cp(builds[0].packages.componentArchive, join(output, basename(builds[0].packages.componentArchive)));
 	await cp(builds[0].packages.runtimeArchive, join(output, basename(builds[0].packages.runtimeArchive)));
 	process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

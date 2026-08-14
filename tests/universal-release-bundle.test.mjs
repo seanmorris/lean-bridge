@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import test from "node:test";
@@ -22,9 +22,11 @@ import {
 	listBundleFiles,
 } from "../src/release/universal-release-bundle.mjs";
 import {
+	canonicalPackageManifestJson,
 	hashCanonicalPackageManifest,
 	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
+import { readVerifiedCanonicalBundle } from "../src/release/canonical-bundle-input.mjs";
 
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -114,6 +116,8 @@ test("universal bundle is byte-identical across clean assembly roots", async () 
 test("canonical manifest inventories every release artifact with its actual bytes", async () => withBundles(async ({ first, firstResult }) => {
   const source = await readFile(join(first, "canonical-package.json"), "utf8");
   const manifest = parseCanonicalPackageManifest(source);
+  assert.equal(source, canonicalPackageManifestJson(manifest));
+  assert.equal(sha256(source), firstResult.manifestSha256);
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
   assert.equal(firstResult.artifactCount, 109);
@@ -133,6 +137,15 @@ test("canonical manifest inventories every release artifact with its actual byte
   assert.equal(npm.publicArtifacts.includes("javascript-library-loader"), true);
   const bundledValidator = await import(`${pathToFileURL(join(first, "validators/src/release/canonical-package-manifest.mjs")).href}?bundle-test`);
   assert.equal(bundledValidator.validateCanonicalPackageManifest(manifest), true);
+}));
+
+test("canonical bundle verification rejects extra manifest bytes", async () => withBundles(async ({ first }) => {
+  const path = join(first, "canonical-package.json");
+  await writeFile(path, `${await readFile(path, "utf8")}\n`);
+  await assert.rejects(
+    readVerifiedCanonicalBundle(first),
+    /canonical package manifest is not canonical JSON/,
+  );
 }));
 
 test("provenance and SBOM name the exact compiled core identity", async () => withBundles(async ({ first, firstResult }) => {

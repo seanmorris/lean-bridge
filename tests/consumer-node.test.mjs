@@ -215,9 +215,9 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     });
 
     const verification = JSON.parse((await run("node", [
-      join(repository, "scripts/verify-component-package-receipt.mjs")
+      join(release, "verify-component-package-receipt.mjs")
       , "--receipt", join(release, "component-package-receipt.json")
-    ])).stdout);
+    ], { cwd: consumer })).stdout);
     assert.equal(verification.verified, true);
     assert.equal(verification.component, "onboarding-small@1.0.0");
     assert.match(verification.runtime, /^@lean-bridge\/runtime@0\.0\.0-abi1\./);

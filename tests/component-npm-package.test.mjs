@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
@@ -109,6 +109,12 @@ test("an external Lean component installs as native callables over one shared ru
       , runtime: first.report.runtime.package
       , package: "onboarding-small@1.0.0"
     });
+    assert.equal(first.report.verificationCommand, "node verify-component-package-receipt.mjs --receipt component-package-receipt.json");
+    const portable = JSON.parse((await execute("node", [
+      join(first.output, "verify-component-package-receipt.mjs")
+      , "--receipt", join(first.output, "component-package-receipt.json")
+    ], { cwd: consumer })).stdout);
+    assert.deepEqual(portable, receipt);
 
     const schema = JSON.parse(await readFile("schema/component-package-receipt.schema.json", "utf8"));
     assert.equal(schema.additionalProperties, false);
@@ -116,6 +122,14 @@ test("an external Lean component installs as native callables over one shared ru
     assert.equal(schema.$defs.source.additionalProperties, false);
     assert.equal(schema.$defs.package.additionalProperties, false);
     assert.equal(schema.$defs.policies.additionalProperties, false);
+    await writeFile(first.componentArchive, "tampered");
+    await assert.rejects(
+      execute("node", [
+        join(first.output, "verify-component-package-receipt.mjs")
+        , "--receipt", join(first.output, "component-package-receipt.json")
+      ], { cwd: consumer }),
+      /package archive differs from the receipt/,
+    );
 } finally
 {
     await rm(scratch, { recursive: true, force: true });
