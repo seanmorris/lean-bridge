@@ -33,6 +33,8 @@ The statement subjects contain:
 - every selected backend plan; and
 - every selected package archive.
 
+The signed predicate also carries one closed archive-subject record per selected archive. Each record contains the ecosystem, package coordinate, operation, archive kind, path, filename, byte length, and SHA-256. The release receipt repeats the same records after publication so a clean consumer can detect archive or coordinate substitution without the repository closure.
+
 The publication predicate records:
 
 - the candidate identity, source revision, source tree, flake lock, canonical manifest, core artifact set, and complete artifact-inventory identity;

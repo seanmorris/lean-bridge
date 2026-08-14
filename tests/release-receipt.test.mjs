@@ -5,16 +5,19 @@
  */
 
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { promisify } from "node:util";
 import test from "node:test";
 
 import { canonicalJson } from "../src/capsule/node.mjs";
 import {
 	authorizePublication,
 	createPublicationSignerPolicy,
+	publicationSignerPolicySha256,
 } from "../src/release/publication-attestation.mjs";
 import {
 	authorizeReleaseReceipt,
@@ -27,6 +30,7 @@ import {
 } from "../src/release/release-receipt.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
+const execute = promisify(execFile);
 const hash = character => character.repeat(64);
 const { privateKey, publicKey } = generateKeyPairSync("ed25519");
 const policy = createPublicationSignerPolicy({
@@ -37,6 +41,17 @@ const signer = Object.freeze({
 	kind: "test-ed25519"
 	, keyId: policy.signers[0].keyId
 	, sign: bytes => sign(null, bytes, privateKey)
+});
+
+const archiveFixtures = Object.freeze({
+	c: Object.freeze({
+		path: "release/packages/c/alpha.tar.gz"
+		, bytes: Buffer.from("deterministic C archive\n")
+	})
+	, npm: Object.freeze({
+		path: "release/packages/npm/alpha.tgz"
+		, bytes: Buffer.from("deterministic npm archive\n")
+	})
 });
 
 test("managed receipt commands use canonical registry coordinates", () => {
@@ -104,9 +119,9 @@ const makeVerified = manifestPath => {
 			, artifact("bundle/metadata/assurance.json", 101, hash("a"))
 			, artifact("bundle/metadata/provenance.intoto.json", 102, hash("b"))
 			, artifact("bundle/metadata/sbom.spdx.json", 103, hash("c"))
-			, artifact("packages/c/alpha.tar.gz", 104, hash("d"))
+			, artifact("packages/c/alpha.tar.gz", archiveFixtures.c.bytes.length, sha256(archiveFixtures.c.bytes))
 			, artifact("packages/c/c-projection.json", 105, hash("e"))
-			, artifact("packages/npm/alpha.tgz", 106, hash("f"))
+			, artifact("packages/npm/alpha.tgz", archiveFixtures.npm.bytes.length, sha256(archiveFixtures.npm.bytes))
 			, artifact("packages/npm/npm-projection.json", 107, hash("0"))
 			, artifact("packages/publication-index.intoto.json", 108, hash("6"))
 		]
@@ -137,7 +152,7 @@ const makeVerified = manifestPath => {
 				, destination: { kind: "archive", endpoint: null }
 				, idempotencyKey: hash("a")
 				, backendPlan: { path: "release/packages/c/c-projection.json", bytes: 105, sha256: hash("e") }
-				, archives: [{ kind: "source", path: "release/packages/c/alpha.tar.gz", bytes: 104, sha256: hash("d") }]
+				, archives: [{ kind: "source", path: archiveFixtures.c.path, bytes: archiveFixtures.c.bytes.length, sha256: sha256(archiveFixtures.c.bytes) }]
 			}
 			, {
 				order: 2
@@ -151,7 +166,7 @@ const makeVerified = manifestPath => {
 				, destination: { kind: "npm", endpoint: "https://registry.npmjs.org/" }
 				, idempotencyKey: hash("b")
 				, backendPlan: { path: "release/packages/npm/npm-projection.json", bytes: 107, sha256: hash("0") }
-				, archives: [{ kind: "package", path: "release/packages/npm/alpha.tgz", bytes: 106, sha256: hash("f") }]
+				, archives: [{ kind: "package", path: archiveFixtures.npm.path, bytes: archiveFixtures.npm.bytes.length, sha256: sha256(archiveFixtures.npm.bytes) }]
 			}
 		]
 	};
@@ -223,6 +238,11 @@ const transactionFor = (verified, publicationAttestation, status = "complete") =
 
 const fixture = async () => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-release-receipt-"));
+	for(const archive of Object.values(archiveFixtures))
+	{
+		await mkdir(join(root, archive.path, ".."), { recursive: true });
+		await writeFile(join(root, archive.path), archive.bytes);
+	}
 	const manifestPath = join(root, "publish-manifest.json");
 	await writeFile(manifestPath, "{}", "utf8");
 	const verified = makeVerified(manifestPath);
@@ -256,7 +276,7 @@ test("receipt signs completed registry coordinates, package hashes, locks, and i
     kind: "retained-archive"
     , commands: ["tar -xf release/packages/c/alpha.tar.gz"]
   });
-  assert.equal(statement.subject.some(item => item.digest.sha256 === hash("f")), true);
+  assert.equal(statement.subject.some(item => item.digest.sha256 === sha256(archiveFixtures.npm.bytes)), true);
 });
 
 test("writer emits one content-addressed receipt and verifies it independently", async t => {
@@ -281,6 +301,55 @@ test("writer emits one content-addressed receipt and verifies it independently",
   assert.equal(await readFile(written.hashPath, "utf8"), `${written.receiptSha256}  release-receipt.json\n`);
   assert.equal(written.targets[1].coordinate, "@lean-bridge/alpha@1.2.3");
   assert.equal(written.targets[1].install.commands[0], "npm install @lean-bridge/alpha@1.2.3");
+  assert.equal(written.archiveHandoffs.length, 2);
+
+  const npmDirectory = join(value.root, "release/packages/npm");
+  const verifier = join(npmDirectory, "verify-release-archive.mjs");
+  const receipt = join(npmDirectory, "release-receipt.json");
+  const policyPath = join(npmDirectory, "publication-signer-policy.json");
+  const trustedPolicySha256 = publicationSignerPolicySha256(policy);
+  const verifierArguments = archive => [
+    verifier
+    , "--archive", archive
+    , "--receipt", receipt
+    , "--policy", policyPath
+    , "--policy-sha256", trustedPolicySha256
+    , "--subject", archiveFixtures.npm.path
+    , "--coordinate", "@lean-bridge/alpha@1.2.3"
+  ];
+  const consumerRoot = await mkdtemp(join(tmpdir(), "lean-bridge-receipt-consumer-"));
+  t.after(() => rm(consumerRoot, { recursive: true, force: true }));
+  const checkedArchive = await execute(process.execPath, verifierArguments(join(value.root, archiveFixtures.npm.path)), {
+    cwd: consumerRoot
+  });
+  const checked = JSON.parse(checkedArchive.stdout);
+  assert.equal(checked.verified, true);
+  assert.equal(checked.bytes, archiveFixtures.npm.bytes.length);
+  assert.equal(checked.sha256, sha256(archiveFixtures.npm.bytes));
+  assert.equal(checked.signerPolicySha256, trustedPolicySha256);
+
+  const tamperedRoot = await mkdtemp(join(tmpdir(), "lean-bridge-tampered-archive-"));
+  t.after(() => rm(tamperedRoot, { recursive: true, force: true }));
+  const tamperedArchive = join(tamperedRoot, archiveFixtures.npm.path.split("/").at(-1));
+  await writeFile(tamperedArchive, "tampered archive\n");
+  await assert.rejects(
+    execute(process.execPath, verifierArguments(tamperedArchive), { cwd: tamperedRoot }),
+    error => error.stderr.includes("release-archive-bytes-drift"),
+  );
+
+  const replacementKeys = generateKeyPairSync("ed25519");
+  const replacementPolicy = createPublicationSignerPolicy({
+    identity: "https://example.test/replacement"
+    , publicKeyPem: replacementKeys.publicKey.export({ type: "spki", format: "pem" }).toString()
+  });
+  const replacementPolicyPath = join(tamperedRoot, "publication-signer-policy.json");
+  await writeFile(replacementPolicyPath, canonicalJson(replacementPolicy));
+  const replacedPolicyArguments = verifierArguments(join(value.root, archiveFixtures.npm.path));
+  replacedPolicyArguments[replacedPolicyArguments.indexOf(policyPath)] = replacementPolicyPath;
+  await assert.rejects(
+    execute(process.execPath, replacedPolicyArguments, { cwd: tamperedRoot }),
+    error => error.stderr.includes("release-signer-policy-untrusted"),
+  );
 
   const verified = await verifyReleaseReceipt({
     receiptPath: written.path
@@ -387,5 +456,6 @@ test("receipt document and schema keep every public object closed", async t => {
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.$defs.statement.additionalProperties, false);
   assert.equal(schema.$defs.target.additionalProperties, false);
+  assert.equal(schema.$defs.archiveSubject.additionalProperties, false);
   assert.equal(schema.$defs.audit.additionalProperties, false);
 });

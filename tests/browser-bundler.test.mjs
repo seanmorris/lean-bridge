@@ -188,7 +188,7 @@ test("the browser acceptance environment uses exact tool versions", () => {
       , react: "19.2.8"
       , "react-dom": "19.2.8"
       , rollup: "4.62.4"
-      , "sm-no-saccade-style": "0.1.2"
+      , "sm-no-saccade-style": "0.1.6"
     , typescript: "5.9.3"
     , vite: "8.2.1"
     , webpack: "5.109.2"

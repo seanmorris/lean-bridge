@@ -11,6 +11,7 @@ import {
 } from "node:crypto";
 
 import { canonicalJson } from "../capsule/node.mjs";
+import { releaseArchiveSubjectsFor } from "./archive-subjects.mjs";
 
 const policyPredicate = "urn:lean-bridge:policy:publication-signer:v1";
 const publicationPredicate = "urn:lean-bridge:attestation:publication-authorization:v1";
@@ -303,6 +304,7 @@ export const createPublicationStatement = ({ verified, policy }) => {
 		, sbom: authorization.authorizedArtifacts.filter(item => isSbom(item.path)).map(artifactReference)
 		, provenance: authorization.authorizedArtifacts.filter(item => isProvenance(item.path)).map(artifactReference)
 	};
+	const archiveSubjects = releaseArchiveSubjectsFor(verified.manifest.targets);
 	if(Object.values(assuranceArtifacts).some(items => items.length === 0))
 	{
 		fail("publication-assurance-artifact-missing", "Authorized release must contain manifests, locks, assurance, SBOM, and provenance artifacts");
@@ -313,6 +315,7 @@ export const createPublicationStatement = ({ verified, policy }) => {
 		, predicateType: publicationPredicate
 		, predicate: {
 			schemaVersion: 1
+			, archiveSubjects
 			, authorization: {
 				sha256: verified.authorization.authorizationSha256
 				, candidate: authorization.candidate

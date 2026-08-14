@@ -56,5 +56,8 @@ test("consumer fixtures, examples, and generated packages expose only native API
     , "c"
     , "cpp"
     , "rust"
+    , "dotnet"
+    , "jvm"
+    , "ruby"
   ]);
 });

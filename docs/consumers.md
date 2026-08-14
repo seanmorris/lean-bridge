@@ -2,6 +2,24 @@
 
 The [versioned support contract](consumer-support.v1.json) records thirteen consumers separately. `supported` means that a clean consumer installs the documented artifact and executes real Lean through the generated public API. The current proof of concept supports every listed row. Native packages target x86-64 Linux with glibc 2.38 or newer.
 
+## Authenticate a release archive
+
+A completed release places `release-receipt.json`, `publication-signer-policy.json`, and `verify-release-archive.mjs` beside each npm, wheel, crate, C, C++, managed, PHP, and WIT/WASI archive. Obtain the expected signer-policy SHA-256 through reviewed configuration or another trusted channel. The adjacent policy and its adjacent hash file are not a trust anchor.
+
+Run the verifier before installation. Supply the exact signed subject path and coordinate printed by the release handoff:
+
+```sh
+node verify-release-archive.mjs \
+  --archive ./downloaded-package \
+  --receipt ./release-receipt.json \
+  --policy ./publication-signer-policy.json \
+  --policy-sha256 <trusted-policy-sha256> \
+  --subject <signed-subject-path> \
+  --coordinate <expected-coordinate>
+```
+
+The verifier uses only Node built-ins. It checks both Ed25519-signed decisions, the separately trusted policy identity, coordinate, filename, byte length, and archive SHA-256. The [release receipt evidence](evidence/release-receipt.md) defines the complete handoff.
+
 ## Browser JavaScript
 
 The npm archive exposes its public module through a browser conditional export. Install with lifecycle scripts disabled, then use an ordinary bare-package import:
@@ -63,7 +81,7 @@ with make_adder(2) as add_two:
 
 The Alpha `round_trip` fixture toggles `enabled`, increments `count`, and preserves the label, bytes, and values. The generated dataclass, callback, and returned callable hide the native adapter.
 
-Verify the canonical package identity from the installed package without a Lean Bridge checkout:
+After authenticating the wheel archive, verify its internal canonical package identity without a Lean Bridge checkout:
 
 ```python
 from hashlib import sha256
@@ -76,6 +94,8 @@ actual = sha256(manifest).hexdigest()
 assert actual == expected
 print(actual)
 ```
+
+This internal check detects damaged installed metadata. It does not authenticate the wheel or its release signer by itself.
 
 ## Rust
 

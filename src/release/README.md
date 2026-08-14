@@ -60,7 +60,7 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 
 [`release-rehearsal.mjs`](release-rehearsal.mjs) installs package projections into clean local consumers before any registry action. [`release-candidate-state.mjs`](release-candidate-state.mjs) tracks candidate transitions. [`publish-manifest.mjs`](publish-manifest.mjs) fixes coordinates and destinations.
 
-[`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`release-receipt.mjs`](release-receipt.mjs) and [`component-package-receipt.mjs`](component-package-receipt.mjs) let consumers verify the installed artifact against the reviewed release. Component package output includes a standalone verifier beside its receipt and archives.
+[`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`archive-subjects.mjs`](archive-subjects.mjs) records each ecosystem, coordinate, filename, byte length, and hash. [`release-receipt.mjs`](release-receipt.mjs) signs the completed result and copies [`release-archive-verifier.mjs`](release-archive-verifier.mjs), the receipt, and the public policy beside every archive. The verifier requires a separately trusted policy hash and no repository checkout. [`component-package-receipt.mjs`](component-package-receipt.mjs) checks unsigned local dry-run packages.
 
 ## Release invariants
 
@@ -69,7 +69,7 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 - Archive metadata is normalized before hashes are calculated.
 - Clean-install rehearsal uses the package artifact, not repository-private imports.
 - Publication requires a reproducibility result, authorization, destination identity, and credential boundary.
-- A receipt binds the published coordinate to package and component identities.
+- A signed release receipt binds each published coordinate to the exact archive filename, byte length, and SHA-256.
 
 These invariants make a registry package a projection of the reviewed bundle instead of an independent build product.
 

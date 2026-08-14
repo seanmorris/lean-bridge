@@ -113,6 +113,8 @@ node "$LEAN_BRIDGE_RECEIPT_VERIFIER" \
 
 The standalone verifier imports only Node built-ins. It checks the receipt identity, component identity, shared-runtime requirement, and SHA-256 of both archives. The [plain project acceptance record](evidence/plain-project-package-acceptance.md) records the current call results and retained receipt identity.
 
+This dry-run receipt proves local package consistency. It does not authenticate a registry or release download. A completed signed release also places `verify-release-archive.mjs`, `release-receipt.json`, and `publication-signer-policy.json` beside the npm archive. Run the signed archive command in the [consumer guide](consumers.md#authenticate-a-release-archive) with a policy SHA-256 obtained through a separate trusted channel.
+
 ## Browser boundary
 
 The browser fixtures execute a real Lean runtime through raw ESM, a module worker, Vite, Rollup, Webpack, and React. The npm archive supplies a browser conditional export. `npm run test:consumer:browser` installs that archive with scripts disabled, bundles an ordinary bare-package import with Vite, and executes Lean in Chromium. See [browser package acceptance](evidence/browser-package-acceptance.md).

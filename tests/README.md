@@ -32,6 +32,8 @@ Package-builder tests inspect archive contents, metadata, paths, modes, hashes, 
 
 Consumer commands install generated archives into new projects using ordinary ecosystem tooling. A supported target then executes a real Lean component through the documented generated API and verifies its receipt. Partial and blocked targets run the strongest available package or interface check and report the exact missing runtime capability.
 
+[`archive-subjects.test.mjs`](archive-subjects.test.mjs) requires every supported consumer to map to a signed ecosystem archive subject. [`release-receipt.test.mjs`](release-receipt.test.mjs) runs the repository-free verifier outside the checkout and rejects changed archive bytes or an adjacent signer-policy substitution.
+
 [`../scripts/consumer-ci.mjs`](../scripts/consumer-ci.mjs) writes a complete summary row for every declared target, including package installation, real Lean execution, result, performance observation when available, and blocker. The test fails if observed capability and [`../docs/consumer-support.v1.json`](../docs/consumer-support.v1.json) disagree.
 
 ### Documentation tests
