@@ -1,3 +1,9 @@
+/**
+ * Tests the Lean link spike behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -23,15 +29,15 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   assert.equal(box.identity(), box);
   assert.equal("handle" in box, false);
   assert.deepEqual(libraries.diagnostics().resources, {
-    live: 1,
-    wrappersCreated: 1,
-    canonicalHits: 1,
-    rejected: 0,
+    live: 1
+    , wrappersCreated: 1
+    , canonicalHits: 1
+    , rejected: 0
   });
   assert.deepEqual(libraries.diagnostics().leases, {
-    acquired: 1,
-    released: 0,
-    finalized: 0,
+    acquired: 1
+    , released: 0
+    , finalized: 0
   });
   box.dispose();
   assert.throws(
@@ -40,19 +46,19 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   );
 
   const input = {
-    enabled: true,
-    count: 41,
-    label: "Lean λ\0bridge",
-    bytes: new Uint8Array([0, 1, 127, 128, 255]),
-    values: [0, 1, 0xffff_ffff],
+    enabled: true
+    , count: 41
+    , label: "Lean λ\0bridge"
+    , bytes: new Uint8Array([0, 1, 127, 128, 255])
+    , values: [0, 1, 0xffff_ffff]
   };
   const result = loadedAlpha.roundTrip(input);
   assert.deepEqual(result, {
-    enabled: false,
-    count: 42,
-    label: "Lean λ\0bridge",
-    bytes: new Uint8Array([0, 1, 127, 128, 255]),
-    values: [0, 1, 0xffff_ffff],
+    enabled: false
+    , count: 42
+    , label: "Lean λ\0bridge"
+    , bytes: new Uint8Array([0, 1, 127, 128, 255])
+    , values: [0, 1, 0xffff_ffff]
   });
   assert.equal(Object.isFrozen(result), true);
   assert.equal(Object.isFrozen(result.values), true);
@@ -63,19 +69,21 @@ test("Lean-generated lazy side module binds into the existing Lean runtime", asy
   const callbackFrames = [];
   const nestedModule = await createLazyModule();
   const nestedLibraries = createLibraryLoader(nestedModule, {
-    onCallbackFrame: event => callbackFrames.push(event),
+    onCallbackFrame: event => callbackFrames.push(event)
   });
   const nestedAlpha = await nestedLibraries.load(alpha);
   const transform = value => {
     const nestedBox = new nestedAlpha.Box(value);
-    try {
+    try
+{
       const read = nestedBox.read();
       return read === 40
         ? nestedAlpha.withCallback(read, transform)
         : read;
-    } finally {
+} finally
+{
       nestedBox.dispose();
-    }
+}
   };
   assert.equal(nestedAlpha.withCallback(39, transform), 43);
   assert.deepEqual(
@@ -106,7 +114,7 @@ test("exported Lean closures are ordinary nested callables with deterministic cl
   const callbackFrames = [];
   const module = await createLazyModule();
   const libraries = createLibraryLoader(module, {
-    onCallbackFrame: event => callbackFrames.push(event),
+    onCallbackFrame: event => callbackFrames.push(event)
   });
   const loadedAlpha = await libraries.load(alpha);
   const addTwo = loadedAlpha.makeAdder(2);
@@ -118,20 +126,20 @@ test("exported Lean closures are ordinary nested callables with deterministic cl
   assert.deepEqual(
     callbackFrames.map(event => [event.event, event.direction, event.depth]),
     [
-      ["enter", "host", 1],
-      ["enter", "lean", 2],
-      ["leave", "lean", 2],
-      ["leave", "host", 1],
+      ["enter", "host", 1]
+      , ["enter", "lean", 2]
+      , ["leave", "lean", 2]
+      , ["leave", "host", 1]
     ],
   );
   assert.deepEqual(libraries.diagnostics().nativeClosures, {
-    live: 1,
-    created: 1,
-    canonicalHits: 0,
-    calls: 1,
-    leasesAcquired: 1,
-    leasesReleased: 0,
-    finalized: 0,
+    live: 1
+    , created: 1
+    , canonicalHits: 0
+    , calls: 1
+    , leasesAcquired: 1
+    , leasesReleased: 0
+    , finalized: 0
   });
   assert.equal(addTwo.dispose(), true);
   assert.equal(addTwo.dispose(), false);
@@ -163,11 +171,11 @@ test("resource classes reject cross-runtime use and expire on shutdown", async (
   assert.equal(firstLibraries.shutdown(), true);
   assert.throws(
     () => first.roundTrip({
-      enabled: true,
-      count: 0,
-      label: "closed",
-      bytes: new Uint8Array(),
-      values: [],
+      enabled: true
+      , count: 0
+      , label: "closed"
+      , bytes: new Uint8Array()
+      , values: []
     }),
     error => error.code === "runtime-shut-down",
   );
@@ -183,11 +191,11 @@ test("native copied-value validation returns structured errors", async () => {
   assert.throws(
     () =>
       loadedAlpha.roundTrip({
-        enabled: true,
-        count: -1,
-        label: "invalid",
-        bytes: new Uint8Array(),
-        values: [],
+        enabled: true
+        , count: -1
+        , label: "invalid"
+        , bytes: new Uint8Array()
+        , values: []
       }),
     error => {
       assert.equal(error.name, "LeanBridgeError");

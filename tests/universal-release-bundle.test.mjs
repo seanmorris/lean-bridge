@@ -1,3 +1,9 @@
+/**
+ * Tests the universal release bundle behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
@@ -8,95 +14,101 @@ import { pathToFileURL } from "node:url";
 
 import { validatePackagingBackendPlan } from "../src/release/backend-policy.mjs";
 import {
-  assertCoreArtifactSetUnchanged,
-  createCoreArtifactSetManifest,
+	assertCoreArtifactSetUnchanged,
+	createCoreArtifactSetManifest,
 } from "../src/release/core-artifact-set.mjs";
 import {
-  buildUniversalReleaseBundle,
-  listBundleFiles,
+	buildUniversalReleaseBundle,
+	listBundleFiles,
 } from "../src/release/universal-release-bundle.mjs";
 import {
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
+	hashCanonicalPackageManifest,
+	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 
 const collectModuleClosure = async entry => {
-  const files = new Set();
-  const visit = async path => {
-    if (files.has(path)) return;
-    files.add(path);
-    const source = await readFile(path, "utf8");
-    const patterns = [
-      /\bfrom\s+["'](\.\.?\/[^"']+)["']/g,
-      /(?:^|\n)\s*import\s+["'](\.\.?\/[^"']+)["']/g,
-    ];
-    for (const pattern of patterns) {
-      for (const match of source.matchAll(pattern)) {
-        const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
-        await visit(imported);
-      }
-    }
-  };
-  await visit(entry);
-  return [...files].sort();
+	const files = new Set();
+	const visit = async path => {
+		if(files.has(path)) return;
+		files.add(path);
+		const source = await readFile(path, "utf8");
+		const patterns = [
+			/\bfrom\s+["'](\.\.?\/[^"']+)["']/g
+			, /(?:^|\n)\s*import\s+["'](\.\.?\/[^"']+)["']/g
+		];
+		for(const pattern of patterns)
+		{
+			for(const match of source.matchAll(pattern))
+			{
+				const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
+				await visit(imported);
+			}
+		}
+	};
+	await visit(entry);
+	return [...files].sort();
 };
 
 const withBundles = async operation => {
-  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-universal-bundle-"));
-  try {
-    const first = join(scratch, "first");
-    const second = join(scratch, "second");
-    const options = {
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      revision,
-      sourceDateEpoch: 1786261809,
-    };
-    const firstResult = await buildUniversalReleaseBundle({ ...options, outputRoot: first });
-    const secondResult = await buildUniversalReleaseBundle({ ...options, outputRoot: second });
-    return await operation({ first, second, firstResult, secondResult });
-  } finally {
-    await rm(scratch, { recursive: true, force: true });
-  }
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-universal-bundle-"));
+	try
+	{
+		const first = join(scratch, "first");
+		const second = join(scratch, "second");
+		const options = {
+			projectRoot: process.cwd()
+			, coreRoot: "build/lean-link-spike"
+			, revision
+			, sourceDateEpoch: 1786261809
+		};
+		const firstResult = await buildUniversalReleaseBundle({ ...options, outputRoot: first });
+		const secondResult = await buildUniversalReleaseBundle({ ...options, outputRoot: second });
+		return await operation({ first, second, firstResult, secondResult });
+	} finally
+	{
+		await rm(scratch, { recursive: true, force: true });
+	}
 };
 
 test("core source boundary includes compiler inputs and excludes packaging backends", async () => {
   const boundary = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
-  const included = path => boundary.includedFiles.includes(path) ||
-    boundary.includedDirectoryPrefixes.some(prefix => path === prefix || path.startsWith(`${prefix}/`));
-  for (const required of [
-    "scripts/build-lean-link-spike.sh",
-    "poc/lean-link-spike/Alpha.lean",
-    "src/abi/value-frame.mjs",
-    "src/binding-ir/canonical.mjs",
-    "patches/lean4-4.32.2-emscripten-runtime-signatures.patch",
+  const included = path => boundary.includedFiles.includes(path)
+    || boundary.includedDirectoryPrefixes.some(prefix => path === prefix || path.startsWith(`${prefix}/`));
+  for(const required of [
+    "scripts/build-lean-link-spike.sh"
+    , "poc/lean-link-spike/Alpha.lean"
+    , "src/abi/value-frame.mjs"
+    , "src/binding-ir/canonical.mjs"
+    , "patches/lean4-4.32.2-emscripten-runtime-signatures.patch"
   ]) assert.equal(included(required), true, required);
-  for (const excluded of [
-    "src/release/backend-policy.mjs",
-    "src/release/universal-release-bundle.mjs",
-    "src/backends/javascript/generate.mjs",
-    "src/binding-ir/package-gate.mjs",
-    "scripts/build-universal-release-bundle.mjs",
-    "poc/lean-link-spike/bindings/php-native.package.json",
-    "poc/lean-link-spike/bindings/php-wasm.package.json",
-    "tests/universal-release-bundle.test.mjs",
+  for(const excluded of [
+    "src/release/backend-policy.mjs"
+    , "src/release/universal-release-bundle.mjs"
+    , "src/backends/javascript/generate.mjs"
+    , "src/binding-ir/package-gate.mjs"
+    , "scripts/build-universal-release-bundle.mjs"
+    , "poc/lean-link-spike/bindings/php-native.package.json"
+    , "poc/lean-link-spike/bindings/php-wasm.package.json"
+    , "tests/universal-release-bundle.test.mjs"
   ]) assert.equal(included(excluded), false, excluded);
 
-  for (const path of await collectModuleClosure("scripts/generate-lean-link-projection.mjs")) {
+  for(const path of await collectModuleClosure("scripts/generate-lean-link-projection.mjs"))
+{
     assert.equal(included(path), true, `core source boundary omits ${path}`);
-  }
+}
 });
 
 test("universal bundle is byte-identical across clean assembly roots", async () => withBundles(async ({ first, second, firstResult, secondResult }) => {
   assert.equal(firstResult.manifestSha256, secondResult.manifestSha256);
   assert.equal(firstResult.coreArtifactSetSha256, secondResult.coreArtifactSetSha256);
   assert.deepEqual(await listBundleFiles(first), await listBundleFiles(second));
-  for (const path of await listBundleFiles(first)) {
+  for(const path of await listBundleFiles(first))
+{
     assert.deepEqual(await readFile(join(first, path)), await readFile(join(second, path)), path);
-  }
+}
 }));
 
 test("canonical manifest inventories every release artifact with its actual bytes", async () => withBundles(async ({ first, firstResult }) => {
@@ -105,11 +117,12 @@ test("canonical manifest inventories every release artifact with its actual byte
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
   assert.equal(firstResult.artifactCount, 109);
-  for (const artifact of manifest.artifacts) {
+  for(const artifact of manifest.artifacts)
+{
     const bytes = await readFile(join(first, artifact.path));
     assert.equal(bytes.length, artifact.bytes, artifact.path);
     assert.equal(sha256(bytes), artifact.sha256, artifact.path);
-  }
+}
   assert.deepEqual(firstResult.generatedBackends, ["c", "cpp", "dotnet", "javascript", "jvm", "php", "python", "ruby", "rust", "wit"]);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/javascript/index.d.ts"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/c/include/lean_alpha.h"), true);
@@ -135,22 +148,22 @@ test("provenance and SBOM name the exact compiled core identity", async () => wi
 test("packaging policy changes cannot mutate the compiled artifact set", async () => {
   const before = await createCoreArtifactSetManifest("build/lean-link-spike");
   const plan = {
-    schemaVersion: 1,
-    backend: "npm-v2",
-    ecosystem: "npm",
-    bundle: { id: "poc/lean-alpha@0.0.0", manifestSha256: "a".repeat(64) },
-    compilerAccess: false,
-    scriptPolicy: "disabled",
-    versionSource: "canonical-manifest",
-    semanticSource: "canonical-manifest",
-    operations: ["arrange", "render-registry-metadata", "archive"],
-    commands: ["tar --create package"],
-    coreArtifacts: before.files.map(file => ({
-      sourcePath: file.path,
-      packagePath: `package/${file.path}`,
-      sourceSha256: file.sha256,
-      packageSha256: file.sha256,
-    })),
+    schemaVersion: 1
+    , backend: "npm-v2"
+    , ecosystem: "npm"
+    , bundle: { id: "poc/lean-alpha@0.0.0", manifestSha256: "a".repeat(64) }
+    , compilerAccess: false
+    , scriptPolicy: "disabled"
+    , versionSource: "canonical-manifest"
+    , semanticSource: "canonical-manifest"
+    , operations: ["arrange", "render-registry-metadata", "archive"]
+    , commands: ["tar --create package"]
+    , coreArtifacts: before.files.map(file => ({
+      sourcePath: file.path
+      , packagePath: `package/${file.path}`
+      , sourceSha256: file.sha256
+      , packageSha256: file.sha256
+    }))
   };
   assert.equal(validatePackagingBackendPlan(plan), true);
   const after = await createCoreArtifactSetManifest("build/lean-link-spike");

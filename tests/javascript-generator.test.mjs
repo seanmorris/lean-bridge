@@ -1,3 +1,9 @@
+/**
+ * Tests the javascript generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -8,25 +14,28 @@ import test from "node:test";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import {
-  JavaScriptPackageAuditError,
-  auditJavaScriptPackage,
+	JavaScriptPackageAuditError,
+	auditJavaScriptPackage,
 } from "../src/backends/javascript/package-audit.mjs";
 import { JavaScriptProjectionError } from "../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
 
 const withGeneratedPackage = async (files, operation) => {
-  const directory = await mkdtemp(join(tmpdir(), "lean-bridge-js-generator-"));
-  try {
-    for (const [relativePath, source] of Object.entries(files)) {
-      const destination = join(directory, relativePath);
-      await mkdir(join(destination, ".."), { recursive: true });
-      await writeFile(destination, source);
-    }
-    await operation(directory);
-  } finally {
-    await rm(directory, { recursive: true, force: true });
-  }
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-js-generator-"));
+	try
+	{
+		for(const [relativePath, source] of Object.entries(files))
+		{
+			const destination = join(directory, relativePath);
+			await mkdir(join(destination, ".."), { recursive: true });
+			await writeFile(destination, source);
+		}
+		await operation(directory);
+	} finally
+	{
+		await rm(directory, { recursive: true, force: true });
+	}
 };
 
 const runtimeStub = `
@@ -133,9 +142,9 @@ test("generated files are deterministic and bind to the reviewed IR hash", () =>
   const packageManifest = JSON.parse(first["package.json"]);
   assert.deepEqual(Object.keys(packageManifest.exports), ["."]);
   assert.deepEqual(packageManifest.exports["."], {
-    types: "./index.d.ts",
-    import: "./index.mjs",
-    default: "./index.mjs",
+    types: "./index.d.ts"
+    , import: "./index.mjs"
+    , default: "./index.mjs"
   });
   assert.equal(packageManifest.files.includes("internal"), true);
 });
@@ -143,10 +152,10 @@ test("generated files are deterministic and bind to the reviewed IR hash", () =>
 test("the package audit rejects raw ABI and internal subpath drift", () => {
   const files = generateJavaScriptPackage(alpha.bindingIr);
   assert.deepEqual(auditJavaScriptPackage(alpha.bindingIr, files).exports, [
-    "Box",
-    "roundTrip",
-    "withCallback",
-    "makeAdder",
+    "Box"
+    , "roundTrip"
+    , "withCallback"
+    , "makeAdder"
   ]);
 
   const rawSymbol = { ...files };
@@ -154,8 +163,8 @@ test("the package audit rejects raw ABI and internal subpath drift", () => {
   assert.throws(
     () => auditJavaScriptPackage(alpha.bindingIr, rawSymbol),
     error =>
-      error instanceof JavaScriptPackageAuditError &&
-      error.code === "public-export-drift",
+      error instanceof JavaScriptPackageAuditError
+      && error.code === "public-export-drift",
   );
 
   const rawTypes = { ...files };
@@ -163,8 +172,8 @@ test("the package audit rejects raw ABI and internal subpath drift", () => {
   assert.throws(
     () => auditJavaScriptPackage(alpha.bindingIr, rawTypes),
     error =>
-      error instanceof JavaScriptPackageAuditError &&
-      error.code === "untyped-public-api",
+      error instanceof JavaScriptPackageAuditError
+      && error.code === "untyped-public-api",
   );
 
   const rawHandle = { ...files };
@@ -172,8 +181,8 @@ test("the package audit rejects raw ABI and internal subpath drift", () => {
   assert.throws(
     () => auditJavaScriptPackage(alpha.bindingIr, rawHandle),
     error =>
-      error instanceof JavaScriptPackageAuditError &&
-      error.code === "raw-handle-leak",
+      error instanceof JavaScriptPackageAuditError
+      && error.code === "raw-handle-leak",
   );
 
   const internalExport = { ...files };
@@ -183,8 +192,8 @@ test("the package audit rejects raw ABI and internal subpath drift", () => {
   assert.throws(
     () => auditJavaScriptPackage(alpha.bindingIr, internalExport),
     error =>
-      error instanceof JavaScriptPackageAuditError &&
-      error.code === "package-export-drift",
+      error instanceof JavaScriptPackageAuditError
+      && error.code === "package-export-drift",
   );
 });
 
@@ -204,19 +213,19 @@ test("generated JavaScript executes through direct functions and classes", async
       assert.equal(box.identity(), box);
 
       const input = Object.freeze({
-        enabled: false,
-        count: 8,
-        label: "typed",
-        bytes: new Uint8Array([0, 127, 255]),
-        values: Object.freeze([1, 5, 13]),
+        enabled: false
+        , count: 8
+        , label: "typed"
+        , bytes: new Uint8Array([0, 127, 255])
+        , values: Object.freeze([1, 5, 13])
       });
       const output = module.roundTrip(input);
       assert.deepEqual(output, {
-        enabled: true,
-        count: 9,
-        label: "typed",
-        bytes: new Uint8Array([0, 127, 255]),
-        values: [1, 5, 13],
+        enabled: true
+        , count: 9
+        , label: "typed"
+        , bytes: new Uint8Array([0, 127, 255])
+        , values: [1, 5, 13]
       });
       assert.equal(output.bytes instanceof Uint8Array, true);
       assert.notEqual(output.bytes, input.bytes);
@@ -252,25 +261,25 @@ test("Promise declarations generate an ordinary async function", async () => {
       "internal/runtime.mjs": runtimeStub.replace(
         "  call(declaration, args) {",
         "  async call(declaration, args) {",
-      ),
+      )
     },
     async directory => {
       const module = await import(
         `${pathToFileURL(join(directory, "index.mjs")).href}?test=promise`
       );
       const output = await module.roundTrip({
-        enabled: false,
-        count: 8,
-        label: "async",
-        bytes: new Uint8Array([1]),
-        values: [2],
+        enabled: false
+        , count: 8
+        , label: "async"
+        , bytes: new Uint8Array([1])
+        , values: [2]
       });
       assert.deepEqual(output, {
-        enabled: true,
-        count: 9,
-        label: "async",
-        bytes: new Uint8Array([1]),
-        values: [2],
+        enabled: true
+        , count: 9
+        , label: "async"
+        , bytes: new Uint8Array([1])
+        , values: [2]
       });
     },
   );
@@ -279,37 +288,37 @@ test("Promise declarations generate an ordinary async function", async () => {
 test("variants and static methods project as native TypeScript surfaces", () => {
   const ir = clone(alpha.bindingIr);
   ir.types.push({
-    id: "bridge:Alpha.Lookup",
-    name: "Lookup",
-    kind: "variant",
-    representation: "copied",
-    mutability: "immutable",
-    typeParameters: [],
-    fields: [],
-    target: null,
-    resource: null,
-    callable: null,
-    cases: [
+    id: "bridge:Alpha.Lookup"
+    , name: "Lookup"
+    , kind: "variant"
+    , representation: "copied"
+    , mutability: "immutable"
+    , typeParameters: []
+    , fields: []
+    , target: null
+    , resource: null
+    , callable: null
+    , cases: [
       {
-        name: "Found",
-        fields: [{
-          name: "value",
-          type: { kind: "primitive", name: "uint32" },
-          mutability: "immutable",
-          documentation: { summary: "The value.", details: "" },
-        }],
-        documentation: { summary: "A hit.", details: "" },
-      },
-      {
-        name: "Missing",
-        fields: [],
-        documentation: { summary: "A miss.", details: "" },
-      },
-    ],
-    host: null,
-    documentation: { summary: "A lookup result.", details: "" },
-    source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} },
-    assurance: [],
+        name: "Found"
+        , fields: [{
+          name: "value"
+          , type: { kind: "primitive", name: "uint32" }
+          , mutability: "immutable"
+          , documentation: { summary: "The value.", details: "" }
+        }]
+        , documentation: { summary: "A hit.", details: "" }
+      }
+      , {
+        name: "Missing"
+        , fields: []
+        , documentation: { summary: "A miss.", details: "" }
+      }
+    ]
+    , host: null
+    , documentation: { summary: "A lookup result.", details: "" }
+    , source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} }
+    , assurance: []
   });
   const method = clone(ir.declarations.find(item => item.name === "roundTrip"));
   method.id = "bridge:Alpha.Box.lookup";
@@ -357,11 +366,11 @@ test("generated validators reject malformed copied values before dispatch", asyn
       const module = await import(`${pathToFileURL(join(directory, "index.mjs")).href}?test=validation`);
       assert.throws(
         () => module.roundTrip({
-          enabled: false,
-          count: -1,
-          label: "invalid",
-          bytes: new Uint8Array(),
-          values: [],
+          enabled: false
+          , count: -1
+          , label: "invalid"
+          , bytes: new Uint8Array()
+          , values: []
         }),
         /roundTrip\.payload\.count must be uint32/,
       );

@@ -1,12 +1,18 @@
+/**
+ * Tests the Lean graph lock behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  alpha,
-  beta,
-  gamma,
+	alpha,
+	beta,
+	gamma,
 } from "../poc/lean-link-spike/descriptors.mjs";
 import { readLockedGraph } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
@@ -27,7 +33,8 @@ test("one content-addressed graph drives dynamic and final-static composition", 
   assert.equal(positions.size, graph.libraries.length);
   assert.deepEqual([...positions.keys()], [...descriptors.keys()]);
 
-  for (const library of graph.libraries) {
+  for(const library of graph.libraries)
+{
     const descriptor = descriptors.get(library.id);
     assert.ok(descriptor, `missing descriptor for ${library.id}`);
     assert.equal(descriptor.capsule.id, library.id);
@@ -43,26 +50,29 @@ test("one content-addressed graph drives dynamic and final-static composition", 
       true,
     );
 
-    for (const dependency of library.dependencies) {
+    for(const dependency of library.dependencies)
+{
       assert.ok(
         positions.get(dependency.id) < positions.get(library.id),
         `${dependency.id} must precede ${library.id}`,
       );
-    }
+}
 
-    for (const input of [library.capsule, library.source, library.shim, library.bindingIr].filter(Boolean)) {
+    for(const input of [library.capsule, library.source, library.shim, library.bindingIr].filter(Boolean))
+{
       const contents = await readFile(`poc/lean-link-spike/${input.path}`);
       assert.equal(digest(contents), input.sha256, input.path);
-    }
-    if (library.bindingIr) {
+}
+    if(library.bindingIr)
+{
       const bindingIr = JSON.parse(
         await readFile(`poc/lean-link-spike/${library.bindingIr.path}`, "utf8"),
       );
       assert.equal(hashBindingIr(bindingIr), library.bindingIr.semanticSha256);
       assert.equal(descriptor.bindingIrSha256, library.bindingIr.semanticSha256);
       assert.equal(descriptor.capsule.fragments.bindings, library.bindingIr.path);
-    }
-  }
+}
+}
 });
 test("startup, lazy, and final-static profiles resolve the same locked order", async () => {
   const profiles = await Promise.all(
@@ -70,13 +80,14 @@ test("startup, lazy, and final-static profiles resolve the same locked order", a
       readLockedGraph({ lockPath, profile }),
     ),
   );
-  for (const graph of profiles) {
+  for(const graph of profiles)
+{
     assert.deepEqual(graph.order, [
-      "poc/lean-alpha@0.0.0",
-      "poc/lean-beta@0.0.0",
-      "poc/lean-gamma@0.0.0",
+      "poc/lean-alpha@0.0.0"
+      , "poc/lean-beta@0.0.0"
+      , "poc/lean-gamma@0.0.0"
     ]);
-  }
+}
 
   const browserEvidence = await Promise.all(
     ["side-startup", "side-lazy", "final-static"].map(profile =>

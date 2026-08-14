@@ -1,20 +1,26 @@
+/**
+ * Tests the JavaScript pending operations behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import createLazyModule from "../../../build/lean-link-spike/lazy/main.mjs";
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
-  __bridgeTest,
-  createLibraryLoader,
+	__bridgeTest,
+	createLibraryLoader,
 } from "../../../poc/link-spike/loader.mjs";
 import { compilePendingOperationV1 } from "../../../src/abi/pending-operation.mjs";
 
 const pendingPlan = () => {
-  const ir = structuredClone(alpha.bindingIr);
-  const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
-  declaration.resultMode = "promise";
-  declaration.effects.push("async");
-  return compilePendingOperationV1(ir, declaration.id);
+	const ir = structuredClone(alpha.bindingIr);
+	const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+	declaration.resultMode = "promise";
+	declaration.effects.push("async");
+	return compilePendingOperationV1(ir, declaration.id);
 };
 
 test("one runtime owns one pending-operation domain", async () => {

@@ -1,3 +1,9 @@
+/**
+ * Tests the binding semantic parity behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -11,59 +17,60 @@ import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { generatePythonBindingPackage } from "../src/backends/python/generate.mjs";
 import {
-  BindingSemanticParityError,
-  compileBindingSemanticContract,
-  compileCrossLanguageSemanticParity,
-  hashBindingSemanticContract,
+	BindingSemanticParityError,
+	compileBindingSemanticContract,
+	compileCrossLanguageSemanticParity,
+	hashBindingSemanticContract,
 } from "../src/binding-ir/semantic-parity.mjs";
 
 const run = promisify(execFile);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(join(destination, ".."), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(join(destination, ".."), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 const advancedFixture = () => {
-  const ir = structuredClone(alpha.bindingIr);
-  const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
-  const asynchronous = structuredClone(declaration);
-  asynchronous.id = "bridge:Alpha.roundTripAsync";
-  asynchronous.name = "roundTripAsync";
-  asynchronous.overloadKey = "roundTripAsync(Payload)";
-  asynchronous.resultMode = "promise";
-  asynchronous.effects.push("async");
-  asynchronous.documentation.summary = "Return the copied payload through an asynchronous host call.";
-  asynchronous.source.producer = "bridge";
-  asynchronous.source.declaration = "Alpha.roundTripAsync";
-  asynchronous.assurance = [];
-  ir.declarations.push(asynchronous);
+	const ir = structuredClone(alpha.bindingIr);
+	const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");
+	const asynchronous = structuredClone(declaration);
+	asynchronous.id = "bridge:Alpha.roundTripAsync";
+	asynchronous.name = "roundTripAsync";
+	asynchronous.overloadKey = "roundTripAsync(Payload)";
+	asynchronous.resultMode = "promise";
+	asynchronous.effects.push("async");
+	asynchronous.documentation.summary = "Return the copied payload through an asynchronous host call.";
+	asynchronous.source.producer = "bridge";
+	asynchronous.source.declaration = "Alpha.roundTripAsync";
+	asynchronous.assurance = [];
+	ir.declarations.push(asynchronous);
 
-  declaration.name = "echo";
-  declaration.overloadKey = "echo<T>(T)";
-  declaration.typeParameters = [{ id: "T", representation: "copied", constraints: [] }];
-  declaration.parameters = [{
-    name: "value",
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
-  }];
-  declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-  };
-  declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
-    { id: "string", type: { kind: "primitive", name: "string" } },
-  ];
-  return ir;
+	declaration.name = "echo";
+	declaration.overloadKey = "echo<T>(T)";
+	declaration.typeParameters = [{ id: "T", representation: "copied", constraints: [] }];
+	declaration.parameters = [{
+		name: "value"
+		, type: { kind: "parameter", id: "T" }
+		, ownership: "copy"
+		, lifetime: null
+		, mutability: "immutable"
+		, optional: false
+		, default: null
+	}];
+	declaration.result = {
+		type: { kind: "parameter", id: "T" }
+		, ownership: "copy"
+		, lifetime: null
+	};
+	declaration.source.extensions["lean-wasm.org/specializations"] = [
+		{ id: "uint32", type: { kind: "primitive", name: "uint32" } }
+		, { id: "string", type: { kind: "primitive", name: "string" } }
+	];
+	return ir;
 };
 
 test("one semantic contract resolves callable, ownership, error, documentation, and assurance facts", () => {
@@ -88,34 +95,34 @@ test("one semantic contract resolves callable, ownership, error, documentation, 
 test("all generated host packages bind to one semantic contract", () => {
   const report = compileCrossLanguageSemanticParity(alpha.bindingIr);
   assert.deepEqual(report.packages.map(item => item.backend), [
-    "javascript",
-    "php",
-    "python",
-    "c",
-    "cpp",
-    "rust",
-    "dotnet",
-    "jvm",
-    "ruby",
+    "javascript"
+    , "php"
+    , "python"
+    , "c"
+    , "cpp"
+    , "rust"
+    , "dotnet"
+    , "jvm"
+    , "ruby"
   ]);
   assert.equal(new Set(report.packages.map(item => item.bindingIrSha256)).size, 1);
   assert.equal(new Set(report.packages.map(item => item.semanticContractSha256)).size, 1);
   assert.deepEqual(report.packages.map(item => item.projection.delivery), [
-    { value: "value" },
-    { value: "value" },
-    { value: "value" },
-    { value: "value and output parameter" },
-    { value: "value" },
-    { value: "value" },
-    { value: "value" },
-    { value: "value" },
-    { value: "value" },
+    { value: "value" }
+    , { value: "value" }
+    , { value: "value" }
+    , { value: "value and output parameter" }
+    , { value: "value" }
+    , { value: "value" }
+    , { value: "value" }
+    , { value: "value" }
+    , { value: "value" }
   ]);
 });
 
 test("JavaScript and Python preserve finite generics and asynchronous delivery from the same IR", () => {
   const report = compileCrossLanguageSemanticParity(advancedFixture(), {
-    backends: ["javascript", "python"],
+    backends: ["javascript", "python"]
   });
   const generic = report.contract.declarations.find(item => item.name === "echo");
   const asynchronous = report.contract.declarations.find(item => item.name === "roundTripAsync");
@@ -123,8 +130,8 @@ test("JavaScript and Python preserve finite generics and asynchronous delivery f
   assert.deepEqual(generic.genericInstantiations.map(item => item.id), ["uint32", "string"]);
   assert.equal(asynchronous.callable.resultMode, "promise");
   assert.deepEqual(report.packages.map(item => item.projection.delivery.promise), [
-    "Promise",
-    "Awaitable",
+    "Promise"
+    , "Awaitable"
   ]);
   assert.equal(report.packages[0].exports.includes("echo"), true);
   assert.equal(report.packages[1].exports.includes("echo"), true);
@@ -132,7 +139,8 @@ test("JavaScript and Python preserve finite generics and asynchronous delivery f
 
 test("JavaScript and Python execute the same identity, value, callback, and cleanup vector", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-semantic-parity-"));
-  try {
+  try
+{
     const jsDirectory = join(directory, "javascript");
     const pythonDirectory = join(directory, "python");
     await writePackage(jsDirectory, generateJavaScriptPackage(alpha.bindingIr));
@@ -187,25 +195,25 @@ export const runtime = Object.freeze({
     const { counters } = await import(`${pathToFileURL(join(jsDirectory, "internal/runtime.mjs")).href}`);
     const jsBox = new jsModule.Box(41);
     const jsPayload = jsModule.roundTrip({
-      enabled: false,
-      count: 8,
-      label: "typed",
-      bytes: new Uint8Array([0, 127, 255]),
-      values: [1, 5, 13],
+      enabled: false
+      , count: 8
+      , label: "typed"
+      , bytes: new Uint8Array([0, 127, 255])
+      , values: [1, 5, 13]
     });
     const jsAdder = jsModule.makeAdder(2);
     const jsTrace = {
-      read: jsBox.read(),
-      identity: jsBox.identity() === jsBox,
-      payload: {
-        enabled: jsPayload.enabled,
-        count: jsPayload.count,
-        label: jsPayload.label,
-        bytes: [...jsPayload.bytes],
-        values: [...jsPayload.values],
-      },
-      callback: jsModule.withCallback(40, value => value),
-      closure: jsAdder(40),
+      read: jsBox.read()
+      , identity: jsBox.identity() === jsBox
+      , payload: {
+        enabled: jsPayload.enabled
+        , count: jsPayload.count
+        , label: jsPayload.label
+        , bytes: [...jsPayload.bytes]
+        , values: [...jsPayload.values]
+      }
+      , callback: jsModule.withCallback(40, value => value)
+      , closure: jsAdder(40)
     };
     jsAdder.dispose();
     jsBox.dispose();
@@ -260,22 +268,23 @@ trace["cleanup"] = {
 print(json.dumps(trace, sort_keys=True))
 `);
     const { stdout } = await run("python3", ["-B", "consumer.py"], {
-      cwd: pythonDirectory,
-      env: { ...process.env, PYTHONPATH: pythonDirectory },
+      cwd: pythonDirectory
+      , env: { ...process.env, PYTHONPATH: pythonDirectory }
     });
     const pythonTrace = JSON.parse(stdout);
     assert.deepEqual(jsTrace, pythonTrace);
     assert.deepEqual(jsTrace.cleanup, { boxDisposals: 1, transformDisposals: 1 });
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("the semantic parity CLI emits the complete machine-readable report", async () => {
   const { stdout } = await run("node", [
-    "scripts/binding-semantic-parity.mjs",
-    "poc/lean-link-spike/bindings/alpha.binding-ir.json",
-    "javascript,python",
+    "scripts/binding-semantic-parity.mjs"
+    , "poc/lean-link-spike/bindings/alpha.binding-ir.json"
+    , "javascript,python"
   ]);
   const report = JSON.parse(stdout);
   assert.equal(report.component, alpha.id);

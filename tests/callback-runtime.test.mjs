@@ -1,19 +1,25 @@
+/**
+ * Tests the callback runtime behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { CallbackRegistry } from "../src/runtime/callbacks.mjs";
 
 const plan = (overrides = {}) => ({
-  kind: "callback-signature-v1",
-  abiVersion: 1,
-  signatureId: "callback-v1:test",
-  invocation: "many",
-  reentry: {
-    policy: "same-agent",
-    maxDepth: 64,
-  },
-  selfDisposal: "reject",
-  ...overrides,
+	kind: "callback-signature-v1"
+	, abiVersion: 1
+	, signatureId: "callback-v1:test"
+	, invocation: "many"
+	, reentry: {
+		policy: "same-agent"
+		, maxDepth: 64
+	}
+	, selfDisposal: "reject",
+	...overrides
 });
 
 test("callbacks receive canonical generation-safe handles by signature", () => {
@@ -86,10 +92,10 @@ test("native Lean closures share the nested frame stack with host callbacks", ()
   assert.deepEqual(
     events.map(event => [event.event, event.direction, event.depth]),
     [
-      ["enter", "host", 1],
-      ["enter", "lean", 2],
-      ["leave", "lean", 2],
-      ["leave", "host", 1],
+      ["enter", "host", 1]
+      , ["enter", "lean", 2]
+      , ["leave", "lean", 2]
+      , ["leave", "host", 1]
     ],
   );
   assert.equal(callbacks.snapshot().activeFrames, 0);
@@ -98,7 +104,7 @@ test("native Lean closures share the nested frame stack with host callbacks", ()
 test("an active non-reentrant callback rejects a nested native call", () => {
   const callbacks = new CallbackRegistry();
   const signature = plan({
-    reentry: { policy: "disallowed", maxDepth: 64 },
+    reentry: { policy: "disallowed", maxDepth: 64 }
   });
   const token = callbacks.retain(() => callbacks.beforeNativeCall(), signature);
 
@@ -112,7 +118,7 @@ test("an active non-reentrant callback rejects a nested native call", () => {
 test("depth overflow rejects before entering another callback", () => {
   const callbacks = new CallbackRegistry();
   const signature = plan({
-    reentry: { policy: "same-agent", maxDepth: 2 },
+    reentry: { policy: "same-agent", maxDepth: 2 }
   });
   let token;
   const recursive = depth =>
@@ -122,8 +128,8 @@ test("depth overflow rejects before entering another callback", () => {
   assert.throws(
     () => callbacks.invoke(token, signature, [2]),
     error =>
-      error.code === "callback-depth-exceeded" &&
-      error.details.maxDepth === 2,
+      error.code === "callback-depth-exceeded"
+      && error.details.maxDepth === 2,
   );
   assert.equal(callbacks.snapshot().activeFrames, 0);
 });
@@ -184,7 +190,7 @@ test("once and non-reentrant callback policies are enforced", () => {
 
   const nestedRegistry = new CallbackRegistry();
   const nestedPlan = plan({
-    reentry: { policy: "disallowed", maxDepth: 64 },
+    reentry: { policy: "disallowed", maxDepth: 64 }
   });
   const innerToken = nestedRegistry.retain(() => 1, nestedPlan);
   const outerToken = nestedRegistry.retain(

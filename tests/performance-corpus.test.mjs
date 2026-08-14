@@ -1,12 +1,18 @@
+/**
+ * Tests the performance corpus behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  PerformanceCorpusError,
-  hashPerformanceCorpus,
-  runPerformanceCorpusVectors,
-  validatePerformanceCorpus,
+	PerformanceCorpusError,
+	hashPerformanceCorpus,
+	runPerformanceCorpusVectors,
+	validatePerformanceCorpus,
 } from "../src/performance/corpus.mjs";
 
 const corpus = JSON.parse(await readFile("poc/performance/corpus.v1.json", "utf8"));
@@ -37,10 +43,10 @@ test("all frozen correctness, mutation, handoff, and disposal vectors execute", 
   assert.deepEqual(
     report.vectors.map(vector => `${vector.dataset}/${vector.vector}`),
     [
-      "duplicates-2d/lower-bound-duplicate-order",
-      "duplicates-2d/resource-mutation-handoff-disposal",
-      "ordered-4d/fixed-dimension-query",
-      "ordered-8d/dimension-eight-query",
+      "duplicates-2d/lower-bound-duplicate-order"
+      , "duplicates-2d/resource-mutation-handoff-disposal"
+      , "ordered-4d/fixed-dimension-query"
+      , "ordered-8d/dimension-eight-query"
     ],
   );
   const lifecycle = report.vectors[1].observations;
@@ -52,17 +58,21 @@ test("all frozen correctness, mutation, handoff, and disposal vectors execute", 
 
 test("complexity is either evidence-scoped or explicitly unknown", () => {
   const evidence = new Map(corpus.evidence.map(item => [item.id, item]));
-  for (const interface_ of corpus.interfaces) {
-    for (const metric of Object.values(interface_.complexity)) {
-      if (metric.state === "unknown") {
+  for(const interface_ of corpus.interfaces)
+{
+    for(const metric of Object.values(interface_.complexity))
+{
+      if(metric.state === "unknown")
+{
         assert.equal(metric.bound, null);
         assert.equal(metric.evidence, null);
-      } else {
+} else
+{
         assert.equal(typeof metric.bound, "string");
         assert.ok(evidence.has(metric.evidence));
-      }
-    }
-  }
+}
+}
+}
   assert.equal(evidence.get("evidence:lower-bound-control-flow").state, "asserted");
   assert.equal(evidence.get("evidence:lower-bound-control-flow").theorem, null);
 
@@ -76,8 +86,8 @@ test("complexity is either evidence-scoped or explicitly unknown", () => {
 
 test("the contract rejects semantic and correctness-vector drift", () => {
   const unsorted = clone(corpus);
-  [unsorted.datasets[0].initialPoints[0], unsorted.datasets[0].initialPoints[1]] =
-    [unsorted.datasets[0].initialPoints[1], unsorted.datasets[0].initialPoints[0]];
+  [unsorted.datasets[0].initialPoints[0], unsorted.datasets[0].initialPoints[1]]
+    = [unsorted.datasets[0].initialPoints[1], unsorted.datasets[0].initialPoints[0]];
   assert.throws(
     () => validatePerformanceCorpus(unsorted),
     error => error instanceof PerformanceCorpusError && error.code === "unsorted-points",

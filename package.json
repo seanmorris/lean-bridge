@@ -127,19 +127,28 @@
     "test:consumer:native": "nix --extra-experimental-features 'nix-command flakes' build .#universal-release-bundle --out-link build/consumer-universal-bundle && nix --extra-experimental-features 'nix-command flakes' develop . --command node scripts/test-native-consumers.mjs --bundle build/consumer-universal-bundle",
     "test:consumer:wasi": "nix --extra-experimental-features 'nix-command flakes' build .#universal-release-bundle --out-link build/consumer-universal-bundle && nix --extra-experimental-features 'nix-command flakes' develop . --command node scripts/test-wasi-consumer.mjs --bundle build/consumer-universal-bundle",
     "acceptance:plain-project-package": "node scripts/check-plain-project-package.mjs",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc -p jsconfig.json --pretty false",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
-    "check": "npm run env:check && npm test"
+    "check": "npm run env:check && npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
     "weaker": "0.0.10"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@rollup/plugin-json": "6.1.0",
+    "@types/node": "22.20.1",
     "@web/rollup-plugin-import-meta-assets": "3.0.0",
+    "eslint": "10.8.1",
+    "eslint-plugin-jsdoc": "64.1.0",
+    "globals": "17.11.0",
     "playwright": "1.62.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "rollup": "4.62.4",
+    "sm-no-saccade-style": "0.1.6",
     "typescript": "5.9.3",
     "vite": "8.2.1",
     "webpack": "5.109.2"

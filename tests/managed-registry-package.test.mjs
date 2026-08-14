@@ -1,3 +1,9 @@
+/**
+ * Tests the managed registry package behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -17,26 +23,30 @@ const native = process.env.LEAN_BRIDGE_NATIVE_ARTIFACTS ?? "build/native-ffi-art
 
 test("managed registry packages fail closed without compiled managed artifacts", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-managed-package-closed-"));
-  try {
+  try
+{
     const bundle = join(scratch, "bundle");
     await buildUniversalReleaseBundle({ projectRoot: process.cwd(), coreRoot: "build/lean-link-spike", outputRoot: bundle, revision, sourceDateEpoch: 1786261809 });
-    for (const [ecosystem, build] of [["nuget", buildNugetPackage], ["maven", buildMavenPackage], ["rubygems", buildRubyGemsPackage]]) {
+    for(const [ecosystem, build] of [["nuget", buildNugetPackage], ["maven", buildMavenPackage], ["rubygems", buildRubyGemsPackage]])
+{
       await assert.rejects(build({ bundleRoot: bundle, outputRoot: join(scratch, ecosystem) }), error => error.code === "package-ineligible");
-    }
-  } finally {
+}
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("eligible NuGet, Maven, and RubyGem projections are byte-identical", { skip: !managed }, async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-managed-package-"));
-  try {
+  try
+{
     const bundle = join(scratch, "bundle");
     await buildUniversalReleaseBundle({ projectRoot: process.cwd(), coreRoot: "build/lean-link-spike", nativeRoot: native, managedRoot: managed, outputRoot: bundle, revision, sourceDateEpoch: 1786261809 });
-    for (const [ecosystem, build, archive] of [
-      ["nuget", buildNugetPackage, result => result.archive],
-      ["maven", buildMavenPackage, result => result.jar],
-      ["rubygems", buildRubyGemsPackage, result => result.archive],
+    for(const [ecosystem, build, archive] of [
+      ["nuget", buildNugetPackage, result => result.archive]
+      , ["maven", buildMavenPackage, result => result.jar]
+      , ["rubygems", buildRubyGemsPackage, result => result.archive]
     ]) {
       const first = await build({ bundleRoot: bundle, outputRoot: join(scratch, `${ecosystem}-first`) });
       const second = await build({ bundleRoot: bundle, outputRoot: join(scratch, `${ecosystem}-second`) });
@@ -44,9 +54,10 @@ test("eligible NuGet, Maven, and RubyGem projections are byte-identical", { skip
       assert.ok(first.coreArtifacts.length >= 2, ecosystem);
       assert.ok(first.coreArtifacts.every(item => item.sourceSha256 === item.packageSha256), ecosystem);
     }
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("managed compiler environment is either complete or absent", () => {

@@ -1,40 +1,46 @@
+/**
+ * Tests the PHP projection behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PhpProjectionError,
-  assertPhpTransportSupported,
-  compilePhpProjection,
-  compilePhpTransportManifest,
+	PhpProjectionError,
+	assertPhpTransportSupported,
+	compilePhpProjection,
+	compilePhpTransportManifest,
 } from "../src/backends/php/projection.mjs";
 
 const clone = value => structuredClone(value);
 
 const deliveryFixture = () => {
-  const ir = clone(alpha.bindingIr);
-  const source = ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
-  const promise = clone(source);
-  promise.id = "bridge:Alpha.roundTripAsync";
-  promise.name = "roundTripAsync";
-  promise.overloadKey = "roundTripAsync(Payload)";
-  promise.resultMode = "promise";
-  promise.effects.push("async");
-  promise.assurance = [];
-  promise.source.producer = "bridge";
-  promise.source.declaration = "Alpha.roundTripAsync";
+	const ir = clone(alpha.bindingIr);
+	const source = ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
+	const promise = clone(source);
+	promise.id = "bridge:Alpha.roundTripAsync";
+	promise.name = "roundTripAsync";
+	promise.overloadKey = "roundTripAsync(Payload)";
+	promise.resultMode = "promise";
+	promise.effects.push("async");
+	promise.assurance = [];
+	promise.source.producer = "bridge";
+	promise.source.declaration = "Alpha.roundTripAsync";
 
-  const iterator = clone(source);
-  iterator.id = "bridge:Alpha.payloads";
-  iterator.name = "payloads";
-  iterator.overloadKey = "payloads(Payload)";
-  iterator.resultMode = "iterator";
-  iterator.assurance = [];
-  iterator.source.producer = "bridge";
-  iterator.source.declaration = "Alpha.payloads";
+	const iterator = clone(source);
+	iterator.id = "bridge:Alpha.payloads";
+	iterator.name = "payloads";
+	iterator.overloadKey = "payloads(Payload)";
+	iterator.resultMode = "iterator";
+	iterator.assurance = [];
+	iterator.source.producer = "bridge";
+	iterator.source.declaration = "Alpha.payloads";
 
-  ir.declarations.push(promise, iterator);
-  return ir;
+	ir.declarations.push(promise, iterator);
+	return ir;
 };
 
 test("PHP projection defines one immutable surface for both transports", () => {
@@ -47,25 +53,25 @@ test("PHP projection defines one immutable surface for both transports", () => {
   assert.equal(projection.identity.phpCache, "identity to WeakReference<object>");
 
   assert.deepEqual(projection.operations.map(operation => operation.transportMethod), [
-    "leanAlphaBox",
-    "leanAlphaBoxRead",
-    "bridgeAlphaBoxIdentity",
-    "leanAlphaRoundTrip",
-    "leanAlphaWithCallback",
-    "leanAlphaMakeAdder",
+    "leanAlphaBox"
+    , "leanAlphaBoxRead"
+    , "bridgeAlphaBoxIdentity"
+    , "leanAlphaRoundTrip"
+    , "leanAlphaWithCallback"
+    , "leanAlphaMakeAdder"
   ]);
   assert.deepEqual(projection.lifecycle.map(operation => operation.transportMethod), [
-    "boxClose",
-    "transformCall",
-    "transformClose",
+    "boxClose"
+    , "transformCall"
+    , "transformClose"
   ]);
   assert.equal(
     projection.lifecycle.find(operation => operation.kind === "resource-close").failure.unexpected,
     "poison-runtime",
   );
   assert.equal(new Set([
-    ...projection.operations.map(operation => operation.transportMethod),
-    ...projection.lifecycle.map(operation => operation.transportMethod),
+    ...projection.operations.map(operation => operation.transportMethod)
+    , ...projection.lifecycle.map(operation => operation.transportMethod)
   ]).size, projection.operations.length + projection.lifecycle.length);
 });
 
@@ -75,16 +81,16 @@ test("PHP projection preserves copied primitives as typed values", () => {
   assert.equal(payload.projection, "value-object");
   assert.equal(payload.readonly, true);
   assert.deepEqual(payload.fields.map(field => [field.name, field.type.phpType]), [
-    ["enabled", "bool"],
-    ["count", "int"],
-    ["label", "string"],
-    ["bytes", "\\LeanAlpha\\Bytes"],
-    ["values", "array"],
+    ["enabled", "bool"]
+    , ["count", "int"]
+    , ["label", "string"]
+    , ["bytes", "\\LeanAlpha\\Bytes"]
+    , ["values", "array"]
   ]);
   assert.deepEqual(payload.fields.find(field => field.name === "count").type.validation, {
-    kind: "integer-range",
-    minimum: 0,
-    maximum: 0xffffffff,
+    kind: "integer-range"
+    , minimum: 0
+    , maximum: 0xffffffff
   });
   assert.equal(
     payload.fields.find(field => field.name === "values").type.phpDocType,
@@ -116,16 +122,16 @@ test("PHP resources, callbacks, errors, and delivery use native PHP concepts", (
   assert.equal(asynchronous.delivery.phpType, "\\LeanAlpha\\Awaitable");
   assert.equal(iterator.delivery.phpType, "\\Traversable");
   assert.deepEqual(projection.errors.map(error => error.fqcn), [
-    "LeanAlpha\\DisposedResource",
-    "LeanAlpha\\CallbackThrew",
+    "LeanAlpha\\DisposedResource"
+    , "LeanAlpha\\CallbackThrew"
   ]);
 });
 
 test("transport capability gaps are explicit and block package generation", () => {
   const projection = compilePhpProjection(alpha.bindingIr);
   const incomplete = compilePhpTransportManifest(projection, {
-    id: "php-wasm-v1",
-    capabilities: ["php-8.2-v1", "shared-runtime-v1"],
+    id: "php-wasm-v1"
+    , capabilities: ["php-8.2-v1", "shared-runtime-v1"]
   });
   assert.equal(incomplete.supported, false);
   assert.equal(incomplete.capabilityGaps.every(gap => gap.blocking), true);
@@ -136,8 +142,8 @@ test("transport capability gaps are explicit and block package generation", () =
   );
 
   const complete = compilePhpTransportManifest(projection, {
-    id: "native-zend-v1",
-    capabilities: projection.requiredCapabilities,
+    id: "native-zend-v1"
+    , capabilities: projection.requiredCapabilities
   });
   assert.equal(complete.supported, true);
   assert.deepEqual(complete.capabilityGaps, []);

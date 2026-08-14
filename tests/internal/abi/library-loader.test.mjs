@@ -1,65 +1,77 @@
+/**
+ * Tests the library loader behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
 import { alpha as leanAlpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
-  __bridgeTest,
-  createLibraryLoader,
+	__bridgeTest,
+	createLibraryLoader,
 } from "../../../poc/link-spike/loader.mjs";
 import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const descriptor = ({
-  id,
-  dependencies = [],
-  bindings = [],
-  bindingIr,
-  bindingIrSha256,
-  integrity,
+	id
+	, dependencies = []
+	, bindings = []
+	, bindingIr
+	, bindingIrSha256
+	, integrity
 }) =>
-  Object.freeze({
-    id: `poc/${id}@0.0.0`,
-    buildHash: `${id}-hash`,
-    dependencies,
-    integrity,
-    bindingIr,
-    bindingIrSha256,
-    bindings: Object.freeze(bindings.map(binding => Object.freeze(binding))),
-    sideModule: new URL(`file:///artifacts/${id}.so.wasm`),
-  });
+	Object.freeze({
+		id: `poc/${id}@0.0.0`
+		, buildHash: `${id}-hash`
+		, dependencies
+		, integrity
+		, bindingIr
+		, bindingIrSha256
+		, bindings: Object.freeze(bindings.map(binding => Object.freeze(binding)))
+		, sideModule: new URL(`file:///artifacts/${id}.so.wasm`)
+	});
 
 test("load returns one boring native API for the minimum dependency graph", async () => {
   const linkEvents = [];
   const linkerHandle = Object.freeze({ privateLinkerHandle: true });
   const module = {
-    _bridge_call_alpha: value => value + 100,
-    _bridge_call_beta: value => value + 1100,
-    async loadDynamicLibrary(path) {
+    _bridge_call_alpha: value => value + 100
+    , _bridge_call_beta: value => value + 1100
+    , loadDynamicLibrary:
+      /**
+       * Records or simulates one dynamic-library load so the test can observe dependency order, caching, and failure propagation.
+       *
+       * @param path - Logical or filesystem path used to locate the input and anchor precise validation diagnostics.
+       */
+      async function(path) {
       linkEvents.push(path);
       await Promise.resolve();
       return linkerHandle;
-    },
+      }
   };
 
   const alpha = descriptor({
-    id: "alpha",
-    bindings: [
-      { kind: "function", name: "add", symbol: "_bridge_call_alpha" },
-    ],
+    id: "alpha"
+    , bindings: [
+      { kind: "function", name: "add", symbol: "_bridge_call_alpha" }
+    ]
   });
   const beta = descriptor({
-    id: "beta",
-    dependencies: [alpha],
-    bindings: [
-      { kind: "function", name: "chain", symbol: "_bridge_call_beta" },
-    ],
+    id: "beta"
+    , dependencies: [alpha]
+    , bindings: [
+      { kind: "function", name: "chain", symbol: "_bridge_call_beta" }
+    ]
   });
   descriptor({ id: "unrelated" });
 
   const libraries = createLibraryLoader(module, { libraries: [beta] });
   const [first, concurrent] = await Promise.all([
-    libraries.load("beta"),
-    libraries.load("beta"),
+    libraries.load("beta")
+    , libraries.load("beta")
   ]);
 
   assert.equal(first, concurrent);
@@ -77,14 +89,18 @@ test("load returns one boring native API for the minimum dependency graph", asyn
 
 test("load rejects underscore-prefixed public binding names", async () => {
   const module = {
-    _bridge_bad: () => 0,
-    async loadDynamicLibrary() {},
+    _bridge_bad: () => 0
+    , loadDynamicLibrary:
+      /**
+       * Records or simulates one dynamic-library load so the test can observe dependency order, caching, and failure propagation.
+       */
+      async function() {}
   };
   const invalid = descriptor({
-    id: "invalid",
-    bindings: [
-      { kind: "function", name: "_bad", symbol: "_bridge_bad" },
-    ],
+    id: "invalid"
+    , bindings: [
+      { kind: "function", name: "_bad", symbol: "_bridge_bad" }
+    ]
   });
 
   await assert.rejects(
@@ -102,78 +118,82 @@ test("native resource classes defer initialization and hide numeric handles", as
     _bridge_initialize: () => {
       initializationRuns += 1;
       return 1;
-    },
-    _bridge_make_box: value => {
+    }
+    , _bridge_make_box: value => {
       boxValue = value;
       return privateToken;
-    },
-    _bridge_read_box: () => boxValue,
-    _bridge_release: handle => {
+    }
+    , _bridge_read_box: () => boxValue
+    , _bridge_release: handle => {
       releasedHandle = handle;
-    },
-    async loadDynamicLibrary() {},
+    }
+    , loadDynamicLibrary:
+      /**
+       * Records or simulates one dynamic-library load so the test can observe dependency order, caching, and failure propagation.
+       */
+      async function() {}
   };
   const readCall = {
-    declarationId: "test:Box.read",
-    name: "read",
-    kind: "method",
-    symbol: "_bridge_read_box",
-    receiver: {
-      typeId: "test:Box",
-      ownership: "borrow",
-      lifetime: { scope: "call", anchor: null },
-    },
-    result: { transport: "copy", ownership: "copy", lifetime: null },
-    resultMode: "value",
+    declarationId: "test:Box.read"
+    , name: "read"
+    , kind: "method"
+    , symbol: "_bridge_read_box"
+    , receiver: {
+      typeId: "test:Box"
+      , ownership: "borrow"
+      , lifetime: { scope: "call", anchor: null }
+    }
+    , result: { transport: "copy", ownership: "copy", lifetime: null }
+    , resultMode: "value"
   };
   const lifecycle = {
-    kind: "resource-lifecycle-v1",
-    abiVersion: 1,
-    typeId: "test:Box",
-    initialize: "_bridge_initialize",
-    handle: { side: "lean", kind: 1 },
-    identity: {
-      projection: "canonical-wrapper",
-      cache: "weak-per-runtime-token",
-    },
-    disposal: {
-      policy: "required",
-      explicit: true,
-      runtimeShutdown: true,
-      fallback: "none",
-      cycles: "no-back-edges",
-      symbol: "_bridge_release",
-    },
-    constructor: {
-      declarationId: "test:Box.make",
-      symbol: "_bridge_make_box",
-      result: {
-        typeId: "test:Box",
-        ownership: "lease",
-        lifetime: { scope: "explicit", anchor: null },
-      },
-      resultMode: "value",
-    },
-    methods: [readCall],
+    kind: "resource-lifecycle-v1"
+    , abiVersion: 1
+    , typeId: "test:Box"
+    , initialize: "_bridge_initialize"
+    , handle: { side: "lean", kind: 1 }
+    , identity: {
+      projection: "canonical-wrapper"
+      , cache: "weak-per-runtime-token"
+    }
+    , disposal: {
+      policy: "required"
+      , explicit: true
+      , runtimeShutdown: true
+      , fallback: "none"
+      , cycles: "no-back-edges"
+      , symbol: "_bridge_release"
+    }
+    , constructor: {
+      declarationId: "test:Box.make"
+      , symbol: "_bridge_make_box"
+      , result: {
+        typeId: "test:Box"
+        , ownership: "lease"
+        , lifetime: { scope: "explicit", anchor: null }
+      }
+      , resultMode: "value"
+    }
+    , methods: [readCall]
   };
   const boxes = descriptor({
-    id: "boxes",
-    bindings: [
+    id: "boxes"
+    , bindings: [
       {
-        kind: "class",
-        name: "Box",
-        typeId: "test:Box",
-        lifecycle,
-        methods: [
+        kind: "class"
+        , name: "Box"
+        , typeId: "test:Box"
+        , lifecycle
+        , methods: [
           {
-            name: "read",
-            declarationId: "test:Box.read",
-            symbol: "_bridge_read_box",
-            call: readCall,
-          },
-        ],
-      },
-    ],
+            name: "read"
+            , declarationId: "test:Box.read"
+            , symbol: "_bridge_read_box"
+            , call: readCall
+          }
+        ]
+      }
+    ]
   });
 
   const api = await createLibraryLoader(module).load(boxes);
@@ -197,16 +217,20 @@ test("artifact integrity is checked before a side module is linked", async () =>
   const expected = createHash("sha256").update(bytes).digest("hex");
   const events = [];
   const module = {
-    async loadDynamicLibrary() {
+    loadDynamicLibrary:
+      /**
+       * Records or simulates one dynamic-library load so the test can observe dependency order, caching, and failure propagation.
+       */
+      async function() {
       events.push("linked");
-    },
+      }
   };
   const library = descriptor({ id: "integrity", integrity: expected });
   const loader = createLibraryLoader(module, {
     readArtifact: async () => {
       events.push("verified");
       return bytes;
-    },
+    }
   });
 
   await loader.load(library);
@@ -229,19 +253,19 @@ test("generated Promise bindings use the shared pending-operation domain", async
   declaration.effects.push("async");
   const privateAbi = structuredClone(leanAlpha.privateAbi);
   privateAbi.declarations[declaration.id].adapter = {
-    kind: "pending-operation-v1",
-    abiVersion: 1,
-    cancel: "_bridge_pending_cancel",
+    kind: "pending-operation-v1"
+    , abiVersion: 1
+    , cancel: "_bridge_pending_cancel"
   };
   const projection = compileJavaScriptProjection(bindingIr, privateAbi);
   const binding = projection.bindings.find(item => item.declarationId === declaration.id);
   let behavior = "resolve";
   let module;
   module = {
-    _bridge_lean_runtime_init: () => 1,
-    _bridge_pending_cancel: () => 1,
-    _bridge_lean_alpha_round_trip: (token, payload) => {
-      if (behavior === "reject-start") return 0;
+    _bridge_lean_runtime_init: () => 1
+    , _bridge_pending_cancel: () => 1
+    , _bridge_lean_alpha_round_trip: (token, payload) => {
+      if(behavior === "reject-start") return 0;
       queueMicrotask(() =>
         __bridgeTest.resolvePendingOperation(
           module,
@@ -250,37 +274,41 @@ test("generated Promise bindings use the shared pending-operation domain", async
             ? { ...payload, count: -1 }
             : {
                 ...payload,
-                enabled: !payload.enabled,
-                count: payload.count + 1,
-              },
+                enabled: !payload.enabled
+                , count: payload.count + 1
+            },
         ),
       );
       return 1;
-    },
-    async loadDynamicLibrary() {},
+    }
+    , loadDynamicLibrary:
+      /**
+       * Records or simulates one dynamic-library load so the test can observe dependency order, caching, and failure propagation.
+       */
+      async function() {}
   };
   const library = descriptor({
-    id: "async-alpha",
-    bindingIr,
-    bindingIrSha256: projection.bindingIrSha256,
-    bindings: [binding],
+    id: "async-alpha"
+    , bindingIr
+    , bindingIrSha256: projection.bindingIrSha256
+    , bindings: [binding]
   });
   const libraries = createLibraryLoader(module);
   const api = await libraries.load(library);
 
   const result = await api.roundTrip({
-    enabled: true,
-    count: 41,
-    label: "pending",
-    bytes: new Uint8Array([0, 255]),
-    values: [1, 2, 3],
+    enabled: true
+    , count: 41
+    , label: "pending"
+    , bytes: new Uint8Array([0, 255])
+    , values: [1, 2, 3]
   });
   assert.deepEqual(result, {
-    enabled: false,
-    count: 42,
-    label: "pending",
-    bytes: new Uint8Array([0, 255]),
-    values: [1, 2, 3],
+    enabled: false
+    , count: 42
+    , label: "pending"
+    , bytes: new Uint8Array([0, 255])
+    , values: [1, 2, 3]
   });
   assert.equal(libraries.diagnostics().pendingOperations.resolved, 1);
   assert.equal(libraries.diagnostics().pendingOperations.live, 0);
@@ -288,11 +316,11 @@ test("generated Promise bindings use the shared pending-operation domain", async
   behavior = "reject-start";
   await assert.rejects(
     api.roundTrip({
-      enabled: true,
-      count: 0,
-      label: "rejected",
-      bytes: new Uint8Array(),
-      values: [],
+      enabled: true
+      , count: 0
+      , label: "rejected"
+      , bytes: new Uint8Array()
+      , values: []
     }),
     error => error.code === "pending-start-rejected",
   );
@@ -301,11 +329,11 @@ test("generated Promise bindings use the shared pending-operation domain", async
   behavior = "invalid-result";
   await assert.rejects(
     api.roundTrip({
-      enabled: true,
-      count: 0,
-      label: "invalid",
-      bytes: new Uint8Array(),
-      values: [],
+      enabled: true
+      , count: 0
+      , label: "invalid"
+      , bytes: new Uint8Array()
+      , values: []
     }),
     error => error.code === "invalid-argument",
   );

@@ -1,3 +1,9 @@
+/**
+ * Tests the Python generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -8,8 +14,7 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PythonBindingGenerationError,
-  generatePythonBindingPackage,
+	generatePythonBindingPackage,
 } from "../src/backends/python/generate.mjs";
 import { auditPythonPackage } from "../src/backends/python/package-audit.mjs";
 
@@ -17,11 +22,12 @@ const run = promisify(execFile);
 const clone = value => structuredClone(value);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(join(destination, ".."), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(join(destination, ".."), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 test("the Python backend emits dataclasses, classes, exceptions, callables, and stubs", () => {
@@ -49,19 +55,19 @@ test("the Python backend emits dataclasses, classes, exceptions, callables, and 
   const audit = auditPythonPackage(alpha.bindingIr, files);
   assert.deepEqual(audit.capabilityGaps, []);
   assert.deepEqual(audit.exports, [
-    "LeanAlphaError",
-    "RuntimeUnavailableError",
-    "UnexpectedError",
-    "DisposedResourceError",
-    "CallbackThrewError",
-    "Ok",
-    "Err",
-    "Payload",
-    "Box",
-    "Transform",
-    "round_trip",
-    "with_callback",
-    "make_adder",
+    "LeanAlphaError"
+    , "RuntimeUnavailableError"
+    , "UnexpectedError"
+    , "DisposedResourceError"
+    , "CallbackThrewError"
+    , "Ok"
+    , "Err"
+    , "Payload"
+    , "Box"
+    , "Transform"
+    , "round_trip"
+    , "with_callback"
+    , "make_adder"
   ]);
 
   const leaked = { ...files };
@@ -74,7 +80,8 @@ test("the Python backend emits dataclasses, classes, exceptions, callables, and 
 
 test("the generated Python package runs through ordinary native syntax", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-python-generator-"));
-  try {
+  try
+{
     await writePackage(directory, generatePythonBindingPackage(alpha.bindingIr));
     await writeFile(join(directory, "consumer.py"), `
 from lean_alpha import (
@@ -167,65 +174,66 @@ else:
     raise AssertionError("invalid UInt32 reached the runtime")
 `);
     await run("python3", ["-B", "consumer.py"], {
-      cwd: directory,
-      env: { ...process.env, PYTHONPATH: directory },
+      cwd: directory
+      , env: { ...process.env, PYTHONPATH: directory }
     });
     await run("python3", ["-m", "compileall", "-q", "lean_alpha"], {
-      cwd: directory,
-      env: { ...process.env, PYTHONPATH: directory },
+      cwd: directory
+      , env: { ...process.env, PYTHONPATH: directory }
     });
     await run("python3", [
-      "-c",
-      "compile(open('lean_alpha/__init__.pyi', encoding='utf-8').read(), 'lean_alpha/__init__.pyi', 'exec')",
+      "-c"
+      , "compile(open('lean_alpha/__init__.pyi', encoding='utf-8').read(), 'lean_alpha/__init__.pyi', 'exec')"
     ], { cwd: directory });
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 const addProperty = ir => {
-  const read = ir.declarations.find(item => item.id === "lean:Alpha.Box.read");
-  const getter = clone(read);
-  getter.id = "bridge:Alpha.Box.value.get";
-  getter.name = "value";
-  getter.kind = "property";
-  getter.overloadKey = "Box.value.get";
-  getter.documentation = { summary: "Read the value property.", details: "" };
-  getter.source.declaration = "Alpha.Box.value.get";
+	const read = ir.declarations.find(item => item.id === "lean:Alpha.Box.read");
+	const getter = clone(read);
+	getter.id = "bridge:Alpha.Box.value.get";
+	getter.name = "value";
+	getter.kind = "property";
+	getter.overloadKey = "Box.value.get";
+	getter.documentation = { summary: "Read the value property.", details: "" };
+	getter.source.declaration = "Alpha.Box.value.get";
 
-  const setter = clone(read);
-  setter.id = "bridge:Alpha.Box.value.set";
-  setter.name = "value";
-  setter.kind = "property";
-  setter.overloadKey = "Box.value.set(uint32)";
-  setter.parameters = [{
-    name: "value",
-    type: { kind: "primitive", name: "uint32" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
-  }];
-  setter.result = {
-    type: { kind: "primitive", name: "unit" },
-    ownership: "copy",
-    lifetime: null,
-  };
-  setter.mutability = "write";
-  setter.effects = ["writes-resource", "fails"];
-  setter.documentation = { summary: "Write the value property.", details: "" };
-  setter.source.declaration = "Alpha.Box.value.set";
-  ir.declarations.push(getter, setter);
+	const setter = clone(read);
+	setter.id = "bridge:Alpha.Box.value.set";
+	setter.name = "value";
+	setter.kind = "property";
+	setter.overloadKey = "Box.value.set(uint32)";
+	setter.parameters = [{
+		name: "value"
+		, type: { kind: "primitive", name: "uint32" }
+		, ownership: "copy"
+		, lifetime: null
+		, mutability: "immutable"
+		, optional: false
+		, default: null
+	}];
+	setter.result = {
+		type: { kind: "primitive", name: "unit" }
+		, ownership: "copy"
+		, lifetime: null
+	};
+	setter.mutability = "write";
+	setter.effects = ["writes-resource", "fails"];
+	setter.documentation = { summary: "Write the value property.", details: "" };
+	setter.source.declaration = "Alpha.Box.value.set";
+	ir.declarations.push(getter, setter);
 };
 
 test("Python properties, iterators, async iterators, and awaitables use native protocols", () => {
   const property = clone(alpha.bindingIr);
   addProperty(property);
   let files = generatePythonBindingPackage(property);
-  assert.match(files["lean_alpha/__init__.py"], /@property\n    def value\(self\) -> int/);
+  assert.match(files["lean_alpha/__init__.py"], /@property\n {4}def value\(self\) -> int/);
   assert.match(files["lean_alpha/__init__.py"], /@value\.setter/);
-  assert.match(files["lean_alpha/__init__.pyi"], /@property\n    def value\(self\) -> int/);
+  assert.match(files["lean_alpha/__init__.pyi"], /@property\n {4}def value\(self\) -> int/);
 
   const promise = clone(alpha.bindingIr);
   let declaration = promise.declarations.find(item => item.id === "lean:Alpha.roundTrip");
@@ -253,37 +261,37 @@ test("Python properties, iterators, async iterators, and awaitables use native p
 test("Python variants and static methods use frozen tagged classes", () => {
   const ir = clone(alpha.bindingIr);
   ir.types.push({
-    id: "bridge:Alpha.Lookup",
-    name: "Lookup",
-    kind: "variant",
-    representation: "copied",
-    mutability: "immutable",
-    typeParameters: [],
-    fields: [],
-    target: null,
-    resource: null,
-    callable: null,
-    cases: [
+    id: "bridge:Alpha.Lookup"
+    , name: "Lookup"
+    , kind: "variant"
+    , representation: "copied"
+    , mutability: "immutable"
+    , typeParameters: []
+    , fields: []
+    , target: null
+    , resource: null
+    , callable: null
+    , cases: [
       {
-        name: "Found",
-        fields: [{
-          name: "value",
-          type: { kind: "primitive", name: "uint32" },
-          mutability: "immutable",
-          documentation: { summary: "The value.", details: "" },
-        }],
-        documentation: { summary: "A hit.", details: "" },
-      },
-      {
-        name: "Missing",
-        fields: [],
-        documentation: { summary: "A miss.", details: "" },
-      },
-    ],
-    host: null,
-    documentation: { summary: "A lookup result.", details: "" },
-    source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} },
-    assurance: [],
+        name: "Found"
+        , fields: [{
+          name: "value"
+          , type: { kind: "primitive", name: "uint32" }
+          , mutability: "immutable"
+          , documentation: { summary: "The value.", details: "" }
+        }]
+        , documentation: { summary: "A hit.", details: "" }
+      }
+      , {
+        name: "Missing"
+        , fields: []
+        , documentation: { summary: "A miss.", details: "" }
+      }
+    ]
+    , host: null
+    , documentation: { summary: "A lookup result.", details: "" }
+    , source: { producer: "bridge", declaration: "Alpha.Lookup", extensions: {} }
+    , assurance: []
   });
   const method = clone(ir.declarations.find(item => item.name === "roundTrip"));
   method.id = "bridge:Alpha.Box.lookup";
@@ -301,7 +309,7 @@ test("Python variants and static methods use frozen tagged classes", () => {
   assert.match(source, /class LookupFound:/);
   assert.match(source, /kind: ClassVar\[Literal\["Found"\]\] = "Found"/);
   assert.match(source, /Lookup = LookupFound \| LookupMissing/);
-  assert.match(source, /@staticmethod\n    def lookup\(payload: Payload\) -> Lookup/);
+  assert.match(source, /@staticmethod\n {4}def lookup\(payload: Payload\) -> Lookup/);
   assert.match(stub, /@dataclass\(frozen=True\)\nclass LookupMissing/);
   assert.doesNotMatch(stub, /tag: int|handle|pointer/i);
 });
@@ -313,22 +321,22 @@ test("Python finite generics expose overload stubs and private typed dispatch", 
   declaration.overloadKey = "echo<T>(T)";
   declaration.typeParameters = [{ id: "T", representation: "copied", constraints: [] }];
   declaration.parameters = [{
-    name: "value",
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
+    name: "value"
+    , type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
+    , mutability: "immutable"
+    , optional: false
+    , default: null
   }];
   declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
+    type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
   };
   declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
-    { id: "string", type: { kind: "primitive", name: "string" } },
+    { id: "uint32", type: { kind: "primitive", name: "uint32" } }
+    , { id: "string", type: { kind: "primitive", name: "string" } }
   ];
   const files = generatePythonBindingPackage(ir);
   assert.equal([...files["lean_alpha/__init__.pyi"].matchAll(/@overload/g)].length, 2);
@@ -339,8 +347,8 @@ test("Python finite generics expose overload stubs and private typed dispatch", 
   assert.doesNotMatch(files["lean_alpha/__init__.py"], /type_token|specialization:/);
 
   declaration.source.extensions["lean-wasm.org/specializations"].push({
-    id: "int32",
-    type: { kind: "primitive", name: "int32" },
+    id: "int32"
+    , type: { kind: "primitive", name: "int32" }
   });
   assert.throws(
     () => generatePythonBindingPackage(ir),

@@ -1,3 +1,9 @@
+/**
+ * Tests the release install gate behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
@@ -8,9 +14,9 @@ import { promisify } from "node:util";
 
 import { validatePackagingBackendPlan } from "../src/release/backend-policy.mjs";
 import {
-  canonicalPackageManifestJson,
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
+	canonicalPackageManifestJson,
+	hashCanonicalPackageManifest,
+	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 import { traceInstalledPackage } from "../src/release/install-trace.mjs";
 import { parsePublicationIndex } from "../src/release/release-rehearsal.mjs";
@@ -20,47 +26,47 @@ const execute = promisify(execFile);
 const revision = "5f0e70569cd85982cbf11e08224243dc448feae8";
 
 const rewriteIdentity = async (directory, manifest) => {
-  const manifestSha256 = hashCanonicalPackageManifest(manifest);
-  await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
-  await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
-  const identityPath = join(directory, "bundle-identity.json");
-  const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  identity.canonicalManifestSha256 = manifestSha256;
-  await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
+	const manifestSha256 = hashCanonicalPackageManifest(manifest);
+	await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+	await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
+	const identityPath = join(directory, "bundle-identity.json");
+	const identity = JSON.parse(await readFile(identityPath, "utf8"));
+	identity.canonicalManifestSha256 = manifestSha256;
+	await writeFile(identityPath, `${JSON.stringify(identity, null, 2)}\n`);
 };
 
 const enableReviewedCBindingTarget = async (bundle, destination) => {
-  await cp(bundle, destination, { recursive: true });
-  const manifest = structuredClone(parseCanonicalPackageManifest(
-    await readFile(join(destination, "canonical-package.json"), "utf8"),
-  ));
-  const cArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/c/"));
-  cArtifacts.forEach(artifact => { artifact.target = "c-bindings"; });
-  manifest.targets.push({
-    id: "c-bindings",
-    eligible: true,
-    reason: null,
-    platforms: ["c11"],
-    capabilities: ["external-runtime-adapter", "source-bindings", "typed-bindings"],
-    entryPoints: [
-      { name: "library", kind: "library", artifact: cArtifacts.find(artifact => artifact.path.endsWith("include/lean_alpha.h")).id },
-      { name: "types", kind: "types", artifact: "binding-ir" },
-      { name: "documentation", kind: "documentation", artifact: cArtifacts.find(artifact => artifact.path.endsWith("README.md")).id },
-    ],
-  });
-  const mapping = manifest.packages.find(candidate => candidate.ecosystem === "c");
-  mapping.target = "c-bindings";
-  mapping.eligible = true;
-  mapping.reason = null;
-  mapping.publicArtifacts = [
-    ...cArtifacts.map(artifact => artifact.id),
-    "license",
-    "assurance",
-    "core-artifact-set",
-    "sbom",
-    "provenance",
-  ];
-  await rewriteIdentity(destination, manifest);
+	await cp(bundle, destination, { recursive: true });
+	const manifest = structuredClone(parseCanonicalPackageManifest(
+		await readFile(join(destination, "canonical-package.json"), "utf8"),
+	));
+	const cArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/c/"));
+	cArtifacts.forEach(artifact => { artifact.target = "c-bindings"; });
+	manifest.targets.push({
+		id: "c-bindings"
+		, eligible: true
+		, reason: null
+		, platforms: ["c11"]
+		, capabilities: ["external-runtime-adapter", "source-bindings", "typed-bindings"]
+		, entryPoints: [
+			{ name: "library", kind: "library", artifact: cArtifacts.find(artifact => artifact.path.endsWith("include/lean_alpha.h")).id }
+			, { name: "types", kind: "types", artifact: "binding-ir" }
+			, { name: "documentation", kind: "documentation", artifact: cArtifacts.find(artifact => artifact.path.endsWith("README.md")).id }
+		]
+	});
+	const mapping = manifest.packages.find(candidate => candidate.ecosystem === "c");
+	mapping.target = "c-bindings";
+	mapping.eligible = true;
+	mapping.reason = null;
+	mapping.publicArtifacts = [
+		...cArtifacts.map(artifact => artifact.id)
+		, "license"
+		, "assurance"
+		, "core-artifact-set"
+		, "sbom"
+		, "provenance"
+	];
+	await rewriteIdentity(destination, manifest);
 };
 
 const cConsumer = `#include "lean_alpha.h"
@@ -123,50 +129,52 @@ int main(void) {
 
 test("permission-isolated rehearsal passes clean npm and C consumers with complete install traces", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-release-install-gate-"));
-  try {
+  try
+{
     const bundle = join(scratch, "bundle");
     await buildUniversalReleaseBundle({
-      projectRoot: process.cwd(),
-      coreRoot: "build/lean-link-spike",
-      outputRoot: bundle,
-      revision,
-      sourceDateEpoch: 1786261809,
+      projectRoot: process.cwd()
+      , coreRoot: "build/lean-link-spike"
+      , outputRoot: bundle
+      , revision
+      , sourceDateEpoch: 1786261809
     });
     const eligible = join(scratch, "eligible");
     await enableReviewedCBindingTarget(bundle, eligible);
 
     const release = join(scratch, "release");
     const { stdout: rehearsalOutput } = await execute("node", [
-      "--permission",
-      `--allow-fs-read=${process.cwd()}`,
-      `--allow-fs-read=${eligible}`,
-      `--allow-fs-read=${release}`,
-      `--allow-fs-read=${release}/*`,
-      `--allow-fs-write=${release}`,
-      `--allow-fs-write=${release}/*`,
-      "scripts/rehearse-release.mjs",
-      "--bundle", eligible,
-      "--output", release,
+      "--permission"
+      , `--allow-fs-read=${process.cwd()}`
+      , `--allow-fs-read=${eligible}`
+      , `--allow-fs-read=${release}`
+      , `--allow-fs-read=${release}/*`
+      , `--allow-fs-write=${release}`
+      , `--allow-fs-write=${release}/*`
+      , "scripts/rehearse-release.mjs"
+      , "--bundle", eligible
+      , "--output", release
     ], { cwd: process.cwd() });
     const rehearsal = JSON.parse(rehearsalOutput);
     assert.equal(rehearsal.ready, 2);
     const index = parsePublicationIndex(await readFile(join(release, "publication-index.json"), "utf8"));
     const ready = index.packages.filter(item => item.status === "ready");
-    for (const item of ready) {
+    for(const item of ready)
+{
       const planSource = await readFile(join(release, item.backendPlan.path), "utf8");
       const plan = JSON.parse(planSource);
       assert.equal(validatePackagingBackendPlan(plan), true);
       assert.equal(plan.compilerAccess, false);
       assert.equal(plan.commands.some(command => /lean|lake|cc|clang|emcc|cargo|cmake|make|ld/.test(command)), false);
-    }
+}
 
     const npm = ready.find(item => item.ecosystem === "npm");
     const npmConsumer = join(scratch, "npm-consumer");
     await mkdir(npmConsumer);
     await execute("npm", ["init", "--yes"], { cwd: npmConsumer });
     await execute("npm", [
-      "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund",
-      join(release, npm.archives[0].path),
+      "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund"
+      , join(release, npm.archives[0].path)
     ], { cwd: npmConsumer });
     const npmProgram = join(npmConsumer, "consumer.mjs");
     await writeFile(npmProgram, `import { Box } from "@lean-bridge/alpha";\nconst box = new Box(42);\nconst result = { value: box.read(), identity: box.identity() === box };\nbox.dispose();\nprocess.stdout.write(JSON.stringify(result));\n`);
@@ -179,13 +187,14 @@ test("permission-isolated rehearsal passes clean npm and C consumers with comple
     const npmMetadata = JSON.parse(await readFile(join(npmRoot, "package.json"), "utf8"));
     assert.equal(npmMetadata.version, index.bundle.version);
     assert.equal((await readFile(join(npmRoot, "README.md"), "utf8")).length > 0, true);
-    for (const artifact of npm.coreArtifacts) {
+    for(const artifact of npm.coreArtifacts)
+{
       assert.deepEqual(
         await readFile(join(eligible, artifact.sourcePath)),
         await readFile(join(npmRoot, artifact.packagePath)),
         artifact.packagePath,
       );
-    }
+}
 
     const c = ready.find(item => item.ecosystem === "c");
     const cInstall = join(scratch, "c-install");
@@ -215,7 +224,8 @@ test("permission-isolated rehearsal passes clean npm and C consumers with comple
       traceInstalledPackage({ bundleRoot: eligible, installRoot: cRoot, ecosystem: "c" }),
       error => error.code === "untraceable-installed-file" && error.message.includes("unreviewed-generated-file.txt"),
     );
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });

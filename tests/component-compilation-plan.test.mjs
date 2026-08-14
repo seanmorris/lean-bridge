@@ -1,3 +1,9 @@
+/**
+ * Tests the component compilation plan behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { cp, mkdtemp, readFile, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -10,19 +16,19 @@ import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { ComponentCompilationPlanError, prepareComponentCompilationPlan, validateComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 
 const prepare = async root => {
-  const analysis = await analyzeLeanProject(root);
-  const componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: process.cwd(), targets: ["npm"] });
-  const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
-  const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
-  return { analysis, componentPlan, compilerAdapters, compilationPlan };
+	const analysis = await analyzeLeanProject(root);
+	const componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: process.cwd(), targets: ["npm"] });
+	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+	const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+	return { analysis, componentPlan, compilerAdapters, compilationPlan };
 };
 
 test("the component compilation plan orders local Lean modules before generated adapters", async () => {
   const { compilationPlan } = await prepare("tests/fixtures/onboarding/medium");
   assert.deepEqual(compilationPlan.document.source.compileOrder, ["OnboardingMedium.Collections", "OnboardingMedium", "LeanBridgeGenerated"]);
   assert.deepEqual(compilationPlan.document.source.modules.map(item => [item.module, item.localDependencies]), [
-    ["OnboardingMedium", ["OnboardingMedium.Collections"]],
-    ["OnboardingMedium.Collections", []],
+    ["OnboardingMedium", ["OnboardingMedium.Collections"]]
+    , ["OnboardingMedium.Collections", []]
   ]);
   assert.deepEqual(compilationPlan.document.source.externalImports, []);
   assert.equal(compilationPlan.document.compilerAdapters.directSymbols.length, 5);
@@ -32,19 +38,19 @@ test("the component compilation plan orders local Lean modules before generated 
 test("the compilation closure carries shared-runtime and direct-call policies", async () => {
   const { compilationPlan } = await prepare("tests/fixtures/onboarding/small");
   assert.deepEqual(compilationPlan.document.target, {
-    triple: "wasm32-unknown-emscripten",
-    format: "wasm",
-    linkMode: "side-module-2",
-    exceptionHandling: "wasm",
-    positionIndependent: true,
+    triple: "wasm32-unknown-emscripten"
+    , format: "wasm"
+    , linkMode: "side-module-2"
+    , exceptionHandling: "wasm"
+    , positionIndependent: true
   });
   assert.deepEqual(compilationPlan.document.policies, {
-    compileOnce: true,
-    sourceReadOnly: true,
-    linksRuntime: false,
-    definesMemory: false,
-    definesTable: false,
-    publicGenericDispatch: false,
+    compileOnce: true
+    , sourceReadOnly: true
+    , linksRuntime: false
+    , definesMemory: false
+    , definesTable: false
+    , publicGenericDispatch: false
   });
   assert.match(compilationPlan.document.outputs.sideModule, /^artifacts\/onboarding-small-[0-9a-f]{16}\.so\.wasm$/);
 });
@@ -52,14 +58,16 @@ test("the compilation closure carries shared-runtime and direct-call policies", 
 test("the compilation plan is identical after the component moves to another checkout root", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-compilation-root-"));
   const copied = join(scratch, "component");
-  try {
+  try
+{
     await cp("tests/fixtures/onboarding/medium", copied, { recursive: true });
     const first = await prepare("tests/fixtures/onboarding/medium");
     const second = await prepare(copied);
     assert.deepEqual(first.compilationPlan, second.compilationPlan);
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("staging verifies every input and leaves author source unchanged", async () => {
@@ -68,7 +76,8 @@ test("staging verifies every input and leaves author source unchanged", async ()
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-compilation-inputs-"));
   const output = join(scratch, "closure");
   const before = await readFile(join(root, "OnboardingSmall.lean"), "utf8");
-  try {
+  try
+{
     const result = await writeComponentCompilationInputs({ projectRoot: root, outputRoot: output, ...prepared });
     assert.equal(result.compilationPlanSha256, prepared.compilationPlan.sha256);
     assert.deepEqual(await readdir(output), ["component-build-plan.json", "component-compilation-plan.json", "generated", "source"]);
@@ -79,17 +88,18 @@ test("staging verifies every input and leaves author source unchanged", async ()
       writeComponentCompilationInputs({ projectRoot: root, outputRoot: output, ...prepared }),
       error => error instanceof ComponentCompilationPlanError && error.code === "component-compilation-output-exists",
     );
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("the validator rejects a private runtime or generic public dispatch", async () => {
   const { compilationPlan } = await prepare("tests/fixtures/onboarding/small");
-  for (const change of [
-    plan => { plan.policies.linksRuntime = true; },
-    plan => { plan.policies.publicGenericDispatch = true; },
-    plan => { plan.source.compileOrder.reverse(); },
+  for(const change of [
+    plan => { plan.policies.linksRuntime = true; }
+    , plan => { plan.policies.publicGenericDispatch = true; }
+    , plan => { plan.source.compileOrder.reverse(); }
   ]) {
     const changed = structuredClone(compilationPlan.document);
     change(changed);

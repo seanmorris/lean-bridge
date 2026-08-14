@@ -1,20 +1,26 @@
+/**
+ * Tests the javascript projection behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
-  JavaScriptProjectionError,
-  compileJavaScriptProjection,
+	JavaScriptProjectionError,
+	compileJavaScriptProjection,
 } from "../../../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
 
 const projectionError = (operation, code) => {
-  assert.throws(operation, error => {
+	assert.throws(operation, error => {
     assert.equal(error instanceof JavaScriptProjectionError, true);
     assert.equal(error.code, code);
     return true;
-  });
+	});
 };
 
 test("the Alpha JavaScript projection is generated from the reviewed Binding IR", () => {
@@ -91,8 +97,8 @@ test("private ABI metadata is closed and cannot inject public binding policy", (
 test("unknown private symbols cannot hide outside the semantic declaration graph", () => {
   const abi = clone(alpha.privateAbi);
   abi.declarations["bridge:Undeclared.call"] = {
-    symbol: "_bridge_hidden",
-    adapter: null,
+    symbol: "_bridge_hidden"
+    , adapter: null
   };
   projectionError(
     () => compileJavaScriptProjection(alpha.bindingIr, abi),
@@ -120,9 +126,9 @@ test("Promise declarations receive a generated pending-operation plan", () => {
   declaration.effects.push("async");
   const abi = clone(alpha.privateAbi);
   abi.declarations["lean:Alpha.roundTrip"].adapter = {
-    kind: "pending-operation-v1",
-    abiVersion: 1,
-    cancel: "_bridge_pending_cancel",
+    kind: "pending-operation-v1"
+    , abiVersion: 1
+    , cancel: "_bridge_pending_cancel"
   };
 
   const projection = compileJavaScriptProjection(ir, abi);
@@ -136,10 +142,10 @@ test("Promise declarations receive a generated pending-operation plan", () => {
 test("class ABI adapters cannot be accepted and then ignored", () => {
   const abi = clone(alpha.privateAbi);
   abi.declarations["lean:Alpha.box"].adapter = {
-    kind: "value-frame-v1",
-    abiVersion: 1,
-    maxCopyBytes: 4,
-    maxArrayLength: 1,
+    kind: "value-frame-v1"
+    , abiVersion: 1
+    , maxCopyBytes: 4
+    , maxArrayLength: 1
   };
   projectionError(
     () => compileJavaScriptProjection(alpha.bindingIr, abi),

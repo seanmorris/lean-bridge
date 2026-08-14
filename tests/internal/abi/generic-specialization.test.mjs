@@ -1,3 +1,9 @@
+/**
+ * Tests the generic specialization behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -13,54 +19,54 @@ import { generateJavaScriptPackage } from "../../../src/backends/javascript/gene
 import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const genericFixture = () => {
-  const ir = structuredClone(alpha.bindingIr);
-  const declaration = ir.declarations.find(
-    item => item.id === "lean:Alpha.roundTrip",
-  );
-  declaration.name = "echo";
-  declaration.overloadKey = "echo<T>(T)";
-  declaration.typeParameters = [
-    { id: "T", representation: "copied", constraints: [] },
-  ];
-  declaration.parameters = [
-    {
-      name: "value",
-      type: { kind: "parameter", id: "T" },
-      ownership: "copy",
-      lifetime: null,
-      mutability: "immutable",
-      optional: false,
-      default: null,
-    },
-  ];
-  declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-  };
-  declaration.documentation = {
-    summary: "Return a value through a compiled value path.",
-    details: "The package advertises only concrete types with private implementations.",
-  };
-  declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
-    { id: "string", type: { kind: "primitive", name: "string" } },
-  ];
+	const ir = structuredClone(alpha.bindingIr);
+	const declaration = ir.declarations.find(
+		item => item.id === "lean:Alpha.roundTrip",
+	);
+	declaration.name = "echo";
+	declaration.overloadKey = "echo<T>(T)";
+	declaration.typeParameters = [
+		{ id: "T", representation: "copied", constraints: [] }
+	];
+	declaration.parameters = [
+		{
+			name: "value"
+			, type: { kind: "parameter", id: "T" }
+			, ownership: "copy"
+			, lifetime: null
+			, mutability: "immutable"
+			, optional: false
+			, default: null
+		}
+	];
+	declaration.result = {
+		type: { kind: "parameter", id: "T" }
+		, ownership: "copy"
+		, lifetime: null
+	};
+	declaration.documentation = {
+		summary: "Return a value through a compiled value path."
+		, details: "The package advertises only concrete types with private implementations."
+	};
+	declaration.source.extensions["lean-wasm.org/specializations"] = [
+		{ id: "uint32", type: { kind: "primitive", name: "uint32" } }
+		, { id: "string", type: { kind: "primitive", name: "string" } }
+	];
 
-  const privateAbi = structuredClone(alpha.privateAbi);
-  privateAbi.initialize = null;
-  privateAbi.declarations[declaration.id] = {
-    symbol: "_bridge_echo_uint32",
-    adapter: {
-      kind: "generic-specialization-v1",
-      abiVersion: 1,
-      branches: [
-        { id: "uint32", symbol: "_bridge_echo_uint32" },
-        { id: "string", symbol: "_bridge_echo_string" },
-      ],
-    },
-  };
-  return { ir, privateAbi, declaration };
+	const privateAbi = structuredClone(alpha.privateAbi);
+	privateAbi.initialize = null;
+	privateAbi.declarations[declaration.id] = {
+		symbol: "_bridge_echo_uint32"
+		, adapter: {
+			kind: "generic-specialization-v1"
+			, abiVersion: 1
+			, branches: [
+				{ id: "uint32", symbol: "_bridge_echo_uint32" }
+				, { id: "string", symbol: "_bridge_echo_string" }
+			]
+		}
+	};
+	return { ir, privateAbi, declaration };
 };
 
 test("generic plans bind canonical specializations to disjoint runtime guards", () => {
@@ -73,15 +79,15 @@ test("generic plans bind canonical specializations to disjoint runtime guards", 
   assert.deepEqual(
     plan.branches.map(branch => [branch.id, branch.guard]),
     [
-      ["uint32", "number"],
-      ["string", "string"],
+      ["uint32", "number"]
+      , ["string", "string"]
     ],
   );
   assert.equal(Object.isFrozen(plan.branches), true);
 
   declaration.source.extensions["lean-wasm.org/specializations"].push({
-    id: "int32",
-    type: { kind: "primitive", name: "int32" },
+    id: "int32"
+    , type: { kind: "primitive", name: "int32" }
   });
   assert.throws(
     () => compileGenericSpecializationV1(ir, declaration.id),
@@ -95,22 +101,22 @@ test("the loader dispatches a native generic function without type tokens", () =
   const projection = compileJavaScriptProjection(ir, privateAbi);
   const binding = projection.bindings.find(item => item.name === "echo");
   const module = {
-    _bridge_echo_uint32: value => value + 1,
-    _bridge_echo_string: value => `${value}!`,
-    _bridge_lean_alpha_make: () => 0x01001001,
-    _bridge_lean_alpha_read: () => 0,
-    _bridge_lean_handle_identity: value => value,
-    _bridge_lean_release: () => 0,
-    _bridge_lean_alpha_with_callback: () => 0,
-    _bridge_lean_alpha_make_adder: () => 0,
-    _bridge_lean_alpha_transform_call: () => 0,
-    _bridge_lean_alpha_transform_release: () => 0,
+    _bridge_echo_uint32: value => value + 1
+    , _bridge_echo_string: value => `${value}!`
+    , _bridge_lean_alpha_make: () => 0x01001001
+    , _bridge_lean_alpha_read: () => 0
+    , _bridge_lean_handle_identity: value => value
+    , _bridge_lean_release: () => 0
+    , _bridge_lean_alpha_with_callback: () => 0
+    , _bridge_lean_alpha_make_adder: () => 0
+    , _bridge_lean_alpha_transform_call: () => 0
+    , _bridge_lean_alpha_transform_release: () => 0
   };
   const api = createLibrarySurface(module, {
-    id: "poc/generic@0.0.0",
-    buildHash: "generic-test",
-    bindingIr: ir,
-    bindings: projection.bindings,
+    id: "poc/generic@0.0.0"
+    , buildHash: "generic-test"
+    , bindingIr: ir
+    , bindings: projection.bindings
   });
   assert.equal(api.echo(41), 42);
   assert.equal(api.echo("lean"), "lean!");
@@ -132,8 +138,9 @@ test("generated packages advertise only compiled generic signatures", async () =
   assert.doesNotMatch(files["index.mjs"], /specialization|_bridge_/);
 
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-"));
-  try {
-    for (const [relativePath, source] of Object.entries({
+  try
+{
+    for(const [relativePath, source] of Object.entries({
       ...files,
       "internal/runtime.mjs": `
 export const runtime = Object.freeze({
@@ -142,7 +149,7 @@ export const runtime = Object.freeze({
     return typeof args[0] === "number" ? args[0] + 1 : args[0] + "!";
   },
 });
-`,
+`
     })) {
       const destination = join(directory, relativePath);
       await mkdir(join(destination, ".."), { recursive: true });
@@ -154,9 +161,10 @@ export const runtime = Object.freeze({
     assert.equal(module.echo(4), 5);
     assert.equal(module.echo("ok"), "ok!");
     assert.throws(() => module.echo(true), /does not support this value type/);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("missing metadata, constrained types, and private drift remain gated", () => {

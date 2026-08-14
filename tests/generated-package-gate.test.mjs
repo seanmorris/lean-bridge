@@ -1,3 +1,9 @@
+/**
+ * Tests the generated package gate behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -7,10 +13,10 @@ import test from "node:test";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import {
-  GeneratedPackageGateError,
-  assertGeneratedPackageGate,
-  auditGeneratedPublicSurface,
-  compileGeneratedPackageGate,
+	GeneratedPackageGateError,
+	assertGeneratedPackageGate,
+	auditGeneratedPublicSurface,
+	compileGeneratedPackageGate,
 } from "../src/binding-ir/package-gate.mjs";
 
 const run = promisify(execFile);
@@ -23,15 +29,15 @@ test("one reviewed report locks every generated host package", async () => {
   const actual = compileGeneratedPackageGate(alpha.bindingIr);
   assert.deepEqual(actual, expected);
   assert.deepEqual(actual.packages.map(item => item.backend), [
-    "javascript",
-    "php",
-    "python",
-    "c",
-    "cpp",
-    "rust",
-    "dotnet",
-    "jvm",
-    "ruby",
+    "javascript"
+    , "php"
+    , "python"
+    , "c"
+    , "cpp"
+    , "rust"
+    , "dotnet"
+    , "jvm"
+    , "ruby"
   ]);
   assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 9);
   assert.equal(Object.isFrozen(actual.packages[0].files), true);
@@ -43,9 +49,9 @@ test("file, export, documentation, and generator drift blocks the gate", async (
   assert.throws(
     () => assertGeneratedPackageGate(alpha.bindingIr, expected),
     error =>
-      error instanceof GeneratedPackageGateError &&
-      error.code === "generated-package-drift" &&
-      error.details.diffs.some(diff => diff.path === "report.packages.0.files.0.sha256"),
+      error instanceof GeneratedPackageGateError
+      && error.code === "generated-package-drift"
+      && error.details.diffs.some(diff => diff.path === "report.packages.0.files.0.sha256"),
   );
 });
 
@@ -55,30 +61,30 @@ test("the shared public-surface gate scans generated package documentation", () 
   assert.throws(
     () => auditGeneratedPublicSurface("c", files),
     error =>
-      error instanceof GeneratedPackageGateError &&
-      error.code === "generic-dispatch" &&
-      error.details.path === "README.md",
+      error instanceof GeneratedPackageGateError
+      && error.code === "generic-dispatch"
+      && error.details.path === "README.md",
   );
 });
 
 test("the package gate CLI checks the reviewed report", async () => {
   const { stdout } = await run("node", [
-    "scripts/binding-package-gate.mjs",
-    "check",
-    "poc/lean-link-spike/bindings/alpha.binding-ir.json",
-    reportPath,
+    "scripts/binding-package-gate.mjs"
+    , "check"
+    , "poc/lean-link-spike/bindings/alpha.binding-ir.json"
+    , reportPath
   ]);
   const result = JSON.parse(stdout);
   assert.equal(result.bindingIrSha256, alpha.bindingIrSha256);
   assert.deepEqual(result.packages.map(item => item.backend), [
-    "javascript",
-    "php",
-    "python",
-    "c",
-    "cpp",
-    "rust",
-    "dotnet",
-    "jvm",
-    "ruby",
+    "javascript"
+    , "php"
+    , "python"
+    , "c"
+    , "cpp"
+    , "rust"
+    , "dotnet"
+    , "jvm"
+    , "ruby"
   ]);
 });

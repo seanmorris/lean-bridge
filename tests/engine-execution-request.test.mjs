@@ -1,3 +1,9 @@
+/**
+ * Tests the engine execution request behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -9,43 +15,45 @@ import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import {
-  createEngineExecutionRequest,
-  EngineExecutionRequestError,
-  readVerifiedEngineExecutionRequest,
-  validateEngineExecutionRequest,
-  writeEngineExecutionRequest,
+	createEngineExecutionRequest,
+	EngineExecutionRequestError,
+	readVerifiedEngineExecutionRequest,
+	validateEngineExecutionRequest,
+	writeEngineExecutionRequest,
 } from "../src/build/engine-execution-request.mjs";
 
 const prepare = async ({ projectRoot, scratch }) => {
-  const analysis = await analyzeLeanProject(projectRoot);
-  const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), targets: ["npm"] });
-  const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
-  const compilationPlan = await prepareComponentCompilationPlan({ projectRoot, analysis, componentPlan, compilerAdapters });
-  const inputRoot = join(scratch, "component");
-  await writeComponentCompilationInputs({ projectRoot, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
-  return { componentPlan, compilationPlan, inputRoot };
+	const analysis = await analyzeLeanProject(projectRoot);
+	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), targets: ["npm"] });
+	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+	const compilationPlan = await prepareComponentCompilationPlan({ projectRoot, analysis, componentPlan, compilerAdapters });
+	const inputRoot = join(scratch, "component");
+	await writeComponentCompilationInputs({ projectRoot, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
+	return { componentPlan, compilationPlan, inputRoot };
 };
 
 const collectModuleClosure = async entry => {
-  const files = new Set();
-  const visit = async path => {
-    if (files.has(path)) return;
-    files.add(path);
-    const source = await readFile(path, "utf8");
-    const patterns = [
-      /(?:^|\n)\s*import\s+(?:[^'"\n]*?\s+from\s+)?["'](\.\.?\/[^"']+)["']/g,
-      /(?:^|\n)\s*export\s+[^'"\n]*?\s+from\s+["'](\.\.?\/[^"']+)["']/g,
-      /import\(\s*["'](\.\.?\/[^"']+)["']\s*\)/g,
-    ];
-    for (const pattern of patterns) {
-      for (const match of source.matchAll(pattern)) {
-        const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
-        await visit(imported);
-      }
-    }
-  };
-  await visit(entry);
-  return [...files].sort();
+	const files = new Set();
+	const visit = async path => {
+		if(files.has(path)) return;
+		files.add(path);
+		const source = await readFile(path, "utf8");
+		const patterns = [
+			/(?:^|\n)\s*import\s+(?:[^'"\n]*?\s+from\s+)?["'](\.\.?\/[^"']+)["']/g
+			, /(?:^|\n)\s*export\s+[^'"\n]*?\s+from\s+["'](\.\.?\/[^"']+)["']/g
+			, /import\(\s*["'](\.\.?\/[^"']+)["']\s*\)/g
+		];
+		for(const pattern of patterns)
+		{
+			for(const match of source.matchAll(pattern))
+			{
+				const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
+				await visit(imported);
+			}
+		}
+	};
+	await visit(entry);
+	return [...files].sort();
 };
 
 test("the Nix component engine source boundary closes the executable module graph", async () => {
@@ -57,14 +65,15 @@ test("the Nix component engine source boundary closes the executable module grap
 
 test("one closed execution request names engine, component, source, output, cache, and targets", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-engine-request-"));
-  try {
+  try
+{
     const prepared = await prepare({ projectRoot: "tests/fixtures/onboarding/small", scratch });
-    const request = await createEngineExecutionRequest({
-      engineRoot: process.cwd(),
-      ...prepared,
-      cachePolicy: "refresh",
-      targets: ["npm"],
-    });
+      const request = await createEngineExecutionRequest({
+        engineRoot: process.cwd()
+        , ...prepared
+        , cachePolicy: "refresh"
+      , targets: ["npm"]
+      });
     assert.equal(validateEngineExecutionRequest(request.document), true);
     assert.equal(request.document.component.id, "onboarding-small@1.0.0");
     assert.equal(request.document.source.readOnly, true);
@@ -76,15 +85,17 @@ test("one closed execution request names engine, component, source, output, cach
     assert.match(request.sha256, /^[0-9a-f]{64}$/);
     const engineFiles = new Set(request.engine.files.map(file => file.path));
     const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
-    for (const path of boundary.includedFiles) assert.ok(engineFiles.has(path), `engine identity omits ${path}`);
-  } finally {
+    for(const path of boundary.includedFiles) assert.ok(engineFiles.has(path), `engine identity omits ${path}`);
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("request bytes and identities survive checkout relocation", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-engine-request-root-"));
-  try {
+  try
+{
     const relocated = join(scratch, "source");
     await cp("tests/fixtures/onboarding/small", relocated, { recursive: true });
     const first = await prepare({ projectRoot: "tests/fixtures/onboarding/small", scratch: join(scratch, "first") });
@@ -93,14 +104,16 @@ test("request bytes and identities survive checkout relocation", async () => {
     const secondRequest = await createEngineExecutionRequest({ engineRoot: process.cwd(), ...second, targets: ["npm"] });
     assert.equal(firstRequest.sha256, secondRequest.sha256);
     assert.deepEqual(firstRequest.document, secondRequest.document);
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("the engine rejects source drift before compilation", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-engine-request-drift-"));
-  try {
+  try
+{
     const prepared = await prepare({ projectRoot: "tests/fixtures/onboarding/small", scratch });
     const requestPath = join(scratch, "request.json");
     await writeEngineExecutionRequest({ output: requestPath, engineRoot: process.cwd(), ...prepared, targets: ["npm"] });
@@ -109,9 +122,10 @@ test("the engine rejects source drift before compilation", async () => {
       readVerifiedEngineExecutionRequest({ requestPath, engineRoot: process.cwd(), inputRoot: prepared.inputRoot }),
       error => error instanceof EngineExecutionRequestError && error.code === "component-input-identity-drift",
     );
-  } finally {
+} finally
+{
     await rm(scratch, { recursive: true, force: true });
-  }
+}
 });
 
 test("the execution request schema closes backend paths and policy", async () => {

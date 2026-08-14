@@ -1,10 +1,16 @@
+/**
+ * Implements the component npm package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import {
-  copyFile,
-  mkdir,
-  readFile,
-  readdir,
-  writeFile,
+	copyFile,
+	mkdir,
+	readFile,
+	readdir,
+	writeFile,
 } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 
@@ -17,30 +23,32 @@ const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
 
 const ensureEmpty = async output => {
-  await mkdir(output, { recursive: true });
-  if ((await readdir(output)).length !== 0) throw new Error(`component npm output is not empty: ${output}`);
+	await mkdir(output, { recursive: true });
+	if((await readdir(output)).length !== 0) throw new Error(`component npm output is not empty: ${output}`);
 };
 
 const copy = async (source, destination) => {
-  await mkdir(dirname(destination), { recursive: true });
-  await copyFile(source, destination);
+	await mkdir(dirname(destination), { recursive: true });
+	await copyFile(source, destination);
 };
 
 const verifiedBundle = async bundleRoot => {
-  const root = resolve(bundleRoot);
-  const manifest = JSON.parse(await readFile(join(root, "component-release-bundle.json"), "utf8"));
-  validateComponentReleaseBundleManifest(manifest);
-  for (const item of manifest.files) {
-    const bytes = await readFile(join(root, item.path));
-    if (bytes.length !== item.bytes || sha256(bytes) !== item.sha256) {
-      throw new Error(`component bundle file differs from its manifest: ${item.path}`);
-    }
-  }
-  return Object.freeze({ root, manifest: Object.freeze(manifest), manifestSha256: sha256(canonicalJson(manifest)) });
+	const root = resolve(bundleRoot);
+	const manifest = JSON.parse(await readFile(join(root, "component-release-bundle.json"), "utf8"));
+	validateComponentReleaseBundleManifest(manifest);
+	for(const item of manifest.files)
+	{
+		const bytes = await readFile(join(root, item.path));
+		if(bytes.length !== item.bytes || sha256(bytes) !== item.sha256)
+		{
+			throw new Error(`component bundle file differs from its manifest: ${item.path}`);
+		}
+	}
+	return Object.freeze({ root, manifest: Object.freeze(manifest), manifestSha256: sha256(canonicalJson(manifest)) });
 };
 
 const runtimeVersion = runtime =>
-  `0.0.0-abi${runtime.abiVersion}.${runtime.leanCommit.slice(0, 12)}.${runtime.patchSetSha256.slice(0, 12)}`;
+	`0.0.0-abi${runtime.abiVersion}.${runtime.leanCommit.slice(0, 12)}.${runtime.patchSetSha256.slice(0, 12)}`;
 
 const runtimeModule = () => `import createMain from "./internal/main.mjs";
 
@@ -174,114 +182,123 @@ import descriptor from "./descriptor.mjs";
 export const runtime = await loadComponent(descriptor);
 `;
 
+/**
+ * Builds component npm packages from validated inputs with deterministic output suitable for the deterministic release and independent-verification pipeline.
+ *
+ * @param root0 - Named inputs and dependency overrides used to build component npm packages.
+ * @param root0.bundleRoot - Filesystem root containing the bundle.
+ * @param root0.runtimeRoot - Filesystem root containing the runtime.
+ * @param root0.outputRoot - Filesystem root containing the output.
+ */
 export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outputRoot }) => {
-  const output = resolve(outputRoot);
-  await ensureEmpty(output);
-  const bundle = await verifiedBundle(bundleRoot);
-  const runtime = resolve(runtimeRoot);
-  const [ir, abi, artifactManifest, mainModule, mainWasm] = await Promise.all([
-    readFile(join(bundle.root, "binding/binding-ir.json"), "utf8").then(JSON.parse),
-    readFile(join(bundle.root, "binding/private-abi.json"), "utf8").then(JSON.parse),
-    readFile(join(bundle.root, "metadata/component-artifact-manifest.json"), "utf8").then(JSON.parse),
-    readFile(join(runtime, "main.mjs")),
-    readFile(join(runtime, "main.wasm")),
-  ]);
-  const artifact = bundle.manifest.files.find(item => item.role === "component");
-  const version = runtimeVersion(bundle.manifest.runtime);
-  const runtimePackage = join(output, "runtime", "package");
-  const componentPackage = join(output, "component", "package");
-  await mkdir(join(runtimePackage, "internal"), { recursive: true });
-  await Promise.all([
-    writeFile(join(runtimePackage, "index.mjs"), runtimeModule()),
-    writeFile(join(runtimePackage, "internal/main.mjs"), mainModule),
-    writeFile(join(runtimePackage, "internal/main.wasm"), mainWasm),
-    writeFile(join(runtimePackage, "package.json"), json({
-      name: "@lean-bridge/runtime",
-      version,
-      description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages.",
-      type: "module",
-      sideEffects: true,
-      engines: { node: ">=22" },
-      exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } },
-      files: ["index.mjs", "internal"],
-      leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime },
-    })),
-  ]);
+	const output = resolve(outputRoot);
+	await ensureEmpty(output);
+	const bundle = await verifiedBundle(bundleRoot);
+	const runtime = resolve(runtimeRoot);
+	const [ir, abi, artifactManifest, mainModule, mainWasm] = await Promise.all([
+		readFile(join(bundle.root, "binding/binding-ir.json"), "utf8").then(JSON.parse)
+		, readFile(join(bundle.root, "binding/private-abi.json"), "utf8").then(JSON.parse)
+		, readFile(join(bundle.root, "metadata/component-artifact-manifest.json"), "utf8").then(JSON.parse)
+		, readFile(join(runtime, "main.mjs"))
+		, readFile(join(runtime, "main.wasm"))
+	]);
+	const artifact = bundle.manifest.files.find(item => item.role === "component");
+	const version = runtimeVersion(bundle.manifest.runtime);
+	const runtimePackage = join(output, "runtime", "package");
+	const componentPackage = join(output, "component", "package");
+	await mkdir(join(runtimePackage, "internal"), { recursive: true });
+	await Promise.all([
+		writeFile(join(runtimePackage, "index.mjs"), runtimeModule())
+		, writeFile(join(runtimePackage, "internal/main.mjs"), mainModule)
+		, writeFile(join(runtimePackage, "internal/main.wasm"), mainWasm)
+		, writeFile(join(runtimePackage, "package.json"), json({
+			name: "@lean-bridge/runtime"
+			, version
+			, description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages."
+			, type: "module"
+			, sideEffects: true
+			, engines: { node: ">=22" }
+			, exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } }
+			, files: ["index.mjs", "internal"]
+			, leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime }
+		}))
+	]);
 
-  const generated = generateJavaScriptPackage(ir);
-  for (const [path, contents] of Object.entries(generated)) {
-    await mkdir(dirname(join(componentPackage, path)), { recursive: true });
-    await writeFile(join(componentPackage, path), contents);
-  }
-  const componentPackageJson = JSON.parse(generated["package.json"]);
-  const componentExports = componentPackageJson.exports?.["."] ?? {};
-  await writeFile(join(componentPackage, "package.json"), json({
-    name: ir.component.name,
-    ...componentPackageJson,
-    version: ir.component.version,
-    description: ir.documentation.summary,
-    engines: { node: ">=22" },
-    exports: {
-      ...componentPackageJson.exports,
-      ".": {
-        ...componentExports,
-        browser: componentExports.import ?? "./index.mjs",
-      },
-    },
-    dependencies: { "@lean-bridge/runtime": version },
-    leanBridge: {
-      component: ir.component.id,
-      componentBundleSha256: bundle.manifestSha256,
-      componentIdentitySha256: bundle.manifest.identitySha256,
-      bindingIrSha256: bundle.manifest.bindingIrSemanticSha256,
-      sharedRuntime: true,
-    },
-  }));
-  await writeFile(join(componentPackage, "internal/runtime.mjs"), componentRuntimeModule());
-  await writeFile(join(componentPackage, "internal/descriptor.mjs"), descriptorModule({
-    manifest: bundle.manifest,
-    ir,
-    abi,
-    artifact,
-    initializer: artifactManifest.structure.exports.internalInitializer,
-  }));
-  await copy(join(bundle.root, artifact.path), join(componentPackage, "internal/wasm", basename(artifact.path)));
-  for (const [source, destination] of [
-    ["component-release-bundle.json", "component-release-bundle.json"],
-    ["binding/binding-ir.json", "binding-ir.json"],
-    ["metadata/assurance.json", "assurance.json"],
-    ["metadata/provenance.json", "provenance.json"],
-    ["metadata/runtime-requirement.json", "runtime-requirement.json"],
-  ]) await copy(join(bundle.root, source), join(componentPackage, "metadata", destination));
+	const generated = generateJavaScriptPackage(ir);
+	for(const [path, contents] of Object.entries(generated))
+	{
+		await mkdir(dirname(join(componentPackage, path)), { recursive: true });
+		await writeFile(join(componentPackage, path), contents);
+	}
+	const componentPackageJson = JSON.parse(generated["package.json"]);
+	const componentExports = componentPackageJson.exports?.["."] ?? {};
+	await writeFile(join(componentPackage, "package.json"), json({
+		name: ir.component.name
+		, ...componentPackageJson
+		, version: ir.component.version
+		, description: ir.documentation.summary
+		, engines: { node: ">=22" }
+		, exports: {
+			...componentPackageJson.exports,
+			".": {
+				...componentExports,
+				browser: componentExports.import ?? "./index.mjs"
+			}
+		}
+		, dependencies: { "@lean-bridge/runtime": version }
+		, leanBridge: {
+			component: ir.component.id
+			, componentBundleSha256: bundle.manifestSha256
+			, componentIdentitySha256: bundle.manifest.identitySha256
+			, bindingIrSha256: bundle.manifest.bindingIrSemanticSha256
+			, sharedRuntime: true
+		}
+	}));
+	await writeFile(join(componentPackage, "internal/runtime.mjs"), componentRuntimeModule());
+	await writeFile(join(componentPackage, "internal/descriptor.mjs"), descriptorModule({
+		manifest: bundle.manifest
+		, ir
+		, abi
+		, artifact
+		, initializer: artifactManifest.structure.exports.internalInitializer
+	}));
+	await copy(join(bundle.root, artifact.path), join(componentPackage, "internal/wasm", basename(artifact.path)));
+	for(const [source, destination] of [
+		["component-release-bundle.json", "component-release-bundle.json"]
+		, ["binding/binding-ir.json", "binding-ir.json"]
+		, ["metadata/assurance.json", "assurance.json"]
+		, ["metadata/provenance.json", "provenance.json"]
+		, ["metadata/runtime-requirement.json", "runtime-requirement.json"]
+	]) await copy(join(bundle.root, source), join(componentPackage, "metadata", destination));
 
-  const sourceDateEpoch = 1;
-  const runtimeArchive = await createDeterministicTarGz({ directory: runtimePackage, archiveRoot: "package", sourceDateEpoch });
-  const componentArchive = await createDeterministicTarGz({ directory: componentPackage, archiveRoot: "package", sourceDateEpoch });
-  const runtimeArchivePath = join(output, `lean-bridge-runtime-${version}.tgz`);
-  const componentArchivePath = join(output, `${ir.component.name.replaceAll("/", "-")}-${ir.component.version}.tgz`);
-  await Promise.all([
-    writeFile(runtimeArchivePath, runtimeArchive),
-    writeFile(componentArchivePath, componentArchive),
-  ]);
-  const sourceManifest = bundle.manifest.files.find(item => item.path === "locks/component-build-plan.json");
-  const provenance = bundle.manifest.files.find(item => item.path === "metadata/provenance.json");
-  const runtimeRequirement = bundle.manifest.files.find(item => item.path === "metadata/runtime-requirement.json");
-  const report = Object.freeze({
-    schemaVersion: 1,
-    kind: "lean-bridge-component-package-receipt",
-    component: Object.freeze({ ...ir.component }),
-    source: Object.freeze({ treeSha256: JSON.parse(await readFile(join(bundle.root, sourceManifest.path), "utf8")).source.treeSha256 }),
-    bindingIrSha256: bundle.manifest.bindingIrSemanticSha256,
-    provenanceSha256: provenance.sha256,
-    componentBundleSha256: bundle.manifestSha256,
-    componentIdentitySha256: bundle.manifest.identitySha256,
-    componentArtifactSha256: artifact.sha256,
-    runtimeRequirementSha256: runtimeRequirement.sha256,
-    runtime: Object.freeze({ package: `@lean-bridge/runtime@${version}`, archive: basename(runtimeArchivePath), sha256: sha256(runtimeArchive) }),
-    package: Object.freeze({ package: `${ir.component.name}@${ir.component.version}`, archive: basename(componentArchivePath), sha256: sha256(componentArchive) }),
-    policies: Object.freeze({ componentCompiledOnce: true, runtimeShared: true, runtimeBinaryInComponent: false, nativeCallablesOnly: true }),
-    verificationCommand: "lean-bridge verify-package-receipt --receipt component-package-receipt.json",
-  });
-  await writeFile(join(output, "component-package-receipt.json"), canonicalJson(report));
-  return Object.freeze({ output, runtimeArchive: runtimeArchivePath, componentArchive: componentArchivePath, report });
+	const sourceDateEpoch = 1;
+	const runtimeArchive = await createDeterministicTarGz({ directory: runtimePackage, archiveRoot: "package", sourceDateEpoch });
+	const componentArchive = await createDeterministicTarGz({ directory: componentPackage, archiveRoot: "package", sourceDateEpoch });
+	const runtimeArchivePath = join(output, `lean-bridge-runtime-${version}.tgz`);
+	const componentArchivePath = join(output, `${ir.component.name.replaceAll("/", "-")}-${ir.component.version}.tgz`);
+	await Promise.all([
+		writeFile(runtimeArchivePath, runtimeArchive)
+		, writeFile(componentArchivePath, componentArchive)
+	]);
+	const sourceManifest = bundle.manifest.files.find(item => item.path === "locks/component-build-plan.json");
+	const provenance = bundle.manifest.files.find(item => item.path === "metadata/provenance.json");
+	const runtimeRequirement = bundle.manifest.files.find(item => item.path === "metadata/runtime-requirement.json");
+	const report = Object.freeze({
+		schemaVersion: 1
+		, kind: "lean-bridge-component-package-receipt"
+		, component: Object.freeze({ ...ir.component })
+		, source: Object.freeze({ treeSha256: JSON.parse(await readFile(join(bundle.root, sourceManifest.path), "utf8")).source.treeSha256 })
+		, bindingIrSha256: bundle.manifest.bindingIrSemanticSha256
+		, provenanceSha256: provenance.sha256
+		, componentBundleSha256: bundle.manifestSha256
+		, componentIdentitySha256: bundle.manifest.identitySha256
+		, componentArtifactSha256: artifact.sha256
+		, runtimeRequirementSha256: runtimeRequirement.sha256
+		, runtime: Object.freeze({ package: `@lean-bridge/runtime@${version}`, archive: basename(runtimeArchivePath), sha256: sha256(runtimeArchive) })
+		, package: Object.freeze({ package: `${ir.component.name}@${ir.component.version}`, archive: basename(componentArchivePath), sha256: sha256(componentArchive) })
+		, policies: Object.freeze({ componentCompiledOnce: true, runtimeShared: true, runtimeBinaryInComponent: false, nativeCallablesOnly: true })
+		, verificationCommand: "lean-bridge verify-package-receipt --receipt component-package-receipt.json"
+	});
+	await writeFile(join(output, "component-package-receipt.json"), canonicalJson(report));
+	return Object.freeze({ output, runtimeArchive: runtimeArchivePath, componentArchive: componentArchivePath, report });
 };

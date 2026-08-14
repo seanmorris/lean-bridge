@@ -1,3 +1,9 @@
+/**
+ * Tests the error envelope behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -8,99 +14,101 @@ import test from "node:test";
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import { createLibrarySurface } from "../../../poc/link-spike/loader.mjs";
 import {
-  ErrorEnvelopeGenerationError,
-  compileErrorEnvelopeV1,
+	ErrorEnvelopeGenerationError,
+	compileErrorEnvelopeV1,
 } from "../../../src/abi/error-envelope.mjs";
 import { generateJavaScriptPackage } from "../../../src/backends/javascript/generate.mjs";
 import {
-  JavaScriptProjectionError,
-  compileJavaScriptProjection,
+	JavaScriptProjectionError,
+	compileJavaScriptProjection,
 } from "../../../src/backends/javascript/projection.mjs";
 
 const errorFixture = () => {
-  const ir = structuredClone(alpha.bindingIr);
-  ir.errors.push({
-    id: "error:underflow",
-    name: "Underflow",
-    category: "domain",
-    payload: { kind: "primitive", name: "uint32" },
-    documentation: {
-      summary: "The requested predecessor is below zero.",
-      details: "The payload preserves the rejected unsigned input.",
-    },
-  });
-  ir.declarations.push({
-    id: "bridge:Alpha.checkedPred",
-    name: "checkedPred",
-    kind: "function",
-    owner: null,
-    overloadKey: "checkedPred(uint32)",
-    typeParameters: [],
-    receiver: null,
-    parameters: [
-      {
-        name: "value",
-        type: { kind: "primitive", name: "uint32" },
-        ownership: "copy",
-        lifetime: null,
-        mutability: "immutable",
-        optional: false,
-        default: null,
-      },
-    ],
-    result: {
-      type: { kind: "primitive", name: "uint32" },
-      ownership: "copy",
-      lifetime: null,
-    },
-    mutability: "immutable",
-    effects: ["fails"],
-    failure: {
-      mode: "declared",
-      errors: ["error:underflow"],
-      unexpected: "poison-runtime",
-    },
-    resultMode: "value",
-    capabilities: ["capability:shared-runtime"],
-    assurance: [],
-    documentation: {
-      summary: "Return the predecessor of a positive unsigned value.",
-      details: "Zero produces a typed Underflow error.",
-    },
-    source: {
-      producer: "bridge",
-      declaration: "Alpha.checkedPred",
-      extensions: { "lean-wasm.org/intrinsic": "error-envelope-probe" },
-    },
-  });
-  const privateAbi = structuredClone(alpha.privateAbi);
-  privateAbi.initialize = null;
-  privateAbi.declarations["bridge:Alpha.checkedPred"] = {
-    symbol: "_bridge_error_probe",
-    adapter: {
-      kind: "error-envelope-v1",
-      abiVersion: 1,
-      maxEnvelopeBytes: 256,
-    },
-  };
-  return { ir, privateAbi };
+	const ir = structuredClone(alpha.bindingIr);
+	ir.errors.push({
+		id: "error:underflow"
+		, name: "Underflow"
+		, category: "domain"
+		, payload: { kind: "primitive", name: "uint32" }
+		, documentation: {
+			summary: "The requested predecessor is below zero."
+			, details: "The payload preserves the rejected unsigned input."
+		}
+	});
+	ir.declarations.push({
+		id: "bridge:Alpha.checkedPred"
+		, name: "checkedPred"
+		, kind: "function"
+		, owner: null
+		, overloadKey: "checkedPred(uint32)"
+		, typeParameters: []
+		, receiver: null
+		, parameters: [
+			{
+				name: "value"
+				, type: { kind: "primitive", name: "uint32" }
+				, ownership: "copy"
+				, lifetime: null
+				, mutability: "immutable"
+				, optional: false
+				, default: null
+			}
+		]
+		, result: {
+			type: { kind: "primitive", name: "uint32" }
+			, ownership: "copy"
+			, lifetime: null
+		}
+		, mutability: "immutable"
+		, effects: ["fails"]
+		, failure: {
+			mode: "declared"
+			, errors: ["error:underflow"]
+			, unexpected: "poison-runtime"
+		}
+		, resultMode: "value"
+		, capabilities: ["capability:shared-runtime"]
+		, assurance: []
+		, documentation: {
+			summary: "Return the predecessor of a positive unsigned value."
+			, details: "Zero produces a typed Underflow error."
+		}
+		, source: {
+			producer: "bridge"
+			, declaration: "Alpha.checkedPred"
+			, extensions: { "lean-wasm.org/intrinsic": "error-envelope-probe" }
+		}
+	});
+	const privateAbi = structuredClone(alpha.privateAbi);
+	privateAbi.initialize = null;
+	privateAbi.declarations["bridge:Alpha.checkedPred"] = {
+		symbol: "_bridge_error_probe"
+		, adapter: {
+			kind: "error-envelope-v1"
+			, abiVersion: 1
+			, maxEnvelopeBytes: 256
+		}
+	};
+	return { ir, privateAbi };
 };
 
 const withGeneratedPackage = async (files, runtimeSource, operation) => {
-  const directory = await mkdtemp(join(tmpdir(), "lean-bridge-errors-"));
-  try {
-    for (const [relativePath, source] of Object.entries({
-      ...files,
-      "internal/runtime.mjs": runtimeSource,
-    })) {
-      const destination = join(directory, relativePath);
-      await mkdir(join(destination, ".."), { recursive: true });
-      await writeFile(destination, source);
-    }
-    await operation(directory);
-  } finally {
-    await rm(directory, { recursive: true, force: true });
-  }
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-errors-"));
+	try
+	{
+		for(const [relativePath, source] of Object.entries({
+			...files,
+			"internal/runtime.mjs": runtimeSource
+		})) {
+			const destination = join(directory, relativePath);
+			await mkdir(join(destination, ".."), { recursive: true });
+			await writeFile(destination, source);
+		}
+		await operation(directory);
+	} finally
+	{
+		await rm(directory, { recursive: true, force: true });
+	}
 };
 
 test("error envelope plans derive tags, scalar layout, and poison policy from Binding IR", () => {
@@ -109,17 +117,17 @@ test("error envelope plans derive tags, scalar layout, and poison policy from Bi
   assert.equal(plan.kind, "error-envelope-v1");
   assert.equal(plan.byteSize, 24);
   assert.deepEqual(plan.header, {
-    abiVersion: 0,
-    byteSize: 4,
-    outcome: 8,
-    errorTag: 12,
+    abiVersion: 0
+    , byteSize: 4
+    , outcome: 8
+    , errorTag: 12
   });
   assert.deepEqual(plan.result, {
-    type: { kind: "primitive", name: "uint32" },
-    codec: "uint32",
-    byteWidth: 4,
-    alignment: 4,
-    offset: 16,
+    type: { kind: "primitive", name: "uint32" }
+    , codec: "uint32"
+    , byteWidth: 4
+    , alignment: 4
+    , offset: 16
   });
   assert.equal(plan.errors[0].tag, 1);
   assert.equal(plan.errors[0].id, "error:underflow");
@@ -128,14 +136,14 @@ test("error envelope plans derive tags, scalar layout, and poison policy from Bi
 
   const unsupported = structuredClone(ir);
   unsupported.errors.find(error => error.id === "error:underflow").payload = {
-    kind: "primitive",
-    name: "string",
+    kind: "primitive"
+    , name: "string"
   };
   assert.throws(
     () => compileErrorEnvelopeV1(unsupported, "bridge:Alpha.checkedPred"),
     error =>
-      error instanceof ErrorEnvelopeGenerationError &&
-      error.code === "unsupported-error-value",
+      error instanceof ErrorEnvelopeGenerationError
+      && error.code === "unsupported-error-value",
   );
 });
 
@@ -150,8 +158,8 @@ test("projection requires the generated error envelope for rich declared errors"
   assert.throws(
     () => compileJavaScriptProjection(ir, privateAbi),
     error =>
-      error instanceof JavaScriptProjectionError &&
-      error.code === "missing-error-envelope-adapter",
+      error instanceof JavaScriptProjectionError
+      && error.code === "missing-error-envelope-adapter",
   );
 });
 
@@ -162,39 +170,49 @@ test("the runtime returns values, reports declared errors, and poisons on corrup
   const buffer = new ArrayBuffer(1024);
   const view = new DataView(buffer);
   const module = {
-    HEAP8: new Int8Array(buffer),
-    _malloc: () => 64,
-    _free: () => {},
-    _bridge_error_probe(pointer, value) {
+    HEAP8: new Int8Array(buffer)
+    , _malloc: () => 64
+    , _free: () => {}
+    , _bridge_error_probe:
+      /**
+       * Writes the synthetic success or failure envelope used to exercise generated error decoding.
+       *
+       * @param pointer - Linear-memory address passed to the generated bridge probe.
+       * @param value - Probe input that selects and populates the synthetic result envelope.
+       */
+      function(pointer, value) {
       view.setUint32(pointer, 1, true);
       view.setUint32(pointer + 4, 24, true);
-      if (value === 0xffff_ffff) {
+      if(value === 0xffff_ffff)
+{
         view.setUint32(pointer + 8, 2, true);
-      } else if (value === 0) {
+} else if(value === 0)
+{
         view.setUint32(pointer + 8, 1, true);
         view.setUint32(pointer + 12, 1, true);
         view.setUint32(pointer + 20, value, true);
-      } else {
+} else
+{
         view.setUint32(pointer + 8, 0, true);
         view.setUint32(pointer + 16, value - 1, true);
-      }
+}
       return 0;
-    },
+      }
   };
   const api = createLibrarySurface(module, {
-    id: "poc/error-envelope@0.0.0",
-    buildHash: "error-envelope-test",
-    bindingIr: ir,
-    bindings: Object.freeze([binding]),
+    id: "poc/error-envelope@0.0.0"
+    , buildHash: "error-envelope-test"
+    , bindingIr: ir
+    , bindings: Object.freeze([binding])
   });
 
   assert.equal(api.checkedPred(42), 41);
   assert.throws(
     () => api.checkedPred(0),
     error =>
-      error.code === "declared-error" &&
-      error.details.errorId === "error:underflow" &&
-      error.details.payload === 0,
+      error.code === "declared-error"
+      && error.details.errorId === "error:underflow"
+      && error.details.payload === 0,
   );
   assert.throws(
     () => api.checkedPred(0xffff_ffff),
@@ -214,23 +232,30 @@ test("trap policy reports one unexpected failure without poisoning later calls",
   const view = new DataView(buffer);
   let failNext = true;
   const module = {
-    HEAP8: new Int8Array(buffer),
-    _malloc: () => 64,
-    _free: () => {},
-    _bridge_error_probe(pointer, value) {
+    HEAP8: new Int8Array(buffer)
+    , _malloc: () => 64
+    , _free: () => {}
+    , _bridge_error_probe:
+      /**
+       * Writes the synthetic success or failure envelope used to exercise generated error decoding.
+       *
+       * @param pointer - Linear-memory address passed to the generated bridge probe.
+       * @param value - Probe input encoded into the alternating failure and success envelopes.
+       */
+      function(pointer, value) {
       view.setUint32(pointer, 1, true);
       view.setUint32(pointer + 4, 24, true);
       view.setUint32(pointer + 8, failNext ? 2 : 0, true);
       view.setUint32(pointer + 16, value - 1, true);
       failNext = false;
       return 0;
-    },
+      }
   };
   const api = createLibrarySurface(module, {
-    id: "poc/error-trap@0.0.0",
-    buildHash: "error-trap-test",
-    bindingIr: ir,
-    bindings: Object.freeze([binding]),
+    id: "poc/error-trap@0.0.0"
+    , buildHash: "error-trap-test"
+    , bindingIr: ir
+    , bindings: Object.freeze([binding])
   });
 
   assert.throws(
@@ -273,10 +298,10 @@ export const runtime = Object.freeze({
     assert.throws(
       () => module.checkedPred(0),
       error =>
-        error instanceof module.Underflow &&
-        error.code === "error:underflow" &&
-        error.payload === 0 &&
-        error.cause?.code === "declared-error",
+        error instanceof module.Underflow
+        && error.code === "error:underflow"
+        && error.payload === 0
+        && error.cause?.code === "declared-error",
     );
   });
 });

@@ -1,3 +1,9 @@
+/**
+ * Tests the documentation behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -6,30 +12,30 @@ import test from "node:test";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import {
-  ConsumerSupportError,
-  consumerSummaryMarkdown,
-  evaluateConsumerResults,
-  readConsumerSupport,
-  validateConsumerSupport,
+	ConsumerSupportError,
+	consumerSummaryMarkdown,
+	evaluateConsumerResults,
+	readConsumerSupport,
+	validateConsumerSupport,
 } from "../src/adoption/consumer-support.mjs";
 import {
-  STEADY_STATE_BOX_VALUE,
-  STEADY_STATE_MEASURED_ITERATIONS,
-  STEADY_STATE_OPERATION,
-  STEADY_STATE_WARMUP_ITERATIONS,
-  createConsumerPerformance,
+	STEADY_STATE_BOX_VALUE,
+	STEADY_STATE_MEASURED_ITERATIONS,
+	STEADY_STATE_OPERATION,
+	STEADY_STATE_WARMUP_ITERATIONS,
+	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
 const publicDocuments = Object.freeze([
-  "README.md",
-  "CONTRIBUTING.md",
-  "docs/lean-author-guide.md",
-  "docs/javascript-typescript.md",
-  "docs/php.md",
-  "docs/dotnet-jvm-ruby.md",
-  "docs/consumers.md",
-  "docs/status.md",
-  "docs/evidence/README.md",
+	"README.md"
+	, "CONTRIBUTING.md"
+	, "docs/lean-author-guide.md"
+	, "docs/javascript-typescript.md"
+	, "docs/php.md"
+	, "docs/dotnet-jvm-ruby.md"
+	, "docs/consumers.md"
+	, "docs/status.md"
+	, "docs/evidence/README.md"
 ]);
 
 const codeFences = source => [...source.matchAll(/^```[^\n]*\n([\s\S]*?)^```\s*$/gm)].map(match => match[1]);
@@ -52,9 +58,10 @@ test("versioned consumer support contract is closed and honest", async () => {
     contract.consumers.filter(item => item.state === "blocked").map(item => item.id),
     [],
   );
-  for (const consumer of contract.consumers) {
-    for (const path of consumer.evidence) await access(path);
-  }
+  for(const consumer of contract.consumers)
+{
+    for(const path of consumer.evidence) await access(path);
+}
   const open = structuredClone(contract);
   open.consumers[0].unreviewed = true;
   assert.throws(
@@ -71,39 +78,44 @@ test("versioned consumer support contract is closed and honest", async () => {
 
 test("README support table matches every matrix state", async () => {
   const [contract, readme] = await Promise.all([readConsumerSupport(), readFile("README.md", "utf8")]);
-  for (const consumer of contract.consumers) {
+  for(const consumer of contract.consumers)
+{
     const prefix = `| ${consumer.name} | \`${consumer.state}\` |`;
     assert.ok(readme.split("\n").some(line => line.startsWith(prefix)), consumer.id);
-  }
+}
   assert.equal((readme.match(/^\| .* \| `(?:supported|partial|blocked)` \|/gm) ?? []).length, contract.consumers.length);
 });
 
 test("public documentation has valid local links, portable paths, and plain punctuation", async () => {
-  for (const path of publicDocuments) {
+  for(const path of publicDocuments)
+{
     const source = await readFile(path, "utf8");
     assert.doesNotMatch(source, /—/, `${path} contains an em dash`);
     assert.doesNotMatch(source, /(?:^|[^A-Za-z0-9_])\/app(?:\/|\b)/, `${path} contains a workspace path`);
     assert.doesNotMatch(source, /\bperformance budgets?\b/i, `${path} presents performance as a budget`);
     assert.doesNotMatch(source, /https?:\/\/(?:www\.)?lean-?bridge\.dev/i, `${path} claims an unowned project domain`);
-    for (const match of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
+    for(const match of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g))
+{
       const target = match[1].trim().replace(/^<|>$/g, "");
-      if (/^(?:https?:|mailto:|#)/.test(target)) continue;
+      if(/^(?:https?:|mailto:|#)/.test(target)) continue;
       const local = decodeURIComponent(target.split("#")[0].split("?")[0]);
-      if (local === "") continue;
+      if(local === "") continue;
       await assert.doesNotReject(access(resolve(dirname(path), local)), `${path} -> ${target}`);
-    }
-    for (const match of source.matchAll(/`((?:tests|scripts|schema|poc|containers|acceptance)\/[^`\s]+)`/g)) {
+}
+    for(const match of source.matchAll(/`((?:tests|scripts|schema|poc|containers|acceptance)\/[^`\s]+)`/g))
+{
       await assert.doesNotReject(access(resolve(match[1])), `${path} -> ${match[1]}`);
-    }
-  }
+}
+}
 });
 
 test("public examples contain no private ABI or generic runtime surface", async () => {
   const forbidden = /\b(?:ccall|cwrap)\b|_Lean|\bWebAssembly\b|\bgeneric\s+(?:invoke|dispatch)\b|\bownershipFlag\b|\b(?:runtime|object)Handle\b/;
-  for (const path of publicDocuments) {
+  for(const path of publicDocuments)
+{
     const source = await readFile(path, "utf8");
-    for (const block of codeFences(source)) assert.doesNotMatch(block, forbidden, `${path} public example`);
-  }
+    for(const block of codeFences(source)) assert.doesNotMatch(block, forbidden, `${path} public example`);
+}
 });
 
 test("generated onboarding TypeScript has no public any", async () => {
@@ -118,17 +130,17 @@ test("generated onboarding TypeScript has no public any", async () => {
 
 test("promoted package evidence names each executable runtime path", async () => {
   const checks = [
-    ["scripts/test-native-consumers.mjs", "buildPyPiPackage"],
-    ["scripts/test-native-consumers.mjs", "buildCargoPackage"],
-    ["scripts/test-native-consumers.mjs", "buildCPackage"],
-    ["scripts/test-native-consumers.mjs", "buildCppPackage"],
-    ["scripts/test-managed-registry-consumers.mjs", "PackageReference"],
-    ["src/release/nuget-package.mjs", "buildNugetPackage"],
-    ["src/release/maven-package.mjs", "buildMavenPackage"],
-    ["src/release/rubygems-package.mjs", "buildRubyGemsPackage"],
-    ["scripts/test-wasi-consumer.mjs", "componentResult"],
+    ["scripts/test-native-consumers.mjs", "buildPyPiPackage"]
+    , ["scripts/test-native-consumers.mjs", "buildCargoPackage"]
+    , ["scripts/test-native-consumers.mjs", "buildCPackage"]
+    , ["scripts/test-native-consumers.mjs", "buildCppPackage"]
+    , ["scripts/test-managed-registry-consumers.mjs", "PackageReference"]
+    , ["src/release/nuget-package.mjs", "buildNugetPackage"]
+    , ["src/release/maven-package.mjs", "buildMavenPackage"]
+    , ["src/release/rubygems-package.mjs", "buildRubyGemsPackage"]
+    , ["scripts/test-wasi-consumer.mjs", "componentResult"]
   ];
-  for (const [path, pattern] of checks) assert.match(await readFile(path, "utf8"), new RegExp(pattern), path);
+  for(const [path, pattern] of checks) assert.match(await readFile(path, "utf8"), new RegExp(pattern), path);
 });
 
 test("steady-state consumers share one retained Box workload", async () => {
@@ -136,13 +148,13 @@ test("steady-state consumers share one retained Box workload", async () => {
   assert.equal(STEADY_STATE_OPERATION, "retained Box read");
   assert.equal(STEADY_STATE_WARMUP_ITERATIONS, 10_000);
   assert.equal(STEADY_STATE_MEASURED_ITERATIONS, 100_000);
-  for (const path of [
-    "tests/consumer-node.test.mjs",
-    "scripts/test-browser-package-consumer.mjs",
-    "scripts/test-native-consumers.mjs",
-    "scripts/test-php-native-package-consumer.mjs",
-    "scripts/test-php-wasm-package-host.mjs",
-    "scripts/test-managed-registry-consumers.mjs",
+  for(const path of [
+    "tests/consumer-node.test.mjs"
+    , "scripts/test-browser-package-consumer.mjs"
+    , "scripts/test-native-consumers.mjs"
+    , "scripts/test-php-native-package-consumer.mjs"
+    , "scripts/test-php-wasm-package-host.mjs"
+    , "scripts/test-managed-registry-consumers.mjs"
   ]) {
     const source = await readFile(path, "utf8");
     assert.match(source, /STEADY_STATE_BOX_VALUE/, path);
@@ -160,22 +172,22 @@ test("steady-state consumers share one retained Box workload", async () => {
 test("CI result contract detects support loss", async () => {
   const contract = await readConsumerSupport();
   const results = contract.consumers.map((item, index) => ({
-    schemaVersion: 2,
-    consumer: item.id,
-    declaredState: item.state,
-    testResult: "passed",
-    packageInstallation: item.packageInstallation,
-    realLeanExecution: item.realLeanExecution,
-    performance: createConsumerPerformance({
-      consumer: item.id,
-      operation: "generated API fixture call",
-      timingMode: item.id === "wit-wasi" ? "whole-invocation" : "steady-state",
-      scope: item.id === "wit-wasi" ? "installed process and component startup" : "steady-state installed consumer",
-      iterations: 1000,
-      durationNanoseconds: (index + 1) * 100000,
-    }),
-    blocker: item.blocker,
-    command: item.testCommand,
+    schemaVersion: 2
+    , consumer: item.id
+    , declaredState: item.state
+    , testResult: "passed"
+    , packageInstallation: item.packageInstallation
+    , realLeanExecution: item.realLeanExecution
+    , performance: createConsumerPerformance({
+      consumer: item.id
+      , operation: "generated API fixture call"
+      , timingMode: item.id === "wit-wasi" ? "whole-invocation" : "steady-state"
+      , scope: item.id === "wit-wasi" ? "installed process and component startup" : "steady-state installed consumer"
+      , iterations: 1000
+      , durationNanoseconds: (index + 1) * 100000
+    })
+    , blocker: item.blocker
+    , command: item.testCommand
   }));
   assert.equal(evaluateConsumerResults({ contract, results }).result, "passed");
 
@@ -198,7 +210,7 @@ test("CI result contract detects support loss", async () => {
   );
 
   const markdown = consumerSummaryMarkdown(evaluateConsumerResults({ contract, results }));
-  for (const consumer of contract.consumers) assert.match(markdown, new RegExp(`\\| ${consumer.id} \\|`));
+  for(const consumer of contract.consumers) assert.match(markdown, new RegExp(`\\| ${consumer.id} \\|`));
   assert.match(markdown, /Operation \| Timing \| Performance/);
   assert.match(markdown, /ns\/call|µs\/call|ms\/call/);
   assert.match(markdown, /\/invocation/);
@@ -209,8 +221,8 @@ test("CI result contract detects support loss", async () => {
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
   const [workflow, packageDocument] = await Promise.all([
-    readFile(".github/workflows/consumer-matrix.yml", "utf8"),
-    readFile("package.json", "utf8").then(JSON.parse),
+    readFile(".github/workflows/consumer-matrix.yml", "utf8")
+    , readFile("package.json", "utf8").then(JSON.parse)
   ]);
   assert.match(workflow, /^\s*push:\s*$/m);
   assert.match(workflow, /^\s*pull_request:\s*$/m);
@@ -231,12 +243,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
   assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 7);
   const contract = await readConsumerSupport();
-  for (const consumer of contract.consumers) {
+  for(const consumer of contract.consumers)
+{
     assert.match(workflow, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
-    if (["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id)) {
+    if(["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id))
+{
       assert.match(workflow, /--performance "build\/consumer-ci\/performance\/\$consumer\.json"/);
-    } else {
+} else
+{
       assert.match(workflow, new RegExp(`--performance [^\\n]*${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));
-    }
-  }
+}
+}
 });

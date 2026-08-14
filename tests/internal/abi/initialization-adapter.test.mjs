@@ -1,47 +1,53 @@
+/**
+ * Tests the initialization adapter behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import {
-  __bridgeTest,
-  createLibrarySurface,
+	__bridgeTest,
+	createLibrarySurface,
 } from "../../../poc/link-spike/loader.mjs";
 import { compileInitializationV1 } from "../../../src/abi/initialization.mjs";
 import { compileJavaScriptProjection } from "../../../src/backends/javascript/projection.mjs";
 
 const descriptor = (plan, bindings) => ({
-  id: "poc/initialization@0.0.0",
-  buildHash: "initialization-test",
-  bindingIrSha256: plan.bindingIrSha256,
-  bindings,
+	id: "poc/initialization@0.0.0"
+	, buildHash: "initialization-test"
+	, bindingIrSha256: plan.bindingIrSha256
+	, bindings
 });
 
 const functionBinding = (name, symbol, plan) => ({
-  kind: "function",
-  name,
-  declarationId: `test:${name}`,
-  symbol,
-  initialization: plan,
+	kind: "function"
+	, name
+	, declarationId: `test:${name}`
+	, symbol
+	, initialization: plan
 });
 
 test("initialization plans bind first-call policy to canonical Binding IR", () => {
   const required = compileInitializationV1(alpha.bindingIr, alpha.privateAbi);
   assert.deepEqual(
     {
-      required: required.required,
-      symbol: required.symbol,
-      trigger: required.trigger,
-      scope: required.scope,
-      failure: required.failure,
-      retry: required.retry,
+      required: required.required
+      , symbol: required.symbol
+      , trigger: required.trigger
+      , scope: required.scope
+      , failure: required.failure
+      , retry: required.retry
     },
     {
-      required: true,
-      symbol: "_bridge_lean_runtime_init",
-      trigger: "first-call",
-      scope: "component-runtime",
-      failure: "terminal",
-      retry: "never",
+      required: true
+      , symbol: "_bridge_lean_runtime_init"
+      , trigger: "first-call"
+      , scope: "component-runtime"
+      , failure: "terminal"
+      , retry: "never"
     },
   );
   assert.equal(Object.isFrozen(required), true);
@@ -56,10 +62,11 @@ test("initialization plans bind first-call policy to canonical Binding IR", () =
 test("every generated binding receives the same initialization plan", () => {
   const projection = compileJavaScriptProjection(alpha.bindingIr, alpha.privateAbi);
   assert.equal(projection.initialization.kind, "initialization-v1");
-  for (const binding of projection.bindings) {
+  for(const binding of projection.bindings)
+{
     assert.equal(binding.initialization, projection.initialization);
     assert.equal("initialize" in binding, false);
-  }
+}
 });
 
 test("one component runtime initializes once across native callables", () => {
@@ -69,16 +76,16 @@ test("one component runtime initializes once across native callables", () => {
     _initialize: () => {
       runs += 1;
       return 1;
-    },
-    _first: () => 1,
-    _second: () => 2,
+    }
+    , _first: () => 1
+    , _second: () => 2
   };
   const localPlan = Object.freeze({ ...plan, symbol: "_initialize" });
   const api = createLibrarySurface(
     module,
     descriptor(localPlan, [
-      functionBinding("first", "_first", localPlan),
-      functionBinding("second", "_second", localPlan),
+      functionBinding("first", "_first", localPlan)
+      , functionBinding("second", "_second", localPlan)
     ]),
   );
   assert.equal(runs, 0);
@@ -97,8 +104,8 @@ test("failed or drifted initialization plans never retry", () => {
     _initialize: () => {
       runs += 1;
       return 0;
-    },
-    _run: () => 1,
+    }
+    , _run: () => 1
   };
   const api = createLibrarySurface(
     module,
@@ -114,8 +121,8 @@ test("failed or drifted initialization plans never retry", () => {
     _initialize: () => {
       driftRuns += 1;
       return 1;
-    },
-    _run: () => 1,
+    }
+    , _run: () => 1
   };
   const driftedApi = createLibrarySurface(
     driftModule,

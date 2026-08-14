@@ -1,3 +1,9 @@
+/**
+ * Tests the managed generators behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
@@ -16,21 +22,23 @@ import { generateRubyBindingPackage } from "../src/backends/ruby/generate.mjs";
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
 const generators = Object.freeze({
-  dotnet: generateDotnetBindingPackage,
-  jvm: generateJvmBindingPackage,
-  ruby: generateRubyBindingPackage,
+	dotnet: generateDotnetBindingPackage
+	, jvm: generateJvmBindingPackage
+	, ruby: generateRubyBindingPackage
 });
 
 const writePackage = async (root, files) => {
-  for (const [path, source] of Object.entries(files)) {
-    const destination = join(root, path);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [path, source] of Object.entries(files))
+	{
+		const destination = join(root, path);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 test(".NET, JVM, and Ruby generation is deterministic and identifies one semantic fixture", () => {
-  for (const [target, generate] of Object.entries(generators)) {
+  for(const [target, generate] of Object.entries(generators))
+{
     const files = generate(alpha.bindingIr);
     assert.deepEqual(files, generate(clone(alpha.bindingIr)), target);
     const manifest = JSON.parse(files["binding-manifest.json"]);
@@ -38,22 +46,22 @@ test(".NET, JVM, and Ruby generation is deterministic and identifies one semanti
     assert.equal(manifest.component, alpha.id);
     assert.equal(manifest.bindingIrSha256, alpha.bindingIrSha256);
     assert.deepEqual(manifest.supportedFeatures, [
-      "direct-functions",
-      "copied-values",
-      "owned-resources",
-      "host-callbacks",
-      "returned-callables",
-      "declared-failures",
-      "deterministic-close",
+      "direct-functions"
+      , "copied-values"
+      , "owned-resources"
+      , "host-callbacks"
+      , "returned-callables"
+      , "declared-failures"
+      , "deterministic-close"
     ]);
     assert.deepEqual(manifest.capabilityGaps.map(gap => gap.feature), [
-      "asynchronous-results",
-      "iterators",
-      "additional-platforms",
+      "asynchronous-results"
+      , "iterators"
+      , "additional-platforms"
     ]);
     assert.ok(manifest.publicFiles.every(path => typeof files[path] === "string"));
     assert.ok(manifest.internalFiles.every(path => typeof files[path] === "string"));
-  }
+}
 });
 
 test("generated public surfaces use host conventions and hide private FFI", () => {
@@ -68,9 +76,10 @@ test("generated public surfaces use host conventions and hide private FFI", () =
   assert.match(jvm["src/main/java/org/leanbridge/alpha/Payload.java"], /public record Payload/);
   assert.match(jvm["src/main/java/org/leanbridge/alpha/Box.java"], /implements AutoCloseable/);
   assert.match(jvm["src/main/java/org/leanbridge/alpha/Transform.java"], /@FunctionalInterface/);
-  for (const path of JSON.parse(jvm["binding-manifest.json"]).publicFiles) {
+  for(const path of JSON.parse(jvm["binding-manifest.json"]).publicFiles)
+{
     assert.doesNotMatch(jvm[path], /\b(?:MemorySegment|Linker|SymbolLookup|Arena|JNI)\b/, path);
-  }
+}
 
   const ruby = generateRubyBindingPackage(alpha.bindingIr);
   const rubyPublic = ruby["lib/lean_bridge/alpha.rb"];
@@ -85,10 +94,11 @@ test("generated Ruby and RBS sources parse in a clean source tree", async () => 
   const root = await mkdtemp(join(tmpdir(), "lean-bridge-ruby-generation-"));
   const files = generateRubyBindingPackage(alpha.bindingIr);
   await writePackage(root, files);
-  for (const path of ["lib/lean_bridge/alpha.rb", "lib/lean_bridge/alpha/native.rb", "lean_bridge_alpha.gemspec"]) {
+  for(const path of ["lib/lean_bridge/alpha.rb", "lib/lean_bridge/alpha/native.rb", "lean_bridge_alpha.gemspec"])
+{
     const { stdout } = await run("ruby", ["-c", path], { cwd: root });
     assert.match(stdout, /Syntax OK/);
-  }
+}
   assert.match(await readFile(join(root, "sig/lean_bridge/alpha.rbs"), "utf8"), /module LeanBridge/);
 });
 
@@ -96,16 +106,18 @@ test("managed generators fail closed on semantic shapes outside the declared pro
   const asynchronous = clone(alpha.bindingIr);
   asynchronous.declarations.find(item => item.name === "roundTrip").resultMode = "promise";
   asynchronous.declarations.find(item => item.name === "roundTrip").effects.push("async");
-  for (const generate of Object.values(generators)) {
+  for(const generate of Object.values(generators))
+{
     assert.throws(
       () => generate(asynchronous),
       error => error instanceof ManagedBindingGenerationError && error.code === "unsupported-result-mode",
     );
-  }
+}
 });
 
 test("managed package audits reject private FFI in public source", () => {
-  for (const [target, generate] of Object.entries(generators)) {
+  for(const [target, generate] of Object.entries(generators))
+{
     const files = { ...generate(alpha.bindingIr) };
     const manifest = JSON.parse(files["binding-manifest.json"]);
     const path = manifest.publicFiles[0];
@@ -115,5 +127,5 @@ test("managed package audits reject private FFI in public source", () => {
       () => auditManagedBindingPackage(alpha.bindingIr, files, target),
       error => error instanceof ManagedPackageAuditError && error.code === "private-ffi-public",
     );
-  }
+}
 });

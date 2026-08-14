@@ -1,3 +1,9 @@
+/**
+ * Tests the PHP generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
@@ -9,12 +15,12 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  PhpBindingGenerationError,
-  generatePhpBindingPackage,
+	PhpBindingGenerationError,
+	generatePhpBindingPackage,
 } from "../src/backends/php/generate.mjs";
 import {
-  PhpPackageAuditError,
-  auditPhpPackage,
+	PhpPackageAuditError,
+	auditPhpPackage,
 } from "../src/backends/php/package-audit.mjs";
 
 const run = promisify(execFile);
@@ -22,83 +28,85 @@ const clone = value => structuredClone(value);
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 const phpFiles = async directory => {
-  const result = [];
-  const visit = async path => {
-    for (const entry of await readdir(path, { withFileTypes: true })) {
-      const child = join(path, entry.name);
-      if (entry.isDirectory()) await visit(child);
-      else if (entry.name.endsWith(".php")) result.push(child);
-    }
-  };
-  await visit(directory);
-  return result.sort();
+	const result = [];
+	const visit = async path => {
+		for(const entry of await readdir(path, { withFileTypes: true }))
+		{
+			const child = join(path, entry.name);
+			if(entry.isDirectory()) await visit(child);
+			else if(entry.name.endsWith(".php")) result.push(child);
+		}
+	};
+	await visit(directory);
+	return result.sort();
 };
 
 const deliveryFixture = () => {
-  const ir = clone(alpha.bindingIr);
-  const source = ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
-  const promise = clone(source);
-  promise.id = "bridge:Alpha.roundTripAsync";
-  promise.name = "roundTripAsync";
-  promise.overloadKey = "roundTripAsync(Payload)";
-  promise.resultMode = "promise";
-  promise.effects.push("async");
-  promise.assurance = [];
-  promise.source.producer = "bridge";
-  promise.source.declaration = "Alpha.roundTripAsync";
+	const ir = clone(alpha.bindingIr);
+	const source = ir.declarations.find(declaration => declaration.id === "lean:Alpha.roundTrip");
+	const promise = clone(source);
+	promise.id = "bridge:Alpha.roundTripAsync";
+	promise.name = "roundTripAsync";
+	promise.overloadKey = "roundTripAsync(Payload)";
+	promise.resultMode = "promise";
+	promise.effects.push("async");
+	promise.assurance = [];
+	promise.source.producer = "bridge";
+	promise.source.declaration = "Alpha.roundTripAsync";
 
-  const iterator = clone(source);
-  iterator.id = "bridge:Alpha.payloads";
-  iterator.name = "payloads";
-  iterator.overloadKey = "payloads(Payload)";
-  iterator.resultMode = "iterator";
-  iterator.assurance = [];
-  iterator.source.producer = "bridge";
-  iterator.source.declaration = "Alpha.payloads";
-  ir.declarations.push(promise, iterator);
-  return ir;
+	const iterator = clone(source);
+	iterator.id = "bridge:Alpha.payloads";
+	iterator.name = "payloads";
+	iterator.overloadKey = "payloads(Payload)";
+	iterator.resultMode = "iterator";
+	iterator.assurance = [];
+	iterator.source.producer = "bridge";
+	iterator.source.declaration = "Alpha.payloads";
+	ir.declarations.push(promise, iterator);
+	return ir;
 };
 
 const propertyFixture = () => {
-  const ir = clone(alpha.bindingIr);
-  ir.types.find(type => type.id === "lean:Alpha.Box").mutability = "write";
-  const getter = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
-  getter.name = "value";
-  getter.kind = "property";
-  getter.overloadKey = "Box.value.get";
-  const setter = clone(getter);
-  setter.id = "bridge:Alpha.Box.setValue";
-  setter.overloadKey = "Box.value.set(uint32)";
-  setter.parameters = [{
-    name: "value",
-    type: { kind: "primitive", name: "uint32" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
-  }];
-  setter.result = { type: { kind: "primitive", name: "unit" }, ownership: "copy", lifetime: null };
-  setter.receiver.mutability = "write";
-  setter.mutability = "write";
-  setter.effects = ["writes-resource", "fails"];
-  setter.assurance = [];
-  setter.documentation = { summary: "Replace the Box value.", details: "" };
-  setter.source = {
-    producer: "bridge",
-    declaration: "Alpha.Box.setValue",
-    extensions: { "lean-wasm.org/intrinsic": "property-setter-probe" },
-  };
-  ir.declarations.push(setter);
-  return ir;
+	const ir = clone(alpha.bindingIr);
+	ir.types.find(type => type.id === "lean:Alpha.Box").mutability = "write";
+	const getter = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+	getter.name = "value";
+	getter.kind = "property";
+	getter.overloadKey = "Box.value.get";
+	const setter = clone(getter);
+	setter.id = "bridge:Alpha.Box.setValue";
+	setter.overloadKey = "Box.value.set(uint32)";
+	setter.parameters = [{
+		name: "value"
+		, type: { kind: "primitive", name: "uint32" }
+		, ownership: "copy"
+		, lifetime: null
+		, mutability: "immutable"
+		, optional: false
+		, default: null
+	}];
+	setter.result = { type: { kind: "primitive", name: "unit" }, ownership: "copy", lifetime: null };
+	setter.receiver.mutability = "write";
+	setter.mutability = "write";
+	setter.effects = ["writes-resource", "fails"];
+	setter.assurance = [];
+	setter.documentation = { summary: "Replace the Box value.", details: "" };
+	setter.source = {
+		producer: "bridge"
+		, declaration: "Alpha.Box.setValue"
+		, extensions: { "lean-wasm.org/intrinsic": "property-setter-probe" }
+	};
+	ir.declarations.push(setter);
+	return ir;
 };
 
 test("PHP generator emits one hash-bound Composer package with typed public stubs", () => {
@@ -137,20 +145,24 @@ test("PHP generator emits one hash-bound Composer package with typed public stub
 
 test("every generated PHP source file and the public stub pass the PHP parser", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-lint-"));
-  try {
+  try
+{
     await writePackage(directory, generatePhpBindingPackage(alpha.bindingIr));
-    for (const path of await phpFiles(directory)) {
+    for(const path of await phpFiles(directory))
+{
       const { stdout } = await run("php", ["-l", path]);
       assert.match(stdout, /No syntax errors detected/);
-    }
-  } finally {
+}
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("generated PHP executes through ordinary values, functions, resources, and callables", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-run-"));
-  try {
+  try
+{
     await writePackage(directory, generatePhpBindingPackage(alpha.bindingIr));
     await run("composer", ["dump-autoload", "--quiet", "--no-interaction"], { cwd: directory });
     await writeFile(join(directory, "FakeTransport.php"), `<?php
@@ -240,13 +252,13 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
 `);
     const { stdout } = await run("php", ["consumer.php"], { cwd: directory });
     assert.deepEqual(JSON.parse(stdout), {
-      read: 41,
-      identity: true,
-      payload: { enabled: true, count: 9, label: "typed", bytes: "007fff", values: [1, 5, 13] },
-      callback: 42,
-      closure: 42,
-      disposed: true,
-      runtime: { initializations: 1, boxDisposals: 1, transformDisposals: 1 },
+      read: 41
+      , identity: true
+      , payload: { enabled: true, count: 9, label: "typed", bytes: "007fff", values: [1, 5, 13] }
+      , callback: 42
+      , closure: 42
+      , disposed: true
+      , runtime: { initializations: 1, boxDisposals: 1, transformDisposals: 1 }
     });
     await writeFile(join(directory, "poison.php"), `<?php
 declare(strict_types=1);
@@ -269,9 +281,10 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
 `);
     const poison = await run("php", ["poison.php"], { cwd: directory });
     assert.deepEqual(JSON.parse(poison.stdout), ["poisoned", "terminal"]);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("PHP properties, iterators, and awaitables retain native syntax", async () => {
@@ -287,12 +300,14 @@ test("PHP properties, iterators, and awaitables retain native syntax", async () 
   assert.match(deliveryFiles["src/functions.php"], /function payloads\([^)]*\): \\Traversable/);
 
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-shapes-"));
-  try {
+  try
+{
     await writePackage(directory, { ...propertyFiles, ...Object.fromEntries(Object.entries(deliveryFiles).map(([path, source]) => [`delivery/${path}`, source])) });
-    for (const path of await phpFiles(directory)) await run("php", ["-l", path]);
-  } finally {
+    for(const path of await phpFiles(directory)) await run("php", ["-l", path]);
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("PHP package audit rejects generated drift and raw public dispatch", async () => {
@@ -329,7 +344,7 @@ test("unsupported PHP semantics fail before package emission", () => {
   declaration.parameters[0].type = { kind: "parameter", id: "T" };
   declaration.result.type = { kind: "parameter", id: "T" };
   declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
+    { id: "uint32", type: { kind: "primitive", name: "uint32" } }
   ];
   assert.throws(
     () => generatePhpBindingPackage(generic),
@@ -339,13 +354,13 @@ test("unsupported PHP semantics fail before package emission", () => {
   const nullable = clone(alpha.bindingIr);
   const field = nullable.types.find(type => type.id === "lean:Alpha.Payload").fields[0];
   field.type = {
-    kind: "apply",
-    constructor: "option",
-    arguments: [{
-      kind: "apply",
-      constructor: "option",
-      arguments: [{ kind: "primitive", name: "uint32" }],
-    }],
+    kind: "apply"
+    , constructor: "option"
+    , arguments: [{
+      kind: "apply"
+      , constructor: "option"
+      , arguments: [{ kind: "primitive", name: "uint32" }]
+    }]
   };
   assert.throws(
     () => generatePhpBindingPackage(nullable),

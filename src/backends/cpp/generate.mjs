@@ -1,19 +1,26 @@
+/**
+ * Implements the generate module in the C++ backend.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 
 const exactAlphaShape = ir => {
-  const declarations = ir.declarations.map(item => item.id);
-  const expected = [
-    "lean:Alpha.box",
-    "lean:Alpha.Box.read",
-    "bridge:Alpha.Box.identity",
-    "lean:Alpha.roundTrip",
-    "lean:Alpha.withCallback",
-    "lean:Alpha.makeAdder",
-  ];
-  if (JSON.stringify(declarations) !== JSON.stringify(expected)) {
-    throw new Error("the C++ projection currently requires the reviewed Alpha fixture");
-  }
+	const declarations = ir.declarations.map(item => item.id);
+	const expected = [
+		"lean:Alpha.box"
+		, "lean:Alpha.Box.read"
+		, "bridge:Alpha.Box.identity"
+		, "lean:Alpha.roundTrip"
+		, "lean:Alpha.withCallback"
+		, "lean:Alpha.makeAdder"
+	];
+	if(JSON.stringify(declarations) !== JSON.stringify(expected))
+	{
+		throw new Error("the C++ projection currently requires the reviewed Alpha fixture");
+	}
 };
 
 const header = `#ifndef LEAN_ALPHA_HPP
@@ -194,26 +201,31 @@ inline Transform make_adder(std::uint32_t base) {
 #endif
 `;
 
+/**
+ * Generates C++ binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ *
+ * @param irValue - Binding IR document validated before target-language source generation.
+ */
 export const generateCppBindingPackage = irValue => {
-  const ir = validateBindingIr(irValue);
-  exactAlphaShape(ir);
-  const files = {
-    "include/lean_alpha.hpp": header,
-    "src/lean_alpha.cpp": "#include \"lean_alpha.hpp\"\n",
-    "README.md": `# ${ir.component.name} C++ binding\n\nTyped C++20 values and deterministic RAII wrappers over the generated native Lean component.\n`,
-  };
-  const manifest = {
-    schemaVersion: 1,
-    component: ir.component.id,
-    bindingIrSha256: hashBindingIr(ir),
-    generator: { id: "lean-wasm/cpp", version: 1 },
-    languageStandard: "C++20",
-    publicHeader: "include/lean_alpha.hpp",
-    implementation: "src/lean_alpha.cpp",
-    exports: ["Box", "Payload", "Transform", "round_trip", "with_callback", "make_adder"],
-    capabilityGaps: [],
-    files: ["include/lean_alpha.hpp", "src/lean_alpha.cpp", "README.md", "binding-manifest.json"],
-  };
-  files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-  return Object.freeze(files);
+	const ir = validateBindingIr(irValue);
+	exactAlphaShape(ir);
+	const files = {
+		"include/lean_alpha.hpp": header
+		, "src/lean_alpha.cpp": "#include \"lean_alpha.hpp\"\n"
+		, "README.md": `# ${ir.component.name} C++ binding\n\nTyped C++20 values and deterministic RAII wrappers over the generated native Lean component.\n`
+	};
+	const manifest = {
+		schemaVersion: 1
+		, component: ir.component.id
+		, bindingIrSha256: hashBindingIr(ir)
+		, generator: { id: "lean-wasm/cpp", version: 1 }
+		, languageStandard: "C++20"
+		, publicHeader: "include/lean_alpha.hpp"
+		, implementation: "src/lean_alpha.cpp"
+		, exports: ["Box", "Payload", "Transform", "round_trip", "with_callback", "make_adder"]
+		, capabilityGaps: []
+		, files: ["include/lean_alpha.hpp", "src/lean_alpha.cpp", "README.md", "binding-manifest.json"]
+	};
+	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
+	return Object.freeze(files);
 };

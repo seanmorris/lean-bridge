@@ -1,26 +1,33 @@
+/**
+ * Tests the host object generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  LeanHostObjectGenerationError,
-  generateLeanHostObjectAdapters,
+	LeanHostObjectGenerationError,
+	generateLeanHostObjectAdapters,
 } from "../src/backends/lean/host-object.mjs";
 
 const clone = value => structuredClone(value);
 
 const hostFixture = () => {
-  const ir = clone(alpha.bindingIr);
-  const box = ir.types.find(type => type.name === "Box");
-  box.host = {
-    targets: ["javascript", "python"],
-    identity: "weak-canonical",
-    dynamic: false,
-  };
-  for (const declaration of ir.declarations.filter(item => item.owner === box.id)) {
-    if (!declaration.effects.includes("host-call")) declaration.effects.push("host-call");
-  }
-  return ir;
+	const ir = clone(alpha.bindingIr);
+	const box = ir.types.find(type => type.name === "Box");
+	box.host = {
+		targets: ["javascript", "python"]
+		, identity: "weak-canonical"
+		, dynamic: false
+	};
+	for(const declaration of ir.declarations.filter(item => item.owner === box.id))
+	{
+		if(!declaration.effects.includes("host-call")) declaration.effects.push("host-call");
+	}
+	return ir;
 };
 
 test("Lean host adapters preserve native members, ownership, and target identity", () => {

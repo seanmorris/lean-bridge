@@ -1,37 +1,43 @@
+/**
+ * Tests the performance methodology behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  inspectPerformanceEnvironment,
-  performanceMethodologySha256,
-  summarizeMeasurementForks,
-  validatePerformanceMethodology,
-  verifyMethodologyIdentityInputs,
+	inspectPerformanceEnvironment,
+	performanceMethodologySha256,
+	summarizeMeasurementForks,
+	validatePerformanceMethodology,
+	verifyMethodologyIdentityInputs,
 } from "../src/performance/methodology.mjs";
 
 const methodology = JSON.parse(await readFile(
-  "poc/performance/methodology.v1.json",
-  "utf8",
+	"poc/performance/methodology.v1.json",
+	"utf8",
 ));
 
 const observationFor = environment => ({
-  environmentId: environment.id,
-  operatingSystem: { ...environment.operatingSystem },
-  hardware: {
-    architecture: environment.hardware.architecture,
-    cpuModel: environment.hardware.cpuModel,
-    logicalCpuCount: environment.hardware.logicalCpuCount,
-    memoryBytes: environment.hardware.minimumMemoryBytes,
-  },
-  runtimes: { ...environment.runtimes },
-  constraints: {
-    exclusiveRunner: environment.constraints.exclusiveRunner,
-    cpuGovernor: environment.constraints.cpuGovernor,
-    loadAveragePerCpu: environment.constraints.maximumLoadAveragePerCpu / 2,
-    swapInputOutputDelta: 0,
-    networkDuringTimedRegions: environment.constraints.networkDuringTimedRegions,
-  },
+	environmentId: environment.id
+	, operatingSystem: { ...environment.operatingSystem }
+	, hardware: {
+		architecture: environment.hardware.architecture
+		, cpuModel: environment.hardware.cpuModel
+		, logicalCpuCount: environment.hardware.logicalCpuCount
+		, memoryBytes: environment.hardware.minimumMemoryBytes
+	}
+	, runtimes: { ...environment.runtimes }
+	, constraints: {
+		exclusiveRunner: environment.constraints.exclusiveRunner
+		, cpuGovernor: environment.constraints.cpuGovernor
+		, loadAveragePerCpu: environment.constraints.maximumLoadAveragePerCpu / 2
+		, swapInputOutputDelta: 0
+		, networkDuringTimedRegions: environment.constraints.networkDuringTimedRegions
+	}
 });
 
 test("the performance methodology and environment report schemas close every object", async () => {
@@ -46,14 +52,19 @@ test("the performance methodology and environment report schemas close every obj
   assert.equal(methodologySchema.additionalProperties, false);
   assert.equal(methodologySchema.properties.schemaVersion.const, 1);
   assert.equal(methodologySchema.properties.kind.const, "lean-bridge-performance-methodology");
-  for (const name of [
-    "environment", "toolchain", "identityInput", "execution", "sampling", "statistics",
-    "memory", "noise", "reporting",
+  for(const name of [
+    "environment"
+    , "toolchain"
+    , "identityInput"
+    , "execution"
+    , "sampling"
+    , "statistics"
+    , "memory", "noise", "reporting"
   ]) assert.equal(methodologySchema.$defs[name].additionalProperties, false);
   assert.equal(reportSchema.additionalProperties, false);
-  for (const name of [
-    "methodology", "source", "identityInput", "observation", "operatingSystem",
-    "hardware", "runtimes", "constraints", "issue",
+  for(const name of [
+    "methodology", "source", "identityInput", "observation", "operatingSystem"
+    , "hardware", "runtimes", "constraints", "issue"
   ]) assert.equal(reportSchema.$defs[name].additionalProperties, false);
 });
 
@@ -127,21 +138,21 @@ test("environment drift rejects a reference result instead of creating a new bas
   assert.equal(result.baselineEligible, false);
   assert.equal(result.classification, "rejected");
   assert.deepEqual(result.issues.map(issue => issue.path), [
-    "runtimes.node",
-    "constraints.loadAveragePerCpu",
+    "runtimes.node"
+    , "constraints.loadAveragePerCpu"
   ]);
 });
 
 test("fork summaries retain raw samples and produce deterministic confidence intervals", () => {
   const forks = Array.from({ length: methodology.sampling.validForks }, (_, index) => ({
-    id: `fork-${index + 1}`,
-    samplesNs: [100 + index, 110 + index, 120 + index, 130 + index, 1000 + index],
+    id: `fork-${index + 1}`
+    , samplesNs: [100 + index, 110 + index, 120 + index, 130 + index, 1000 + index]
   }));
   const options = {
-    methodology,
-    metricIdentity: "lazy.box.read",
-    resultIdentity: "example-result",
-    forks,
+    methodology
+    , metricIdentity: "lazy.box.read"
+    , resultIdentity: "example-result"
+    , forks
   };
   const first = summarizeMeasurementForks(options);
   const second = summarizeMeasurementForks(options);
@@ -157,19 +168,19 @@ test("fork summaries retain raw samples and produce deterministic confidence int
 test("an incomplete fork set cannot produce a baseline summary", () => {
   assert.throws(
     () => summarizeMeasurementForks({
-      methodology,
-      metricIdentity: "lazy.box.read",
-      resultIdentity: "example-result",
-      forks: [{ id: "one", samplesNs: [1, 2, 3] }],
+      methodology
+      , metricIdentity: "lazy.box.read"
+      , resultIdentity: "example-result"
+      , forks: [{ id: "one", samplesNs: [1, 2, 3] }]
     }),
     error => error.code === "insufficient-valid-forks",
   );
 });
 
 test("methodology tooling never reaches private bridge dispatch", async () => {
-  for (const path of [
-    "src/performance/methodology.mjs",
-    "scripts/check-performance-methodology.mjs",
+  for(const path of [
+    "src/performance/methodology.mjs"
+    , "scripts/check-performance-methodology.mjs"
   ]) {
     const source = await readFile(path, "utf8");
     assert.doesNotMatch(

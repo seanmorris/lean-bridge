@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Compiles the plain component target C workflow.
+ *
+ * @file
+ */
+
 
 import { mkdir, mkdtemp, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -13,42 +19,46 @@ import { compileLeanComponentSources } from "../src/build/lean-component-compile
 
 const arguments_ = process.argv.slice(2);
 const option = name => {
-  const index = arguments_.indexOf(name);
-  return index === -1 ? null : arguments_[index + 1] ?? null;
+	const index = arguments_.indexOf(name);
+	return index === -1 ? null : arguments_[index + 1] ?? null;
 };
 const projectRoot = resolve(option("--project") ?? process.cwd());
 const engineRoot = resolve(option("--engine") ?? fileURLToPath(new URL("..", import.meta.url)));
 const outputRoot = resolve(option("--output") ?? `${projectRoot}/build/lean-bridge-target-c`);
 
-try {
-  await stat(outputRoot);
-  throw new Error(`Output already exists: ${outputRoot}`);
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
+try
+{
+	await stat(outputRoot);
+	throw new Error(`Output already exists: ${outputRoot}`);
+} catch(error)
+{
+	if(error.code !== "ENOENT") throw error;
 }
 
 await mkdir(dirname(outputRoot), { recursive: true });
 const staging = await mkdtemp(`${dirname(outputRoot)}/.lean-bridge-component-compile-`);
-try {
-  const analysis = await analyzeLeanProject(projectRoot);
-  const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot });
-  const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
-  const compilationPlan = await prepareComponentCompilationPlan({ projectRoot, analysis, componentPlan, compilerAdapters });
-  await writeComponentCompilationInputs({ projectRoot, outputRoot: `${staging}/inputs`, analysis, componentPlan, compilerAdapters });
-  const compiled = await compileLeanComponentSources({ inputRoot: `${staging}/inputs`, outputRoot: `${staging}/target-c`, engineRoot, compilationPlan });
-  const report = Object.freeze({
-    schemaVersion: 1,
-    component: compilationPlan.document.component.id,
-    componentPlanSha256: componentPlan.sha256,
-    compilationPlanSha256: compilationPlan.sha256,
-    targetCManifestSha256: compiled.manifestSha256,
-    modules: compiled.manifest.modules.map(module => module.module),
-    sourceReadOnly: true,
-  });
-  await writeFile(`${staging}/compile-report.json`, canonicalJson(report));
-  await rename(staging, outputRoot);
-  process.stdout.write(canonicalJson({ ...report, output: outputRoot }));
-} catch (error) {
-  await rm(staging, { recursive: true, force: true });
-  throw error;
+try
+{
+	const analysis = await analyzeLeanProject(projectRoot);
+	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot });
+	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+	const compilationPlan = await prepareComponentCompilationPlan({ projectRoot, analysis, componentPlan, compilerAdapters });
+	await writeComponentCompilationInputs({ projectRoot, outputRoot: `${staging}/inputs`, analysis, componentPlan, compilerAdapters });
+	const compiled = await compileLeanComponentSources({ inputRoot: `${staging}/inputs`, outputRoot: `${staging}/target-c`, engineRoot, compilationPlan });
+	const report = Object.freeze({
+		schemaVersion: 1
+		, component: compilationPlan.document.component.id
+		, componentPlanSha256: componentPlan.sha256
+		, compilationPlanSha256: compilationPlan.sha256
+		, targetCManifestSha256: compiled.manifestSha256
+		, modules: compiled.manifest.modules.map(module => module.module)
+		, sourceReadOnly: true
+	});
+	await writeFile(`${staging}/compile-report.json`, canonicalJson(report));
+	await rename(staging, outputRoot);
+	process.stdout.write(canonicalJson({ ...report, output: outputRoot }));
+} catch(error)
+{
+	await rm(staging, { recursive: true, force: true });
+	throw error;
 }

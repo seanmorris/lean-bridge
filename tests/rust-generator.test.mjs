@@ -1,3 +1,9 @@
+/**
+ * Tests the Rust generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -8,8 +14,8 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  RustBindingGenerationError,
-  generateRustBindingPackage,
+	RustBindingGenerationError,
+	generateRustBindingPackage,
 } from "../src/backends/rust/generate.mjs";
 import { auditRustPackage } from "../src/backends/rust/package-audit.mjs";
 
@@ -17,11 +23,12 @@ const run = promisify(execFile);
 const clone = value => structuredClone(value);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(join(destination, ".."), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(join(destination, ".."), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 test("the Rust backend emits owned values, resources, closures, and Results", () => {
@@ -67,7 +74,8 @@ test("the Rust backend emits owned values, resources, closures, and Results", ()
 
 test("the generated Rust crate compiles and runs through its native API", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-rust-generator-"));
-  try {
+  try
+{
     await writePackage(directory, generateRustBindingPackage(alpha.bindingIr));
     await mkdir(join(directory, "tests"), { recursive: true });
     await writeFile(join(directory, "tests/consumer.rs"), `
@@ -177,9 +185,10 @@ fn ordinary_rust_calls_preserve_values_identity_callbacks_and_drop() {
       { env: { ...process.env, RUSTFLAGS: "-D warnings" } },
     );
     assert.match(`${stdout}\n${stderr}`, /1 passed/);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("finite generic declarations become concrete Rust functions", () => {
@@ -189,22 +198,22 @@ test("finite generic declarations become concrete Rust functions", () => {
   declaration.overloadKey = "echo<T>(T)";
   declaration.typeParameters = [{ id: "T", representation: "copied", constraints: [] }];
   declaration.parameters = [{
-    name: "value",
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
+    name: "value"
+    , type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
+    , mutability: "immutable"
+    , optional: false
+    , default: null
   }];
   declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
+    type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
   };
   declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
-    { id: "string", type: { kind: "primitive", name: "string" } },
+    { id: "uint32", type: { kind: "primitive", name: "uint32" } }
+    , { id: "string", type: { kind: "primitive", name: "string" } }
   ];
 
   const files = generateRustBindingPackage(ir);

@@ -1,3 +1,9 @@
+/**
+ * Tests the performance reference behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -5,9 +11,9 @@ import test from "node:test";
 
 test("independent Lean performance components compile and execute corpus vectors", async () => {
   const output = execFileSync("bash", ["scripts/test-performance-reference.sh"], {
-    cwd: process.cwd(),
-    encoding: "utf8",
-    env: { ...process.env, NO_COLOR: "1" },
+    cwd: process.cwd()
+    , encoding: "utf8"
+    , env: { ...process.env, NO_COLOR: "1" }
   });
   assert.match(output, /performance reference vectors passed/);
 

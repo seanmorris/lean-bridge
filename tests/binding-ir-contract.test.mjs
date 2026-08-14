@@ -1,3 +1,9 @@
+/**
+ * Tests the binding IR contract behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -5,47 +11,48 @@ import { promisify } from "node:util";
 import test from "node:test";
 
 import {
-  BindingIrCanonicalError,
-  BindingIrCompatibilityError,
-  canonicalizeBindingIr,
-  diagnoseBindingIrVersion,
-  hashBindingIr,
-  migrateBindingIr,
-  parseBindingIr,
+	BindingIrCanonicalError,
+	BindingIrCompatibilityError,
+	canonicalizeBindingIr,
+	diagnoseBindingIrVersion,
+	hashBindingIr,
+	migrateBindingIr,
+	parseBindingIr,
 } from "../src/binding-ir/canonical.mjs";
 import {
-  BindingIrContractError,
-  validateBindingIr,
+	BindingIrContractError,
+	validateBindingIr,
 } from "../src/binding-ir/contract.mjs";
 import {
-  BindingIrFrontendError,
-  createBindingIrFrontend,
+	BindingIrFrontendError,
+	createBindingIrFrontend,
 } from "../src/binding-ir/frontend.mjs";
 
 const fixture = JSON.parse(
-  await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json", "utf8"),
+	await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json", "utf8"),
 );
 const clone = value => structuredClone(value);
 const execute = promisify(execFile);
 
 const reverseObjectKeys = value => {
-  if (Array.isArray(value)) return value.map(reverseObjectKeys);
-  if (value !== null && typeof value === "object") {
-    return Object.fromEntries(
-      Object.entries(value)
+	if(Array.isArray(value)) return value.map(reverseObjectKeys);
+	if(value !== null && typeof value === "object")
+	{
+		return Object.fromEntries(
+			Object.entries(value)
         .reverse()
         .map(([key, child]) => [key, reverseObjectKeys(child)]),
-    );
-  }
-  return value;
+		);
+	}
+	return value;
 };
 
 const contractError = (operation, code) => {
-  assert.throws(operation, error => {
+	assert.throws(operation, error => {
     assert.equal(error instanceof BindingIrContractError, true);
     assert.equal(error.code, code);
     return true;
-  });
+	});
 };
 
 test("the Alpha fixture defines copied values and identity resources", () => {
@@ -53,9 +60,9 @@ test("the Alpha fixture defines copied values and identity resources", () => {
   assert.deepEqual(
     fixture.types.map(type => [type.name, type.representation]),
     [
-      ["Payload", "copied"],
-      ["Box", "identity"],
-      ["Transform", "identity"],
+      ["Payload", "copied"]
+      , ["Box", "identity"]
+      , ["Transform", "identity"]
     ],
   );
 });
@@ -134,10 +141,10 @@ test("borrow anchors must resolve to a receiver or declared parameter", () => {
 test("copied records reject identity-bearing fields", () => {
   const candidate = clone(fixture);
   candidate.types[0].fields.push({
-    name: "box",
-    type: { kind: "named", id: "lean:Alpha.Box" },
-    mutability: "immutable",
-    documentation: { summary: "An invalid identity field.", details: "" },
+    name: "box"
+    , type: { kind: "named", id: "lean:Alpha.Box" }
+    , mutability: "immutable"
+    , documentation: { summary: "An invalid identity field.", details: "" }
   });
   contractError(() => validateBindingIr(candidate), "record-field-representation");
 });
@@ -155,89 +162,89 @@ test("producer-specific metadata stays behind namespaced extension keys", () => 
 });
 
 const progressCallback = () => ({
-  id: "bridge:Alpha.ProgressCallback",
-  name: "ProgressCallback",
-  kind: "callback",
-  representation: "identity",
-  mutability: "immutable",
-  typeParameters: [],
-  fields: [],
-  target: null,
-  resource: null,
-  callable: {
-    invocation: "many",
-    reentry: "same-agent",
-    selfDisposal: "reject",
-    parameters: [
-      {
-        name: "value",
-        type: { kind: "primitive", name: "uint32" },
-        ownership: "copy",
-        lifetime: null,
-        mutability: "immutable",
-        optional: false,
-        default: null,
-      },
-    ],
-    result: {
-      type: { kind: "primitive", name: "unit" },
-      ownership: "copy",
-      lifetime: null,
-    },
-    effects: ["host-call"],
-    failure: { mode: "none", errors: [], unexpected: "poison-runtime" },
-    resultMode: "value",
-  },
-  cases: [],
-  host: null,
-  documentation: {
-    summary: "Receive progress from Lean.",
-    details: "The callback may re-enter the same shared runtime.",
-  },
-  source: {
-    producer: "bridge",
-    declaration: "Alpha.ProgressCallback",
-    extensions: { "lean-wasm.org/intrinsic": "host-callback" },
-  },
-  assurance: [],
+	id: "bridge:Alpha.ProgressCallback"
+	, name: "ProgressCallback"
+	, kind: "callback"
+	, representation: "identity"
+	, mutability: "immutable"
+	, typeParameters: []
+	, fields: []
+	, target: null
+	, resource: null
+	, callable: {
+		invocation: "many"
+		, reentry: "same-agent"
+		, selfDisposal: "reject"
+		, parameters: [
+			{
+				name: "value"
+				, type: { kind: "primitive", name: "uint32" }
+				, ownership: "copy"
+				, lifetime: null
+				, mutability: "immutable"
+				, optional: false
+				, default: null
+			}
+		]
+		, result: {
+			type: { kind: "primitive", name: "unit" }
+			, ownership: "copy"
+			, lifetime: null
+		}
+		, effects: ["host-call"]
+		, failure: { mode: "none", errors: [], unexpected: "poison-runtime" }
+		, resultMode: "value"
+	}
+	, cases: []
+	, host: null
+	, documentation: {
+		summary: "Receive progress from Lean."
+		, details: "The callback may re-enter the same shared runtime."
+	}
+	, source: {
+		producer: "bridge"
+		, declaration: "Alpha.ProgressCallback"
+		, extensions: { "lean-wasm.org/intrinsic": "host-callback" }
+	}
+	, assurance: []
 });
 
 const lookupVariant = () => ({
-  id: "bridge:Alpha.Lookup",
-  name: "Lookup",
-  kind: "variant",
-  representation: "copied",
-  mutability: "immutable",
-  typeParameters: [],
-  fields: [],
-  target: null,
-  resource: null,
-  callable: null,
-  cases: [
-    {
-      name: "Found",
-      fields: [{
-        name: "value",
-        type: { kind: "primitive", name: "uint32" },
-        mutability: "immutable",
-        documentation: { summary: "The located value.", details: "" },
-      }],
-      documentation: { summary: "A successful lookup.", details: "" },
-    },
-    {
-      name: "Missing",
-      fields: [],
-      documentation: { summary: "No value was found.", details: "" },
-    },
-  ],
-  host: null,
-  documentation: { summary: "A tagged lookup result.", details: "" },
-  source: {
-    producer: "bridge",
-    declaration: "Alpha.Lookup",
-    extensions: {},
-  },
-  assurance: [],
+	id: "bridge:Alpha.Lookup"
+	, name: "Lookup"
+	, kind: "variant"
+	, representation: "copied"
+	, mutability: "immutable"
+	, typeParameters: []
+	, fields: []
+	, target: null
+	, resource: null
+	, callable: null
+	, cases: [
+		{
+			name: "Found"
+			, fields: [{
+				name: "value"
+				, type: { kind: "primitive", name: "uint32" }
+				, mutability: "immutable"
+				, documentation: { summary: "The located value.", details: "" }
+			}]
+			, documentation: { summary: "A successful lookup.", details: "" }
+		}
+		, {
+			name: "Missing"
+			, fields: []
+			, documentation: { summary: "No value was found.", details: "" }
+		}
+	]
+	, host: null
+	, documentation: { summary: "A tagged lookup result.", details: "" }
+	, source: {
+		producer: "bridge"
+		, declaration: "Alpha.Lookup"
+		, extensions: {}
+	}
+	, assurance: []
 });
 
 test("callback types carry closed invocation and re-entry semantics", () => {
@@ -272,8 +279,8 @@ test("variants carry semantic case names and copied fields", () => {
 
   const identity = clone(candidate);
   identity.types.at(-1).cases[0].fields[0].type = {
-    kind: "named",
-    id: "lean:Alpha.Box",
+    kind: "named"
+    , id: "lean:Alpha.Box"
   };
   contractError(() => validateBindingIr(identity), "record-field-representation");
 });
@@ -300,70 +307,70 @@ test("resource ownership projects static methods without a receiver", () => {
 });
 
 const schemaProducedFixture = {
-  schemaVersion: 3,
-  component: {
-    id: "fixture/schema-math@1.0.0",
-    name: "Schema Math",
-    version: "1.0.0",
-  },
-  producers: [
-    {
-      id: "schema",
-      adapter: "interface-schema",
-      adapterVersion: 1,
-      tool: "Fixture schema compiler",
-      toolVersion: "1.0.0",
-      extensions: { "example.test/schema": "math-v1" },
-    },
-  ],
-  types: [],
-  declarations: [
-    {
-      id: "schema:math.add",
-      name: "add",
-      kind: "function",
-      owner: null,
-      overloadKey: "add(uint32,uint32)",
-      typeParameters: [],
-      receiver: null,
-      parameters: ["left", "right"].map(name => ({
-        name,
-        type: { kind: "primitive", name: "uint32" },
-        ownership: "copy",
-        lifetime: null,
-        mutability: "immutable",
-        optional: false,
-        default: null,
-      })),
-      result: {
-        type: { kind: "primitive", name: "uint32" },
-        ownership: "copy",
-        lifetime: null,
-      },
-      mutability: "immutable",
-      effects: [],
-      failure: { mode: "none", errors: [], unexpected: "trap" },
-      resultMode: "value",
-      capabilities: [],
-      assurance: [],
-      documentation: {
-        summary: "Add two unsigned 32-bit integers.",
-        details: "This fixture is produced without Lean declarations or metadata.",
-      },
-      source: {
-        producer: "schema",
-        declaration: "math.add",
-        extensions: { "example.test/pointer": "#/functions/add" },
-      },
-    },
-  ],
-  errors: [],
-  capabilities: [],
-  assurance: [],
-  documentation: {
-    summary: "A non-Lean producer fixture.",
-    details: "It exercises the same semantic core through another frontend.",
-  },
+	schemaVersion: 3
+	, component: {
+		id: "fixture/schema-math@1.0.0"
+		, name: "Schema Math"
+		, version: "1.0.0"
+	}
+	, producers: [
+		{
+			id: "schema"
+			, adapter: "interface-schema"
+			, adapterVersion: 1
+			, tool: "Fixture schema compiler"
+			, toolVersion: "1.0.0"
+			, extensions: { "example.test/schema": "math-v1" }
+		}
+	]
+	, types: []
+	, declarations: [
+		{
+			id: "schema:math.add"
+			, name: "add"
+			, kind: "function"
+			, owner: null
+			, overloadKey: "add(uint32,uint32)"
+			, typeParameters: []
+			, receiver: null
+			, parameters: ["left", "right"].map(name => ({
+				name
+				, type: { kind: "primitive", name: "uint32" }
+				, ownership: "copy"
+				, lifetime: null
+				, mutability: "immutable"
+				, optional: false
+				, default: null
+			}))
+			, result: {
+				type: { kind: "primitive", name: "uint32" }
+				, ownership: "copy"
+				, lifetime: null
+			}
+			, mutability: "immutable"
+			, effects: []
+			, failure: { mode: "none", errors: [], unexpected: "trap" }
+			, resultMode: "value"
+			, capabilities: []
+			, assurance: []
+			, documentation: {
+				summary: "Add two unsigned 32-bit integers."
+				, details: "This fixture is produced without Lean declarations or metadata."
+			}
+			, source: {
+				producer: "schema"
+				, declaration: "math.add"
+				, extensions: { "example.test/pointer": "#/functions/add" }
+			}
+		}
+	]
+	, errors: []
+	, capabilities: []
+	, assurance: []
+	, documentation: {
+		summary: "A non-Lean producer fixture."
+		, details: "It exercises the same semantic core through another frontend."
+	}
 };
 
 test("generic declarations use scoped representation constraints", () => {
@@ -374,30 +381,30 @@ test("generic declarations use scoped representation constraints", () => {
   declaration.overloadKey = "echo<T>(T)";
   declaration.typeParameters = [
     {
-      id: "T",
-      representation: "copied",
-      constraints: ["constraint:copyable"],
-    },
+      id: "T"
+      , representation: "copied"
+      , constraints: ["constraint:copyable"]
+    }
   ];
   declaration.parameters = [
     {
-      name: "value",
-      type: { kind: "parameter", id: "T" },
-      ownership: "copy",
-      lifetime: null,
-      mutability: "immutable",
-      optional: false,
-      default: null,
-    },
+      name: "value"
+      , type: { kind: "parameter", id: "T" }
+      , ownership: "copy"
+      , lifetime: null
+      , mutability: "immutable"
+      , optional: false
+      , default: null
+    }
   ];
   declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
+    type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
   };
   declaration.documentation = {
-    summary: "Return one copied value with the same semantic type.",
-    details: "The producer constrains T to copied representations.",
+    summary: "Return one copied value with the same semantic type."
+    , details: "The producer constrains T to copied representations."
   };
   declaration.source.declaration = "identity.echo";
   assert.equal(validateBindingIr(candidate), candidate);
@@ -405,10 +412,10 @@ test("generic declarations use scoped representation constraints", () => {
 
 test("a versioned non-Lean frontend produces the same semantic core", async () => {
   const frontend = createBindingIrFrontend({
-    producerId: "schema",
-    adapter: "interface-schema",
-    adapterVersion: 1,
-    analyze: async () => clone(schemaProducedFixture),
+    producerId: "schema"
+    , adapter: "interface-schema"
+    , adapterVersion: 1
+    , analyze: async () => clone(schemaProducedFixture)
   });
   const ir = await frontend.analyze({ source: "ignored fixture input" });
   assert.equal(ir.declarations[0].id, "schema:math.add");
@@ -418,10 +425,10 @@ test("a versioned non-Lean frontend produces the same semantic core", async () =
 
 test("the Lean frontend carries declaration and proof provenance through its namespace", async () => {
   const frontend = createBindingIrFrontend({
-    producerId: "lean",
-    adapter: "lean4",
-    adapterVersion: 1,
-    analyze: async () => clone(fixture),
+    producerId: "lean"
+    , adapter: "lean4"
+    , adapterVersion: 1
+    , analyze: async () => clone(fixture)
   });
   const ir = await frontend.analyze({ module: "Alpha" });
   assert.equal(ir.types[0].source.declaration, "Alpha.Payload");
@@ -434,10 +441,10 @@ test("the Lean frontend carries declaration and proof provenance through its nam
 
 test("a frontend cannot claim another producer or adapter version", async () => {
   const frontend = createBindingIrFrontend({
-    producerId: "schema",
-    adapter: "interface-schema",
-    adapterVersion: 2,
-    analyze: async () => clone(schemaProducedFixture),
+    producerId: "schema"
+    , adapter: "interface-schema"
+    , adapterVersion: 2
+    , analyze: async () => clone(schemaProducedFixture)
   });
   await assert.rejects(frontend.analyze(null), error => {
     assert.equal(error instanceof BindingIrFrontendError, true);
@@ -483,12 +490,12 @@ test("canonical serialization rejects values that JSON cannot identify safely", 
 
 test("version diagnostics distinguish migration from consumer upgrades", () => {
   assert.deepEqual(diagnoseBindingIrVersion(fixture), {
-    compatible: true,
-    code: "exact-schema-version",
-    actual: 3,
-    supported: [3],
-    relation: "exact",
-    action: null,
+    compatible: true
+    , code: "exact-schema-version"
+    , actual: 3
+    , supported: [3]
+    , relation: "exact"
+    , action: null
   });
   assert.equal(diagnoseBindingIrVersion({ schemaVersion: 1 }).code, "migration-required");
   assert.equal(diagnoseBindingIrVersion({ schemaVersion: 4 }).code, "consumer-upgrade-required");
@@ -499,14 +506,14 @@ test("version diagnostics distinguish migration from consumer upgrades", () => {
   legacy.types = legacy.types.filter(type => type.kind !== "callback");
   legacy.declarations = legacy.declarations.filter(
     declaration =>
-      declaration.id !== "lean:Alpha.withCallback" &&
-      declaration.id !== "lean:Alpha.makeAdder",
+      declaration.id !== "lean:Alpha.withCallback"
+      && declaration.id !== "lean:Alpha.makeAdder",
   );
   legacy.errors = legacy.errors.filter(error => error.id !== "error:callback-threw");
   legacy.assurance = legacy.assurance.filter(
     claim =>
-      claim.id !== "assurance:Alpha.withCallback.boundary" &&
-      claim.id !== "assurance:Alpha.makeAdder.boundary",
+      claim.id !== "assurance:Alpha.withCallback.boundary"
+      && claim.id !== "assurance:Alpha.makeAdder.boundary",
   );
   legacy.types.forEach(type => delete type.callable);
   legacy.types.forEach(type => {

@@ -1,14 +1,20 @@
+/**
+ * Tests the canonical package manifest behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
 import {
-  CanonicalPackageManifestError,
-  canonicalPackageManifestJson,
-  hashCanonicalPackageManifest,
-  parseCanonicalPackageManifest,
-  validateCanonicalPackageManifest,
+	CanonicalPackageManifestError,
+	canonicalPackageManifestJson,
+	hashCanonicalPackageManifest,
+	parseCanonicalPackageManifest,
+	validateCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 
 const fixtureSource = await readFile("poc/universal-package-fixture/canonical-package.json", "utf8");
@@ -34,11 +40,12 @@ test("fixture binds one component to locks, artifacts, targets, packages, assura
 });
 
 test("fixture source, locks, metadata, documentation, and license match recorded bytes", async () => {
-  for (const artifact of fixture.artifacts.filter(item => !item.core)) {
+  for(const artifact of fixture.artifacts.filter(item => !item.core))
+{
     const bytes = await readFile(artifact.path);
     assert.equal(bytes.length, artifact.bytes, artifact.path);
     assert.equal(createHash("sha256").update(bytes).digest("hex"), artifact.sha256, artifact.path);
-  }
+}
 });
 
 test("canonical identity ignores object insertion order", () => {
@@ -64,16 +71,17 @@ test("unknown fields and missing provenance fail closed", () => {
 
 test("component, package, runtime, graph, and closure identities cannot drift", () => {
   const cases = [
-    [manifest => { manifest.component.version = "0.0.1"; }, "component-version-drift"],
-    [manifest => { manifest.packages[0].version = "0.0.1"; }, "package-version-drift"],
-    [manifest => { manifest.runtime.profile = "side-startup"; }, "runtime-graph-profile-drift"],
-    [manifest => { manifest.provenance.inputClosureSha256 = "2".repeat(64); }, "provenance-closure-drift"],
+    [manifest => { manifest.component.version = "0.0.1"; }, "component-version-drift"]
+    , [manifest => { manifest.packages[0].version = "0.0.1"; }, "package-version-drift"]
+    , [manifest => { manifest.runtime.profile = "side-startup"; }, "runtime-graph-profile-drift"]
+    , [manifest => { manifest.provenance.inputClosureSha256 = "2".repeat(64); }, "provenance-closure-drift"]
   ];
-  for (const [mutate, code] of cases) {
+  for(const [mutate, code] of cases)
+{
     const manifest = structuredClone(fixture);
     mutate(manifest);
     assert.throws(() => validateCanonicalPackageManifest(manifest), error => error.code === code);
-  }
+}
 });
 
 test("target eligibility, capability, and artifact claims cannot contradict each other", () => {

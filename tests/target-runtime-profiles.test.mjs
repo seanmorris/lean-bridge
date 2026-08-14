@@ -1,12 +1,18 @@
+/**
+ * Tests the target runtime profiles behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  TargetRuntimeProfileError,
-  readTargetRuntimeProfiles,
-  targetRuntimeAcceptanceIds,
-  validateTargetRuntimeProfiles,
+	TargetRuntimeProfileError,
+	readTargetRuntimeProfiles,
+	targetRuntimeAcceptanceIds,
+	validateTargetRuntimeProfiles,
 } from "../src/adoption/target-runtime-profiles.mjs";
 
 test("managed runtime profiles share one closed native execution contract", async () => {
@@ -21,11 +27,12 @@ test("managed runtime profiles share one closed native execution contract", asyn
   assert.equal(contract.boundary.sharedRuntime, true);
   assert.equal(contract.boundary.compileOnce, true);
   assert.deepEqual(contract.acceptance.map(item => item.id), [...targetRuntimeAcceptanceIds]);
-  for (const profile of contract.profiles) {
+  for(const profile of contract.profiles)
+{
     assert.deepEqual(profile.supportedFeatures, contract.profiles[0].supportedFeatures);
     assert.equal(profile.package.scriptsDisabled, true);
     assert.ok(profile.capabilityGaps.every(gap => !profile.supportedFeatures.includes(gap.feature)));
-  }
+}
 });
 
 test("profiles select host-native private FFI without changing the public boundary", async () => {
@@ -46,12 +53,12 @@ test("profiles select host-native private FFI without changing the public bounda
 
 test("validator rejects boundary, package, and capability drift", async () => {
   const contract = await readTargetRuntimeProfiles();
-  for (const mutate of [
-    value => { value.boundary.runtimeScope = "component"; },
-    value => { value.profiles[0].package.scriptsDisabled = false; },
-    value => { value.profiles[1].forbiddenMechanisms = value.profiles[1].forbiddenMechanisms.filter(item => item !== "JNI"); },
-    value => { value.profiles[2].capabilityGaps[0].feature = "direct-functions"; },
-    value => { value.profiles[0].unreviewed = true; },
+  for(const mutate of [
+    value => { value.boundary.runtimeScope = "component"; }
+    , value => { value.profiles[0].package.scriptsDisabled = false; }
+    , value => { value.profiles[1].forbiddenMechanisms = value.profiles[1].forbiddenMechanisms.filter(item => item !== "JNI"); }
+    , value => { value.profiles[2].capabilityGaps[0].feature = "direct-functions"; }
+    , value => { value.profiles[0].unreviewed = true; }
   ]) {
     const changed = structuredClone(contract);
     mutate(changed);

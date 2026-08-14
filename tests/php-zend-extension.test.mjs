@@ -1,3 +1,9 @@
+/**
+ * Tests the PHP zend extension behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -11,19 +17,20 @@ import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generatePhpNativeRuntimePackage } from "../src/backends/php/native-runtime.mjs";
 import {
-  PhpZendGenerationError,
-  generatePhpZendExtensionPackage,
+	PhpZendGenerationError,
+	generatePhpZendExtensionPackage,
 } from "../src/backends/php/zend-extension.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(dirname(destination), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 const nativeRuntimeFixture = `#include "lean_alpha_runtime.h"
@@ -187,24 +194,26 @@ test("Zend generator emits one typed handler for every PHP transport operation",
   assert.equal(manifest.extension, "lean_alpha");
   assert.equal(manifest.transportClass, "LeanAlpha\\Internal\\NativeTransport");
   assert.deepEqual(manifest.operations, [
-    "initialize",
-    "leanAlphaBox",
-    "leanAlphaBoxRead",
-    "bridgeAlphaBoxIdentity",
-    "leanAlphaRoundTrip",
-    "leanAlphaWithCallback",
-    "leanAlphaMakeAdder",
-    "boxClose",
-    "transformCall",
-    "transformClose",
+    "initialize"
+    , "leanAlphaBox"
+    , "leanAlphaBoxRead"
+    , "bridgeAlphaBoxIdentity"
+    , "leanAlphaRoundTrip"
+    , "leanAlphaWithCallback"
+    , "leanAlphaMakeAdder"
+    , "boxClose"
+    , "transformCall"
+    , "transformClose"
   ]);
   assert.deepEqual(manifest.sourceFiles, Object.keys(files).filter(path => path !== "zend-manifest.json").sort());
-  for (const [path, hash] of Object.entries(manifest.filesSha256)) {
+  for(const [path, hash] of Object.entries(manifest.filesSha256))
+{
     assert.equal(createHash("sha256").update(files[path], "utf8").digest("hex"), hash);
-  }
-  for (const operation of manifest.operations.slice(1)) {
+}
+  for(const operation of manifest.operations.slice(1))
+{
     assert.match(files["lean_alpha_zend.c"], new RegExp(`PHP_METHOD\\(LeanAlpha_NativeTransport, ${operation}\\)`));
-  }
+}
   assert.match(files["lean_alpha_zend.c"], /Z_PARAM_FUNC\(context\.fci, context\.fcc\)/);
   assert.match(files["lean_alpha_zend.c"], /lean_bridge_native_identity_acquire/);
   assert.match(files["lean_alpha_zend.c"], /runtimeSnapshot/);
@@ -213,10 +222,10 @@ test("Zend generator emits one typed handler for every PHP transport operation",
 
   const unsupported = clone(alpha.bindingIr);
   unsupported.types.find(type => type.id === "lean:Alpha.Payload").fields.push({
-    name: "extra",
-    type: { kind: "primitive", name: "uint32" },
-    mutability: "immutable",
-    documentation: { summary: "Unsupported fixture field.", details: "" },
+    name: "extra"
+    , type: { kind: "primitive", name: "uint32" }
+    , mutability: "immutable"
+    , documentation: { summary: "Unsupported fixture field.", details: "" }
   });
   assert.throws(
     () => generatePhpZendExtensionPackage(unsupported),
@@ -226,7 +235,8 @@ test("Zend generator emits one typed handler for every PHP transport operation",
 
 test("generated Zend extension executes the Composer API without consumer adapters", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-zend-"));
-  try {
+  try
+{
     const extensionFiles = { ...generatePhpZendExtensionPackage(alpha.bindingIr) };
     const nativeFiles = generatePhpNativeRuntimePackage(alpha.bindingIr);
     extensionFiles["lean_bridge_native_runtime.h"] = nativeFiles["include/lean_bridge_native_runtime.h"];
@@ -302,27 +312,28 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
     const { stdout, stderr } = await run("php", ["-n", "-d", `extension=${extension}`, "consumer.php"], { cwd: directory });
     assert.equal(stderr, "");
     assert.deepEqual(JSON.parse(stdout), {
-      read: 41,
-      identity: true,
-      payload: [true, 9, "typed", "007fff", [1, 5, 13]],
-      callback: 42,
-      callbackFailure: ["PHP callback threw", "callback failed at 41", true],
-      usableAfterCallbackFailure: 41,
-      closure: 42,
-      declared: true,
-      hash: alpha.bindingIrSha256,
-      runtime: {
-        abiVersion: 1,
-        runtimeState: 2,
-        runtimeInitRuns: 1,
-        componentInitRuns: 1,
-        attachedComponents: 1,
-        liveIdentities: 3,
-        runtimeInstanceId: "101",
-        identityDomainId: "202",
-      },
+      read: 41
+      , identity: true
+      , payload: [true, 9, "typed", "007fff", [1, 5, 13]]
+      , callback: 42
+      , callbackFailure: ["PHP callback threw", "callback failed at 41", true]
+      , usableAfterCallbackFailure: 41
+      , closure: 42
+      , declared: true
+      , hash: alpha.bindingIrSha256
+      , runtime: {
+        abiVersion: 1
+        , runtimeState: 2
+        , runtimeInitRuns: 1
+        , componentInitRuns: 1
+        , attachedComponents: 1
+        , liveIdentities: 3
+        , runtimeInstanceId: "101"
+        , identityDomainId: "202"
+      }
     });
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });

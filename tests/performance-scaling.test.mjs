@@ -1,12 +1,18 @@
+/**
+ * Tests the performance scaling behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-  runScalingSuite,
-  scalingGraphCounts,
-  scalingProfiles,
+	runScalingSuite,
+	scalingGraphCounts,
+	scalingProfiles,
 } from "../src/performance/scaling.mjs";
 
 test("the scaling contract fixes real Lean graphs at 1, 3, 10, and 50 libraries", async () => {
@@ -22,7 +28,8 @@ test("the scaling contract fixes real Lean graphs at 1, 3, 10, and 50 libraries"
 
   const manifest = JSON.parse(await readFile("build/performance-scale/manifest.json", "utf8"));
   assert.equal(manifest.components.length, 50);
-  for (const component of manifest.components) {
+  for(const component of manifest.components)
+{
     const source = await readFile(
       `build/performance-scale/generated/${component.moduleName}.lean`,
       "utf8",
@@ -30,7 +37,7 @@ test("the scaling contract fixes real Lean graphs at 1, 3, 10, and 50 libraries"
     assert.match(source, /@\[export lean_bridge_scale_\d{3}_ping\]/);
     assert.equal(component.binding.name, "ping");
     assert.equal(component.binding.input, "uint32");
-  }
+}
 });
 
 test("the scaling result schema closes the report envelope", async () => {
@@ -46,7 +53,8 @@ test("the scaling result schema closes the report envelope", async () => {
 test("all graph sizes use native callables across composed and isolated profiles", async () => {
   const result = await runScalingSuite();
   assert.equal(result.runs.length, 16);
-  for (const run of result.runs) {
+  for(const run of result.runs)
+{
     assert.equal(run.correctness.accepted, true);
     assert.equal(run.correctness.checkedNativeCalls, run.graph.libraryCount);
     assert.equal(run.composition.shutdown.every(Boolean), true);
@@ -58,7 +66,7 @@ test("all graph sizes use native callables across composed and isolated profiles
     );
     assert.ok(run.bytes.totalBytes > 0);
     assert.ok(run.phases.firstNativeCall.samples === run.graph.libraryCount);
-  }
+}
   const isolated50 = result.runs.find(run => (
     run.profile === "isolated" && run.graph.libraryCount === 50
   ));
@@ -66,13 +74,14 @@ test("all graph sizes use native callables across composed and isolated profiles
     run.profile === "lazy" && run.graph.libraryCount === 50
   ));
   assert.ok(
-    isolated50.memory.phaseSnapshots.at(-2).wasmMemoryBytes >=
-      shared50.memory.phaseSnapshots.at(-2).wasmMemoryBytes * 50,
+    isolated50.memory.phaseSnapshots.at(-2).wasmMemoryBytes
+      >= shared50.memory.phaseSnapshots.at(-2).wasmMemoryBytes * 50,
   );
 });
 
 test("every dynamic component imports the main runtime memory and table", () => {
-  for (let ordinal = 1; ordinal <= 50; ordinal += 1) {
+  for(let ordinal = 1; ordinal <= 50; ordinal += 1)
+{
     const suffix = String(ordinal).padStart(3, "0");
     const output = execFileSync(
       "wasm-objdump",
@@ -81,17 +90,18 @@ test("every dynamic component imports the main runtime memory and table", () => 
     );
     assert.match(output, /<- env\.memory/);
     assert.match(output, /<- env\.__indirect_function_table/);
-  }
+}
 });
 
 test("the scaling benchmark client never exposes the private bridge dispatcher", async () => {
   const client = await readFile("scripts/benchmark-library-scaling.mjs", "utf8");
   const harness = await readFile("src/performance/scaling.mjs", "utf8");
-  for (const source of [client, harness]) {
+  for(const source of [client, harness])
+{
     assert.doesNotMatch(source, /\bccall\b|\bcwrap\b|_bridge_|generic\s+(?:invoke|dispatch)|numeric handle/i);
-  }
+}
   const bindings = await readFile("build/performance-scale/bindings.mjs", "utf8");
   assert.match(bindings, /createLibraries/);
   const runtime = await readFile("poc/performance/scale/runtime.mjs", "utf8");
-  assert.match(runtime, /ping\(value\)/);
+  assert.match(runtime, /\bping:\s*[\s\S]*?\bfunction\(value\)/);
 });

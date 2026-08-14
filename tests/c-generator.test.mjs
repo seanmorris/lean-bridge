@@ -1,3 +1,9 @@
+/**
+ * Tests the C generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -8,8 +14,8 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
-  CBindingGenerationError,
-  generateCBindingPackage,
+	CBindingGenerationError,
+	generateCBindingPackage,
 } from "../src/backends/c/generate.mjs";
 import { auditCPackage } from "../src/backends/c/package-audit.mjs";
 
@@ -17,11 +23,12 @@ const run = promisify(execFile);
 const clone = value => structuredClone(value);
 
 const writePackage = async (directory, files) => {
-  for (const [relativePath, source] of Object.entries(files)) {
-    const destination = join(directory, relativePath);
-    await mkdir(join(destination, ".."), { recursive: true });
-    await writeFile(destination, source);
-  }
+	for(const [relativePath, source] of Object.entries(files))
+	{
+		const destination = join(directory, relativePath);
+		await mkdir(join(destination, ".."), { recursive: true });
+		await writeFile(destination, source);
+	}
 };
 
 test("the C backend emits typed values, opaque resources, callbacks, and direct functions", () => {
@@ -49,13 +56,13 @@ test("the C backend emits typed values, opaque resources, callbacks, and direct 
   assert.match(internal, /\(\*round_trip\)/);
   assert.doesNotMatch(internal, /\(\*invoke\)|\(\*dispatch\)/);
   assert.deepEqual(auditCPackage(alpha.bindingIr, files).exports, [
-    "lean_alpha_box_create",
-    "lean_alpha_box_read",
-    "lean_alpha_box_identity",
-    "lean_alpha_round_trip",
-    "lean_alpha_with_callback",
-    "lean_alpha_make_adder",
-    "lean_alpha_box_dispose",
+    "lean_alpha_box_create"
+    , "lean_alpha_box_read"
+    , "lean_alpha_box_identity"
+    , "lean_alpha_round_trip"
+    , "lean_alpha_with_callback"
+    , "lean_alpha_make_adder"
+    , "lean_alpha_box_dispose"
   ]);
 
   const leaked = { ...files };
@@ -68,7 +75,8 @@ test("the C backend emits typed values, opaque resources, callbacks, and direct 
 
 test("generated C compiles and runs through native functions without consumer glue", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-c-generator-"));
-  try {
+  try
+{
     await writePackage(directory, generateCBindingPackage(alpha.bindingIr));
     await writeFile(join(directory, "consumer.c"), `
 #include "lean_alpha.h"
@@ -241,15 +249,15 @@ int main(void) {
 `);
     const executable = join(directory, "consumer");
     await run("cc", [
-      "-std=c11",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-I", join(directory, "include"),
-      "-I", join(directory, "internal"),
-      join(directory, "src/lean_alpha.c"),
-      join(directory, "consumer.c"),
-      "-o", executable,
+      "-std=c11"
+      , "-Wall"
+      , "-Wextra"
+      , "-Werror"
+      , "-I", join(directory, "include")
+      , "-I", join(directory, "internal")
+      , join(directory, "src/lean_alpha.c")
+      , join(directory, "consumer.c")
+      , "-o", executable
     ]);
     await run(executable);
 
@@ -285,20 +293,21 @@ int main(void) {
 `);
     const failedExecutable = join(directory, "failed-init");
     await run("cc", [
-      "-std=c11",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-I", join(directory, "include"),
-      "-I", join(directory, "internal"),
-      join(directory, "src/lean_alpha.c"),
-      join(directory, "failed-init.c"),
-      "-o", failedExecutable,
+      "-std=c11"
+      , "-Wall"
+      , "-Wextra"
+      , "-Werror"
+      , "-I", join(directory, "include")
+      , "-I", join(directory, "internal")
+      , join(directory, "src/lean_alpha.c")
+      , join(directory, "failed-init.c")
+      , "-o", failedExecutable
     ]);
     await run(failedExecutable);
-  } finally {
+} finally
+{
     await rm(directory, { recursive: true, force: true });
-  }
+}
 });
 
 test("finite generic declarations become concrete C functions", () => {
@@ -308,22 +317,22 @@ test("finite generic declarations become concrete C functions", () => {
   declaration.overloadKey = "echo<T>(T)";
   declaration.typeParameters = [{ id: "T", representation: "copied", constraints: [] }];
   declaration.parameters = [{
-    name: "value",
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
-    mutability: "immutable",
-    optional: false,
-    default: null,
+    name: "value"
+    , type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
+    , mutability: "immutable"
+    , optional: false
+    , default: null
   }];
   declaration.result = {
-    type: { kind: "parameter", id: "T" },
-    ownership: "copy",
-    lifetime: null,
+    type: { kind: "parameter", id: "T" }
+    , ownership: "copy"
+    , lifetime: null
   };
   declaration.source.extensions["lean-wasm.org/specializations"] = [
-    { id: "uint32", type: { kind: "primitive", name: "uint32" } },
-    { id: "string", type: { kind: "primitive", name: "string" } },
+    { id: "uint32", type: { kind: "primitive", name: "uint32" } }
+    , { id: "string", type: { kind: "primitive", name: "string" } }
   ];
 
   const files = generateCBindingPackage(ir);
