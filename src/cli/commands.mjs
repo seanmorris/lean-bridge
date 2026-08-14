@@ -105,15 +105,36 @@ const internalBuildCodes = new Set([
 	, "unpinned-builder-image", "unsupported-docker-mount-path"
 ]);
 
-const publicBuildDiagnostic = error => internalBuildCodes.has(error.code)
-	? diagnostic({
-		code: error.code === "build-timeout" ? "package-build-timeout" : "package-build-failed"
-		, message: error.code === "build-timeout"
-			? "The package build exceeded its execution deadline"
-			: "Lean Bridge could not build and validate the requested package"
-		, hint: "Run lean-bridge analyze, resolve any reported source issues, and retry the same build command."
-	})
-	: diagnostic({ code: error.code, message: error.message, hint: error.hint });
+const dependencyDownloadFailure = error => /(?:cannot|could not|failed to|unable to) (?:download|fetch)|could not resolve host|connection (?:reset|timed out)|http server.*cannot resume/i
+	.test(JSON.stringify(error.details ?? {}));
+
+const publicBuildDiagnostic = error => {
+	if(!internalBuildCodes.has(error.code))
+	{
+		return diagnostic({ code: error.code, message: error.message, hint: error.hint });
+	}
+	if(error.code === "build-timeout")
+	{
+		return diagnostic({
+			code: "package-build-timeout"
+			, message: "The package build exceeded its execution deadline"
+			, hint: "Retry with --json --progress json. If the timeout repeats, preserve the diagnostic and build log for support."
+		});
+	}
+	if(dependencyDownloadFailure(error))
+	{
+		return diagnostic({
+			code: "package-dependency-download-failed"
+			, message: "A pinned package dependency could not be downloaded"
+			, hint: "Check network access, remove any incomplete download from the selected build cache, and retry the same build command."
+		});
+	}
+	return diagnostic({
+		code: "package-build-failed"
+		, message: "Lean Bridge could not build and validate the requested package"
+		, hint: "Retry with --json --progress json. If the failure repeats, preserve the diagnostic and build log for support."
+	});
+};
 
 /**
  * Composes analyze, build, publish, credential, attestation, and receipt dependencies into immutable command handlers.

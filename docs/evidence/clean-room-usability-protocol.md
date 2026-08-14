@@ -21,6 +21,10 @@ Every session records a 40-character Git revision. The checkout must be clean be
 
 Cold author runs use a clean build cache. Warm author runs repeat against the supported cache. Consumer runs install only published or locally rehearsed registry artifacts. They must not import files from the bridge repository.
 
+Before a rehearsal, record `df -h` for the temporary filesystem and verify the selected builder is on `PATH`. Create one temporary root for the run. Give each participant a separate child directory, but let the author build the pinned runtime and component once. Hand the resulting archives, receipt, and standalone verifier to consumer sessions as read-only inputs. Do not create one toolchain cache per participant.
+
+After the session records are retained, remove only the exact temporary root created for that rehearsal. Record the disk usage before and after cleanup. A failed run must keep its diagnostics in the session record even when its temporary cache is removed.
+
 ## Passing conditions
 
 A session passes when all of these statements are supported by attached evidence:

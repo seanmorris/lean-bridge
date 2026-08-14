@@ -297,8 +297,11 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, runtime: Object.freeze({ package: `@lean-bridge/runtime@${version}`, archive: basename(runtimeArchivePath), sha256: sha256(runtimeArchive) })
 		, package: Object.freeze({ package: `${ir.component.name}@${ir.component.version}`, archive: basename(componentArchivePath), sha256: sha256(componentArchive) })
 		, policies: Object.freeze({ componentCompiledOnce: true, runtimeShared: true, runtimeBinaryInComponent: false, nativeCallablesOnly: true })
-		, verificationCommand: "lean-bridge verify-package-receipt --receipt component-package-receipt.json"
+		, verificationCommand: "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
 	});
-	await writeFile(join(output, "component-package-receipt.json"), canonicalJson(report));
+	await Promise.all([
+		writeFile(join(output, "component-package-receipt.json"), canonicalJson(report))
+		, copy(new URL("./component-package-receipt.mjs", import.meta.url), join(output, "verify-component-package-receipt.mjs"))
+	]);
 	return Object.freeze({ output, runtimeArchive: runtimeArchivePath, componentArchive: componentArchivePath, report });
 };

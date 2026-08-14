@@ -11,9 +11,23 @@ Set two paths and install the CLI from the checkout:
 ```sh
 export LEAN_BRIDGE_CHECKOUT=/path/to/lean-bridge
 export LEAN_BRIDGE_WORK=$(mktemp -d)
-npm install --global "$LEAN_BRIDGE_CHECKOUT"
+npm install --global --ignore-scripts --no-audit --no-fund "$LEAN_BRIDGE_CHECKOUT"
 lean-bridge --help
+git -C "$LEAN_BRIDGE_CHECKOUT" status --short
 ```
+
+The final command should print nothing. The checkout records the CLI entry point as executable, so npm does not need to change its mode during installation.
+
+Check the selected builder and available storage before preparing the runtime:
+
+```sh
+node --version
+npm --version
+command -v nix || command -v docker
+df -h "$LEAN_BRIDGE_WORK"
+```
+
+A coordinated clean-room run should realize the pinned toolchain once before participant sessions start. Author commands then reuse the shared Nix store, and consumers receive only the generated archives, receipt, and verifier. Do not create one private toolchain cache per participant.
 
 Prepare one shared runtime. The Nix path is the shorter setup:
 
@@ -107,6 +121,8 @@ lean-bridge publish \
 
 `analyze` reads source and Lake metadata. The explicit output receives `project-analysis.json`, `binding-ir.json`, and `policy-report.json`. It refuses to merge with an existing directory.
 
+Source-only inference is provisional until `build` elaborates and audits the component. An `unverified` assurance relationship means the analyzer found no theorem relationship for that declaration; it does not mean compilation failed.
+
 `build` compiles one runtime-free component and writes its component-neutral bundle under `build/lean-bridge-release/bundle`. Inspect the component, assurance, runtime requirement, and provenance records:
 
 ```sh
@@ -124,11 +140,11 @@ sed -n '1,200p' build/lean-bridge-dry-run/publish-manifest.json
 Verify the copied package receipt and both referenced archives:
 
 ```sh
-node "$LEAN_BRIDGE_CHECKOUT/scripts/verify-component-package-receipt.mjs" \
+node build/lean-bridge-dry-run/release/packages/npm/verify-component-package-receipt.mjs \
   --receipt build/lean-bridge-dry-run/release/packages/npm/component-package-receipt.json
 ```
 
-The verifier recalculates the receipt identity and archive hashes. A passing dry run is local evidence. It does not publish to npm.
+The dry run places the standalone verifier beside the receipt and archives. It imports only Node built-ins, so verification does not depend on the Lean Bridge checkout. The verifier recalculates the receipt identity and archive hashes. A passing dry run is local evidence. It does not publish to npm.
 
 ## Current export rules
 
@@ -176,6 +192,8 @@ Use `--json --progress none` for one machine-readable result. A first interrupt 
 | `source-tree-dirty` | A tracked or untracked project input changed after the candidate revision. | Commit the intended input or remove the unrelated file from the project. |
 | `docker-unavailable` or `nix-unavailable` | The selected isolated builder is not installed. | Install the selected builder or choose the other pinned path. |
 | `shared-runtime-package-unavailable` | The CLI cannot find `main.mjs` and `main.wasm`. | Set `LEAN_BRIDGE_RUNTIME_ROOT` to the prepared lazy runtime directory. |
+| `package-dependency-download-failed` | The isolated build could not fetch a pinned source. | Check network access, remove an incomplete download from the selected cache, and retry the same build command. |
+| `package-build-failed` | The isolated build failed after analysis accepted the source. | Retry with `--json --progress json`. Preserve the diagnostic and build log if it repeats. |
 | `package-ineligible` | The requested projection lacks a required runtime artifact or adapter. | Check the [consumer support contract](consumer-support.v1.json) before selecting another target. |
 
 The executable onboarding fixture lives at `tests/fixtures/onboarding/small`. The [plain project acceptance record](evidence/plain-project-package-acceptance.md) retains its build, install, call, and receipt results.

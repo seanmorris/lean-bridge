@@ -7,10 +7,20 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-
-import { canonicalJson } from "../capsule/node.mjs";
+import { pathToFileURL } from "node:url";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
+
+const canonicalValue = value => {
+	if(Array.isArray(value)) return value.map(canonicalValue);
+	if(value !== null && typeof value === "object")
+	{
+		return Object.fromEntries(Object.keys(value).sort().map(key => [key, canonicalValue(value[key])]));
+	}
+	return value;
+};
+
+const canonicalJson = value => `${JSON.stringify(canonicalValue(value), null, 2)}\n`;
 
 const exactKeys = (value, keys, label) => {
 	if(value === null || typeof value !== "object" || Array.isArray(value)) throw new TypeError(`${label} must be an object`);
@@ -106,3 +116,15 @@ export const verifyComponentPackageReceipt = async ({ receiptPath, artifactRoot 
 		, package: receipt.package.package
 	});
 };
+
+if(process.argv[1] !== undefined && import.meta.url === pathToFileURL(resolve(process.argv[1])).href)
+{
+	const options = new Map();
+	for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
+	if(!options.get("--receipt")) throw new Error("--receipt is required");
+	const result = await verifyComponentPackageReceipt({
+		receiptPath: resolve(options.get("--receipt"))
+		, artifactRoot: options.get("--artifacts") ? resolve(options.get("--artifacts")) : null
+	});
+	process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+}

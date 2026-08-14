@@ -12,8 +12,8 @@
   "promptsRequired": 0,
   "build": {
     "backend": "nix",
-    "engineIdentitySha256": "6282cbdca9cd9739edbd20ea1897e8c37d6ef1d6c4bb342bfd17a8b7f6a8095c",
-    "executionRequestSha256": "9282097f70fb5b8885a1dcb92eb450b0ee40ffa0c3df40359d44db7c03422bb0",
+    "engineIdentitySha256": "aa4ce394a14dc218a758cf4a3b81e05b4bccb691bf0a4156d9cf53c8a5599607",
+    "executionRequestSha256": "514b1ecdc6bd07e090494e879465fa4a58b233d9aca6639d86eeff6489c95caf",
     "componentPlanSha256": "5830af269e6ca435d2954a3af58708a0cb6d0d054c48eb85eaf47e21d91b715e",
     "compilationPlanSha256": "7b48113ae9ac8f32fd481f8f6dd085ffbe548111a1f2ea91815d5e605fb0430b",
     "componentBundleSha256": "15ff87bfdb8c6ffc4613a94597828c40f66a91085cd429eaa1a8c8cebef7d610",
@@ -23,7 +23,7 @@
     "dryRun": true,
     "cleanBuilds": 2,
     "inventorySha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "files": 42,
+    "files": 43,
     "differences": [],
     "externalRegistryWrites": false
   },
@@ -46,7 +46,7 @@
   },
   "receipt": {
     "verified": true,
-    "receiptSha256": "01973d37052f821d7694c2c6356b6083e487b103c496174d6c9c7064533eee9f",
+    "receiptSha256": "e4a8e82f7df1f3e5f754e7d2738a9cdf29cd72f104921fa78fcbf0deae7fe05c",
     "component": "onboarding-small@1.0.0",
     "componentIdentitySha256": "3839bed53a7833a39816de80e4960c6378d94e54ecaf528f3257db7939685789",
     "runtime": "@lean-bridge/runtime@0.0.0-abi1.f3b06c705e6c.743765bf566f",

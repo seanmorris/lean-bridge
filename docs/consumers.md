@@ -34,8 +34,18 @@ console.assert(value.count === 42);
 The platform wheel contains generated Python, its lazy native adapter, one component library, and the shared runtime:
 
 ```sh
+uname -m
+getconf GNU_LIBC_VERSION
+```
+
+Continue only when these commands report `x86_64` and glibc 2.38 or newer. The platform check avoids pip's generic unsupported-wheel error on an older host.
+
+```sh
+python3 -m pip debug --verbose | grep -F 'py3-none-manylinux_2_38_x86_64'
 python3 -m pip install --no-index --no-deps ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
 ```
+
+The compatibility command must print the wheel's exact tag before installation.
 
 ```python
 from lean_alpha import Box, Payload, make_adder, round_trip, with_callback
@@ -49,6 +59,22 @@ assert value.count == 42
 assert with_callback(40, lambda current: current + 2) == 44
 with make_adder(2) as add_two:
     assert add_two(40) == 42
+```
+
+The Alpha `round_trip` fixture toggles `enabled`, increments `count`, and preserves the label, bytes, and values. The generated dataclass, callback, and returned callable hide the native adapter.
+
+Verify the canonical package identity from the installed package without a Lean Bridge checkout:
+
+```python
+from hashlib import sha256
+from importlib.resources import files
+
+metadata = files("lean_alpha").joinpath("lean_bridge", "metadata")
+manifest = metadata.joinpath("canonical-package.json").read_bytes()
+expected = metadata.joinpath("canonical-package.sha256").read_text().split()[0]
+actual = sha256(manifest).hexdigest()
+assert actual == expected
+print(actual)
 ```
 
 ## Rust

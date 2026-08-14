@@ -33,6 +33,8 @@ Prefer the npm commands in [`../package.json`](../package.json) over invoking a 
 
 `check-*`, `compare-*`, and `verify-*` validate methodology, source closure, artifact inventories, release authorization, receipts, PHP transport parity, and cross-root reproducibility. They should exit nonzero when the named contract fails and retain enough diagnostics to identify the mismatched stage or file.
 
+[`verify-component-package-receipt.mjs`](verify-component-package-receipt.mjs) is a standalone consumer verifier. The component npm builder copies it beside the receipt and archives, so a clean consumer needs Node but does not need the repository or an installed CLI.
+
 ### Clean consumer tests
 
 `test-*` scripts install produced archives into temporary consumer projects and call their generated APIs. [`consumer-ci.mjs`](consumer-ci.mjs) coordinates every downstream target, compares the observation with the versioned support state, and writes the GitHub job summary. Package construction without a real Lean call remains distinguishable from runtime execution.

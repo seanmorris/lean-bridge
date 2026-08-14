@@ -653,7 +653,7 @@ export const buildUniversalReleaseBundle = async ({
 	validateCanonicalPackageManifest(manifest);
 	const canonical = canonicalPackageManifestJson(manifest);
 	const manifestSha256 = hashCanonicalPackageManifest(manifest);
-	await write(output, "canonical-package.json", `${canonical}\n`);
+	await write(output, "canonical-package.json", canonical);
 	await write(output, "canonical-package.sha256", `${manifestSha256}  canonical-package.json\n`);
 	await write(output, "bundle-identity.json", json({
 		schemaVersion: 1

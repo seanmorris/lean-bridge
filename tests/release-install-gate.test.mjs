@@ -27,7 +27,7 @@ const revision = "5f0e70569cd85982cbf11e08224243dc448feae8";
 
 const rewriteIdentity = async (directory, manifest) => {
 	const manifestSha256 = hashCanonicalPackageManifest(manifest);
-	await writeFile(join(directory, "canonical-package.json"), `${canonicalPackageManifestJson(manifest)}\n`);
+	await writeFile(join(directory, "canonical-package.json"), canonicalPackageManifestJson(manifest));
 	await writeFile(join(directory, "canonical-package.sha256"), `${manifestSha256}  canonical-package.json\n`);
 	const identityPath = join(directory, "bundle-identity.json");
 	const identity = JSON.parse(await readFile(identityPath, "utf8"));
