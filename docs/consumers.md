@@ -52,18 +52,17 @@ console.assert(value.count === 42);
 The platform wheel contains generated Python, its lazy native adapter, one component library, and the shared runtime:
 
 ```sh
-uname -m
-getconf GNU_LIBC_VERSION
+node ./python-wheel-preflight.mjs \
+  --wheel ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
 ```
 
-Continue only when these commands report `x86_64` and glibc 2.38 or newer. The platform check avoids pip's generic unsupported-wheel error on an older host.
+The generated PyPI handoff places `python-wheel-preflight.mjs` beside the wheel. It reports the detected operating system, architecture, selected Python runtime's glibc version, Python version, and pip wheel-tag decision. It exits with status 2 when the host cannot install the exact wheel. The current package requires Linux x86-64, glibc 2.38 or newer, Python 3.11 or newer, and pip acceptance of `py3-none-manylinux_2_38_x86_64`.
 
 ```sh
-python3 -m pip debug --verbose | grep -F 'py3-none-manylinux_2_38_x86_64'
 python3 -m pip install --no-index --no-deps ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
 ```
 
-The compatibility command must print the wheel's exact tag before installation.
+Install the original wheel after the preflight passes. Do not rename, retag, or unpack the wheel to bypass pip's compatibility decision.
 
 ```python
 from lean_alpha import Box, Payload, make_adder, round_trip, with_callback

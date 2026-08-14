@@ -338,7 +338,7 @@ jobs:
       - name: Execute the clean consumer through Docker
         env:
           LEAN_BRIDGE_BUILD_BACKEND: docker
-        run: npm run test:consumer:node
+        run: npm run test:consumer:docker-ci
 
   support-summary:
     name: Publish consumer support summary

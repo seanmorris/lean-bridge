@@ -44,7 +44,7 @@ The canonical input boundary requires the manifest file to equal its canonical n
 | Modules | Output family |
 |---|---|
 | [`npm-package.mjs`](npm-package.mjs), [`component-npm-package.mjs`](component-npm-package.mjs) | JavaScript runtime and component archives. |
-| [`pypi-package.mjs`](pypi-package.mjs) | Python wheel and source package layout. |
+| [`pypi-package.mjs`](pypi-package.mjs), [`python-wheel-preflight.mjs`](python-wheel-preflight.mjs) | Python wheel and source package layout, plus the repository-free host compatibility preflight. |
 | [`cargo-package.mjs`](cargo-package.mjs) | Rust crate layout. |
 | [`c-family-package.mjs`](c-family-package.mjs) | C and C++ archives, headers, and metadata. |
 | [`nuget-package.mjs`](nuget-package.mjs), [`maven-package.mjs`](maven-package.mjs), [`rubygems-package.mjs`](rubygems-package.mjs) | .NET, JVM, and Ruby registry layouts. |

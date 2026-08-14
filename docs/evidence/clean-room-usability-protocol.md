@@ -23,6 +23,8 @@ Cold author runs use a clean build cache. Warm author runs repeat against the su
 
 Before a rehearsal, record `df -h` for the temporary filesystem and verify the selected builder is on `PATH`. Create one temporary root for the run. Give each participant a separate child directory, but let the author build the pinned runtime and component once. Hand the resulting archives, receipt, and standalone verifier to consumer sessions as read-only inputs. Do not create one toolchain cache per participant.
 
+Before the Python participant installs the wheel, run `node <read-only-handoff>/python-wheel-preflight.mjs --wheel <read-only-wheel>`. Retain its report with the session observations. A compatible result records Linux x86-64, glibc 2.38 or newer, Python 3.11 or newer, and the wheel's exact pip tag. An incompatible result stops the session before installation. Do not rename, retag, or unpack the wheel to bypass pip.
+
 After the session records are retained, remove only the exact temporary root created for that rehearsal. Record the disk usage before and after cleanup. A failed run must keep its diagnostics in the session record even when its temporary cache is removed.
 
 ## Passing conditions
