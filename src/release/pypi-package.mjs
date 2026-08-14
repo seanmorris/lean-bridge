@@ -13,6 +13,7 @@ import {
 	writeFile,
 } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { validatePackagingBackendPlan } from "./backend-policy.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
@@ -22,6 +23,7 @@ import { createDeterministicZip } from "./deterministic-zip.mjs";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
 const normalizedDistribution = name => name.toLowerCase().replace(/[-_.]+/g, "_");
+const wheelPreflightSource = fileURLToPath(new URL("./python-wheel-preflight.mjs", import.meta.url));
 
 const fail = (code, message, details = {}) => {
 	const error = new Error(message);
@@ -239,6 +241,8 @@ export const buildPyPiPackage = async ({ bundleRoot, outputRoot }) => {
 	});
 	const sdistPath = join(output, `${versionedName}.tar.gz`);
 	await writeFile(sdistPath, sdist);
+	const preflightPath = join(output, "python-wheel-preflight.mjs");
+	await copy(wheelPreflightSource, preflightPath);
 	return Object.freeze({
 		package: `${mapping.name}@${mapping.version}`
 		, output
@@ -246,6 +250,7 @@ export const buildPyPiPackage = async ({ bundleRoot, outputRoot }) => {
 		, wheelSha256: sha256(wheel)
 		, sdist: sdistPath
 		, sdistSha256: sha256(sdist)
+		, preflight: preflightPath
 		, canonicalManifestSha256: manifestSha256
 		, tag
 		, coreArtifacts: Object.freeze(coreArtifacts)

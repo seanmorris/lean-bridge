@@ -35,6 +35,8 @@ Prefer the npm commands in [`../package.json`](../package.json) over invoking a 
 
 [`verify-component-package-receipt.mjs`](verify-component-package-receipt.mjs) is a standalone consumer verifier. The component npm builder copies it beside the receipt and archives, so a clean consumer needs Node but does not need the repository or an installed CLI.
 
+[`test-docker-consumer-ci.sh`](test-docker-consumer-ci.sh) retries only the observed transient Lean `MinMaxIdx` bootstrap failure and preserves immediate failure for every other diagnostic. The PyPI builder copies the repository-free [`python-wheel-preflight.mjs`](../src/release/python-wheel-preflight.mjs) beside its wheel.
+
 ### Clean consumer tests
 
 `test-*` scripts install produced archives into temporary consumer projects and call their generated APIs. [`consumer-ci.mjs`](consumer-ci.mjs) coordinates every downstream target, compares the observation with the versioned support state, and writes the GitHub job summary. Package construction without a real Lean call remains distinguishable from runtime execution.

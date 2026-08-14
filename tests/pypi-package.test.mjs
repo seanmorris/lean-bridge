@@ -103,6 +103,7 @@ test("an eligible Python binding target produces deterministic wheel and source 
   assert.equal(first.sdistSha256, second.sdistSha256);
   assert.deepEqual(await readFile(first.wheel), await readFile(second.wheel));
   assert.deepEqual(await readFile(first.sdist), await readFile(second.sdist));
+  assert.deepEqual(await readFile(first.preflight), await readFile(second.preflight));
   assert.deepEqual(first.coreArtifacts, []);
 
   const plan = JSON.parse(await readFile(join(scratch, "first/pypi-projection.json"), "utf8"));
@@ -115,6 +116,8 @@ test("an eligible Python binding target produces deterministic wheel and source 
   const { stdout: sourceFiles } = await execute("tar", ["-tzf", first.sdist]);
   assert.match(sourceFiles, /^lean_bridge_alpha-0\.0\.0\/pyproject\.toml$/m);
   assert.match(sourceFiles, /^lean_bridge_alpha-0\.0\.0\/lean_alpha\/lean_bridge\/metadata\/provenance\.intoto\.json$/m);
+  const { stdout: preflightHelp } = await execute(process.execPath, [first.preflight, "--help"]);
+  assert.match(preflightHelp, /--wheel <archive\.whl>/);
 
   const installed = join(scratch, "installed");
   await execute("python3", ["-m", "pip", "install", "--no-index", "--no-deps", "--target", installed, first.wheel]);
