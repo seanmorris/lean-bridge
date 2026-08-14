@@ -22,6 +22,10 @@ import {
 import { basename, dirname, join, resolve } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";
+import {
+	releaseArchiveSubjectsFor,
+	validateReleaseArchiveSubjects,
+} from "./archive-subjects.mjs";
 import { verifyPublishManifest } from "./publish-manifest.mjs";
 import {
 	dssePreauthenticationEncoding,
@@ -35,6 +39,11 @@ const documentType = "urn:lean-bridge:release-receipt:v1";
 const receiptPredicateType = "urn:lean-bridge:attestation:release-receipt:v1";
 const statementType = "https://in-toto.io/Statement/v1";
 const payloadType = "application/vnd.in-toto+json";
+const handoffReceiptFile = "release-receipt.json";
+const handoffReceiptHashFile = "release-receipt.sha256";
+const handoffPolicyFile = "publication-signer-policy.json";
+const handoffPolicyHashFile = "publication-signer-policy.sha256";
+const handoffVerifierFile = "verify-release-archive.mjs";
 const terminalStatuses = new Set(["published", "already-published", "retained"]);
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const deepFreeze = value => {
@@ -318,6 +327,7 @@ export const createReleaseReceiptStatement = ({
 			, digest: { sha256: archive.sha256 }
 		})))
 	].sort((left, right) => left.name.localeCompare(right.name));
+	const archiveSubjects = releaseArchiveSubjectsFor(targets);
 	for(let index = 1; index < subjects.length; index += 1)
 	{
 		if(subjects[index].name === subjects[index - 1].name)
@@ -331,6 +341,7 @@ export const createReleaseReceiptStatement = ({
 		, predicateType: receiptPredicateType
 		, predicate: {
 			schemaVersion: 1
+			, archiveSubjects
 			, release: {
 				candidate: authorization.candidate
 				, authorization: {
@@ -364,15 +375,14 @@ export const createReleaseReceiptStatement = ({
 				}))
 			}
 			, verification: {
-				command: "npm run verify:release-receipt -- --receipt release-receipt.json --policy <trusted-policy.json>"
+				command: "node verify-release-archive.mjs --archive <downloaded-archive> --receipt release-receipt.json --policy publication-signer-policy.json --policy-sha256 <trusted-policy-sha256> --subject <signed-subject-path> --coordinate <expected-coordinate>"
 				, requiredInputs: [
 					"release-receipt.json"
 					, "release-receipt.sha256"
-					, "publish-manifest.json"
-					, "publish-manifest.sha256"
-					, "registry-transaction.json"
-					, "release/"
-					, "<trusted-policy.json>"
+					, "publication-signer-policy.json"
+					, "verify-release-archive.mjs"
+					, "<downloaded-archive>"
+					, "<trusted-policy-sha256>"
 				]
 			}
 		}
@@ -510,6 +520,22 @@ export const validateReleaseReceipt = receipt => {
     || sha256(canonicalJson(receipt.statement)) !== receipt.statementSha256
     || sha256(canonicalJson(receipt.envelope)) !== receipt.envelopeSha256
 	) fail("release-receipt-envelope-drift", "Receipt statement or envelope hash differs from its signed bytes");
+	const receiptTargets = receipt.statement?.predicate?.registryTransaction?.targets;
+	try
+	{
+		validateReleaseArchiveSubjects(receipt.statement?.predicate?.archiveSubjects, receiptTargets);
+	} catch(error)
+	{
+		fail("invalid-release-receipt", error.message);
+	}
+	const receiptSubjectMap = new Map(receipt.statement.subject.map(subject => [subject.name, subject.digest?.sha256]));
+	for(const subject of receipt.statement.predicate.archiveSubjects)
+	{
+		if(receiptSubjectMap.get(subject.path) !== subject.sha256)
+		{
+			fail("release-receipt-archive-subject-drift", `Archive subject differs from the in-toto subject: ${subject.path}`);
+		}
+	}
 	exactKeys(receipt.audit, [
 		"schemaVersion"
 		, "status"
@@ -630,6 +656,82 @@ const readTransaction = async path => {
 
 const receiptHashPath = path => join(dirname(path), `${basename(path, ".json")}.sha256`);
 
+const verifyLocalArchiveSubjects = async ({ root, subjects }) => {
+	for(const subject of subjects)
+	{
+		const path = resolve(root, subject.path);
+		let bytes;
+		let facts;
+		try
+		{
+			[bytes, facts] = await Promise.all([readFile(path), stat(path)]);
+		} catch(error)
+		{
+			if(error.code === "ENOENT") fail("release-receipt-archive-missing", `Authorized archive is missing: ${subject.path}`);
+			throw error;
+		}
+		if(!facts.isFile()) fail("release-receipt-archive-not-file", `Authorized archive is not a regular file: ${subject.path}`);
+		if(bytes.length !== subject.bytes || sha256(bytes) !== subject.sha256)
+		{
+			fail("release-receipt-archive-bytes-drift", `Authorized archive bytes differ from the publish manifest: ${subject.path}`);
+		}
+	}
+};
+
+const publishHandoffDirectory = async ({ directory, files }) => {
+	const staging = await mkdtemp(join(directory, ".release-verification-"));
+	try
+	{
+		for(const file of files)
+		{
+			const staged = join(staging, file.name);
+			await writeFile(staged, file.bytes, { flag: "wx", mode: file.mode });
+			try
+			{
+				await link(staged, join(directory, file.name));
+			} catch(error)
+			{
+				if(error.code !== "EEXIST") throw error;
+				const existing = await readFile(join(directory, file.name));
+				if(!existing.equals(Buffer.from(file.bytes)))
+				{
+					fail("release-verification-handoff-conflict", `Release verification handoff differs from an existing file: ${join(directory, file.name)}`);
+				}
+			}
+		}
+	} finally
+	{
+		await rm(staging, { recursive: true, force: true });
+	}
+};
+
+const publishReleaseArchiveHandoffs = async ({ root, receiptPath, receiptSha256, policy, subjects }) => {
+	const [receiptSource, verifierSource] = await Promise.all([
+		readFile(receiptPath)
+		, readFile(new URL("./release-archive-verifier.mjs", import.meta.url))
+	]);
+	const policySource = canonicalJson(policy);
+	const policySha256 = publicationSignerPolicySha256(policy);
+	const directories = [...new Set(subjects.map(subject => dirname(resolve(root, subject.path))))].sort();
+	const files = [
+		{ name: handoffReceiptFile, bytes: receiptSource, mode: 0o644 }
+		, { name: handoffReceiptHashFile, bytes: `${receiptSha256}  ${handoffReceiptFile}\n`, mode: 0o644 }
+		, { name: handoffPolicyFile, bytes: policySource, mode: 0o644 }
+		, { name: handoffPolicyHashFile, bytes: `${policySha256}  ${handoffPolicyFile}\n`, mode: 0o644 }
+		, { name: handoffVerifierFile, bytes: verifierSource, mode: 0o755 }
+	];
+	for(const directory of directories) await publishHandoffDirectory({ directory, files });
+	return Object.freeze(subjects.map(subject => Object.freeze({
+		ecosystem: subject.ecosystem
+		, coordinate: subject.coordinate
+		, archive: resolve(root, subject.path)
+		, subject: subject.path
+		, directory: dirname(resolve(root, subject.path))
+		, signerPolicySha256: policySha256
+		, command: `node ${handoffVerifierFile} --archive ${subject.filename} --receipt ${handoffReceiptFile} --policy ${handoffPolicyFile} --policy-sha256 ${policySha256} --subject ${subject.path} --coordinate ${subject.coordinate}`
+	})));
+};
+
 const acquireReceiptLock = async path => {
 	const lockPath = `${path}.lock`;
 	let handle;
@@ -679,7 +781,7 @@ const readReceipt = async path => {
 	return { receipt, source, sha256: identity };
 };
 
-const summary = ({ path, receiptSha256, receipt, verification }) => canonicalSnapshot({
+const summary = ({ path, receiptSha256, receipt, verification, archiveHandoffs }) => canonicalSnapshot({
 	path
 	, hashPath: receiptHashPath(path)
 	, receiptSha256
@@ -688,6 +790,7 @@ const summary = ({ path, receiptSha256, receipt, verification }) => canonicalSna
 	, candidateId: verification.candidate.id
 	, transactionId: verification.transaction.id
 	, targets: verification.targets
+	, archiveHandoffs
 });
 
 /**
@@ -781,6 +884,8 @@ export const writeReleaseReceipt = async ({
 	{
 		fail("release-receipt-transaction-drift", "Receipt and registry transaction must share the publish manifest directory");
 	}
+	const archiveSubjects = releaseArchiveSubjectsFor(verified.manifest.targets);
+	await verifyLocalArchiveSubjects({ root: dirname(verified.manifestPath), subjects: archiveSubjects });
 	const releaseLock = await acquireReceiptLock(path);
 	try
 	{
@@ -816,7 +921,14 @@ export const writeReleaseReceipt = async ({
 				, transactionPath
 				, transactionSha256: loadedTransaction.sha256
 			});
-			return summary({ path, receiptSha256: existing.sha256, receipt: existing.receipt, verification });
+			const archiveHandoffs = await publishReleaseArchiveHandoffs({
+				root: dirname(verified.manifestPath)
+				, receiptPath: path
+				, receiptSha256: existing.sha256
+				, policy
+				, subjects: archiveSubjects
+			});
+			return summary({ path, receiptSha256: existing.sha256, receipt: existing.receipt, verification, archiveHandoffs });
 		}
 		const hashPath = receiptHashPath(path);
 		try
@@ -870,7 +982,14 @@ export const writeReleaseReceipt = async ({
 			, transactionPath
 			, transactionSha256: loadedTransaction.sha256
 		});
-		return summary({ path, receiptSha256, receipt, verification });
+		const archiveHandoffs = await publishReleaseArchiveHandoffs({
+			root: dirname(verified.manifestPath)
+			, receiptPath: path
+			, receiptSha256
+			, policy
+			, subjects: archiveSubjects
+		});
+		return summary({ path, receiptSha256, receipt, verification, archiveHandoffs });
 	} finally
 	{
 		await releaseLock();

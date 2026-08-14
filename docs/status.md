@@ -92,7 +92,7 @@ The release proof of concept includes:
 - signed publication authorization with a closed public-key policy;
 - preflight and durable state for several registry adapters;
 - idempotency keys and registry-specific recovery states; and
-- content-addressed release and component package receipts.
+- content-addressed component receipts for local dry runs and signed exact-archive receipts for completed releases.
 
 No live registry adapter is installed. Dry run performs no external registry write. Execute mode cannot publish without a separately installed adapter, credentials, and signer policy. [Reproducibility evidence](evidence/reproducibility-release-gate.md), [publication attestation evidence](evidence/publication-attestation.md), [registry transaction evidence](evidence/transactional-registry-release.md), and [receipt evidence](evidence/release-receipt.md) define those controls.
 

@@ -102,6 +102,8 @@ The release manifest and sorted SHA-256 inventory cover the Composer package, ge
 npm run test:php-native-package
 ```
 
+The manifest and inventory establish internal package consistency. A distributed native PHP archive also needs the signed archive handoff from the [consumer guide](consumers.md#authenticate-a-release-archive). Verify the downloaded filename, coordinate, byte length, and SHA-256 against that receipt before copying the Composer package or loading the extension.
+
 The [native PHP release record](evidence/native-php-release-package.md) lists the observed ABI, package layout, execution checks, and limitations.
 
 ## PHP-Wasm alternate transport
@@ -155,5 +157,7 @@ The lazy and startup profiles execute the same conformance corpus. The current h
 ```sh
 npm run test:php-release
 ```
+
+Signed release receipts record the lazy and startup PHP-Wasm archives as separate subjects. Both subjects use the same generated PHP API but retain their distinct artifact identities and graph profiles.
 
 The [PHP release gate](evidence/php-release-gate.md) records package installation, real Lean execution, callback and closure behavior, shared runtime identity, and cleanup for native Zend and both PHP-Wasm profiles.

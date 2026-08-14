@@ -158,6 +158,16 @@ test("publication statement binds source, locks, evidence, assurance artifacts, 
   ]);
   assert.equal(statement.predicate.assuranceArtifacts.provenance.length, 2);
   assert.equal(statement.predicate.publication.targets[0].idempotencyKey, hash("f"));
+  assert.deepEqual(statement.predicate.archiveSubjects, [{
+    ecosystem: "npm"
+    , coordinate: "@lean-bridge/alpha@0.0.0"
+    , operation: "publish"
+    , kind: "package"
+    , path: "release/packages/npm/lean-bridge-alpha.tgz"
+    , filename: "lean-bridge-alpha.tgz"
+    , bytes: 104
+    , sha256: hash("c")
+  }]);
   assert.equal(statement.predicate.signerPolicy.sha256, publicationSignerPolicySha256(policy));
   assert.deepEqual(statement.subject.map(item => item.name), [
     "publish-manifest.json"
@@ -247,6 +257,7 @@ test("publication attestation schemas close policy, statement, envelope, and aud
   assert.equal(policySchema.properties.signers.items.additionalProperties, false);
   assert.equal(attestationSchema.additionalProperties, false);
   assert.equal(attestationSchema.$defs.statement.additionalProperties, false);
+  assert.equal(attestationSchema.$defs.archiveSubject.additionalProperties, false);
   assert.equal(attestationSchema.$defs.envelope.additionalProperties, false);
   assert.equal(attestationSchema.$defs.audit.additionalProperties, false);
   assert.equal(attestationSchema.$defs.audit.properties.privateMaterialReceived.const, false);

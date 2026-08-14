@@ -6,7 +6,7 @@ The current implementation gives package authors:
 
 - one analysis result derived from Lean source and Lake metadata;
 - one compiled component reused by package projections;
-- deterministic artifacts, manifests, provenance, and receipts; and
+- deterministic artifacts, manifests, provenance, and signed exact-archive receipts; and
 - clean-consumer tests that separate executable targets from generated-only targets.
 
 ## Consumer support
