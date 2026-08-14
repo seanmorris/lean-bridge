@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
 
@@ -26,6 +26,31 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+const directoryDocuments = Object.freeze([
+	"src/README.md"
+	, "src/abi/README.md"
+	, "src/adoption/README.md"
+	, "src/analyze/README.md"
+	, "src/backends/README.md"
+	, "src/binding-ir/README.md"
+	, "src/build/README.md"
+	, "src/capsule/README.md"
+	, "src/cli/README.md"
+	, "src/performance/README.md"
+	, "src/release/README.md"
+	, "src/runtime/README.md"
+	, "src/wasi/README.md"
+	, "acceptance/README.md"
+	, "containers/README.md"
+	, "docs/README.md"
+	, "nix/README.md"
+	, "patches/README.md"
+	, "poc/README.md"
+	, "schema/README.md"
+	, "scripts/README.md"
+	, "tests/README.md"
+]);
+
 const publicDocuments = Object.freeze([
 	"README.md"
 	, "CONTRIBUTING.md"
@@ -36,9 +61,35 @@ const publicDocuments = Object.freeze([
 	, "docs/consumers.md"
 	, "docs/status.md"
 	, "docs/evidence/README.md"
+	, ...directoryDocuments
 ]);
 
 const codeFences = source => [...source.matchAll(/^```[^\n]*\n([\s\S]*?)^```\s*$/gm)].map(match => match[1]);
+
+test("source and operational directories have boundary indexes", async () => {
+	const sourceDirectories = (await readdir("src", { withFileTypes: true }))
+		.filter(entry => entry.isDirectory())
+		.map(entry => `src/${entry.name}/README.md`)
+		.sort();
+	const indexedSourceDirectories = directoryDocuments
+		.filter(path => path.startsWith("src/") && path !== "src/README.md")
+		.sort();
+	assert.deepEqual(indexedSourceDirectories, sourceDirectories);
+	for(const path of directoryDocuments)
+	{
+		const source = await readFile(path, "utf8");
+		assert.match(source, /^# [^\n]+$/m, `${path} needs one title`);
+		assert.match(source, /\[[^\]]+\]\([^)]+\)/, `${path} needs a canonical link`);
+		assert.ok(
+			(source.match(/^## [^\n]+$/gm) ?? []).length >= 3,
+			`${path} needs at least three explainer sections`,
+		);
+		assert.ok(
+			source.split("\n").filter(line => line.trim() !== "").length >= 20,
+			`${path} needs a full directory explanation`,
+		);
+	}
+});
 
 test("versioned consumer support contract is closed and honest", async () => {
   const contract = await readConsumerSupport();
