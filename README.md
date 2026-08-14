@@ -132,6 +132,7 @@ These are observational end-user API measurements, not cross-machine comparisons
 
 ## Documentation
 
+- [Documentation map](docs/README.md)
 - [Lean package author guide](docs/lean-author-guide.md)
 - [JavaScript and TypeScript consumer guide](docs/javascript-typescript.md)
 - [PHP consumer guide](docs/php.md)
