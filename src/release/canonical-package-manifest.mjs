@@ -1,3 +1,9 @@
+/**
+ * Implements the canonical package manifest module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { canonicalJson } from "../capsule/node.mjs";

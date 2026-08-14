@@ -1,3 +1,9 @@
+/**
+ * Tests the component build plan behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";

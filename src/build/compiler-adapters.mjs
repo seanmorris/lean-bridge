@@ -1,3 +1,9 @@
+/**
+ * Implements the compiler adapters module in the build subsystem.
+ *
+ * @file
+ */
+
 import { mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 

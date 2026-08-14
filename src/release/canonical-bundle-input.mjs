@@ -1,3 +1,9 @@
+/**
+ * Implements the canonical bundle input module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";

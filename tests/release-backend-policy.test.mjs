@@ -1,3 +1,9 @@
+/**
+ * Tests the release backend policy behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 

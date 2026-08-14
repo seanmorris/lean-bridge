@@ -1,3 +1,9 @@
+/**
+ * Implements the initialization module in the ABI subsystem.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 

@@ -1,3 +1,9 @@
+/**
+ * Implements the evidence bundle module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";

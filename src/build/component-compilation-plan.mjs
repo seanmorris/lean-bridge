@@ -1,3 +1,9 @@
+/**
+ * Implements the component compilation plan module in the build subsystem.
+ *
+ * @file
+ */
+
 import { chmod, mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 

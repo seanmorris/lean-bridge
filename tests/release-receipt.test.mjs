@@ -1,3 +1,9 @@
+/**
+ * Tests the release receipt behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";

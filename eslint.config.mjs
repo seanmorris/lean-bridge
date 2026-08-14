@@ -1,3 +1,9 @@
+/**
+ * Configures repository-wide JavaScript style, documentation, globals, and lint exceptions.
+ *
+ * @file
+ */
+
 // @ts-check
 
 import js from '@eslint/js';
@@ -74,6 +80,15 @@ export default [
 		, rules: {
 			// Left-rail object commas place member JSDoc between a property colon and its value.
 			'jsdoc/check-alignment': 'off'
+			, 'jsdoc/require-file-overview': ['error', {
+				tags: {
+					file: {
+						initialCommentsOnly: true
+						, mustExist: true
+						, preventDuplicates: true
+					}
+				}
+			}]
 			, 'jsdoc/no-undefined-types': ['warn', {
 				definedTypes: []
 			}]
@@ -173,13 +188,6 @@ export default [
 		, rules: {
 			// These files contain source text for other languages and runtimes.
 			'no-useless-escape': 'off'
-		}
-	}
-	, {
-		files: ['tests/internal/abi/iterator-adapter.test.mjs']
-		, rules: {
-			// The style rule currently rewrites `for await (` as `for(`.
-			'sm-no-saccade-style/no-space-control-paren': 'off'
 		}
 	}
 ];

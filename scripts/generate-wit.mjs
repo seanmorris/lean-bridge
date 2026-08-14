@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Generates the WIT workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

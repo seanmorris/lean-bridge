@@ -1,3 +1,9 @@
+/**
+ * Implements the publication attestation module in the release subsystem.
+ *
+ * @file
+ */
+
 import {
 	createHash,
 	createPublicKey,

@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Builds the component npm package workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 

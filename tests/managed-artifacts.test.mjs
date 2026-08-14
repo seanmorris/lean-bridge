@@ -1,3 +1,9 @@
+/**
+ * Tests the managed artifacts behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdtemp, readFile, readdir } from "node:fs/promises";

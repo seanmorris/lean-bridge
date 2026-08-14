@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Builds the plain component side module workflow.
+ *
+ * @file
+ */
+
 
 import { mkdir, mkdtemp, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

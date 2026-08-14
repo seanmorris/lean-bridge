@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the performance regression workflow.
+ *
+ * @file
+ */
+
 
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

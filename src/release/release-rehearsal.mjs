@@ -1,3 +1,9 @@
+/**
+ * Implements the release rehearsal module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import {
 	mkdir,

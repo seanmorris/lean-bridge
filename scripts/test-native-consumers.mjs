@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the native consumers workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readdir, writeFile } from "node:fs/promises";

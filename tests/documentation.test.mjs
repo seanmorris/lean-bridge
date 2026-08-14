@@ -1,3 +1,9 @@
+/**
+ * Tests the documentation behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

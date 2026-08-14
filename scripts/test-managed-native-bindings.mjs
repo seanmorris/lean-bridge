@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the managed native bindings workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, writeFile } from "node:fs/promises";

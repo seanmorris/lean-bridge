@@ -1,3 +1,9 @@
+/**
+ * Implements the host object module in the Lean backend.
+ *
+ * @file
+ */
+
 import { canonicalizeJsonValue, hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 

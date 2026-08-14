@@ -1,3 +1,9 @@
+/**
+ * Implements the generate module in the Ruby backend.
+ *
+ * @file
+ */
+
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
 

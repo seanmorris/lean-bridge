@@ -1,3 +1,9 @@
+/**
+ * Implements the zero config audit module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { readFile } from "node:fs/promises";
 
 const stages = new Set(["analyze", "generate", "build", "rebuild", "compare", "publish", "consume"]);

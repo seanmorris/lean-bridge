@@ -1,3 +1,9 @@
+/**
+ * Provides the performance scale runtime proof-of-concept module.
+ *
+ * @file
+ */
+
 const UINT32_MAX = 0xffff_ffff;
 
 const nanoseconds = milliseconds => Math.round(milliseconds * 1_000_000);

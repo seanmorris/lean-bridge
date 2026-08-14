@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Builds the native FFI artifacts workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";

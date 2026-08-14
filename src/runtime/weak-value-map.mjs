@@ -1,3 +1,9 @@
+/**
+ * Implements the weak value map module in the runtime subsystem.
+ *
+ * @file
+ */
+
 const isWeakTarget = value =>
 	(typeof value === "object" && value !== null) || typeof value === "function";
 

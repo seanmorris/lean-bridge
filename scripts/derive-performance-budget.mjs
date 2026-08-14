@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Derives the performance budget workflow.
+ *
+ * @file
+ */
+
 
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

@@ -1,3 +1,9 @@
+/**
+ * Tests the Lean component compiler behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";

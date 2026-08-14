@@ -1,3 +1,9 @@
+/**
+ * Implements the component engine module in the build subsystem.
+ *
+ * @file
+ */
+
 import { mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 

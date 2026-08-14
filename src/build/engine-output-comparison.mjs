@@ -1,3 +1,9 @@
+/**
+ * Implements the engine output comparison module in the build subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";

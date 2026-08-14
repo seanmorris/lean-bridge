@@ -1,3 +1,9 @@
+/**
+ * Implements the PHP Wasm module in the PHP backend.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { posix } from "node:path";
 

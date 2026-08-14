@@ -1,3 +1,9 @@
+/**
+ * Implements the corpus module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
 

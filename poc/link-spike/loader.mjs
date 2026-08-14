@@ -1,3 +1,9 @@
+/**
+ * Provides the link spike loader proof-of-concept module.
+ *
+ * @file
+ */
+
 import { PendingOperationRegistry } from "../../src/runtime/pending-operations.mjs";
 import { CallbackRegistry } from "../../src/runtime/callbacks.mjs";
 import { WeakValueMap } from "../../src/runtime/weak-value-map.mjs";

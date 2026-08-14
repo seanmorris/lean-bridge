@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Verifies the Lean artifacts workflow.
+ *
+ * @file
+ */
+
 
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";

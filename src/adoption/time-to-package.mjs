@@ -1,3 +1,9 @@
+/**
+ * Implements the time to package module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";

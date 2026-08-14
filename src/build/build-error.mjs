@@ -1,4 +1,10 @@
 /**
+ * Implements the build error module in the build subsystem.
+ *
+ * @file
+ */
+
+/**
  * Reports canonical build failures with stable machine-readable codes and structured diagnostic context.
  */
 export class CanonicalBuildError extends Error

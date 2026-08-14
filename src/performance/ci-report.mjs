@@ -1,3 +1,9 @@
+/**
+ * Implements the CI report module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";

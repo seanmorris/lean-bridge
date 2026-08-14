@@ -1,3 +1,9 @@
+/**
+ * Implements the conformance module in the PHP backend.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { canonicalJson } from "../../capsule/node.mjs";

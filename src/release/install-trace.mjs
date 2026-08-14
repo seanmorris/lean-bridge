@@ -1,3 +1,9 @@
+/**
+ * Implements the install trace module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";

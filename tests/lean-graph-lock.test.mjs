@@ -1,3 +1,9 @@
+/**
+ * Tests the Lean graph lock behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";

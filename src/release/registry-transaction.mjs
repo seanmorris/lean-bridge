@@ -1,3 +1,9 @@
+/**
+ * Implements the registry transaction module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash, randomUUID } from "node:crypto";
 import { open, readFile, rename, rm } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";

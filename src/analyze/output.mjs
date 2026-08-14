@@ -1,3 +1,9 @@
+/**
+ * Implements the output module in the analyze subsystem.
+ *
+ * @file
+ */
+
 import { mkdir, mkdtemp, rename, rm, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 

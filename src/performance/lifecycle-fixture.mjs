@@ -1,4 +1,10 @@
 /**
+ * Implements the lifecycle fixture module in the performance subsystem.
+ *
+ * @file
+ */
+
+/**
  * Replaces weak references and finalization registries with explicit controls so lifecycle tests can trigger collection deterministically.
  */
 export const createDeterministicFinalizerControls = () => {

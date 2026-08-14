@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the performance methodology workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

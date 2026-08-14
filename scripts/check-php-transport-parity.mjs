@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the PHP transport parity workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";

@@ -1,3 +1,9 @@
+/**
+ * Implements the package audit module in the C backend.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 
 /**

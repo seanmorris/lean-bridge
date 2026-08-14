@@ -1,3 +1,9 @@
+/**
+ * Provides the Lean link spike descriptors proof-of-concept module.
+ *
+ * @file
+ */
+
 import alphaCapsule from "./capsules/alpha.json" with { type: "json" };
 import betaCapsule from "./capsules/beta.json" with { type: "json" };
 import gammaCapsule from "./capsules/gamma.json" with { type: "json" };

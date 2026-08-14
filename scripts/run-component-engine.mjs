@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the component engine workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";

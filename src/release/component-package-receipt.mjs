@@ -1,3 +1,9 @@
+/**
+ * Implements the component package receipt module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";

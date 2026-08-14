@@ -1,3 +1,9 @@
+/**
+ * Implements the release receipt module in the release subsystem.
+ *
+ * @file
+ */
+
 import {
 	createHash,
 	createPublicKey,

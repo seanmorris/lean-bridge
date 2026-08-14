@@ -1,3 +1,9 @@
+/**
+ * Implements the methodology module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import os from "node:os";

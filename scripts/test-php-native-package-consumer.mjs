@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the PHP native package consumer workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { chmod, cp, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";

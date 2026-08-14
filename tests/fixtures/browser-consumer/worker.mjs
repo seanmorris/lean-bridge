@@ -1,3 +1,9 @@
+/**
+ * Provides the worker test fixture.
+ *
+ * @file
+ */
+
 import { runNativeConsumer } from "./app.mjs";
 
 try

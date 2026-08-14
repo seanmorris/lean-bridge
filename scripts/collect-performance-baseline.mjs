@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Collects the performance baseline workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";

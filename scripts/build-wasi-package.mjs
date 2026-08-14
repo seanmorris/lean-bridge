@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Builds the WASI package workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 import { buildWasiPackage } from "../src/release/wasi-package.mjs";

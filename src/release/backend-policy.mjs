@@ -1,3 +1,9 @@
+/**
+ * Implements the backend policy module in the release subsystem.
+ *
+ * @file
+ */
+
 const allowedOperations = new Set([
 	"select"
 	, "arrange"

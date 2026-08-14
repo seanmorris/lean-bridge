@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Generates the value frame workflow.
+ *
+ * @file
+ */
+
 
 import { readFile } from "node:fs/promises";
 

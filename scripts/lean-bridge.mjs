@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the Lean bridge command-line workflow.
+ *
+ * @file
+ */
+
 
 import { cliHandlers } from "../src/cli/commands.mjs";
 import { renderProgressEvent, runCli } from "../src/cli/run.mjs";

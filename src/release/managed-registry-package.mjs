@@ -1,3 +1,9 @@
+/**
+ * Implements the managed registry package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";

@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the zero config acceptance workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 

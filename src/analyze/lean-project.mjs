@@ -1,3 +1,9 @@
+/**
+ * Implements the Lean project module in the analyze subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";

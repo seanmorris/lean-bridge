@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the clean room usability workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 

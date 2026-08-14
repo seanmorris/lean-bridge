@@ -1,3 +1,9 @@
+/**
+ * Tests the canonical build behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { constants } from "node:fs";
 import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";

@@ -1,3 +1,9 @@
+/**
+ * Implements the deterministic zip module in the release subsystem.
+ *
+ * @file
+ */
+
 import { deflateRawSync } from "node:zlib";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";

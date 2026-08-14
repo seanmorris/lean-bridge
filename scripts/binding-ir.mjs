@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the binding IR command-line workflow.
+ *
+ * @file
+ */
+
 
 import { readFile } from "node:fs/promises";
 

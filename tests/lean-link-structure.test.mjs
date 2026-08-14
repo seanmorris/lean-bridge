@@ -1,3 +1,9 @@
+/**
+ * Tests the Lean link structure behavior.
+ *
+ * @file
+ */
+
 import test from "node:test";
 
 import {

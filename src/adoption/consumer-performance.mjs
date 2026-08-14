@@ -1,3 +1,9 @@
+/**
+ * Implements the consumer performance module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { mkdir, writeFile } from "node:fs/promises";
 import { arch, cpus, platform } from "node:os";
 import { join, resolve } from "node:path";

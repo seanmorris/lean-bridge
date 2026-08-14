@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the binding semantic parity command-line workflow.
+ *
+ * @file
+ */
+
 
 import { readFile } from "node:fs/promises";
 

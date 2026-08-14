@@ -1,3 +1,9 @@
+/**
+ * Implements the release candidate state module in the release subsystem.
+ *
+ * @file
+ */
+
 const states = Object.freeze([
 	"created"
 	, "analyze"

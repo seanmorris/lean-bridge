@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the consumer CI command-line workflow.
+ *
+ * @file
+ */
+
 
 import { appendFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";

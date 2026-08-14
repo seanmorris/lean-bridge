@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the WASI consumer workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp } from "node:fs/promises";

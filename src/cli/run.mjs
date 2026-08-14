@@ -1,3 +1,9 @@
+/**
+ * Implements the run module in the cli subsystem.
+ *
+ * @file
+ */
+
 import { resolve } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";

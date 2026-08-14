@@ -1,3 +1,9 @@
+/**
+ * Implements the callbacks module in the runtime subsystem.
+ *
+ * @file
+ */
+
 const HANDLE_SLOT_MASK = 0x0fff;
 const HANDLE_GENERATION_MASK = 0x0fff;
 const HANDLE_KIND_MASK = 0x7f;

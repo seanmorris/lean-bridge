@@ -1,3 +1,9 @@
+/**
+ * Implements the pending operations module in the runtime subsystem.
+ *
+ * @file
+ */
+
 const MAX_SLOT = 0xffff;
 const MAX_GENERATION = 0xffff;
 

@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Verifies the component package receipt workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 

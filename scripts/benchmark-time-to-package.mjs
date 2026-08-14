@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Benchmarks the time to package workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";

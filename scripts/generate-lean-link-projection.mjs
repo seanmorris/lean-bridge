@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Generates the Lean link projection workflow.
+ *
+ * @file
+ */
+
 
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";

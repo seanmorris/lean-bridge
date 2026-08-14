@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Compares the performance builds workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";

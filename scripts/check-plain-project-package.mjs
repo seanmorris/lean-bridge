@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the plain project package workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";

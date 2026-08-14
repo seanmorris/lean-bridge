@@ -1,3 +1,9 @@
+/**
+ * Implements the generate module in the .NET backend.
+ *
+ * @file
+ */
+
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
 

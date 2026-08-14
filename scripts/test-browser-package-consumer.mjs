@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the browser package consumer workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { createServer } from "node:http";

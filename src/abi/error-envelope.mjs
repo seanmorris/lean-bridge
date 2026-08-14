@@ -1,3 +1,9 @@
+/**
+ * Implements the error envelope module in the ABI subsystem.
+ *
+ * @file
+ */
+
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 
 /**

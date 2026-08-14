@@ -1,3 +1,9 @@
+/**
+ * Implements the NuGet package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { mkdir, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 

@@ -1,3 +1,9 @@
+/**
+ * Implements the onboarding module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 

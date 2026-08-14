@@ -1,3 +1,9 @@
+/**
+ * Tests the capsule contract behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";

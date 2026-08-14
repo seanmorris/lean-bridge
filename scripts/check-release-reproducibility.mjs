@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Checks the release reproducibility workflow.
+ *
+ * @file
+ */
+
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

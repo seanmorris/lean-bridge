@@ -1,3 +1,9 @@
+/**
+ * Tests the registry transaction behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";

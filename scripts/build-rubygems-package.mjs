@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Builds the RubyGems package workflow.
+ *
+ * @file
+ */
+
 import { buildRubyGemsPackage } from "../src/release/rubygems-package.mjs";
 const options = new Map();
 for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);

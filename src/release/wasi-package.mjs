@@ -1,3 +1,9 @@
+/**
+ * Implements the WASI package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { copyFile, mkdir, readdir, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";

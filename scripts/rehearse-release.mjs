@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Rehearses the release workflow.
+ *
+ * @file
+ */
+
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

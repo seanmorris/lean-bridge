@@ -1,3 +1,9 @@
+/**
+ * Implements the target runtime profiles module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 

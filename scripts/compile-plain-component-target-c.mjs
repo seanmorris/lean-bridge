@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Compiles the plain component target C workflow.
+ *
+ * @file
+ */
+
 
 import { mkdir, mkdtemp, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

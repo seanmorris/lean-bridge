@@ -1,3 +1,9 @@
+/**
+ * Implements the core artifact set module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";

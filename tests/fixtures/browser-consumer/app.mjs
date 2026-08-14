@@ -1,3 +1,9 @@
+/**
+ * Provides the app test fixture.
+ *
+ * @file
+ */
+
 import createMain from "../../../build/lean-link-spike/browser/main.mjs";
 import { alphaBrowser as alpha } from "../../../poc/lean-link-spike/descriptors.mjs";
 import { createLibraryLoader } from "../../../poc/link-spike/loader.mjs";

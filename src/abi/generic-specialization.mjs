@@ -1,3 +1,9 @@
+/**
+ * Implements the generic specialization module in the ABI subsystem.
+ *
+ * @file
+ */
+
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 
 /**

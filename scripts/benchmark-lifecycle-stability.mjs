@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Benchmarks the lifecycle stability workflow.
+ *
+ * @file
+ */
+
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

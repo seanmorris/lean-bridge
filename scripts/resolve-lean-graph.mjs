@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Resolves the Lean graph workflow.
+ *
+ * @file
+ */
+
 
 import { resolve } from "node:path";
 

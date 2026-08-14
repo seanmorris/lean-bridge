@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Benchmarks the self consistency workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";

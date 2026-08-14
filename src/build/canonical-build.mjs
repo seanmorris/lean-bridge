@@ -1,3 +1,9 @@
+/**
+ * Implements the canonical build module in the build subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import {
 	cp,

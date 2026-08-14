@@ -1,3 +1,9 @@
+/**
+ * Implements the RubyGems package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { execFile } from "node:child_process";
 import { rename, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";

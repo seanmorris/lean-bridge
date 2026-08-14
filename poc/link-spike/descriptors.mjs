@@ -1,3 +1,9 @@
+/**
+ * Provides the link spike descriptors proof-of-concept module.
+ *
+ * @file
+ */
+
 export const alpha = Object.freeze({
 	id: "poc/alpha@0.0.0"
 	, buildHash: "link-spike-alpha"

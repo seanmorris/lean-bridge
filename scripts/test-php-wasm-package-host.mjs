@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Tests the PHP Wasm package host workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";

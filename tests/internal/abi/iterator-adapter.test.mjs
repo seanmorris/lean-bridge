@@ -1,3 +1,9 @@
+/**
+ * Tests the iterator adapter behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -397,7 +403,7 @@ test("native async iterators serialize pulls and cancel active work on return", 
   const values = [];
   const complete = api.asyncRange(4);
   assert.equal(complete[Symbol.asyncIterator](), complete);
-	for await (const value of complete) values.push(value);
+	for await(const value of complete) values.push(value);
   assert.deepEqual(values, [0, 1, 2, 3]);
   assert.equal(releases, 1);
 
@@ -448,7 +454,7 @@ export const runtime = Object.freeze({
       `${pathToFileURL(join(directory, "index.mjs")).href}?test=async-iterator`
     );
     const values = [];
-		for await (const value of module.asyncRange(3)) values.push(value);
+		for await(const value of module.asyncRange(3)) values.push(value);
     assert.deepEqual(values, [0, 1, 2]);
 } finally
 {

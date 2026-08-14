@@ -1,3 +1,9 @@
+/**
+ * Implements the value frame module in the ABI subsystem.
+ *
+ * @file
+ */
+
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 

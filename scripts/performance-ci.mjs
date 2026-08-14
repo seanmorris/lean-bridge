@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the performance CI command-line workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";

@@ -1,3 +1,9 @@
+/**
+ * Implements the native package module in the PHP backend.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { isAbsolute, normalize, relative, resolve, sep } from "node:path";

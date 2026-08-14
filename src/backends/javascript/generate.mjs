@@ -1,3 +1,9 @@
+/**
+ * Implements the generate module in the javascript backend.
+ *
+ * @file
+ */
+
 import {
 	canonicalizeJsonValue,
 	hashBindingIr,

@@ -1,3 +1,9 @@
+/**
+ * Tests the PHP Wasm adapter behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";

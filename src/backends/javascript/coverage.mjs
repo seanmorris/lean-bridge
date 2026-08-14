@@ -1,3 +1,9 @@
+/**
+ * Implements the coverage module in the javascript backend.
+ *
+ * @file
+ */
+
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";

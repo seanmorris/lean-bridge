@@ -1,3 +1,9 @@
+/**
+ * Implements the projection module in the javascript backend.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import {

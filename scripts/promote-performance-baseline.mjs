@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Promotes the performance baseline workflow.
+ *
+ * @file
+ */
+
 
 import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, stat } from "node:fs/promises";

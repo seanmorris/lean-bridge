@@ -1,3 +1,9 @@
+/**
+ * Provides the performance runtime proof-of-concept module.
+ *
+ * @file
+ */
+
 const indexStates = new WeakMap();
 
 const UINT32_MAX = 0xffff_ffff;

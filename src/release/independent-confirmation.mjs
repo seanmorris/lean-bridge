@@ -1,3 +1,9 @@
+/**
+ * Implements the independent confirmation module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, rename, rm, stat, writeFile } from "node:fs/promises";
 import { arch, platform } from "node:os";

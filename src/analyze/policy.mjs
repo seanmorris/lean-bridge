@@ -1,3 +1,9 @@
+/**
+ * Implements the policy module in the analyze subsystem.
+ *
+ * @file
+ */
+
 import { readFileSync } from "node:fs";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";

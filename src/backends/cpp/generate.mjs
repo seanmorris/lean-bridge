@@ -1,3 +1,9 @@
+/**
+ * Implements the generate module in the C++ backend.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 

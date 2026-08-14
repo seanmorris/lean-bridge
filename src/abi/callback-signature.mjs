@@ -1,3 +1,9 @@
+/**
+ * Implements the callback signature module in the ABI subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import {

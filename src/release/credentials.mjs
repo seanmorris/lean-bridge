@@ -1,3 +1,9 @@
+/**
+ * Implements the credentials module in the release subsystem.
+ *
+ * @file
+ */
+
 const credentialNamePattern = /^[A-Z][A-Z0-9_]*$/;
 const safeCodePattern = /^[a-z0-9][a-z0-9._-]*$/;
 

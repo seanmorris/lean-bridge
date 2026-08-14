@@ -1,3 +1,9 @@
+/**
+ * Tests the PHP zend extension behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";

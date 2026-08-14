@@ -1,3 +1,9 @@
+/**
+ * Implements the alpha model module in the managed backend.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 

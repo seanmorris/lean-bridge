@@ -1,3 +1,9 @@
+/**
+ * Tests the independent verifier behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, truncate, writeFile } from "node:fs/promises";

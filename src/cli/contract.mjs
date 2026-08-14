@@ -1,3 +1,9 @@
+/**
+ * Implements the contract module in the cli subsystem.
+ *
+ * @file
+ */
+
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 

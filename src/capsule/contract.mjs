@@ -1,3 +1,9 @@
+/**
+ * Implements the contract module in the capsule subsystem.
+ *
+ * @file
+ */
+
 const PACKAGE_ID = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*@[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 const SYMBOL = /^[A-Za-z_][A-Za-z0-9_]*$/;

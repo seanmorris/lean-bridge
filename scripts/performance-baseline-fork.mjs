@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Runs the performance baseline fork command-line workflow.
+ *
+ * @file
+ */
+
 
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";

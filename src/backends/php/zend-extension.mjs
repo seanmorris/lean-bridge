@@ -1,3 +1,9 @@
+/**
+ * Implements the zend extension module in the PHP backend.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";

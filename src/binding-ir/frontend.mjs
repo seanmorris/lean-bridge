@@ -1,3 +1,9 @@
+/**
+ * Implements the frontend module in the binding IR subsystem.
+ *
+ * @file
+ */
+
 import { validateBindingIr } from "./contract.mjs";
 
 /**

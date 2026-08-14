@@ -1,3 +1,9 @@
+/**
+ * Implements the contract module in the binding IR subsystem.
+ *
+ * @file
+ */
+
 const ID = /^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9][A-Za-z0-9._/-]*$/;
 const PACKAGE_ID = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*@[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;
 const VERSION = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;

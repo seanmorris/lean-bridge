@@ -1,3 +1,9 @@
+/**
+ * Implements the canonical module in the binding IR subsystem.
+ *
+ * @file
+ */
+
 import {
 	validateBindingIr,
 	validateBindingIrForMigration,

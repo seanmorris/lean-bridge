@@ -1,3 +1,9 @@
+/**
+ * Implements the side module audit module in the build subsystem.
+ *
+ * @file
+ */
+
 import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 

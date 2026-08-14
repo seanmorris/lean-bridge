@@ -1,3 +1,9 @@
+/**
+ * Implements the usability gate module in the adoption subsystem.
+ *
+ * @file
+ */
+
 import { readFile } from "node:fs/promises";
 
 const roles = new Set(["lean-author", "javascript-consumer", "python-consumer", "automated-agent"]);

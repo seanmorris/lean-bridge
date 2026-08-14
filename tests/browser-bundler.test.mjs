@@ -1,3 +1,9 @@
+/**
+ * Tests the browser bundler behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { createReadStream, existsSync } from "node:fs";
 import { mkdir, rm, stat, writeFile } from "node:fs/promises";

@@ -1,3 +1,9 @@
+/**
+ * Implements the npm package module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import {
 	copyFile,

@@ -1,3 +1,9 @@
+/**
+ * Implements the reproducibility module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { lstat, readFile, readdir } from "node:fs/promises";
 import { basename, extname, join, relative } from "node:path";

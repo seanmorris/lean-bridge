@@ -1,3 +1,9 @@
+/**
+ * Tests the resource lifecycle generator behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import test from "node:test";
 

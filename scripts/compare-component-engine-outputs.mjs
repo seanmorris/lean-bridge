@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Compares the component engine outputs workflow.
+ *
+ * @file
+ */
+
 
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { compareComponentEngineOutputs } from "../src/build/engine-output-comparison.mjs";

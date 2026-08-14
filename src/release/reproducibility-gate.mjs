@@ -1,3 +1,9 @@
+/**
+ * Implements the reproducibility gate module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import {
 	chmod,

@@ -1,3 +1,9 @@
+/**
+ * Implements the projection module in the PHP backend.
+ *
+ * @file
+ */
+
 import { compileFiniteGenericSpecializations } from "../../abi/generic-specialization.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";

@@ -1,3 +1,9 @@
+/**
+ * Implements the Node module in the capsule subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

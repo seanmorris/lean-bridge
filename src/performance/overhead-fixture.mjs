@@ -1,3 +1,9 @@
+/**
+ * Implements the overhead fixture module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { compileJavaScriptProjection } from "../backends/javascript/projection.mjs";
 import { alpha } from "../../poc/lean-link-spike/descriptors.mjs";

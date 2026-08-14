@@ -1,3 +1,9 @@
+/**
+ * Tests the component compilation plan behavior.
+ *
+ * @file
+ */
+
 import assert from "node:assert/strict";
 import { cp, mkdtemp, readFile, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";

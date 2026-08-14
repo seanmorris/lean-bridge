@@ -1,3 +1,9 @@
+/**
+ * Provides the Lean link spike private ABI proof-of-concept module.
+ *
+ * @file
+ */
+
 export const alphaPrivateAbi = Object.freeze({
 	schemaVersion: 1
 	, initialize: "_bridge_lean_runtime_init"

@@ -1,3 +1,9 @@
+/**
+ * Implements the component artifact manifest module in the build subsystem.
+ *
+ * @file
+ */
+
 import { readFile, stat, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 

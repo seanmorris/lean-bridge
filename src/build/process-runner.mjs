@@ -1,3 +1,9 @@
+/**
+ * Implements the process runner module in the build subsystem.
+ *
+ * @file
+ */
+
 import { spawn } from "node:child_process";
 
 import { CanonicalBuildError } from "./build-error.mjs";

@@ -1,3 +1,9 @@
+/**
+ * Benchmarks the native API workflow.
+ *
+ * @file
+ */
+
 import { execFileSync } from "node:child_process";
 import os from "node:os";
 import { performance } from "node:perf_hooks";

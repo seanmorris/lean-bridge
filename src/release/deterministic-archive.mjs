@@ -1,3 +1,9 @@
+/**
+ * Implements the deterministic archive module in the release subsystem.
+ *
+ * @file
+ */
+
 import { gzipSync } from "node:zlib";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";

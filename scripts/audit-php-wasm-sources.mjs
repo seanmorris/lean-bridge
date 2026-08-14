@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Audits the PHP Wasm sources workflow.
+ *
+ * @file
+ */
+
 
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";

@@ -1,3 +1,9 @@
+/**
+ * Implements the independent verifier module in the release subsystem.
+ *
+ * @file
+ */
+
 import { createWriteStream } from "node:fs";
 import { mkdir, mkdtemp, readFile, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";

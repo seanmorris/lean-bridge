@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Generates the performance scale fixtures workflow.
+ *
+ * @file
+ */
+
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";

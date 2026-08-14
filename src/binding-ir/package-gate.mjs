@@ -1,3 +1,9 @@
+/**
+ * Implements the package gate module in the binding IR subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { generateCBindingPackage } from "../backends/c/generate.mjs";

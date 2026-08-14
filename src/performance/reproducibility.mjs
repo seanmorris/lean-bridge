@@ -1,3 +1,9 @@
+/**
+ * Implements the reproducibility module in the performance subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";

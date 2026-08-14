@@ -1,3 +1,9 @@
+/**
+ * Implements the semantic parity module in the binding IR subsystem.
+ *
+ * @file
+ */
+
 import { createHash } from "node:crypto";
 
 import { compileFiniteGenericSpecializations } from "../abi/generic-specialization.mjs";

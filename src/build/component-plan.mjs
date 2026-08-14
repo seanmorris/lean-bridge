@@ -1,3 +1,9 @@
+/**
+ * Implements the component plan module in the build subsystem.
+ *
+ * @file
+ */
+
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 

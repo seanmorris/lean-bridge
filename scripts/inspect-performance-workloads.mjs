@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Inspects the performance workloads workflow.
+ *
+ * @file
+ */
+
 
 import { readFile } from "node:fs/promises";
 import {

@@ -1,3 +1,9 @@
+/**
+ * Provides the react runner test fixture.
+ *
+ * @file
+ */
+
 import React, { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
