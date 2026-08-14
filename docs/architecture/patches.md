@@ -19,7 +19,7 @@ The conditional-pthreads patch changes three lines of policy around the existing
 
 The offline-libuv patch changes build acquisition only. When `LEAN_WASM_LIBUV_SOURCE` is unset, the stock pinned Git path remains in effect. When it is set, CMake copies that immutable source into the disposable external-project directory, makes the copy writable, and then runs Lean's existing libuv Emscripten patch/configure/build steps. The Nix derivation verifies the libuv commit through the fixed-output source identity and a generated marker before configuring Lean. No libuv or Lean runtime implementation is changed by this patch.
 
-No Emscripten patch is currently required. The rest of the design uses existing extension points:
+No additional bridge-specific Emscripten patch is currently required beyond the two runtime patches above. The rest of the design uses existing extension points:
 
 - Lean-generated C and the public runtime/FFI surface;
 - explicit C/C++ adapter code and generated module initializers;

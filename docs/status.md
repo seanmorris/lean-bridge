@@ -1,6 +1,6 @@
 # Implementation status
 
-Status as of 2026-08-13: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer.
+Status as of 2026-08-14: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer. The [production-hardening review](evidence/production-hardening-review-20260814.md) withholds production approval pending human clean-room sessions, external reconstruction, a reviewed deployment profile, operated publication controls, and human assurance review.
 
 ## Lean project intake
 
@@ -106,6 +106,9 @@ The runtime measurements in the [README](../README.md#runtime-performance) link 
 
 Current blockers include:
 
+- passing clean-room sessions from a real Lean author, JavaScript consumer, and Python consumer;
+- an independent release reconstruction outside this repository's workflow boundary;
+- a reviewed production deployment profile and human assurance approval;
 - elaborator-backed extraction for the full supported Lean language surface;
 - reviewed adapters for additional numeric, generic, effect, callback, and ownership shapes;
 - additional native operating systems and architectures;

@@ -22,6 +22,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Commit-pinned source dossier](sources.md)
 - [Patch policy](patches.md)
 - [Implementation approval checkpoint](approval.md)
+- [Production-hardening review, 14 August 2026](../evidence/production-hardening-review-20260814.md)
 - [Historical synthesis](../vision.md)
 - [Native API performance evidence](../evidence/performance.md)
 - [Generated native call overhead](../evidence/native-call-overhead.md)
@@ -61,7 +62,7 @@ Every conclusion is reviewed for:
 2. generated TypeScript and an ordinary npm experience;
 3. explainable proof, trust, and artifact identity;
 4. Nix-style reproducible graph composition;
-5. a JavaScript-first but host-neutral core with a future WASI projection; and
+5. a JavaScript-first but host-neutral core with an executable WIT/WASI projection;
 6. preservation of metadata for AI-native verified component discovery and reuse;
 7. accessible, ergonomic, zero-friction host-language adoption with optional progressive learning; and
 8. universal, independently tested composition across semantics, ABI, runtime, proof/trust metadata, packages, locks, and target profiles.

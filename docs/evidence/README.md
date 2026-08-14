@@ -2,6 +2,8 @@
 
 Evidence documents record commands, artifact identities, measured results, and limitations for the proof of concept. Architecture requirements remain in the [architecture index](../architecture/README.md). Consumer claims remain in the [versioned support contract](../consumer-support.v1.json).
 
+The [production-hardening review from 14 August 2026](production-hardening-review-20260814.md) reconciles the current evidence against all eight permanent architecture lenses and records the remaining approval blockers.
+
 ## Author workflow and release
 
 - [Lean project analysis](lean-project-analysis.md)

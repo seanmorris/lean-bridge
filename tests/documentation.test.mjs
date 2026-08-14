@@ -61,6 +61,11 @@ const publicDocuments = Object.freeze([
 	, "docs/consumers.md"
 	, "docs/status.md"
 	, "docs/evidence/README.md"
+	, "docs/evidence/production-hardening-review-20260814.md"
+	, "docs/architecture/approval.md"
+	, "docs/architecture/risks.md"
+	, "docs/architecture/patches.md"
+	, "docs/architecture/adr/README.md"
 	, ...directoryDocuments
 ]);
 
