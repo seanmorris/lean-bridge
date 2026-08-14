@@ -26,9 +26,12 @@ The receipt derives commands from canonical package names and versions:
 | npm | `npm install <name>@<version>` |
 | Cargo | `cargo add <name>@<version>` |
 | PyPI | `python -m pip install <name>==<version>` |
-| Retained C or C++ archive | `tar -xf <authorized-archive>` |
+| NuGet | `dotnet add package <name> --version <version>` |
+| Maven | `mvn dependency:get -Dartifact=<group>:<artifact>:<version>` |
+| RubyGems | `gem install <name> --version <version>` |
+| Retained C, C++, or WIT/WASI archive | `tar -xf <authorized-archive>` |
 
-Each target record also contains its registry reference, terminal state, idempotency key, backend plan, and complete archive inventory. Local C and C++ targets remain marked as retained archives. The receipt does not describe them as registry publications.
+Each target record also contains its registry reference, terminal state, idempotency key, backend plan, and complete archive inventory. Local C, C++, and WIT/WASI targets remain marked as retained archives. The receipt does not describe them as registry publications.
 
 ## Independent verification
 

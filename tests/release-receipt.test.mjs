@@ -13,6 +13,7 @@ import {
 import {
   authorizeReleaseReceipt,
   createReleaseReceiptStatement,
+  releaseInstallFor,
   validateReleaseReceipt,
   verifyReleaseReceipt,
   verifyReleaseReceiptDocument,
@@ -30,6 +31,29 @@ const signer = Object.freeze({
   kind: "test-ed25519",
   keyId: policy.signers[0].keyId,
   sign: bytes => sign(null, bytes, privateKey),
+});
+
+test("managed receipt commands use canonical registry coordinates", () => {
+  const target = (ecosystem, name, version, coordinate) => ({
+    ecosystem,
+    name,
+    version,
+    coordinate,
+    operation: "publish",
+    archives: [],
+  });
+  assert.deepEqual(releaseInstallFor(target("nuget", "LeanBridge.Alpha", "0.0.0", "LeanBridge.Alpha@0.0.0")), {
+    kind: "nuget",
+    commands: ["dotnet add package LeanBridge.Alpha --version 0.0.0"],
+  });
+  assert.deepEqual(releaseInstallFor(target("maven", "org.leanbridge:lean-alpha", "0.0.0", "org.leanbridge:lean-alpha:0.0.0")), {
+    kind: "maven",
+    commands: ["mvn dependency:get -Dartifact=org.leanbridge:lean-alpha:0.0.0"],
+  });
+  assert.deepEqual(releaseInstallFor(target("rubygems", "lean_bridge_alpha", "0.0.0", "lean_bridge_alpha@0.0.0")), {
+    kind: "rubygems",
+    commands: ["gem install lean_bridge_alpha --version 0.0.0"],
+  });
 });
 
 const artifact = (path, bytes, digest) => ({

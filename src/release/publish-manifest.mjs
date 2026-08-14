@@ -31,6 +31,24 @@ const destinations = Object.freeze({
     endpoint: "https://upload.pypi.org/legacy/",
     credentialEnvironment: Object.freeze(["TWINE_USERNAME", "TWINE_PASSWORD"]),
   }),
+  nuget: Object.freeze({
+    operation: "publish",
+    kind: "nuget",
+    endpoint: "https://api.nuget.org/v3/index.json",
+    credentialEnvironment: Object.freeze(["NUGET_API_KEY"]),
+  }),
+  maven: Object.freeze({
+    operation: "publish",
+    kind: "maven",
+    endpoint: "https://central.sonatype.com/api/v1/publisher/",
+    credentialEnvironment: Object.freeze(["MAVEN_CENTRAL_PASSWORD", "MAVEN_CENTRAL_USERNAME"]),
+  }),
+  rubygems: Object.freeze({
+    operation: "publish",
+    kind: "rubygems",
+    endpoint: "https://rubygems.org/",
+    credentialEnvironment: Object.freeze(["GEM_HOST_API_KEY"]),
+  }),
   c: Object.freeze({
     operation: "retain",
     kind: "archive",
@@ -38,6 +56,12 @@ const destinations = Object.freeze({
     credentialEnvironment: Object.freeze([]),
   }),
   cpp: Object.freeze({
+    operation: "retain",
+    kind: "archive",
+    endpoint: null,
+    credentialEnvironment: Object.freeze([]),
+  }),
+  "wit-wasi": Object.freeze({
     operation: "retain",
     kind: "archive",
     endpoint: null,
@@ -96,9 +120,23 @@ const sortedUniqueStrings = (values, label) => {
   }
 };
 
-const coordinateFor = item => {
+export const publicationCoordinateFor = item => {
   if (item.ecosystem === "pypi") return `${item.name}==${item.version}`;
+  if (item.ecosystem === "maven") return `${item.name}:${item.version}`;
   return `${item.name}@${item.version}`;
+};
+
+export const publicationDestinationFor = ecosystem => {
+  const destination = destinations[ecosystem];
+  if (destination === undefined) {
+    fail("unsupported-publication-target", `No publication destination is defined for ${ecosystem}`, { ecosystem });
+  }
+  return Object.freeze({
+    operation: destination.operation,
+    kind: destination.kind,
+    endpoint: destination.endpoint,
+    credentialEnvironment: Object.freeze([...destination.credentialEnvironment]),
+  });
 };
 
 const targetIdentity = target => sha256(canonicalJson({
@@ -116,12 +154,7 @@ const targetIdentity = target => sha256(canonicalJson({
 }));
 
 const targetRecord = ({ item, candidateId, order }) => {
-  const destination = destinations[item.ecosystem];
-  if (destination === undefined) {
-    fail("unsupported-publication-target", `No publication destination is defined for ${item.ecosystem}`, {
-      ecosystem: item.ecosystem,
-    });
-  }
+  const destination = publicationDestinationFor(item.ecosystem);
   const target = {
     order,
     candidateId,
@@ -134,7 +167,7 @@ const targetRecord = ({ item, candidateId, order }) => {
       kind: destination.kind,
       endpoint: destination.endpoint,
     },
-    coordinate: coordinateFor(item),
+    coordinate: publicationCoordinateFor(item),
     backendPlan: {
       ...item.backendPlan,
       path: `release/packages/${item.backendPlan.path}`,

@@ -394,6 +394,223 @@
           "sha256": "dfe063173eb69227245e2c0c75bacd99d496ff3a86ebd84bbb049706c646c299"
         }
       ]
+    },
+    {
+      "backend": "dotnet",
+      "generator": {
+        "id": "lean-wasm/dotnet",
+        "version": 1
+      },
+      "exports": [
+        "Payload",
+        "Transform",
+        "Box",
+        "OwnedTransform",
+        "Alpha",
+        "LeanBridgeException",
+        "DisposedResourceException",
+        "CallbackThrewException"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "The managed POC does not yet project asynchronous Binding IR delivery."
+        },
+        {
+          "feature": "iterators",
+          "reason": "The managed POC does not yet project Binding IR iterators."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical native artifacts currently target Linux x64 with glibc 2.38 or newer."
+        }
+      ],
+      "fileSetSha256": "d4fbed5fa346ded6161c641e5257548779f63eef015055a03339b862fac925d4",
+      "files": [
+        {
+          "path": "README.md",
+          "bytes": 176,
+          "sha256": "126d45677c57e2ff9061927affb0a3c8548ae4606e40adb19513ed2e1c65839b"
+        },
+        {
+          "path": "binding-manifest.json",
+          "bytes": 1464,
+          "sha256": "996e4b8b27e8763fc572db31efb1dcff699e21bdc91d3c6d181b1f2c942bf1a0"
+        },
+        {
+          "path": "src/LeanBridge.Alpha/Alpha.cs",
+          "bytes": 2533,
+          "sha256": "33ac71f211ad02bda06f2feaef0b8be3b9fdf8d0af84e50881e17c9f22657da8"
+        },
+        {
+          "path": "src/LeanBridge.Alpha/LeanBridge.Alpha.csproj",
+          "bytes": 479,
+          "sha256": "b12ca4626021608b293001faba86abd3538f17a67056d4aaf02533abccb27064"
+        },
+        {
+          "path": "src/LeanBridge.Alpha/Runtime.cs",
+          "bytes": 12587,
+          "sha256": "39e30bbde8a6d23475198cc0cd749700c406101de006e6e8de22ea10d8db5c78"
+        }
+      ]
+    },
+    {
+      "backend": "jvm",
+      "generator": {
+        "id": "lean-wasm/jvm",
+        "version": 1
+      },
+      "exports": [
+        "Payload",
+        "Transform",
+        "Box",
+        "OwnedTransform",
+        "Alpha",
+        "LeanBridgeException",
+        "DisposedResourceException",
+        "CallbackThrewException"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "The managed POC does not yet project asynchronous Binding IR delivery."
+        },
+        {
+          "feature": "iterators",
+          "reason": "The managed POC does not yet project Binding IR iterators."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical native artifacts currently target Linux x64 with glibc 2.38 or newer."
+        }
+      ],
+      "fileSetSha256": "95ccaa0b45a6453690fa90d724d93be9af7f1de79fa9d3d8cf2b24b1cfbf94d0",
+      "files": [
+        {
+          "path": "README.md",
+          "bytes": 177,
+          "sha256": "771bfbc843d45bfaeccc9e2693b52bd2f735b7b0b8963c6fc82af44ab7ab0fcf"
+        },
+        {
+          "path": "binding-manifest.json",
+          "bytes": 2318,
+          "sha256": "2df6b2aa12fce16337d5e615e7bf37a16a7395dac857f1ea13c2396c9f243c5d"
+        },
+        {
+          "path": "pom.xml",
+          "bytes": 513,
+          "sha256": "7d3226bc2f0c393e4a3fd0779afb9d7720809a3377888e164e57eede9245ffa6"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/Alpha.java",
+          "bytes": 454,
+          "sha256": "02b66863eaa188ab798cc6ad9e062834e3ebfeb35079f9e7eb5863692ad7abc6"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/Box.java",
+          "bytes": 520,
+          "sha256": "9a97a72a7c060764b301572e5c04c0d3b64e90d303d90f1a2e1db8f9f0d928f2"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/CallbackThrewException.java",
+          "bytes": 192,
+          "sha256": "b3075c05719c5f77229ea4f0330afd62161d17709739bcfbced6520ebf7b1588"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/DisposedResourceException.java",
+          "bytes": 174,
+          "sha256": "8f3d1c20361b0f1711a7f62e5bf543987aa3744ce6134b16611aa847ffd5c9e5"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/LeanBridgeException.java",
+          "bytes": 237,
+          "sha256": "db848f067146fc4a648266b4508fddaad33ef69fd078d53518f31161e4f8e627"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/OwnedTransform.java",
+          "bytes": 428,
+          "sha256": "525b5bc3715cc9daa2e41d9758e4c55cf9df4d0504b602f14a0a8897432824b9"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/Payload.java",
+          "bytes": 802,
+          "sha256": "1a4e2e0ef1d8854f3a24bd74b69e377b5f87872f04683e8cb73ad77924a048e4"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/Runtime.java",
+          "bytes": 18300,
+          "sha256": "0c99fa3264b1d08c53b50d8c0fab641dec24c61ac37d43cfd645e4ba1098d9f7"
+        },
+        {
+          "path": "src/main/java/org/leanbridge/alpha/Transform.java",
+          "bytes": 156,
+          "sha256": "cea63db09adbca27d28513b5294c7325628d6627fa1b732b3ec8adf816bc65d2"
+        }
+      ]
+    },
+    {
+      "backend": "ruby",
+      "generator": {
+        "id": "lean-wasm/ruby",
+        "version": 1
+      },
+      "exports": [
+        "Payload",
+        "Transform",
+        "Box",
+        "OwnedTransform",
+        "Alpha",
+        "LeanBridgeException",
+        "DisposedResourceException",
+        "CallbackThrewException"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "The managed POC does not yet project asynchronous Binding IR delivery."
+        },
+        {
+          "feature": "iterators",
+          "reason": "The managed POC does not yet project Binding IR iterators."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical native artifacts currently target Linux x64 with glibc 2.38 or newer."
+        }
+      ],
+      "fileSetSha256": "e58790b02bd63f7f1a572595e6681538bde3af6f2c4a279c7e55e784e8ed969f",
+      "files": [
+        {
+          "path": "README.md",
+          "bytes": 178,
+          "sha256": "826ce6b26e260b23c037e183e7741d6d1234914f71e0d18a1eaa59e255749922"
+        },
+        {
+          "path": "binding-manifest.json",
+          "bytes": 1478,
+          "sha256": "736cc2a494991b3cb3d37ce007db641363cdf5886c9e5b28b690624011692038"
+        },
+        {
+          "path": "lean_bridge_alpha.gemspec",
+          "bytes": 358,
+          "sha256": "001be65097b6ccd75b951b689aa3d18655d68112187c17a368ffff451dd13642"
+        },
+        {
+          "path": "lib/lean_bridge/alpha.rb",
+          "bytes": 2337,
+          "sha256": "28c5d911a961b9c7b3dd3666da6def41388f8526d9998cab7f006de77854e79c"
+        },
+        {
+          "path": "lib/lean_bridge/alpha/native.rb",
+          "bytes": 9465,
+          "sha256": "50dfc73eec4c148a643f97047fe78f3b554be8cb94c6345d9c9a931d63d0a2a2"
+        },
+        {
+          "path": "sig/lean_bridge/alpha.rbs",
+          "bytes": 1063,
+          "sha256": "c3c8250889ab475af27bd091082d26f7d0197184513ced2d8ae4e6faa2f55a6c"
+        }
+      ]
     }
   ]
 }

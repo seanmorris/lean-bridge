@@ -39,6 +39,9 @@ const mediaTypeFor = path => {
   if (path.endsWith(".py")) return "text/x-python";
   if (path.endsWith(".php")) return "application/x-httpd-php";
   if (path.endsWith(".so")) return "application/vnd.lean-bridge.shared-library";
+  if (path.endsWith(".dll")) return "application/vnd.microsoft.portable-executable";
+  if (path.endsWith(".class")) return "application/java-vm";
+  if (path.endsWith(".xml")) return "application/xml";
   return "text/plain";
 };
 
@@ -94,6 +97,7 @@ export const buildUniversalReleaseBundle = async ({
   projectRoot,
   coreRoot,
   nativeRoot = null,
+  managedRoot = null,
   wasiRoot = null,
   outputRoot,
   revision,
@@ -103,6 +107,7 @@ export const buildUniversalReleaseBundle = async ({
   const root = resolve(projectRoot);
   const core = resolve(coreRoot);
   const native = nativeRoot === null ? null : resolve(nativeRoot);
+  const managed = managedRoot === null ? null : resolve(managedRoot);
   const wasi = wasiRoot === null ? null : resolve(wasiRoot);
   const output = resolve(outputRoot);
   if (output === root || output === dirname(root)) throw new Error("refusing to replace the project tree with a release bundle");
@@ -148,6 +153,7 @@ export const buildUniversalReleaseBundle = async ({
     const layout = [
       { source: "lib/liblean_bridge_native.so", path: "artifacts/native/lib/liblean_bridge_native.so", id: "native-runtime-library", role: "runtime", core: true },
       { source: "lib/liblean_alpha_component.so", path: "artifacts/native/lib/liblean_alpha_component.so", id: "native-component-library", role: "component", core: true },
+      { source: "lib/liblean_beta_component.so", path: "artifacts/native/lib/liblean_beta_component.so", id: "native-composition-component-library", role: "component", core: true },
       { source: "include/lean_alpha.h", path: "artifacts/native/include/lean_alpha.h", id: "native-public-header", role: "binding", core: false },
       { source: "native-artifacts.json", path: "artifacts/native/native-artifacts.json", id: "native-artifact-manifest", role: "provenance", core: false },
     ];
@@ -159,9 +165,41 @@ export const buildUniversalReleaseBundle = async ({
         throw new Error(`native artifact changed after its manifest was written: ${item.source}`);
       }
       await copy(output, item.path, join(native, item.source));
-      artifacts.push(await record(output, { ...item, target: "native-ffi" }));
+      artifacts.push(await record(output, { ...item, target: null }));
       nativeArtifactIds.push(item.id);
     }
+  }
+
+  const managedArtifactIds = { dotnet: [], jvm: [] };
+  let managedArtifactManifestId = null;
+  if (managed !== null) {
+    const managedManifest = JSON.parse(await readFile(join(managed, "managed-artifacts.json"), "utf8"));
+    if (
+      managedManifest.schemaVersion !== 1 ||
+      managedManifest.component !== ir.component.id ||
+      managedManifest.bindingIrSha256 !== alphaLibrary.bindingIr.semanticSha256 ||
+      managedManifest.target !== "linux-x64-gnu.2.38" ||
+      !Array.isArray(managedManifest.files)
+    ) throw new Error("managed artifact manifest does not match the canonical component target");
+    for (const file of managedManifest.files) {
+      const target = file.path.startsWith("dotnet/") ? "dotnet" : file.path.startsWith("jvm/") ? "jvm" : null;
+      if (target === null || !/^[^\\]+$/.test(file.path) || file.path.split("/").includes("..")) {
+        throw new Error(`managed artifact uses an unsupported path: ${file.path}`);
+      }
+      const bytes = await readFile(join(managed, file.path));
+      if (file.bytes !== bytes.length || file.sha256 !== sha256(bytes)) {
+        throw new Error(`managed artifact changed after its manifest was written: ${file.path}`);
+      }
+      const path = `artifacts/managed/${file.path}`;
+      const id = artifactId(`managed-${target}`, file.path);
+      await copy(output, path, join(managed, file.path));
+      artifacts.push(await record(output, { id, path, role: "binding", target }));
+      managedArtifactIds[target].push(id);
+    }
+    const path = "artifacts/managed/managed-artifacts.json";
+    managedArtifactManifestId = "managed-artifact-manifest";
+    await copy(output, path, join(managed, "managed-artifacts.json"));
+    artifacts.push(await record(output, { id: managedArtifactManifestId, path, role: "provenance", target: null }));
   }
 
   const fixedFiles = [
@@ -196,7 +234,7 @@ export const buildUniversalReleaseBundle = async ({
         id,
         path,
         role: packagePath.endsWith("README.md") ? "documentation" : "binding",
-        target: backend === "javascript" ? "node-esm" : "native-ffi",
+        target: backend === "javascript" ? "node-esm" : new Set(["dotnet", "jvm", "ruby"]).has(backend) ? backend : "native-ffi",
       }));
       ids.push(id);
     }
@@ -343,6 +381,9 @@ export const buildUniversalReleaseBundle = async ({
 
   const commonPackageArtifacts = ["license", "assurance", "core-artifact-set", "sbom", "provenance"];
   const nativeEligible = native !== null;
+  const dotnetEligible = nativeEligible && managedArtifactIds.dotnet.length > 0;
+  const jvmEligible = nativeEligible && managedArtifactIds.jvm.length > 0;
+  const rubyEligible = nativeEligible;
   const wasiEligible = nativeEligible && wasi !== null;
   const packages = [
     {
@@ -379,6 +420,27 @@ export const buildUniversalReleaseBundle = async ({
       reason: nativeEligible ? null : reason,
       publicArtifacts: nativeEligible
         ? [...bindingArtifacts.get(backend), ...nativeArtifactIds, ...commonPackageArtifacts]
+        : [],
+    })),
+    ...[
+      ["nuget", "LeanBridge.Alpha", "dotnet", dotnetEligible, "The canonical bundle has no compiled .NET assembly or native component library."],
+      ["maven", "org.leanbridge:lean-alpha", "jvm", jvmEligible, "The canonical bundle has no compiled JDK 22 classes or native component library."],
+      ["rubygems", "lean_bridge_alpha", "ruby", rubyEligible, "The canonical bundle has no native component library."],
+    ].map(([ecosystem, name, backend, eligible, reason]) => ({
+      ecosystem,
+      name,
+      version: ir.component.version,
+      target: backend,
+      eligible,
+      reason: eligible ? null : reason,
+      publicArtifacts: eligible
+        ? [
+            ...bindingArtifacts.get(backend),
+            ...managedArtifactIds[backend] ?? [],
+            ...nativeArtifactIds,
+            ...managedArtifactManifestId === null ? [] : [managedArtifactManifestId],
+            ...commonPackageArtifacts,
+          ]
         : [],
     })),
     {
@@ -454,6 +516,45 @@ export const buildUniversalReleaseBundle = async ({
           : [],
       },
       {
+        id: "dotnet",
+        eligible: dotnetEligible,
+        reason: dotnetEligible ? null : "The canonical bundle does not contain both the native component and compiled net8.0 binding assembly.",
+        platforms: dotnetEligible ? ["x86_64-linux-gnu"] : [],
+        capabilities: dotnetEligible ? ["callbacks", "copied-values", "identity-resources", "library-import", "shared-runtime"] : ["copied-values", "identity-resources"],
+        entryPoints: dotnetEligible ? [
+          { name: "library", kind: "library", artifact: managedArtifactIds.dotnet[0] },
+          { name: "runtime", kind: "library", artifact: "native-runtime-library" },
+          { name: "component", kind: "library", artifact: "native-component-library" },
+          { name: "metadata", kind: "metadata", artifact: managedArtifactManifestId },
+        ] : [],
+      },
+      {
+        id: "jvm",
+        eligible: jvmEligible,
+        reason: jvmEligible ? null : "The canonical bundle does not contain both the native component and compiled JDK 22 bindings.",
+        platforms: jvmEligible ? ["x86_64-linux-gnu"] : [],
+        capabilities: jvmEligible ? ["callbacks", "copied-values", "foreign-function-and-memory", "identity-resources", "shared-runtime"] : ["copied-values", "identity-resources"],
+        entryPoints: jvmEligible ? [
+          { name: "library", kind: "library", artifact: managedArtifactIds.jvm[0] },
+          { name: "runtime", kind: "library", artifact: "native-runtime-library" },
+          { name: "component", kind: "library", artifact: "native-component-library" },
+          { name: "metadata", kind: "metadata", artifact: managedArtifactManifestId },
+        ] : [],
+      },
+      {
+        id: "ruby",
+        eligible: rubyEligible,
+        reason: rubyEligible ? null : "The canonical bundle does not contain the native component required by the generated Fiddle adapter.",
+        platforms: rubyEligible ? ["x86_64-linux-gnu"] : [],
+        capabilities: rubyEligible ? ["callbacks", "copied-values", "fiddle", "identity-resources", "shared-runtime"] : ["copied-values", "identity-resources"],
+        entryPoints: rubyEligible ? [
+          { name: "library", kind: "library", artifact: artifacts.find(item => item.path === "bindings/ruby/lib/lean_bridge/alpha.rb").id },
+          { name: "runtime", kind: "library", artifact: "native-runtime-library" },
+          { name: "component", kind: "library", artifact: "native-component-library" },
+          { name: "metadata", kind: "metadata", artifact: "native-artifact-manifest" },
+        ] : [],
+      },
+      {
         id: "wit-wasi",
         eligible: wasiEligible,
         reason: wasiEligible ? null : "This bundle contains WIT declarations but no executable Component Model adapter and host.",
@@ -474,9 +575,18 @@ export const buildUniversalReleaseBundle = async ({
     dependencies: [],
     capabilities: {
       provided: ["callbacks", "copied-values", "identity-resources", "promises", "shared-runtime", "typed-bindings"],
-      requiredHosts: nativeEligible ? ["javascript", "native-ffi"] : ["javascript"],
+      requiredHosts: [
+        "javascript",
+        ...nativeEligible ? ["native-ffi"] : [],
+        ...dotnetEligible ? ["dotnet"] : [],
+        ...jvmEligible ? ["jvm"] : [],
+        ...rubyEligible ? ["ruby"] : [],
+      ],
       gaps: [
         ...nativeEligible ? [] : [{ target: "native-ffi", feature: "native-library-artifact", reason: "The current core derivation builds the Wasm shared-runtime profile." }],
+        ...dotnetEligible ? [] : [{ target: "dotnet", feature: "compiled-binding", reason: "The canonical bundle lacks a compiled net8.0 binding assembly or native component." }],
+        ...jvmEligible ? [] : [{ target: "jvm", feature: "compiled-binding", reason: "The canonical bundle lacks compiled JDK 22 binding classes or native component." }],
+        ...rubyEligible ? [] : [{ target: "ruby", feature: "native-library-artifact", reason: "The canonical bundle lacks the native component used by the generated Fiddle adapter." }],
         ...wasiEligible ? [] : [{ target: "wit-wasi", feature: "component-model", reason: "The current bundle has WIT declarations but no executable Component Model adapter and host." }],
       ],
     },

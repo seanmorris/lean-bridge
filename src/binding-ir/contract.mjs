@@ -367,7 +367,7 @@ const validateHostProjection = (value, path) => {
   if (value === null) return;
   exactKeys(value, ["targets", "identity", "dynamic"], [], path);
   array(value.targets, `${path}.targets`, { nonempty: true }).forEach((target, index) =>
-    enumeration(target, new Set(["javascript", "python"]), `${path}.targets[${index}]`),
+    enumeration(target, new Set(["javascript", "python", "dotnet", "jvm", "ruby"]), `${path}.targets[${index}]`),
   );
   unique(value.targets, target => target, `${path}.targets`);
   enumeration(

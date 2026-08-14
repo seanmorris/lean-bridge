@@ -2,10 +2,13 @@ import { createHash } from "node:crypto";
 
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
+import { generateDotnetBindingPackage } from "../backends/dotnet/generate.mjs";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
+import { generateJvmBindingPackage } from "../backends/jvm/generate.mjs";
 import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
 import { generateRustBindingPackage } from "../backends/rust/generate.mjs";
+import { generateRubyBindingPackage } from "../backends/ruby/generate.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "./canonical.mjs";
 
 export class GeneratedPackageGateError extends Error {
@@ -28,6 +31,9 @@ const BACKENDS = Object.freeze([
   Object.freeze({ id: "c", generate: generateCBindingPackage }),
   Object.freeze({ id: "cpp", generate: generateCppBindingPackage }),
   Object.freeze({ id: "rust", generate: generateRustBindingPackage }),
+  Object.freeze({ id: "dotnet", generate: generateDotnetBindingPackage }),
+  Object.freeze({ id: "jvm", generate: generateJvmBindingPackage }),
+  Object.freeze({ id: "ruby", generate: generateRubyBindingPackage }),
 ]);
 
 export const generateBindingPackages = ir => Object.freeze(Object.fromEntries(
@@ -63,6 +69,9 @@ const publicFilesFor = (backend, manifest, files) => {
   if (backend === "c") return [manifest.publicHeader, ...docsFor(files)];
   if (backend === "cpp") return [manifest.publicHeader, ...docsFor(files)];
   if (backend === "rust") return [manifest.publicModule, "Cargo.toml", ...docsFor(files)];
+  if (new Set(["dotnet", "jvm", "ruby"]).has(backend)) {
+    return [...manifest.publicFiles, ...docsFor(files)];
+  }
   fail("unknown-backend", `no public-file policy exists for ${backend}`, { backend });
 };
 

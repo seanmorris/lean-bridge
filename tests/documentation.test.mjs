@@ -26,6 +26,7 @@ const publicDocuments = Object.freeze([
   "docs/lean-author-guide.md",
   "docs/javascript-typescript.md",
   "docs/php.md",
+  "docs/dotnet-jvm-ruby.md",
   "docs/consumers.md",
   "docs/status.md",
   "docs/evidence/README.md",
@@ -41,7 +42,7 @@ test("versioned consumer support contract is closed and honest", async () => {
   assert.equal(schema.$defs.consumer.additionalProperties, false);
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "supported").map(item => item.id),
-    ["node-javascript", "node-typescript", "browser-javascript", "php-native", "php-wasm", "python", "rust", "c", "cpp", "wit-wasi"],
+    ["node-javascript", "node-typescript", "browser-javascript", "php-native", "php-wasm", "dotnet", "jvm", "ruby", "python", "rust", "c", "cpp", "wit-wasi"],
   );
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "partial").map(item => item.id),
@@ -121,6 +122,10 @@ test("promoted package evidence names each executable runtime path", async () =>
     ["scripts/test-native-consumers.mjs", "buildCargoPackage"],
     ["scripts/test-native-consumers.mjs", "buildCPackage"],
     ["scripts/test-native-consumers.mjs", "buildCppPackage"],
+    ["scripts/test-managed-registry-consumers.mjs", "PackageReference"],
+    ["src/release/nuget-package.mjs", "buildNugetPackage"],
+    ["src/release/maven-package.mjs", "buildMavenPackage"],
+    ["src/release/rubygems-package.mjs", "buildRubyGemsPackage"],
     ["scripts/test-wasi-consumer.mjs", "componentResult"],
   ];
   for (const [path, pattern] of checks) assert.match(await readFile(path, "utf8"), new RegExp(pattern), path);
@@ -137,6 +142,7 @@ test("steady-state consumers share one retained Box workload", async () => {
     "scripts/test-native-consumers.mjs",
     "scripts/test-php-native-package-consumer.mjs",
     "scripts/test-php-wasm-package-host.mjs",
+    "scripts/test-managed-registry-consumers.mjs",
   ]) {
     const source = await readFile(path, "utf8");
     assert.match(source, /STEADY_STATE_BOX_VALUE/, path);
@@ -217,14 +223,17 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(packageDocument.scripts["test:consumer:node"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
+  assert.match(packageDocument.scripts["test:consumer:managed"], /\.\#nuget-package/);
+  assert.match(packageDocument.scripts["test:consumer:managed"], /\.\#maven-package/);
+  assert.match(packageDocument.scripts["test:consumer:managed"], /\.\#rubygems-package/);
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 6);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 7);
   const contract = await readConsumerSupport();
   for (const consumer of contract.consumers) {
     assert.match(workflow, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
-    if (["python", "rust", "c", "cpp"].includes(consumer.id)) {
+    if (["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id)) {
       assert.match(workflow, /--performance "build\/consumer-ci\/performance\/\$consumer\.json"/);
     } else {
       assert.match(workflow, new RegExp(`--performance [^\\n]*${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));

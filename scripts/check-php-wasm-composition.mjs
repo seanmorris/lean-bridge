@@ -176,13 +176,14 @@ echo json_encode([
   assert.equal(result.alphaRead, 41);
   assert.equal(result.betaRead, 41);
   assert.equal(result.canonicalIdentity, true);
+  const liveBoxRegistrations = 2;
   assert.deepEqual(
     [result.beforeBeta.runtimeInitRuns, result.beforeBeta.componentInitRuns, result.beforeBeta.attachedComponents, result.beforeBeta.liveIdentities],
-    [1, 1, 1, 1],
+    [1, 1, 1, liveBoxRegistrations],
   );
   assert.deepEqual(
     [result.afterBeta.runtimeInitRuns, result.afterBeta.componentInitRuns, result.afterBeta.attachedComponents, result.afterBeta.liveIdentities],
-    [1, 2, 2, 1],
+    [1, 2, 2, liveBoxRegistrations],
   );
   assert.equal(result.afterBeta.runtimeInstanceId, result.beforeBeta.runtimeInstanceId);
   assert.equal(result.afterBeta.identityDomainId, result.beforeBeta.identityDomainId);

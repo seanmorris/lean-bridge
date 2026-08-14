@@ -1,6 +1,6 @@
 # Transactional multi-registry release evidence
 
-Status: implemented as a durable coordinator with injected registry adapters. The coordinator performs no live registry operation in this repository. A production deployment installs reviewed npm, Cargo, or PyPI adapters through the CLI handler contract.
+Status: implemented as a durable coordinator with injected registry adapters. The coordinator performs no live registry operation in this repository. A production deployment installs reviewed npm, Cargo, PyPI, NuGet, Maven Central, or RubyGems adapters through the CLI handler contract.
 
 ## One authorized transaction
 
@@ -40,7 +40,7 @@ Each adapter receives one target-scoped credential view. It cannot request crede
 
 A matching coordinate counts as complete only when every reported archive hash equals the authorized archive set. A different or incomplete set is a collision. Denied permission, unverified immutability, a collision, an unavailable dependency, or a dependency ordered after its consumer blocks the entire transaction before the first write.
 
-Local C and C++ archives use the `retain` operation. They receive a preflight record but do not access credentials or claim an external registry write.
+Local C, C++, and WIT/WASI archives use the `retain` operation. They receive a preflight record but do not access credentials or claim an external registry write.
 
 ## Durable partial success
 
@@ -67,9 +67,12 @@ The record does not claim cross-registry atomicity. Each registry commit stands 
 | npm | Deprecate the affected version or publish a corrective version | npm coordinates remain immutable even when policy permits unpublishing. Deprecation warns consumers without breaking existing installs. |
 | Cargo | Publish a compatible correction, then yank when appropriate | Yanking removes a version from new resolution but keeps downloads and existing lockfiles working. |
 | PyPI | Yank affected files or publish a corrective version | Yanked files are skipped by ordinary resolution but remain available to exact pins. |
-| C and C++ | Replace the retained archive before distribution | No external registry transaction has occurred yet. |
+| NuGet | Unlist or deprecate, then publish a corrective version | The original immutable version remains available to exact restores while ordinary discovery moves to the correction. |
+| Maven Central | Publish a corrective version | A released Central component cannot be changed or removed. |
+| RubyGems | Yank, then publish a corrective version | Yanking removes the affected gem from installation and discovery before the correction is published. |
+| C, C++, and WIT/WASI | Replace the retained archive before distribution | No external registry transaction has occurred yet. |
 
-The policy sources are the [npm unpublish policy](https://docs.npmjs.com/policies/unpublish/), [`cargo yank` documentation](https://doc.rust-lang.org/cargo/commands/cargo-yank.html), and the [Python file-yanking specification](https://packaging.python.org/en/latest/specifications/file-yanking/).
+The policy sources are the [npm unpublish policy](https://docs.npmjs.com/policies/unpublish/), [`cargo yank` documentation](https://doc.rust-lang.org/cargo/commands/cargo-yank.html), [Python file-yanking specification](https://packaging.python.org/en/latest/specifications/file-yanking/), [NuGet publish API](https://learn.microsoft.com/en-us/nuget/api/package-publish-resource), [Maven Central immutability policy](https://central.sonatype.org/faq/can-i-change-a-component/), and [RubyGems yank guide](https://guides.rubygems.org/removing-a-published-gem/).
 
 ## CLI result
 
@@ -90,7 +93,7 @@ npm run test:registry-transaction
 [`registry-transaction.test.mjs`](../../tests/registry-transaction.test.mjs) proves:
 
 - all preflights precede all writes;
-- retain, npm, Cargo, and PyPI targets execute in authorized order;
+- retain, npm, Cargo, PyPI, NuGet, Maven, and RubyGems targets share the same authorized ordering and recovery contract;
 - collisions, denied permission, unavailable dependencies, missing adapters, invalid dependency order, and lock conflicts perform no write;
 - already-published exact coordinates are idempotent;
 - mismatched archive hashes are collisions;

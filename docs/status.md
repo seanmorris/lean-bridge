@@ -1,6 +1,6 @@
 # Implementation status
 
-Status as of 2026-08-11: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer.
+Status as of 2026-08-13: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer.
 
 ## Lean project intake
 
@@ -74,12 +74,18 @@ The WIT/WASI package includes the generated portable WIT subset, a Component Mod
 
 [Native consumer acceptance](evidence/native-consumer-acceptance.md) and [WIT/WASI consumer acceptance](evidence/wasi-consumer-acceptance.md) record the package and execution evidence.
 
+### .NET, JVM, and Ruby
+
+The canonical bundle includes deterministic net8.0 assemblies, JDK 22 classes, generated Ruby and RBS sources, the shared native runtime, and independently compiled Alpha and Beta components. NuGet uses the standard runtime-specific native asset layout. Maven packages native libraries as resources loaded by the finalized Foreign Function and Memory API. RubyGems installs pure Ruby `Fiddle` bindings without compiling a native extension.
+
+Clean consumers cover copied values, identity, callbacks, returned callables, declared failures, deterministic close, stale use, package receipts, Kotlin compilation, isolated JVM class loaders, Ruby GC compaction, two-component shared-runtime composition, and end-user performance. [.NET, JVM, and Ruby acceptance](evidence/managed-consumer-acceptance.md) records the package and execution evidence.
+
 ## Release controls
 
 The release proof of concept includes:
 
 - a canonical package manifest and component graph lock;
-- deterministic npm, native PHP, and PHP-Wasm artifacts;
+- deterministic npm, NuGet, Maven, RubyGems, native PHP, and PHP-Wasm artifacts;
 - an SPDX SBOM and in-toto provenance records;
 - clean rebuild comparison before authorization;
 - a value-free registry credential boundary;

@@ -29,8 +29,11 @@ test("one reviewed report locks every generated host package", async () => {
     "c",
     "cpp",
     "rust",
+    "dotnet",
+    "jvm",
+    "ruby",
   ]);
-  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 6);
+  assert.equal(new Set(actual.packages.map(item => item.fileSetSha256)).size, 9);
   assert.equal(Object.isFrozen(actual.packages[0].files), true);
 });
 
@@ -74,5 +77,8 @@ test("the package gate CLI checks the reviewed report", async () => {
     "c",
     "cpp",
     "rust",
+    "dotnet",
+    "jvm",
+    "ruby",
   ]);
 });

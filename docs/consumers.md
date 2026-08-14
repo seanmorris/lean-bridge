@@ -1,6 +1,6 @@
 # Downstream consumers
 
-The [versioned support contract](consumer-support.v1.json) records ten consumers separately. `supported` means that a clean consumer installs the documented artifact and executes real Lean through the generated public API. The current proof of concept supports every listed row. Native packages target x86-64 Linux with glibc 2.38 or newer.
+The [versioned support contract](consumer-support.v1.json) records thirteen consumers separately. `supported` means that a clean consumer installs the documented artifact and executes real Lean through the generated public API. The current proof of concept supports every listed row. Native packages target x86-64 Linux with glibc 2.38 or newer.
 
 ## Browser JavaScript
 
@@ -103,6 +103,12 @@ The wrapper is move-only. Destructors release `Box` and returned `Transform` val
 
 `npm run test:consumer:native` builds all four deterministic projections, installs each in a separate clean directory, and executes retained resources, copied values, callbacks, closures, and disposal against real Lean. See [native consumer acceptance](evidence/native-consumer-acceptance.md).
 
+## .NET, JVM, and Ruby
+
+The NuGet, Maven, and RubyGems archives package idiomatic generated APIs over the same shared native runtime and independently compiled Alpha and Beta components. .NET 8 uses source-generated `LibraryImport`, JDK 22 uses the finalized Foreign Function and Memory API without JNI, and MRI Ruby 3.3 uses `Fiddle` without compiling a native extension.
+
+`npm run test:consumer:managed` restores or installs every archive in a clean project and executes copied values, identity-bearing resources, callbacks, returned callables, repeated close, stale-use rejection, and two-component composition against real Lean. The JVM check also compiles Kotlin and uses isolated class loaders. See the [.NET, JVM, and Ruby guide](dotnet-jvm-ruby.md) and [managed consumer acceptance](evidence/managed-consumer-acceptance.md).
+
 ## WIT and WASI
 
 The WIT/WASI archive contains the generated portable WIT projection, a binary Component Model adapter, an independent Wasmtime 42 host, and the same shared native Lean runtime. Run it directly after extracting the archive:
@@ -117,4 +123,4 @@ The host prints `42`. Wasmtime enters the packaged component, the component invo
 
 ## Promotion rule
 
-CI fails if any supported consumer does not install its package and execute real Lean. The workflow publishes all ten observations in the GitHub job summary.
+CI fails if any supported consumer does not install its package and execute real Lean. The workflow publishes all thirteen observations in the GitHub job summary.

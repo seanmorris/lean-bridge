@@ -243,7 +243,7 @@
       "additionalProperties": false,
       "required": ["ecosystem", "name", "version", "target", "eligible", "reason", "publicArtifacts"],
       "properties": {
-        "ecosystem": { "enum": ["npm", "cargo", "pypi", "c", "cpp", "wit-wasi"] },
+        "ecosystem": { "enum": ["npm", "cargo", "pypi", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi"] },
         "name": { "type": "string", "minLength": 1 },
         "version": { "$ref": "#/$defs/version" },
         "target": { "type": "string", "minLength": 1 },

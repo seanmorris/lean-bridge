@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "1.0.0",
+  "verifiedAt": "2026-08-13",
+  "bindingIrSchemaVersion": 3,
+  "platform": {
+    "id": "linux-x64-gnu.2.38",
+    "operatingSystem": "linux",
+    "architecture": "x86-64",
+    "libc": "glibc",
+    "minimumLibcVersion": "2.38"
+  },
+  "boundary": {
+    "transport": "generated-c",
+    "runtimeScope": "process",
+    "sharedRuntime": true,
+    "compileOnce": true,
+    "runtimeLibrary": "liblean_bridge_native.so",
+    "componentLibrary": "liblean_alpha_component.so",
+    "header": "lean_alpha.h",
+    "failureProtocol": "status-and-error-envelope",
+    "callbackThread": "initiating-runtime-thread"
+  },
+  "acceptance": [
+    {
+      "id": "deterministic-generation",
+      "requirement": "Generate byte-identical host sources from the same Binding IR.",
+      "evidence": "Generate each projection twice and compare every byte."
+    },
+    {
+      "id": "public-surface",
+      "requirement": "Expose direct idiomatic declarations without public pointers, handles, or generic dispatch.",
+      "evidence": "Audit generated public source and compile a public API consumer."
+    },
+    {
+      "id": "host-compilation",
+      "requirement": "Compile generated bindings with the declared minimum host runtime.",
+      "evidence": "Run the host compiler in the pinned toolchain."
+    },
+    {
+      "id": "deterministic-package",
+      "requirement": "Build byte-identical registry archives from one canonical release bundle.",
+      "evidence": "Build twice in separate roots and compare archive hashes."
+    },
+    {
+      "id": "clean-install",
+      "requirement": "Install the archive into a clean ordinary package project with scripts disabled.",
+      "evidence": "Use the ecosystem package manager in an empty temporary root."
+    },
+    {
+      "id": "real-lean-execution",
+      "requirement": "Execute a declaration from the packaged Lean Alpha component through the generated API.",
+      "evidence": "Call copied values, resources, callbacks, and returned callables in the clean consumer."
+    },
+    {
+      "id": "semantic-parity",
+      "requirement": "Match the Alpha semantic oracle shared by existing generated backends.",
+      "evidence": "Run the common copied-value, identity, lifecycle, callback, callable, and failure scenarios."
+    },
+    {
+      "id": "deterministic-lifecycle",
+      "requirement": "Release owned resources explicitly and make repeated release harmless.",
+      "evidence": "Exercise close or dispose twice and confirm stale use fails predictably."
+    },
+    {
+      "id": "shared-runtime",
+      "requirement": "Use one process-wide Lean runtime without packaging a private runtime per component.",
+      "evidence": "Load two independently packaged components and compare runtime identity."
+    },
+    {
+      "id": "compile-once",
+      "requirement": "Reuse canonical native artifacts without a Lean, C, or linker step in registry packaging or install.",
+      "evidence": "Trace package construction and clean installation with compiler access disabled."
+    },
+    {
+      "id": "provenance",
+      "requirement": "Retain canonical component, Binding IR, runtime, graph, and artifact identities.",
+      "evidence": "Verify packaged hashes and receipt fields against the canonical manifest."
+    },
+    {
+      "id": "end-user-performance",
+      "requirement": "Measure steady-state calls through the installed generated API.",
+      "evidence": "Publish operation, iterations, duration, per-call latency, and machine context."
+    }
+  ],
+  "profiles": [
+    {
+      "id": "dotnet",
+      "language": "C#",
+      "runtime": ".NET",
+      "minimumRuntimeVersion": "8.0",
+      "interop": "library-import",
+      "package": {
+        "ecosystem": "nuget",
+        "coordinate": "LeanBridge.Alpha",
+        "nativeLayout": "runtimes/linux-x64/native",
+        "scriptsDisabled": true
+      },
+      "publicConventions": [
+        "static methods for namespace functions",
+        "immutable value types for copied records",
+        "sealed classes and IDisposable for owned resources",
+        "delegates for callbacks and returned callables",
+        "named exceptions for declared failures"
+      ],
+      "privateMechanisms": [
+        "System.Runtime.InteropServices.LibraryImport",
+        "NativeLibrary.SetDllImportResolver"
+      ],
+      "forbiddenMechanisms": [
+        "public IntPtr",
+        "generic dispatch",
+        "package install scripts"
+      ],
+      "supportedFeatures": [
+        "direct-functions",
+        "copied-values",
+        "owned-resources",
+        "host-callbacks",
+        "returned-callables",
+        "declared-failures",
+        "deterministic-close"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "Binding IR async delivery has not been projected to Task."
+        },
+        {
+          "feature": "iterators",
+          "reason": "Binding IR iterators have not been projected to IEnumerable."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical release bundle currently carries only the Linux x64 glibc native artifacts."
+        }
+      ],
+      "lifecycle": "Dispose is authoritative, finalization is fallback only, and native libraries remain loaded until process exit."
+    },
+    {
+      "id": "jvm",
+      "language": "Java",
+      "runtime": "JDK",
+      "minimumRuntimeVersion": "22",
+      "interop": "foreign-function-and-memory",
+      "package": {
+        "ecosystem": "maven",
+        "coordinate": "org.leanbridge:lean-alpha",
+        "nativeLayout": "META-INF/lean-bridge/native/linux-x64",
+        "scriptsDisabled": true
+      },
+      "publicConventions": [
+        "static methods for namespace functions",
+        "records for copied values",
+        "final AutoCloseable classes for owned resources",
+        "functional interfaces for callbacks and returned callables",
+        "named exceptions for declared failures"
+      ],
+      "privateMechanisms": [
+        "java.lang.foreign.Linker",
+        "java.lang.foreign.SymbolLookup",
+        "java.lang.foreign.Arena"
+      ],
+      "forbiddenMechanisms": [
+        "JNI",
+        "public MemorySegment",
+        "generic dispatch",
+        "package install scripts"
+      ],
+      "supportedFeatures": [
+        "direct-functions",
+        "copied-values",
+        "owned-resources",
+        "host-callbacks",
+        "returned-callables",
+        "declared-failures",
+        "deterministic-close"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "Binding IR async delivery has not been projected to CompletionStage."
+        },
+        {
+          "feature": "iterators",
+          "reason": "Binding IR iterators have not been projected to Stream or Iterator."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical release bundle currently carries only the Linux x64 glibc native artifacts."
+        }
+      ],
+      "lifecycle": "Close is authoritative, Cleaner is fallback only, and native libraries remain loaded until process exit."
+    },
+    {
+      "id": "ruby",
+      "language": "Ruby",
+      "runtime": "MRI Ruby",
+      "minimumRuntimeVersion": "3.3",
+      "interop": "fiddle",
+      "package": {
+        "ecosystem": "rubygems",
+        "coordinate": "lean_bridge_alpha",
+        "nativeLayout": "lib/lean_bridge/native/linux-x64",
+        "scriptsDisabled": true
+      },
+      "publicConventions": [
+        "module functions for namespace functions",
+        "immutable objects for copied records",
+        "classes with close for owned resources",
+        "blocks and callables for callbacks and returned callables",
+        "named errors for declared failures"
+      ],
+      "privateMechanisms": [
+        "Fiddle.dlopen",
+        "Fiddle::Function",
+        "Fiddle::Closure"
+      ],
+      "forbiddenMechanisms": [
+        "native extension build",
+        "public Fiddle pointers",
+        "generic dispatch",
+        "package install scripts"
+      ],
+      "supportedFeatures": [
+        "direct-functions",
+        "copied-values",
+        "owned-resources",
+        "host-callbacks",
+        "returned-callables",
+        "declared-failures",
+        "deterministic-close"
+      ],
+      "capabilityGaps": [
+        {
+          "feature": "asynchronous-results",
+          "reason": "Binding IR async delivery has not been projected to a Ruby scheduler contract."
+        },
+        {
+          "feature": "iterators",
+          "reason": "Binding IR iterators have not been projected to Enumerator."
+        },
+        {
+          "feature": "additional-platforms",
+          "reason": "The canonical release bundle currently carries only the Linux x64 glibc native artifacts."
+        }
+      ],
+      "lifecycle": "Close is authoritative, finalization is fallback only, and native libraries remain loaded until process exit."
+    }
+  ]
+}

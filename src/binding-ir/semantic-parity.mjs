@@ -3,10 +3,13 @@ import { createHash } from "node:crypto";
 import { compileFiniteGenericSpecializations } from "../abi/generic-specialization.mjs";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
+import { generateDotnetBindingPackage } from "../backends/dotnet/generate.mjs";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
+import { generateJvmBindingPackage } from "../backends/jvm/generate.mjs";
 import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
 import { generateRustBindingPackage } from "../backends/rust/generate.mjs";
+import { generateRubyBindingPackage } from "../backends/ruby/generate.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "./canonical.mjs";
 import { validateBindingIr } from "./contract.mjs";
 
@@ -102,6 +105,33 @@ const BACKENDS = Object.freeze({
     callbacks: "closures and callable resources",
     errors: "Result",
     cleanup: "Drop",
+    delivery: Object.freeze({ value: "value" }),
+  }),
+  dotnet: Object.freeze({
+    generate: generateDotnetBindingPackage,
+    values: "immutable records",
+    resources: "sealed IDisposable classes",
+    callbacks: "delegates and callable resources",
+    errors: "exceptions",
+    cleanup: "Dispose and finalization fallback",
+    delivery: Object.freeze({ value: "value" }),
+  }),
+  jvm: Object.freeze({
+    generate: generateJvmBindingPackage,
+    values: "records with defensive copies",
+    resources: "final AutoCloseable classes",
+    callbacks: "functional interfaces and callable resources",
+    errors: "exceptions",
+    cleanup: "close and Cleaner fallback",
+    delivery: Object.freeze({ value: "value" }),
+  }),
+  ruby: Object.freeze({
+    generate: generateRubyBindingPackage,
+    values: "frozen value objects",
+    resources: "classes with explicit close",
+    callbacks: "blocks and callable objects",
+    errors: "exceptions",
+    cleanup: "close and finalization fallback",
     delivery: Object.freeze({ value: "value" }),
   }),
 });

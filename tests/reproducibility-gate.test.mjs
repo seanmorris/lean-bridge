@@ -24,6 +24,8 @@ import {
   verifyReleaseAuthorization,
 } from "../src/release/reproducibility-gate.mjs";
 import {
+  publicationCoordinateFor,
+  publicationDestinationFor,
   verifyPublishManifest,
   writePublishManifest,
 } from "../src/release/publish-manifest.mjs";
@@ -36,6 +38,36 @@ import { rehearseRelease } from "../src/release/release-rehearsal.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
 const execute = promisify(execFile);
+
+test("managed registries have closed destinations, credentials, and coordinates", () => {
+  assert.deepEqual(publicationDestinationFor("nuget"), {
+    operation: "publish",
+    kind: "nuget",
+    endpoint: "https://api.nuget.org/v3/index.json",
+    credentialEnvironment: ["NUGET_API_KEY"],
+  });
+  assert.deepEqual(publicationDestinationFor("maven"), {
+    operation: "publish",
+    kind: "maven",
+    endpoint: "https://central.sonatype.com/api/v1/publisher/",
+    credentialEnvironment: ["MAVEN_CENTRAL_PASSWORD", "MAVEN_CENTRAL_USERNAME"],
+  });
+  assert.deepEqual(publicationDestinationFor("rubygems"), {
+    operation: "publish",
+    kind: "rubygems",
+    endpoint: "https://rubygems.org/",
+    credentialEnvironment: ["GEM_HOST_API_KEY"],
+  });
+  assert.deepEqual(publicationDestinationFor("wit-wasi"), {
+    operation: "retain",
+    kind: "archive",
+    endpoint: null,
+    credentialEnvironment: [],
+  });
+  assert.equal(publicationCoordinateFor({ ecosystem: "nuget", name: "LeanBridge.Alpha", version: "0.0.0" }), "LeanBridge.Alpha@0.0.0");
+  assert.equal(publicationCoordinateFor({ ecosystem: "maven", name: "org.leanbridge:lean-alpha", version: "0.0.0" }), "org.leanbridge:lean-alpha:0.0.0");
+  assert.equal(publicationCoordinateFor({ ecosystem: "rubygems", name: "lean_bridge_alpha", version: "0.0.0" }), "lean_bridge_alpha@0.0.0");
+});
 
 const sha256 = async path => {
   const { createHash } = await import("node:crypto");

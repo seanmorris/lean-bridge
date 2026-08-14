@@ -320,4 +320,8 @@ test("the transaction schema and recovery policies are closed public contracts",
   assert.equal(registryRecoveryPolicies.npm.source, "https://docs.npmjs.com/policies/unpublish/");
   assert.equal(registryRecoveryPolicies.cargo.source, "https://doc.rust-lang.org/cargo/commands/cargo-yank.html");
   assert.equal(registryRecoveryPolicies.pypi.source, "https://packaging.python.org/en/latest/specifications/file-yanking/");
+  assert.equal(registryRecoveryPolicies.nuget.source, "https://learn.microsoft.com/en-us/nuget/api/package-publish-resource");
+  assert.equal(registryRecoveryPolicies.maven.source, "https://central.sonatype.org/faq/can-i-change-a-component/");
+  assert.equal(registryRecoveryPolicies.rubygems.source, "https://guides.rubygems.org/removing-a-published-gem/");
+  assert.equal(registryRecoveryPolicies["wit-wasi"].source, "urn:lean-bridge:policy:local-archive-retention:v1");
 });

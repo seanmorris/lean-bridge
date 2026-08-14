@@ -220,6 +220,51 @@ jobs:
         if: steps.consumer.outcome != 'success'
         run: exit 1
 
+  managed-consumers:
+    name: .NET, JVM, and Ruby
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Restore packages and execute real Lean
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:managed
+      - name: Record managed consumer observations
+        if: always()
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          for consumer in dotnet jvm ruby; do
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:managed"
+          done
+      - name: Upload managed consumer observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-managed-${{ github.sha }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: steps.consumer.outcome != 'success'
+        run: exit 1
+
   wasi-consumer:
     name: WIT and WASI Component Model
     runs-on: ubuntu-24.04
@@ -304,6 +349,7 @@ jobs:
       - browser-consumer
       - php-consumers
       - native-consumers
+      - managed-consumers
       - wasi-consumer
       - docker-engine
     runs-on: ubuntu-24.04
@@ -322,7 +368,7 @@ jobs:
           pattern: consumer-results-*-${{ github.sha }}
           path: build/consumer-ci/results
           merge-multiple: true
-      - name: Validate all ten targets and publish the table
+      - name: Validate all thirteen targets and publish the table
         run: node scripts/consumer-ci.mjs summary --results build/consumer-ci/results --output build/consumer-ci/report.json
       - name: Upload the combined support report
         if: always()

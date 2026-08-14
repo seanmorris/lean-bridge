@@ -93,6 +93,7 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *component_id);
 LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer);
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer);
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer);
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out);
 
 #ifdef __cplusplus
@@ -349,6 +350,29 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, c
   return 1;
 }
 
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer)
+{
+  if (kind == NULL || pointer == NULL) return -1;
+  uint64_t kind_hash = hash_text(kind);
+  pthread_mutex_lock(&runtime_mutex);
+  for (size_t index = 0; index < LEAN_BRIDGE_IDENTITY_CAPACITY; index++) {
+    lean_bridge_identity_slot *slot = &identities[index];
+    if (slot->pointer != pointer || slot->kind_hash != kind_hash || slot->references == 0 || slot->retired) continue;
+    slot->references--;
+    if (slot->references == 0) {
+      slot->pointer = NULL;
+      slot->kind_hash = 0;
+      live_identities--;
+      if (slot->generation == UINT32_MAX) slot->retired = true;
+      else slot->generation++;
+    }
+    pthread_mutex_unlock(&runtime_mutex);
+    return 1;
+  }
+  pthread_mutex_unlock(&runtime_mutex);
+  return 0;
+}
+
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out)
 {
   if (out == NULL) return;
@@ -395,6 +419,8 @@ extern lean_object *lean_link_alpha_payload_bytes(lean_object *payload);
 extern lean_object *lean_link_alpha_payload_values(lean_object *payload);
 
 static const char component_id[] = "${componentId}";
+static const char box_identity_kind[] = "${ir.component.id}:${shape.resource.name}";
+static const char transform_identity_kind[] = "${ir.component.id}:${shape.callback.name}";
 
 static ${stem}_status fail(${stem}_status status, ${stem}_error_code code, const char *message, ${stem}_error *error)
 {
@@ -431,6 +457,10 @@ static ${stem}_status box_create(void *context, uint32_t value, uintptr_t *out, 
   (void)error;
   lean_object *box = lean_link_alpha_box(value);
   if (box == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Box", error);
+  if (lean_bridge_native_identity_acquire(box_identity_kind, box) == 0) {
+    lean_dec(box);
+    return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Box identity capacity is exhausted", error);
+  }
   *out = (uintptr_t)box;
   return ${macro}_STATUS_OK;
 }
@@ -548,6 +578,10 @@ static ${stem}_status make_adder(void *context, uint32_t base, uintptr_t *out, $
   (void)error;
   lean_object *transform = lean_link_alpha_make_adder(base);
   if (transform == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Transform", error);
+  if (lean_bridge_native_identity_acquire(transform_identity_kind, transform) == 0) {
+    lean_dec(transform);
+    return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Transform identity capacity is exhausted", error);
+  }
   *out = (uintptr_t)transform;
   return ${macro}_STATUS_OK;
 }
@@ -555,7 +589,10 @@ static ${stem}_status make_adder(void *context, uint32_t base, uintptr_t *out, $
 static void box_dispose(void *context, uintptr_t value)
 {
   (void)context;
-  if (value != 0) lean_dec((lean_object *)value);
+  if (value != 0) {
+    (void)lean_bridge_native_identity_release_pointer(box_identity_kind, (lean_object *)value);
+    lean_dec((lean_object *)value);
+  }
 }
 
 static ${stem}_status transform_call(void *context, uintptr_t self, uint32_t value, uint32_t *out, ${stem}_error *error)
@@ -573,7 +610,10 @@ static ${stem}_status transform_call(void *context, uintptr_t self, uint32_t val
 static void transform_dispose(void *context, uintptr_t value)
 {
   (void)context;
-  if (value != 0) lean_dec((lean_object *)value);
+  if (value != 0) {
+    (void)lean_bridge_native_identity_release_pointer(transform_identity_kind, (lean_object *)value);
+    lean_dec((lean_object *)value);
+  }
 }
 
 const ${stem}_runtime_v1 *${stem}_native_runtime_v1(void)

@@ -24,6 +24,7 @@ Evidence documents record commands, artifact identities, measured results, and l
 - [Native PHP release](native-php-release-package.md)
 - [PHP-Wasm release](php-wasm-release-package.md)
 - [PHP release gate](php-release-gate.md)
+- [.NET, JVM, and Ruby acceptance](managed-consumer-acceptance.md)
 - [PyPI package](pypi-package.md)
 - [Cargo package](cargo-package.md)
 - [C and C++ packages](c-family-package.md)
@@ -46,6 +47,7 @@ Evidence documents record commands, artifact identities, measured results, and l
 ## Performance
 
 - [Downstream consumer performance, 12 August 2026](downstream-consumer-performance-20260812.md)
+- [.NET, JVM, and Ruby performance, 13 August 2026](managed-consumer-acceptance.md#end-user-performance)
 - [Time-to-package raw record](time-to-package-20260811.json)
 - [Generated native call overhead](native-call-overhead.md)
 - [Library scaling](library-scaling.md)

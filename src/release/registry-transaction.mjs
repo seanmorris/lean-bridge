@@ -29,6 +29,24 @@ const recoveryPolicies = Object.freeze({
     effect: "Mark files as yanked for ordinary resolution while preserving exact pins and the published files.",
     source: "https://packaging.python.org/en/latest/specifications/file-yanking/",
   }),
+  nuget: Object.freeze({
+    strategy: "unlist-or-deprecate-then-publish-corrective-version",
+    command: "dotnet nuget delete <name> <version> --source https://api.nuget.org/v3/index.json --api-key <key>",
+    effect: "Hide the immutable version from ordinary discovery while preserving exact restores, then direct consumers to a corrective version.",
+    source: "https://learn.microsoft.com/en-us/nuget/api/package-publish-resource",
+  }),
+  maven: Object.freeze({
+    strategy: "publish-corrective-version",
+    command: null,
+    effect: "Central releases cannot be changed or removed, so correction requires a new version.",
+    source: "https://central.sonatype.org/faq/can-i-change-a-component/",
+  }),
+  rubygems: Object.freeze({
+    strategy: "yank-then-publish-corrective-version",
+    command: "gem yank <name> -v <version>",
+    effect: "Remove the version from RubyGems.org installation and discovery, then publish a corrected version.",
+    source: "https://guides.rubygems.org/removing-a-published-gem/",
+  }),
   c: Object.freeze({
     strategy: "replace-retained-archive-before-distribution",
     command: null,
@@ -36,6 +54,12 @@ const recoveryPolicies = Object.freeze({
     source: "urn:lean-bridge:policy:local-archive-retention:v1",
   }),
   cpp: Object.freeze({
+    strategy: "replace-retained-archive-before-distribution",
+    command: null,
+    effect: "The local archive has no registry transaction and can be replaced only before a later distribution step.",
+    source: "urn:lean-bridge:policy:local-archive-retention:v1",
+  }),
+  "wit-wasi": Object.freeze({
     strategy: "replace-retained-archive-before-distribution",
     command: null,
     effect: "The local archive has no registry transaction and can be replaced only before a later distribution step.",
