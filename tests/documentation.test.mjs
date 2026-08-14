@@ -80,6 +80,14 @@ test("source and operational directories have boundary indexes", async () => {
 		const source = await readFile(path, "utf8");
 		assert.match(source, /^# [^\n]+$/m, `${path} needs one title`);
 		assert.match(source, /\[[^\]]+\]\([^)]+\)/, `${path} needs a canonical link`);
+		assert.ok(
+			(source.match(/^## [^\n]+$/gm) ?? []).length >= 3,
+			`${path} needs at least three explainer sections`,
+		);
+		assert.ok(
+			source.split("\n").filter(line => line.trim() !== "").length >= 20,
+			`${path} needs a full directory explanation`,
+		);
 	}
 });
 
