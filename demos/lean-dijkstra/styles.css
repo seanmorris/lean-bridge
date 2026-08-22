@@ -40,8 +40,9 @@ main { width: min(1440px, calc(100% - 48px)); margin: 0 auto; }
   justify-content: space-between;
   align-items: end;
   gap: 48px;
-  padding: 58px 6px 36px;
+  padding: 58px 6px 16px;
   border-bottom: 1px solid rgba(114, 216, 255, .14);
+  border-radius: 0 0 var(--radius-shell) var(--radius-shell);
   background: linear-gradient(105deg, rgba(255, 107, 95, .075), transparent 46%);
 }
 
@@ -100,6 +101,7 @@ h1 em { color: var(--coral); font-style: normal; }
 .workspace {
   display: grid;
   grid-template-columns: 238px minmax(0, 1fr);
+  margin-top: 20px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-shell);

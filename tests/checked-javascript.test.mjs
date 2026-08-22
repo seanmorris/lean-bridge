@@ -54,7 +54,8 @@ test("the default and CI quality gates execute the same core contract", async ()
 	assert.equal(packageDocument.scripts.check, "npm run check:core");
 	assert.match(packageDocument.scripts["check:core"], /env:check:core.*lint.*typecheck.*test:contracts/);
 	assert.match(workflow, /node-version: 22/);
+	assert.match(workflow, /bootstrap-toolchains\.sh --wasm-tools-only/);
 	assert.match(workflow, /npm ci --ignore-scripts/);
-	assert.match(workflow, /npm run check:core/);
+	assert.match(workflow, /source scripts\/env\.sh[\s\S]*npm run check:core/);
 	assert.match(workflow, /permissions:\n\s+contents: read/);
 });

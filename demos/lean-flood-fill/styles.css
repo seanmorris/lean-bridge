@@ -155,7 +155,7 @@ html { scrollbar-gutter:stable both-edges; }
 .ledge-rail,.ledge-marker,.legend .ledge-symbol { border-radius:var(--radius-cell); }
 .room-card { height:auto; min-height:0; aspect-ratio:13 / 7; padding:10px; }
 .room-preview { inset:0; width:100%; height:100%; transform:none; }
-.hero { position:relative; isolation:isolate; overflow:hidden; padding-inline:6px; background:linear-gradient(105deg,rgba(114,216,255,.075),transparent 46%); }
+.hero { position:relative; isolation:isolate; overflow:hidden; padding-inline:6px; border-radius:0 0 var(--radius-shell) var(--radius-shell); background:linear-gradient(105deg,rgba(114,216,255,.075),transparent 46%); }
 .hero::before { content:""; position:absolute; z-index:-2; inset:0; background-image:linear-gradient(rgba(114,216,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(114,216,255,.055) 1px,transparent 1px); background-size:38px 38px; mask-image:linear-gradient(90deg,#000,transparent 72%); }
 .hero::after { content:""; position:absolute; z-index:-1; width:310px; height:310px; right:2%; top:-64%; border:1px solid rgba(173,247,182,.22); border-radius:50%; background:radial-gradient(circle,rgba(173,247,182,.12),transparent 66%); box-shadow:0 0 70px rgba(114,216,255,.09); }
 .hero > * { position:relative; z-index:1; }

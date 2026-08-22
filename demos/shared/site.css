@@ -1,4 +1,9 @@
-.portfolio-nav { position: sticky; z-index: 30; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 18px; min-height: 48px; padding: 9px max(20px, calc((100vw - 1120px) / 2)); border-bottom: 1px solid rgba(173, 204, 235, .16); background: rgba(9, 17, 31, .91); backdrop-filter: blur(15px); font: 700 11px/1 ui-monospace, monospace; letter-spacing: .05em; }
-.portfolio-nav a { color: #cbe1f2; text-decoration: none; }
-.portfolio-nav a:first-child { color: #adf7b6; }
-.portfolio-nav span { overflow: hidden; color: #7890a9; text-overflow: ellipsis; white-space: nowrap; }
+.portfolio-nav { position:sticky; z-index:30; top:0; min-height:48px; display:flex; justify-content:space-between; align-items:center; gap:18px; padding:8px max(24px,calc((100% - 1440px) / 2)); border-bottom:1px solid rgba(114,216,255,.24); background:linear-gradient(90deg,rgba(13,27,47,.97),rgba(9,17,31,.94) 55%,rgba(15,30,50,.97)); box-shadow:0 8px 28px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035); backdrop-filter:blur(15px); font:700 11px/1 ui-monospace,monospace; letter-spacing:.05em; }
+.portfolio-nav::after { content:""; position:absolute; right:0; bottom:-1px; left:0; height:1px; background:linear-gradient(90deg,transparent 4%,#72d8ff 22%,rgba(173,247,182,.28) 54%,transparent 94%); opacity:.55; }
+.portfolio-nav a { display:flex; align-items:center; gap:9px; color:#dcecf9; text-decoration:none; }
+.portfolio-nav a:hover { color:#fff; }
+.portfolio-mark { width:27px; height:27px; display:grid; place-items:center; border:1px solid rgba(173,247,182,.5); border-radius:6px; background:rgba(173,247,182,.11); color:#adf7b6; box-shadow:0 0 18px rgba(173,247,182,.12); font:800 16px/1 Georgia,serif; }
+.portfolio-nav a span { color:inherit; letter-spacing:.07em; }
+.portfolio-current { max-width:52%; overflow:hidden; padding:6px 9px; border:1px solid rgba(173,204,235,.12); border-radius:4px; background:rgba(7,17,30,.42); color:#8da4bb; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:.11em; }
+@media (max-width:850px) { .portfolio-nav { padding-inline:max(12px,calc((100% - 720px) / 2)); } }
+@media (max-width:560px) { .portfolio-nav { padding-inline:12px; }.portfolio-nav a span { display:none; }.portfolio-current { max-width:72%; } }

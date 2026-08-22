@@ -26,7 +26,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Restore pinned wasm-tools
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads/wasm-tools-*.tar.gz
+            .toolchains/wasm-tools
+          key: core-wasm-tools-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh') }}
+      - name: Install pinned wasm-tools
+        run: bash scripts/bootstrap-toolchains.sh --wasm-tools-only
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
       - name: Run lint, checked JavaScript, documentation, and contract tests
-        run: npm run check:core
+        run: |
+          source scripts/env.sh
+          npm run check:core

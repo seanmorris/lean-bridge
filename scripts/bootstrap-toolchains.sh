@@ -27,6 +27,27 @@ LEAN_SOURCE_DIR="$LEAN_WASM_TOOLCHAINS/lean4-src"
 
 mkdir -p "$LEAN_WASM_DOWNLOADS" "$LEAN_WASM_TOOLCHAINS/elan-installer"
 
+install_wasm_tools() {
+  if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" ]]; then
+    curl --fail --location --silent --show-error "$WASM_TOOLS_URL" -o "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
+  fi
+  printf '%s  %s\n' "$WASM_TOOLS_SHA256" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" | sha256sum -c -
+  if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" ]] || \
+    [[ "$("$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" --version)" != "wasm-tools $WASM_TOOLS_VERSION "* ]]; then
+    mkdir -p "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin"
+    tar -xzf "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" \
+      --strip-components=1 \
+      -C "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin" \
+      "${WASM_TOOLS_ARCHIVE%.tar.gz}/wasm-tools"
+  fi
+  "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" --version
+}
+
+if [[ "${1:-}" == "--wasm-tools-only" ]]; then
+  install_wasm_tools
+  exit 0
+fi
+
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE" ]]; then
   curl --fail --location --silent --show-error "$ELAN_URL" -o "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE"
 fi
@@ -76,18 +97,7 @@ fi
 "$LEAN_WASM_TOOLCHAINS/emsdk/emsdk" install "$EMSDK_VERSION"
 "$LEAN_WASM_TOOLCHAINS/emsdk/emsdk" activate "$EMSDK_VERSION"
 
-if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" ]]; then
-  curl --fail --location --silent --show-error "$WASM_TOOLS_URL" -o "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
-fi
-printf '%s  %s\n' "$WASM_TOOLS_SHA256" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" | sha256sum -c -
-if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" ]] || \
-  [[ "$("$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" --version)" != "wasm-tools $WASM_TOOLS_VERSION "* ]]; then
-  mkdir -p "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin"
-  tar -xzf "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" \
-    --strip-components=1 \
-    -C "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin" \
-    "${WASM_TOOLS_ARCHIVE%.tar.gz}/wasm-tools"
-fi
+install_wasm_tools
 
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE" ]]; then
   curl --fail --location --silent --show-error "$WABT_URL" -o "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE"
