@@ -12,7 +12,11 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
-import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import {
+	compileJavaScriptPackageModel,
+	generateJavaScriptPackage,
+	renderJavaScriptPackageLayout,
+} from "../src/backends/javascript/generate.mjs";
 import {
 	JavaScriptPackageAuditError,
 	auditJavaScriptPackage,
@@ -20,6 +24,13 @@ import {
 import { JavaScriptProjectionError } from "../src/backends/javascript/projection.mjs";
 
 const clone = value => structuredClone(value);
+
+test("JavaScript model and render stages preserve audited package bytes", () => {
+	const model = compileJavaScriptPackageModel(alpha.bindingIr);
+	const files = renderJavaScriptPackageLayout(model);
+	assert.deepEqual(files, generateJavaScriptPackage(alpha.bindingIr));
+	assert.doesNotThrow(() => auditJavaScriptPackage(alpha.bindingIr, files));
+});
 
 const withGeneratedPackage = async (files, operation) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-js-generator-"));

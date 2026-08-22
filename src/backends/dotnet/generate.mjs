@@ -388,8 +388,18 @@ const projectSource = model => `<Project Sdk="Microsoft.NET.Sdk">
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generateDotnetBindingPackage = ir => {
-	const model = compileManagedAlphaModel(ir, "dotnet");
+export const compileDotnetPackageModel = ir => Object.freeze({
+	ir
+	, model: compileManagedAlphaModel(ir, "dotnet")
+});
+
+/**
+ * Renders a deterministic .NET package layout from its compiled model.
+ *
+ * @param root0 - Compiled .NET package model.
+ * @param root0.model - Managed projection model.
+ */
+export const renderDotnetPackageLayout = ({ model }) => {
 	const publicFiles = ["src/LeanBridge.Alpha/Alpha.cs"];
 	const internalFiles = ["src/LeanBridge.Alpha/Runtime.cs"];
 	const packageFiles = ["src/LeanBridge.Alpha/LeanBridge.Alpha.csproj"];
@@ -408,6 +418,17 @@ export const generateDotnetBindingPackage = ir => {
 		, packageFiles
 	});
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-	auditManagedBindingPackage(ir, files, "dotnet");
 	return Object.freeze(files);
+};
+
+/**
+ * Validates, compiles, renders, and audits one .NET binding package.
+ *
+ * @param ir - Binding IR document.
+ */
+export const generateDotnetBindingPackage = ir => {
+	const packageModel = compileDotnetPackageModel(ir);
+	const files = renderDotnetPackageLayout(packageModel);
+	auditManagedBindingPackage(packageModel.ir, files, "dotnet");
+	return files;
 };

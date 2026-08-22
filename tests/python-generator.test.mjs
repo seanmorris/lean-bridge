@@ -14,12 +14,21 @@ import test from "node:test";
 
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
+	compilePythonPackageModel,
 	generatePythonBindingPackage,
+	renderPythonPackageLayout,
 } from "../src/backends/python/generate.mjs";
 import { auditPythonPackage } from "../src/backends/python/package-audit.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
+
+test("Python model and render stages preserve audited package bytes", () => {
+	const model = compilePythonPackageModel(alpha.bindingIr);
+	const files = renderPythonPackageLayout(model);
+	assert.deepEqual(files, generatePythonBindingPackage(alpha.bindingIr));
+	assert.doesNotThrow(() => auditPythonPackage(alpha.bindingIr, files));
+});
 
 const writePackage = async (directory, files) => {
 	for(const [relativePath, source] of Object.entries(files))

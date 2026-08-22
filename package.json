@@ -14,6 +14,8 @@
   "scripts": {
     "bootstrap": "bash scripts/bootstrap-toolchains.sh",
     "env:check": "bash scripts/inventory.sh",
+    "env:check:core": "bash scripts/inventory.sh --profile core",
+    "env:check:json": "bash scripts/inventory.sh --json",
     "build:lean-runtime": "bash scripts/build-lean-runtime.sh",
     "build:lean-runtime:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-runtime.sh",
     "build:lean-runtime:native": "bash scripts/build-lean-native-runtime.sh",
@@ -61,6 +63,7 @@
     "verify:release-receipt": "node scripts/verify-release-receipt.mjs",
     "verify:release-archive": "node src/release/release-archive-verifier.mjs",
     "verify:independent-release": "node scripts/verify-independent-release.mjs",
+    "deployment:check": "node scripts/check-production-deployment-profile.mjs",
     "audit:php-wasm": "node scripts/audit-php-wasm-sources.mjs",
     "test:link-spike": "npm run build:link-spike && node --test tests/link-spike.test.mjs",
     "test:lean-link-spike": "npm run build:lean-link-spike && node --test tests/lean-link-spike.test.mjs",
@@ -117,6 +120,8 @@
     "test:component-npm-package": "node --test tests/component-npm-package.test.mjs",
     "test:docs": "node --test tests/documentation.test.mjs",
     "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
+    "test:contracts": "bash scripts/run-test-profile.sh contract",
+    "test:profile": "bash scripts/run-test-profile.sh",
     "test:managed-generators": "node --test tests/managed-generators.test.mjs",
     "test:managed-artifacts": "node --test tests/managed-artifacts.test.mjs",
     "test:managed-native": "node scripts/test-managed-native-bindings.mjs --native-root build/native-ffi-artifacts/lib",
@@ -132,9 +137,11 @@
     "acceptance:plain-project-package": "node scripts/check-plain-project-package.mjs",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc -p jsconfig.json --pretty false",
+    "typecheck": "tsc -p jsconfig.checked.json --pretty false",
     "test": "npm run build:link-spike && npm run build:lean-link-spike && npm run build:lean-link-spike:threaded && npm run build:performance-wasm && npm run build:performance-scaling && node --test tests/**/*.test.mjs",
-    "check": "npm run env:check && npm run lint && npm run typecheck && npm test"
+    "check:core": "npm run env:check:core && npm run lint && npm run typecheck && npm run test:contracts",
+    "check": "npm run check:core",
+    "check:full": "npm run env:check && npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
     "weaker": "0.0.10"

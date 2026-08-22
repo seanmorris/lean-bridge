@@ -266,10 +266,9 @@ const assuranceFor = (ir, subjects) => ir.assurance.filter(item => subjects.has(
 /**
  * Generates WIT package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
  *
- * @param irValue - Binding IR document validated before target-language source generation.
+ * @param ir - Validated Binding IR projected into WIT package semantics.
  */
-export const generateWitPackage = irValue => {
-	const ir = validateBindingIr(irValue);
+const projectWitPackageModel = ir => {
 	const types = typeMap(ir);
 	const deferred = [];
 	const included = [];
@@ -396,6 +395,25 @@ export const generateWitPackage = irValue => {
 		, deferred: Object.freeze(deferred)
 		, assurance: Object.freeze(assuranceFor(ir, subjects))
 	});
+	return Object.freeze({ wit, manifest });
+};
+
+/**
+ * Validates and projects WIT semantics into a renderer-owned model.
+ *
+ * @param irValue - Binding IR document.
+ */
+export const compileWitPackageModel = irValue => projectWitPackageModel(validateBindingIr(irValue));
+
+/**
+ * Renders the deterministic WIT package from a compiled projection model.
+ *
+ * @param root0 - Compiled WIT package model.
+ * @param root0.wit - Rendered WIT source produced by semantic projection.
+ * @param root0.manifest - Projected WIT package manifest.
+ */
+export const renderWitPackageLayout = ({ wit, manifest }) => {
+	const worldName = manifest.wit.world;
 	const files = Object.freeze({
 		[`wit/${worldName}.wit`]: wit
 		, "binding-manifest.json": `${JSON.stringify(manifest, null, 2)}\n`
@@ -409,6 +427,13 @@ export const generateWitPackage = irValue => {
 	});
 	return Object.freeze({ wit, manifest, files });
 };
+
+/**
+ * Validates, compiles, and renders one WIT package.
+ *
+ * @param irValue - Binding IR document.
+ */
+export const generateWitPackage = irValue => renderWitPackageLayout(compileWitPackageModel(irValue));
 
 /**
  * Generates WIT consumer probe from validated semantic input without introducing behavior outside the generated native-language binding pipeline.

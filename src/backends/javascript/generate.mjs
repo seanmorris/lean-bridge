@@ -837,11 +837,11 @@ const emitDocumentation = ir => {
 };
 
 /**
- * Generates java script package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ * Compiles Binding IR into the validated JavaScript projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generateJavaScriptPackage = ir => {
+export const compileJavaScriptPackageModel = ir => {
 	validateBindingIr(ir);
 	const coverage = analyzeJavaScriptCoverage(ir);
 	if(!coverage.supported)
@@ -851,6 +851,16 @@ export const generateJavaScriptPackage = ir => {
 	}
 	ensureUniqueSurface(ir);
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));
+	return Object.freeze({ ir, typeMap });
+};
+
+/**
+ * Renders and lays out deterministic JavaScript package files from one model.
+ *
+ * @param model - Validated JavaScript package projection model.
+ */
+export const renderJavaScriptPackageLayout = model => {
+	const { ir, typeMap } = model;
 	const generated = emitDeclarations(ir, typeMap);
 	const packageManifest = {
 		version: ir.component.version
@@ -900,6 +910,17 @@ export const generateJavaScriptPackage = ir => {
 		, "binding-manifest.json": `${JSON.stringify(manifest, null, 2)}\n`
 		, "package.json": `${JSON.stringify(packageManifest, null, 2)}\n`
 	};
-	auditJavaScriptPackage(ir, files);
 	return Object.freeze(files);
+};
+
+/**
+ * Generates and audits a JavaScript package through explicit model and rendering stages.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
+export const generateJavaScriptPackage = ir => {
+	const model = compileJavaScriptPackageModel(ir);
+	const files = renderJavaScriptPackageLayout(model);
+	auditJavaScriptPackage(ir, files);
+	return files;
 };

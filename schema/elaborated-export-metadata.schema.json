@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.invalid/schema/elaborated-export-metadata.schema.json",
+  "title": "Lean Bridge elaborated export metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "producer", "modules", "diagnostics"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-elaborated-exports" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "modules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/module" }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/diagnostic" }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "adapterVersion",
+        "tool",
+        "toolVersion",
+        "toolchain",
+        "invocationIdentitySha256"
+      ],
+      "properties": {
+        "adapter": { "const": "lean-bridge-elaborator" },
+        "adapterVersion": { "const": 1 },
+        "tool": { "const": "Lean" },
+        "toolVersion": { "type": "string", "minLength": 1 },
+        "toolchain": { "type": "string", "minLength": 1 },
+        "invocationIdentitySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "sourcePath",
+        "sourceSha256",
+        "interfaceSha256",
+        "directImports",
+        "declarations"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "sourcePath": { "type": "string", "minLength": 1 },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "interfaceSha256": { "$ref": "#/$defs/sha256" },
+        "directImports": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "declarations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/declaration" }
+        }
+      }
+    },
+    "sourcePosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "startLine", "startColumn", "endLine", "endColumn"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "startLine": { "type": "integer", "minimum": 1 },
+        "startColumn": { "type": "integer", "minimum": 0 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "endColumn": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "binderInfo", "typeExpression"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "binderInfo": {
+          "enum": ["explicit", "implicit", "strict-implicit", "instance-implicit"]
+        },
+        "typeExpression": { "type": "string", "minLength": 1 }
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity",
+        "kind",
+        "visibility",
+        "source",
+        "documentation",
+        "typeExpression",
+        "parameters",
+        "resultExpression",
+        "effects",
+        "theoremReferences",
+        "projection"
+      ],
+      "properties": {
+        "identity": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["definition", "opaque", "abbreviation", "theorem"]
+        },
+        "visibility": { "enum": ["public", "protected", "private"] },
+        "source": { "$ref": "#/$defs/sourcePosition" },
+        "documentation": { "type": ["string", "null"] },
+        "typeExpression": { "type": "string", "minLength": 1 },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/parameter" }
+        },
+        "resultExpression": { "type": "string", "minLength": 1 },
+        "effects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "theoremReferences": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "projection": { "$ref": "#/$defs/projection" }
+      }
+    },
+    "projection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "bindingShape"],
+          "properties": {
+            "status": { "const": "supported" },
+            "bindingShape": {
+              "enum": ["pure-function", "async-function"]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason", "expression"],
+          "properties": {
+            "status": { "const": "unsupported" },
+            "reason": {
+              "enum": [
+                "implicit-parameter",
+                "instance-parameter",
+                "dependent-type",
+                "unsupported-effect",
+                "unsupported-parameter-type",
+                "unsupported-result-type",
+                "foreign-declaration",
+                "visibility"
+              ]
+            },
+            "expression": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "code", "severity", "message", "module", "declaration"],
+      "properties": {
+        "category": {
+          "enum": ["unsupported-meaning", "extractor-failure", "stale-metadata"]
+        },
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "severity": { "enum": ["warning", "error"] },
+        "message": { "type": "string", "minLength": 1 },
+        "module": { "type": ["string", "null"] },
+        "declaration": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

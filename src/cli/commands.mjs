@@ -35,10 +35,15 @@ import {
 	createRegistryTransactionPublisher,
 	RegistryTransactionError,
 } from "../release/registry-transaction.mjs";
+import { createNpmRegistryAdapter } from "../release/npm-registry-adapter.mjs";
 import {
 	ReleaseReceiptError,
 	writeReleaseReceipt,
 } from "../release/release-receipt.mjs";
+import {
+	evaluateProductionDeploymentProfile,
+	loadProductionDeploymentProfile,
+} from "../adoption/production-deployment-profile.mjs";
 
 const deferred = (command, node) => ({
 	status: "blocked"
@@ -147,6 +152,7 @@ const publicBuildDiagnostic = error => {
  * @param root0.verifyPublishPlan - Injected verifier that authenticates and closes the publication plan before use.
  * @param root0.registryAdapters - Registry-specific publish and rollback adapters exposed to the CLI transaction layer.
  * @param root0.publisher - Injected registry transaction publisher used by the publish command handler.
+ * @param root0.deploymentProfileGate - Optional production-profile approval gate evaluated before credential access.
  * @param root0.credentialProvider - Opaque provider that checks and reads authorized registry credentials inside the publication boundary.
  * @param root0.createCredentialBoundary - Factory used to create credential boundary without hard-coding host dependencies.
  * @param root0.attestationPolicy - Signer policy that constrains accepted identities, keys, and signature algorithms.
@@ -162,6 +168,7 @@ export const createCliHandlers = ({
 	, verifyPublishPlan = verifyPublishManifest
 	, registryAdapters = null
 	, publisher = registryAdapters === null ? null : createRegistryTransactionPublisher({ adapters: registryAdapters })
+	, deploymentProfileGate = null
 	, credentialProvider = createEnvironmentCredentialProvider()
 	, createCredentialBoundary = createPublishCredentialBoundary
 	, attestationPolicy = null
@@ -342,6 +349,28 @@ export const createCliHandlers = ({
 				});
 				signal?.throwIfAborted();
 				emitProgress?.({ phase: "authorize", state: "completed", message: "Publish manifest and release authorization verified" });
+				if(deploymentProfileGate !== null)
+				{
+					const deployment = await deploymentProfileGate();
+					if(deployment?.eligible !== true)
+					{
+						return {
+							status: "blocked"
+							, result: {
+								publishManifest: { path: verified.manifestPath, sha256: verified.manifestSha256 }
+								, deploymentProfile: deployment
+								, externalRegistryWrites: false
+							}
+							, diagnostics: [diagnostic({
+								code: "production-deployment-profile-unapproved"
+								, message: "Production publication is blocked until the versioned deployment profile has every required approval"
+								, hint: "Complete the release-owner, runtime-owner, and security-owner review records without bypassing the sandbox publication rehearsal."
+							})]
+							, prompts: []
+							, nextActions: []
+						};
+					}
+				}
 				if(publisher === null)
 				{
 					const pending = deferred("publish", 879);
@@ -598,4 +627,17 @@ export const createCliHandlers = ({
 	}
 });
 
-export const cliHandlers = createCliHandlers();
+const installedNpmMode = process.env.LEAN_BRIDGE_NPM_REGISTRY_MODE === "sandbox" ? "sandbox" : "production";
+const installedNpmAdapter = createNpmRegistryAdapter({
+	mode: installedNpmMode
+	, registry: process.env.LEAN_BRIDGE_NPM_REGISTRY_URL
+	, productionOptIn: process.env.LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN
+});
+const installedDeploymentGate = installedNpmMode === "production"
+	? async () => evaluateProductionDeploymentProfile(await loadProductionDeploymentProfile())
+	: null;
+
+export const cliHandlers = createCliHandlers({
+	registryAdapters: [installedNpmAdapter]
+	, deploymentProfileGate: installedDeploymentGate
+});

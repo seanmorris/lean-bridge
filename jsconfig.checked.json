@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"lib": ["ES2024", "DOM", "DOM.Iterable", "WebWorker"],
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2024",
+		"types": ["node"]
+	},
+	"include": [
+		"src/adoption/test-profiles.mjs",
+		"src/adoption/toolchain-preflight.mjs"
+	]
+}

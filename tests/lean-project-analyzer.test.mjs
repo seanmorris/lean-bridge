@@ -241,6 +241,19 @@ test("the published analysis schema closes the report and adapter questions", as
   assert.equal(reportSchema.additionalProperties, false);
   assert.equal(reportSchema.properties.policy.additionalProperties, false);
   assert.equal(reportSchema.properties.metrics.additionalProperties, false);
+
+	const elaboratedSchema = JSON.parse(await readFile("schema/elaborated-export-metadata.schema.json", "utf8"));
+	assert.equal(elaboratedSchema.$schema, "https://json-schema.org/draft/2020-12/schema");
+	assert.equal(elaboratedSchema.additionalProperties, false);
+	assert.equal(elaboratedSchema.properties.schemaVersion.const, 1);
+	assert.equal(elaboratedSchema.$defs.producer.additionalProperties, false);
+	assert.equal(elaboratedSchema.$defs.module.additionalProperties, false);
+	assert.equal(elaboratedSchema.$defs.declaration.additionalProperties, false);
+	assert.equal(elaboratedSchema.$defs.parameter.additionalProperties, false);
+	assert.equal(elaboratedSchema.$defs.diagnostic.additionalProperties, false);
+	assert.deepEqual(elaboratedSchema.$defs.diagnostic.properties.category.enum, [
+		"unsupported-meaning", "extractor-failure", "stale-metadata"
+	]);
 });
 
 test("CLI analyze returns a complete report or minimal adapter questions", async () => {

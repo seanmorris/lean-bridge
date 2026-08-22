@@ -1,0 +1,501 @@
+{
+	"schemaVersion": 1,
+	"checked": [
+		"src/adoption/test-profiles.mjs",
+		"src/adoption/toolchain-preflight.mjs"
+	],
+	"deferred": [
+		{
+			"path": "src/abi/callback-signature.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/error-envelope.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/generic-specialization.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/initialization.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/iterator.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/overload.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/pending-operation.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/resource-lifecycle.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/value-frame.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/consumer-performance.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/consumer-support.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/onboarding.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/production-deployment-profile.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/target-runtime-profiles.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/time-to-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/usability-gate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/adoption/zero-config-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/analyze/lean-project.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/analyze/output.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/analyze/policy.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/c/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/c/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/cpp/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/dotnet/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/javascript/coverage.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/javascript/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/javascript/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/javascript/projection.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/jvm/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/lean/host-object.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/managed/alpha-model.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/managed/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/conformance.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/native-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/native-runtime.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/php-wasm-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/php-wasm.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/projection.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/php/zend-extension.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/python/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/python/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/ruby/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/rust/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/rust/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/wit/generate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/canonical.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/contract.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/frontend.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/package-gate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/semantic-parity.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/binding-ir/sha256.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/build-error.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/canonical-build.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/compiler-adapters.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/component-artifact-manifest.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/component-compilation-plan.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/component-engine.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/component-plan.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/component-side-linker.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/engine-execution-request.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/engine-output-comparison.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/lean-component-compiler.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/process-runner.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/side-module-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/capsule/contract.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/capsule/node.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/cli/commands.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/cli/contract.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/cli/run.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/budgets.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/ci-report.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/corpus.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/evidence-bundle.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/harness.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/lifecycle-fixture.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/lifecycle.mjs",
+			"classification": "generated-runtime-import-boundary"
+		},
+		{
+			"path": "src/performance/methodology.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/overhead-fixture.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/overhead.mjs",
+			"classification": "generated-runtime-import-boundary"
+		},
+		{
+			"path": "src/performance/reproducibility.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/scaling.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/performance/workloads.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/archive-subjects.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/backend-policy.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/c-family-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/canonical-bundle-input.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/canonical-package-manifest.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/cargo-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-npm-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-package-receipt.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-release-bundle.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-reproducibility-gate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/core-artifact-set.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/credentials.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/deterministic-archive.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/deterministic-zip.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/independent-confirmation.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/independent-verifier.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/install-trace.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/managed-registry-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/maven-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/npm-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/npm-registry-adapter.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/nuget-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/publication-attestation.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/publish-manifest.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/pypi-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/python-wheel-preflight.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/registry-transaction.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/release-archive-verifier.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/release-candidate-state.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/release-receipt.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/release-rehearsal.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/reproducibility-gate.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/reproducibility.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/rubygems-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/universal-release-bundle.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/wasi-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/runtime/callbacks.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/runtime/pending-operations.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/runtime/weak-value-map.mjs",
+			"classification": "strict-migration-backlog"
+		}
+	]
+}

@@ -190,4 +190,12 @@ export default [
 			'no-useless-escape': 'off'
 		}
 	}
+	, {
+		files: ['src/adoption/toolchain-preflight.mjs']
+		, rules: {
+			// TypeScript validates the richer checked-JavaScript types used by this module.
+			'jsdoc/no-undefined-types': 'off'
+			, 'jsdoc/valid-types': 'off'
+		}
+	}
 ];

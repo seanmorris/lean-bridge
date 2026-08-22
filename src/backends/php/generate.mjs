@@ -1121,15 +1121,25 @@ const publicExports = (projection, support) => [
 ].filter((value, index, values) => values.indexOf(value) === index);
 
 /**
- * Generates PHP binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ * Compiles Binding IR into the validated PHP package projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generatePhpBindingPackage = ir => {
+export const compilePhpPackageModel = ir => {
 	validateBindingIr(ir);
 	validateCoverage(ir);
 	const projection = compilePhpProjection(ir);
 	const support = supportProfile(projection);
+	return Object.freeze({ ir, projection, support });
+};
+
+/**
+ * Renders and lays out deterministic PHP package files from one model.
+ *
+ * @param model - Validated PHP package projection model.
+ */
+export const renderPhpPackageLayout = model => {
+	const { ir, projection, support } = model;
 	const root = projection.package.namespace;
 	const files = {};
 	const publicFiles = [];
@@ -1231,6 +1241,17 @@ export const generatePhpBindingPackage = ir => {
 		, files: manifestFiles
 		, filesSha256
 	}, null, 2)}\n`;
-	auditPhpPackage(ir, files);
 	return Object.freeze(files);
+};
+
+/**
+ * Generates and audits a PHP package through explicit model and rendering stages.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
+export const generatePhpBindingPackage = ir => {
+	const model = compilePhpPackageModel(ir);
+	const files = renderPhpPackageLayout(model);
+	auditPhpPackage(ir, files);
+	return files;
 };

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "profileId": "production-linux-x64-gnu-v1",
+  "revision": "1.0.0",
+  "status": "candidate",
+  "platform": {
+    "operatingSystem": "linux",
+    "architecture": "x86-64",
+    "libc": "glibc",
+    "minimumLibcVersion": "2.38"
+  },
+  "runtimes": [
+    {
+      "id": "browser-chromium",
+      "version": "Chrome for Testing 151.0.7922.34",
+      "transport": "browser-wasm",
+      "concurrency": "One isolated Lean runtime per browser realm; the threaded profile additionally requires cross-origin isolation and SharedArrayBuffer.",
+      "filesystem": "Packaged WebAssembly and component bytes are read-only; no ambient host filesystem is exposed.",
+      "network": "Network access is required only to retrieve application-owned package assets; generated bindings perform no network calls.",
+      "lifecycle": "Owned resources close explicitly; finalization is fallback-only and the realm owns runtime shutdown.",
+      "preflightProfile": "browser"
+    },
+    {
+      "id": "native-abi",
+      "version": "C11, C++20, and Rust 2021",
+      "transport": "generated-c",
+      "concurrency": "One process-wide Lean runtime; callbacks execute on the initiating runtime thread.",
+      "filesystem": "The loader reads packaged shared libraries from the verified installation root and writes no runtime state there.",
+      "network": "No network access is required after package installation.",
+      "lifecycle": "The host initializes once, closes owned resources deterministically, and retains the runtime until process exit.",
+      "preflightProfile": "native"
+    },
+    {
+      "id": "node",
+      "version": "22.23.1",
+      "transport": "native-or-wasm-package-export",
+      "concurrency": "One process-wide runtime per Node worker isolate; objects never cross isolates.",
+      "filesystem": "The package reads only its verified runtime payload and an explicitly configured cache root.",
+      "network": "No network access is required after npm installation.",
+      "lifecycle": "Explicit close is authoritative; FinalizationRegistry is a leak fallback and process exit owns runtime teardown.",
+      "preflightProfile": "core"
+    },
+    {
+      "id": "php-native",
+      "version": "PHP 8.2 NTS, module API 20220829",
+      "transport": "zend-extension",
+      "concurrency": "One process-owned Lean runtime in the non-thread-safe PHP profile; callbacks remain on the request thread.",
+      "filesystem": "PHP loads the packaged extension and shared libraries without compiling or mutating the package.",
+      "network": "No network access is required after Composer installation.",
+      "lifecycle": "Request objects close deterministically and module shutdown releases process-owned adapter state.",
+      "preflightProfile": "php"
+    },
+    {
+      "id": "php-wasm",
+      "version": "PHP 8.4.1 on php-wasm 0.1.0",
+      "transport": "emscripten-side-module",
+      "concurrency": "One Node-hosted PHP-Wasm runtime per isolate using either the reviewed lazy or startup loading profile.",
+      "filesystem": "The virtual filesystem contains immutable packaged extension and component assets.",
+      "network": "No network access is required after the host package and side modules are present.",
+      "lifecycle": "The PHP host closes projected resources before the containing Node isolate exits.",
+      "preflightProfile": "php"
+    },
+    {
+      "id": "python",
+      "version": "3.11 or newer",
+      "transport": "manylinux_2_38_x86_64-wheel",
+      "concurrency": "One process-wide Lean runtime; generated calls and callbacks execute while the initiating Python thread owns the adapter call.",
+      "filesystem": "The adapter loads only wheel-owned shared libraries and does not compile during installation.",
+      "network": "No network access is required after wheel installation.",
+      "lifecycle": "Context managers and explicit close are authoritative; interpreter shutdown is not used for semantic work.",
+      "preflightProfile": "native"
+    }
+  ],
+  "exclusions": [
+    "Operating systems other than Linux",
+    "Architectures other than x86-64",
+    "musl and glibc older than 2.38 for native payloads",
+    "Cross-isolate or cross-process resource identity",
+    "Asynchronous Lean results and iterators",
+    "Unreviewed browser, Node, PHP, Python, compiler, linker, or registry versions"
+  ],
+  "enforcement": {
+    "preflightProfile": "full",
+    "ciWorkflow": ".github/workflows/quality.yml",
+    "documentation": [
+      "README.md",
+      "docs/consumers.md",
+      "docs/status.md"
+    ],
+    "releaseAuthorization": "Publication remains blocked unless this exact profile revision is reviewed and all external production evidence is independently confirmed.",
+    "requiredEvidence": [
+      "full-ci-green",
+      "external-reconstruction",
+      "human-clean-room",
+      "npm-sandbox-publication",
+      "security-and-assurance-review"
+    ]
+  },
+  "review": {
+    "requiredRoles": [
+      "release-owner",
+      "runtime-owner",
+      "security-owner"
+    ],
+    "approvals": []
+  }
+}

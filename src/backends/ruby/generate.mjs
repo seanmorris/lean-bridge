@@ -386,8 +386,18 @@ end
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generateRubyBindingPackage = ir => {
-	const model = compileManagedAlphaModel(ir, "ruby");
+export const compileRubyPackageModel = ir => Object.freeze({
+	ir
+	, model: compileManagedAlphaModel(ir, "ruby")
+});
+
+/**
+ * Renders a deterministic Ruby package layout from its compiled model.
+ *
+ * @param root0 - Compiled Ruby package model.
+ * @param root0.model - Managed projection model.
+ */
+export const renderRubyPackageLayout = ({ model }) => {
 	const publicFiles = ["lib/lean_bridge/alpha.rb", "sig/lean_bridge/alpha.rbs"];
 	const internalFiles = ["lib/lean_bridge/alpha/native.rb"];
 	const packageFiles = ["lean_bridge_alpha.gemspec"];
@@ -407,6 +417,17 @@ export const generateRubyBindingPackage = ir => {
 		, packageFiles
 	});
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-	auditManagedBindingPackage(ir, files, "ruby");
 	return Object.freeze(files);
+};
+
+/**
+ * Validates, compiles, renders, and audits one Ruby binding package.
+ *
+ * @param ir - Binding IR document.
+ */
+export const generateRubyBindingPackage = ir => {
+	const packageModel = compileRubyPackageModel(ir);
+	const files = renderRubyPackageLayout(packageModel);
+	auditManagedBindingPackage(packageModel.ir, files, "ruby");
+	return files;
 };

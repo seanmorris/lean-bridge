@@ -421,8 +421,18 @@ const pomSource = model => `<project xmlns="http://maven.apache.org/POM/4.0.0" x
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generateJvmBindingPackage = ir => {
-	const model = compileManagedAlphaModel(ir, "jvm");
+export const compileJvmPackageModel = ir => Object.freeze({
+	ir
+	, model: compileManagedAlphaModel(ir, "jvm")
+});
+
+/**
+ * Renders a deterministic JVM package layout from its compiled model.
+ *
+ * @param root0 - Compiled JVM package model.
+ * @param root0.model - Managed projection model.
+ */
+export const renderJvmPackageLayout = ({ model }) => {
 	const publicEntries = publicSources(model);
 	const publicFiles = Object.keys(publicEntries).sort();
 	const internalFiles = ["src/main/java/org/leanbridge/alpha/Runtime.java"];
@@ -442,6 +452,17 @@ export const generateJvmBindingPackage = ir => {
 		, packageFiles
 	});
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-	auditManagedBindingPackage(ir, files, "jvm");
 	return Object.freeze(files);
+};
+
+/**
+ * Validates, compiles, renders, and audits one JVM binding package.
+ *
+ * @param ir - Binding IR document.
+ */
+export const generateJvmBindingPackage = ir => {
+	const packageModel = compileJvmPackageModel(ir);
+	const files = renderJvmPackageLayout(packageModel);
+	auditManagedBindingPackage(packageModel.ir, files, "jvm");
+	return files;
 };

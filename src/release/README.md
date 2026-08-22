@@ -62,6 +62,8 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 
 [`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`archive-subjects.mjs`](archive-subjects.mjs) records each ecosystem, coordinate, filename, byte length, and hash. [`release-receipt.mjs`](release-receipt.mjs) signs the completed result and copies [`release-archive-verifier.mjs`](release-archive-verifier.mjs), the receipt, and the public policy beside every archive. The verifier requires a separately trusted policy hash and no repository checkout. [`component-package-receipt.mjs`](component-package-receipt.mjs) checks unsigned local dry-run packages.
 
+The installed CLI includes the npm transaction adapter. It defaults to production mode, but production writes remain blocked by the reviewed deployment-profile gate and require `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production`. A local registry rehearsal uses `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and optionally `LEAN_BRIDGE_NPM_REGISTRY_URL`; sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint. In both modes the adapter hashes the authorized tarball before the write and hashes the immutable registry tarball afterward.
+
 ## Release invariants
 
 - Package builders consume a verified canonical input and a fixed generated projection.

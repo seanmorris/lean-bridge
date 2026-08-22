@@ -921,38 +921,82 @@ const emitDocumentation = ir => {
 };
 
 /**
- * Generates C binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ * Compiles canonical Binding IR into the closed C backend projection model.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
+export const compileCProjectionModel = ir => {
+	validateBindingIr(ir);
+	validateCoverage(ir);
+	return Object.freeze({
+		ir
+		, component: ir.component.id
+		, bindingIrSha256: hashBindingIr(ir)
+		, paths: Object.freeze({
+			publicHeader: publicHeaderPath(ir)
+			, internalHeader: internalHeaderPath(ir)
+			, implementation: implementationPath(ir)
+			, documentation: "README.md"
+			, manifest: "binding-manifest.json"
+		})
+	});
+};
+
+/**
+ * Renders deterministic C package sources from one validated projection model.
+ *
+ * @param model - Closed C projection model produced from Binding IR.
+ */
+export const renderCProjectionModel = model => {
+	const publicHeader = emitPublicHeader(model.ir);
+	return Object.freeze({
+		exports: Object.freeze([...publicHeader.exports])
+		, files: Object.freeze({
+			[model.paths.publicHeader]: publicHeader.source
+			, [model.paths.internalHeader]: emitInternalHeader(model.ir)
+			, [model.paths.implementation]: emitImplementation(model.ir)
+			, [model.paths.documentation]: emitDocumentation(model.ir)
+		})
+	});
+};
+
+/**
+ * Assembles rendered C sources and deterministic package metadata without compiling artifacts.
+ *
+ * @param model - Closed C projection model that owns semantic and path identity.
+ * @param rendered - Deterministic source renderer result for the same model.
+ */
+export const assembleCPackageLayout = (model, rendered) => {
+	const files = { ...rendered.files };
+	const manifest = {
+		schemaVersion: 1
+		, component: model.component
+		, bindingIrSha256: model.bindingIrSha256
+		, generator: { id: "lean-wasm/c", version: 1 }
+		, publicHeader: model.paths.publicHeader
+		, internalHeader: model.paths.internalHeader
+		, implementation: model.paths.implementation
+		, exports: rendered.exports
+		, files: [
+			model.paths.publicHeader
+			, model.paths.internalHeader
+			, model.paths.implementation
+			, model.paths.documentation
+			, model.paths.manifest
+		]
+	};
+	files[model.paths.manifest] = `${JSON.stringify(manifest, null, 2)}\n`;
+	return Object.freeze(files);
+};
+
+/**
+ * Generates and audits a C binding package through projection, rendering, and layout stages.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
 export const generateCBindingPackage = ir => {
-	validateBindingIr(ir);
-	validateCoverage(ir);
-	const publicHeader = emitPublicHeader(ir);
-	const files = {
-		[publicHeaderPath(ir)]: publicHeader.source
-		, [internalHeaderPath(ir)]: emitInternalHeader(ir)
-		, [implementationPath(ir)]: emitImplementation(ir)
-		, "README.md": emitDocumentation(ir)
-	};
-	const manifest = {
-		schemaVersion: 1
-		, component: ir.component.id
-		, bindingIrSha256: hashBindingIr(ir)
-		, generator: { id: "lean-wasm/c", version: 1 }
-		, publicHeader: publicHeaderPath(ir)
-		, internalHeader: internalHeaderPath(ir)
-		, implementation: implementationPath(ir)
-		, exports: publicHeader.exports
-		, files: [
-			publicHeaderPath(ir)
-			, internalHeaderPath(ir)
-			, implementationPath(ir)
-			, "README.md"
-			, "binding-manifest.json"
-		]
-	};
-	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
+	const model = compileCProjectionModel(ir);
+	const files = assembleCPackageLayout(model, renderCProjectionModel(model));
 	auditCPackage(ir, files);
-	return Object.freeze(files);
+	return files;
 };

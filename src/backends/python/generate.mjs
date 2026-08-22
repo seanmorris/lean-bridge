@@ -1077,14 +1077,24 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
 `;
 
 /**
- * Generates python binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ * Compiles Binding IR into the validated Python package projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generatePythonBindingPackage = ir => {
+export const compilePythonPackageModel = ir => {
 	validateBindingIr(ir);
 	validateCoverage(ir);
 	const packageDir = packageName(ir);
+	return Object.freeze({ ir, packageDir });
+};
+
+/**
+ * Renders and lays out deterministic Python package files from one model.
+ *
+ * @param model - Validated Python package projection model.
+ */
+export const renderPythonPackageLayout = model => {
+	const { ir, packageDir } = model;
 	const publicModule = `${packageDir}/__init__.py`;
 	const typeStub = `${packageDir}/__init__.pyi`;
 	const publicOutput = emitPublic(ir);
@@ -1110,6 +1120,17 @@ export const generatePythonBindingPackage = ir => {
 		, files: ["pyproject.toml", publicModule, `${packageDir}/_runtime.py`, `${packageDir}/_native.py`, typeStub, `${packageDir}/py.typed`, "README.md", "binding-manifest.json"]
 	};
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-	auditPythonPackage(ir, files);
 	return Object.freeze(files);
+};
+
+/**
+ * Generates and audits a Python package through explicit model and rendering stages.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
+export const generatePythonBindingPackage = ir => {
+	const model = compilePythonPackageModel(ir);
+	const files = renderPythonPackageLayout(model);
+	auditPythonPackage(ir, files);
+	return files;
 };

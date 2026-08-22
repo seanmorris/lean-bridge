@@ -16,7 +16,9 @@ import test from "node:test";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
 	PhpBindingGenerationError,
+	compilePhpPackageModel,
 	generatePhpBindingPackage,
+	renderPhpPackageLayout,
 } from "../src/backends/php/generate.mjs";
 import {
 	PhpPackageAuditError,
@@ -26,6 +28,13 @@ import {
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
+
+test("PHP model and render stages preserve audited package bytes", () => {
+	const model = compilePhpPackageModel(alpha.bindingIr);
+	const files = renderPhpPackageLayout(model);
+	assert.deepEqual(files, generatePhpBindingPackage(alpha.bindingIr));
+	assert.doesNotThrow(() => auditPhpPackage(alpha.bindingIr, files));
+});
 
 const writePackage = async (directory, files) => {
 	for(const [relativePath, source] of Object.entries(files))

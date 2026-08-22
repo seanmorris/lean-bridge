@@ -800,13 +800,23 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
 `;
 
 /**
- * Generates rust binding package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
+ * Compiles Binding IR into the validated Rust package projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const generateRustBindingPackage = ir => {
+export const compileRustPackageModel = ir => {
 	validateBindingIr(ir);
 	validateCoverage(ir);
+	return Object.freeze({ ir });
+};
+
+/**
+ * Renders and lays out deterministic Rust package files from one model.
+ *
+ * @param model - Validated Rust package projection model.
+ */
+export const renderRustPackageLayout = model => {
+	const { ir } = model;
 	const lib = emitLibrary(ir);
 	const runtime = emitRuntime(ir);
 	const exports = [
@@ -835,6 +845,17 @@ export const generateRustBindingPackage = ir => {
 		, files: ["Cargo.toml", "src/lib.rs", "src/__runtime.rs", "README.md", "binding-manifest.json"]
 	};
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
-	auditRustPackage(ir, files);
 	return Object.freeze(files);
+};
+
+/**
+ * Generates and audits a Rust package through explicit model and rendering stages.
+ *
+ * @param ir - Binding IR document that defines the source types and operations.
+ */
+export const generateRustBindingPackage = ir => {
+	const model = compileRustPackageModel(ir);
+	const files = renderRustPackageLayout(model);
+	auditRustPackage(ir, files);
+	return files;
 };

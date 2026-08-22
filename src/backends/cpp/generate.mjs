@@ -206,18 +206,32 @@ inline Transform make_adder(std::uint32_t base) {
  *
  * @param irValue - Binding IR document validated before target-language source generation.
  */
-export const generateCppBindingPackage = irValue => {
+export const compileCppPackageModel = irValue => {
 	const ir = validateBindingIr(irValue);
 	exactAlphaShape(ir);
+	return Object.freeze({
+		component: Object.freeze({ ...ir.component })
+		, bindingIrSha256: hashBindingIr(ir)
+	});
+};
+
+/**
+ * Renders the deterministic C++ package layout from a compiled projection model.
+ *
+ * @param root0 - Compiled C++ package model.
+ * @param root0.component - Projected component identity.
+ * @param root0.bindingIrSha256 - Canonical semantic input identity.
+ */
+export const renderCppPackageLayout = ({ component, bindingIrSha256 }) => {
 	const files = {
 		"include/lean_alpha.hpp": header
 		, "src/lean_alpha.cpp": "#include \"lean_alpha.hpp\"\n"
-		, "README.md": `# ${ir.component.name} C++ binding\n\nTyped C++20 values and deterministic RAII wrappers over the generated native Lean component.\n`
+		, "README.md": `# ${component.name} C++ binding\n\nTyped C++20 values and deterministic RAII wrappers over the generated native Lean component.\n`
 	};
 	const manifest = {
 		schemaVersion: 1
-		, component: ir.component.id
-		, bindingIrSha256: hashBindingIr(ir)
+		, component: component.id
+		, bindingIrSha256
 		, generator: { id: "lean-wasm/cpp", version: 1 }
 		, languageStandard: "C++20"
 		, publicHeader: "include/lean_alpha.hpp"
@@ -229,3 +243,10 @@ export const generateCppBindingPackage = irValue => {
 	files["binding-manifest.json"] = `${JSON.stringify(manifest, null, 2)}\n`;
 	return Object.freeze(files);
 };
+
+/**
+ * Validates, compiles, and renders one C++ binding package.
+ *
+ * @param irValue - Binding IR document.
+ */
+export const generateCppBindingPackage = irValue => renderCppPackageLayout(compileCppPackageModel(irValue));

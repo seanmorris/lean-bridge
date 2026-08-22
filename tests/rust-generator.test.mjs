@@ -15,12 +15,21 @@ import test from "node:test";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import {
 	RustBindingGenerationError,
+	compileRustPackageModel,
 	generateRustBindingPackage,
+	renderRustPackageLayout,
 } from "../src/backends/rust/generate.mjs";
 import { auditRustPackage } from "../src/backends/rust/package-audit.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
+
+test("Rust model and render stages preserve audited package bytes", () => {
+	const model = compileRustPackageModel(alpha.bindingIr);
+	const files = renderRustPackageLayout(model);
+	assert.deepEqual(files, generateRustBindingPackage(alpha.bindingIr));
+	assert.doesNotThrow(() => auditRustPackage(alpha.bindingIr, files));
+});
 
 const writePackage = async (directory, files) => {
 	for(const [relativePath, source] of Object.entries(files))
