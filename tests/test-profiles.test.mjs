@@ -31,6 +31,8 @@ test("every repository test receives exactly one named execution profile", async
 	assert.equal(new Set(Object.values(grouped).flat()).size, paths.length);
 	assert.ok(grouped.contract.includes("tests/test-profiles.test.mjs"));
 	assert.ok(grouped.native.includes("tests/rust-generator.test.mjs"));
+	assert.ok(grouped.component.includes("tests/release-rehearsal.test.mjs"));
+	assert.ok(grouped.component.includes("tests/internal/abi/js-pending-operations.test.mjs"));
 	assert.ok(grouped.consumer.includes("tests/consumer-node.test.mjs"));
 });
 

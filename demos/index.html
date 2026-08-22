@@ -12,12 +12,26 @@
     <main>
       <header class="hero">
         <p class="eyebrow"><span></span> Lean 4 → WebAssembly</p>
-        <h1>Algorithms you can<br><em>run—and inspect.</em></h1>
+        <h1>Algorithms you can<br><em>run and inspect.</em></h1>
         <p class="lede">Interactive implementations compiled from Lean, with the optimized execution path tied to machine-checked correctness theorems.</p>
         <div class="trust-row" aria-label="Portfolio guarantees">
           <span>No <code>sorry</code></span><span>Wasm artifacts included</span><span>Proof sources visible</span>
         </div>
       </header>
+      <section class="business-explainer" aria-labelledby="business-title">
+        <div class="explainer-intro">
+          <p class="eyebrow">What the proofs change</p>
+          <h2 id="business-title">Lean checks the core <br><em>before the browser runs it.</em></h2>
+        </div>
+        <div class="explainer-body">
+          <div class="explainer-points">
+            <article><span>01</span><h3>Lean rejects changes that break a proof</h3><p>When a code change invalidates a proof, Lean reports an error. The build stops before producing the demo artifact.</p></article>
+            <article><span>02</span><h3>Reviewers can trace each claim</h3><p>Each demo names its guarantees and exposes the Lean source, theorem names, source hashes, and build receipt.</p></article>
+            <article><span>03</span><h3>The browser uses generic cores</h3><p>Both Lean APIs accept graphs. JavaScript converts the grid or room map into a graph before calling the compiled core.</p></article>
+          </div>
+          <p class="explainer-summary">Tests check selected inputs and outputs. These demos add Lean proofs for named properties of each core algorithm. The build checks those proofs before compiling the same Lean implementation to WebAssembly.</p>
+        </div>
+      </section>
       <section aria-labelledby="gallery-title">
         <div class="section-heading">
           <div><p class="eyebrow">The collection</p><h2 id="gallery-title">Verified demos</h2></div>
