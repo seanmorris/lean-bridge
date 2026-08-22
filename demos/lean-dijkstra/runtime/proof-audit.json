@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated",
+  "sourceFiles": {
+    "DijkstraCore.lean": {
+      "bytes": 16480,
+      "sha256": "059d4d435bc8bde878ab8fa8c6da3f57905ce4c92603aa5470de9754c39077ae"
+    },
+    "Dijkstra.lean": {
+      "bytes": 8561,
+      "sha256": "6f1ed0d6777fed8ac3dd61d0416895cc99d435f7f6a21a517c3711dfe33b3eae"
+    }
+  },
+  "theorems": [
+    "costOfPath_cons",
+    "costOfPath_increase",
+    "costOfPath_rcons",
+    "feasibleLabels_lowerBound",
+    "certificate_shortest",
+    "feasibleLabelsCheck_sound",
+    "csrFeasibleFrom_eq",
+    "csrFeasibleLabelsCheck_eq",
+    "csrFeasibleLabelsCheck_sound",
+    "dijkstraRec_correct",
+    "dijkstra_correct",
+    "dijkstraCsr_correct"
+  ]
+}

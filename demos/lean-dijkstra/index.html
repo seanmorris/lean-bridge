@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101a2e">
+    <title>Proven paths · Lean Dijkstra</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101a2e%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23adf7b6%22>λ</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div>
+          <p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p>
+          <h1>Draw a problem.<br><em>Get a proven path.</em></h1>
+        </div>
+        <p class="lede">A generic weighted-graph Dijkstra implementation, compiled from Lean. The grid is only a graph-building interface.</p>
+      </header>
+
+      <section class="workspace" aria-label="Dijkstra pathfinding demo">
+        <aside class="controls">
+          <div class="control-group">
+            <p class="label">Edit mode</p>
+            <div class="mode-list" role="radiogroup" aria-label="Grid edit mode">
+              <button class="mode active" data-mode="wall" role="radio" aria-checked="true">
+                <span class="mode-key">1</span><span><b>Walls</b><small>Click or drag</small></span>
+              </button>
+              <button class="mode" data-mode="start" role="radio" aria-checked="false">
+                <span class="mode-key start-key">2</span><span><b>Start</b><small>Place origin</small></span>
+              </button>
+              <button class="mode" data-mode="end" role="radio" aria-checked="false">
+                <span class="mode-key end-key">3</span><span><b>End</b><small>Place target</small></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="maze" class="secondary">New maze</button>
+            <button id="clear" class="secondary">Clear walls</button>
+          </div>
+
+          <div class="proof-card">
+            <div class="proof-icon">λ</div>
+            <div><b>Certified result</b><p>Lean checks path validity, exact cost, and feasible distance labels before returning a route.</p></div>
+          </div>
+        </aside>
+
+        <div class="board-panel">
+          <div class="board-topline">
+            <div id="status" class="status" role="status"><span class="spinner"></span> Loading Lean/Wasm…</div>
+            <div class="metrics"><span><b id="steps">—</b> steps</span><span><b id="visited">—</b> vertices</span></div>
+          </div>
+          <div id="grid" class="grid" aria-label="Editable pathfinding grid"></div>
+          <div class="legend" aria-hidden="true">
+            <span><i class="start-swatch"></i>Start</span>
+            <span><i class="end-swatch"></i>End</span>
+            <span><i class="path-swatch"></i>Shortest path</span>
+            <span><i class="wall-swatch"></i>Wall</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Inspectable assurance</p>
+            <h2 id="proof-title">Don’t trust the badge.<br><em>Read the proof.</em></h2>
+          </div>
+          <p>The displayed source is hashed against a receipt generated only after the pinned Lean compiler accepts every declaration.</p>
+        </div>
+
+        <div class="proof-grid">
+          <div class="source-viewer">
+            <div class="source-toolbar">
+              <div class="source-tabs" role="tablist" aria-label="Lean source file">
+                <button class="source-tab active" data-source="Dijkstra.lean" role="tab">Proof</button>
+                <button class="source-tab" data-source="DijkstraCore.lean" role="tab">Core</button>
+              </div>
+              <div class="source-meta"><span id="source-label">Dijkstra.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div>
+            </div>
+            <pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre>
+          </div>
+
+          <aside class="proof-audit">
+            <div class="audit-mark">✓</div>
+            <p class="label">Build receipt</p>
+            <h3>Checked, then compiled.</h3>
+            <p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p>
+            <dl>
+              <div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div>
+              <div><dt>Checker</dt><dd id="audit-checker">—</dd></div>
+              <div><dt>Ported theorems</dt><dd id="theorem-count">—</dd></div>
+            </dl>
+            <div class="checker-actions">
+              <button id="launch-wasm" class="launch-lean" disabled>Preparing Lean WASM… <span>↗</span></button>
+              <button id="launch-lean-web" class="launch-lean secondary" disabled>Preparing Lean Web… <span>↗</span></button>
+            </div>
+            <p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p>
+          </aside>
+        </div>
+
+        <div id="playground-panel" class="playground-panel" hidden>
+          <div class="playground-toolbar">
+            <div><b>Interactive checkers</b><span>Both open the same bundled core and proof as one self-contained Lean module.</span></div>
+            <div class="playground-links">
+              <a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a>
+              <a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p><b>Proof-backed, not JavaScript-backed.</b> JavaScript constructs a sparse weighted graph; the route is computed by the compiled Lean core.</p>
+        <a href="./Dijkstra.lean">Read the proof →</a>
+      </footer>
+    </main>
+    <script type="module" src="app.mjs"></script>
+    <script type="module" src="proof-viewer.mjs"></script>
+  </body>
+</html>

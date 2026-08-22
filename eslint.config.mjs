@@ -13,7 +13,8 @@ import { recommended as smNoSaccadeRecommended } from 'sm-no-saccade-style';
 
 const sourceFiles = ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'];
 const browserFiles = [
-	'scripts/test-browser-package-consumer.mjs'
+	'demos/lean-dijkstra/{app,runtime,proof-viewer}.mjs'
+	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
 const generatedSourceTemplateFiles = [
@@ -70,6 +71,7 @@ export default [
 			, 'build/**'
 			, 'coverage/**'
 			, 'docs/**'
+			, 'demos/lean-dijkstra/runtime/lean-dijkstra.mjs'
 			, 'result*/**'
 		]
 	}
