@@ -1,10 +1,18 @@
 /**
- * Renders Lean source, verifies its receipt, and launches two Lean checkers.
+ * Renders checked Lean sources and launches the two portfolio proof checkers.
  *
  * @file
  */
 
-const sourceNames = ["Dijkstra.lean", "DijkstraCore.lean"];
+const configElement = document.querySelector("[data-proof-core]");
+const config = {
+	core: configElement.dataset.proofCore
+	, proof: configElement.dataset.proofModule
+	, namespace: configElement.dataset.proofNamespace
+	, comparator: configElement.dataset.comparatorTheorem
+	, theorems: configElement.dataset.proofTheorems.split(",")
+};
+const sourceNames = [config.proof, config.core];
 const keywords = new Set([
 	"abbrev", "by", "cases", "def", "deriving", "do", "else", "end", "exact"
 	, "have", "if", "import", "induction", "instance", "let", "match", "namespace"
@@ -24,15 +32,12 @@ const openWasm = document.querySelector("#open-wasm");
 const openLeanWeb = document.querySelector("#open-lean-web");
 const launchWasm = document.querySelector("#launch-wasm");
 const launchLeanWeb = document.querySelector("#launch-lean-web");
-let activeSource = "Dijkstra.lean";
+let activeSource = config.proof;
 let wasmUrl = "";
 let leanWebUrl = "";
 
-const escapeHtml = value => value
-	.replaceAll("&", "&amp;")
-	.replaceAll("<", "&lt;")
-	.replaceAll(">", "&gt;")
-	.replaceAll('"', "&quot;");
+const escapeHtml = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+	.replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
 const highlightCode = value => {
 	let declarationExpected = false;
@@ -122,38 +127,22 @@ const verifyAudit = async audit => {
 	theoremCount.textContent = String(audit.theorems.length);
 };
 
-const playgroundSource = () => {
-	const withoutImports = source => source.replace(/^import .*$/gmu, "").trim();
-	return `import Std\n\n${withoutImports(sources.get("DijkstraCore.lean"))}\n\n`
-		+ withoutImports(sources.get("Dijkstra.lean"));
-};
-
-const interactiveSource = () => `${playgroundSource()}\n\n`
-	+ "#check LeanDijkstra.dijkstra_correct\n"
-	+ "#print axioms LeanDijkstra.dijkstra_correct\n"
-	+ "#check LeanDijkstra.dijkstraCsr_correct\n"
-	+ "#print axioms LeanDijkstra.dijkstraCsr_correct\n";
-
-// Comparator compiles the inputs as Challenge.lean and Solution.lean. Lean
-// includes that filename in private declaration names, so identical private
-// helpers otherwise receive different names and lean4export cannot compare
-// them. Making those helpers public in both inputs changes only visibility.
-const comparatorCompatible = source =>
-	source.replace(/^private\s+(?=(?:def|structure)\b)/gmu, "");
+const withoutImports = source => source.replace(/^import .*$/gmu, "").trim();
+const playgroundSource = () => `import Std\n\n${withoutImports(sources.get(config.core))}\n\n`
+	+ withoutImports(sources.get(config.proof));
+const interactiveSource = () => `${playgroundSource()}\n\n${config.theorems.map(theorem =>
+	`#check ${theorem}\n#print axioms ${theorem}`).join("\n")}`;
+const comparatorCompatible = source => source.replace(/^private\s+(?=(?:def|structure)\b)/gmu, "");
 
 const comparatorChallenge = () => {
-	const core = comparatorCompatible(
-		sources.get("DijkstraCore.lean").replace(/^import .*$/gmu, "").trim(),
-	);
-	const proof = sources.get("Dijkstra.lean");
-	const theoremStart = proof.indexOf("theorem dijkstraCsr_correct");
+	const core = comparatorCompatible(withoutImports(sources.get(config.core)));
+	const proof = comparatorCompatible(withoutImports(sources.get(config.proof)));
+	const theoremStart = proof.indexOf(`theorem ${config.comparator}`);
 	const proofStart = proof.indexOf(":=", theoremStart);
-	if(theoremStart < 0 || proofStart < 0)
-	{
-		throw new Error("could not extract the dijkstraCsr_correct challenge statement");
-	}
+	if(theoremStart < 0 || proofStart < 0) throw new Error("could not extract Comparator theorem");
+	const prelude = proof.slice(0, theoremStart).trimEnd();
 	const statement = proof.slice(theoremStart, proofStart).trimEnd();
-	return `import Std\n\n${core}\n\nnamespace LeanDijkstra\n\n${statement} := by\n  sorry\n\nend LeanDijkstra`;
+	return `import Std\n\n${core}\n\n${prelude}\n\n${statement} := by\n  sorry\n\nend ${config.namespace}`;
 };
 
 const toBase64Url = bytes => {
@@ -164,20 +153,28 @@ const toBase64Url = bytes => {
 
 const buildWasmUrl = async () => {
 	const workspace = JSON.stringify({
-		files: [{ name: "Dijkstra.lean", content: interactiveSource() }]
-		, active: "Dijkstra.lean"
+		files: [{ name: config.proof, content: interactiveSource() }]
+		, active: config.proof
 	});
 	const compressed = new Blob([new TextEncoder().encode(workspace)])
 		.stream().pipeThrough(new CompressionStream("gzip"));
-	const bytes = new Uint8Array(await new Response(compressed).arrayBuffer());
-	return `https://lean.cau.li/#s=${toBase64Url(bytes)}`;
+	return `https://lean.cau.li/#s=${toBase64Url(new Uint8Array(await new Response(compressed).arrayBuffer()))}`;
 };
 
-const openChecker = (url, button, openedLabel) => {
-	window.open(url, "_blank", "noopener,noreferrer");
+const checkerWindows = new Map();
+
+const openChecker = (url, windowName) => {
+	let checker = checkerWindows.get(windowName);
+	if(!checker || checker.closed)
+	{
+		checker = window.open("about:blank", windowName);
+		if(!checker) return;
+		checker.opener = null;
+		checker.location.replace(url);
+		checkerWindows.set(windowName, checker);
+	}
+	else checker.focus();
 	playgroundPanel.hidden = false;
-	button.textContent = openedLabel;
-	button.disabled = true;
 };
 
 const load = async () => {
@@ -185,15 +182,11 @@ const load = async () => {
 		fetch("./runtime/proof-audit.json").then(response => response.json())
 		, ...sourceNames.map(name => fetch(`./${name}`).then(response => response.text()))
 	]);
-	for(let index = 0; index < sourceNames.length; index += 1)
-	{
-		sources.set(sourceNames[index], loadedSources[index]);
-	}
+	for(let index = 0; index < sourceNames.length; index += 1) sources.set(sourceNames[index], loadedSources[index]);
 	renderSource(activeSource);
 	await verifyAudit(audit);
 	wasmUrl = await buildWasmUrl();
-	leanWebUrl = "https://live.lean-lang.org/#challenge="
-		+ `${encodeURIComponent(comparatorChallenge())}`
+	leanWebUrl = "https://live.lean-lang.org/#challenge=" + encodeURIComponent(comparatorChallenge())
 		+ `&code=${encodeURIComponent(comparatorCompatible(interactiveSource()))}`;
 	openWasm.href = wasmUrl;
 	openLeanWeb.href = leanWebUrl;
@@ -207,16 +200,13 @@ for(const tab of document.querySelectorAll(".source-tab"))
 {
 	tab.addEventListener("click", () => renderSource(tab.dataset.source));
 }
-
 document.querySelector("#copy-source").addEventListener("click", async event => {
 	await navigator.clipboard.writeText(sources.get(activeSource));
 	event.currentTarget.textContent = "Copied";
 	setTimeout(() => { event.currentTarget.textContent = "Copy"; }, 1200);
 });
-
-launchWasm.addEventListener("click", () => openChecker(wasmUrl, launchWasm, "Lean WASM opened"));
-launchLeanWeb.addEventListener("click", () =>
-	openChecker(leanWebUrl, launchLeanWeb, "Lean Web opened"));
+launchWasm.addEventListener("click", () => openChecker(wasmUrl, "lean-wasm-checker"));
+launchLeanWeb.addEventListener("click", () => openChecker(leanWebUrl, "lean-web-comparator"));
 load().catch(error => {
 	auditStatus.className = "audit-value failed";
 	auditStatus.textContent = "Proof receipt unavailable";

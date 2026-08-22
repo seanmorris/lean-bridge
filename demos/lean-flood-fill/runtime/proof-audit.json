@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated",
+  "sourceFiles": {
+    "FloodFillCore.lean": {
+      "bytes": 11654,
+      "sha256": "3de9f1607a3592a51f55cdd5d7ca64ced17fa8d1581c5106fa1f173e6c5a05b1"
+    },
+    "FloodFill.lean": {
+      "bytes": 32283,
+      "sha256": "0c2300338ff551f23351002afb9fce81dcaec8cc7890287585ef9bceaf394cf1"
+    }
+  },
+  "theorems": [
+    "walk_rcons",
+    "closureFrom_adjacentFrom",
+    "closureCheck_edge",
+    "parentCheck_reachable",
+    "closureCheck_complete",
+    "floodCertificate_exact",
+    "floodFillCsr_correct",
+    "reachable_capabilities_mono",
+    "capabilityLoop_extends",
+    "capabilityLoop_closed",
+    "capabilityLoop_least",
+    "capabilityClosureCsr_reachable",
+    "capabilityClosureCsr_least",
+    "capabilityClosureCsr_correct"
+  ]
+}

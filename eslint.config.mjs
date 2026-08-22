@@ -13,7 +13,9 @@ import { recommended as smNoSaccadeRecommended } from 'sm-no-saccade-style';
 
 const sourceFiles = ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'];
 const browserFiles = [
-	'demos/lean-dijkstra/{app,runtime,proof-viewer}.mjs'
+	'demos/{gallery,shared/{site-nav,proof-viewer}}.mjs'
+	, 'demos/lean-dijkstra/{app,runtime}.mjs'
+	, 'demos/lean-flood-fill/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
@@ -72,6 +74,7 @@ export default [
 			, 'coverage/**'
 			, 'docs/**'
 			, 'demos/lean-dijkstra/runtime/lean-dijkstra.mjs'
+			, 'demos/lean-flood-fill/runtime/lean-flood-fill.mjs'
 			, 'result*/**'
 		]
 	}

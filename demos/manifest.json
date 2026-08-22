@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "title": "Verified Lean/Wasm Algorithms",
+  "demos": [
+    {
+      "slug": "lean-dijkstra",
+      "title": "Dijkstra shortest path",
+      "category": "Graphs",
+      "status": "available",
+      "summary": "A generic weighted-graph solver with a certified shortest-path result.",
+      "entrypoint": "lean-dijkstra/",
+      "theorems": ["dijkstra_correct", "dijkstraCsr_correct"],
+      "accent": "mint"
+    },
+    {
+      "slug": "lean-flood-fill",
+      "title": "Flood fill + capability closure",
+      "category": "Games & graphs",
+      "status": "available",
+      "summary": "Directed reachability across rooms, locks, keys, obstacles, and one-way ledges.",
+      "entrypoint": "lean-flood-fill/",
+      "theorems": ["floodFillCsr_correct", "capabilityClosureCsr_correct"],
+      "accent": "cyan"
+    }
+  ]
+}

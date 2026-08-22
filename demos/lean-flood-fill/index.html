@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" data-demo-title="Flood fill + capability closure">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09111f">
+    <title>Open rooms · Proven Lean flood fill</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23adf7b6%22>λ</text></svg>">
+    <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div><p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p><h1>Which rooms are<br><em>open to you?</em></h1></div>
+        <p class="lede">Begin at <b>◎</b>. Bright tiles are places the player can reach right now; dark rooms are cut off by walls or locked doors. Tell the solver which keys were found and watch the reachable world change.</p>
+      </header>
+
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div class="guide-intro"><p class="label">How to read the demo</p><h2 id="guide-title">One question,<br><em>three steps.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Start at ◎</b><p>The fill begins at the marked entrance in Room 01.</p></div></li>
+          <li><span>2</span><div><b>Choose found keys</b><p>Keys enable matching doors. Bright rooms and tiles are reachable.</p></div></li>
+          <li><span>3</span><div><b>Try Auto-find</b><p>Lean collects reachable keys and repeats until nothing new opens.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="workspace" aria-label="Editable room reachability demo">
+        <aside class="controls">
+          <div class="control-group">
+            <p class="label">Key handling</p>
+            <div class="segmented" role="radiogroup" aria-label="Inventory logic">
+              <button class="inventory-mode active" data-inventory="manual" role="radio" aria-checked="true">Choose found</button>
+              <button class="inventory-mode" data-inventory="auto" role="radio" aria-checked="false">Auto-find</button>
+            </div>
+            <p id="inventory-help" class="help">Click the keys below to say exactly which ones the player has found.</p>
+          </div>
+          <div class="control-group">
+            <p class="label">Keys found</p>
+            <div id="keys" class="key-list"></div>
+            <div class="result-summary" role="status" aria-live="polite">
+              <div><b id="result-title">Starting at the entrance…</b><p id="result-explanation">Lean/Wasm is computing which floor tiles can be reached.</p></div>
+              <div id="next-actions" class="next-actions" hidden></div>
+            </div>
+          </div>
+          <details class="control-group editor-disclosure" open>
+            <summary><span>Room tile editor</span><small id="editor-state">Active</small></summary>
+            <p id="editor-tool-help" class="help">Drag from floor to paint walls; start on a wall to erase them. Every edit is solved immediately by Lean/Wasm.</p>
+            <div class="tool-list" role="radiogroup" aria-label="Tile editing tool">
+              <button class="tool active" data-tool="wall" role="radio" aria-checked="true">Toggle wall</button>
+              <button class="tool" data-tool="key" role="radio" aria-checked="false">Place a key</button>
+              <button class="tool" data-tool="ledge" role="radio" aria-checked="false">Paint ledges</button>
+              <button class="tool" data-tool="entrance" role="radio" aria-checked="false">Move start</button>
+            </div>
+            <div class="picker-slot">
+              <div id="key-picker" class="mini-picker" aria-label="Key to place" hidden></div>
+              <div id="direction-picker" class="mini-picker" aria-label="One-edge or two-edge ledge mode" hidden></div>
+            </div>
+          </details>
+          <div class="actions"><button id="new-map">New map</button><button id="reset-edits" class="secondary">Reset edits</button></div>
+          <p class="seed">Map seed <button id="seed" title="Copy seed">—</button></p>
+        </aside>
+
+        <div class="maps">
+          <div class="panel overview-panel">
+            <div class="panel-heading"><div><p class="label">World graph</p><h2>Connected rooms</h2></div><div id="status" class="status" role="status">Loading Lean/Wasm…</div></div>
+            <div class="connection-legend" aria-hidden="true"><span><i class="open-link"></i>Open</span><span><i class="closed-link"></i>Closed</span><span><i class="keyed-link"></i>Glyph/color = required key</span><span class="missing-link"><i class="missing-key-link"></i>Dim = key not held</span></div>
+            <div class="world-scroll"><div id="world" class="world" aria-label="Graph of connected rooms"></div></div>
+            <p class="map-help"><b>Bright room</b> = reachable from ◎. Each door marker combines an open/closed status badge with its required-key glyph; a dim connection needs a key you have not found. Select a room, then use its gold door tile to edit either property.</p>
+          </div>
+          <div class="panel room-panel">
+            <div class="panel-heading"><div><p class="label">Room detail</p><h2 id="room-name">—</h2></div><div class="metrics"><span><b id="reachable-count">—</b> reachable tiles</span><span><b id="runtime">—</b> ms</span></div></div>
+            <p class="room-edit-help"><b id="room-edit-state">Editing is active.</b> <span id="room-edit-copy">Click or drag with the selected tool; gold door tiles have separate key and open/closed controls.</span></p>
+            <div id="room-grid" class="room-grid" aria-label="Editable room tile map"></div>
+            <div class="legend" aria-hidden="true"><span>◎ Start</span><span><i class="reach"></i>Reachable floor</span><span><i class="blocked"></i>Unreachable floor</span><span><i class="solid"></i>Solid wall</span><span>◆ Key</span><span><i class="ledge-symbol">→</i>One-way ledge</span><span>▣ Door control</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title"
+        data-proof-core="FloodFillCore.lean" data-proof-module="FloodFill.lean"
+        data-proof-namespace="LeanFloodFill" data-comparator-theorem="capabilityClosureCsr_correct"
+        data-proof-theorems="LeanFloodFill.floodFillCsr_correct,LeanFloodFill.capabilityClosureCsr_correct">
+        <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">Reachability—and the<br><em>least fixed point.</em></h2></div><p>The final key set is proven stable and contained in every other stable set that contains the starting inventory.</p></div>
+        <div class="proof-grid">
+          <div class="source-viewer">
+            <div class="source-toolbar"><div class="source-tabs" role="tablist" aria-label="Lean source file"><button class="source-tab active" data-source="FloodFill.lean" role="tab">Proof</button><button class="source-tab" data-source="FloodFillCore.lean" role="tab">Core</button></div><div class="source-meta"><span id="source-label">FloodFill.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div></div>
+            <pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre>
+          </div>
+          <aside class="proof-audit">
+            <div class="audit-mark">✓</div>
+            <p class="label">Build receipt</p>
+            <h3>Checked, then compiled.</h3>
+            <p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p>
+            <dl>
+              <div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div>
+              <div><dt>Checker</dt><dd id="audit-checker">—</dd></div>
+              <div><dt>Audited theorems</dt><dd id="theorem-count">—</dd></div>
+            </dl>
+            <div class="checker-actions">
+              <button id="launch-wasm" class="launch-lean" disabled>Preparing Lean WASM… <span>↗</span></button>
+              <button id="launch-lean-web" class="launch-lean secondary" disabled>Preparing Lean Web… <span>↗</span></button>
+            </div>
+            <p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p>
+          </aside>
+        </div>
+        <div id="playground-panel" class="playground-panel" hidden><div class="playground-toolbar"><div><b>Interactive checkers opened</b><span>Both use the bundled core and proof.</span></div><div class="playground-links"><a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a><a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a></div></div></div>
+      </section>
+      <footer><p><b>The room model is not trusted Lean code.</b> It becomes a generic directed CSR graph before the compiled solver sees it.</p><a href="./FloodFill.lean">Read the proof →</a></footer>
+    </main>
+    <script type="module" src="../shared/site-nav.mjs"></script>
+    <script type="module" src="app.mjs"></script>
+    <script type="module" src="../shared/proof-viewer.mjs"></script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-demo-title="Dijkstra shortest path">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     <title>Proven paths · Lean Dijkstra</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101a2e%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23adf7b6%22>λ</text></svg>">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/site.css">
   </head>
   <body>
     <main>
@@ -61,7 +62,10 @@
         </div>
       </section>
 
-      <section class="proof-section" aria-labelledby="proof-title">
+      <section class="proof-section" aria-labelledby="proof-title"
+        data-proof-core="DijkstraCore.lean" data-proof-module="Dijkstra.lean"
+        data-proof-namespace="LeanDijkstra" data-comparator-theorem="dijkstraCsr_correct"
+        data-proof-theorems="LeanDijkstra.dijkstra_correct,LeanDijkstra.dijkstraCsr_correct">
         <div class="section-heading">
           <div>
             <p class="eyebrow">Inspectable assurance</p>
@@ -116,7 +120,8 @@
         <a href="./Dijkstra.lean">Read the proof →</a>
       </footer>
     </main>
+    <script type="module" src="../shared/site-nav.mjs"></script>
     <script type="module" src="app.mjs"></script>
-    <script type="module" src="proof-viewer.mjs"></script>
+    <script type="module" src="../shared/proof-viewer.mjs"></script>
   </body>
 </html>

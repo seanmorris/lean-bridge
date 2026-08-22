@@ -130,6 +130,18 @@ The downstream measurements below ran on 12 and 13 August 2026 using Linux x86-6
 
 These are observational end-user API measurements, not cross-machine comparisons. The [original downstream performance record](docs/evidence/downstream-consumer-performance-20260812.md) and [managed consumer record](docs/evidence/managed-consumer-acceptance.md#end-user-performance) contain exact durations, scope, and limitations. The [library scaling record](docs/evidence/library-scaling.md) contains the shared-runtime memory measurements.
 
+## Verified algorithm demos
+
+The static [demo gallery](demos/) runs proof-backed Lean algorithms directly in the browser. The initial collection includes generic Dijkstra shortest path and directed flood fill with a proven least capability closure. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark.
+
+Build and verify the complete GitHub Pages artifact with:
+
+```sh
+npm run demos:verify
+```
+
+The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
+
 ## Documentation
 
 - [Documentation map](docs/README.md)

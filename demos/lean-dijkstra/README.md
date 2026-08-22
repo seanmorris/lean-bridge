@@ -40,7 +40,7 @@ The executable graph uses compressed sparse rows, and Dijkstra's next-vertex sel
 - `runtime.mjs` — generic weighted compressed-sparse-row JavaScript API.
 - `app.mjs` — grid-to-graph conversion and UI behavior.
 - `benchmark.mjs` — deterministic end-to-end benchmark for the compiled API.
-- `proof-viewer.mjs` — syntax highlighting, browser-side receipt verification, and local Lean WASM checker launcher.
+- `../shared/proof-viewer.mjs` — shared syntax highlighting, browser-side receipt verification, and Lean checker launcher.
 - `generate-proof-audit.mjs` — creates the source-hash receipt after Lean accepts the proof module.
 - `runtime/` — compiled Emscripten ES module and Lean Wasm artifact.
 

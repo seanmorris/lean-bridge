@@ -1,0 +1,4 @@
+.portfolio-nav { position: sticky; z-index: 30; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 18px; min-height: 48px; padding: 9px max(20px, calc((100vw - 1120px) / 2)); border-bottom: 1px solid rgba(173, 204, 235, .16); background: rgba(9, 17, 31, .91); backdrop-filter: blur(15px); font: 700 11px/1 ui-monospace, monospace; letter-spacing: .05em; }
+.portfolio-nav a { color: #cbe1f2; text-decoration: none; }
+.portfolio-nav a:first-child { color: #adf7b6; }
+.portfolio-nav span { overflow: hidden; color: #7890a9; text-overflow: ellipsis; white-space: nowrap; }
