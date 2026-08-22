@@ -16,6 +16,7 @@ const browserFiles = [
 	'demos/{gallery,shared/{site-nav,proof-viewer}}.mjs'
 	, 'demos/lean-dijkstra/{app,runtime}.mjs'
 	, 'demos/lean-flood-fill/{app,runtime}.mjs'
+	, 'demos/lean-union-find/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
@@ -75,6 +76,7 @@ export default [
 			, 'docs/**'
 			, 'demos/lean-dijkstra/runtime/lean-dijkstra.mjs'
 			, 'demos/lean-flood-fill/runtime/lean-flood-fill.mjs'
+			, 'demos/lean-union-find/runtime/lean-union-find.mjs'
 			, 'result*/**'
 		]
 	}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated",
+  "sourceFiles": {
+    "UnionFindCore.lean": {
+      "bytes": 16201,
+      "sha256": "4fb1dc7bbf57a00971fcd3391c84ba5872797f5469986bd2a231a72f3a657502"
+    },
+    "UnionFind.lean": {
+      "bytes": 9008,
+      "sha256": "d35e8606209c104b4f85999e5fa17d0daf1169d49a16fba9191e9d2f8706af13"
+    }
+  },
+  "theorems": [
+    "edgeMatches_linkEdge",
+    "allFrom_get",
+    "certificate_parent_connected",
+    "certificate_edges_closed",
+    "partitionCertificate_exact",
+    "certifiedPartition_correct",
+    "connected_equivalence"
+  ]
+}

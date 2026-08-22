@@ -190,8 +190,6 @@ const load = async () => {
 		+ `&code=${encodeURIComponent(comparatorCompatible(interactiveSource()))}`;
 	openWasm.href = wasmUrl;
 	openLeanWeb.href = leanWebUrl;
-	launchWasm.textContent = "Open Lean WASM checker ↗";
-	launchLeanWeb.textContent = "Open Lean Web / Comparator ↗";
 	launchWasm.disabled = false;
 	launchLeanWeb.disabled = false;
 };

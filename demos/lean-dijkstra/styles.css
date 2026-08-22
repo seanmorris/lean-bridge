@@ -33,47 +33,13 @@ button { font: inherit; }
 main { width: min(1440px, calc(100% - 48px)); margin: 0 auto; }
 
 .hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 48px;
   padding: 58px 6px 16px;
   border-bottom: 1px solid rgba(114, 216, 255, .14);
-  border-radius: 0 0 var(--radius-shell) var(--radius-shell);
-  background: linear-gradient(105deg, rgba(255, 107, 95, .075), transparent 46%);
 }
-
-.hero::before {
-  content: "";
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(114, 216, 255, .055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(114, 216, 255, .055) 1px, transparent 1px);
-  background-size: 38px 38px;
-  mask-image: linear-gradient(90deg, #000, transparent 72%);
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: 310px;
-  height: 310px;
-  right: 2%;
-  top: -76%;
-  border: 1px solid rgba(255, 107, 95, .24);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 107, 95, .13), transparent 66%);
-  box-shadow: 0 0 70px rgba(114, 216, 255, .09);
-}
-
-.hero > * { position: relative; z-index: 1; }
-.hero > div { padding-left: 18px; border-left: 2px solid var(--coral); }
 
 .eyebrow, .label {
   margin: 0 0 16px;
@@ -96,7 +62,7 @@ main { width: min(1440px, calc(100% - 48px)); margin: 0 auto; }
 
 h1 { margin: 0; color: #fffaf3; font-size: clamp(42px, 6vw, 76px); line-height: .96; letter-spacing: -.055em; text-shadow: 0 2px 26px rgba(0, 0, 0, .38); }
 h1 em { color: var(--coral); font-style: normal; }
-.lede { max-width: 430px; margin: 0 0 5px; padding: 14px 17px; color: var(--muted); border: 1px solid rgba(114, 216, 255, .2); border-left: 3px solid var(--sky); border-radius: var(--radius-panel); background: rgba(8, 17, 31, .58); box-shadow: 0 14px 38px rgba(0, 0, 0, .16); font-size: 17px; line-height: 1.6; }
+.lede { max-width: 430px; margin: 0 0 5px; color: var(--muted); font-size: 17px; line-height: 1.6; }
 
 .workspace {
   display: grid;

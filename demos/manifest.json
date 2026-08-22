@@ -21,6 +21,16 @@
       "entrypoint": "lean-flood-fill/",
       "theorems": ["floodFillCsr_correct", "capabilityClosureCsr_correct"],
       "accent": "cyan"
+    },
+    {
+      "slug": "lean-union-find",
+      "title": "Union-find percolation",
+      "category": "Partitions & simulation",
+      "status": "available",
+      "summary": "A generic checked partition finds when open passages first cross a braided porous maze.",
+      "entrypoint": "lean-union-find/",
+      "theorems": ["partitionCertificate_exact", "certifiedPartition_correct"],
+      "accent": "gold"
     }
   ]
 }

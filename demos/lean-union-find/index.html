@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-demo-title="Union-find percolation">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09111f">
+    <title>Percolation lab · Proven Lean union-find</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23ffd36e%22>λ</text></svg>">
+    <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div><p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p><h1>Will water<br><em>get through?</em></h1></div>
+        <p class="lede">Open pores in a material sample. Water enters connected pores from the top. Lean/Wasm identifies the first cluster that reaches the outlet.</p>
+      </header>
+
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div><p class="label">How to read it</p><h2 id="guide-title">One partition,<br><em>two scales.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Open pores</b><p>Click, drag, step, or run a randomized opening order.</p></div></li>
+          <li><span>2</span><div><b>Watch water enter</b><p>Cyan pores belong to the open cluster connected to the inlet.</p></div></li>
+          <li><span>3</span><div><b>Reach the outlet</b><p>The material percolates when that wet cluster crosses the sample.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="theme-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Percolation lab</h2></div><p id="runtime-status" class="runtime-status" role="status">Loading Lean/Wasm…</p></div>
+        <div class="experiment-tabs" role="tablist" aria-label="Percolation experiment">
+          <button id="tab-sample" role="tab" aria-selected="true" aria-controls="panel-sample" data-view="sample">One sample</button>
+          <button id="tab-trials" role="tab" aria-selected="false" aria-controls="panel-trials" data-view="trials" tabindex="-1">Browser benchmark</button>
+        </div>
+
+        <div id="panel-sample" class="workspace" role="tabpanel" aria-labelledby="tab-sample">
+          <div class="result-card" role="status" aria-live="polite">
+            <p class="label">Current result</p>
+            <div><h3 id="result-title">Preparing the sample…</h3><p id="result-copy">The checked module is loading.</p></div>
+          </div>
+          <aside class="controls">
+            <dl class="metrics">
+              <div><dt>Open passages</dt><dd id="active-count">0 / 651</dd></div>
+              <div><dt>Porosity</dt><dd id="density">0.0%</dd></div>
+              <div><dt>Pore clusters</dt><dd id="component-count">0</dd></div>
+              <div><dt>Lean/Wasm</dt><dd id="runtime">—</dd></div>
+            </dl>
+            <div class="control-group">
+              <p class="label">Random sequence</p>
+              <div class="button-grid"><button id="run">Resume</button><button id="pause">Pause</button><button id="step">Open one</button><button id="reset">Restart</button></div>
+              <button id="new-material" class="wide secondary">New maze</button>
+            </div>
+            <div class="control-group draw-panel">
+              <p class="label">Draw tool</p>
+              <div class="draw-tools" role="group" aria-label="Maze drawing tool"><button id="tool-open" aria-pressed="true" title="Draw open passages (O)"><i class="open-swatch"></i>Open</button><button id="tool-seal" aria-pressed="false" title="Close passages (C)"><i class="close-swatch"></i>Close</button><button id="tool-wall" aria-pressed="false" title="Draw walls (W)"><i class="wall-swatch"></i>Wall</button></div>
+              <p id="edit-status" class="edit-status">Open tool selected. Drag across the maze to draw open passages.</p>
+            </div>
+            <div class="seed"><label for="seed">Maze seed</label><div><input id="seed" inputmode="text" maxlength="10" spellcheck="false" aria-label="Maze seed in hexadecimal"><button id="apply-seed" type="button">Load</button></div></div>
+          </aside>
+
+          <div class="sample-panel">
+            <div class="sample-toolbar"><div><p class="label">Live sample</p><b id="sample-title">Porous material</b></div><p>Water enters through open passages along the inlet.</p></div>
+            <div class="sample-scroll">
+              <div class="sample-shell">
+                <div id="top-boundary" class="boundary top">Inlet</div>
+                <div id="site-grid" class="site-grid" role="grid" aria-label="Editable percolation sample"></div>
+                <div id="bottom-boundary" class="boundary bottom">Outlet</div>
+              </div>
+            </div>
+            <div id="legend" class="legend" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <section id="panel-trials" class="trials" role="tabpanel" aria-labelledby="tab-trials trials-title" hidden>
+          <div class="trials-copy"><p class="label">Live browser benchmark</p><h3 id="trials-title">What does checked connectivity cost?</h3><p>Run 100 seeded threshold searches. Checked Lean/Wasm and an optimized typed-array JavaScript union-find receive the same graph requests and must find the same crossing point.</p><div class="trial-actions"><button id="run-trials">Run benchmark</button><button id="cancel-trials" class="secondary">Cancel</button></div></div>
+          <div class="histogram-card"><div class="histogram-summary"><b id="trial-summary">No benchmark run yet.</b><span id="trial-progress">Ready</span></div><dl class="benchmark-metrics"><div><dt>Lean median</dt><dd id="bench-lean">—</dd></div><div><dt>Lean p95</dt><dd id="bench-p95">—</dd></div><div><dt>JS median</dt><dd id="bench-js">—</dd></div><div><dt>Relative cost</dt><dd id="bench-ratio">—</dd></div></dl><svg id="histogram" role="img" aria-label="Histogram of checked Lean threshold-search latency" viewBox="0 0 620 150"></svg></div>
+        </section>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title"
+        data-proof-core="UnionFindCore.lean" data-proof-module="UnionFind.lean"
+        data-proof-namespace="LeanUnionFind" data-comparator-theorem="certifiedPartition_correct"
+        data-proof-theorems="LeanUnionFind.partitionCertificate_exact,LeanUnionFind.certifiedPartition_correct">
+        <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">Equal roots mean<br><em>connected inputs.</em></h2></div><p>The checked result uses real input links as witnesses. Every input link remains inside one returned class, and every equal representative has a witnessed link path.</p></div>
+        <div class="proof-grid">
+          <div class="source-viewer">
+            <div class="source-toolbar"><div class="source-tabs" role="tablist" aria-label="Lean source file"><button class="source-tab active" data-source="UnionFind.lean" role="tab">Proof</button><button class="source-tab" data-source="UnionFindCore.lean" role="tab">Core</button></div><div class="source-meta"><span id="source-label">UnionFind.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div></div>
+            <pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre>
+          </div>
+          <aside class="proof-audit">
+            <div class="audit-mark">✓</div><p class="label">Build receipt</p><h3>Checked, then compiled.</h3><p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p>
+            <dl><div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div><div><dt>Checker</dt><dd id="audit-checker">—</dd></div><div><dt>Audited theorems</dt><dd id="theorem-count">—</dd></div></dl>
+            <div class="checker-actions"><button id="launch-wasm" class="launch-lean" disabled>Open Lean WASM checker <span>↗</span></button><button id="launch-lean-web" class="launch-lean secondary" disabled>Open Lean Web / Comparator <span>↗</span></button></div>
+            <p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p>
+          </aside>
+        </div>
+        <div id="playground-panel" class="playground-panel" hidden><div class="playground-toolbar"><div><b>Interactive checkers opened</b><span>Both use the bundled core and proof.</span></div><div class="playground-links"><a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a><a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a></div></div></div>
+      </section>
+      <footer><p><b>The grid adapter remains browser code.</b> Lean proves the finite-index partition returned for the pairs it receives.</p><a href="./UnionFind.lean">Read the proof →</a></footer>
+    </main>
+    <script type="module" src="../shared/site-nav.mjs"></script>
+    <script type="module" src="app.mjs"></script>
+    <script type="module" src="../shared/proof-viewer.mjs"></script>
+  </body>
+</html>
