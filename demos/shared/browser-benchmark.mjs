@@ -176,6 +176,7 @@ export const attachBrowserBenchmark = ({
 			const started = performance.now();
 			for(let index = 0; index < warmupCount; index += 1)
 			{
+				if(current !== revision) return;
 				elements.progress.textContent = `Warming up ${index + 1} / ${warmupCount}`;
 				await sample(index, true);
 				if(current !== revision) return;
@@ -186,9 +187,11 @@ export const attachBrowserBenchmark = ({
 			{
 				if(current !== revision) return;
 				samples.push(await sample(index, false));
+				if(current !== revision) return;
 				elements.progress.textContent = `${index + 1} / ${trialCount} compared`;
 				if(index % 2 === 1) await frame();
 			}
+			if(current !== revision) return;
 			const leanTimes = samples.map(result => result.leanMs).sort((left, right) => left - right);
 			const javascriptTimes = samples.map(result => result.javascriptMs)
 				.sort((left, right) => left - right);

@@ -23,6 +23,9 @@ const browserFiles = [
 	, 'demos/lean-a-star/{app,runtime}.mjs'
 	, 'demos/lean-tarjan/{app,runtime}.mjs'
 	, 'demos/lean-token-bucket/{app,runtime}.mjs'
+	, 'demos/lean-dinic/{app,runtime}.mjs'
+	, 'demos/lean-myers/{app,runtime}.mjs'
+	, 'demos/lean-sweep-and-prune/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
@@ -89,6 +92,9 @@ export default [
 			, 'demos/lean-a-star/runtime/lean-a-star.mjs'
 			, 'demos/lean-tarjan/runtime/lean-tarjan.mjs'
 			, 'demos/lean-token-bucket/runtime/lean-token-bucket.mjs'
+			, 'demos/lean-dinic/runtime/lean-dinic.mjs'
+			, 'demos/lean-myers/runtime/lean-myers.mjs'
+			, 'demos/lean-sweep-and-prune/runtime/lean-sweep-and-prune.mjs'
 			, 'result*/**'
 		]
 	}

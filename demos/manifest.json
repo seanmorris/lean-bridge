@@ -91,6 +91,36 @@
       "entrypoint": "lean-token-bucket/",
       "theorems": ["refill_eq", "request_valid", "exportedRun_no_over_admission", "exportedStep_admitted_iff"],
       "accent": "cyan"
+    },
+    {
+      "slug": "lean-dinic",
+      "title": "Maximum flow / minimum cut",
+      "category": "Networks & capacity planning",
+      "status": "available",
+      "summary": "Change a connection's capacity and watch the bottleneck move. Lean returns a maximum flow and a minimum cut through a generic directed network.",
+      "entrypoint": "lean-dinic/",
+      "theorems": ["solve_total", "exported_optimal", "flow_cut_upper_bound", "matching_cut_edges"],
+      "accent": "gold"
+    },
+    {
+      "slug": "lean-myers",
+      "title": "Myers shortest edit script",
+      "category": "Text, code & synchronization",
+      "status": "available",
+      "summary": "Edit two documents and inspect their smallest insertion/deletion script. Lean proves that replay reaches the target and no shorter script exists.",
+      "entrypoint": "lean-myers/",
+      "theorems": ["solve_total", "exported_shortest", "exported_patch_reconstructs", "exported_zero_iff"],
+      "accent": "violet"
+    },
+    {
+      "slug": "lean-sweep-and-prune",
+      "title": "Sweep-and-prune collision pairs",
+      "category": "Games, geometry & simulation",
+      "status": "available",
+      "summary": "Drag moving boxes and see one-axis candidates narrowed to exact overlaps. Lean proves that no overlapping pair is missed or repeated.",
+      "entrypoint": "lean-sweep-and-prune/",
+      "theorems": ["solve_total", "exported_candidates_exact", "exported_overlaps_exact", "exported_overlaps_unique"],
+      "accent": "gold"
     }
   ]
 }

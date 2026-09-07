@@ -435,7 +435,9 @@ test("cancellation has a stable status, diagnostic, progress state, and exit cod
 });
 
 test("the executable analyzes the project and reports pending commands honestly", async () => {
-  const analyzed = await execute("node", ["scripts/lean-bridge.mjs", "analyze", "--json"], { cwd: process.cwd() });
+  // The full declaration report grows with the verified algorithm portfolio.
+  const analysisOptions = { cwd: process.cwd(), maxBuffer: 16 * 1024 * 1024 };
+  const analyzed = await execute("node", ["scripts/lean-bridge.mjs", "analyze", "--json"], analysisOptions);
   const response = JSON.parse(analyzed.stdout);
   assert.equal(response.status, "ok");
   assert.equal(response.result.bindingIr.origin, "existing-validated");
@@ -447,7 +449,7 @@ test("the executable analyzes the project and reports pending commands honestly"
     , "json"
     , "--target"
     , "npm"
-  ], { cwd: process.cwd() });
+  ], analysisOptions);
   const progressResponse = JSON.parse(withProgress.stdout);
   const events = withProgress.stderr.trim().split("\n").map(line => JSON.parse(line));
   assert.equal(events.length, progressResponse.progress.events.length);

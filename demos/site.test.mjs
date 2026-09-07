@@ -10,12 +10,136 @@ import test from "node:test";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-	measureAsyncBenchmark, measureSyncBenchmark
+	attachBrowserBenchmark, measureAsyncBenchmark, measureSyncBenchmark
 } from "./shared/browser-benchmark.mjs";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = resolve(repositoryRoot, "demos");
 const siteRoot = resolve(repositoryRoot, "build/github-pages");
+
+const mockBenchmarkBrowser = context => {
+	const elements = new Map();
+	const frames = [];
+	const waiting = [];
+	const makeElement = () => ({
+		textContent: "unchanged", disabled: false, clientWidth: 620
+		, addEventListener: () => undefined, setAttribute: () => undefined
+		, replaceChildren: () => undefined, append: () => undefined
+	});
+	/** Keep automatic observation dormant until the test starts a run. */
+	class ObserverMock
+	{
+		/** Leave visibility and resize callbacks under test control. */
+		observe() { return undefined; }
+		/** Release the inert observer. */
+		disconnect() { return undefined; }
+	}
+	const replacements = {
+		ResizeObserver: ObserverMock, IntersectionObserver: ObserverMock
+		, document: { createElementNS: makeElement }
+		, requestAnimationFrame: callback => {
+			frames.push(callback);
+			waiting.shift()?.();
+			return frames.length;
+		}
+	};
+	const originals = new Map(Object.keys(replacements).map(name =>
+		[name, Object.getOwnPropertyDescriptor(globalThis, name)]));
+	context.after(() => {
+		for(const [name, descriptor] of originals)
+		{
+			if(descriptor) Object.defineProperty(globalThis, name, descriptor);
+			else Reflect.deleteProperty(globalThis, name);
+		}
+	});
+	for(const [name, value] of Object.entries(replacements))
+		Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
+	const root = { querySelector: selector => {
+		if(!elements.has(selector)) elements.set(selector, makeElement());
+		return elements.get(selector);
+	} };
+	return {
+		root, elements
+		, waitForFrame: () => frames.length ? Promise.resolve() : new Promise(resolve => waiting.push(resolve))
+		, releaseFrame: () => { assert.ok(frames.length > 0); frames.shift()(0); }
+	};
+};
+
+const assertBenchmarkCancelled = browser => {
+	assert.equal(browser.elements.get("[data-benchmark-progress]").textContent, "Cancelled");
+	assert.equal(browser.elements.get("[data-benchmark-summary]").textContent, "unchanged");
+	assert.equal(browser.elements.get("[data-benchmark-lean]").textContent, "unchanged");
+	assert.equal(browser.elements.get("[data-benchmark-run]").disabled, false);
+	assert.equal(browser.elements.get("[data-benchmark-cancel]").disabled, true);
+};
+
+test("browser benchmark cancellation during a warmup frame prevents another sample", async context => {
+	const browser = mockBenchmarkBrowser(context);
+	const calls = [];
+	let disposed = false;
+	let summarized = false;
+	const controller = attachBrowserBenchmark({
+		root: browser.root, prepare: async () => undefined
+		, warmupCount: 2, trialCount: 1
+		, sample: (index, warmup) => {
+			calls.push([index, warmup]);
+			assert.equal(disposed, false, "a cancelled warmup must not touch disposed state");
+			return { leanMs: 1, javascriptMs: 1 };
+		}
+		, summarize: () => { summarized = true; return "completed"; }
+	});
+	const running = controller.run();
+	await browser.waitForFrame();
+	controller.cancel();
+	disposed = true;
+	browser.releaseFrame();
+	await running;
+	assert.deepEqual(calls, [[0, true]]);
+	assert.equal(summarized, false);
+	assertBenchmarkCancelled(browser);
+});
+
+test("browser benchmark cancellation while its last sample is pending preserves cancelled state", async context => {
+	const browser = mockBenchmarkBrowser(context);
+	let releaseSample;
+	let announceSample;
+	let summarized = false;
+	const pending = new Promise(resolve => { releaseSample = resolve; });
+	const started = new Promise(resolve => { announceSample = resolve; });
+	const controller = attachBrowserBenchmark({
+		root: browser.root, prepare: async () => undefined
+		, warmupCount: 0, trialCount: 1
+		, sample: () => { announceSample(); return pending; }
+		, summarize: () => { summarized = true; return "completed"; }
+	});
+	const running = controller.run();
+	await started;
+	controller.cancel();
+	releaseSample({ leanMs: 1, javascriptMs: 1 });
+	await running;
+	assert.equal(summarized, false);
+	assertBenchmarkCancelled(browser);
+});
+
+test("browser benchmark cancellation during its final measured frame prevents completion", async context => {
+	const browser = mockBenchmarkBrowser(context);
+	let calls = 0;
+	let summarized = false;
+	const controller = attachBrowserBenchmark({
+		root: browser.root, prepare: async () => undefined
+		, warmupCount: 0, trialCount: 2
+		, sample: () => { calls++; return { leanMs: 1, javascriptMs: 1 }; }
+		, summarize: () => { summarized = true; return "completed"; }
+	});
+	const running = controller.run();
+	await browser.waitForFrame();
+	assert.equal(calls, 2);
+	controller.cancel();
+	browser.releaseFrame();
+	await running;
+	assert.equal(summarized, false);
+	assertBenchmarkCancelled(browser);
+});
 
 test("adaptive browser timing produces finite per-operation samples", async () => {
 	let synchronousCalls = 0;
@@ -33,7 +157,7 @@ test("adaptive browser timing produces finite per-operation samples", async () =
 
 test("gallery manifest names every published standalone demo", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
-	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket"]);
+	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket", "lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
 	for(const demo of manifest.demos)
 	{
 		assert.equal(demo.entrypoint, `${demo.slug}/`);
@@ -47,7 +171,7 @@ test("assembled Pages artifact is commit-bound and base-path safe", async () => 
 	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
 	assert.match(identity.commit, /^[0-9a-f]{40}$/u);
 	await access(resolve(siteRoot, ".nojekyll"));
-	for(const path of ["index.html", "lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html"])
+	for(const path of ["index.html", "lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html", "lean-dinic/index.html", "lean-myers/index.html", "lean-sweep-and-prune/index.html"])
 	{
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.doesNotMatch(html, /(?:href|src)="\/(?!\/)/u,
@@ -90,7 +214,7 @@ test("Aho–Corasick publishes editable overlapping scans and its byte matcher",
 });
 
 test("every proof demo publishes an automatic prewarmed browser benchmark", async () => {
-	for(const path of ["lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html"])
+	for(const path of ["lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html", "lean-dinic/index.html", "lean-myers/index.html", "lean-sweep-and-prune/index.html"])
 	{
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.match(html, /id="browser-benchmark"/u);
@@ -156,6 +280,53 @@ test("token bucket publishes its request timeline, exact admission proof, and be
 		await access(resolve(root, file));
 	const audit = JSON.parse(await readFile(resolve(root, "runtime/proof-audit.json"), "utf8"));
 	for(const theorem of ["refill_eq", "exportedRun_no_over_admission", "request_retry_earliest", "exportedRun_word_bounds"])
+		assert.ok(audit.theorems.includes(theorem));
+});
+
+test("Dinic publishes its capacity editor, optimality proof, and benchmark dependencies", async () => {
+	const root = resolve(siteRoot, "lean-dinic");
+	const html = await readFile(resolve(root, "index.html"), "utf8");
+	for(const id of ["widen-bottleneck", "network-svg", "edge-capacity", "cut-links", "reset-network"])
+		assert.ok(html.includes(`id="${id}"`));
+	assert.match(html, /data-comparator-theorem="solve_total"/u);
+	assert.match(html, /LeanDinic\.exported_optimal/u);
+	assert.ok(html.indexOf("id=\"browser-benchmark\"") > html.indexOf("id=\"network-svg\""));
+	for(const file of ["network.mjs", "reference.mjs", "browser-benchmark.mjs", "benchmark-workload.mjs"])
+		await access(resolve(root, file));
+	const audit = JSON.parse(await readFile(resolve(root, "runtime/proof-audit.json"), "utf8"));
+	for(const theorem of ["solve_total", "exported_optimal", "flow_cut_upper_bound", "matching_cut_edges"])
+		assert.ok(audit.theorems.includes(theorem));
+});
+
+test("Myers publishes its editable diff, exact reconstruction proof, and benchmark", async () => {
+	const root = resolve(siteRoot, "lean-myers");
+	const html = await readFile(resolve(root, "index.html"), "utf8");
+	for(const id of ["before-text", "after-text", "swap-text", "diff-preview", "edit-count", "replay-title"])
+		assert.ok(html.includes(`id="${id}"`));
+	assert.match(html, /data-comparator-theorem="solve_total"/u);
+	assert.match(html, /LeanMyers\.exported_shortest/u);
+	assert.match(html, /LeanMyers\.exported_reconstructs/u);
+	assert.ok(html.indexOf("id=\"browser-benchmark\"") > html.indexOf("id=\"diff-preview\""));
+	for(const file of ["scenario.mjs", "reference.mjs", "browser-benchmark.mjs", "benchmark-workload.mjs"])
+		await access(resolve(root, file));
+	const audit = JSON.parse(await readFile(resolve(root, "runtime/proof-audit.json"), "utf8"));
+	for(const theorem of ["solve_total", "exported_shortest", "exported_patch_reconstructs", "solveExport_words_bounded"])
+		assert.ok(audit.theorems.includes(theorem));
+});
+
+test("sweep and prune publishes its draggable scene, both pair sets, and exact proof", async () => {
+	const root = resolve(siteRoot, "lean-sweep-and-prune");
+	const html = await readFile(resolve(root, "index.html"), "utf8");
+	for(const id of ["scene", "projection", "toggle-motion", "step-motion", "new-scene", "candidate-count", "overlap-count"])
+		assert.ok(html.includes(`id="${id}"`));
+	assert.match(html, /data-comparator-theorem="solve_total"/u);
+	assert.match(html, /LeanSweep\.exported_candidates_exact/u);
+	assert.match(html, /LeanSweep\.exported_overlaps_exact/u);
+	assert.ok(html.indexOf("id=\"browser-benchmark\"") > html.indexOf("id=\"projection\""));
+	for(const file of ["scenario.mjs", "reference.mjs", "browser-benchmark.mjs", "benchmark-workload.mjs"])
+		await access(resolve(root, file));
+	const audit = JSON.parse(await readFile(resolve(root, "runtime/proof-audit.json"), "utf8"));
+	for(const theorem of ["solve_total", "exported_candidates_exact", "exported_overlaps_exact", "exported_overlaps_unique"])
 		assert.ok(audit.theorems.includes(theorem));
 });
 

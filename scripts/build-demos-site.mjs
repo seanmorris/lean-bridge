@@ -15,7 +15,7 @@ const outputRoot = resolve(repositoryRoot, "build/github-pages");
 const manifest = JSON.parse(await readFile(resolve(demosRoot, "manifest.json"), "utf8"));
 const demoSlugs = new Set(manifest.demos.map(demo => demo.slug));
 const rootFiles = new Set(["gallery.css", "gallery.mjs", "index.html", "manifest.json"]);
-const demoFiles = new Set(["app.mjs", "benchmark-workload.mjs", "browser-benchmark.mjs", "graph.mjs", "index.html", "percolation.mjs", "README.md", "reference.mjs", "runtime.mjs", "scenario.mjs", "styles.css", "terrain.mjs"]);
+const demoFiles = new Set(["app.mjs", "benchmark-workload.mjs", "browser-benchmark.mjs", "graph.mjs", "index.html", "network.mjs", "percolation.mjs", "README.md", "reference.mjs", "runtime.mjs", "scenario.mjs", "styles.css", "terrain.mjs"]);
 
 for(const demo of manifest.demos)
 {

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked complete unique projection candidates and exact AABB overlaps before compilation",
+  "sourceFiles": {
+    "SweepSpec.lean": {
+      "bytes": 3428,
+      "sha256": "1ea1bcef41af9f81964915e9c9e97b0eef39ccd7d055cfc359fd94bbe320d6be"
+    },
+    "SweepProofs.lean": {
+      "bytes": 19712,
+      "sha256": "c193f3816bf9e4cd154afb6d6fbf3e1963f35396243701a96a65db0cb10e06cf"
+    },
+    "SweepCore.lean": {
+      "bytes": 18164,
+      "sha256": "d17e74f3eb308ccf4d20e9524aa2f7f37e468b6a00455c8954e5fb54a308b233"
+    },
+    "Sweep.lean": {
+      "bytes": 14243,
+      "sha256": "9b2f80762645ae64d4e2ade0193e730ef294ae0eb9b565e497961f1ec545aa21"
+    }
+  },
+  "theorems": [
+    "activeInvariant_step",
+    "keepActive_exact_overlap",
+    "expired_never_returns",
+    "sweepPairs_exact",
+    "sweepPairs_axis_exact",
+    "sweepPairs_axis_nodup",
+    "filtered_sweep_box_exact",
+    "sweepPairs_length_le",
+    "sweepPairs_length_choose",
+    "sortEntries_perm",
+    "sortEntries_sorted",
+    "sweepArray_refines",
+    "candidatePairs_refines",
+    "prepared_unique",
+    "prepared_valid_axis",
+    "prepared_lookup",
+    "prepare_exists_iff",
+    "parseEntries_lower",
+    "parseEntries_upper",
+    "overlapCheck_iff",
+    "solveFused_refines",
+    "pruneEmit_refines",
+    "sweepPruned_refines",
+    "sweepFused_eq_sweepPruned",
+    "solvePrepared_eq_solveFused",
+    "solve_total",
+    "solve_candidates_exact",
+    "solve_candidates_unique",
+    "solve_overlaps_exact",
+    "solve_overlaps_subset",
+    "solve_overlaps_unique",
+    "solve_pair_canonical_bounded",
+    "solve_candidate_count_choose",
+    "decode_serialize",
+    "exported_candidates_exact",
+    "exported_overlaps_exact",
+    "exported_candidates_unique",
+    "exported_overlaps_unique",
+    "solveExport_words_bounded",
+    "solveExport_capacity_bounded",
+    "solveExport_size_bounded"
+  ]
+}

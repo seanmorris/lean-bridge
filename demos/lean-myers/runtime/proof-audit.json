@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked exact script reconstruction and minimum insertion/deletion cost before compilation",
+  "sourceFiles": {
+    "EditSpec.lean": {
+      "bytes": 4287,
+      "sha256": "26f5ec45c510863731f026d09d65aca4c8307d65b9c0cff2b394ae79368ad4cf"
+    },
+    "EditProofs.lean": {
+      "bytes": 16936,
+      "sha256": "2285d0c8b506e1aa1312057bf3842013dcfa53122d144c86f871bd3fe8909968"
+    },
+    "EditReference.lean": {
+      "bytes": 7667,
+      "sha256": "aa66449e582a6ab7352369929903ee5f7bc3dbe7cb7e0cf9c7dd215e3e529564"
+    },
+    "ArrayScriptCheck.lean": {
+      "bytes": 8468,
+      "sha256": "3235b8cbba8c612718cf8f71c45077b40fd43efca3fe71a02e172ec841070dff"
+    },
+    "ScoreCertificate.lean": {
+      "bytes": 6760,
+      "sha256": "6d3e7f4f26702977fd5ab48a86d69887874b2b8f73fb33bd618ac92ac9baa7c9"
+    },
+    "MyersCore.lean": {
+      "bytes": 14204,
+      "sha256": "10f7fbbeaaeaa12362a26b8dbcac2181daf6ec7f0f6fc542da2140252abb92a0"
+    },
+    "EditCertificate.lean": {
+      "bytes": 7058,
+      "sha256": "8f69c4178b2b4f52c28fa8ce1afbf75a9c6cf04a3f29827bddbe71c5e31651d9"
+    },
+    "Myers.lean": {
+      "bytes": 7693,
+      "sha256": "35419c02dd5097100263c339eb1c8176bb366f685a151ad1e66ac68a2ce16e6e"
+    }
+  },
+  "theorems": [
+    "scriptCheck_iff",
+    "replay_reconstructs",
+    "valid_operation_codes",
+    "valid_script_length",
+    "valid_consumption",
+    "valid_cost_counts",
+    "potential_script_bound",
+    "potential_lower_bound",
+    "potential_certifies_optimal",
+    "referenceScript_optimal",
+    "referenceSolve_correct",
+    "referenceSolve_reconstructs",
+    "snake_monotone",
+    "snake_bounded",
+    "bandCheck_bounds",
+    "certificateCheck_sound",
+    "solve_total",
+    "solve_shortest",
+    "solve_reconstructs",
+    "serialize_size",
+    "decode_serialize",
+    "exported_shortest",
+    "exported_total_shortest",
+    "exported_reconstructs",
+    "exported_patch_reconstructs",
+    "exported_zero_iff",
+    "solveExport_words_bounded",
+    "solveTotalExport_words_bounded",
+    "solveExport_size_bounded",
+    "optimal_distance_symmetric",
+    "valid_length_difference",
+    "score_lower_bound",
+    "score_certifies_optimal",
+    "fastScoreCheck_sound",
+    "arrayScriptCheck_equivalent",
+    "arrayScriptCost_eq",
+    "reconstructed_array_eq"
+  ]
+}

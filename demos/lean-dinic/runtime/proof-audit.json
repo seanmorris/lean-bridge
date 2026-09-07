@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked feasible maximum flow, minimum cut, and total return before compiling this implementation",
+  "sourceFiles": {
+    "FlowSpec.lean": {
+      "bytes": 3041,
+      "sha256": "c14550536f5aa844da3988f1857cf75bf7d709798e8b1c077f726facfa393159"
+    },
+    "FlowProofs.lean": {
+      "bytes": 14968,
+      "sha256": "f09af8f222323547c54055f4b3af92ecd1dcf9dde525f8cfc0dc3b8984f402fd"
+    },
+    "FlowCertificate.lean": {
+      "bytes": 7156,
+      "sha256": "dcc0bc98f0e9b740e8b073e6468c1c5587c9b24e9dee34929aab6f78bffbd0d8"
+    },
+    "FlowPaths.lean": {
+      "bytes": 8184,
+      "sha256": "9cff06df59343cc4c596581610d75f739141ef743ce366f31289acd3cb433adc"
+    },
+    "FlowAugment.lean": {
+      "bytes": 9366,
+      "sha256": "1bb19af2aebd25f47f729b96f51f44c447ed9fcc173f36209fcfd7c2de1e9720"
+    },
+    "FlowDuality.lean": {
+      "bytes": 5269,
+      "sha256": "c60eca665ac5d52715f92ffb7f59bf5d62318c3d9e4a2d0b2f5b15100bf04286"
+    },
+    "FlowReference.lean": {
+      "bytes": 12915,
+      "sha256": "bf9705fb068d7a1323213f488597ba75830e13638114389ad93a6c68e15357f8"
+    },
+    "DinicCore.lean": {
+      "bytes": 23787,
+      "sha256": "9f39db4117eda58d67514707533fbbbd6f0c6e5ae02afdf716077a024dac882d"
+    },
+    "Dinic.lean": {
+      "bytes": 14406,
+      "sha256": "8f02975b189451b15806ecaedff4fca67724c8a1bc4e7962d828ce7ddf04e8db"
+    }
+  },
+  "theorems": [
+    "flow_cut_upper_bound",
+    "matching_flow_cut_optimal",
+    "feasibleCheck_iff",
+    "cutCheck_iff",
+    "certificateCheck_sound",
+    "referenceFlow_maximum",
+    "referenceCut_minimum",
+    "referenceSolve_correct",
+    "solve_prepared_correct",
+    "solve_maximum_flow",
+    "solve_minimum_cut",
+    "solve_total",
+    "word_roundtrip",
+    "serialize_size",
+    "solveExport_no_failure",
+    "findPath_fits",
+    "augmentArc_pair_sum",
+    "augmentArc_positive_progress",
+    "matching_cut_edges",
+    "exported_optimal",
+    "exported_total_optimal",
+    "maximumFlow_no_residual_path",
+    "maximumFlow_minimumCut_equal",
+    "referenceSolve_certificate",
+    "exported_flow_cut_equal",
+    "exported_certificate",
+    "findPath_saturates",
+    "solveExport_words_bounded",
+    "solveTotalExport_words_bounded",
+    "prepare_residual_shape",
+    "totalCapacity_javascript_exact"
+  ]
+}
