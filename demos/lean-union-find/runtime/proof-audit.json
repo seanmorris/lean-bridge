@@ -4,21 +4,22 @@
   "assurance": "Lean elaboration completed before this receipt was generated",
   "sourceFiles": {
     "UnionFindCore.lean": {
-      "bytes": 16201,
-      "sha256": "4fb1dc7bbf57a00971fcd3391c84ba5872797f5469986bd2a231a72f3a657502"
+      "bytes": 18145,
+      "sha256": "9c3df1b86fb505531f828aecc0a011492af4223c06619c818098be6df605d230"
     },
     "UnionFind.lean": {
-      "bytes": 9008,
-      "sha256": "d35e8606209c104b4f85999e5fa17d0daf1169d49a16fba9191e9d2f8706af13"
+      "bytes": 30243,
+      "sha256": "209c96c0a0db51df8d70652d257103b071339d0d744003017d2f718f6f2f866b"
     }
   },
   "theorems": [
-    "edgeMatches_linkEdge",
-    "allFrom_get",
-    "certificate_parent_connected",
-    "certificate_edges_closed",
-    "partitionCertificate_exact",
-    "certifiedPartition_correct",
+    "rootFrom_eq_of_path",
+    "currentLinkEdge",
+    "parentSound_link",
+    "fastUnion_correct",
+    "fastProcessFrom_correct",
+    "fastRepresentatives_correct",
+    "solvePartition_correct",
     "connected_equivalence"
   ]
 }

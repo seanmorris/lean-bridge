@@ -5,10 +5,13 @@
 extern lean_object *initialize_Init(uint8_t builtin);
 extern lean_object *initialize_UnionFindCore(uint8_t builtin);
 extern lean_object *lean_union_find_partition(uint32_t count, lean_object *links);
+extern lean_object *lean_union_find_partition_debug(uint32_t count, lean_object *links);
 extern lean_object *lean_union_find_operations(uint32_t count, lean_object *operations);
 extern void lean_initialize_runtime_module(void);
 
 static uint8_t runtime_ready = 0;
+static lean_object *prepared_links = NULL;
+static uint32_t prepared_count = 0;
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_union_find_runtime_init(void) {
@@ -64,6 +67,48 @@ uint32_t lean_union_find_solve(
   if (!runtime_ready || !output || count > LEAN_MAX_SMALL_NAT) return UINT32_MAX;
   if (!links_valid(count, links, link_words)) return UINT32_MAX;
   return copy_result(lean_union_find_partition(count, make_nat_array(links, link_words)),
+    output, output_capacity);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t lean_union_find_prepare_partition(
+    uint32_t count,
+    const uint32_t *links,
+    uint32_t link_words
+) {
+  if (!runtime_ready || count > LEAN_MAX_SMALL_NAT) return 0;
+  if (!links_valid(count, links, link_words)) return 0;
+  lean_object *next_links = make_nat_array(links, link_words);
+  if (prepared_links) lean_dec(prepared_links);
+  prepared_links = next_links;
+  prepared_count = count;
+  return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t lean_union_find_solve_prepared_partition(
+    uint32_t *output,
+    uint32_t output_capacity
+) {
+  if (!runtime_ready || !prepared_links || !output || output_capacity < prepared_count) {
+    return UINT32_MAX;
+  }
+  lean_inc(prepared_links);
+  return copy_result(lean_union_find_partition(prepared_count, prepared_links),
+    output, output_capacity);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t lean_union_find_solve_debug(
+    uint32_t count,
+    const uint32_t *links,
+    uint32_t link_words,
+    uint32_t *output,
+    uint32_t output_capacity
+) {
+  if (!runtime_ready || !output || count > LEAN_MAX_SMALL_NAT) return UINT32_MAX;
+  if (!links_valid(count, links, link_words)) return UINT32_MAX;
+  return copy_result(lean_union_find_partition_debug(count, make_nat_array(links, link_words)),
     output, output_capacity);
 }
 

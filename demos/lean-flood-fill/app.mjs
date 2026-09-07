@@ -4,7 +4,12 @@
  * @file
  */
 
-import { reachable, reachableWithCapabilities, ready } from "./runtime.mjs";
+import {
+	prepareCapabilityClosure, reachable, reachableWithCapabilities, ready
+} from "./runtime.mjs";
+import {
+	attachBrowserBenchmark, measureSyncBenchmark
+} from "../shared/browser-benchmark.mjs";
 
 const ROOM_WIDTH = 13;
 const ROOM_HEIGHT = 7;
@@ -835,12 +840,137 @@ seedButton.addEventListener("click", async () => {
 const observeWorldSize = new ResizeObserver(() => requestAnimationFrame(renderConnections));
 observeWorldSize.observe(world);
 
+const makeBenchmarkRequest = variant => {
+	const width = 32;
+	const height = 24;
+	const vertexCount = width * height;
+	const offsets = new Uint32Array(vertexCount + 1);
+	const targets = [];
+	for(let y = 0; y < height; y += 1)
+	{
+		for(let x = 0; x < width; x += 1)
+		{
+			const source = y * width + x;
+			if(x > 0) targets.push(source - 1);
+			if(x + 1 < width) targets.push(source + 1);
+			if(y > 0) targets.push(source - width);
+			if(y + 1 < height) targets.push(source + width);
+			offsets[source + 1] = targets.length;
+		}
+	}
+	const targetArray = Uint32Array.from(targets);
+	const allowedVertices = Uint32Array.from({ length: vertexCount }, (_, vertex) =>
+		Number(vertex === 0 || (vertex + variant * 7) % 19 !== 0));
+	const requirements = Uint32Array.from(targetArray, (_, edge) =>
+		(edge + variant * 13) % 97 === 0 ? (edge + variant) % CAPABILITY_COUNT : CAPABILITY_COUNT);
+	const grants = Uint32Array.from({ length: vertexCount }, (_, vertex) =>
+		vertex > 0 && (vertex + variant * 17) % 211 === 0
+			? (vertex + variant) % CAPABILITY_COUNT : CAPABILITY_COUNT);
+	return {
+		allowedVertices, capabilityCount: CAPABILITY_COUNT, grants
+		, initialCapabilities: new Uint32Array(), offsets, requirements, start: 0
+		, targets: targetArray, vertexCount
+	};
+};
+
+const javascriptReachable = (request, allowedEdges) => {
+	if(!request.allowedVertices[request.start]) return new Uint32Array();
+	const visited = new Uint8Array(request.vertexCount);
+	const queue = new Uint32Array(request.vertexCount);
+	let head = 0;
+	let tail = 1;
+	queue[0] = request.start;
+	visited[request.start] = 1;
+	while(head < tail)
+	{
+		const source = queue[head++];
+		for(let edge = request.offsets[source]; edge < request.offsets[source + 1]; edge += 1)
+		{
+			const target = request.targets[edge];
+			if(allowedEdges[edge] && request.allowedVertices[target] && !visited[target])
+			{
+				visited[target] = 1;
+				queue[tail++] = target;
+			}
+		}
+	}
+	return queue.slice(0, tail);
+};
+
+const javascriptCapabilityClosure = request => {
+	const capabilities = new Uint8Array(request.capabilityCount);
+	for(const capability of request.initialCapabilities) capabilities[capability] = 1;
+	const allowedEdges = new Uint32Array(request.targets.length);
+	let vertices;
+	for(let round = 0; round <= request.capabilityCount; round += 1)
+	{
+		for(let edge = 0; edge < allowedEdges.length; edge += 1)
+		{
+			const requirement = request.requirements[edge];
+			allowedEdges[edge] = Number(requirement === request.capabilityCount || capabilities[requirement]);
+		}
+		vertices = javascriptReachable(request, allowedEdges);
+		let changed = false;
+		for(const vertex of vertices)
+		{
+			const grant = request.grants[vertex];
+			if(grant < request.capabilityCount && !capabilities[grant])
+			{
+				capabilities[grant] = 1;
+				changed = true;
+			}
+		}
+		if(!changed)
+		{
+			return {
+				capabilities: Uint32Array.from(capabilities.keys()).filter(capability => capabilities[capability])
+				, vertices
+			};
+		}
+	}
+	throw new Error("JavaScript capability closure did not stabilize");
+};
+
+const sameValues = (left, right) => {
+	if(left.length !== right.length) return false;
+	const leftValues = [...left].sort((first, second) => first - second);
+	const rightValues = [...right].sort((first, second) => first - second);
+	return leftValues.every((value, index) => value === rightValues[index]);
+};
+
+const benchmarkRequest = makeBenchmarkRequest(0);
+let benchmarkSolve;
+
 const initialSeed = new Uint32Array(1);
 crypto.getRandomValues(initialSeed);
 generateMap(initialSeed[0]);
 installPickers();
 render();
-ready().then(solve).catch(error => {
+const demoReady = ready().then(solve);
+const benchmarkReady = demoReady.then(async () => {
+	benchmarkSolve = await prepareCapabilityClosure(benchmarkRequest);
+});
+demoReady.catch(error => {
 	status.textContent = "Lean/Wasm failed to load";
 	console.error(error);
+});
+
+attachBrowserBenchmark({
+	root: document.querySelector("#browser-benchmark")
+	, prepare: () => benchmarkReady
+	, sample: async () => {
+		const request = benchmarkRequest;
+		const lean = measureSyncBenchmark(() => benchmarkSolve());
+		const javascript = measureSyncBenchmark(() => javascriptCapabilityClosure(request));
+		if(!sameValues(lean.result.vertices, javascript.result.vertices)
+			|| !sameValues(lean.result.capabilities, javascript.result.capabilities)) {
+			throw new Error("Lean and JavaScript returned different capability closures");
+			}
+		return { javascriptMs: javascript.milliseconds, leanMs: lean.milliseconds };
+	}
+	, summarize: ({ javascriptMedian, leanMedian, trialCount }) => {
+		const request = benchmarkRequest;
+		return `${request.vertexCount} vertices · ${request.targets.length} directed edges · `
+			+ `${trialCount} closures agreed · +${(leanMedian - javascriptMedian).toFixed(2)} ms`;
+	}
 });

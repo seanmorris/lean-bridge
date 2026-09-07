@@ -50,7 +50,7 @@ node demos/lean-flood-fill/benchmark.mjs --assert
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080/demos/lean-flood-fill/`. The randomized differential suite compares the compiled operations with independent JavaScript graph and fixed-point implementations. The benchmark measures the public API end to end, including CSR transfer, Lean execution, certificate checking, and result transfer.
+Open `http://localhost:8080/demos/lean-flood-fill/`. The randomized differential suite compares the compiled operations with independent JavaScript graph and fixed-point implementations. The proof page automatically runs a prewarmed 100-request capability-closure benchmark against an independent JavaScript implementation when its benchmark panel approaches the viewport. It prepares the immutable graph once before timing, then measures certified closure execution and result transfer. The command-line benchmark uses five excluded warm-ups per workload and continues to measure the one-shot public API end to end, including CSR transfer.
 
 ## Trust boundary
 

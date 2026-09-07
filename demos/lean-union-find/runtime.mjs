@@ -80,12 +80,79 @@ export const partition = async ({ elementCount, links }) => {
 		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
 	}
 	const module = await loadModule();
-	const outputWords = elementCount * 3;
+	const outputWords = elementCount;
 	const { inputPointer, outputPointer } = transfer(module, links, outputWords);
 	const length = module._lean_union_find_solve(
 		elementCount, inputPointer, links.length, outputPointer, outputWords
 	) >>> 0;
 	if(length === ERROR || length !== outputWords) throw new Error("Lean union-find rejected the partition");
+	const start = outputPointer >>> 2;
+	return { representatives: Uint32Array.from(module.HEAPU32.subarray(start, start + elementCount)) };
+};
+
+/**
+ * Prepare one fixed graph and return a synchronous partition operation for benchmarking.
+ * Input conversion happens once; each call runs the checked Lean implementation and copies
+ * its representatives out of Wasm memory.
+ *
+ * @param root0 Partition request.
+ * @param root0.elementCount Number of finite elements to partition.
+ * @param root0.links Flat undirected endpoint pairs.
+ * @returns {Promise<() => {representatives: Uint32Array}>} Prepared operation.
+ */
+export const preparePartition = async ({ elementCount, links }) => {
+	requireCount(elementCount);
+	requireArray(links, "links", 2);
+	for(const endpoint of links)
+	{
+		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
+	}
+	const module = await loadModule();
+	const inputPointer = reserveScratch(module, links.length);
+	module.HEAPU32.set(links, inputPointer >>> 2);
+	if(module._lean_union_find_prepare_partition(elementCount, inputPointer, links.length) !== 1)
+	{
+		throw new Error("Lean union-find rejected the prepared partition");
+	}
+	const outputBytes = Math.max(elementCount * Uint32Array.BYTES_PER_ELEMENT, 4);
+	const outputPointer = module._malloc(outputBytes);
+	if(!outputPointer) throw new Error(`Unable to allocate ${outputBytes} Wasm bytes`);
+	return () => {
+		const length = module._lean_union_find_solve_prepared_partition(
+			outputPointer, elementCount
+		) >>> 0;
+		if(length === ERROR || length !== elementCount)
+		{
+			throw new Error("Lean union-find rejected the prepared partition");
+		}
+		const start = outputPointer >>> 2;
+		return {
+			representatives: Uint32Array.from(module.HEAPU32.subarray(start, start + elementCount))
+		};
+	};
+};
+
+/**
+ * Build a diagnostic partition that also exposes the internal parent and size arrays.
+ *
+ * @param root0 Partition request.
+ * @param root0.elementCount Number of finite elements to partition.
+ * @param root0.links Flat undirected endpoint pairs.
+ */
+export const partitionDebug = async ({ elementCount, links }) => {
+	requireCount(elementCount);
+	requireArray(links, "links", 2);
+	for(const endpoint of links)
+	{
+		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
+	}
+	const module = await loadModule();
+	const outputWords = elementCount * 3;
+	const { inputPointer, outputPointer } = transfer(module, links, outputWords);
+	const length = module._lean_union_find_solve_debug(
+		elementCount, inputPointer, links.length, outputPointer, outputWords
+	) >>> 0;
+	if(length === ERROR || length !== outputWords) throw new Error("Lean union-find rejected the diagnostic partition");
 	return parsePartition(module, outputPointer, elementCount);
 };
 

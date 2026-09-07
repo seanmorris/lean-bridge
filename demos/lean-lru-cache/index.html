@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-demo-title="LRU cache">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09111f">
+    <title>Cache desk · Proven Lean LRU cache</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%224%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23ffd36e%22>λ</text></svg>">
+    <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div><p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p><h1>Keep what you use.<br><em>Make room for more.</em></h1></div>
+        <p class="lede">A cache has limited room. Request a resource and watch Lean move it to the front, or evict the entry you have left unused longest.</p>
+      </header>
+
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div><p class="label">How to use it</p><h2 id="guide-title">Follow a request.<br><em>See what stays.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Fill the cache</b><p>Step through the timeline. A miss loads a resource into a slot.</p></div></li>
+          <li><span>2</span><div><b>Use it again</b><p>A hit moves that resource to the most recently used end.</p></div></li>
+          <li><span>3</span><div><b>Run out of room</b><p>The least recently used entry leaves when a new one needs its slot.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="theme-lab cache-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive LRU cache</p><h2 id="lab-title">Cache desk</h2></div><p id="runtime-status" class="runtime-status" role="status">Loading Lean/Wasm…</p></div>
+        <div class="workbench">
+          <div class="scenario-bar">
+            <div class="scenario-picker" role="group" aria-label="Request sequence"><button data-scenario="working" aria-pressed="true">Repeated working set</button><button data-scenario="scan" aria-pressed="false">One-time scan</button></div>
+            <label class="capacity-control" for="capacity">Cache capacity <select id="capacity" disabled><option value="1">1 slot</option><option value="2">2 slots</option><option value="3" selected>3 slots</option><option value="4">4 slots</option><option value="5">5 slots</option><option value="6">6 slots</option></select></label>
+          </div>
+
+          <div class="cache-workspace">
+            <section class="cache-stage" aria-labelledby="cache-title">
+              <div class="cache-heading"><div><p class="label">Current contents</p><h3 id="cache-title">Your most recent resources.</h3></div><span id="occupancy" class="occupancy">0 / 3 slots</span></div>
+              <div class="recency-axis"><span><b>Most recently used</b><small>New loads and hits arrive here</small></span><i aria-hidden="true">→</i><span><b>Least recently used</b><small>First to leave when full</small></span></div>
+              <div id="cache-slots" class="cache-slots" aria-label="Cache contents, most to least recently used"></div>
+              <div id="request-result" class="request-result" role="status" aria-live="polite" aria-atomic="true">
+                <div id="result-symbol" class="result-symbol">?</div>
+                <div class="result-copy"><p id="result-kind" class="label">Ready for the first request</p><h3 id="result-title">The cache is empty.</h3><p id="result-explanation">Choose Step to request A, or click any resource on the right.</p></div>
+                <div id="eviction-detail" class="eviction-detail"><span>Evicted</span><b id="eviction-name">None</b><small id="eviction-reason">There is still room.</small></div>
+              </div>
+              <dl class="cache-metrics"><div><dt>Hits</dt><dd id="hit-count">0</dd></div><div><dt>Misses</dt><dd id="miss-count">0</dd></div><div><dt>Evictions</dt><dd id="eviction-count">0</dd></div><div><dt>Hit rate</dt><dd id="hit-rate">—</dd></div></dl>
+            </section>
+
+            <aside class="request-controls" aria-labelledby="request-title">
+              <div><p class="label">Try your own</p><h3 id="request-title">Request a resource</h3><p class="control-help">A hit uses the cached copy. A miss loads it and makes room if needed.</p></div>
+              <div id="resource-buttons" class="resource-buttons" role="group" aria-label="Request a resource"></div>
+              <p class="insertion-note">Your request goes into the timeline at the current step.</p>
+              <div class="playback-controls"><div class="next-request"><span>Up next</span><b id="next-request">A · Atlas</b></div><div class="playback-buttons"><button id="step" class="primary" disabled>Step →</button><button id="run" disabled>Run</button><button id="replay" class="icon-button" title="Replay the sequence from an empty cache" aria-label="Replay the sequence from an empty cache" disabled>↺</button></div></div>
+            </aside>
+          </div>
+
+          <section class="timeline-panel" aria-labelledby="timeline-title">
+            <div class="timeline-heading"><div><p class="label">Request timeline</p><h3 id="timeline-title">A small working set gets reused.</h3></div><span id="timeline-progress">0 / 12 requests</span></div>
+            <p id="scenario-explanation" class="scenario-explanation">A, B, and C repeat. A newcomer competes for cache space. Compare three slots with four and inspect the same requests again.</p>
+            <div id="request-timeline" class="request-timeline" aria-label="Choose a request to inspect the cache immediately after it"></div>
+            <div class="timeline-legend"><span><i class="hit-dot"></i>Hit</span><span><i class="miss-dot"></i>Miss</span><span><i class="queued-dot"></i>Queued</span><p>Click any request to inspect the cache after that step.</p></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy"><p class="label">Live browser benchmark</p><h2 id="benchmark-title">What does a proven<br>cache cost?</h2><p id="benchmark-description">Lean/Wasm and JavaScript process the same request trace. Five excluded runs warm both solvers before 100 measured comparisons.</p><div class="browser-benchmark-actions"><button data-benchmark-run>Run again</button><button data-benchmark-cancel class="secondary">Cancel</button></div></div>
+        <div class="browser-benchmark-card"><div class="browser-benchmark-summary"><b data-benchmark-summary>No benchmark run yet.</b><span data-benchmark-progress>Waiting to enter view</span></div><dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl><svg class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of Lean LRU cache latency" viewBox="0 0 620 200"></svg></div>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title" data-proof-core="LruCore.lean" data-proof-module="Lru.lean" data-proof-namespace="LeanLRU" data-comparator-theorem="put_full_evicts_oldest" data-proof-theorems="LeanLRU.get_refines,LeanLRU.put_refines,LeanLRU.get_valid,LeanLRU.put_valid,LeanLRU.get_preserves_values,LeanLRU.put_lookup_written,LeanLRU.put_existing_no_eviction,LeanLRU.put_full_evicts_oldest,LeanLRU.get_preserves_other_order,LeanLRU.exported_get_correct,LeanLRU.exported_put_correct,LeanLRU.exported_batch_refines">
+        <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">Limited room.<br><em>Specified behavior.</em></h2></div><p>Lean checks the cache transitions: entries stay within capacity, each key appears once, a successful lookup promotes its entry, and inserting into a full cache evicts the least recently used entry.</p></div>
+        <div class="proof-grid">
+          <div class="source-viewer"><div class="source-toolbar"><div class="source-tabs" role="tablist" aria-label="Lean source file"><button class="source-tab active" data-source="Lru.lean" role="tab">Proof</button><button class="source-tab" data-source="LruCore.lean" role="tab">Core</button></div><div class="source-meta"><span id="source-label">Lru.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div></div><pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre></div>
+          <aside class="proof-audit"><div class="audit-mark">✓</div><p class="label">Build receipt</p><h3>Checked, then compiled.</h3><p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p><dl><div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div><div><dt>Checker</dt><dd id="audit-checker">—</dd></div><div><dt>Audited theorems</dt><dd id="theorem-count">—</dd></div></dl><div class="checker-actions"><button id="launch-wasm" class="launch-lean" disabled>Open Lean WASM checker <span>↗</span></button><button id="launch-lean-web" class="launch-lean secondary" disabled>Open Lean Web / Comparator <span>↗</span></button></div><p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p></aside>
+        </div>
+        <div id="playground-panel" class="playground-panel" hidden><div class="playground-toolbar"><div><b>Interactive checkers opened</b><span>Both use the bundled core and proof.</span></div><div class="playground-links"><a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a><a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a></div></div></div>
+      </section>
+      <footer><p><b>Every displayed hit and eviction comes from Lean/Wasm.</b> Resource names and the timeline are browser controls for a generic key/value cache.</p><a href="./Lru.lean">Read the proof →</a></footer>
+    </main>
+    <script type="module" src="../shared/demo-page.mjs"></script>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

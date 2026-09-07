@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-demo-title="A* weighted terrain">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09111f">
+    <title>Fewer detours · Proven Lean A*</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%224%22 fill=%22%2309111f%22/><text x=%227%22 y=%2224%22 font-size=%2222%22 fill=%22%23c0ed8a%22>λ</text></svg>">
+    <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div><p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p><h1>Give search<br><em>a sense of direction.</em></h1></div>
+        <p class="lede">A* uses a safe estimate of the distance left to focus its search. Paint the terrain and compare it with Dijkstra. Both find a route with the lowest total cost.</p>
+      </header>
+
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div><p class="label">How to read it</p><h2 id="guide-title">Same terrain.<br><em>Less searching.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Paint either map</b><p>Both maps share your walls, terrain costs, and endpoints.</p></div></li>
+          <li><span>2</span><div><b>Compare the tint</b><p>Tinted tiles show where each algorithm actually searched.</p></div></li>
+          <li><span>3</span><div><b>Check the route cost</b><p>A shorter route can cost more if it crosses water or forest.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="theme-lab terrain-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Terrain route lab</h2></div><p id="runtime-status" class="runtime-status" role="status">Loading Lean/Wasm…</p></div>
+        <div class="terrain-workbench">
+          <div class="result-summary" role="status" aria-live="polite">
+            <div><p class="label">One map, two searches</p><h3 id="result-title">Preparing both routes…</h3><p id="result-copy">You can paint the terrain while Lean loads.</p></div>
+            <div class="savings"><b id="search-saving">—</b><span id="search-saving-label">fewer tiles inspected</span></div>
+          </div>
+
+          <div class="terrain-toolbar">
+            <div class="terrain-actions"><button id="new-terrain" type="button">New terrain <span aria-hidden="true">↻</span></button><button id="clear-terrain" type="button" class="secondary">Clear terrain</button></div>
+            <form id="seed-form" class="seed-control"><label for="terrain-seed">Seed</label><input id="terrain-seed" name="seed" value="1135cafe" maxlength="32" spellcheck="false" autocomplete="off"><button type="submit" class="secondary">Load</button></form>
+          </div>
+
+          <div class="edit-toolbar">
+            <div class="paint-tools" role="group" aria-label="Terrain drawing tool">
+              <button type="button" data-tool="wall" aria-pressed="true" title="Paint permanent walls (W)"><i class="swatch wall"></i>Wall</button>
+              <button type="button" data-tool="floor" aria-pressed="false" title="Paint floor with an entry cost of 1 (F)"><i class="swatch floor"></i>Floor <small>1</small></button>
+              <button type="button" data-tool="forest" aria-pressed="false" title="Paint forest with an entry cost of 4 (T)"><i class="swatch forest"></i>Forest <small>4</small></button>
+              <button type="button" data-tool="water" aria-pressed="false" title="Paint water with an entry cost of 9 (R)"><i class="swatch water"></i>Water <small>9</small></button>
+              <button type="button" data-tool="erase" aria-pressed="false" title="Erase walls and terrain back to floor (E)"><span class="eraser-glyph" aria-hidden="true">⌫</span>Erase</button>
+            </div>
+            <div class="endpoint-tools" role="group" aria-label="Move an endpoint"><button type="button" data-tool="start" aria-pressed="false" title="Place the start (S)"><i class="endpoint start">S</i>Start</button><button type="button" data-tool="target" aria-pressed="false" title="Place the goal (G)"><i class="endpoint target">G</i>Goal</button></div>
+          </div>
+
+          <div class="heuristic-toolbar">
+            <fieldset class="heuristic-control"><legend>A* goal estimate</legend><div role="group" aria-label="Heuristic strength"><button type="button" data-strength="0" aria-pressed="false">0%</button><button type="button" data-strength="50" aria-pressed="false">50%</button><button type="button" data-strength="100" aria-pressed="true">100%</button></div></fieldset>
+            <p id="heuristic-copy">100% uses the grid distance to the goal. Each step costs at least 1, so this estimate never overstates the remaining cost.</p>
+          </div>
+
+          <div class="map-comparison">
+            <article class="search-panel astar-panel" aria-labelledby="astar-title">
+              <header class="map-heading"><div><p class="label">With a goal estimate</p><h3 id="astar-title">A<span aria-hidden="true">✳</span><span class="sr-only"> star</span></h3></div><span id="astar-estimate" class="estimate-tag">100% estimate</span></header>
+              <dl class="search-metrics"><div><dt>Route cost</dt><dd id="astar-cost">—</dd></div><div><dt>Tiles inspected</dt><dd id="astar-expanded">—</dd></div><div><dt>Lean/Wasm</dt><dd id="astar-time" title="Last search; graph preparation and drawing excluded.">—</dd></div></dl>
+              <div class="map-surface"><canvas id="astar-map" width="990" height="630" tabindex="0" role="img" aria-label="Editable A star terrain map. Use arrow keys to move and Space to apply the selected tool." aria-describedby="edit-hint"></canvas></div>
+              <p id="astar-route" class="route-caption">Finding the cheapest route…</p>
+            </article>
+            <article class="search-panel dijkstra-panel" aria-labelledby="dijkstra-title">
+              <header class="map-heading"><div><p class="label">Without a goal estimate</p><h3 id="dijkstra-title">Dijkstra</h3></div><span class="estimate-tag">0% estimate</span></header>
+              <dl class="search-metrics"><div><dt>Route cost</dt><dd id="dijkstra-cost">—</dd></div><div><dt>Tiles inspected</dt><dd id="dijkstra-expanded">—</dd></div><div><dt>Lean/Wasm</dt><dd id="dijkstra-time" title="Last search; graph preparation and drawing excluded.">—</dd></div></dl>
+              <div class="map-surface"><canvas id="dijkstra-map" width="990" height="630" tabindex="0" role="img" aria-label="Editable Dijkstra terrain map. Changes also update the A star map. Use arrow keys and Space to draw." aria-describedby="edit-hint"></canvas></div>
+              <p id="dijkstra-route" class="route-caption">Finding the cheapest route…</p>
+            </article>
+          </div>
+          <div class="map-legend" aria-label="Map legend"><span><i class="route-swatch"></i>Lowest-cost route</span><span><i class="inspected-swatch astar"></i>A* inspected</span><span><i class="inspected-swatch dijkstra"></i>Dijkstra inspected</span><span class="terrain-cost-note">Terrain number = cost to enter a tile</span></div>
+          <p id="edit-hint" class="edit-hint">Wall tool: click or drag on either map. Choose Erase to remove walls. Arrow keys move the cursor; Space paints.</p>
+        </div>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy"><p class="label">Live browser benchmark</p><h2 id="benchmark-title">What does proven<br>search cost?</h2><p id="benchmark-description">Lean/Wasm and JavaScript search the same weighted graph with the same heuristic. Five excluded runs warm both solvers before 100 measured samples.</p><div class="browser-benchmark-actions"><button data-benchmark-run>Run again</button><button data-benchmark-cancel class="secondary">Cancel</button></div></div>
+        <div class="browser-benchmark-card"><div class="browser-benchmark-summary"><b data-benchmark-summary>Preparing the search benchmark.</b><span data-benchmark-progress>Waiting to enter view</span></div><dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl><svg class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of compiled Lean A star latency" viewBox="0 0 620 200"></svg></div>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title" data-proof-core="DijkstraCore.lean" data-proof-module="AStar.lean" data-proof-dependencies="Dijkstra.lean,AStarCore.lean,AStarPotential.lean,AStarChecks.lean,AStarTotal.lean" data-proof-namespace="LeanAStar" data-comparator-theorem="solve_total" data-proof-theorems="LeanAStar.solve_total,LeanAStar.solve_path_shortest,LeanAStar.solve_unreachable,LeanAStar.exported_search_correct">
+        <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">A useful estimate.<br><em>An optimal route.</em></h2></div><p>Lean checks the graph algorithm and the conditions on its heuristic. A consistent estimate lets A* prioritize the goal while preserving the lowest total path cost.</p></div>
+        <div class="proof-grid"><div class="source-viewer"><div class="source-toolbar"><div class="source-pickers"><div class="source-tabs" role="tablist" aria-label="Lean source file"><button class="source-tab active" data-source="AStar.lean" role="tab">Proof</button><button class="source-tab" data-source="AStarCore.lean" role="tab">Core</button></div><label class="sr-only" for="supporting-source">Supporting Lean source</label><select id="supporting-source" class="source-select" data-source-select aria-label="Supporting Lean source"><option value="">Supporting sources</option><option value="DijkstraCore.lean">Dijkstra core</option><option value="Dijkstra.lean">Dijkstra proofs</option><option value="AStarPotential.lean">Heuristic lemmas</option><option value="AStarChecks.lean">Result checks</option><option value="AStarTotal.lean">Totality proofs</option></select></div><div class="source-meta"><span id="source-label">AStar.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div></div><pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre></div>
+          <aside class="proof-audit"><div class="audit-mark">✓</div><p class="label">Build receipt</p><h3>Checked, then compiled.</h3><p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p><dl><div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div><div><dt>Checker</dt><dd id="audit-checker">—</dd></div><div><dt>Audited theorems</dt><dd id="theorem-count">—</dd></div></dl><div class="checker-actions"><button id="launch-wasm" class="launch-lean" disabled>Open Lean WASM checker <span>↗</span></button><button id="launch-lean-web" class="launch-lean secondary" disabled>Open Lean Web / Comparator <span>↗</span></button></div><p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p></aside>
+        </div>
+        <div id="playground-panel" class="playground-panel" hidden><div class="playground-toolbar"><div><b>Interactive checkers opened</b><span>Both use the bundled core and proof.</span></div><div class="playground-links"><a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a><a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a></div></div></div>
+      </section>
+      <footer><p>Both panels run the same compiled Lean graph search. JavaScript turns terrain costs into graph edges.</p><a href="./AStar.lean">Read the proof →</a></footer>
+    </main>
+    <script type="module" src="../shared/demo-page.mjs"></script>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

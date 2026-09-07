@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated",
+  "sourceFiles": {
+    "TopologicalSortCore.lean": {
+      "bytes": 10263,
+      "sha256": "938c4c7097d46ccc230d33259d13d462bb14af0eb73e012c18f59d340402b8f2"
+    },
+    "TopologicalSortOrderLemmas.lean": {
+      "bytes": 1509,
+      "sha256": "b092bb5421c423f9e4b59c99a2a2a19ff63caf074c0c5b0881d544a4d90b0bd3"
+    },
+    "TopologicalSortTotal.lean": {
+      "bytes": 8732,
+      "sha256": "b3ca8c2849400ae96db702c7bff9d1c50b87865287bff7c2358c5b6d5b07df01"
+    },
+    "TopologicalSortChecks.lean": {
+      "bytes": 19717,
+      "sha256": "47a9a245a33238640d9356b8fdfd2ebb5a474f69ee145f5d7528346744f06648"
+    },
+    "TopologicalSortCycleLemmas.lean": {
+      "bytes": 2211,
+      "sha256": "2b7a4473ba25ca6f0228d3c02d4deeafa44c1f45e93554e31210964ca7656a3b"
+    },
+    "TopologicalSort.lean": {
+      "bytes": 5833,
+      "sha256": "254db0dd476e18f11640a5d41cf2d8c98e07fdf10b5c496c6fe3b37ce673363a"
+    }
+  },
+  "theorems": [
+    "topologicalCheck_sound",
+    "cycleCheck_sound",
+    "topologicalOrder_covers",
+    "topologicalOrder_respects_edges",
+    "directedCycle_nonempty",
+    "directedCycle_edges_exist",
+    "solve_result_correct",
+    "solve_order_correct",
+    "solve_cycle_correct",
+    "edgeExists_iff",
+    "permutationCheck_iff",
+    "orderCheck_of_total",
+    "cycleCheck_of_total",
+    "solve_total",
+    "solveGraph_total",
+    "solveGraph_no_failure",
+    "topologicalOrder_iff_semantic"
+  ]
+}

@@ -7,7 +7,9 @@
     <title>Percolation lab · Proven Lean union-find</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23ffd36e%22>λ</text></svg>">
     <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
   </head>
   <body>
     <main>
@@ -27,12 +29,7 @@
 
       <section class="theme-lab" aria-labelledby="lab-title">
         <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Percolation lab</h2></div><p id="runtime-status" class="runtime-status" role="status">Loading Lean/Wasm…</p></div>
-        <div class="experiment-tabs" role="tablist" aria-label="Percolation experiment">
-          <button id="tab-sample" role="tab" aria-selected="true" aria-controls="panel-sample" data-view="sample">One sample</button>
-          <button id="tab-trials" role="tab" aria-selected="false" aria-controls="panel-trials" data-view="trials" tabindex="-1">Browser benchmark</button>
-        </div>
-
-        <div id="panel-sample" class="workspace" role="tabpanel" aria-labelledby="tab-sample">
+        <div class="workspace">
           <div class="result-card" role="status" aria-live="polite">
             <p class="label">Current result</p>
             <div><h3 id="result-title">Preparing the sample…</h3><p id="result-copy">The checked module is loading.</p></div>
@@ -70,16 +67,26 @@
           </div>
         </div>
 
-        <section id="panel-trials" class="trials" role="tabpanel" aria-labelledby="tab-trials trials-title" hidden>
-          <div class="trials-copy"><p class="label">Live browser benchmark</p><h3 id="trials-title">What does checked connectivity cost?</h3><p>Run 100 seeded threshold searches. Checked Lean/Wasm and an optimized typed-array JavaScript union-find receive the same graph requests and must find the same crossing point.</p><div class="trial-actions"><button id="run-trials">Run benchmark</button><button id="cancel-trials" class="secondary">Cancel</button></div></div>
-          <div class="histogram-card"><div class="histogram-summary"><b id="trial-summary">No benchmark run yet.</b><span id="trial-progress">Ready</span></div><dl class="benchmark-metrics"><div><dt>Lean median</dt><dd id="bench-lean">—</dd></div><div><dt>Lean p95</dt><dd id="bench-p95">—</dd></div><div><dt>JS median</dt><dd id="bench-js">—</dd></div><div><dt>Relative cost</dt><dd id="bench-ratio">—</dd></div></dl><svg id="histogram" role="img" aria-label="Histogram of checked Lean threshold-search latency" viewBox="0 0 620 150"></svg></div>
-        </section>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy">
+          <p class="label">Live browser benchmark</p>
+          <h2 id="benchmark-title">What does checked<br>connectivity cost?</h2>
+          <p>The connected graph is prepared once. Five excluded runs warm both solvers, then Lean/Wasm and optimized typed-array JavaScript partition the same 653 elements and 2,611 links 100 times. Every result pair must describe the same connected components.</p>
+          <div class="browser-benchmark-actions"><button id="run-trials" data-benchmark-run>Run again</button><button id="cancel-trials" data-benchmark-cancel class="secondary">Cancel</button></div>
+        </div>
+        <div class="browser-benchmark-card">
+          <div class="browser-benchmark-summary"><b id="trial-summary" data-benchmark-summary>No benchmark run yet.</b><span id="trial-progress" data-benchmark-progress>Waiting to enter view</span></div>
+          <dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd id="bench-lean" data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd id="bench-p95" data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd id="bench-js" data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd id="bench-ratio" data-benchmark-ratio>—</dd></div></dl>
+          <svg id="histogram" class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of checked Lean partition latency" viewBox="0 0 620 200"></svg>
+        </div>
       </section>
 
       <section class="proof-section" aria-labelledby="proof-title"
         data-proof-core="UnionFindCore.lean" data-proof-module="UnionFind.lean"
-        data-proof-namespace="LeanUnionFind" data-comparator-theorem="certifiedPartition_correct"
-        data-proof-theorems="LeanUnionFind.partitionCertificate_exact,LeanUnionFind.certifiedPartition_correct">
+        data-proof-namespace="LeanUnionFind" data-comparator-theorem="solvePartition_correct"
+        data-proof-theorems="LeanUnionFind.fastRepresentatives_correct,LeanUnionFind.solvePartition_correct">
         <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">Equal roots mean<br><em>connected inputs.</em></h2></div><p>The checked result uses real input links as witnesses. Every input link remains inside one returned class, and every equal representative has a witnessed link path.</p></div>
         <div class="proof-grid">
           <div class="source-viewer">
@@ -97,8 +104,7 @@
       </section>
       <footer><p><b>The grid adapter remains browser code.</b> Lean proves the finite-index partition returned for the pairs it receives.</p><a href="./UnionFind.lean">Read the proof →</a></footer>
     </main>
-    <script type="module" src="../shared/site-nav.mjs"></script>
+    <script type="module" src="../shared/demo-page.mjs"></script>
     <script type="module" src="app.mjs"></script>
-    <script type="module" src="../shared/proof-viewer.mjs"></script>
   </body>
 </html>

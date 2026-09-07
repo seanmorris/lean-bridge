@@ -28,9 +28,9 @@ The port uses a proof-carrying result. The label-setting loop builds distances a
 - a valid source-to-target walk; and
 - equality between the walk cost and the target label.
 
-`certificate_shortest` proves these conditions imply global minimality against every alternative walk. `dijkstraRec_correct` and `dijkstra_correct` establish the generic list-backed API, while `csrFeasibleLabelsCheck_eq` and `dijkstraCsr_correct` connect the direct CSR implementation used by the Wasm export to exactly the same graph specification. There are no `sorry` declarations. The proof module is checked on every build, while Lean erases proofs from the Wasm artifact.
+`certificate_shortest` proves these conditions imply global minimality against every alternative walk. `dijkstraRec_correct` and `dijkstra_correct` establish the generic list-backed API. `csrFeasibleLabelsCheck_sound` proves the direct checker may skip rows already capped at the target cost, and `dijkstraCsr_correct` connects the CSR implementation used by the Wasm export to the same graph specification. There are no `sorry` declarations. The proof module is checked on every build, while Lean erases proofs from the Wasm artifact.
 
-The executable graph uses compressed sparse rows, and Dijkstra's next-vertex selection uses a binary min-heap. The search result also caches its graph-derived unreachable-distance bound. Search therefore runs in `O((V + E) log E)` time, while certificate validation traverses the vertices and edges once in `O(V + E)` time instead of probing every possible vertex pair.
+The executable graph uses compressed sparse rows and a cyclic bucket queue sized from the graph's maximum integer edge weight. This removes binary-heap swaps while keeping the implementation graph-generic. Search runs in `O(E + WV)` time for maximum edge weight `W`. Certificate validation is `O(V + E)`, skips rows already capped at the target cost, and checks the returned path directly against CSR without rebuilding adjacency lists.
 
 ## Files
 
@@ -44,7 +44,7 @@ The executable graph uses compressed sparse rows, and Dijkstra's next-vertex sel
 - `generate-proof-audit.mjs` — creates the source-hash receipt after Lean accepts the proof module.
 - `runtime/` — compiled Emscripten ES module and Lean Wasm artifact.
 
-The browser boundary uses compressed sparse row (CSR) arrays: `offsets` has one row boundary per vertex, while parallel `targets` and `weights` arrays describe the edges. Zero-weight edges are supported. The compiled path traverses CSR directly rather than expanding every edge into linked lists and records. Its executable CSR certificate is proved equivalent to the generic graph checker, and `dijkstraCsr_correct` connects the optimized entry point to the same `ShortestPath` specification.
+The browser boundary uses compressed sparse row (CSR) arrays: `offsets` has one row boundary per vertex, while parallel `targets` and `weights` arrays describe the edges. Zero-weight edges are supported. The compiled search and certificate both traverse CSR directly rather than expanding edges into linked lists and records. The direct certificate is proved sound for the generic graph model, and `dijkstraCsr_correct` connects the optimized entry point to the same `ShortestPath` specification.
 
 ## Build and run
 
@@ -81,7 +81,7 @@ Run the compiled Lean/Wasm implementation across deterministic weighted grid gra
 node demos/lean-dijkstra/benchmark.mjs
 ```
 
-The benchmark warms each workload once, validates every returned path, and reports minimum, median, and p95 latency. Timings cover the public JavaScript API end to end: CSR copying into a reusable Wasm scratch block, Lean Dijkstra execution, executable certificate checking, and copying the result back to JavaScript. Graph construction is outside the timed region.
+The command-line benchmark warms each workload five times, validates every returned path, and reports minimum, median, and p95 latency. The proof page also runs a prewarmed 100-request browser benchmark against an independent JavaScript Dijkstra when the benchmark panel approaches the viewport. Its graph is converted to Lean once before timing, just as the JavaScript solver receives prepared typed arrays. Each timed sample includes the certified Lean search and result transfer. The command-line benchmark continues to measure the one-shot API end to end, including CSR transfer.
 
 For machine-readable output or a fixed sample count:
 

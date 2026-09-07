@@ -2,9 +2,9 @@
 
 This demo compiles a generic finite-index union-find implementation from Lean 4 to WebAssembly. The browser generates a braided maze, treats permanent wall cells as isolated vertices, and turns neighboring open passage cells into undirected pairs. Two additional vertices connect the eligible top and bottom boundary cells. Lean returns their exact partition.
 
-The page separates one editable material sample from a live browser benchmark. The benchmark runs 100 seeded threshold searches through both checked Lean/Wasm and an optimized typed-array JavaScript union-find, then verifies that they find the same crossing point. Maze generation, wall semantics, and the inlet and outlet adapter remain JavaScript.
+The page separates one editable material sample from a live browser benchmark. The benchmark warms both solvers with five excluded searches, runs 100 measured seeded threshold searches through checked Lean/Wasm and an optimized typed-array JavaScript union-find, then verifies that they find the same crossing point. Maze generation, wall semantics, and the inlet and outlet adapter remain JavaScript.
 
-The grid, animation, seeded activation order, benchmark harness, and histogram live in JavaScript. The Lean API receives only an element count and endpoint pairs. `certifiedPartition_correct` proves that two returned representatives are equal exactly when the input pairs connect those elements.
+The grid, animation, seeded activation order, benchmark harness, and histogram live in JavaScript. The Lean API receives only an element count and endpoint pairs. `solvePartition_correct` proves directly that two representatives returned by the production solver are equal exactly when the input pairs connect those elements.
 
 ## Build and check
 
@@ -18,7 +18,7 @@ The build rejects `sorry` and `admit`, runs native Lean tests, emits the proof r
 
 ## Performance boundary
 
-The checked `partition` export runs the optimized union-find pass and validates a connectivity certificate. Each benchmark trial uses binary search, so it needs at most ten partitions instead of replaying every activation. Reported core timings cover those solver calls after JavaScript has built the graph request.
+The `partition` export runs a weighted union-find over two mutable Lean arrays and returns only the representative array needed by the application. Its correctness proof is erased during compilation, so the browser does not rebuild or validate a runtime certificate. The separate `partitionDebug` API retains the larger certifying result for diagnostics. Each benchmark trial uses binary search, so it needs at most ten partitions instead of replaying every activation. Reported core timings cover those solver calls after JavaScript has built the graph request.
 
 ## Sources
 

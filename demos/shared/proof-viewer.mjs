@@ -11,8 +11,10 @@ const config = {
 	, namespace: configElement.dataset.proofNamespace
 	, comparator: configElement.dataset.comparatorTheorem
 	, theorems: configElement.dataset.proofTheorems.split(",")
+	, dependencies: (configElement.dataset.proofDependencies || "").split(",").filter(Boolean)
 };
-const sourceNames = [config.proof, config.core];
+const sourceNames = [config.proof, config.core, ...config.dependencies];
+const compilationOrder = [config.core, ...config.dependencies, config.proof];
 const keywords = new Set([
 	"abbrev", "by", "cases", "def", "deriving", "do", "else", "end", "exact"
 	, "have", "if", "import", "induction", "instance", "let", "match", "namespace"
@@ -110,6 +112,8 @@ const renderSource = name => {
 	{
 		tab.classList.toggle("active", tab.dataset.source === name);
 	}
+	for(const select of document.querySelectorAll("[data-source-select]"))
+		select.value = [...select.options].some(option => option.value === name) ? name : "";
 };
 
 const sha256 = async value => {
@@ -128,14 +132,15 @@ const verifyAudit = async audit => {
 };
 
 const withoutImports = source => source.replace(/^import .*$/gmu, "").trim();
-const playgroundSource = () => `import Std\n\n${withoutImports(sources.get(config.core))}\n\n`
-	+ withoutImports(sources.get(config.proof));
+const playgroundSource = () => "import Std\n\n"
+	+ compilationOrder.map(name => withoutImports(sources.get(name))).join("\n\n");
 const interactiveSource = () => `${playgroundSource()}\n\n${config.theorems.map(theorem =>
 	`#check ${theorem}\n#print axioms ${theorem}`).join("\n")}`;
 const comparatorCompatible = source => source.replace(/^private\s+(?=(?:def|structure)\b)/gmu, "");
 
 const comparatorChallenge = () => {
-	const core = comparatorCompatible(withoutImports(sources.get(config.core)));
+	const core = [config.core, ...config.dependencies]
+		.map(name => comparatorCompatible(withoutImports(sources.get(name)))).join("\n\n");
 	const proof = comparatorCompatible(withoutImports(sources.get(config.proof)));
 	const theoremStart = proof.indexOf(`theorem ${config.comparator}`);
 	const proofStart = proof.indexOf(":=", theoremStart);
@@ -198,6 +203,8 @@ for(const tab of document.querySelectorAll(".source-tab"))
 {
 	tab.addEventListener("click", () => renderSource(tab.dataset.source));
 }
+for(const select of document.querySelectorAll("[data-source-select]"))
+	select.addEventListener("change", () => { if(select.value) renderSource(select.value); });
 document.querySelector("#copy-source").addEventListener("click", async event => {
 	await navigator.clipboard.writeText(sources.get(activeSource));
 	event.currentTarget.textContent = "Copied";

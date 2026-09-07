@@ -22,6 +22,12 @@ def cyclic : Array Nat := #[0, 1, 1, 2, 2, 0, 2, 2, 4, 5]
 
 example : (certifiedPartition 6 cyclic).isSome = true := by native_decide
 
+example : fastRepresentatives 6 chain = #[0, 0, 0, 3, 3, 5] := by native_decide
+
+example : arrayGet (solvePartition 6 chain) 0 6 = arrayGet (solvePartition 6 chain) 2 6 ↔
+    Connected 6 chain 0 2 := by
+  exact solvePartition_correct 6 chain (by native_decide) 0 2 (by native_decide) (by native_decide)
+
 example : linksValid 0 #[] = true := by native_decide
 example : linksValid 3 #[0, 3] = false := by native_decide
 example : linksValid 3 #[0] = false := by native_decide

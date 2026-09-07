@@ -298,6 +298,48 @@ def certifiedPartition (count : Nat) (links : Array Nat) : Option CertifiedParti
 def linksValid (count : Nat) (links : Array Nat) : Bool :=
   links.size % 2 = 0 && links.all fun vertex => vertex < count
 
+/-! Allocation-conscious production partition path. -/
+
+def rootFrom (count : Nat) : Nat → Nat → Array Nat → Nat
+  | 0, vertex, _ => vertex
+  | fuel + 1, vertex, parents =>
+      let parent := arrayGet parents vertex vertex
+      if parent = vertex then vertex else rootFrom count fuel parent parents
+
+def fastUnion (count edgeCount left right : Nat) (state : State) : State :=
+  let fuel := edgeCount + 1
+  let leftRoot := rootFrom count fuel left state.parent
+  let rightRoot := rootFrom count fuel right state.parent
+  if leftRoot = rightRoot then state
+  else
+    let leftSize := arrayGet state.size leftRoot 1
+    let rightSize := arrayGet state.size rightRoot 1
+    if leftSize < rightSize || (leftSize = rightSize && rightRoot < leftRoot) then {
+      parent := state.parent.setIfInBounds leftRoot rightRoot
+      size := state.size.setIfInBounds rightRoot (leftSize + rightSize)
+    }
+    else {
+      parent := state.parent.setIfInBounds rightRoot leftRoot
+      size := state.size.setIfInBounds leftRoot (leftSize + rightSize)
+    }
+
+def fastProcessFrom (count edgeCount : Nat) (links : Array Nat) :
+    Nat → Nat → Nat → State → State
+  | 0, _, _, state => state
+  | fuel + 1, index, edge, state =>
+      fastProcessFrom count edgeCount links fuel (index + 2) edge.succ
+        (fastUnion count edgeCount (arrayGet links index count)
+          (arrayGet links (index + 1) count) state)
+
+def fastRepresentatives (count : Nat) (links : Array Nat) : Array Nat :=
+  let edgeCount := links.size / 2
+  let state := fastProcessFrom count edgeCount links edgeCount 0 0 {
+    parent := Array.ofFn fun index : Fin count => index.val
+    size := Array.replicate count 1
+  }
+  Array.ofFn fun index : Fin count =>
+    rootFrom count (edgeCount + 1) index.val state.parent
+
 def operationsValid (count : Nat) (operations : Array Nat) : Bool :=
   operations.size % 3 = 0 &&
     (List.range (operations.size / 3)).all fun operation =>
@@ -357,14 +399,18 @@ def serializePartition (result : PartitionResult) : Array Nat :=
 def serializeOperations (result : OperationResult) : Array Nat :=
   #[result.queries.size] ++ result.queries ++ serializePartition result.partition
 
-@[export lean_union_find_partition]
-def solvePartition (count : UInt32) (links : Array Nat) : Array Nat :=
+@[export lean_union_find_partition_debug]
+def solvePartitionDebug (count : UInt32) (links : Array Nat) : Array Nat :=
   let total := count.toNat
   if linksValid total links then
     match certifiedPartition total links with
     | some certified => serializePartition certified.result
     | none => #[]
   else #[]
+
+@[export lean_union_find_partition]
+def solvePartition (count : UInt32) (links : Array Nat) : Array Nat :=
+  fastRepresentatives count.toNat links
 
 @[export lean_union_find_operations]
 def solveOperations (count : UInt32) (operations : Array Nat) : Array Nat :=

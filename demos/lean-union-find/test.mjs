@@ -6,7 +6,9 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CONNECTED, UNION, partition, runOperations } from "./runtime.mjs";
+import {
+	CONNECTED, UNION, partition, partitionDebug, preparePartition, runOperations
+} from "./runtime.mjs";
 import {
 	GRAPH_COUNT, SITE_COUNT, WIDTH, activationOrder, activeFromPrefix, analyzePartition, linksForActive,
 	inletDistances, mazeWalls
@@ -68,8 +70,17 @@ test("compiled partition handles chains, cycles, duplicates, and isolated elemen
 	const links = Uint32Array.of(0, 1, 1, 2, 2, 0, 2, 2, 4, 5);
 	const result = await partition({ elementCount: 7, links });
 	samePartition(result.representatives, graphComponents(7, links));
-	assert.equal(result.parents.length, 7);
-	assert.equal(result.sizes[result.representatives[0]], 3);
+	const debug = await partitionDebug({ elementCount: 7, links });
+	assert.equal(debug.parents.length, 7);
+	assert.equal(debug.sizes[debug.representatives[0]], 3);
+});
+
+test("prepared partition can be called synchronously and repeatedly", async () => {
+	const links = Uint32Array.of(0, 1, 1, 2, 4, 5);
+	const solve = await preparePartition({ elementCount: 7, links });
+	samePartition(solve().representatives, graphComponents(7, links));
+	await partition({ elementCount: 4, links: Uint32Array.of(0, 3) });
+	samePartition(solve().representatives, graphComponents(7, links));
 });
 
 test("compiled operation stream answers against preceding unions", async () => {

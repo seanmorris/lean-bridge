@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-demo-title="Aho–Corasick">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09111f">
+    <title>Signal scanner · Proven Lean Aho–Corasick</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%224%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23c6a0ff%22>λ</text></svg>">
+    <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div><p class="eyebrow"><span class="pulse"></span> Lean 4 → WebAssembly</p><h1>Scan once.<br><em>Catch every signal.</em></h1></div>
+        <p class="lede">Search for many byte patterns at the same time. Lean/Wasm reports every exact occurrence—including nested, overlapping, and duplicate signatures.</p>
+      </header>
+
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div><p class="label">How to use it</p><h2 id="guide-title">Choose a feed.<br><em>Watch hits stack.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Pick a scenario</b><p>Try operations logs, moderation rules, or threat signatures.</p></div></li>
+          <li><span>2</span><div><b>Edit either side</b><p>Patterns compile into one automaton; input is scanned as UTF-8 bytes.</p></div></li>
+          <li><span>3</span><div><b>Inspect overlaps</b><p>Select a signature to isolate its exact spans in the shared result.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="theme-lab matcher-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Multi-signal workbench</h2></div><p id="runtime-status" class="runtime-status" role="status">Loading Lean/Wasm…</p></div>
+        <div class="workbench">
+          <div class="verdict" role="status" aria-live="polite">
+            <div><p class="label">Lean’s result</p><h3 id="verdict-title">Compiling signatures…</h3><p id="verdict-copy">The verified byte matcher is loading.</p></div>
+            <div class="verdict-metrics"><span><b id="match-count">—</b> matches</span><span><b id="overlap-count">—</b> overlaps</span><span><b id="scan-time">—</b> Lean/Wasm</span></div>
+          </div>
+
+          <div class="scenario-bar" role="group" aria-label="Scanner scenario">
+            <div><p class="label">Sample feeds</p><b>Same algorithm, different rule sets</b></div>
+            <div class="scenario-tabs"><button data-scenario="operations" aria-pressed="true">Operations log</button><button data-scenario="moderation" aria-pressed="false">Moderation queue</button><button data-scenario="threats" aria-pressed="false">Threat signatures</button></div>
+          </div>
+
+          <div class="editor-grid">
+            <label class="editor-panel patterns-panel"><span><b>Patterns</b><small>One exact UTF-8 pattern per line. Duplicates stay distinct.</small></span><textarea id="patterns" spellcheck="false" aria-label="Patterns, one per line"></textarea></label>
+            <label class="editor-panel input-panel"><span><b>Incoming text</b><small id="input-note">Edit the feed; scanning updates automatically.</small></span><textarea id="input" spellcheck="false" aria-label="Text to scan"></textarea></label>
+          </div>
+
+          <section class="inspection" aria-labelledby="inspection-title">
+            <div class="inspection-heading"><div><p class="label">Checked output</p><h3 id="inspection-title">Overlap inspector</h3></div><button id="show-all" class="secondary" disabled>Show every signature</button></div>
+            <div id="highlighted-text" class="highlighted-text" aria-label="Input with matched spans"></div>
+            <div id="pattern-results" class="pattern-results" aria-label="Matched pattern filters"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy">
+          <p class="label">Live browser benchmark</p>
+          <h2 id="benchmark-title">What does a checked<br>multi-pattern scan cost?</h2>
+          <p>The 28-pattern automata are prepared once. Five excluded runs warm both solvers, then Lean/Wasm and typed-array JavaScript scan the same 4,200-byte log 100 times. Every Lean result is checked for exact soundness and completeness.</p>
+          <div class="browser-benchmark-actions"><button data-benchmark-run>Run again</button><button data-benchmark-cancel class="secondary">Cancel</button></div>
+        </div>
+        <div class="browser-benchmark-card">
+          <div class="browser-benchmark-summary"><b data-benchmark-summary>No benchmark run yet.</b><span data-benchmark-progress>Waiting to enter view</span></div>
+          <dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl>
+          <svg class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of checked Lean Aho–Corasick latency" viewBox="0 0 620 200"></svg>
+        </div>
+      </section>
+
+      <section class="proof-section" aria-labelledby="proof-title"
+        data-proof-core="AhoCorasickCore.lean" data-proof-module="AhoCorasick.lean"
+        data-proof-namespace="LeanAhoCorasick" data-comparator-theorem="scan_result_correct"
+        data-proof-theorems="LeanAhoCorasick.compile_trie_invariant,LeanAhoCorasick.compile_failure_invariant,LeanAhoCorasick.scan_result_correct,LeanAhoCorasick.scan_matches_sound,LeanAhoCorasick.scan_matches_complete">
+        <div class="section-heading"><div><p class="eyebrow">Inspectable assurance</p><h2 id="proof-title">Every reported hit.<br><em>Every real hit.</em></h2></div><p>The compiled result is checked in both directions: each emitted span equals its named pattern, and every pattern occurrence in the input appears in the result—even when spans overlap or patterns are duplicates.</p></div>
+        <div class="proof-grid">
+          <div class="source-viewer">
+            <div class="source-toolbar"><div class="source-tabs" role="tablist" aria-label="Lean source file"><button class="source-tab active" data-source="AhoCorasick.lean" role="tab">Proof</button><button class="source-tab" data-source="AhoCorasickCore.lean" role="tab">Core</button></div><div class="source-meta"><span id="source-label">AhoCorasick.lean</span><span id="source-stats">Loading…</span><button id="copy-source">Copy</button></div></div>
+            <pre id="proof-code" class="proof-code" aria-label="Syntax-highlighted Lean source"><span class="code-loading">Loading checked source…</span></pre>
+          </div>
+          <aside class="proof-audit">
+            <div class="audit-mark">✓</div><p class="label">Build receipt</p><h3>Checked, then compiled.</h3><p class="audit-copy">The receipt binds this exact source to the proof-checking build. It is verified again in your browser with SHA-256.</p>
+            <dl><div><dt>Status</dt><dd id="audit-status" class="audit-value">Verifying source…</dd></div><div><dt>Checker</dt><dd id="audit-checker">—</dd></div><div><dt>Audited theorems</dt><dd id="theorem-count">—</dd></div></dl>
+            <div class="checker-actions"><button id="launch-wasm" class="launch-lean" disabled>Open Lean WASM checker <span>↗</span></button><button id="launch-lean-web" class="launch-lean secondary" disabled>Open Lean Web / Comparator <span>↗</span></button></div>
+            <p class="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p>
+          </aside>
+        </div>
+        <div id="playground-panel" class="playground-panel" hidden><div class="playground-toolbar"><div><b>Interactive checkers opened</b><span>Both use the bundled core and proof.</span></div><div class="playground-links"><a id="open-wasm" target="_blank" rel="noopener noreferrer">Lean WASM ↗</a><a id="open-lean-web" target="_blank" rel="noopener noreferrer">Lean Web / Comparator ↗</a></div></div></div>
+      </section>
+      <footer><p><b>The text editor remains browser code.</b> Lean receives a generic finite pattern table and byte sequence, then checks the exact match triples it returns.</p><a href="./AhoCorasick.lean">Read the proof →</a></footer>
+    </main>
+    <script type="module" src="../shared/demo-page.mjs"></script>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

@@ -4,7 +4,8 @@
  * @file
  */
 
-import { partition, ready } from "./runtime.mjs";
+import { partition, preparePartition, ready } from "./runtime.mjs";
+import { attachBrowserBenchmark, measureSyncBenchmark } from "../shared/browser-benchmark.mjs";
 import {
 	GRAPH_COUNT, HEIGHT, SITE_COUNT, WIDTH, activationOrder, activeFromPrefix, analyzePartition,
 	inletDistances, linksForActive, mazeWalls
@@ -15,22 +16,15 @@ const COPY = {
 	, spanning: "Water reached the outlet."
 	, waiting: "Water has not crossed the material."
 };
-
 const byId = id => document.getElementById(id);
 const elements = {
 	activeCount: byId("active-count")
 	, applySeed: byId("apply-seed")
-	, benchJs: byId("bench-js")
-	, benchLean: byId("bench-lean")
-	, benchP95: byId("bench-p95")
-	, benchRatio: byId("bench-ratio")
 	, bottom: byId("bottom-boundary")
-	, cancelTrials: byId("cancel-trials")
 	, componentCount: byId("component-count")
 	, density: byId("density")
 	, editStatus: byId("edit-status")
 	, grid: byId("site-grid")
-	, histogram: byId("histogram")
 	, legend: byId("legend")
 	, newMaterial: byId("new-material")
 	, pause: byId("pause")
@@ -40,7 +34,6 @@ const elements = {
 	, run: byId("run")
 	, runtime: byId("runtime")
 	, runtimeStatus: byId("runtime-status")
-	, runTrials: byId("run-trials")
 	, sampleTitle: byId("sample-title")
 	, seed: byId("seed")
 	, step: byId("step")
@@ -48,8 +41,6 @@ const elements = {
 	, toolOpen: byId("tool-open")
 	, toolSeal: byId("tool-seal")
 	, toolWall: byId("tool-wall")
-	, trialProgress: byId("trial-progress")
-	, trialSummary: byId("trial-summary")
 };
 
 let active = new Uint8Array(SITE_COUNT);
@@ -60,10 +51,8 @@ let seed = 0;
 let running = false;
 let runFrame = 0;
 let solveRevision = 0;
-let view = "sample";
 let firstSpanCount = null;
 let sequenceIntact = true;
-let trialRevision = 0;
 let painting = false;
 let drawTool = "open";
 let dragSolveFrame = 0;
@@ -96,15 +85,8 @@ const showSeed = () => {
 	elements.seed.setAttribute("aria-invalid", "false");
 };
 
-const syncView = () => {
+const syncLegend = () => {
 	elements.legend.innerHTML = `<span><i class="wall-key"></i>Maze wall</span><span><i></i>Unopened passage</span><span><i class="active-key"></i>Dry clusters</span><span><i class="wet-key"></i>Water from inlet</span><span><i class="span-key"></i>Outlet contact</span>`;
-	for(const tab of document.querySelectorAll("[role=tab][data-view]"))
-	{
-		const selected = tab.dataset.view === view;
-		tab.setAttribute("aria-selected", String(selected));
-		tab.tabIndex = selected ? 0 : -1;
-		byId(tab.getAttribute("aria-controls")).hidden = !selected;
-	}
 };
 
 const draw = (result, elapsed) => {
@@ -355,28 +337,6 @@ elements.seed.addEventListener("keydown", event => {
 	}
 });
 
-const selectView = (nextView, updateHash = true) => {
-	if(!["sample", "trials"].includes(nextView)) return;
-	view = nextView;
-	syncView();
-	if(updateHash) history.replaceState(null, "", `#${view}`);
-};
-const tabs = [...document.querySelectorAll("[role=tab][data-view]")];
-for(const tab of tabs)
-{
-	tab.addEventListener("click", () => selectView(tab.dataset.view));
-	tab.addEventListener("keydown", event => {
-		let target = tabs.indexOf(tab);
-		if(event.key === "ArrowRight") target = (target + 1) % tabs.length;
-		else if(event.key === "ArrowLeft") target = (target + tabs.length - 1) % tabs.length;
-		else if(event.key === "Home") target = 0;
-		else if(event.key === "End") target = tabs.length - 1;
-		else return;
-		event.preventDefault(); tabs[target].focus(); selectView(tabs[target].dataset.view);
-	});
-}
-window.addEventListener("hashchange", () => selectView(location.hash.slice(1), false));
-
 const jsPartition = ({ elementCount, links }) => {
 	const parent = Uint32Array.from({ length: elementCount }, (_, index) => index);
 	const sizes = new Uint32Array(elementCount);
@@ -407,135 +367,98 @@ const jsPartition = ({ elementCount, links }) => {
 	return { representatives };
 };
 
-const thresholdForOrder = async (trialOrder, solver = partition) => {
+const thresholdForOrder = async trialOrder => {
 	let low = 1;
 	let high = trialOrder.length;
-	let calls = 0;
-	let coreMs = 0;
 	while(low < high)
 	{
 		const middle = Math.floor((low + high) / 2);
 		const trialActive = activeFromPrefix(trialOrder, middle);
 		const links = linksForActive(trialActive, walls, true);
-		const started = performance.now();
-		const result = await solver({ elementCount: GRAPH_COUNT, links });
-		coreMs += performance.now() - started;
-		calls += 1;
+		const result = await partition({ elementCount: GRAPH_COUNT, links });
 		const analysis = analyzePartition(trialActive, result.representatives, walls);
 		if(analysis.spans) high = middle;
 		else low = middle + 1;
 	}
-	return { calls, coreMs, count: low, percent: low / trialOrder.length * 100 };
+	return { count: low, percent: low / trialOrder.length * 100 };
 };
 
-const svgElement = (name, attributes = {}) => {
-	const node = document.createElementNS("http://www.w3.org/2000/svg", name);
-	for(const [key, value] of Object.entries(attributes)) node.setAttribute(key, String(value));
-	return node;
-};
-
-let histogramValues = [];
-const drawHistogram = values => {
-	histogramValues = values;
-	elements.histogram.replaceChildren();
-	const chartWidth = Math.max(320, Math.round(elements.histogram.clientWidth));
-	elements.histogram.setAttribute("viewBox", `0 0 ${chartWidth} 150`);
-	const minimum = Math.floor(Math.min(...values) * 2) / 2;
-	let maximum = Math.ceil(Math.max(...values) * 2) / 2;
-	if(maximum <= minimum) maximum = minimum + .5;
-	const binCount = 10;
-	const bins = new Uint32Array(binCount);
-	for(const value of values) bins[Math.min(binCount - 1, Math.floor((value - minimum) / (maximum - minimum) * binCount))] += 1;
-	const maxBin = Math.max(...bins);
-	const left = 18;
-	const width = chartWidth - left * 2;
-	const baseline = 124;
-	for(let index = 0; index < binCount; index += 1)
+const samePartition = (left, right) => {
+	if(left.length !== right.length) return false;
+	const leftToRight = new Map();
+	const rightToLeft = new Map();
+	for(let vertex = 0; vertex < left.length; vertex += 1)
 	{
-		const barWidth = width / binCount - 3;
-		const height = bins[index] / maxBin * 108;
-		const x = left + index * width / binCount;
-		elements.histogram.append(svgElement("rect", { class: "bar", height, width: barWidth, x, y: baseline - height }));
-		const label = svgElement("text", { class: "bar-label", "text-anchor": "middle", x: x + barWidth / 2, y: 142 });
-		label.textContent = `${(minimum + index * (maximum - minimum) / binCount).toFixed(1)}`;
-		elements.histogram.append(label);
+		const leftRoot = left[vertex];
+		const rightRoot = right[vertex];
+		if(leftToRight.has(leftRoot) && leftToRight.get(leftRoot) !== rightRoot) return false;
+		if(rightToLeft.has(rightRoot) && rightToLeft.get(rightRoot) !== leftRoot) return false;
+		leftToRight.set(leftRoot, rightRoot);
+		rightToLeft.set(rightRoot, leftRoot);
 	}
-	const sorted = [...values].sort((leftValue, rightValue) => leftValue - rightValue);
-	const median = sorted[Math.floor(sorted.length / 2)];
-	const medianX = left + (median - minimum) / (maximum - minimum) * width;
-	elements.histogram.append(svgElement("line", { class: "mean-line", x1: medianX, x2: medianX, y1: 12, y2: baseline }));
-	elements.histogram.setAttribute("aria-label", `Histogram of 100 checked Lean threshold searches. Median ${median.toFixed(2)} milliseconds.`);
+	return true;
 };
 
-let histogramResizeFrame = 0;
-new ResizeObserver(() => {
-	if(histogramValues.length === 0 || histogramResizeFrame) return;
-	histogramResizeFrame = requestAnimationFrame(() => {
-		histogramResizeFrame = 0;
-		drawHistogram(histogramValues);
-	});
-}).observe(elements.histogram);
-
-const runTrials = async () => {
-	const revision = ++trialRevision;
-	elements.runTrials.disabled = true;
-	elements.cancelTrials.disabled = false;
-	const leanTimes = [];
-	const javascriptTimes = [];
-	const thresholds = [];
-	let checkedPartitions = 0;
-	const started = performance.now();
-	for(let index = 0; index < 100; index += 1)
+const connectedBenchmarkLinks = (elementCount, degree, initialSeed) => {
+	let value = initialSeed >>> 0;
+	const next = () => {
+		value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
+		return value;
+	};
+	const links = [];
+	for(let vertex = 1; vertex < elementCount; vertex += 1) links.push(vertex, next() % vertex);
+	for(let edge = elementCount; edge < elementCount * degree; edge += 1)
 	{
-		if(revision !== trialRevision) return;
-		const trialSeed = (seed + Math.imul(index + 1, 0x9e3779b9)) >>> 0;
-		const trialOrder = activationOrder(trialSeed, walls);
-		const lean = await thresholdForOrder(trialOrder);
-		const javascript = await thresholdForOrder(trialOrder, jsPartition);
-		if(lean.count !== javascript.count) throw new Error("Lean and JavaScript found different thresholds");
-		leanTimes.push(lean.coreMs);
-		javascriptTimes.push(javascript.coreMs);
-		thresholds.push(lean.percent);
-		checkedPartitions += lean.calls;
-		elements.trialProgress.textContent = `${index + 1} / 100 compared`;
-		if(index % 2 === 1) await new Promise(requestAnimationFrame);
+		links.push(next() % elementCount, next() % elementCount);
 	}
-	leanTimes.sort((left, right) => left - right);
-	javascriptTimes.sort((left, right) => left - right);
-	thresholds.sort((left, right) => left - right);
-	const leanMedian = leanTimes[50];
-	const leanP95 = leanTimes[94];
-	const javascriptMedian = javascriptTimes[50];
-	const ratio = leanMedian / javascriptMedian;
-	const leanTotal = leanTimes.reduce((sum, value) => sum + value, 0);
-	elements.benchLean.textContent = `${leanMedian.toFixed(2)} ms`;
-	elements.benchP95.textContent = `${leanP95.toFixed(2)} ms`;
-	elements.benchJs.textContent = `${javascriptMedian.toFixed(2)} ms`;
-	elements.benchRatio.textContent = `${ratio.toFixed(1)}×`;
-	elements.trialSummary.textContent = `${checkedPartitions} checked partitions · ${(checkedPartitions / leanTotal * 1000).toFixed(0)} partitions/s · median crossing ${thresholds[50].toFixed(1)}%`;
-	elements.trialProgress.textContent = `Completed in ${((performance.now() - started) / 1000).toFixed(1)} s`;
-	drawHistogram(leanTimes);
-	elements.runTrials.disabled = false;
-	elements.cancelTrials.disabled = true;
+	return Uint32Array.from(links);
 };
-elements.runTrials.addEventListener("click", runTrials);
-elements.cancelTrials.addEventListener("click", () => {
-	trialRevision += 1;
-	elements.runTrials.disabled = false;
-	elements.cancelTrials.disabled = true;
-	elements.trialProgress.textContent = "Cancelled";
+const benchmarkLinks = connectedBenchmarkLinks(GRAPH_COUNT, 4, GRAPH_COUNT ^ 0xa53c9e1d);
+const benchmarkRequest = { elementCount: GRAPH_COUNT, links: benchmarkLinks };
+const preparedLeanPartition = preparePartition(benchmarkRequest);
+const preparedJavaScriptPartition = () => jsPartition(benchmarkRequest);
+
+attachBrowserBenchmark({
+	root: byId("browser-benchmark")
+	, prepare: async () => {
+		if(running) pause("Sequence paused while benchmarking.");
+		await preparedLeanPartition;
+	}
+	, sample: async index => {
+		let lean;
+		let javascript;
+		if(index % 2 === 0)
+		{
+			lean = measureSyncBenchmark(await preparedLeanPartition);
+			javascript = measureSyncBenchmark(preparedJavaScriptPartition);
+		}
+		else
+		{
+			javascript = measureSyncBenchmark(preparedJavaScriptPartition);
+			lean = measureSyncBenchmark(await preparedLeanPartition);
+		}
+		if(!samePartition(lean.result.representatives, javascript.result.representatives))
+		{
+			throw new Error("Lean and JavaScript returned different partitions");
+		}
+		return { leanMs: lean.milliseconds, javascriptMs: javascript.milliseconds };
+	}
+	, summarize: ({ ratio, trialCount }) => `${trialCount} checked partitions agreed · ${GRAPH_COUNT} elements · ${benchmarkLinks.length / 2} links · median paired cost ${ratio.toFixed(1)}×`
 });
+
+const initializePage = () => {
+	syncLegend();
+};
 
 try
 {
+	initializePage();
 	await ready();
 	elements.runtimeStatus.textContent = "Lean/Wasm ready";
 	seed = freshSeed();
 	walls = mazeWalls(seed);
 	order = activationOrder(seed ^ 0xa53c9e1d, walls);
 	showSeed();
-	selectView(["sample", "trials"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "sample", false);
-	elements.cancelTrials.disabled = true;
 	await solve();
 	if(matchMedia("(prefers-reduced-motion: reduce)").matches)
 	{

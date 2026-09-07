@@ -8,6 +8,8 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101a2e%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23adf7b6%22>λ</text></svg>">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="../shared/site.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
   </head>
   <body>
     <main>
@@ -19,7 +21,18 @@
         <p class="lede">A generic weighted-graph Dijkstra implementation, compiled from Lean. The grid is only a graph-building interface.</p>
       </header>
 
-      <section class="workspace" aria-label="Dijkstra pathfinding demo">
+      <section class="reading-guide" aria-labelledby="guide-title">
+        <div><p class="label">How to use it</p><h2 id="guide-title">Draw a route.<br><em>Change the graph.</em></h2></div>
+        <ol>
+          <li><span>1</span><div><b>Paint walls</b><p>Click or drag to remove cells from the graph.</p></div></li>
+          <li><span>2</span><div><b>Place endpoints</b><p>Switch modes to move the start and destination.</p></div></li>
+          <li><span>3</span><div><b>Read the path</b><p>Lean returns the lowest-cost valid route that remains.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="theme-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Pathfinding workbench</h2></div><p class="runtime-status">Generic weighted graph</p></div>
+        <div class="workspace" aria-label="Dijkstra pathfinding demo">
         <aside class="controls">
           <div class="control-group">
             <p class="label">Edit mode</p>
@@ -59,6 +72,21 @@
             <span><i class="path-swatch"></i>Shortest path</span>
             <span><i class="wall-swatch"></i>Wall</span>
           </div>
+        </div>
+        </div>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy">
+          <p class="label">Live browser benchmark</p>
+          <h2 id="benchmark-title">How fast is a<br>checked shortest path?</h2>
+          <p>The weighted graph is prepared once. Five excluded runs warm both solvers, then Lean/Wasm and optimized JavaScript solve 100 endpoint requests and must return paths with the same cost.</p>
+          <div class="browser-benchmark-actions"><button data-benchmark-run>Run again</button><button data-benchmark-cancel class="secondary">Cancel</button></div>
+        </div>
+        <div class="browser-benchmark-card">
+          <div class="browser-benchmark-summary"><b data-benchmark-summary>No benchmark run yet.</b><span data-benchmark-progress>Waiting to enter view</span></div>
+          <dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl>
+          <svg class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of checked Dijkstra latency" viewBox="0 0 620 200"></svg>
         </div>
       </section>
 
@@ -120,8 +148,7 @@
         <a href="./Dijkstra.lean">Read the proof →</a>
       </footer>
     </main>
-    <script type="module" src="../shared/site-nav.mjs"></script>
+    <script type="module" src="../shared/demo-page.mjs"></script>
     <script type="module" src="app.mjs"></script>
-    <script type="module" src="../shared/proof-viewer.mjs"></script>
   </body>
 </html>

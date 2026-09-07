@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked total return, shortest paths, and unreachable outcomes before compiling this implementation",
+  "sourceFiles": {
+    "DijkstraCore.lean": {
+      "bytes": 19111,
+      "sha256": "f7652c39de24df9963fd270dedbb23c71c556eb249d62ed178eac694ebbfad3f"
+    },
+    "Dijkstra.lean": {
+      "bytes": 13453,
+      "sha256": "3ab6a76651cf38bb51cf26b75056d42622acbc44c4614bc4c2410039f53d97e1"
+    },
+    "AStarCore.lean": {
+      "bytes": 9368,
+      "sha256": "8e77a5b04451a89b4127216618e70918615e80df7436fc1d14078a58bb529888"
+    },
+    "AStarPotential.lean": {
+      "bytes": 13299,
+      "sha256": "7c0867cb2961e8f7a9960e92da83035d559f03ca7ac13e3f7a1c9900be584de4"
+    },
+    "AStarChecks.lean": {
+      "bytes": 3813,
+      "sha256": "2f18e7fb4a2606a8a147b73e17264092a656d557c758588b687876b2a87fe606"
+    },
+    "AStarTotal.lean": {
+      "bytes": 12660,
+      "sha256": "e4ad0bb890d2b0ff901de0cfea7d58c41d83dc4fd4479db4310d552be35d998a"
+    },
+    "AStar.lean": {
+      "bytes": 8812,
+      "sha256": "fe948467ad71a1d825ed2984e1279b7e8027d17c2f12caf94ff9abff66b51777"
+    }
+  },
+  "theorems": [
+    "certificate_shortest",
+    "consistent_admissible",
+    "reduced_shortest_iff",
+    "heuristicCheck_sound",
+    "labelsCheck_sound",
+    "cutCheck_sound",
+    "searchLoop_stale",
+    "total_shortest_correct",
+    "total_shortest_unreachable",
+    "solve_prepared_correct",
+    "solve_path_shortest",
+    "solve_unreachable",
+    "solve_total",
+    "exported_search_correct",
+    "exported_total_correct",
+    "prepareExport_valid_iff",
+    "solveExport_no_failure",
+    "solveExport_unreachable_iff",
+    "serialize_path_starts_at_source"
+  ]
+}

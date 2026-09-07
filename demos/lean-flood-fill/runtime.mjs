@@ -136,5 +136,48 @@ export const reachableWithCapabilities = async ({
 	};
 };
 
+/**
+ * Prepare an immutable gated graph once for repeated certified closures.
+ *
+ * @param request - Generic gated CSR request.
+ * @returns {Promise<() => {vertices: Uint32Array, capabilities: Uint32Array}>} Prepared solver.
+ */
+export const prepareCapabilityClosure = async request => {
+	const {
+		vertexCount, offsets, targets, allowedVertices, requirements, grants
+		, initialCapabilities, capabilityCount, start
+	} = request;
+	validateGraph({ vertexCount, offsets, targets, allowedVertices });
+	requireArray(requirements, "requirements", targets.length);
+	requireArray(grants, "grants", vertexCount);
+	requireArray(initialCapabilities, "initialCapabilities");
+	if(!Number.isInteger(capabilityCount) || capabilityCount < 0) throw new RangeError("capabilityCount is invalid");
+	if(!Number.isInteger(start) || start < 0 || start >= vertexCount) throw new RangeError("start is out of range");
+	const module = await loadModule();
+	const arrays = [offsets, targets, requirements, allowedVertices, grants, initialCapabilities];
+	const { pointers } = transfer(module, arrays, 0);
+	const revision = module._lean_capability_prepare(
+		vertexCount, capabilityCount, start, pointers[0], offsets.length, pointers[1], pointers[2]
+		, targets.length, pointers[3], pointers[4], pointers[5], initialCapabilities.length
+	) >>> 0;
+	if(revision === 0) throw new Error("Lean flood-fill bridge rejected the prepared graph");
+	return () => {
+		const outputCapacity = vertexCount + capabilityCount + 1;
+		const outputPointer = reserveScratch(module, outputCapacity);
+		const length = module._lean_capability_solve_prepared(
+			revision, outputPointer, outputCapacity
+		) >>> 0;
+		if(length === ERROR) throw new Error("Prepared Lean flood-fill graph is no longer active");
+		if(length === 0) return { vertices: new Uint32Array(), capabilities: new Uint32Array() };
+		const output = module.HEAPU32.subarray(outputPointer >>> 2, (outputPointer >>> 2) + length);
+		const vertexLength = output[0];
+		if(vertexLength + 1 > length) throw new Error("Lean capability result is malformed");
+		return {
+			vertices: Uint32Array.from(output.subarray(1, vertexLength + 1))
+			, capabilities: Uint32Array.from(output.subarray(vertexLength + 1))
+		};
+	};
+};
+
 /** Resolve after the compiled Lean runtime is initialized. */
 export const ready = loadModule;

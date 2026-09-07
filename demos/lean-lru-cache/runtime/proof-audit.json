@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated; transition proofs erase before compilation",
+  "sourceFiles": {
+    "LruCore.lean": {
+      "bytes": 4920,
+      "sha256": "701d904d5b3e23dc6967ba5087380c16c9a76f6ceea8fdd17641c58b13f9528a"
+    },
+    "Lru.lean": {
+      "bytes": 21529,
+      "sha256": "93d24b7e3127738eac3a103b7beb8e195e5a9e721da10c502447a3c99702cfb4"
+    }
+  },
+  "theorems": [
+    "get_refines",
+    "put_refines",
+    "get_valid",
+    "put_valid",
+    "get_preserves_values",
+    "put_lookup_written",
+    "put_existing_no_eviction",
+    "put_full_evicts_oldest",
+    "get_preserves_other_order",
+    "exported_run_valid",
+    "fastGet_eq_get",
+    "exported_get_correct",
+    "exported_put_correct",
+    "exported_run_refines",
+    "exported_batch_refines",
+    "put_preserves_other_order"
+  ]
+}

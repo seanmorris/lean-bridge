@@ -4,7 +4,10 @@
  * @file
  */
 
-import { ready, shortestPath } from "./runtime.mjs";
+import { prepareShortestPath, ready, shortestPath } from "./runtime.mjs";
+import {
+	attachBrowserBenchmark, measureSyncBenchmark
+} from "../shared/browser-benchmark.mjs";
 
 const COLUMNS = 28;
 const ROWS = 18;
@@ -239,9 +242,162 @@ globalThis.addEventListener("keydown", event => {
 	if(event.key === "3") setMode("end");
 });
 
+const makeBenchmarkGraph = () => {
+	const offsets = new Uint32Array(VERTEX_COUNT + 1);
+	const targets = [];
+	const weights = [];
+	for(let vertex = 0; vertex < VERTEX_COUNT; vertex += 1)
+	{
+		const x = vertex % COLUMNS;
+		const y = Math.floor(vertex / COLUMNS);
+		const neighbors = [
+			x > 0 ? vertex - 1 : -1
+			, x + 1 < COLUMNS ? vertex + 1 : -1
+			, y > 0 ? vertex - COLUMNS : -1
+			, y + 1 < ROWS ? vertex + COLUMNS : -1
+		];
+		for(const neighbor of neighbors)
+		{
+			if(neighbor < 0) continue;
+			targets.push(neighbor);
+			weights.push(1 + ((vertex * 17 + neighbor * 31) % 9));
+		}
+		offsets[vertex + 1] = targets.length;
+	}
+	return { offsets, targets: Uint32Array.from(targets), weights: Uint32Array.from(weights) };
+};
+
+const javascriptShortestPath = ({ vertexCount, offsets, targets, weights, start: source, target: goal }) => {
+	const distances = new Float64Array(vertexCount);
+	distances.fill(Number.POSITIVE_INFINITY);
+	const previous = new Int32Array(vertexCount);
+	previous.fill(-1);
+	const heapVertices = [];
+	const heapDistances = [];
+	const push = (vertex, distance) => {
+		let index = heapVertices.length;
+		heapVertices.push(vertex);
+		heapDistances.push(distance);
+		while(index > 0)
+		{
+			const parent = Math.floor((index - 1) / 2);
+			if(heapDistances[parent] <= distance) break;
+			heapVertices[index] = heapVertices[parent];
+			heapDistances[index] = heapDistances[parent];
+			index = parent;
+		}
+		heapVertices[index] = vertex;
+		heapDistances[index] = distance;
+	};
+	const pop = () => {
+		const vertex = heapVertices[0];
+		const distance = heapDistances[0];
+		const lastVertex = heapVertices.pop();
+		const lastDistance = heapDistances.pop();
+		if(heapVertices.length > 0)
+		{
+			let index = 0;
+			while(true)
+			{
+				const left = index * 2 + 1;
+				if(left >= heapVertices.length) break;
+				const right = left + 1;
+				const child = right < heapVertices.length && heapDistances[right] < heapDistances[left]
+					? right : left;
+				if(heapDistances[child] >= lastDistance) break;
+				heapVertices[index] = heapVertices[child];
+				heapDistances[index] = heapDistances[child];
+				index = child;
+			}
+			heapVertices[index] = lastVertex;
+			heapDistances[index] = lastDistance;
+		}
+		return { distance, vertex };
+	};
+	distances[source] = 0;
+	push(source, 0);
+	while(heapVertices.length > 0)
+	{
+		const current = pop();
+		if(current.distance !== distances[current.vertex]) continue;
+		if(current.vertex === goal) break;
+		for(let edge = offsets[current.vertex]; edge < offsets[current.vertex + 1]; edge += 1)
+		{
+			const next = targets[edge];
+			const candidate = current.distance + weights[edge];
+			if(candidate >= distances[next]) continue;
+			distances[next] = candidate;
+			previous[next] = current.vertex;
+			push(next, candidate);
+		}
+	}
+	if(!Number.isFinite(distances[goal])) return [];
+	const result = [];
+	for(let vertex = goal; vertex >= 0; vertex = previous[vertex])
+	{
+		result.push(vertex);
+		if(vertex === source) break;
+	}
+	return result.reverse();
+};
+
+const benchmarkPathCost = (graph, route) => {
+	let cost = 0;
+	for(let index = 1; index < route.length; index += 1)
+	{
+		const source = route[index - 1];
+		const target = route[index];
+		let weight = -1;
+		for(let edge = graph.offsets[source]; edge < graph.offsets[source + 1]; edge += 1)
+		{
+			if(graph.targets[edge] === target) weight = graph.weights[edge];
+		}
+		if(weight < 0) throw new Error("A benchmark solver returned a nonexistent edge");
+		cost += weight;
+	}
+	return cost;
+};
+
+const benchmarkGraph = makeBenchmarkGraph();
+let benchmarkSolve;
+const benchmarkRequest = index => {
+	const source = (index * 47 + 11) % VERTEX_COUNT;
+	let goal = (index * 193 + VERTEX_COUNT - 7) % VERTEX_COUNT;
+	if(goal === source) goal = (goal + Math.floor(VERTEX_COUNT / 2)) % VERTEX_COUNT;
+	return { vertexCount: VERTEX_COUNT, ...benchmarkGraph, start: source, target: goal };
+};
+
 render();
-ready().then(() => animateInitialMaze(200)).catch(error => {
+const demoReady = ready().then(() => animateInitialMaze(200));
+const benchmarkReady = demoReady.then(async () => {
+	benchmarkSolve = await prepareShortestPath({ vertexCount: VERTEX_COUNT, ...benchmarkGraph });
+});
+demoReady.catch(error => {
 	status.className = "status no-path ready";
 	status.innerHTML = '<span class="spinner"></span> Lean/Wasm failed to load';
 	console.error(error);
+});
+
+attachBrowserBenchmark({
+	root: document.querySelector("#browser-benchmark")
+	, prepare: () => benchmarkReady
+	, sample: async (index, warmup) => {
+		const request = benchmarkRequest(index + (warmup ? 10_000 : 0));
+		const lean = measureSyncBenchmark(() => benchmarkSolve(request.start, request.target));
+		const javascript = measureSyncBenchmark(() => javascriptShortestPath(request));
+		const leanPath = lean.result;
+		const javascriptPath = javascript.result;
+		if(leanPath[0] !== request.start || leanPath.at(-1) !== request.target)
+		{
+			throw new Error("Lean returned incorrect benchmark endpoints");
+		}
+		if(benchmarkPathCost(request, leanPath) !== benchmarkPathCost(request, javascriptPath))
+		{
+			throw new Error("Lean and JavaScript found paths with different costs");
+		}
+		return { javascriptMs: javascript.milliseconds, leanMs: lean.milliseconds };
+	}
+	, summarize: ({ javascriptMedian, leanMedian, trialCount }) =>
+		`${VERTEX_COUNT} vertices · ${benchmarkGraph.targets.length} directed edges · `
+		+ `${trialCount} costs agreed · +${(leanMedian - javascriptMedian).toFixed(2)} ms`
 });

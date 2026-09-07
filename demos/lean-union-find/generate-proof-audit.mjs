@@ -13,12 +13,13 @@ const demoRoot = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(demoRoot, "../..");
 const files = ["UnionFindCore.lean", "UnionFind.lean"];
 const requiredTheorems = [
-	"edgeMatches_linkEdge"
-	, "allFrom_get"
-	, "certificate_parent_connected"
-	, "certificate_edges_closed"
-	, "partitionCertificate_exact"
-	, "certifiedPartition_correct"
+	"rootFrom_eq_of_path"
+	, "currentLinkEdge"
+	, "parentSound_link"
+	, "fastUnion_correct"
+	, "fastProcessFrom_correct"
+	, "fastRepresentatives_correct"
+	, "solvePartition_correct"
 	, "connected_equivalence"
 ];
 const sources = await Promise.all(files.map(file => readFile(resolve(demoRoot, file), "utf8")));

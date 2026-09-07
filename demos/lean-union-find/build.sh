@@ -65,7 +65,7 @@ em++ \
   -sENVIRONMENT=web,node \
   -sALLOW_MEMORY_GROWTH=1 \
   -sEXPORTED_RUNTIME_METHODS=HEAPU32 \
-  -sEXPORTED_FUNCTIONS=_lean_union_find_runtime_init,_lean_union_find_solve,_lean_union_find_run_operations,_malloc,_free \
+  -sEXPORTED_FUNCTIONS=_lean_union_find_runtime_init,_lean_union_find_solve,_lean_union_find_prepare_partition,_lean_union_find_solve_prepared_partition,_lean_union_find_solve_debug,_lean_union_find_run_operations,_malloc,_free \
   -Wl,--no-entry \
   -o "$OUTPUT_DIR/lean-union-find.mjs"
 

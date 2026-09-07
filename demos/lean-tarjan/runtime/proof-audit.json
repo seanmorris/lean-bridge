@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked total return, exact strongly connected components, and acyclic condensation before compiling this implementation",
+  "sourceFiles": {
+    "TarjanCore.lean": {
+      "bytes": 13672,
+      "sha256": "7e42ac5145dd39c282b0a197a54cce6808cab185f5570f4115e6ae5e12f55e86"
+    },
+    "TarjanReachability.lean": {
+      "bytes": 7938,
+      "sha256": "80e54cc1381a4d632b93eee311e3ff7a6e75de56785f2ad32cd8a56759e32df3"
+    },
+    "TarjanCertificate.lean": {
+      "bytes": 11596,
+      "sha256": "1e7c89314302533a47e4c5cee4f4133dc0f462192210241170d39c785955b379"
+    },
+    "TarjanChecks.lean": {
+      "bytes": 13119,
+      "sha256": "d91b796d239b5805c4c4217b88de9f87ae5f18663e08fb8501ee8d10f8f46e8d"
+    },
+    "TarjanTotal.lean": {
+      "bytes": 8038,
+      "sha256": "c921e8a5974a4e782f7215368ae918d25ffcbebcd5149609294d279766438f1e"
+    },
+    "Tarjan.lean": {
+      "bytes": 5210,
+      "sha256": "7660453c7705a95d1d527c88658fad688caa6773c5afccbd3431ef947162d600"
+    }
+  },
+  "theorems": [
+    "certificate_partition",
+    "partition_maximal",
+    "condensation_acyclic",
+    "condensation_edge_projects",
+    "condensation_walk_reachable",
+    "edgeWitness_sound",
+    "descendingFrom_sound",
+    "certificateCheck_sound",
+    "transitiveClosure_correct",
+    "totalLabels_correct",
+    "discover_assigns",
+    "discover_preserves_existing_index",
+    "discover_preserves_stack_uniqueness",
+    "lowerLink_nonincreasing",
+    "lowerLink_preserves_index_bound",
+    "lowerLink_preserves_reachable_witness",
+    "popThrough_partition",
+    "popThrough_contains_root",
+    "popThrough_preserves_uniqueness",
+    "solve_prepared_correct",
+    "solve_same_iff",
+    "solve_maximal",
+    "solve_total",
+    "prepareExport_valid_iff",
+    "serialize_label",
+    "solveExport_no_failure",
+    "exported_same_iff",
+    "exported_total_same_iff"
+  ]
+}

@@ -148,6 +148,7 @@ html { scrollbar-gutter:stable both-edges; }
 .connection-legend .missing-key-link { color:var(--gold); }
 .connection-legend .missing-key-link::before { width:6px; height:6px; border-radius:50%; transform:translate(-50%,-50%); }
 .workspace,.proof-grid { border-radius:var(--radius-shell); }
+.workspace + .browser-benchmark { margin-top:-44px; }
 .reading-guide li,.result-summary,.room-card,.room-grid,.playground-panel { border-radius:var(--radius-panel); }
 .inventory-mode,.tool,.mini-picker button,.actions button,#seed,.next-actions button,.key-toggle,.source-tab,.source-meta button,.launch-lean { border-radius:var(--radius-control); }
 .tile { border-radius:var(--radius-cell); }

@@ -8,6 +8,18 @@ Correctness proofs for the exact CSR implementation exported by
 
 namespace LeanFloodFill
 
+theorem allUpTo_get (predicate : Nat → Bool) (count index : Nat)
+    (checked : allUpTo count predicate = true) (bound : index < count) :
+    predicate index = true := by
+  induction count with
+  | zero => omega
+  | succ count ih =>
+      simp only [allUpTo, Bool.and_eq_true] at checked
+      by_cases last : index = count
+      · subst index
+        exact checked.2
+      · exact ih checked.1 (by omega)
+
 theorem walk_rcons (vertexCount : Nat) (offsets targets : Array Nat)
     (enabled allowed : Array Bool) (current target next : Nat) : ∀ path,
     Walk vertexCount offsets targets enabled allowed current target path →
@@ -64,8 +76,7 @@ theorem closureCheck_edge (vertexCount : Nat) (offsets targets : Array Nat)
     (targetAllowed : arrayGet allowed target false = true) :
     arrayGet visited target false = true := by
   rcases edge with ⟨sourceBound, targetBound, adjacent⟩
-  have sourceMember : source ∈ List.range vertexCount := List.mem_range.mpr sourceBound
-  have sourceCheck := (List.all_eq_true.mp checked) source sourceMember
+  have sourceCheck := allUpTo_get _ vertexCount source checked sourceBound
   simp only [sourceVisited, if_true] at sourceCheck
   simp only [csrAdjacent] at adjacent
   exact closureFrom_adjacentFrom vertexCount source targets enabled allowed visited
@@ -84,8 +95,7 @@ theorem parentCheck_reachable (vertexCount : Nat) (offsets targets : Array Nat)
   generalize rankEq : arrayGet state.rank vertex 0 = rank
   induction rank using Nat.strongRecOn generalizing vertex with
   | ind rank ih =>
-      have member : vertex ∈ List.range vertexCount := List.mem_range.mpr vertexBound
-      have vertexCheck := (List.all_eq_true.mp checked) vertex member
+      have vertexCheck := allUpTo_get _ vertexCount vertex checked vertexBound
       simp only [vertexVisited, if_true, Bool.and_eq_true] at vertexCheck
       rcases vertexCheck with ⟨vertexAllowed, parentPart⟩
       by_cases isStart : vertex = start
@@ -152,7 +162,8 @@ theorem floodFillCsr_correct (vertexCount : Nat) (offsets targets enabledFlags a
         Reachable vertexCount offsets targets (natFlagsToBool enabledFlags)
           (natFlagsToBool allowedFlags) start vertex) := by
   simp only [floodFillCsr] at found
-  generalize rawEq : floodRawCsr vertexCount offsets targets enabledFlags allowedFlags start = raw at found
+  generalize rawEq : floodRawCsr vertexCount offsets targets (natFlagsToBool enabledFlags)
+    (natFlagsToBool allowedFlags) start = raw at found
   split at found
   · rename_i certificate
     simp only [Option.some.injEq] at found
@@ -166,12 +177,12 @@ def CapabilitiesSubset (left right : List Nat) : Prop :=
 
 def capabilityEnabled (requirements : Array Nat) (capabilityCount : Nat)
     (capabilities : List Nat) : Array Bool :=
-  natFlagsToBool (edgeFlagsForCapabilities requirements capabilityCount capabilities)
+  edgeBoolsForCapabilities requirements capabilityCount capabilities
 
 @[simp] theorem capabilityEnabled_size (requirements : Array Nat) (capabilityCount : Nat)
     (capabilities : List Nat) :
     (capabilityEnabled requirements capabilityCount capabilities).size = requirements.size := by
-  simp [capabilityEnabled, natFlagsToBool, edgeFlagsForCapabilities]
+  simp [capabilityEnabled, edgeBoolsForCapabilities]
 
 theorem capabilityEnabled_get (requirements : Array Nat) (capabilityCount : Nat)
     (capabilities : List Nat) (index : Nat) :
@@ -181,13 +192,36 @@ theorem capabilityEnabled_get (requirements : Array Nat) (capabilityCount : Nat)
           arrayGet requirements index capabilityCount ∈ capabilities)
       else false := by
   by_cases bound : index < requirements.size
-  · simp only [capabilityEnabled, natFlagsToBool, edgeFlagsForCapabilities, arrayGet,
+  · simp only [capabilityEnabled, edgeBoolsForCapabilities, arrayGet,
       Array.getD, Array.size_map, bound, dite_true]
     by_cases unrestricted : requirements[index] = capabilityCount <;>
       by_cases present : requirements[index] ∈ capabilities <;>
         simp [unrestricted, present] <;> exact bound
-  · simp [capabilityEnabled, natFlagsToBool, edgeFlagsForCapabilities, arrayGet,
+  · simp [capabilityEnabled, edgeBoolsForCapabilities, arrayGet,
       Array.getD, bound]
+
+theorem floodFillCapabilitiesCsr_correct (vertexCount capabilityCount : Nat)
+    (offsets targets requirements allowedFlags : Array Nat) (capabilities : List Nat)
+    (start : Nat) (state : FloodState)
+    (found : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets requirements
+      allowedFlags capabilities start = some state) :
+    ∀ vertex, vertex < vertexCount →
+      (arrayGet state.visited vertex false = true ↔
+        Reachable vertexCount offsets targets
+          (capabilityEnabled requirements capabilityCount capabilities)
+          (natFlagsToBool allowedFlags) start vertex) := by
+  simp only [floodFillCapabilitiesCsr] at found
+  generalize rawEq : floodRawCsr vertexCount offsets targets
+    (edgeBoolsForCapabilities requirements capabilityCount capabilities)
+    (natFlagsToBool allowedFlags) start = raw at found
+  split at found
+  · rename_i certificate
+    simp only [Option.some.injEq] at found
+    subst state
+    exact floodCertificate_exact vertexCount offsets targets
+      (capabilityEnabled requirements capabilityCount capabilities)
+      (natFlagsToBool allowedFlags) start raw certificate
+  · simp at found
 
 theorem capabilityEnabled_mono (requirements : Array Nat) (capabilityCount : Nat)
     (left right : List Nat) (subset : CapabilitiesSubset left right) (index : Nat)
@@ -310,11 +344,35 @@ theorem discoverFrom_extends (capabilityCount : Nat) (grants : Array Nat)
         simp [discovered]
         exact ih capabilities
 
+theorem discoverIndices_eq_discoverFrom (capabilityCount : Nat) (grants : Array Nat)
+    (visited : Array Bool) : ∀ fuel vertex capabilities,
+    discoverIndices capabilityCount grants visited fuel vertex capabilities =
+      discoverFrom capabilityCount grants visited (List.range' vertex fuel) capabilities := by
+  intro fuel vertex capabilities
+  induction fuel generalizing vertex capabilities with
+  | zero => rfl
+  | succ fuel ih =>
+      simp only [discoverIndices, List.range'_succ, discoverFrom]
+      let grant := arrayGet grants vertex capabilityCount
+      by_cases discovered : arrayGet visited vertex false && grant < capabilityCount
+      · dsimp [grant] at discovered
+        simp [discovered, ih]
+      · dsimp [grant] at discovered
+        simp [discovered, ih]
+
+theorem discoverCapabilities_eq (vertexCount capabilityCount : Nat)
+    (grants : Array Nat) (visited : Array Bool) (capabilities : List Nat) :
+    discoverCapabilities vertexCount capabilityCount grants visited capabilities =
+      discoverFrom capabilityCount grants visited (List.range vertexCount) capabilities := by
+  rw [List.range_eq_range']
+  exact discoverIndices_eq_discoverFrom capabilityCount grants visited vertexCount 0 capabilities
+
 theorem discoverCapabilities_extends (vertexCount capabilityCount : Nat)
     (grants : Array Nat) (visited : Array Bool) (capabilities : List Nat) :
     CapabilitiesSubset capabilities
-      (discoverCapabilities vertexCount capabilityCount grants visited capabilities) :=
-  discoverFrom_extends capabilityCount grants visited (List.range vertexCount) capabilities
+      (discoverCapabilities vertexCount capabilityCount grants visited capabilities) := by
+  rw [discoverCapabilities_eq]
+  exact discoverFrom_extends capabilityCount grants visited (List.range vertexCount) capabilities
 
 theorem discoverFrom_subset (capabilityCount : Nat) (grants : Array Nat)
     (visited : Array Bool) (candidate : List Nat) : ∀ vertices capabilities,
@@ -388,6 +446,7 @@ theorem discoverCapabilities_contains (vertexCount capabilityCount : Nat)
     (validGrant : arrayGet grants vertex capabilityCount < capabilityCount) :
     arrayGet grants vertex capabilityCount ∈
       discoverCapabilities vertexCount capabilityCount grants visited capabilities := by
+  rw [discoverCapabilities_eq]
   exact discoverFrom_contains capabilityCount grants visited (List.range vertexCount)
     capabilities vertex (List.mem_range.mpr vertexBound) visitedVertex validGrant
 
@@ -405,10 +464,11 @@ theorem discoverCapabilities_subset_closed (vertexCount capabilityCount : Nat)
     (current candidate : List Nat) (subset : CapabilitiesSubset current candidate)
     (closed : CapabilityClosed vertexCount capabilityCount offsets targets requirements
       allowedFlags grants start candidate) (flood : FloodState)
-    (found : floodFillCsr vertexCount offsets targets
-      (edgeFlagsForCapabilities requirements capabilityCount current) allowedFlags start = some flood) :
+    (found : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets requirements
+      allowedFlags current start = some flood) :
     CapabilitiesSubset
       (discoverCapabilities vertexCount capabilityCount grants flood.visited current) candidate := by
+  rw [discoverCapabilities_eq]
   apply discoverFrom_subset capabilityCount grants flood.visited candidate
     (List.range vertexCount) current subset
   intro vertex member visited validGrant
@@ -416,10 +476,8 @@ theorem discoverCapabilities_subset_closed (vertexCount capabilityCount : Nat)
   have reachableCurrent : Reachable vertexCount offsets targets
       (capabilityEnabled requirements capabilityCount current)
       (natFlagsToBool allowedFlags) start vertex := by
-    simpa [capabilityEnabled] using
-      (floodFillCsr_correct vertexCount offsets targets
-        (edgeFlagsForCapabilities requirements capabilityCount current) allowedFlags start flood found
-        vertex vertexBound).mp visited
+    exact (floodFillCapabilitiesCsr_correct vertexCount capabilityCount offsets targets requirements
+      allowedFlags current start flood found vertex vertexBound).mp visited
   have reachableCandidate := reachable_capabilities_mono vertexCount capabilityCount offsets targets
     requirements allowedFlags start vertex current candidate subset reachableCurrent
   exact closed vertex vertexBound reachableCandidate validGrant
@@ -435,11 +493,11 @@ theorem capabilityLoop_extends (vertexCount capabilityCount : Nat)
   | zero => simp [capabilityLoop] at found
   | succ fuel ih =>
       simp only [capabilityLoop] at found
-      let edgeFlags := edgeFlagsForCapabilities requirements capabilityCount initial
-      cases floodEq : floodFillCsr vertexCount offsets targets edgeFlags allowedFlags start with
-      | none => simp [edgeFlags, floodEq] at found
+      cases floodEq : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets
+          requirements allowedFlags initial start with
+      | none => simp [floodEq] at found
       | some flood =>
-          simp only [edgeFlags, floodEq] at found
+          simp only [floodEq] at found
           let discovered := discoverCapabilities vertexCount capabilityCount grants flood.visited initial
           split at found
           · simp only [Option.some.injEq] at found
@@ -461,20 +519,20 @@ theorem capabilityLoop_closed (vertexCount capabilityCount : Nat)
   | zero => simp [capabilityLoop] at found
   | succ fuel ih =>
       simp only [capabilityLoop] at found
-      let edgeFlags := edgeFlagsForCapabilities requirements capabilityCount initial
-      cases floodEq : floodFillCsr vertexCount offsets targets edgeFlags allowedFlags start with
-      | none => simp [edgeFlags, floodEq] at found
+      cases floodEq : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets
+          requirements allowedFlags initial start with
+      | none => simp [floodEq] at found
       | some flood =>
-          simp only [edgeFlags, floodEq] at found
+          simp only [floodEq] at found
           let discovered := discoverCapabilities vertexCount capabilityCount grants flood.visited initial
           split at found
           · rename_i stable
             simp only [Option.some.injEq] at found
             subst result
             intro vertex vertexBound reachable validGrant
-            have visited := (floodFillCsr_correct vertexCount offsets targets edgeFlags allowedFlags
-              start flood floodEq vertex vertexBound).mpr (by
-                simpa [capabilityEnabled, edgeFlags] using reachable)
+            have visited := (floodFillCapabilitiesCsr_correct vertexCount capabilityCount offsets
+              targets requirements allowedFlags initial start flood floodEq vertex vertexBound).mpr
+              reachable
             have granted := discoverCapabilities_contains vertexCount capabilityCount grants
               flood.visited initial vertex vertexBound visited validGrant
             simpa [discovered, stable] using granted
@@ -494,11 +552,11 @@ theorem capabilityLoop_least (vertexCount capabilityCount : Nat)
   | zero => simp [capabilityLoop] at found
   | succ fuel ih =>
       simp only [capabilityLoop] at found
-      let edgeFlags := edgeFlagsForCapabilities requirements capabilityCount initial
-      cases floodEq : floodFillCsr vertexCount offsets targets edgeFlags allowedFlags start with
-      | none => simp [edgeFlags, floodEq] at found
+      cases floodEq : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets
+          requirements allowedFlags initial start with
+      | none => simp [floodEq] at found
       | some flood =>
-          simp only [edgeFlags, floodEq] at found
+          simp only [floodEq] at found
           let discovered := discoverCapabilities vertexCount capabilityCount grants flood.visited initial
           split at found
           · simp only [Option.some.injEq] at found
@@ -506,7 +564,7 @@ theorem capabilityLoop_least (vertexCount capabilityCount : Nat)
             exact initialSubset
           · have discoveredSubset := discoverCapabilities_subset_closed vertexCount capabilityCount
               offsets targets requirements allowedFlags grants start initial candidate initialSubset
-              candidateClosed flood (by simpa [edgeFlags] using floodEq)
+              candidateClosed flood floodEq
             exact ih discovered result discoveredSubset found
 
 /-!
@@ -531,9 +589,8 @@ theorem capabilityLoop_reachable (vertexCount capabilityCount : Nat)
   | zero => simp [capabilityLoop] at found
   | succ fuel ih =>
       simp only [capabilityLoop] at found
-      generalize edgeEq : edgeFlagsForCapabilities requirements capabilityCount
-        capabilities = edgeFlags at found
-      cases floodEq : floodFillCsr vertexCount offsets targets edgeFlags allowedFlags start with
+      cases floodEq : floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets
+          requirements allowedFlags capabilities start with
       | none => simp [floodEq] at found
       | some flood =>
           simp only [floodEq] at found
@@ -544,9 +601,8 @@ theorem capabilityLoop_reachable (vertexCount capabilityCount : Nat)
             simp only [Option.some.injEq] at found
             subst result
             subst discovered
-            simpa [capabilityEnabled, edgeEq] using
-              floodFillCsr_correct vertexCount offsets targets edgeFlags allowedFlags start flood
-                floodEq
+            exact floodFillCapabilitiesCsr_correct vertexCount capabilityCount offsets targets
+              requirements allowedFlags capabilities start flood floodEq
           · exact ih discovered result found
 
 theorem capabilityClosureCsr_reachable (vertexCount capabilityCount : Nat)

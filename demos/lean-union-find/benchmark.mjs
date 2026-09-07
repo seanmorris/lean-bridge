@@ -58,7 +58,7 @@ const percentile = (samples, fraction) => samples[Math.min(samples.length - 1,
 	Math.floor(samples.length * fraction))];
 
 const measure = async operation => {
-	await operation();
+	for(let index = 0; index < 5; index += 1) await operation();
 	const samples = [];
 	for(let index = 0; index < iterations; index += 1)
 	{

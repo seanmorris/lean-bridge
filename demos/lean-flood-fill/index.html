@@ -8,6 +8,8 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2309111f%22/><text x=%228%22 y=%2224%22 font-size=%2222%22 fill=%22%23adf7b6%22>λ</text></svg>">
     <link rel="stylesheet" href="../shared/site.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/browser-benchmark.css">
+    <link rel="stylesheet" href="../shared/proof-page.css">
   </head>
   <body>
     <main>
@@ -25,7 +27,9 @@
         </ol>
       </section>
 
-      <section class="workspace" aria-label="Editable room reachability demo">
+      <section class="theme-lab" aria-labelledby="lab-title">
+        <div class="lab-heading"><div><p class="label">Interactive proof adapter</p><h2 id="lab-title">Reachability workbench</h2></div><p class="runtime-status">Generic directed graph</p></div>
+        <div class="workspace" aria-label="Editable room reachability demo">
         <aside class="controls">
           <div class="control-group">
             <p class="label">Key handling</p>
@@ -75,6 +79,21 @@
             <div class="legend" aria-hidden="true"><span>◎ Start</span><span><i class="reach"></i>Reachable floor</span><span><i class="blocked"></i>Unreachable floor</span><span><i class="solid"></i>Solid wall</span><span>◆ Key</span><span><i class="ledge-symbol">→</i>One-way ledge</span><span>▣ Door control</span></div>
           </div>
         </div>
+        </div>
+      </section>
+
+      <section id="browser-benchmark" class="browser-benchmark" aria-labelledby="benchmark-title">
+        <div class="browser-benchmark-copy">
+          <p class="label">Live browser benchmark</p>
+          <h2 id="benchmark-title">How fast is the<br>key closure?</h2>
+          <p>The gated graph is prepared once. Five excluded runs warm both solvers, then Lean/Wasm and optimized JavaScript solve it 100 times and must return identical rooms and keys.</p>
+          <div class="browser-benchmark-actions"><button data-benchmark-run>Run again</button><button data-benchmark-cancel class="secondary">Cancel</button></div>
+        </div>
+        <div class="browser-benchmark-card">
+          <div class="browser-benchmark-summary"><b data-benchmark-summary>No benchmark run yet.</b><span data-benchmark-progress>Waiting to enter view</span></div>
+          <dl class="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div><div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div><div><dt>JS median</dt><dd data-benchmark-js>—</dd></div><div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl>
+          <svg class="browser-benchmark-histogram" data-benchmark-histogram role="img" aria-label="Histogram of checked capability-closure latency" viewBox="0 0 620 200"></svg>
+        </div>
       </section>
 
       <section class="proof-section" aria-labelledby="proof-title"
@@ -108,8 +127,7 @@
       </section>
       <footer><p><b>The room model is not trusted Lean code.</b> It becomes a generic directed CSR graph before the compiled solver sees it.</p><a href="./FloodFill.lean">Read the proof →</a></footer>
     </main>
-    <script type="module" src="../shared/site-nav.mjs"></script>
+    <script type="module" src="../shared/demo-page.mjs"></script>
     <script type="module" src="app.mjs"></script>
-    <script type="module" src="../shared/proof-viewer.mjs"></script>
   </body>
 </html>

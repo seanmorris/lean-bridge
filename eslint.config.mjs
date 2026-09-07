@@ -17,6 +17,11 @@ const browserFiles = [
 	, 'demos/lean-dijkstra/{app,runtime}.mjs'
 	, 'demos/lean-flood-fill/{app,runtime}.mjs'
 	, 'demos/lean-union-find/{app,runtime}.mjs'
+	, 'demos/lean-topological-sort/{app,runtime}.mjs'
+	, 'demos/lean-aho-corasick/{app,runtime}.mjs'
+	, 'demos/lean-lru-cache/{app,runtime}.mjs'
+	, 'demos/lean-a-star/{app,runtime}.mjs'
+	, 'demos/lean-tarjan/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
@@ -77,6 +82,11 @@ export default [
 			, 'demos/lean-dijkstra/runtime/lean-dijkstra.mjs'
 			, 'demos/lean-flood-fill/runtime/lean-flood-fill.mjs'
 			, 'demos/lean-union-find/runtime/lean-union-find.mjs'
+			, 'demos/lean-topological-sort/runtime/lean-topological-sort.mjs'
+			, 'demos/lean-aho-corasick/runtime/lean-aho-corasick.mjs'
+			, 'demos/lean-lru-cache/runtime/lean-lru-cache.mjs'
+			, 'demos/lean-a-star/runtime/lean-a-star.mjs'
+			, 'demos/lean-tarjan/runtime/lean-tarjan.mjs'
 			, 'result*/**'
 		]
 	}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean elaboration completed before this receipt was generated",
+  "sourceFiles": {
+    "AhoCorasickCore.lean": {
+      "bytes": 17835,
+      "sha256": "19ee6d4376e21a733fb7bb6077ebae218b9096107ac3cbedba764e50b7251bec"
+    },
+    "AhoCorasick.lean": {
+      "bytes": 2469,
+      "sha256": "24ad793090593b15ebc38777fe2306dd5dd0760ac7fb09a606b3a38b7256f150"
+    }
+  },
+  "theorems": [
+    "machineCheck_sound",
+    "compile_machine_invariant",
+    "compile_trie_invariant",
+    "compile_failure_invariant",
+    "resultCheck_sound",
+    "scan_result_correct",
+    "scan_matches_sound",
+    "scan_matches_complete"
+  ]
+}

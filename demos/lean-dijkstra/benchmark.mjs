@@ -92,7 +92,8 @@ const runWorkload = async workload => {
 		, start: 0
 		, target: graph.vertexCount - 1
 	};
-	const warmPath = await shortestPath(request);
+	let warmPath;
+	for(let index = 0; index < 5; index += 1) warmPath = await shortestPath(request);
 	const expectedCost = validatePath(graph, warmPath);
 	const sampleCount = Number.isInteger(overriddenSamples) ? overriddenSamples : workload.samples;
 	const durations = [];

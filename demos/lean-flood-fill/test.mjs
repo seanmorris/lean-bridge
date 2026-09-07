@@ -6,7 +6,9 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { reachable, reachableWithCapabilities } from "./runtime.mjs";
+import {
+	prepareCapabilityClosure, reachable, reachableWithCapabilities
+} from "./runtime.mjs";
 
 const referenceReachable = ({ vertexCount, offsets, targets, allowedVertices, allowedEdges, start }) => {
 	if(!allowedVertices[start]) return [];
@@ -115,6 +117,10 @@ test("compiled capability closure acquires chained reusable keys", async () => {
 	const expected = referenceCapabilities(request);
 	assert.deepEqual([...actual.vertices], expected.vertices);
 	assert.deepEqual([...actual.capabilities].sort((a, b) => a - b), expected.capabilities);
+	const solvePrepared = await prepareCapabilityClosure(request);
+	const prepared = await solvePrepared();
+	assert.deepEqual([...prepared.vertices], expected.vertices);
+	assert.deepEqual([...prepared.capabilities].sort((a, b) => a - b), expected.capabilities);
 });
 
 test("compiled implementation matches independent randomized references", async () => {

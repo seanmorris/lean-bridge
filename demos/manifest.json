@@ -31,6 +31,56 @@
       "entrypoint": "lean-union-find/",
       "theorems": ["partitionCertificate_exact", "certifiedPartition_correct"],
       "accent": "gold"
+    },
+    {
+      "slug": "lean-topological-sort",
+      "title": "Topological sort + cycle witness",
+      "category": "Builds & dependency graphs",
+      "status": "available",
+      "summary": "A generic checked scheduler returns a complete legal order or an explicit directed dependency cycle.",
+      "entrypoint": "lean-topological-sort/",
+      "theorems": ["solve_total", "solveGraph_total", "solve_order_correct", "solve_cycle_correct"],
+      "accent": "coral"
+    },
+    {
+      "slug": "lean-aho-corasick",
+      "title": "Aho–Corasick multi-pattern search",
+      "category": "Text, logs & signatures",
+      "status": "available",
+      "summary": "One checked byte automaton reports every exact match, including overlaps and duplicate patterns.",
+      "entrypoint": "lean-aho-corasick/",
+      "theorems": ["scan_matches_sound", "scan_matches_complete"],
+      "accent": "violet"
+    },
+    {
+      "slug": "lean-lru-cache",
+      "title": "LRU cache",
+      "category": "Applications & systems",
+      "status": "available",
+      "summary": "A bounded key/value cache with proven recency, capacity, and least-recently-used eviction.",
+      "entrypoint": "lean-lru-cache/",
+      "theorems": ["get_valid", "put_full_evicts_oldest"],
+      "accent": "gold"
+    },
+    {
+      "slug": "lean-a-star",
+      "title": "A* heuristic search",
+      "category": "Routes & weighted graphs",
+      "status": "available",
+      "summary": "A checked heuristic guides a generic shortest-path search. Compare its route and explored region with Dijkstra on weighted terrain.",
+      "entrypoint": "lean-a-star/",
+      "theorems": ["solve_total", "solve_path_shortest", "solve_unreachable", "exported_search_correct"],
+      "accent": "mint"
+    },
+    {
+      "slug": "lean-tarjan",
+      "title": "Tarjan strongly connected components",
+      "category": "Modules & dependency graphs",
+      "status": "available",
+      "summary": "Find every group of mutually dependent modules, then collapse those groups into an acyclic graph.",
+      "entrypoint": "lean-tarjan/",
+      "theorems": ["solve_total", "exported_same_iff", "solve_maximal", "condensation_acyclic"],
+      "accent": "violet"
     }
   ]
 }

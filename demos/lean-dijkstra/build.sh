@@ -44,9 +44,9 @@ INCLUDES=(
   -I"$RUNTIME_SOURCE/src/include"
 )
 
-emcc -O3 "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
+emcc -O3 -flto "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
   -c "$GENERATED_DIR/DijkstraCore.c" -o "$BUILD_DIR/DijkstraCore.o"
-emcc -O3 "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
+emcc -O3 -flto "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
   -c "$DEMO_ROOT/bridge.c" -o "$BUILD_DIR/bridge.o"
 
 em++ \
@@ -57,6 +57,7 @@ em++ \
   "$RUNTIME_BUILD/lib/lean/libleanrt.a" \
   -Wl,--end-group \
   -O3 \
+  -flto \
   "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" \
   "${INCLUDES[@]}" \
   -sMODULARIZE=1 \
@@ -64,7 +65,7 @@ em++ \
   -sENVIRONMENT=web,node \
   -sALLOW_MEMORY_GROWTH=1 \
   -sEXPORTED_RUNTIME_METHODS=HEAPU32 \
-  -sEXPORTED_FUNCTIONS=_lean_demo_runtime_init,_lean_demo_solve,_malloc,_free \
+  -sEXPORTED_FUNCTIONS=_lean_demo_runtime_init,_lean_demo_prepare_graph,_lean_demo_solve_prepared,_lean_demo_solve,_malloc,_free \
   -Wl,--no-entry \
   -o "$OUTPUT_DIR/lean-dijkstra.mjs"
 

@@ -67,15 +67,16 @@ structure FloodState where
   queue : Array Nat
   head : Nat
 
-private def scanNeighbors (vertexCount source : Nat) (targets enabled allowed : Array Nat)
+private def scanNeighbors (vertexCount source : Nat) (targets : Array Nat)
+    (enabled allowed : Array Bool)
     (stop : Nat) : Nat → Nat → FloodState → FloodState
   | 0, _, state => state
   | fuel + 1, index, state =>
       if stop ≤ index then state
       else
         let target := arrayGet targets index 0
-        if arrayGet enabled index 0 != 0 && target < vertexCount &&
-            arrayGet allowed target 0 != 0 && !arrayGet state.visited target true then
+        if arrayGet enabled index false && target < vertexCount &&
+            arrayGet allowed target false && !arrayGet state.visited target true then
           scanNeighbors vertexCount source targets enabled allowed stop fuel index.succ {
             state with
             visited := state.visited.setIfInBounds target true
@@ -85,7 +86,8 @@ private def scanNeighbors (vertexCount source : Nat) (targets enabled allowed : 
           }
         else scanNeighbors vertexCount source targets enabled allowed stop fuel index.succ state
 
-private def floodLoop (vertexCount : Nat) (offsets targets enabled allowed : Array Nat) :
+private def floodLoop (vertexCount : Nat) (offsets targets : Array Nat)
+    (enabled allowed : Array Bool) :
     Nat → FloodState → FloodState
   | 0, state => state
   | fuel + 1, state =>
@@ -98,9 +100,10 @@ private def floodLoop (vertexCount : Nat) (offsets targets enabled allowed : Arr
           (stop - first + 1) first { state with head := state.head + 1 }
         floodLoop vertexCount offsets targets enabled allowed fuel next
 
-def floodRawCsr (vertexCount : Nat) (offsets targets enabled allowed : Array Nat)
+def floodRawCsr (vertexCount : Nat) (offsets targets : Array Nat)
+    (enabled allowed : Array Bool)
     (start : Nat) : FloodState :=
-  let permitted := start < vertexCount && arrayGet allowed start 0 != 0
+  let permitted := start < vertexCount && arrayGet allowed start false
   let visited := Array.replicate vertexCount false
   let initial : FloodState := {
     visited := if permitted then visited.setIfInBounds start true else visited
@@ -114,9 +117,13 @@ def floodRawCsr (vertexCount : Nat) (offsets targets enabled allowed : Array Nat
 def natFlagsToBool (values : Array Nat) : Array Bool :=
   values.map fun value => value != 0
 
+def allUpTo : Nat → (Nat → Bool) → Bool
+  | 0, _ => true
+  | count + 1, predicate => allUpTo count predicate && predicate count
+
 def parentCheck (vertexCount : Nat) (offsets targets : Array Nat) (enabled allowed : Array Bool)
     (start : Nat) (state : FloodState) : Bool :=
-  (List.range vertexCount).all fun vertex =>
+  allUpTo vertexCount fun vertex =>
     if arrayGet state.visited vertex false then
       arrayGet allowed vertex false &&
         (if vertex = start then true
@@ -140,7 +147,7 @@ def closureFrom (vertexCount source : Nat) (targets : Array Nat) (enabled allowe
 
 def closureCheck (vertexCount : Nat) (offsets targets : Array Nat)
     (enabled allowed visited : Array Bool) : Bool :=
-  (List.range vertexCount).all fun source =>
+  allUpTo vertexCount fun source =>
     if arrayGet visited source false then
       let first := arrayGet offsets source 0
       let stop := arrayGet offsets source.succ 0
@@ -166,7 +173,7 @@ def floodFillCsr (vertexCount : Nat) (offsets targets enabledFlags allowedFlags 
     (start : Nat) : Option FloodState :=
   let enabled := natFlagsToBool enabledFlags
   let allowed := natFlagsToBool allowedFlags
-  let state := floodRawCsr vertexCount offsets targets enabledFlags allowedFlags start
+  let state := floodRawCsr vertexCount offsets targets enabled allowed start
   if FloodCertificate vertexCount offsets targets enabled allowed start state then some state else none
 
 def visitedVertices (vertexCount : Nat) (state : FloodState) : Array Nat :=
@@ -176,6 +183,19 @@ def edgeFlagsForCapabilities (requirements : Array Nat) (capabilityCount : Nat)
     (capabilities : List Nat) : Array Nat :=
   requirements.map fun requirement =>
     if requirement = capabilityCount || requirement ∈ capabilities then 1 else 0
+
+def edgeBoolsForCapabilities (requirements : Array Nat) (capabilityCount : Nat)
+    (capabilities : List Nat) : Array Bool :=
+  requirements.map fun requirement =>
+    requirement = capabilityCount || decide (requirement ∈ capabilities)
+
+def floodFillCapabilitiesCsr (vertexCount capabilityCount : Nat)
+    (offsets targets requirements allowedFlags : Array Nat) (capabilities : List Nat)
+    (start : Nat) : Option FloodState :=
+  let enabled := edgeBoolsForCapabilities requirements capabilityCount capabilities
+  let allowed := natFlagsToBool allowedFlags
+  let state := floodRawCsr vertexCount offsets targets enabled allowed start
+  if FloodCertificate vertexCount offsets targets enabled allowed start state then some state else none
 
 def discoverFrom (capabilityCount : Nat) (grants : Array Nat)
     (visited : Array Bool) : List Nat → List Nat → List Nat
@@ -187,9 +207,19 @@ def discoverFrom (capabilityCount : Nat) (grants : Array Nat)
     else capabilities
     discoverFrom capabilityCount grants visited rest discovered
 
+def discoverIndices (capabilityCount : Nat) (grants : Array Nat)
+    (visited : Array Bool) : Nat → Nat → List Nat → List Nat
+  | 0, _, capabilities => capabilities
+  | fuel + 1, vertex, capabilities =>
+      let grant := arrayGet grants vertex capabilityCount
+      let discovered := if arrayGet visited vertex false && grant < capabilityCount then
+        capabilities.insert grant
+      else capabilities
+      discoverIndices capabilityCount grants visited fuel vertex.succ discovered
+
 def discoverCapabilities (vertexCount capabilityCount : Nat) (grants : Array Nat)
     (visited : Array Bool) (capabilities : List Nat) : List Nat :=
-  discoverFrom capabilityCount grants visited (List.range vertexCount) capabilities
+  discoverIndices capabilityCount grants visited vertexCount 0 capabilities
 
 structure CapabilityResult where
   flood : FloodState
@@ -199,8 +229,8 @@ def capabilityLoop (vertexCount capabilityCount : Nat) (offsets targets requirem
     allowedFlags grants : Array Nat) (start : Nat) : Nat → List Nat → Option CapabilityResult
   | 0, _ => none
   | fuel + 1, capabilities =>
-      let edgeFlags := edgeFlagsForCapabilities requirements capabilityCount capabilities
-      match floodFillCsr vertexCount offsets targets edgeFlags allowedFlags start with
+      match floodFillCapabilitiesCsr vertexCount capabilityCount offsets targets requirements
+          allowedFlags capabilities start with
       | none => none
       | some flood =>
           let discovered := discoverCapabilities vertexCount capabilityCount grants
