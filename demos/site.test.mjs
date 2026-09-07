@@ -33,7 +33,7 @@ test("adaptive browser timing produces finite per-operation samples", async () =
 
 test("gallery manifest names every published standalone demo", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
-	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan"]);
+	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket"]);
 	for(const demo of manifest.demos)
 	{
 		assert.equal(demo.entrypoint, `${demo.slug}/`);
@@ -47,7 +47,7 @@ test("assembled Pages artifact is commit-bound and base-path safe", async () => 
 	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
 	assert.match(identity.commit, /^[0-9a-f]{40}$/u);
 	await access(resolve(siteRoot, ".nojekyll"));
-	for(const path of ["index.html", "lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html"])
+	for(const path of ["index.html", "lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html"])
 	{
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.doesNotMatch(html, /(?:href|src)="\/(?!\/)/u,
@@ -90,11 +90,11 @@ test("Aho–Corasick publishes editable overlapping scans and its byte matcher",
 });
 
 test("every proof demo publishes an automatic prewarmed browser benchmark", async () => {
-	for(const path of ["lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html"])
+	for(const path of ["lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html"])
 	{
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.match(html, /id="browser-benchmark"/u);
-		assert.match(html, /Five excluded runs warm both solvers/u);
+		assert.match(html, /Five excluded runs warm both (?:solvers|implementations)/u);
 		assert.match(html, /data-benchmark-histogram/u);
 		assert.match(html, /Run again/u);
 		assert.match(html, /\.\.\/shared\/demo-page\.mjs/u);
@@ -141,6 +141,22 @@ test("Tarjan publishes its editable graph, exact exported partition proof, and b
 	assert.ok(html.indexOf("id=\"browser-benchmark\"") > html.indexOf("id=\"graph-canvas\""));
 	for(const file of ["graph.mjs", "reference.mjs", "browser-benchmark.mjs", "benchmark-workload.mjs"])
 		await access(resolve(root, file));
+});
+
+test("token bucket publishes its request timeline, exact admission proof, and benchmark", async () => {
+	const root = resolve(siteRoot, "lean-token-bucket");
+	const html = await readFile(resolve(root, "index.html"), "utf8");
+	for(const id of ["replay-example", "send-request", "play-clock", "request-timeline", "reset-bucket"])
+		assert.ok(html.includes(`id="${id}"`));
+	assert.match(html, /data-comparator-theorem="exportedRun_no_over_admission"/u);
+	assert.match(html, /LeanTokenBucket\.exportedStep_admitted_iff/u);
+	assert.match(html, /LeanTokenBucket\.retryDelay_earliest/u);
+	assert.ok(html.indexOf("id=\"browser-benchmark\"") > html.indexOf("id=\"request-timeline\""));
+	for(const file of ["scenario.mjs", "reference.mjs", "browser-benchmark.mjs", "benchmark-workload.mjs"])
+		await access(resolve(root, file));
+	const audit = JSON.parse(await readFile(resolve(root, "runtime/proof-audit.json"), "utf8"));
+	for(const theorem of ["refill_eq", "exportedRun_no_over_admission", "request_retry_earliest", "exportedRun_word_bounds"])
+		assert.ok(audit.theorems.includes(theorem));
 });
 
 test("browser proof bundles include every local import in dependency order", async () => {

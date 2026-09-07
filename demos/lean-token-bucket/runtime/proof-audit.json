@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Lean checked exact admission, capacity bounds, refill, trace budgets, and optimized arithmetic before compiling this implementation",
+  "sourceFiles": {
+    "TokenBucketCore.lean": {
+      "bytes": 5399,
+      "sha256": "10721b20dedb649e81cb4a2d754f75743327d11b221e5ee827ffd4f1b3c19674"
+    },
+    "TokenBucket.lean": {
+      "bytes": 24153,
+      "sha256": "b9b2ddafb13b3b45284e1e242b5b0d7e0ffdef529a8135a069b5e92acf503aba"
+    }
+  },
+  "theorems": [
+    "refill_eq",
+    "refill_bounded",
+    "refill_product_bounded",
+    "initial_valid",
+    "admitted_iff",
+    "request_valid",
+    "clock_regression_unchanged",
+    "request_time_monotone",
+    "rejected_unspent",
+    "request_conservation",
+    "trace_budget",
+    "trace_no_over_admission",
+    "trace_interval_bound",
+    "retryDelay_earliest",
+    "retryDelay_impossible",
+    "request_retry_earliest",
+    "exportedStep_admitted_iff",
+    "exportedStep_valid",
+    "exportedStep_word_bounds",
+    "exportedRun_valid",
+    "exportedRun_size",
+    "exportedRun_wire",
+    "exportedRun_no_over_admission",
+    "exportedRun_word_bounds",
+    "runCredits_eq"
+  ]
+}

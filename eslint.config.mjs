@@ -22,6 +22,7 @@ const browserFiles = [
 	, 'demos/lean-lru-cache/{app,runtime}.mjs'
 	, 'demos/lean-a-star/{app,runtime}.mjs'
 	, 'demos/lean-tarjan/{app,runtime}.mjs'
+	, 'demos/lean-token-bucket/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 ];
@@ -87,6 +88,7 @@ export default [
 			, 'demos/lean-lru-cache/runtime/lean-lru-cache.mjs'
 			, 'demos/lean-a-star/runtime/lean-a-star.mjs'
 			, 'demos/lean-tarjan/runtime/lean-tarjan.mjs'
+			, 'demos/lean-token-bucket/runtime/lean-token-bucket.mjs'
 			, 'result*/**'
 		]
 	}

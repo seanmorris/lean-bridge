@@ -81,6 +81,16 @@
       "entrypoint": "lean-tarjan/",
       "theorems": ["solve_total", "exported_same_iff", "solve_maximal", "condensation_acyclic"],
       "accent": "violet"
+    },
+    {
+      "slug": "lean-token-bucket",
+      "title": "Token-bucket rate limiter",
+      "category": "APIs & traffic control",
+      "status": "available",
+      "summary": "Watch a request burst spend available tokens, then refill over time. Exact integer arithmetic enforces the configured rate and burst capacity.",
+      "entrypoint": "lean-token-bucket/",
+      "theorems": ["refill_eq", "request_valid", "exportedRun_no_over_admission", "exportedStep_admitted_iff"],
+      "accent": "cyan"
     }
   ]
 }
