@@ -18,6 +18,7 @@ This directory contains the reviewed architecture for moving Lean components fro
 - [Architecture decisions](adr/README.md)
 - [Managed runtime target profiles](adr/23-managed-runtime-target-profiles.md)
 - [Proof-of-concept plan](poc-plan.md)
+- [React gallery and documentation-site plan](react-documentation-site-plan.md)
 - [Risk register](risks.md)
 - [Commit-pinned source dossier](sources.md)
 - [Patch policy](patches.md)

@@ -1,5 +1,7 @@
 # Verified algorithms content plan
 
+Status: content backlog within the [React gallery and documentation-site plan](../docs/architecture/react-documentation-site-plan.md), VO phase 1185. The newer plan owns site architecture, routes, migration order, and publication gates. The concepts below become `/docs/concepts/` pages; do not build a separate guide shell.
+
 ## Goal
 
 Extend the gallery with pages that connect four homepage claims to source files, proof receipts, benchmarks, and live demos. Business readers get plain explanations. Engineers and reviewers can follow the same claims to technical evidence.
@@ -12,7 +14,7 @@ The homepage remains the concise entry point. Deeper pages expand its claims and
 | --- | --- | --- | --- |
 | `guides/` | Where should I start? | A role-based guide hub for product leaders, engineers, and reviewers. | Choose a concept or live demo. |
 | `guides/change-risk/` | How does this reduce software risk? | Explain proof-checking as a build gate, contrast examples/tests/proofs, and show a deliberately rejected change. | Open a proof receipt. |
-| `guides/auditable-claims/` | What evidence can a reviewer inspect? | Trace one claim through theorem, source hash, compiler receipt, Wasm artifact, and independent browser checker. | Audit either demo. |
+| `guides/auditable-claims/` | What evidence can a reviewer inspect? | Trace one claim through theorem, source hash, compiler receipt, Wasm artifact, and independent browser checker. | Audit a demo. |
 | `guides/reusable-cores/` | Is the proof tied to one screen or product? | Show generic graph interfaces, adapters, and why Dijkstra and flood fill are not grid-specific. | View the core Lean APIs. |
 | `guides/trust-boundaries/` | Where does proof coverage end? | Separate theorem, compiler, generated artifact, ABI, browser adapter, input model, and UI responsibilities. Include failure scenarios. | Read a demo-specific boundary. |
 | `guides/proof-to-wasm/` | How does checked code become browser code? | A step-by-step build pipeline from Lean source to checked declaration, optimized core, C bridge, Wasm, receipt, and page. | Reproduce the build. |

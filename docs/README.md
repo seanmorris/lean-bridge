@@ -31,6 +31,8 @@ Guides describe commands that a user can execute with produced package archives.
 
 Architecture pages define durable interoperability, safety, reproducibility, and ownership rules. Architecture decision records explain why the project selected a boundary and what alternatives it rejected.
 
+The [React gallery and documentation-site plan](architecture/react-documentation-site-plan.md) describes the planned public site for Lean authors, downstream consumers, and publishers. It reuses the canonical guides above and keeps migration work separate from executed evidence.
+
 Evidence pages record observations. Each one should identify the command, environment, source revision, artifacts, result, and limitation. A design expectation belongs in architecture; a command that passed belongs in evidence. Do not write future intent as an observed result.
 
 Raw measurement and acceptance records stay under the evidence index or their versioned input directories. Documentation links to those records rather than translating them into vague claims.
