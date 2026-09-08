@@ -40,6 +40,9 @@ interface ProofState {
 	wasmNote: string;
 }
 
+// Firefox otherwise restores an earlier disabled state before React hydrates.
+const proofControlAttributes = { autoComplete: "off" };
+
 /**
  * Load one immutable configuration when its proof section approaches the viewport.
  *
@@ -183,6 +186,7 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 		copyTimer.current = setTimeout(() => setCopyLabel("Copy"), 1200);
 	};
 	const openChecker = (url: string, name: string) => {
+		if(!url) return;
 		setPanelMessage(openProofChecker(url, name)
 			? "Interactive proof checkers" : "Popup blocked. Use a checker link below.");
 	};
@@ -210,12 +214,12 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 		<div className="proof-grid"><div className="source-viewer">
 			<div className="source-toolbar"><div className="source-pickers">
 				<div className="source-tabs" role="tablist" aria-label="Lean source file">
-					{tabs.map((tab, index) => <button key={tab.name} type="button" role="tab"
+					{tabs.map((tab, index) => <button {...proofControlAttributes} key={tab.name} type="button" role="tab"
 						className={`source-tab${activeSource === tab.name ? " active" : ""}`} data-source={tab.name}
 						aria-selected={activeSource === tab.name} aria-controls="proof-code" disabled={!available}
 						tabIndex={activeSource === tab.name || (!tabSelected && index === 0) ? 0 : -1}
 						onClick={() => setActiveSource(tab.name)} onKeyDown={event => changeTab(event, index)}>{tab.label}</button>)}
-				</div><select className="source-select" data-source-select aria-label="Supporting Lean source"
+				</div><select {...proofControlAttributes} className="source-select" data-source-select aria-label="Supporting Lean source"
 					disabled={!available} value={supporting.includes(activeSource) ? activeSource : ""}
 					onChange={event => { if(event.target.value) setActiveSource(event.target.value); }}>
 					<option value="">Supporting sources</option>
@@ -223,7 +227,7 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 				</select></div><div className="source-meta"><span id="source-label">{activeSource}</span>
 				<span id="source-stats">{source === undefined ? state.phase === "failed" ? "Source unavailable" : "Loading…"
 					: `${source.split("\n").length} lines · ${new TextEncoder().encode(source).length} bytes`}</span>
-				<button id="copy-source" type="button" disabled={!available} title={copyTitle} onClick={() => void copy()}>{copyLabel}</button>
+				<button {...proofControlAttributes} id="copy-source" type="button" disabled={!available} title={copyTitle} onClick={() => void copy()}>{copyLabel}</button>
 			</div></div><pre id="proof-code" className="proof-code" role="tabpanel" tabIndex={0}
 				aria-label="Syntax-highlighted Lean source" aria-busy={state.phase === "loading"}
 				dangerouslySetInnerHTML={{ __html: source === undefined
@@ -236,10 +240,10 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 				{state.phase === "verified" ? "Source matches checked build" : state.phase === "failed" ? "Proof receipt unavailable" : "Verifying source…"}</dd></div>
 			<div><dt>Checker</dt><dd id="audit-checker">{state.checker}</dd></div>
 			<div><dt>Audited theorems</dt><dd id="theorem-count">{state.phase === "verified" ? state.count : "—"}</dd></div></dl>
-			<div className="checker-actions"><button id="launch-wasm" type="button" className="launch-lean"
+			<div className="checker-actions"><button {...proofControlAttributes} id="launch-wasm" type="button" className="launch-lean"
 				disabled={!state.wasmUrl} title={state.wasmNote} onClick={() => openChecker(state.wasmUrl, "lean-wasm-checker")}>
 				Open Lean WASM checker <span>↗</span></button>
-			<button id="launch-lean-web" type="button" className="launch-lean secondary" disabled={!state.leanWebUrl}
+			<button {...proofControlAttributes} id="launch-lean-web" type="button" className="launch-lean secondary" disabled={!state.leanWebUrl}
 				onClick={() => openChecker(state.leanWebUrl, "lean-web-comparator")}>Open Lean Web / Comparator <span>↗</span></button></div>
 			<p className="network-note"><b>WASM:</b> wait for “Ready,” then click “Run Code”; the output prints the theorem and its axioms. <b>Lean Web:</b> inspect the separate challenge before choosing “I trust this challenge.”</p>
 			{state.wasmNote && <p className="network-note" role="status">{state.wasmNote}</p>}

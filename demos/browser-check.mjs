@@ -186,10 +186,16 @@ const auditFailures = async browser => {
 	let releaseSource;
 	const delayed = new Promise(resolve => { releaseSource = resolve; });
 	await page.route("**/Sweep.lean", async route => { await delayed; await route.continue(); });
+	const requested = page.waitForRequest("**/Sweep.lean");
 	await page.reload({ waitUntil: "domcontentloaded" });
 	await page.locator(".proof-section").scrollIntoViewIfNeeded();
+	await requested;
+	await page.waitForFunction(() => globalThis.document.querySelector("#proof-code").getAttribute("aria-busy") === "true");
 	assert.equal(await page.locator("#copy-source").isDisabled(), true);
 	for(const tab of await page.locator(".source-tab").all()) assert.equal(await tab.isDisabled(), true);
+	assert.equal(await page.locator("[data-source-select]").isDisabled(), true);
+	assert.equal(await page.locator("#launch-wasm").isDisabled(), true);
+	assert.equal(await page.locator("#launch-lean-web").isDisabled(), true);
 	releaseSource();
 	await page.waitForFunction(() => !globalThis.document.querySelector("#launch-wasm").disabled);
 	await page.unroute("**/Sweep.lean");
@@ -197,6 +203,9 @@ const auditFailures = async browser => {
 	await page.reload();
 	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	await page.waitForFunction(() => globalThis.document.querySelector("#audit-status").textContent === "Proof receipt unavailable");
+	assert.equal(await page.locator("#copy-source").isDisabled(), true);
+	for(const tab of await page.locator(".source-tab").all()) assert.equal(await tab.isDisabled(), true);
+	assert.equal(await page.locator("[data-source-select]").isDisabled(), true);
 	assert.equal(await page.locator("#launch-wasm").isDisabled(), true);
 	assert.equal(await page.locator("#launch-lean-web").isDisabled(), true);
 	await page.unroute("**/Sweep.lean");
