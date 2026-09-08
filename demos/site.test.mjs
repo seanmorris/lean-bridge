@@ -5,6 +5,7 @@
  */
 
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 import { dirname, resolve } from "node:path";
@@ -12,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import {
 	attachBrowserBenchmark, measureAsyncBenchmark, measureSyncBenchmark
 } from "./shared/browser-benchmark.mjs";
+import { renderGalleryCard } from "./shared/gallery-card.mjs";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = resolve(repositoryRoot, "demos");
@@ -21,6 +23,7 @@ const mockBenchmarkBrowser = context => {
 	const elements = new Map();
 	const frames = [];
 	const waiting = [];
+	const events = new Map();
 	const makeElement = () => ({
 		textContent: "unchanged", disabled: false, clientWidth: 620
 		, addEventListener: () => undefined, setAttribute: () => undefined
@@ -37,6 +40,7 @@ const mockBenchmarkBrowser = context => {
 	const replacements = {
 		ResizeObserver: ObserverMock, IntersectionObserver: ObserverMock
 		, document: { createElementNS: makeElement }
+		, addEventListener: (name, listener) => events.set(name, listener)
 		, requestAnimationFrame: callback => {
 			frames.push(callback);
 			waiting.shift()?.();
@@ -59,7 +63,7 @@ const mockBenchmarkBrowser = context => {
 		return elements.get(selector);
 	} };
 	return {
-		root, elements
+		root, elements, events
 		, waitForFrame: () => frames.length ? Promise.resolve() : new Promise(resolve => waiting.push(resolve))
 		, releaseFrame: () => { assert.ok(frames.length > 0); frames.shift()(0); }
 	};
@@ -155,6 +159,61 @@ test("adaptive browser timing produces finite per-operation samples", async () =
 	assert.ok(asynchronousCalls > 1);
 });
 
+test("browser benchmark rejects invalid timing samples without rendering NaN", async context => {
+	const browser = mockBenchmarkBrowser(context);
+	const originalError = console.error;
+	console.error = () => undefined;
+	context.after(() => { console.error = originalError; });
+	for(const leanMs of [Number.NaN, Number.POSITIVE_INFINITY, -1])
+	{
+		const controller = attachBrowserBenchmark({
+			root: browser.root, prepare: async () => undefined
+			, warmupCount: 0, trialCount: 1
+			, sample: () => ({ leanMs, javascriptMs: 1 })
+			, summarize: () => { throw new Error("Invalid samples must not be summarized"); }
+		});
+		await controller.run();
+		assert.equal(browser.elements.get("[data-benchmark-progress]").textContent, "Benchmark failed");
+		assert.match(browser.elements.get("[data-benchmark-summary]").textContent, /finite, nonnegative/u);
+		assert.equal(browser.elements.get("[data-benchmark-lean]").textContent, "unchanged");
+	}
+});
+
+test("benchmark reruns share preparation and pagehide invalidates the old lifetime", async context => {
+	const browser = mockBenchmarkBrowser(context);
+	const releases = [];
+	let preparations = 0;
+	let samples = 0;
+	const controller = attachBrowserBenchmark({
+		root: browser.root, warmupCount: 0, trialCount: 1
+		, prepare: () => {
+			preparations++;
+			return new Promise(resolve => releases.push(resolve));
+		}
+		, sample: () => { samples++; return { leanMs: 1, javascriptMs: 1 }; }
+		, summarize: () => "completed"
+	});
+	const first = controller.run();
+	const second = controller.run();
+	await new Promise(resolve => setImmediate(resolve));
+	assert.equal(preparations, 1);
+	browser.events.get("pagehide")();
+	assertBenchmarkCancelled(browser);
+	const restored = controller.run();
+	await new Promise(resolve => setImmediate(resolve));
+	assert.equal(preparations, 2);
+	releases[0]();
+	await Promise.all([first, second]);
+	assert.equal(samples, 0);
+	const repeated = controller.run();
+	await new Promise(resolve => setImmediate(resolve));
+	assert.equal(preparations, 2, "the stale finalizer cannot clear a newer preparation");
+	releases[1]();
+	await Promise.all([restored, repeated]);
+	assert.equal(samples, 1);
+	assert.equal(browser.elements.get("[data-benchmark-summary]").textContent, "completed");
+});
+
 test("gallery manifest names every published standalone demo", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
 	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket", "lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
@@ -176,6 +235,32 @@ test("assembled Pages artifact is commit-bound and base-path safe", async () => 
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.doesNotMatch(html, /(?:href|src)="\/(?!\/)/u,
 			`${path} must not assume a domain-root deployment`);
+	}
+});
+
+test("published gallery is readable without JavaScript and escapes manifest text", async () => {
+	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
+	const html = await readFile(resolve(siteRoot, "index.html"), "utf8");
+	assert.equal((html.match(/class="demo-card"/gu) ?? []).length, manifest.demos.length);
+	for(const demo of manifest.demos) assert.ok(html.includes(`href="${demo.entrypoint}"`));
+	const malicious = { ...manifest.demos[0], title: '<script>alert("hello")</script>' };
+	assert.doesNotMatch(renderGalleryCard(malicious), /<script>/u);
+	assert.throws(() => renderGalleryCard({ ...malicious, entrypoint: "javascript:alert(1)" }), /entrypoint/u);
+	assert.throws(() => renderGalleryCard({ ...malicious, accent: "red;display:none" }), /accent/u);
+});
+
+test("build identity binds every published Wasm binary, loader, and proof receipt", async () => {
+	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
+	assert.equal(identity.schemaVersion, 2);
+	assert.ok(["clean", "modified"].includes(identity.sourceState));
+	assert.equal(Object.keys(identity.artifacts).length, identity.demos.length * 3);
+	assert.deepEqual(Object.keys(identity.artifacts).sort(), identity.demos.flatMap(slug =>
+		[`${slug}/runtime/${slug}.wasm`, `${slug}/runtime/${slug}.mjs`, `${slug}/runtime/proof-audit.json`]).sort());
+	for(const [path, receipt] of Object.entries(identity.artifacts))
+	{
+		const bytes = await readFile(resolve(siteRoot, path));
+		assert.equal(receipt.bytes, bytes.length, path);
+		assert.equal(receipt.sha256, createHash("sha256").update(bytes).digest("hex"), path);
 	}
 });
 

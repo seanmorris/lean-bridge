@@ -12,13 +12,16 @@ let modulePromise;
 
 /** Initialize the shared Lean/Wasm module once. */
 export const initRuntime = () => {
-	modulePromise ??= createModule({ locateFile: path => path === "lean-dinic.wasm"
+	const pending = modulePromise ??= createModule({ locateFile: path => path === "lean-dinic.wasm"
 		? new URL("./runtime/lean-dinic.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_dinic_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const validate = ({ vertexCount, source, sink, offsets, targets, capacities }) => {

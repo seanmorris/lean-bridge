@@ -81,6 +81,47 @@ test("prepared partition can be called synchronously and repeatedly", async () =
 	samePartition(solve().representatives, graphComponents(7, links));
 	await partition({ elementCount: 4, links: Uint32Array.of(0, 3) });
 	samePartition(solve().representatives, graphComponents(7, links));
+	solve.dispose();
+});
+
+test("prepared partitions own immutable graphs and independent disposable outputs", async () => {
+	const links = Uint32Array.of(0, 1);
+	const pending = preparePartition({ elementCount: 3, links });
+	links.set([1, 2]);
+	const [first, second] = await Promise.all([pending, preparePartition({ elementCount: 3, links })]);
+	try
+	{
+		const retained = first().representatives;
+		samePartition(retained, graphComponents(3, Uint32Array.of(0, 1)));
+		samePartition(second().representatives, graphComponents(3, Uint32Array.of(1, 2)));
+		first().representatives.fill(99);
+		assert.deepEqual(first().representatives, retained);
+		second.dispose(); second.dispose();
+		assert.throws(second, /disposed/u);
+		assert.deepEqual(first().representatives, retained);
+	}
+	finally
+	{ first.dispose(); second.dispose(); }
+});
+
+test("partition and operation streams snapshot input before asynchronous initialization", async () => {
+	const links = Uint32Array.of(0, 1);
+	const pending = partition({ elementCount: 3, links });
+	links.set([1, 2]);
+	samePartition((await pending).representatives, graphComponents(3, Uint32Array.of(0, 1)));
+	const operations = Uint32Array.of(UNION, 0, 1, CONNECTED, 0, 1);
+	const result = runOperations({ elementCount: 3, operations });
+	operations.fill(0);
+	assert.deepEqual([...(await result).queries], [1]);
+});
+
+test("oversized partitions are rejected before Wasm32 byte counts can wrap", async () => {
+	for(const elementCount of [0x4000_0000, 0x7fff_ffff, 0xffff_fffe])
+	{
+		const request = { elementCount, links: new Uint32Array() };
+		await assert.rejects(partition(request), /limit|31-bit/u);
+		await assert.rejects(preparePartition(request), /limit|31-bit/u);
+	}
 });
 
 test("compiled operation stream answers against preceding unions", async () => {

@@ -34,6 +34,13 @@ const openWasm = document.querySelector("#open-wasm");
 const openLeanWeb = document.querySelector("#open-lean-web");
 const launchWasm = document.querySelector("#launch-wasm");
 const launchLeanWeb = document.querySelector("#launch-lean-web");
+const copySource = document.querySelector("#copy-source");
+const sourceControls = [...document.querySelectorAll(".source-tab, [data-source-select]")];
+const sourceTabs = [...document.querySelectorAll(".source-tab")];
+code.setAttribute("role", "tabpanel");
+code.tabIndex = 0;
+for(const control of [...sourceControls, copySource, launchWasm, launchLeanWeb]) control.disabled = true;
+let copyTimer = 0;
 let activeSource = config.proof;
 let wasmUrl = "";
 let leanWebUrl = "";
@@ -100,8 +107,9 @@ const highlightLine = (line, state) => {
 };
 
 const renderSource = name => {
-	activeSource = name;
 	const source = sources.get(name);
+	if(typeof source !== "string") return;
+	activeSource = name;
 	const state = { inBlockComment: false };
 	code.innerHTML = source.split("\n").map((line, index) =>
 		`<span class="code-line"><span class="line-number">${index + 1}</span>`
@@ -111,7 +119,11 @@ const renderSource = name => {
 	for(const tab of document.querySelectorAll(".source-tab"))
 	{
 		tab.classList.toggle("active", tab.dataset.source === name);
+		tab.setAttribute("aria-selected", String(tab.dataset.source === name));
+		tab.setAttribute("aria-controls", "proof-code");
+		tab.tabIndex = tab.dataset.source === name ? 0 : -1;
 	}
+	if(!sourceTabs.some(tab => tab.tabIndex === 0)) sourceTabs[0].tabIndex = 0;
 	for(const select of document.querySelectorAll("[data-source-select]"))
 		select.value = [...select.options].some(option => option.value === name) ? name : "";
 };
@@ -169,51 +181,99 @@ const buildWasmUrl = async () => {
 const checkerWindows = new Map();
 
 const openChecker = (url, windowName) => {
+	if(!url) return;
 	let checker = checkerWindows.get(windowName);
 	if(!checker || checker.closed)
 	{
 		checker = window.open("about:blank", windowName);
-		if(!checker) return;
+		if(!checker)
+		{
+			playgroundPanel.hidden = false;
+			playgroundPanel.querySelector("b").textContent = "Popup blocked. Use a checker link below.";
+			return;
+		}
 		checker.opener = null;
 		checker.location.replace(url);
 		checkerWindows.set(windowName, checker);
 	}
 	else checker.focus();
 	playgroundPanel.hidden = false;
+	playgroundPanel.querySelector("b").textContent = "Interactive proof checkers";
+};
+
+const fetchChecked = async path => {
+	const response = await fetch(path);
+	if(!response.ok) throw new Error(`Could not load ${path}: HTTP ${response.status}`);
+	return response;
 };
 
 const load = async () => {
 	const [audit, ...loadedSources] = await Promise.all([
-		fetch("./runtime/proof-audit.json").then(response => response.json())
-		, ...sourceNames.map(name => fetch(`./${name}`).then(response => response.text()))
+		fetchChecked("./runtime/proof-audit.json").then(response => response.json())
+		, ...sourceNames.map(name => fetchChecked(`./${name}`).then(response => response.text()))
 	]);
 	for(let index = 0; index < sourceNames.length; index += 1) sources.set(sourceNames[index], loadedSources[index]);
 	renderSource(activeSource);
+	for(const control of [...sourceControls, copySource]) control.disabled = false;
 	await verifyAudit(audit);
-	wasmUrl = await buildWasmUrl();
 	leanWebUrl = "https://live.lean-lang.org/#challenge=" + encodeURIComponent(comparatorChallenge())
 		+ `&code=${encodeURIComponent(comparatorCompatible(interactiveSource()))}`;
-	openWasm.href = wasmUrl;
 	openLeanWeb.href = leanWebUrl;
-	launchWasm.disabled = false;
 	launchLeanWeb.disabled = false;
+	if("CompressionStream" in globalThis)
+	{
+		try
+		{
+			wasmUrl = await buildWasmUrl();
+			openWasm.href = wasmUrl;
+			launchWasm.disabled = false;
+		}
+		catch
+		{
+			launchWasm.title = "Could not compress the workspace. Use Lean Web / Comparator.";
+		}
+	}
+	else launchWasm.title = "This browser cannot create the compressed workspace. Use Lean Web / Comparator.";
 };
 
 for(const tab of document.querySelectorAll(".source-tab"))
 {
 	tab.addEventListener("click", () => renderSource(tab.dataset.source));
+	tab.addEventListener("keydown", event => {
+		let index = sourceTabs.indexOf(tab);
+		if(event.key === "ArrowRight") index = (index + 1) % sourceTabs.length;
+		else if(event.key === "ArrowLeft") index = (index + sourceTabs.length - 1) % sourceTabs.length;
+		else if(event.key === "Home") index = 0;
+		else if(event.key === "End") index = sourceTabs.length - 1;
+		else return;
+		event.preventDefault();
+		sourceTabs[index].focus();
+		renderSource(sourceTabs[index].dataset.source);
+	});
 }
 for(const select of document.querySelectorAll("[data-source-select]"))
 	select.addEventListener("change", () => { if(select.value) renderSource(select.value); });
-document.querySelector("#copy-source").addEventListener("click", async event => {
-	await navigator.clipboard.writeText(sources.get(activeSource));
-	event.currentTarget.textContent = "Copied";
-	setTimeout(() => { event.currentTarget.textContent = "Copy"; }, 1200);
+copySource.addEventListener("click", async () => {
+	clearTimeout(copyTimer);
+	try
+	{
+		await navigator.clipboard.writeText(sources.get(activeSource));
+		copySource.textContent = "Copied";
+		copySource.title = "";
+	}
+	catch
+	{
+		copySource.textContent = "Copy failed";
+		copySource.title = "Clipboard access is unavailable. Select and copy the source text.";
+	}
+	copyTimer = setTimeout(() => { copySource.textContent = "Copy"; }, 1200);
 });
 launchWasm.addEventListener("click", () => openChecker(wasmUrl, "lean-wasm-checker"));
 launchLeanWeb.addEventListener("click", () => openChecker(leanWebUrl, "lean-web-comparator"));
 load().catch(error => {
 	auditStatus.className = "audit-value failed";
 	auditStatus.textContent = "Proof receipt unavailable";
-	console.error(error);
+	auditStatus.title = error.message;
+	sourceStats.textContent = sources.size ? sourceStats.textContent : "Source unavailable";
+	if(!sources.size) code.textContent = "The Lean source could not be loaded. Reload to try again.";
 });

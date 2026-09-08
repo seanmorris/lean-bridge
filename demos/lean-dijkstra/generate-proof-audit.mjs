@@ -28,6 +28,8 @@ const requiredTheorems = [
 	, "dijkstraRec_correct"
 	, "dijkstra_correct"
 	, "dijkstraCsr_correct"
+	, "dijkstraRawCsr_large_uses_heap"
+	, "bucket_storage_bounded"
 ];
 
 const sources = await Promise.all(files.map(file => readFile(resolve(demoRoot, file), "utf8")));

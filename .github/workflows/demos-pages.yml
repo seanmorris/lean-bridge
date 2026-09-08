@@ -37,6 +37,19 @@ jobs:
         run: git diff --exit-code -- demos
       - name: Assemble the static site
         run: npm run demos:site
+      - name: Install browser audit engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Audit the assembled gallery in three browser engines
+        env:
+          DEMO_BROWSERS: chromium,firefox,webkit
+        run: npm run demos:browser
+      - name: Preserve browser audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-browser-audit
+          path: build/demo-browser-audit
+          if-no-files-found: ignore
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5

@@ -5,9 +5,11 @@
  */
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderGalleryCard } from "../demos/shared/gallery-card.mjs";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const demosRoot = resolve(repositoryRoot, "demos");
@@ -43,14 +45,35 @@ const commit = execFileSync("git", ["rev-parse", "HEAD"], {
 	cwd: repositoryRoot
 	, encoding: "utf8"
 }).trim();
+const gitOutput = args => execFileSync("git", args, { cwd: repositoryRoot, encoding: "utf8" }).trim();
+const modified = gitOutput(["status", "--porcelain", "--untracked-files=no"])
+	|| gitOutput([
+		"ls-files", "--others", "--exclude-standard", "--"
+		, "demos", "scripts", "src", "poc", "patches"
+		, "containers", "nix", "schema", ".github"
+	]);
 const identity = {
-	schemaVersion: 1
+	schemaVersion: 2
 	, commit
+	, sourceState: modified ? "modified" : "clean"
 	, generatedAt: new Date().toISOString()
 	, demos: manifest.demos.map(demo => demo.slug)
+	, artifacts: {}
 };
+for(const demo of manifest.demos)
+{
+	for(const file of [`${demo.slug}.wasm`, `${demo.slug}.mjs`, "proof-audit.json"])
+	{
+		const path = `${demo.slug}/runtime/${file}`;
+		const bytes = await readFile(resolve(outputRoot, path));
+		identity.artifacts[path] = { bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex") };
+	}
+}
+const homepage = await readFile(resolve(outputRoot, "index.html"), "utf8");
 await Promise.all([
 	writeFile(resolve(outputRoot, ".nojekyll"), "")
 	, writeFile(resolve(outputRoot, "build-identity.json"), `${JSON.stringify(identity, null, 2)}\n`)
+	, writeFile(resolve(outputRoot, "index.html"), homepage.replace("<!-- published-demo-cards -->",
+		manifest.demos.map(renderGalleryCard).join("\n")))
 ]);
 process.stdout.write(`Assembled ${manifest.demos.length} demos in ${outputRoot}\n`);

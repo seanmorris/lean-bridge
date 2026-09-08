@@ -36,6 +36,8 @@ LEAN_PATH="$GENERATED_DIR${LEAN_PATH:+:$LEAN_PATH}" lean -R "$DEMO_ROOT" \
   -o "$GENERATED_DIR/Dijkstra.olean" \
   "$DEMO_ROOT/Dijkstra.lean"
 
+LEAN_PATH="$GENERATED_DIR${LEAN_PATH:+:$LEAN_PATH}" lean -R "$DEMO_ROOT" "$DEMO_ROOT/Tests.lean"
+
 node "$DEMO_ROOT/generate-proof-audit.mjs"
 
 INCLUDES=(
@@ -65,7 +67,7 @@ em++ \
   -sENVIRONMENT=web,node \
   -sALLOW_MEMORY_GROWTH=1 \
   -sEXPORTED_RUNTIME_METHODS=HEAPU32 \
-  -sEXPORTED_FUNCTIONS=_lean_demo_runtime_init,_lean_demo_prepare_graph,_lean_demo_solve_prepared,_lean_demo_solve,_malloc,_free \
+  -sEXPORTED_FUNCTIONS=_lean_demo_runtime_init,_lean_demo_prepare_graph,_lean_demo_solve_prepared,_lean_demo_release_graph,_lean_demo_solve,_malloc,_free \
   -Wl,--no-entry \
   -o "$OUTPUT_DIR/lean-dijkstra.mjs"
 

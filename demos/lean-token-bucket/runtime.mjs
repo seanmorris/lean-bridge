@@ -13,14 +13,17 @@ let modulePromise;
 
 /** Initialize the compiled Lean runtime once for all independent buckets. */
 export const initRuntime = () => {
-	modulePromise ??= createModule({
+	const pending = modulePromise ??= createModule({
 		locateFile: path => path === "lean-token-bucket.wasm"
 			? new URL("./runtime/lean-token-bucket.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_token_bucket_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const unsigned = (value, name) => {

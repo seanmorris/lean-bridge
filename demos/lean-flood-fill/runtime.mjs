@@ -13,18 +13,23 @@ let scratchCapacity = 0;
 
 /** Load and initialize the compiled Lean module once. */
 const loadModule = async () => {
-	modulePromise ??= createLeanModule({
+	const pending = modulePromise ??= createLeanModule({
 		locateFile: path => path === "lean-flood-fill.wasm"
 			? new URL("./runtime/lean-flood-fill.wasm", import.meta.url).href
 			: path
 	}).then(module => {
 		if(module._lean_flood_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const reserveScratch = (module, words) => {
+	if(!Number.isSafeInteger(words) || words < 0 || words > 0x3fff_ffff)
+		throw new RangeError("Graph storage exceeds the Wasm32 allocation limit");
 	const bytes = Math.max(words * Uint32Array.BYTES_PER_ELEMENT, 4);
 	if(bytes <= scratchCapacity) return scratchPointer;
 	const pointer = module._malloc(bytes);
@@ -43,10 +48,18 @@ const requireArray = (value, name, length) => {
 };
 
 const validateGraph = ({ vertexCount, offsets, targets, allowedVertices }) => {
-	if(!Number.isInteger(vertexCount) || vertexCount <= 0) throw new RangeError("vertexCount must be positive");
+	if(!Number.isInteger(vertexCount) || vertexCount <= 0 || vertexCount > 0x7fff_ffff)
+		throw new RangeError("vertexCount must be a positive 31-bit integer");
 	requireArray(offsets, "offsets", vertexCount + 1);
 	requireArray(targets, "targets");
 	requireArray(allowedVertices, "allowedVertices", vertexCount);
+	if(offsets[0] !== 0 || offsets[vertexCount] !== targets.length)
+		throw new RangeError("CSR offsets must start at zero and end at the edge count");
+	for(let vertex = 0; vertex < vertexCount; vertex++)
+		if(offsets[vertex] > offsets[vertex + 1] || offsets[vertex + 1] > targets.length)
+			throw new RangeError("CSR offsets must be monotone and in bounds");
+	for(const target of targets)
+		if(target >= vertexCount) throw new RangeError("CSR contains an out-of-range target");
 };
 
 const transfer = (module, arrays, outputWords) => {
@@ -80,6 +93,8 @@ export const reachable = async ({
 	validateGraph({ vertexCount, offsets, targets, allowedVertices });
 	requireArray(allowedEdges, "allowedEdges", targets.length);
 	if(!Number.isInteger(start) || start < 0 || start >= vertexCount) throw new RangeError("start is out of range");
+	offsets = offsets.slice(); targets = targets.slice();
+	allowedVertices = allowedVertices.slice(); allowedEdges = allowedEdges.slice();
 	const module = await loadModule();
 	const { pointers, outputPointer } = transfer(module,
 		[offsets, targets, allowedEdges, allowedVertices], vertexCount);
@@ -114,8 +129,11 @@ export const reachableWithCapabilities = async ({
 	requireArray(requirements, "requirements", targets.length);
 	requireArray(grants, "grants", vertexCount);
 	requireArray(initialCapabilities, "initialCapabilities");
-	if(!Number.isInteger(capabilityCount) || capabilityCount < 0) throw new RangeError("capabilityCount is invalid");
+	if(!Number.isInteger(capabilityCount) || capabilityCount < 0 || capabilityCount > 0x7fff_ffff)
+		throw new RangeError("capabilityCount is invalid");
 	if(!Number.isInteger(start) || start < 0 || start >= vertexCount) throw new RangeError("start is out of range");
+	offsets = offsets.slice(); targets = targets.slice(); allowedVertices = allowedVertices.slice();
+	requirements = requirements.slice(); grants = grants.slice(); initialCapabilities = initialCapabilities.slice();
 	const module = await loadModule();
 	const outputCapacity = vertexCount + capabilityCount + 1;
 	const { pointers, outputPointer } = transfer(module,
@@ -143,7 +161,7 @@ export const reachableWithCapabilities = async ({
  * @returns {Promise<() => {vertices: Uint32Array, capabilities: Uint32Array}>} Prepared solver.
  */
 export const prepareCapabilityClosure = async request => {
-	const {
+	let {
 		vertexCount, offsets, targets, allowedVertices, requirements, grants
 		, initialCapabilities, capabilityCount, start
 	} = request;
@@ -151,21 +169,26 @@ export const prepareCapabilityClosure = async request => {
 	requireArray(requirements, "requirements", targets.length);
 	requireArray(grants, "grants", vertexCount);
 	requireArray(initialCapabilities, "initialCapabilities");
-	if(!Number.isInteger(capabilityCount) || capabilityCount < 0) throw new RangeError("capabilityCount is invalid");
+	if(!Number.isInteger(capabilityCount) || capabilityCount < 0 || capabilityCount > 0x7fff_ffff)
+		throw new RangeError("capabilityCount is invalid");
 	if(!Number.isInteger(start) || start < 0 || start >= vertexCount) throw new RangeError("start is out of range");
+	offsets = offsets.slice(); targets = targets.slice(); allowedVertices = allowedVertices.slice();
+	requirements = requirements.slice(); grants = grants.slice(); initialCapabilities = initialCapabilities.slice();
 	const module = await loadModule();
 	const arrays = [offsets, targets, requirements, allowedVertices, grants, initialCapabilities];
 	const { pointers } = transfer(module, arrays, 0);
-	const revision = module._lean_capability_prepare(
+	const handle = module._lean_capability_prepare(
 		vertexCount, capabilityCount, start, pointers[0], offsets.length, pointers[1], pointers[2]
 		, targets.length, pointers[3], pointers[4], pointers[5], initialCapabilities.length
 	) >>> 0;
-	if(revision === 0) throw new Error("Lean flood-fill bridge rejected the prepared graph");
-	return () => {
+	if(handle === 0) throw new Error("Lean flood-fill bridge rejected the prepared graph");
+	let disposed = false;
+	const solve = () => {
+		if(disposed) throw new Error("Prepared flood-fill graph has been disposed");
 		const outputCapacity = vertexCount + capabilityCount + 1;
 		const outputPointer = reserveScratch(module, outputCapacity);
 		const length = module._lean_capability_solve_prepared(
-			revision, outputPointer, outputCapacity
+			handle, outputPointer, outputCapacity
 		) >>> 0;
 		if(length === ERROR) throw new Error("Prepared Lean flood-fill graph is no longer active");
 		if(length === 0) return { vertices: new Uint32Array(), capabilities: new Uint32Array() };
@@ -177,6 +200,12 @@ export const prepareCapabilityClosure = async request => {
 			, capabilities: Uint32Array.from(output.subarray(vertexLength + 1))
 		};
 	};
+	solve.dispose = () => {
+		if(disposed) return;
+		disposed = true;
+		module._lean_capability_release(handle);
+	};
+	return solve;
 };
 
 /** Resolve after the compiled Lean runtime is initialized. */

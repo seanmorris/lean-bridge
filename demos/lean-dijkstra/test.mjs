@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { prepareShortestPath, shortestPath } from "./runtime.mjs";
+import { prepareShortestPath, ready, shortestPath } from "./runtime.mjs";
 
 const graph = (vertexCount, edges) => {
 	const outgoing = Array.from({ length: vertexCount }, () => []);
@@ -88,6 +88,70 @@ test("prepared Lean graph supports repeated endpoint queries", async () => {
 	const solve = await prepareShortestPath(weighted);
 	assert.deepEqual(await solve(0, 3), [0, 2, 3]);
 	assert.deepEqual(await solve(1, 3), [1, 3]);
+	solve.dispose();
+});
+
+test("prepared graphs snapshot before await and retain independent owned lifetimes", async () => {
+	const request = graph(3, [[0, 1, 1], [1, 2, 1]]);
+	const pending = prepareShortestPath(request);
+	request.targets.fill(0); request.weights.fill(99); request.offsets.fill(0);
+	const [first, second] = await Promise.all([pending, prepareShortestPath(graph(3, [[0, 2, 1]]))]);
+	try
+	{
+		const retained = first(0, 2);
+		assert.deepEqual(retained, [0, 1, 2]);
+		assert.deepEqual(second(0, 2), [0, 2]);
+		first(0, 2).fill(99);
+		assert.deepEqual(first(0, 2), retained);
+		second.dispose(); second.dispose();
+		assert.throws(() => second(0, 2), /disposed/u);
+		assert.deepEqual(first(0, 2), retained);
+		first.dispose();
+		assert.deepEqual(retained, [0, 1, 2]);
+	}
+	finally
+	{ first.dispose(); second.dispose(); }
+});
+
+test("one-shot requests snapshot arrays and reject endpoint coercion", async () => {
+	const request = { ...graph(3, [[0, 1, 1], [1, 2, 1]]), start: 0, target: 2 };
+	const pending = shortestPath(request);
+	request.targets.fill(0);
+	assert.deepEqual(await pending, [0, 1, 2]);
+	for(const start of [-1, 0.5, NaN, Infinity, 0x1_0000_0000])
+		await assert.rejects(shortestPath({ ...request, start }), /endpoints/u);
+});
+
+test("duplicate weighted edges are rejected instead of misreported as unreachable", async () => {
+	const request = graph(2, [[0, 1, 2], [0, 1, 1]]);
+	await assert.rejects(shortestPath({ ...request, start: 0, target: 1 }), /Duplicate/u);
+	await assert.rejects(prepareShortestPath(request), /Duplicate/u);
+	const module = await ready();
+	const pointer = module._malloc(28);
+	try
+	{
+		module.HEAPU32.set([0, 2, 2, 1, 1, 2, 1], pointer >>> 2);
+		assert.equal(module._lean_demo_prepare_graph(2, pointer, 3, pointer + 12, pointer + 20, 2), 0);
+	}
+	finally
+	{ module._free(pointer); }
+});
+
+test("full Uint32 weights and path totals above Uint32 use bounded queue storage", async () => {
+	for(const weight of [4095, 4096, 0x7fff_ffff, 0xffff_ffff])
+	{
+		const request = graph(4, [[0, 1, weight], [1, 3, weight], [0, 2, weight], [2, 3, 1]]);
+		const expected = [0, 2, 3];
+		assert.deepEqual(await shortestPath({ ...request, start: 0, target: 3 }), expected);
+		const solve = await prepareShortestPath(request);
+		try
+		{
+			assert.deepEqual(solve(0, 3), expected);
+			assert.equal(pathCost(request, solve(0, 3)), weight + 1);
+		}
+		finally
+		{ solve.dispose(); }
+	}
 });
 
 test("bucketed Lean Dijkstra matches randomized weighted graphs", async () => {

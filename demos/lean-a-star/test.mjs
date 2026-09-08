@@ -73,6 +73,21 @@ const checkPaired = async request => {
 	return result;
 };
 
+test("prepared A* snapshots every graph array before awaiting initialization", async () => {
+	const request = graphRequest(3, [[0, 1, 1], [1, 2, 1]], 0, 2);
+	const pending = prepareSearch(request);
+	request.offsets.fill(0); request.targets.fill(0); request.weights.fill(99); request.heuristic.fill(99);
+	const search = await pending;
+	try
+	{
+		assert.deepEqual([...search().path], [0, 1, 2]);
+		assert.equal(search().cost, 2);
+		assert.throws(() => search("yes"), /boolean/u);
+	}
+	finally
+	{ search.dispose(); }
+});
+
 test("weighted detours, zero-cost cycles, unreachable goals, and singleton paths", async () => {
 	await initRuntime();
 	const fixtures = [

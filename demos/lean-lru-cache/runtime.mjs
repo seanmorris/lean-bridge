@@ -12,14 +12,17 @@ let modulePromise;
 
 /** Initialize the generated module once for all independent cache handles. */
 const loadModule = () => {
-	modulePromise ??= createLeanModule({
+	const pending = modulePromise ??= createLeanModule({
 		locateFile: path => path === "lean-lru-cache.wasm"
 			? new URL("./runtime/lean-lru-cache.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_lru_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const unsigned = (value, label, maximum = 0xffff_ffff) => {
@@ -90,13 +93,14 @@ export const createCache = async capacity => {
 	};
 	const run = operations => {
 		live(); operationsChecked(operations);
-		const words = operations.length / 3 * 4;
-		const scratch = allocate(module, Math.max(operations.byteLength, words * 4));
+		const input = operations.buffer === module.HEAPU32.buffer ? operations.slice() : operations;
+		const words = input.length / 3 * 4;
+		const scratch = allocate(module, Math.max(input.byteLength, words * 4));
 		try
 		{
-			module.HEAPU32.set(operations, scratch >>> 2);
+			module.HEAPU32.set(input, scratch >>> 2);
 			const output = scratch;
-			const length = module._lean_lru_trace(id, scratch, operations.length, output) >>> 0;
+			const length = module._lean_lru_trace(id, scratch, input.length, output) >>> 0;
 			if(length !== words) throw new Error("Invalid Lean trace result");
 			return copyOutput(module, output, length);
 		}

@@ -4,8 +4,8 @@
   "assurance": "Lean elaboration completed before this receipt was generated",
   "sourceFiles": {
     "DijkstraCore.lean": {
-      "bytes": 19111,
-      "sha256": "f7652c39de24df9963fd270dedbb23c71c556eb249d62ed178eac694ebbfad3f"
+      "bytes": 20404,
+      "sha256": "c340ea1788f0ab2783e47aa77a1f808f8d788a6feafede724af65119eda66c10"
     },
     "Dijkstra.lean": {
       "bytes": 13453,
@@ -27,6 +27,8 @@
     "csrFeasibleLabelsCheck_sound",
     "dijkstraRec_correct",
     "dijkstra_correct",
-    "dijkstraCsr_correct"
+    "dijkstraCsr_correct",
+    "dijkstraRawCsr_large_uses_heap",
+    "bucket_storage_bounded"
   ]
 }

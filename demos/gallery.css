@@ -50,7 +50,7 @@ em { color: var(--mint); font-family: Georgia, serif; font-weight: 400; }
 .status { color: var(--mint); }
 .demo-card h3 { margin: auto 0 13px; max-width: 460px; font-size: 29px; letter-spacing: -.035em; }
 .demo-card p { margin: 0; max-width: 490px; color: var(--muted); line-height: 1.55; }
-.theorems { margin-top: 20px; color: #bcd2e7; font: 11px/1.5 ui-monospace, monospace; }
+.theorems { margin-top: 20px; color: #bcd2e7; font: 11px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
 footer { display: flex; justify-content: space-between; gap: 30px; margin-top: 80px; padding: 30px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 footer a { color: var(--cyan); }
 @media (max-width: 1000px) { .business-explainer { grid-template-columns: 1fr; }.explainer-intro { padding: 0 0 28px; border-right: 0; border-bottom: 1px solid var(--line); } }

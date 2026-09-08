@@ -12,13 +12,16 @@ let modulePromise;
 
 /** Initialize the shared Lean/Wasm runtime once. */
 export const initRuntime = () => {
-	modulePromise ??= createModule({ locateFile: path => path === "lean-sweep-and-prune.wasm"
+	const pending = modulePromise ??= createModule({ locateFile: path => path === "lean-sweep-and-prune.wasm"
 		? new URL("./runtime/lean-sweep-and-prune.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_sweep_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 /**

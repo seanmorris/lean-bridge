@@ -21,6 +21,48 @@ const position = page => page.evaluate(() => {
 	return [transform.e, transform.f];
 });
 const movement = (before, after) => Math.hypot(before[0] - after[0], before[1] - after[1]);
+const motionState = page => page.evaluate(() => ({
+	svgTime: globalThis.document.querySelector("#network-svg").getCurrentTime()
+	, packets: [...globalThis.document.querySelectorAll(".flow-packet")].map(packet => {
+		const matrix = packet.getCTM();
+		return [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f];
+	})
+	, dashes: [...globalThis.document.querySelectorAll(".flow-motion")].map(path => ({
+		offset: globalThis.getComputedStyle(path).strokeDashoffset
+		, clocks: path.getAnimations().map(animation => [animation.playState, animation.currentTime])
+	}))
+}));
+
+// Chromium can rerasterize a stationary rounded outline with small edge-color
+// differences. Compare decoded pixels, not PNG bytes, while checking every
+// animation clock and packet transform exactly below.
+const rasterDifference = (page, before, after) => page.evaluate(async ({ first, second }) => {
+	const decode = async encoded => {
+		const bytes = Uint8Array.from(globalThis.atob(encoded), character => character.charCodeAt(0));
+		const bitmap = await globalThis.createImageBitmap(new globalThis.Blob([bytes], { type: "image/png" }));
+		const canvas = new globalThis.OffscreenCanvas(bitmap.width, bitmap.height);
+		const context = canvas.getContext("2d", { willReadFrequently: true });
+		context.drawImage(bitmap, 0, 0);
+		const pixels = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
+		bitmap.close();
+		return { width: canvas.width, height: canvas.height, pixels };
+	};
+	const left = await decode(first);
+	const right = await decode(second);
+	const sameDimensions = left.width === right.width && left.height === right.height;
+	let changedPixels = 0;
+	let maximumDelta = 0;
+	if(sameDimensions)
+		for(let index = 0; index < left.pixels.length; index += 4)
+		{
+			let delta = 0;
+			for(let channel = 0; channel < 4; channel++)
+				delta = Math.max(delta, Math.abs(left.pixels[index + channel] - right.pixels[index + channel]));
+			if(delta) changedPixels++;
+			maximumDelta = Math.max(maximumDelta, delta);
+		}
+	return { sameDimensions, changedPixels, maximumDelta, pixelCount: left.width * left.height };
+}, { first: before.toString("base64"), second: after.toString("base64") });
 
 try
 {
@@ -51,16 +93,21 @@ try
 		await delay(173);
 		assert.ok(movement(movingBefore, await position(page)) > 2, "A flow packet must visibly travel along its edge");
 		const secondRaster = await page.locator(".network-canvas").screenshot();
-		assert.equal(firstRaster.equals(secondRaster), false, "Running motion must change actual rendered pixels");
+		assert.ok((await rasterDifference(page, firstRaster, secondRaster)).maximumDelta > 16, "Running motion must change actual rendered pixels beyond antialiasing noise");
 
 		await page.locator("#toggle-motion").click();
 		await page.mouse.move(0, 0);
+		await page.waitForFunction(() => [...globalThis.document.querySelectorAll(".flow-motion")]
+			.every(path => path.getAnimations().every(animation => animation.playState === "paused")));
 		await page.evaluate(() => new Promise(resolve => globalThis.requestAnimationFrame(() => globalThis.requestAnimationFrame(resolve))));
-		const pausedBefore = await position(page);
+		const pausedBefore = await motionState(page);
 		const pausedRaster = await page.locator(".network-canvas").screenshot();
 		await delay(219);
-		assert.equal(movement(pausedBefore, await position(page)), 0, "Pause must freeze packet positions");
-		assert.ok(pausedRaster.equals(await page.locator(".network-canvas").screenshot()), "Pause must freeze rendered flow pixels");
+		assert.deepEqual(await motionState(page), pausedBefore, "Pause must freeze every packet transform, CSS dash clock, and SVG clock exactly");
+		const pausedDifference = await rasterDifference(page, pausedRaster, await page.locator(".network-canvas").screenshot());
+		const visuallyPaused = pausedDifference.sameDimensions && pausedDifference.maximumDelta <= 16
+			&& pausedDifference.changedPixels <= pausedDifference.pixelCount * .001;
+		assert.ok(visuallyPaused, `Paused raster must remain unchanged apart from small edge antialiasing noise: ${JSON.stringify(pausedDifference)}`);
 
 		await page.locator("#toggle-motion").click();
 		const resumedBefore = await position(page);

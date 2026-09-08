@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { prepareMatcher, unpackMatches } from "./runtime.mjs";
+import { prepareMatcher, ready, unpackMatches } from "./runtime.mjs";
 
 const encoder = new TextEncoder();
 const canonical = matches => matches.map(({ pattern, start, stop }) => `${pattern}:${start}:${stop}`).sort();
@@ -74,4 +74,56 @@ test("compiled implementation matches randomized byte references", async () => {
 test("public API rejects malformed requests", async () => {
 	await assert.rejects(prepareMatcher([]), /nonempty array/u);
 	await assert.rejects(prepareMatcher([42]), /string or Uint8Array/u);
+});
+
+test("disposing a matcher invalidates existing streams and new stream creation", async () => {
+	const matcher = await prepareMatcher(["aba"]);
+	const stream = matcher.createStream();
+	stream.push("ab");
+	matcher.dispose(); matcher.dispose();
+	assert.throws(() => stream.push("a"), /disposed/u);
+	assert.throws(() => matcher.createStream(), /disposed/u);
+	assert.throws(() => matcher.scanBytes("aba"), /disposed/u);
+});
+
+test("prepared pattern metadata and machine share the same immutable input snapshot", async () => {
+	const pattern = Uint8Array.of(97, 98);
+	const pending = prepareMatcher([pattern]);
+	pattern.fill(120);
+	const matcher = await pending;
+	try
+	{
+		assert.deepEqual(matcher.patterns, [Uint8Array.of(97, 98)]);
+		assert.deepEqual([...matcher.scanBytes("ab")], [0, 0, 2]);
+		matcher.patterns[0].fill(121);
+		assert.deepEqual([...matcher.scanBytes("ab")], [0, 0, 2]);
+	}
+	finally
+	{ matcher.dispose(); }
+});
+
+test("heap-backed scan bytes survive scratch allocation that grows Wasm memory", async () => {
+	const matcher = await prepareMatcher(["nevermatch"]);
+	const module = await ready();
+	const allocate = module._malloc;
+	const pointer = allocate(65_536);
+	let padding = 0;
+	try
+	{
+		const input = module.HEAPU8.subarray(pointer, pointer + 65_536);
+		input.fill(0);
+		const buffer = input.buffer;
+		module._malloc = bytes => {
+			padding = allocate(module.HEAPU8.byteLength);
+			return allocate(bytes);
+		};
+		assert.equal(matcher.scanBytes(input).length, 0);
+		assert.notEqual(module.HEAPU8.buffer, buffer);
+	}
+	finally
+	{
+		module._malloc = allocate;
+		if(padding) module._free(padding);
+		module._free(pointer); matcher.dispose();
+	}
 });

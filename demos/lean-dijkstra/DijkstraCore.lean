@@ -368,7 +368,7 @@ private def initialStateForSize (vertexCount start infinity : Nat) : SearchState
     previous := Array.replicate vertexCount vertexCount
     visited := #[] }
 
-def dijkstraRawCsr (vertexCount : Nat) (offsets targets weights : Array Nat)
+def dijkstraBucketRawCsr (vertexCount : Nat) (offsets targets weights : Array Nat)
     (maximumWeight start target : Nat) : SearchResult :=
   let unreachable := (maximumWeight + 1) * (vertexCount + 1)
   let bucketCount := maximumWeight + 1
@@ -384,6 +384,30 @@ def dijkstraRawCsr (vertexCount : Nat) (offsets targets weights : Array Nat)
     path := reconstruct state.previous start vertexCount (vertexCount + 1) target []
     unreachable
     cutoff := arrayGet state.distance target unreachable }
+
+/-- Bound queue storage independently of the numeric range of edge weights. -/
+def maximumBucketWeight : Nat := 4095
+
+/-- Small integer weights use the compact bucket queue. Larger weights use
+the existing binary heap, so a uint32 weight never sizes a billion-slot array.
+Both results pass through the same CSR shortest-path certificate below. -/
+def dijkstraRawCsr (vertexCount : Nat) (offsets targets weights : Array Nat)
+    (maximumWeight start target : Nat) : SearchResult :=
+  if maximumWeight ≤ maximumBucketWeight then
+    dijkstraBucketRawCsr vertexCount offsets targets weights maximumWeight start target
+  else
+    dijkstraRaw (csrGraph vertexCount offsets targets weights) start target
+
+theorem dijkstraRawCsr_large_uses_heap (vertexCount : Nat) (offsets targets weights : Array Nat)
+    (maximumWeight start target : Nat) (large : maximumBucketWeight < maximumWeight) :
+    dijkstraRawCsr vertexCount offsets targets weights maximumWeight start target =
+      dijkstraRaw (csrGraph vertexCount offsets targets weights) start target := by
+  simp [dijkstraRawCsr, Nat.not_le.mpr large]
+
+theorem bucket_storage_bounded (maximumWeight : Nat) (small : maximumWeight ≤ maximumBucketWeight) :
+    maximumWeight + 1 ≤ 4096 := by
+  unfold maximumBucketWeight at small
+  omega
 
 def csrFeasibleFrom (vertexCount source : Nat) (targets weights : Array Nat)
     (stop : Nat) (distance : Nat → Nat) : Nat → Nat → Bool

@@ -73,6 +73,8 @@ const cardBounds = card => {
 const boundaryPoint = (origin, destination, padding) => {
 	const dx = destination.x - origin.x;
 	const dy = destination.y - origin.y;
+	if(Math.abs(dx) < .001 && Math.abs(dy) < .001)
+		return { x: origin.x + origin.width / 2 + padding, y: origin.y };
 	const horizontal = Math.abs(dx) < .001 ? Number.POSITIVE_INFINITY
 		: (origin.width / 2 + padding) / Math.abs(dx);
 	const vertical = Math.abs(dy) < .001 ? Number.POSITIVE_INFINITY
@@ -164,6 +166,7 @@ const renderCards = () => {
 		};
 		button.addEventListener("click", selectTask);
 		button.addEventListener("pointerdown", event => {
+			if(event.button !== 0 || !event.isPrimary) return;
 			selectTask();
 			drag = { id: event.pointerId, index };
 			button.setPointerCapture(event.pointerId);
@@ -179,6 +182,7 @@ const renderCards = () => {
 		});
 		button.addEventListener("pointerup", () => { drag = null; });
 		button.addEventListener("pointercancel", () => { drag = null; });
+		button.addEventListener("lostpointercapture", () => { drag = null; });
 		return button;
 	}));
 };
@@ -346,22 +350,44 @@ const benchmarkRequest = (() => {
 	}
 	return { vertexCount, edges: Uint32Array.from(values) };
 })();
-const preparedBenchmark = prepareSort(benchmarkRequest);
+let preparedBenchmark;
+let benchmarkHandle;
+let benchmarkGeneration = 0;
+const prepareBenchmark = () => {
+	const generation = benchmarkGeneration;
+	preparedBenchmark ??= prepareSort(benchmarkRequest).then(solver => {
+		if(generation !== benchmarkGeneration) solver.dispose();
+		else benchmarkHandle = solver;
+		return solver;
+	});
+	return preparedBenchmark;
+};
+globalThis.addEventListener("pagehide", () => {
+	drag = null;
+	solveRevision++;
+	benchmarkGeneration++;
+	preparedBenchmark = undefined;
+	benchmarkHandle?.dispose();
+	benchmarkHandle = undefined;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted) void solve();
+});
 attachBrowserBenchmark({
 	root: document.querySelector("#browser-benchmark")
-	, prepare: () => preparedBenchmark
+	, prepare: prepareBenchmark
 	, sample: async index => {
 		let lean;
 		let javascript;
 		if(index % 2 === 0)
 		{
-			lean = measureSyncBenchmark(await preparedBenchmark);
+			lean = measureSyncBenchmark(await prepareBenchmark());
 			javascript = measureSyncBenchmark(() => jsSort(benchmarkRequest));
 		}
 		else
 		{
 			javascript = measureSyncBenchmark(() => jsSort(benchmarkRequest));
-			lean = measureSyncBenchmark(await preparedBenchmark);
+			lean = measureSyncBenchmark(await prepareBenchmark());
 		}
 		if(lean.result.kind !== "order" || !validOrder(benchmarkRequest, lean.result.vertices)
 			|| !validOrder(benchmarkRequest, javascript.result)) {

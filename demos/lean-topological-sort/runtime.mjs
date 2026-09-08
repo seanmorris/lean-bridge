@@ -13,17 +13,22 @@ let scratchCapacity = 0;
 
 /** Load and initialize the generated Emscripten module once. */
 const loadModule = async () => {
-	modulePromise ??= createLeanModule({
+	const pending = modulePromise ??= createLeanModule({
 		locateFile: path => path === "lean-topological-sort.wasm"
 			? new URL("./runtime/lean-topological-sort.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_topological_sort_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const reserveScratch = (module, words) => {
+	if(!Number.isSafeInteger(words) || words < 0 || words > 0x3fff_ffff)
+		throw new RangeError("Graph storage exceeds the Wasm32 allocation limit");
 	const bytes = Math.max(words * Uint32Array.BYTES_PER_ELEMENT, 4);
 	if(bytes <= scratchCapacity) return scratchPointer;
 	const pointer = module._malloc(bytes);
@@ -35,10 +40,12 @@ const reserveScratch = (module, words) => {
 };
 
 const validate = ({ vertexCount, edges }) => {
-	if(!Number.isSafeInteger(vertexCount) || vertexCount < 0 || vertexCount > 0xffff_fffe)
-		throw new RangeError("vertexCount must be a nonnegative Uint32-compatible integer");
+	if(!Number.isSafeInteger(vertexCount) || vertexCount < 0 || vertexCount > 0x7fff_ffff)
+		throw new RangeError("vertexCount must be a nonnegative 31-bit integer");
 	if(!(edges instanceof Uint32Array) || edges.length % 2 !== 0)
 		throw new TypeError("edges must be a Uint32Array of endpoint pairs");
+	if(edges.length + vertexCount + 1 > 0x3fff_ffff)
+		throw new RangeError("Graph storage exceeds the Wasm32 allocation limit");
 	for(const endpoint of edges) if(endpoint >= vertexCount) throw new RangeError("edges contains an out-of-range endpoint");
 };
 
@@ -59,7 +66,8 @@ const parse = (module, pointer, length) => {
  */
 const runGraph = async (request, entrypoint) => {
 	validate(request);
-	const { vertexCount, edges } = request;
+	const { vertexCount } = request;
+	const edges = request.edges.slice();
 	const module = await loadModule();
 	const pointer = reserveScratch(module, edges.length + vertexCount + 1);
 	module.HEAPU32.set(edges, pointer >>> 2);
@@ -93,7 +101,8 @@ export const sortGraphTotal = request => runGraph(request, "_lean_topological_so
  */
 export const prepareSort = async request => {
 	validate(request);
-	const { vertexCount, edges } = request;
+	const { vertexCount } = request;
+	const edges = request.edges.slice();
 	const module = await loadModule();
 	const inputPointer = reserveScratch(module, edges.length);
 	module.HEAPU32.set(edges, inputPointer >>> 2);

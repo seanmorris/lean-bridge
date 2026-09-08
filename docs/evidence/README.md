@@ -4,6 +4,10 @@ Evidence documents record commands, artifact identities, measured results, and l
 
 The [production-hardening review from 14 August 2026](production-hardening-review-20260814.md) reconciles the current evidence against all eight permanent architecture lenses and records the remaining approval blockers.
 
+## Verified algorithm gallery
+
+- [Twelve-demo correctness, lifecycle, and browser audit, 8 September 2026](demo-portfolio-audit-20260908.md)
+
 ## Author workflow and release
 
 - [Lean project analysis](lean-project-analysis.md)

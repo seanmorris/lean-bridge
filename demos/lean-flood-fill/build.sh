@@ -65,7 +65,7 @@ em++ \
   -sENVIRONMENT=web,node \
   -sALLOW_MEMORY_GROWTH=1 \
   -sEXPORTED_RUNTIME_METHODS=HEAPU32 \
-  -sEXPORTED_FUNCTIONS=_lean_flood_runtime_init,_lean_flood_solve,_lean_capability_prepare,_lean_capability_solve_prepared,_lean_capability_solve,_malloc,_free \
+  -sEXPORTED_FUNCTIONS=_lean_flood_runtime_init,_lean_flood_solve,_lean_capability_prepare,_lean_capability_solve_prepared,_lean_capability_release,_lean_capability_solve,_malloc,_free \
   -Wl,--no-entry \
   -o "$OUTPUT_DIR/lean-flood-fill.mjs"
 

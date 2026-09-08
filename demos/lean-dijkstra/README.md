@@ -30,7 +30,7 @@ The port uses a proof-carrying result. The label-setting loop builds distances a
 
 `certificate_shortest` proves these conditions imply global minimality against every alternative walk. `dijkstraRec_correct` and `dijkstra_correct` establish the generic list-backed API. `csrFeasibleLabelsCheck_sound` proves the direct checker may skip rows already capped at the target cost, and `dijkstraCsr_correct` connects the CSR implementation used by the Wasm export to the same graph specification. There are no `sorry` declarations. The proof module is checked on every build, while Lean erases proofs from the Wasm artifact.
 
-The executable graph uses compressed sparse rows and a cyclic bucket queue sized from the graph's maximum integer edge weight. This removes binary-heap swaps while keeping the implementation graph-generic. Search runs in `O(E + WV)` time for maximum edge weight `W`. Certificate validation is `O(V + E)`, skips rows already capped at the target cost, and checks the returned path directly against CSR without rebuilding adjacency lists.
+For maximum edge weights up to 4095, the executable uses compressed sparse rows and a cyclic queue with at most 4096 buckets. This search runs in `O(E + WV)` time for maximum weight `W`. Larger weights use the existing binary-heap search over the graph's adjacency view, so full Uint32 weights do not request billions of buckets. Both routes use the same proved CSR certificate. Certificate validation is `O(V + E)`, skips rows already capped at the target cost, and checks the returned path directly against CSR.
 
 ## Files
 
@@ -44,7 +44,9 @@ The executable graph uses compressed sparse rows and a cyclic bucket queue sized
 - `generate-proof-audit.mjs` — creates the source-hash receipt after Lean accepts the proof module.
 - `runtime/` — compiled Emscripten ES module and Lean Wasm artifact.
 
-The browser boundary uses compressed sparse row (CSR) arrays: `offsets` has one row boundary per vertex, while parallel `targets` and `weights` arrays describe the edges. Zero-weight edges are supported. The compiled search and certificate both traverse CSR directly rather than expanding edges into linked lists and records. The direct certificate is proved sound for the generic graph model, and `dijkstraCsr_correct` connects the optimized entry point to the same `ShortestPath` specification.
+The browser boundary uses compressed sparse row (CSR) arrays: `offsets` has one row boundary per vertex, while parallel `targets` and `weights` arrays describe the edges. Zero-weight edges and the full Uint32 weight range are supported. Small-weight searches and certificate checks traverse CSR directly; the large-weight heap route constructs an adjacency view. The direct certificate is proved sound for the generic graph model, and `dijkstraCsr_correct` connects both routes to the same `ShortestPath` specification.
+
+The browser API requires at most one edge to each target within a CSR row. It rejects parallel edges instead of interpreting their weights inconsistently. Both one-shot calls and `prepareShortestPath` snapshot input arrays before awaiting initialization. Each prepared solver owns its graph independently, returns copied paths, and exposes an idempotent `dispose()` method. Calling a disposed solver throws.
 
 ## Build and run
 

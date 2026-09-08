@@ -132,7 +132,7 @@ These are observational end-user API measurements, not cross-machine comparisons
 
 ## Verified algorithm demos
 
-The static [demo gallery](demos/) runs proof-backed Lean algorithms directly in the browser. The initial collection includes generic Dijkstra shortest path and directed flood fill with a proven least capability closure. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark.
+The static [demo gallery](demos/) runs twelve proof-backed Lean algorithms directly in the browser, covering graphs, text, caches, rate limits, and collision pairs. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark. The [gallery manifest](demos/manifest.json) lists the algorithms and their named guarantees.
 
 Build and verify the complete GitHub Pages artifact with:
 
@@ -155,4 +155,4 @@ The assembled static site is written to `build/github-pages`. Pull requests vali
 - [Evidence index](docs/evidence/README.md)
 - [Contributing](CONTRIBUTING.md)
 
-This repository is an architecture-testing proof of concept. It publishes no live registry package and includes no live registry adapter.
+This repository is an architecture-testing proof of concept. Its documented consumer workflows install local package archives, not a public registry release. The CLI includes an npm registry adapter; production writes require an approved deployment profile, credentials, a signer policy, and explicit opt-in. The [release pipeline](src/release/README.md#publication-and-receipts) documents those controls and the separate sandbox mode.

@@ -121,6 +121,45 @@ test("compiled capability closure acquires chained reusable keys", async () => {
 	const prepared = await solvePrepared();
 	assert.deepEqual([...prepared.vertices], expected.vertices);
 	assert.deepEqual([...prepared.capabilities].sort((a, b) => a - b), expected.capabilities);
+	solvePrepared.dispose();
+});
+
+test("prepared closures snapshot inputs, stay independent, and dispose without invalidating peers", async () => {
+	const request = {
+		vertexCount: 3, offsets: Uint32Array.of(0, 1, 2, 2)
+		, targets: Uint32Array.of(1, 2)
+		, allowedVertices: Uint32Array.of(1, 1, 1), requirements: Uint32Array.of(0, 0)
+		, grants: Uint32Array.of(0, 0, 0), initialCapabilities: new Uint32Array()
+		, capabilityCount: 0, start: 0
+	};
+	const pending = prepareCapabilityClosure(request);
+	request.allowedVertices.fill(0);
+	const [first, second] = await Promise.all([pending, prepareCapabilityClosure(request)]);
+	try
+	{
+		const retained = first();
+		assert.deepEqual([...retained.vertices], [0, 1, 2]);
+		assert.deepEqual([...second().vertices], []);
+		first().vertices.fill(99);
+		assert.deepEqual(first(), retained);
+		second.dispose(); second.dispose();
+		assert.throws(second, /disposed/u);
+		assert.deepEqual(first(), retained);
+	}
+	finally
+	{ first.dispose(); second.dispose(); }
+});
+
+test("one-shot reachability snapshots caller-owned eligibility before await", async () => {
+	const request = {
+		vertexCount: 2, offsets: Uint32Array.of(0, 1, 1)
+		, targets: Uint32Array.of(1)
+		, allowedVertices: Uint32Array.of(1, 1), allowedEdges: Uint32Array.of(1)
+		, start: 0
+	};
+	const pending = reachable(request);
+	request.allowedEdges.fill(0); request.allowedVertices.fill(0);
+	assert.deepEqual([...await pending], [0, 1]);
 });
 
 test("compiled implementation matches independent randomized references", async () => {

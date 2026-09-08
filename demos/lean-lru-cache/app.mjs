@@ -76,6 +76,7 @@ let busy = true;
 let playing = false;
 let timer = 0;
 let revision = 0;
+let alive = true;
 
 const stopPlayback = () => {
 	clearTimeout(timer);
@@ -250,7 +251,7 @@ const resetAt = async (position, autoplay = false) => {
 	try
 	{
 		const nextCache = await createCache(capacity);
-		if(current !== revision)
+		if(current !== revision || !alive)
 		{ nextCache.dispose(); return; }
 		cache?.dispose();
 		cache = nextCache;
@@ -301,11 +302,47 @@ for(const button of globalThis.document.querySelectorAll("[data-scenario]")) but
 	void resetAt(0);
 });
 
+globalThis.document.addEventListener("visibilitychange", () => {
+	if(globalThis.document.hidden)
+	{
+		stopPlayback();
+		render();
+	}
+});
+globalThis.addEventListener("pagehide", () => {
+	alive = false;
+	revision++;
+	stopPlayback();
+	cache?.dispose();
+	cache = undefined;
+	busy = true;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted)
+	{
+		alive = true;
+		void resetAt(history.length);
+	}
+});
+
 let benchmark;
+let benchmarkGeneration = 0;
+globalThis.addEventListener("pagehide", () => {
+	benchmarkGeneration++;
+	benchmark?.dispose();
+	benchmark = undefined;
+});
 attachBrowserBenchmark({
 	root: byId("browser-benchmark")
 	, prepare: async () => {
-		benchmark ??= await createBenchmark();
+		const generation = benchmarkGeneration;
+		if(!benchmark)
+		{
+			const prepared = await createBenchmark();
+			if(generation !== benchmarkGeneration)
+			{ prepared.dispose(); return; }
+			benchmark = prepared;
+		}
 		byId("benchmark-description").textContent = `A ${benchmark.capacity}-slot cache processes ${benchmark.count.toLocaleString()} lookups and writes per trace. Five excluded runs warm Lean/Wasm and JavaScript’s insertion-ordered Map, then 100 comparisons check every outcome.`;
 	}
 	, sample: index => benchmark.sample(index)

@@ -16,18 +16,23 @@ let scratchCapacity = 0;
 
 /** Loads the generated module and initializes its Lean runtime. */
 const loadModule = async () => {
-	modulePromise ??= createLeanModule({
+	const pending = modulePromise ??= createLeanModule({
 		locateFile: path => path === "lean-union-find.wasm"
 			? new URL("./runtime/lean-union-find.wasm", import.meta.url).href
 			: path
 	}).then(module => {
 		if(module._lean_union_find_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const reserveScratch = (module, words) => {
+	if(!Number.isSafeInteger(words) || words < 0 || words > 0x3fff_ffff)
+		throw new RangeError("Partition storage exceeds the Wasm32 allocation limit");
 	const bytes = Math.max(words * Uint32Array.BYTES_PER_ELEMENT, 4);
 	if(bytes <= scratchCapacity) return scratchPointer;
 	const pointer = module._malloc(bytes);
@@ -39,9 +44,9 @@ const reserveScratch = (module, words) => {
 };
 
 const requireCount = count => {
-	if(!Number.isSafeInteger(count) || count < 0 || count > 0xffff_fffe)
+	if(!Number.isSafeInteger(count) || count < 0 || count > 0x7fff_ffff)
 	{
-		throw new RangeError("elementCount must be a nonnegative Uint32-compatible integer");
+		throw new RangeError("elementCount must be a nonnegative 31-bit integer");
 	}
 };
 
@@ -79,6 +84,7 @@ export const partition = async ({ elementCount, links }) => {
 	{
 		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
 	}
+	links = links.slice();
 	const module = await loadModule();
 	const outputWords = elementCount;
 	const { inputPointer, outputPointer } = transfer(module, links, outputWords);
@@ -107,19 +113,28 @@ export const preparePartition = async ({ elementCount, links }) => {
 	{
 		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
 	}
+	if(elementCount > 0x3fff_ffff) throw new RangeError("Partition output exceeds the Wasm32 allocation limit");
+	links = links.slice();
 	const module = await loadModule();
 	const inputPointer = reserveScratch(module, links.length);
 	module.HEAPU32.set(links, inputPointer >>> 2);
-	if(module._lean_union_find_prepare_partition(elementCount, inputPointer, links.length) !== 1)
+	const handle = module._lean_union_find_prepare_partition(elementCount, inputPointer, links.length) >>> 0;
+	if(!handle)
 	{
 		throw new Error("Lean union-find rejected the prepared partition");
 	}
 	const outputBytes = Math.max(elementCount * Uint32Array.BYTES_PER_ELEMENT, 4);
 	const outputPointer = module._malloc(outputBytes);
-	if(!outputPointer) throw new Error(`Unable to allocate ${outputBytes} Wasm bytes`);
-	return () => {
+	if(!outputPointer)
+	{
+		module._lean_union_find_release_partition(handle);
+		throw new Error(`Unable to allocate ${outputBytes} Wasm bytes`);
+	}
+	let disposed = false;
+	const solve = () => {
+		if(disposed) throw new Error("Prepared partition has been disposed");
 		const length = module._lean_union_find_solve_prepared_partition(
-			outputPointer, elementCount
+			handle, outputPointer, elementCount
 		) >>> 0;
 		if(length === ERROR || length !== elementCount)
 		{
@@ -130,6 +145,13 @@ export const preparePartition = async ({ elementCount, links }) => {
 			representatives: Uint32Array.from(module.HEAPU32.subarray(start, start + elementCount))
 		};
 	};
+	solve.dispose = () => {
+		if(disposed) return;
+		disposed = true;
+		module._lean_union_find_release_partition(handle);
+		module._free(outputPointer);
+	};
+	return solve;
 };
 
 /**
@@ -146,6 +168,7 @@ export const partitionDebug = async ({ elementCount, links }) => {
 	{
 		if(endpoint >= elementCount) throw new RangeError("links contains an out-of-range endpoint");
 	}
+	links = links.slice();
 	const module = await loadModule();
 	const outputWords = elementCount * 3;
 	const { inputPointer, outputPointer } = transfer(module, links, outputWords);
@@ -177,6 +200,7 @@ export const runOperations = async ({ elementCount, operations }) => {
 		}
 		if(opcode === CONNECTED) queryCount += 1;
 	}
+	operations = operations.slice();
 	const module = await loadModule();
 	const outputWords = 1 + queryCount + elementCount * 3;
 	const { inputPointer, outputPointer } = transfer(module, operations, outputWords);

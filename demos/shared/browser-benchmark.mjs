@@ -97,6 +97,17 @@ export const attachBrowserBenchmark = ({
 	let revision = 0;
 	let startedOnce = false;
 	let histogramValues = [];
+	let preparation;
+	const prepareOnce = () => {
+		if(!preparation)
+		{
+			const pending = Promise.resolve().then(prepare).finally(() => {
+				if(preparation === pending) preparation = undefined;
+			});
+			preparation = pending;
+		}
+		return preparation;
+	};
 
 	const drawHistogram = values => {
 		histogramValues = values;
@@ -158,6 +169,7 @@ export const attachBrowserBenchmark = ({
 	}).observe(elements.histogram);
 
 	const cancel = () => {
+		startedOnce = true;
 		revision += 1;
 		elements.rerun.disabled = false;
 		elements.cancel.disabled = true;
@@ -171,7 +183,7 @@ export const attachBrowserBenchmark = ({
 		elements.cancel.disabled = false;
 		try
 		{
-			await prepare();
+			await prepareOnce();
 			if(current !== revision) return;
 			const started = performance.now();
 			for(let index = 0; index < warmupCount; index += 1)
@@ -186,8 +198,12 @@ export const attachBrowserBenchmark = ({
 			for(let index = 0; index < trialCount; index += 1)
 			{
 				if(current !== revision) return;
-				samples.push(await sample(index, false));
+				const result = await sample(index, false);
 				if(current !== revision) return;
+				if(!Number.isFinite(result.leanMs) || result.leanMs < 0
+					|| !Number.isFinite(result.javascriptMs) || result.javascriptMs < 0)
+					throw new Error("Benchmark sample must contain finite, nonnegative timings");
+				samples.push(result);
 				elements.progress.textContent = `${index + 1} / ${trialCount} compared`;
 				if(index % 2 === 1) await frame();
 			}
@@ -228,6 +244,10 @@ export const attachBrowserBenchmark = ({
 
 	elements.rerun.addEventListener("click", run);
 	elements.cancel.addEventListener("click", cancel);
+	globalThis.addEventListener?.("pagehide", () => {
+		cancel();
+		preparation = undefined;
+	});
 	elements.cancel.disabled = true;
 	if("IntersectionObserver" in globalThis)
 	{

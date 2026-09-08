@@ -6,6 +6,8 @@ The page separates one editable material sample from a live browser benchmark. T
 
 The grid, animation, seeded activation order, benchmark harness, and histogram live in JavaScript. The Lean API receives only an element count and endpoint pairs. `solvePartition_correct` proves directly that two representatives returned by the production solver are equal exactly when the input pairs connect those elements.
 
+Public requests snapshot their typed arrays before awaiting initialization. Each `preparePartition` solver owns its graph and output storage independently. Results are copied out of Wasm memory. Call the solver's idempotent `dispose()` method when finished; calls after disposal throw.
+
 ## Build and check
 
 ```sh

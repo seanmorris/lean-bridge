@@ -25,6 +25,10 @@ let mode = "wall";
 let drawing = false;
 let drawValue = true;
 let solveVersion = 0;
+let drawingPointer = null;
+let lastDrawn = null;
+let alive = true;
+let userEdited = false;
 
 grid.style.setProperty("--columns", COLUMNS);
 
@@ -34,6 +38,7 @@ for(let index = 0; index < VERTEX_COUNT; index += 1)
 	cell.className = "cell";
 	cell.dataset.index = index;
 	cell.type = "button";
+	cell.tabIndex = index === start ? 0 : -1;
 	cell.setAttribute("aria-label", `Cell ${index % COLUMNS + 1}, ${Math.floor(index / COLUMNS) + 1}`);
 	grid.append(cell);
 	cells.push(cell);
@@ -78,6 +83,12 @@ const animateInitialMaze = duration => new Promise(resolve => {
 	let started;
 	grid.classList.add("maze-cycling");
 	const nextFrame = async timestamp => {
+		if(!alive || userEdited || document.hidden)
+		{
+			grid.classList.remove("maze-cycling");
+			resolve();
+			return;
+		}
 		started ??= timestamp;
 		installMaze();
 		path = [];
@@ -113,6 +124,7 @@ const render = () => {
 		else if(pathCells.has(index)) cell.classList.add("path");
 		if(index === start) cell.classList.add("start");
 		if(index === target) cell.classList.add("end");
+		cell.setAttribute("aria-label", `Cell ${index % COLUMNS + 1}, ${Math.floor(index / COLUMNS) + 1}: ${index === start ? "start" : index === target ? "end" : walls[index] ? "wall" : "space"}`);
 	}
 };
 
@@ -149,7 +161,7 @@ const solve = async () => {
 	try
 	{
 		const result = await shortestPath({ vertexCount: VERTEX_COUNT, ...graphCsr(), start, target });
-		if(version !== solveVersion) return;
+		if(version !== solveVersion || !alive) return;
 		path = result;
 		const elapsed = performance.now() - started;
 		steps.textContent = result.length ? result.length - 1 : "—";
@@ -175,7 +187,7 @@ const solve = async () => {
 	}
 };
 
-const edit = (index, solveAfter = true) => {
+const edit = (index, solveAfter = true, renderAfter = true) => {
 	if(mode === "wall")
 	{
 		if(index === start || index === target) return;
@@ -194,29 +206,78 @@ const edit = (index, solveAfter = true) => {
 		target = index;
 	}
 	path = [];
-	render();
+	if(renderAfter) render();
 	if(solveAfter) solve();
 };
 
+const stopDrawing = event => {
+	if(drawingPointer === null || event?.pointerId !== undefined && event.pointerId !== drawingPointer) return;
+	const pointer = drawingPointer;
+	drawingPointer = null;
+	lastDrawn = null;
+	const changed = drawing;
+	drawing = false;
+	if(grid.hasPointerCapture(pointer)) grid.releasePointerCapture(pointer);
+	if(changed && alive) void solve();
+};
+
 grid.addEventListener("pointerdown", event => {
+	if(event.button !== 0 || !event.isPrimary || drawingPointer !== null) return;
 	const cell = event.target.closest(".cell");
 	if(!cell) return;
 	event.preventDefault();
+	userEdited = true;
 	const index = Number(cell.dataset.index);
+	for(const candidate of cells) candidate.tabIndex = candidate === cell ? 0 : -1;
+	cell.focus({ preventScroll: true });
 	drawing = mode === "wall";
 	drawValue = !walls[index];
+	drawingPointer = event.pointerId;
+	lastDrawn = index;
+	grid.setPointerCapture(event.pointerId);
 	edit(index, !drawing);
 });
 
-grid.addEventListener("pointerover", event => {
-	if(!drawing || mode !== "wall") return;
-	const cell = event.target.closest(".cell");
-	if(cell) edit(Number(cell.dataset.index), false);
+grid.addEventListener("pointermove", event => {
+	if(!drawing || mode !== "wall" || drawingPointer !== event.pointerId) return;
+	const cell = document.elementFromPoint(event.clientX, event.clientY)?.closest(".cell");
+	if(!cell || !grid.contains(cell)) return;
+	const index = Number(cell.dataset.index);
+	const startX = lastDrawn % COLUMNS;
+	const startY = Math.floor(lastDrawn / COLUMNS);
+	const dx = index % COLUMNS - startX;
+	const dy = Math.floor(index / COLUMNS) - startY;
+	const distance = Math.max(Math.abs(dx), Math.abs(dy));
+	for(let step = 1; step <= distance; step++)
+		edit(Math.round(startY + dy * step / distance) * COLUMNS + Math.round(startX + dx * step / distance), false, false);
+	lastDrawn = index;
+	render();
 });
 
-globalThis.addEventListener("pointerup", () => {
-	if(drawing) solve();
-	drawing = false;
+for(const type of ["pointerup", "pointercancel", "lostpointercapture"]) grid.addEventListener(type, stopDrawing);
+grid.addEventListener("keydown", event => {
+	const cell = event.target.closest(".cell");
+	if(!cell) return;
+	const index = Number(cell.dataset.index);
+	if(event.key === " " || event.key === "Enter")
+	{
+		event.preventDefault();
+		userEdited = true;
+		drawValue = !walls[index];
+		edit(index);
+		return;
+	}
+	const x = index % COLUMNS;
+	const y = Math.floor(index / COLUMNS);
+	const target = event.key === "ArrowLeft" ? y * COLUMNS + Math.max(0, x - 1)
+		: event.key === "ArrowRight" ? y * COLUMNS + Math.min(COLUMNS - 1, x + 1)
+			: event.key === "ArrowUp" ? Math.max(0, y - 1) * COLUMNS + x
+				: event.key === "ArrowDown" ? Math.min(ROWS - 1, y + 1) * COLUMNS + x : null;
+	if(target === null) return;
+	event.preventDefault();
+	cell.tabIndex = -1;
+	cells[target].tabIndex = 0;
+	cells[target].focus();
 });
 
 for(const button of document.querySelectorAll(".mode"))
@@ -225,18 +286,21 @@ for(const button of document.querySelectorAll(".mode"))
 }
 
 document.querySelector("#clear").addEventListener("click", () => {
+	userEdited = true;
 	walls.fill(0);
 	render();
 	solve();
 });
 
 document.querySelector("#maze").addEventListener("click", () => {
+	userEdited = true;
 	installMaze();
 	render();
 	solve();
 });
 
 globalThis.addEventListener("keydown", event => {
+	if(event.target.closest("input,textarea,select") || event.metaKey || event.ctrlKey || event.altKey) return;
 	if(event.key === "1") setMode("wall");
 	if(event.key === "2") setMode("start");
 	if(event.key === "3") setMode("end");
@@ -368,10 +432,17 @@ const benchmarkRequest = index => {
 };
 
 render();
-const demoReady = ready().then(() => animateInitialMaze(200));
-const benchmarkReady = demoReady.then(async () => {
-	benchmarkSolve = await prepareShortestPath({ vertexCount: VERTEX_COUNT, ...benchmarkGraph });
-});
+const demoReady = ready().then(() => matchMedia("(prefers-reduced-motion: reduce)").matches ? solve() : animateInitialMaze(200));
+let benchmarkReady;
+let benchmarkGeneration = 0;
+const prepareBenchmark = () => {
+	const generation = benchmarkGeneration;
+	benchmarkReady ??= demoReady.then(() => prepareShortestPath({ vertexCount: VERTEX_COUNT, ...benchmarkGraph })).then(solver => {
+		if(generation !== benchmarkGeneration) solver.dispose();
+		else benchmarkSolve = solver;
+	});
+	return benchmarkReady;
+};
 demoReady.catch(error => {
 	status.className = "status no-path ready";
 	status.innerHTML = '<span class="spinner"></span> Lean/Wasm failed to load';
@@ -380,7 +451,7 @@ demoReady.catch(error => {
 
 attachBrowserBenchmark({
 	root: document.querySelector("#browser-benchmark")
-	, prepare: () => benchmarkReady
+	, prepare: prepareBenchmark
 	, sample: async (index, warmup) => {
 		const request = benchmarkRequest(index + (warmup ? 10_000 : 0));
 		const lean = measureSyncBenchmark(() => benchmarkSolve(request.start, request.target));
@@ -400,4 +471,28 @@ attachBrowserBenchmark({
 	, summarize: ({ javascriptMedian, leanMedian, trialCount }) =>
 		`${VERTEX_COUNT} vertices · ${benchmarkGraph.targets.length} directed edges · `
 		+ `${trialCount} costs agreed · +${(leanMedian - javascriptMedian).toFixed(2)} ms`
+});
+document.addEventListener("visibilitychange", () => {
+	if(document.hidden)
+	{
+		userEdited = true;
+		stopDrawing();
+	}
+});
+globalThis.addEventListener("pagehide", () => {
+	alive = false;
+	userEdited = true;
+	solveVersion++;
+	stopDrawing();
+	benchmarkGeneration++;
+	benchmarkReady = undefined;
+	benchmarkSolve?.dispose();
+	benchmarkSolve = undefined;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted)
+	{
+		alive = true;
+		void solve();
+	}
 });

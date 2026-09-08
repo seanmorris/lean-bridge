@@ -1,6 +1,6 @@
 # Implementation status
 
-Status as of 2026-08-14: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer. The [production-hardening review](evidence/production-hardening-review-20260814.md) withholds production approval pending human clean-room sessions, external reconstruction, a reviewed deployment profile, operated publication controls, and human assurance review.
+Consumer evidence as of 2026-08-14, with release controls updated on 2026-09-08: the repository is an architecture-testing proof of concept. Every row in the [consumer support contract](consumer-support.v1.json) has a clean package consumer that executes real Lean. Native packages currently target x86-64 Linux with glibc 2.38 or newer. The [production-hardening review](evidence/production-hardening-review-20260814.md) withholds production approval pending human clean-room sessions, external reconstruction, a reviewed deployment profile, operated publication controls, and human assurance review.
 
 ## Lean project intake
 
@@ -94,7 +94,7 @@ The release proof of concept includes:
 - idempotency keys and registry-specific recovery states; and
 - content-addressed component receipts for local dry runs and signed exact-archive receipts for completed releases.
 
-No live registry adapter is installed. Dry run performs no external registry write. Execute mode cannot publish without a separately installed adapter, credentials, and signer policy. [Reproducibility evidence](evidence/reproducibility-release-gate.md), [publication attestation evidence](evidence/publication-attestation.md), [registry transaction evidence](evidence/transactional-registry-release.md), and [receipt evidence](evidence/release-receipt.md) define those controls.
+The installed CLI includes the npm registry adapter. Production execution checks the deployment-profile approvals before credential access and requires `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production`, credentials, and a signer policy. `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` selects the separate local-registry path. Other registry projections require their own installed adapters. Dry run performs no external registry write. [Reproducibility evidence](evidence/reproducibility-release-gate.md), [publication attestation evidence](evidence/publication-attestation.md), [registry transaction evidence](evidence/transactional-registry-release.md), and [receipt evidence](evidence/release-receipt.md) define those controls.
 
 ## Performance evidence
 
@@ -114,7 +114,7 @@ Current blockers include:
 - additional native operating systems and architectures;
 - broader Component Model coverage for callbacks and borrowed identity results;
 - PHP ZTS, AArch64, macOS, Windows, browser PHP, and broader libuv effects;
-- live registry adapters and an operated signer policy; and
+- adapters for the remaining registries and an operated signer policy; and
 - independent release rebuild attestations outside this repository.
 
 Any support promotion requires a clean package installation and real Lean execution in the consumer matrix workflow.

@@ -4,51 +4,34 @@
  * @file
  */
 
+import { renderGalleryCard } from "./shared/gallery-card.mjs";
+
 const grid = document.querySelector("#demo-grid");
 const buildIdentity = document.querySelector("#build-identity");
 
 const loadJson = async (path, fallback) => {
 	const response = await fetch(path);
-	if(!response.ok) return fallback;
+	if(!response.ok)
+	{
+		if(fallback !== undefined) return fallback;
+		throw new Error(`Could not load ${path}: HTTP ${response.status}`);
+	}
 	return response.json();
-};
-
-const renderCard = demo => {
-	const card = document.createElement("a");
-	card.className = "demo-card";
-	card.href = demo.entrypoint;
-	card.style.setProperty("--accent", `var(--${demo.accent})`);
-	const top = document.createElement("div");
-	top.className = "card-top";
-	const category = document.createElement("span");
-	category.textContent = demo.category;
-	const status = document.createElement("span");
-	status.className = "status";
-	status.textContent = demo.status;
-	top.append(category, status);
-	const title = document.createElement("h3");
-	title.textContent = demo.title;
-	const summary = document.createElement("p");
-	summary.textContent = demo.summary;
-	const theorems = document.createElement("div");
-	theorems.className = "theorems";
-	theorems.textContent = demo.theorems.join(" · ");
-	card.append(top, title, summary, theorems);
-	return card;
 };
 
 const load = async () => {
 	const [manifest, build] = await Promise.all([
-		loadJson("manifest.json", { demos: [] })
-		, loadJson("build-identity.json", null)
+		loadJson("manifest.json")
+		, loadJson("build-identity.json", null).catch(() => null)
 	]);
-	grid.replaceChildren(...manifest.demos.map(renderCard));
+	grid.innerHTML = manifest.demos.map(renderGalleryCard).join("");
 	buildIdentity.textContent = build
-		? `Built from ${build.commit.slice(0, 12)} · ${build.generatedAt}`
+		? `Built from ${build.commit.slice(0, 12)}${build.sourceState === "modified" ? " + local changes" : ""} · ${build.generatedAt}`
 		: "Local source tree · build identity is added during Pages assembly";
 };
 
 load().catch(error => {
-	grid.textContent = "The demo manifest could not be loaded.";
-	console.error(error);
+	buildIdentity.textContent = "Could not refresh gallery metadata. The published demo links remain available.";
+	buildIdentity.title = error.message;
+	if(!grid.children.length) grid.textContent = "The demo manifest could not be loaded. Reload to try again.";
 });

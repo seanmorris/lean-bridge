@@ -45,8 +45,10 @@ let matches = [];
 let selectedPattern = null;
 let revision = 0;
 let updateTimer = 0;
+let scanTimer = 0;
+let alive = true;
 
-const readPatterns = () => elements.patterns.value.split("\n").map(value => value.trim()).filter(Boolean);
+const readPatterns = () => elements.patterns.value.split("\n").filter(value => value.length > 0);
 const byteCharacters = text => {
 	const result = [];
 	let position = 0;
@@ -105,26 +107,52 @@ const render = () => {
 };
 
 const scan = () => {
-	if(!matcher) return;
-	const started = performance.now();
-	matches = unpackMatches(matcher.scanBytes(elements.input.value));
-	elements.scanTime.textContent = `${(performance.now() - started).toFixed(2)} ms`;
+	if(!alive) return;
+	if(!matcher)
+	{
+		elements.highlighted.textContent = elements.input.value;
+		return;
+	}
+	try
+	{
+		const started = performance.now();
+		matches = unpackMatches(matcher.scanBytes(elements.input.value));
+		elements.scanTime.textContent = `${(performance.now() - started).toFixed(2)} ms`;
+		render();
+	}
+	catch(error)
+	{
+		matches = [];
+		render();
+		elements.verdictTitle.textContent = "This input could not be scanned.";
+		elements.verdictCopy.textContent = error instanceof Error ? error.message : String(error);
+	}
+};
+
+const clearMatcher = () => {
+	matcher?.dispose();
+	matcher = undefined;
+	patterns = [];
+	matches = [];
+	selectedPattern = null;
+	elements.scanTime.textContent = "—";
 	render();
 };
 
 const compileAndScan = async () => {
 	const current = ++revision;
 	const nextPatterns = readPatterns();
+	clearMatcher();
 	if(nextPatterns.length === 0)
 	{
 		elements.verdictTitle.textContent = "Add at least one pattern.";
-		elements.verdictCopy.textContent = "Blank lines are ignored; empty patterns are rejected explicitly.";
+		elements.verdictCopy.textContent = "Empty lines are ignored. Spaces in a nonempty pattern are significant.";
 		return;
 	}
 	try
 	{
 		const next = await prepareMatcher(nextPatterns);
-		if(current !== revision)
+		if(current !== revision || !alive)
 		{ next.dispose(); return; }
 		matcher?.dispose();
 		matcher = next;
@@ -134,15 +162,26 @@ const compileAndScan = async () => {
 	}
 	catch(error)
 	{
+		if(current !== revision || !alive) return;
 		elements.verdictTitle.textContent = "These patterns could not be compiled.";
 		elements.verdictCopy.textContent = error instanceof Error ? error.message : String(error);
 		console.error(error);
 	}
 };
 
-const scheduleCompile = () => { clearTimeout(updateTimer); updateTimer = setTimeout(() => void compileAndScan(), 160); };
-const scheduleScan = () => { clearTimeout(updateTimer); updateTimer = setTimeout(scan, 55); };
+const scheduleCompile = () => {
+	revision++;
+	clearTimeout(updateTimer);
+	clearTimeout(scanTimer);
+	clearMatcher();
+	elements.verdictTitle.textContent = "Compiling the updated patterns…";
+	elements.verdictCopy.textContent = "The next scan will use the patterns currently shown in the editor.";
+	updateTimer = setTimeout(() => void compileAndScan(), 160);
+};
+const scheduleScan = () => { clearTimeout(scanTimer); scanTimer = setTimeout(scan, 55); };
 const loadScenario = name => {
+	clearTimeout(updateTimer);
+	clearTimeout(scanTimer);
 	const scenario = scenarios[name];
 	elements.patterns.value = scenario.patterns.join("\n");
 	elements.input.value = scenario.text;
@@ -154,6 +193,21 @@ for(const button of document.querySelectorAll("[data-scenario]")) button.addEven
 elements.patterns.addEventListener("input", scheduleCompile);
 elements.input.addEventListener("input", scheduleScan);
 elements.showAll.addEventListener("click", () => { selectedPattern = null; render(); });
+globalThis.addEventListener("pagehide", () => {
+	alive = false;
+	revision++;
+	clearTimeout(updateTimer);
+	clearTimeout(scanTimer);
+	matcher?.dispose();
+	matcher = undefined;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted)
+	{
+		alive = true;
+		void compileAndScan();
+	}
+});
 
 const benchmarkPatterns = ["error", "warning", "timeout", "connection", "denied", "retry", "failed", "exception", "trace", "request", "response", "database", "cache", "worker", "queue", "critical", "error: timeout", "connection denied", "retry failed", "database error", "worker timeout", "warn", "failure", "fail", "timed out", "permission denied", "unavailable", "panic"];
 const benchmarkInput = encoder.encode("INFO request accepted; WARNING cache retry failed; ERROR: timeout while database connection denied. ".repeat(42));
@@ -199,13 +253,30 @@ const buildJavaScriptMatcher = values => {
 		return output;
 	};
 };
-const benchmarkMatcher = prepareMatcher(benchmarkPatterns);
+let benchmarkMatcher;
+let benchmarkHandle;
+let benchmarkGeneration = 0;
+const prepareBenchmark = () => {
+	const generation = benchmarkGeneration;
+	benchmarkMatcher ??= prepareMatcher(benchmarkPatterns).then(matcher => {
+		if(generation !== benchmarkGeneration) matcher.dispose();
+		else benchmarkHandle = matcher;
+		return matcher;
+	});
+	return benchmarkMatcher;
+};
+globalThis.addEventListener("pagehide", () => {
+	benchmarkGeneration++;
+	benchmarkMatcher = undefined;
+	benchmarkHandle?.dispose();
+	benchmarkHandle = undefined;
+});
 const javascriptMatcher = buildJavaScriptMatcher(benchmarkPatterns);
 attachBrowserBenchmark({
 	root: document.querySelector("#browser-benchmark")
-	, prepare: () => benchmarkMatcher
+	, prepare: prepareBenchmark
 	, sample: async index => {
-		const prepared = await benchmarkMatcher;
+		const prepared = await prepareBenchmark();
 		let lean;
 		let javascript;
 		if(index % 2 === 0)

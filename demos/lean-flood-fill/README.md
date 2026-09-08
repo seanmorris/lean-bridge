@@ -19,6 +19,8 @@ The proof audit rejects `sorry` and `admit`, hashes the displayed source, and na
 
 ## Public API
 
+Each request snapshots its typed arrays before awaiting runtime initialization. Prepared `prepareCapabilityClosure` solvers own independent graph handles, return copied result arrays, and expose idempotent `dispose()` methods. Disposing one solver leaves the others usable; calling a disposed solver throws.
+
 `runtime.mjs` exports two typed-array operations:
 
 ```js

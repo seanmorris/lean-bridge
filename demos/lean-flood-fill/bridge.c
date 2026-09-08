@@ -1,6 +1,7 @@
 #include <emscripten/emscripten.h>
 #include <lean/lean.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern lean_object *initialize_FloodFillCore(uint8_t builtin);
@@ -26,11 +27,10 @@ extern lean_object *lean_capability_closure_solve_csr(
 extern void lean_initialize_runtime_module(void);
 
 static uint8_t runtime_ready = 0;
-static lean_object *prepared_capability_inputs[6] = {0};
-static uint32_t prepared_vertex_count = 0;
-static uint32_t prepared_capability_count = 0;
-static uint32_t prepared_start = 0;
-static uint32_t prepared_revision = 0;
+typedef struct {
+  lean_object *inputs[6];
+  uint32_t vertex_count, capability_count, start;
+} prepared_closure;
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_flood_runtime_init(void) {
@@ -111,8 +111,8 @@ uint32_t lean_capability_prepare(
     const uint32_t *initial_capabilities,
     uint32_t initial_count
 ) {
-  lean_object *next[6];
-  if (!runtime_ready || !requirements || !allowed || !grants || start >= vertex_count) return 0;
+  if (!runtime_ready || !requirements || !allowed || !grants || start >= vertex_count ||
+      (initial_count && !initial_capabilities)) return 0;
   if (!validate_csr(vertex_count, offsets, offset_count, targets, edge_count)) return 0;
   for (uint32_t index = 0; index < edge_count; index += 1) {
     if (requirements[index] > capability_count) return 0;
@@ -123,43 +123,48 @@ uint32_t lean_capability_prepare(
   for (uint32_t index = 0; index < initial_count; index += 1) {
     if (initial_capabilities[index] >= capability_count) return 0;
   }
-  next[0] = make_nat_array(offsets, offset_count);
-  next[1] = make_nat_array(targets, edge_count);
-  next[2] = make_nat_array(requirements, edge_count);
-  next[3] = make_nat_array(allowed, vertex_count);
-  next[4] = make_nat_array(grants, vertex_count);
-  next[5] = make_nat_array(initial_capabilities, initial_count);
-  for (uint32_t index = 0; index < 6; index += 1) {
-    if (prepared_capability_inputs[index]) lean_dec(prepared_capability_inputs[index]);
-    prepared_capability_inputs[index] = next[index];
-  }
-  prepared_vertex_count = vertex_count;
-  prepared_capability_count = capability_count;
-  prepared_start = start;
-  prepared_revision += 1;
-  if (prepared_revision == 0) prepared_revision = 1;
-  return prepared_revision;
+  prepared_closure *closure = malloc(sizeof(prepared_closure));
+  if (!closure) return 0;
+  closure->inputs[0] = make_nat_array(offsets, offset_count);
+  closure->inputs[1] = make_nat_array(targets, edge_count);
+  closure->inputs[2] = make_nat_array(requirements, edge_count);
+  closure->inputs[3] = make_nat_array(allowed, vertex_count);
+  closure->inputs[4] = make_nat_array(grants, vertex_count);
+  closure->inputs[5] = make_nat_array(initial_capabilities, initial_count);
+  closure->vertex_count = vertex_count;
+  closure->capability_count = capability_count;
+  closure->start = start;
+  return (uint32_t)(uintptr_t)closure;
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_capability_solve_prepared(
-    uint32_t revision,
+    uint32_t handle,
     uint32_t *output,
     uint32_t output_capacity
 ) {
-  if (!runtime_ready || revision == 0 || revision != prepared_revision || !output) return UINT32_MAX;
-  for (uint32_t index = 0; index < 6; index += 1) lean_inc(prepared_capability_inputs[index]);
+  prepared_closure *closure = (prepared_closure *)(uintptr_t)handle;
+  if (!runtime_ready || !closure || !output) return UINT32_MAX;
+  for (uint32_t index = 0; index < 6; index += 1) lean_inc(closure->inputs[index]);
   return copy_result(lean_capability_closure_solve_csr(
-    prepared_vertex_count,
-    prepared_capability_count,
-    prepared_start,
-    prepared_capability_inputs[0],
-    prepared_capability_inputs[1],
-    prepared_capability_inputs[2],
-    prepared_capability_inputs[3],
-    prepared_capability_inputs[4],
-    prepared_capability_inputs[5]
+    closure->vertex_count,
+    closure->capability_count,
+    closure->start,
+    closure->inputs[0],
+    closure->inputs[1],
+    closure->inputs[2],
+    closure->inputs[3],
+    closure->inputs[4],
+    closure->inputs[5]
   ), output, output_capacity);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void lean_capability_release(uint32_t handle) {
+  prepared_closure *closure = (prepared_closure *)(uintptr_t)handle;
+  if (!closure) return;
+  for (uint32_t index = 0; index < 6; index += 1) lean_dec(closure->inputs[index]);
+  free(closure);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -210,7 +215,8 @@ uint32_t lean_capability_solve(
     uint32_t output_capacity
 ) {
   lean_object *inputs[6];
-  if (!runtime_ready || !requirements || !allowed || !grants || !output || start >= vertex_count) {
+  if (!runtime_ready || !requirements || !allowed || !grants || !output || start >= vertex_count ||
+      (initial_count && !initial_capabilities)) {
     return UINT32_MAX;
   }
   if (!validate_csr(vertex_count, offsets, offset_count, targets, edge_count)) return UINT32_MAX;

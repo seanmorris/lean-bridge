@@ -14,17 +14,22 @@ let scratchCapacity = 0;
 
 /** Load and initialize the generated Emscripten module once. */
 const loadModule = async () => {
-	modulePromise ??= createLeanModule({
+	const pending = modulePromise ??= createLeanModule({
 		locateFile: path => path === "lean-aho-corasick.wasm"
 			? new URL("./runtime/lean-aho-corasick.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_aho_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const reserveScratch = (module, bytes) => {
+	if(!Number.isSafeInteger(bytes) || bytes < 0 || bytes > 0xffff_ffff)
+		throw new RangeError("Scan storage exceeds the Wasm32 allocation limit");
 	const capacity = Math.max(bytes, 4);
 	if(capacity <= scratchCapacity) return scratchPointer;
 	const pointer = module._malloc(capacity);
@@ -46,13 +51,14 @@ const encodePatterns = patterns => {
 	const encoded = patterns.map((pattern, index) => {
 		const bytes = normalizeBytes(pattern, `patterns[${index}]`);
 		if(bytes.length === 0) throw new RangeError("empty patterns are not supported");
-		return bytes;
+		return bytes.slice();
 	});
 	const offsets = new Uint32Array(encoded.length + 1);
 	let length = 0;
 	for(let index = 0; index < encoded.length; index += 1)
 	{
 		length += encoded[index].length;
+		if(length > 0xffff_ffff) throw new RangeError("Pattern storage exceeds the Wasm32 allocation limit");
 		offsets[index + 1] = length;
 	}
 	const tokens = new Uint8Array(length);
@@ -87,8 +93,11 @@ export const prepareMatcher = async patterns => {
 		throw new Error("Lean rejected the pattern table");
 	let outputPointer = 0;
 	let outputCapacity = 0;
+	let disposed = false;
 	const scanBytes = value => {
-		const input = normalizeBytes(value, "input");
+		if(disposed) throw new Error("Matcher has been disposed");
+		const bytes = normalizeBytes(value, "input");
+		const input = bytes.buffer === module.HEAPU8.buffer ? bytes.slice() : bytes;
 		const words = input.length * encoded.length * 3;
 		const required = input.length + 4 + words * 4;
 		const base = reserveScratch(module, required);
@@ -100,8 +109,9 @@ export const prepareMatcher = async patterns => {
 		if(length === ERROR) throw new Error("Lean rejected or could not certify the scan result");
 		return parseMatches(module, outputPointer, length);
 	};
-	const maxPatternLength = Math.max(...encoded.map(pattern => pattern.length));
+	const maxPatternLength = encoded.reduce((maximum, pattern) => Math.max(maximum, pattern.length), 0);
 	const createStream = () => {
+		if(disposed) throw new Error("Matcher has been disposed");
 		let carry = new Uint8Array(0);
 		let consumed = 0;
 		/**
@@ -111,7 +121,10 @@ export const prepareMatcher = async patterns => {
 		 * @returns {Uint32Array} Match triples ending in this chunk.
 		 */
 		const push = value => {
+			if(disposed) throw new Error("Matcher has been disposed");
 			const chunk = normalizeBytes(value, "chunk");
+			if(consumed + chunk.length > 0xffff_ffff)
+				throw new RangeError("Stream positions exceed the Uint32 match format; reset the stream");
 			const combined = new Uint8Array(carry.length + chunk.length);
 			combined.set(carry); combined.set(chunk, carry.length);
 			const raw = scanBytes(combined);
@@ -127,7 +140,6 @@ export const prepareMatcher = async patterns => {
 		const reset = () => { carry = new Uint8Array(0); consumed = 0; };
 		return { push, reset };
 	};
-	let disposed = false;
 	const checkedScan = value => {
 		if(disposed) throw new Error("Matcher has been disposed");
 		return scanBytes(value);

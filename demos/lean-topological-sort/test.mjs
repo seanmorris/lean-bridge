@@ -35,6 +35,31 @@ const verify = ({ vertexCount, edges }, result) => {
 	}
 };
 
+test("one-shot and prepared topological sorts snapshot before awaiting initialization", async () => {
+	const edges = pairs([[0, 1], [1, 2]]);
+	const request = { vertexCount: 3, edges };
+	const pending = sortGraph(request);
+	const preparing = prepareSort(request);
+	edges.fill(0);
+	const solver = await preparing;
+	try
+	{
+		assert.deepEqual([...(await pending).vertices], [0, 1, 2]);
+		assert.deepEqual([...solver().vertices], [0, 1, 2]);
+	}
+	finally
+	{ solver.dispose(); }
+});
+
+test("oversized graph allocations are rejected before Wasm32 byte counts can wrap", async () => {
+	for(const vertexCount of [0x3fff_ffff, 0x7fff_ffff, 0xffff_fffe])
+	{
+		const request = { vertexCount, edges: new Uint32Array() };
+		await assert.rejects(sortGraph(request), /limit|31-bit/u);
+		await assert.rejects(prepareSort(request), /limit|31-bit/u);
+	}
+});
+
 test("compiled solver orders a build DAG", async () => {
 	const request = { vertexCount: 6, edges: pairs([[0, 2], [1, 2], [2, 3], [2, 4], [4, 5]]) };
 	const result = await sortGraph(request);

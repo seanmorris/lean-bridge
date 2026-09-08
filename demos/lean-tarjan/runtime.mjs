@@ -12,14 +12,17 @@ let modulePromise;
 
 /** Initialize the Lean runtime once. */
 export const initRuntime = () => {
-	modulePromise ??= createModule({
+	const pending = modulePromise ??= createModule({
 		locateFile: path => path === "lean-tarjan.wasm"
 			? new URL("./runtime/lean-tarjan.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_tarjan_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const validate = ({ vertexCount, offsets, targets }) => {
@@ -100,6 +103,7 @@ export const prepareGraph = async request => {
 	let disposed = false;
 	const solve = (diagnostic = false) => {
 		if(disposed) throw new Error("Prepared SCC graph has been disposed");
+		if(typeof diagnostic !== "boolean") throw new TypeError("diagnostic must be a boolean");
 		const length = module._lean_tarjan_run(handle, diagnostic ? 1 : 0, output, capacity) >>> 0;
 		if(length !== capacity) throw new Error("Invalid Lean SCC result length");
 		const wire = module.HEAPU32.subarray(output >>> 2, (output >>> 2) + length);

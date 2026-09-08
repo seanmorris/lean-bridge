@@ -1,6 +1,7 @@
 #include <emscripten/emscripten.h>
 #include <lean/lean.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern lean_object *initialize_UnionFindCore(uint8_t builtin);
@@ -10,8 +11,7 @@ extern lean_object *lean_union_find_operations(uint32_t count, lean_object *oper
 extern void lean_initialize_runtime_module(void);
 
 static uint8_t runtime_ready = 0;
-static lean_object *prepared_links = NULL;
-static uint32_t prepared_count = 0;
+typedef struct { lean_object *links; uint32_t count; } prepared_partition;
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_union_find_runtime_init(void) {
@@ -78,24 +78,34 @@ uint32_t lean_union_find_prepare_partition(
 ) {
   if (!runtime_ready || count > LEAN_MAX_SMALL_NAT) return 0;
   if (!links_valid(count, links, link_words)) return 0;
-  lean_object *next_links = make_nat_array(links, link_words);
-  if (prepared_links) lean_dec(prepared_links);
-  prepared_links = next_links;
-  prepared_count = count;
-  return 1;
+  prepared_partition *partition = malloc(sizeof(prepared_partition));
+  if (!partition) return 0;
+  partition->links = make_nat_array(links, link_words);
+  partition->count = count;
+  return (uint32_t)(uintptr_t)partition;
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_union_find_solve_prepared_partition(
+    uint32_t handle,
     uint32_t *output,
     uint32_t output_capacity
 ) {
-  if (!runtime_ready || !prepared_links || !output || output_capacity < prepared_count) {
+  prepared_partition *partition = (prepared_partition *)(uintptr_t)handle;
+  if (!runtime_ready || !partition || !output || output_capacity < partition->count) {
     return UINT32_MAX;
   }
-  lean_inc(prepared_links);
-  return copy_result(lean_union_find_partition(prepared_count, prepared_links),
+  lean_inc(partition->links);
+  return copy_result(lean_union_find_partition(partition->count, partition->links),
     output, output_capacity);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void lean_union_find_release_partition(uint32_t handle) {
+  prepared_partition *partition = (prepared_partition *)(uintptr_t)handle;
+  if (!partition) return;
+  lean_dec(partition->links);
+  free(partition);
 }
 
 EMSCRIPTEN_KEEPALIVE

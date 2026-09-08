@@ -6,8 +6,36 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createCache, prepareTrace } from "./runtime.mjs";
+import { createCache, prepareTrace, ready } from "./runtime.mjs";
 import { javascriptTrace, makeWorkload } from "./benchmark-workload.mjs";
+
+test("heap-backed operations survive memory growth during scratch allocation", async () => {
+	const module = await ready();
+	const cache = await createCache(2);
+	const allocate = module._malloc;
+	const pointer = allocate(24);
+	let padding = 0;
+	try
+	{
+		const input = module.HEAPU32.subarray(pointer >>> 2, (pointer >>> 2) + 6);
+		input.set([1, 7, 9, 0, 7, 0]);
+		const buffer = input.buffer;
+		module._malloc = bytes => {
+			padding = allocate(module.HEAPU32.byteLength);
+			return allocate(bytes);
+		};
+		const output = cache.run(input);
+		assert.notEqual(module.HEAPU32.buffer, buffer);
+		assert.equal(output.length, 8);
+		assert.deepEqual(cache.get(7), { hit: true, value: 9 });
+	}
+	finally
+	{
+		module._malloc = allocate;
+		if(padding) module._free(padding);
+		module._free(pointer); cache.dispose();
+	}
+});
 
 test("get promotes a hit; misses preserve order; eviction removes the least recent entry", async () => {
 	const cache = await createCache(3);

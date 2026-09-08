@@ -14,15 +14,22 @@ import { createBenchmark } from "./benchmark-workload.mjs";
  */
 export const mountBenchmark = () => {
 	let benchmark;
+	let preparing;
 	let lifetime = 0;
 	const controls = attachBrowserBenchmark({
 		root: globalThis.document.querySelector("#browser-benchmark")
 		, prepare: async () => {
 			if(benchmark) return;
+			if(preparing) return preparing;
 			const current = lifetime;
-			const prepared = await createBenchmark();
-			if(current !== lifetime) prepared.dispose();
-			else benchmark = prepared;
+			const pending = createBenchmark().then(prepared => {
+				if(current !== lifetime) prepared.dispose();
+				else benchmark = prepared;
+			}).finally(() => {
+				if(preparing === pending) preparing = undefined;
+			});
+			preparing = pending;
+			return pending;
 		}
 		, sample: index => benchmark.sample(index)
 		, summarize: ({ trialCount, samples }) => `${trialCount} checked searches on a fixed `
@@ -34,6 +41,7 @@ export const mountBenchmark = () => {
 		controls.cancel();
 		benchmark?.dispose();
 		benchmark = undefined;
+		preparing = undefined;
 	});
 	return controls;
 };

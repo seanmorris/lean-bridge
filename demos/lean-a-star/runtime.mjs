@@ -12,14 +12,17 @@ let modulePromise;
 
 /** Initialize the Lean runtime once. */
 export const initRuntime = () => {
-	modulePromise ??= createModule({
+	const pending = modulePromise ??= createModule({
 		locateFile: path => path === "lean-a-star.wasm"
 			? new URL("./runtime/lean-a-star.wasm", import.meta.url).href : path
 	}).then(module => {
 		if(module._lean_astar_runtime_init() !== 1) throw new Error("Lean runtime initialization failed");
 		return module;
+	}).catch(error => {
+		if(modulePromise === pending) modulePromise = undefined;
+		throw error;
 	});
-	return modulePromise;
+	return pending;
 };
 
 const validate = request => {
@@ -80,7 +83,11 @@ const parse = (module, pointer, length) => {
  */
 export const prepareSearch = async request => {
 	validate(request);
-	const { vertexCount, offsets, targets, weights, heuristic, start, target } = request;
+	const { vertexCount, start, target } = request;
+	const offsets = request.offsets.slice();
+	const targets = request.targets.slice();
+	const weights = request.weights.slice();
+	const heuristic = request.heuristic.slice();
 	const module = await initRuntime();
 	const words = offsets.length + targets.length + weights.length + heuristic.length;
 	const pointer = module._malloc(words * 4);
@@ -111,6 +118,7 @@ export const prepareSearch = async request => {
 	let disposed = false;
 	const search = (diagnostic = false) => {
 		if(disposed) throw new Error("Prepared A* search has been disposed");
+		if(typeof diagnostic !== "boolean") throw new TypeError("diagnostic must be a boolean");
 		return parse(module, output, module._lean_astar_run(handle, diagnostic ? 1 : 0, output, capacity) >>> 0);
 	};
 	search.dispose = () => {

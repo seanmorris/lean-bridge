@@ -126,7 +126,7 @@ const draw = (result, elapsed) => {
 	elements.top.classList.toggle("connected", spans);
 	elements.bottom.classList.toggle("connected", spans);
 	elements.activeCount.textContent = `${analysis.activeCount} / ${order.length}`;
-	elements.density.textContent = `${(analysis.activeCount / order.length * 100).toFixed(1)}%`;
+	elements.density.textContent = `${(order.length ? analysis.activeCount / order.length * 100 : 0).toFixed(1)}%`;
 	elements.componentCount.textContent = String(analysis.componentCount);
 	elements.runtime.textContent = `${elapsed.toFixed(2)} ms`;
 	if(spans)
@@ -147,7 +147,7 @@ const draw = (result, elapsed) => {
 		elements.resultCopy.textContent = `${analysis.activeCount} ${COPY.noun} form ${analysis.componentCount} separate ${analysis.componentCount === 1 ? "cluster" : "clusters"}. Cyan shows where inlet water can reach.`;
 	}
 	elements.pause.disabled = !running;
-	elements.run.disabled = running || spans;
+	elements.run.disabled = running || spans || cursor >= order.length;
 };
 
 const solve = async () => {
@@ -179,11 +179,15 @@ const runLoop = async () => {
 	elements.editStatus.textContent = "Opening pores in the seeded sequence.";
 	await solve();
 	if(running && cursor < order.length) runFrame = requestAnimationFrame(runLoop);
-	else running = false;
+	else if(running)
+	{
+		pause("Every available passage is open.");
+		elements.run.disabled = true;
+	}
 };
 
 const startRun = () => {
-	if(running) return;
+	if(running || !order || cursor >= order.length) return;
 	running = true;
 	elements.pause.disabled = false;
 	elements.run.disabled = true;
@@ -272,6 +276,7 @@ elements.toolWall.addEventListener("click", () => selectTool("wall"));
 selectTool("open");
 
 elements.grid.addEventListener("pointerdown", event => {
+	if(event.button !== 0 || !event.isPrimary || !order) return;
 	const cell = event.target.closest(".site");
 	if(!cell) return;
 	event.preventDefault();
@@ -295,6 +300,7 @@ const finishPaint = async event => {
 };
 elements.grid.addEventListener("pointerup", finishPaint);
 elements.grid.addEventListener("pointercancel", finishPaint);
+elements.grid.addEventListener("lostpointercapture", finishPaint);
 elements.grid.addEventListener("keydown", async event => {
 	const cell = event.target.closest(".site");
 	if(!cell) return;
@@ -314,6 +320,19 @@ elements.grid.addEventListener("keydown", async event => {
 });
 
 elements.run.addEventListener("click", startRun);
+document.addEventListener("visibilitychange", () => {
+	if(document.hidden) pause("Sequence paused while the page is hidden.");
+});
+globalThis.addEventListener("pagehide", () => {
+	pause("Sequence paused.");
+	solveRevision++;
+	painting = false;
+	cancelAnimationFrame(dragSolveFrame);
+	dragSolveFrame = 0;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted && order) void solve();
+});
 elements.pause.addEventListener("click", () => pause("Sequence paused."));
 elements.step.addEventListener("click", async () => { pause(); activateNext(1); elements.editStatus.textContent = "Opened one site."; await solve(); });
 elements.reset.addEventListener("click", async () => { await reset(); startRun(); });
@@ -415,27 +434,44 @@ const connectedBenchmarkLinks = (elementCount, degree, initialSeed) => {
 };
 const benchmarkLinks = connectedBenchmarkLinks(GRAPH_COUNT, 4, GRAPH_COUNT ^ 0xa53c9e1d);
 const benchmarkRequest = { elementCount: GRAPH_COUNT, links: benchmarkLinks };
-const preparedLeanPartition = preparePartition(benchmarkRequest);
+let preparedLeanPartition;
+let benchmarkHandle;
+let benchmarkGeneration = 0;
+const prepareLeanPartition = () => {
+	const generation = benchmarkGeneration;
+	preparedLeanPartition ??= preparePartition(benchmarkRequest).then(solver => {
+		if(generation !== benchmarkGeneration) solver.dispose();
+		else benchmarkHandle = solver;
+		return solver;
+	});
+	return preparedLeanPartition;
+};
+globalThis.addEventListener("pagehide", () => {
+	benchmarkGeneration++;
+	preparedLeanPartition = undefined;
+	benchmarkHandle?.dispose();
+	benchmarkHandle = undefined;
+});
 const preparedJavaScriptPartition = () => jsPartition(benchmarkRequest);
 
 attachBrowserBenchmark({
 	root: byId("browser-benchmark")
 	, prepare: async () => {
 		if(running) pause("Sequence paused while benchmarking.");
-		await preparedLeanPartition;
+		await prepareLeanPartition();
 	}
 	, sample: async index => {
 		let lean;
 		let javascript;
 		if(index % 2 === 0)
 		{
-			lean = measureSyncBenchmark(await preparedLeanPartition);
+			lean = measureSyncBenchmark(await prepareLeanPartition());
 			javascript = measureSyncBenchmark(preparedJavaScriptPartition);
 		}
 		else
 		{
 			javascript = measureSyncBenchmark(preparedJavaScriptPartition);
-			lean = measureSyncBenchmark(await preparedLeanPartition);
+			lean = measureSyncBenchmark(await prepareLeanPartition());
 		}
 		if(!samePartition(lean.result.representatives, javascript.result.representatives))
 		{

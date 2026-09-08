@@ -801,6 +801,7 @@ const finishDrag = event => {
 };
 roomGrid.addEventListener("pointerup", finishDrag);
 roomGrid.addEventListener("pointercancel", finishDrag);
+roomGrid.addEventListener("lostpointercapture", () => { dragState = null; });
 editorDisclosure.addEventListener("toggle", () => {
 	const editing = editorDisclosure.open;
 	editorState.textContent = editing ? "Active" : "Paused";
@@ -833,8 +834,13 @@ document.querySelector("#new-map").addEventListener("click", () => {
 });
 document.querySelector("#reset-edits").addEventListener("click", () => { generateMap(seed); void solve(); });
 seedButton.addEventListener("click", async () => {
-	await navigator.clipboard.writeText(seedButton.textContent);
-	seedButton.textContent = "copied";
+	try
+	{
+		await navigator.clipboard.writeText(seed.toString(16).padStart(8, "0"));
+		seedButton.textContent = "copied";
+	}
+	catch
+	{ seedButton.textContent = "copy unavailable"; }
 	setTimeout(() => { seedButton.textContent = seed.toString(16).padStart(8, "0"); }, 900);
 });
 const observeWorldSize = new ResizeObserver(() => requestAnimationFrame(renderConnections));
@@ -947,9 +953,16 @@ generateMap(initialSeed[0]);
 installPickers();
 render();
 const demoReady = ready().then(solve);
-const benchmarkReady = demoReady.then(async () => {
-	benchmarkSolve = await prepareCapabilityClosure(benchmarkRequest);
-});
+let benchmarkReady;
+let benchmarkGeneration = 0;
+const prepareBenchmark = () => {
+	const generation = benchmarkGeneration;
+	benchmarkReady ??= demoReady.then(() => prepareCapabilityClosure(benchmarkRequest)).then(solver => {
+		if(generation !== benchmarkGeneration) solver.dispose();
+		else benchmarkSolve = solver;
+	});
+	return benchmarkReady;
+};
 demoReady.catch(error => {
 	status.textContent = "Lean/Wasm failed to load";
 	console.error(error);
@@ -957,7 +970,7 @@ demoReady.catch(error => {
 
 attachBrowserBenchmark({
 	root: document.querySelector("#browser-benchmark")
-	, prepare: () => benchmarkReady
+	, prepare: prepareBenchmark
 	, sample: async () => {
 		const request = benchmarkRequest;
 		const lean = measureSyncBenchmark(() => benchmarkSolve());
@@ -973,4 +986,17 @@ attachBrowserBenchmark({
 		return `${request.vertexCount} vertices · ${request.targets.length} directed edges · `
 			+ `${trialCount} closures agreed · +${(leanMedian - javascriptMedian).toFixed(2)} ms`;
 	}
+});
+globalThis.addEventListener("pagehide", () => {
+	solveVersion++;
+	dragState = null;
+	cancelAnimationFrame(solveFrame);
+	solveFrame = 0;
+	benchmarkGeneration++;
+	benchmarkReady = undefined;
+	benchmarkSolve?.dispose();
+	benchmarkSolve = undefined;
+});
+globalThis.addEventListener("pageshow", event => {
+	if(event.persisted) void solve();
 });

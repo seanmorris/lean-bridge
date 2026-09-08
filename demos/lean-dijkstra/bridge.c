@@ -1,6 +1,7 @@
 #include <emscripten/emscripten.h>
 #include <lean/lean.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern lean_object *initialize_DijkstraCore(uint8_t builtin);
@@ -16,12 +17,10 @@ extern lean_object *lean_dijkstra_solve_csr(
 extern void lean_initialize_runtime_module(void);
 
 static uint8_t runtime_ready = 0;
-static lean_object *prepared_offsets = NULL;
-static lean_object *prepared_targets = NULL;
-static lean_object *prepared_weights = NULL;
-static uint32_t prepared_vertex_count = 0;
-static uint32_t prepared_maximum_weight = 0;
-static uint32_t prepared_revision = 0;
+typedef struct {
+  lean_object *offsets, *targets, *weights;
+  uint32_t vertex_count, maximum_weight;
+} prepared_graph;
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_demo_runtime_init(void) {
@@ -72,10 +71,17 @@ static uint32_t validate_graph(
   for (uint32_t index = 0; index < vertex_count; index += 1) {
     if (offsets[index] > offsets[index + 1u] || offsets[index + 1u] > edge_count) return 0;
   }
-  for (uint32_t index = 0; index < edge_count; index += 1) {
-    if (targets[index] >= vertex_count) return 0;
-    if (weights[index] > maximum) maximum = weights[index];
+  uint32_t *seen = calloc(vertex_count, sizeof(uint32_t));
+  if (!seen) return 0;
+  for (uint32_t vertex = 0; vertex < vertex_count; vertex += 1) {
+    for (uint32_t index = offsets[vertex]; index < offsets[vertex + 1]; index += 1) {
+      uint32_t target = targets[index];
+      if (target >= vertex_count || seen[target] == vertex + 1) { free(seen); return 0; }
+      seen[target] = vertex + 1;
+      if (weights[index] > maximum) maximum = weights[index];
+    }
   }
+  free(seen);
   *maximum_weight = maximum;
   return 1;
 }
@@ -103,49 +109,51 @@ uint32_t lean_demo_prepare_graph(
     uint32_t edge_count
 ) {
   uint32_t maximum_weight;
-  lean_object *next_offsets;
-  lean_object *next_targets;
-  lean_object *next_weights;
   if (!runtime_ready || !validate_graph(vertex_count, offsets, offset_count, targets, weights,
       edge_count, &maximum_weight)) return 0;
-  next_offsets = make_nat_array(offsets, offset_count);
-  next_targets = make_nat_array(targets, edge_count);
-  next_weights = make_nat_array(weights, edge_count);
-  if (prepared_offsets) lean_dec(prepared_offsets);
-  if (prepared_targets) lean_dec(prepared_targets);
-  if (prepared_weights) lean_dec(prepared_weights);
-  prepared_offsets = next_offsets;
-  prepared_targets = next_targets;
-  prepared_weights = next_weights;
-  prepared_vertex_count = vertex_count;
-  prepared_maximum_weight = maximum_weight;
-  prepared_revision += 1;
-  if (prepared_revision == 0) prepared_revision = 1;
-  return prepared_revision;
+  prepared_graph *graph = malloc(sizeof(prepared_graph));
+  if (!graph) return 0;
+  graph->offsets = make_nat_array(offsets, offset_count);
+  graph->targets = make_nat_array(targets, edge_count);
+  graph->weights = make_nat_array(weights, edge_count);
+  graph->vertex_count = vertex_count;
+  graph->maximum_weight = maximum_weight;
+  return (uint32_t)(uintptr_t)graph;
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t lean_demo_solve_prepared(
-    uint32_t revision,
+    uint32_t handle,
     uint32_t start,
     uint32_t target,
     uint32_t *output,
     uint32_t output_capacity
 ) {
-  if (!runtime_ready || revision == 0 || revision != prepared_revision || !output ||
-      start >= prepared_vertex_count || target >= prepared_vertex_count) return UINT32_MAX;
-  lean_inc(prepared_offsets);
-  lean_inc(prepared_targets);
-  lean_inc(prepared_weights);
+  prepared_graph *graph = (prepared_graph *)(uintptr_t)handle;
+  if (!runtime_ready || !graph || !output ||
+      start >= graph->vertex_count || target >= graph->vertex_count) return UINT32_MAX;
+  lean_inc(graph->offsets);
+  lean_inc(graph->targets);
+  lean_inc(graph->weights);
   return copy_path(lean_dijkstra_solve_csr(
-    prepared_vertex_count,
+    graph->vertex_count,
     start,
     target,
-    prepared_maximum_weight,
-    prepared_offsets,
-    prepared_targets,
-    prepared_weights
+    graph->maximum_weight,
+    graph->offsets,
+    graph->targets,
+    graph->weights
   ), output, output_capacity);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void lean_demo_release_graph(uint32_t handle) {
+  prepared_graph *graph = (prepared_graph *)(uintptr_t)handle;
+  if (!graph) return;
+  lean_dec(graph->offsets);
+  lean_dec(graph->targets);
+  lean_dec(graph->weights);
+  free(graph);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -167,7 +175,8 @@ uint32_t lean_demo_solve(
   lean_object *lean_targets;
   lean_object *lean_weights;
 
-  if (!runtime_ready || !output || !validate_graph(vertex_count, offsets, offset_count, targets,
+  if (!runtime_ready || !output || start >= vertex_count || target >= vertex_count ||
+      !validate_graph(vertex_count, offsets, offset_count, targets,
       weights, edge_count, &maximum_weight)) return UINT32_MAX;
 
   lean_offsets = make_nat_array(offsets, offset_count);

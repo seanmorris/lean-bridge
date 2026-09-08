@@ -1,6 +1,6 @@
 # Transactional multi-registry release evidence
 
-Status: implemented as a durable coordinator with injected registry adapters. The coordinator performs no live registry operation in this repository. A production deployment installs reviewed npm, Cargo, PyPI, NuGet, Maven Central, or RubyGems adapters through the CLI handler contract.
+Status: implemented as a durable coordinator with injected registry adapters. The installed CLI supplies the npm adapter with separate sandbox and production controls. Cargo, PyPI, NuGet, Maven Central, and RubyGems publication require additional reviewed adapters through the CLI handler contract. The acceptance tests below use injected clients and do not establish a public registry release.
 
 ## One authorized transaction
 
@@ -78,7 +78,7 @@ The policy sources are the [npm unpublish policy](https://docs.npmjs.com/policie
 
 `createCliHandlers({ registryAdapters })` installs the coordinator. A blocked preflight returns a structured CLI diagnostic plus the durable transaction path, hash, status, target results, credential audit, signer audit, and honest external-write state. A partial release returns the same recovery record with a failed command status. Credential values remain excluded from progress, errors, transaction state, and results.
 
-The repository still leaves `registryAdapters` unset by default. This keeps the standalone POC from performing live registry writes while allowing a deployment to install reviewed adapters without replacing the transaction semantics.
+The [installed CLI](../../src/cli/commands.mjs) registers the [npm adapter](../../src/release/npm-registry-adapter.mjs). Production mode is the default; it checks all deployment-profile approvals before credential access and requires the exact `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production` value before a write. `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` selects the local-registry path, which defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint. Both modes still require an authorized manifest, credentials, and signer policy. The adapter hashes the authorized archive before publication and verifies the registry tarball afterward.
 
 After a transaction reaches `complete`, the CLI passes its durable path and hash to the [`release receipt`](release-receipt.md) writer. The writer signs the post-publication coordinate and artifact map. Partial, blocked, and ambiguous states remain recovery records and cannot become consumer receipts.
 
