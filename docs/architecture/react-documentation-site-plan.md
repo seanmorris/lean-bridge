@@ -1,6 +1,6 @@
 # React gallery and documentation-site plan
 
-Status: planned, 8 September 2026. VO phase 1185 extends portfolio plan 1123. Implementation has not started.
+Status: initial implementation batch complete, 8 September 2026. VO phase 1185 extends portfolio plan 1123. Tasks 1186, 1187, and 1189 deliver the foundation, documentation shell, and Myers pilot in local commits `cb9eec9` and `649d242`. See the [acceptance evidence](../evidence/react-site-foundation-20260908.md). The remaining eleven ports and expanded tutorials remain separate work; no push or deployment occurred in this batch.
 
 Audit prerequisite: commit `949b5005f85fee13a270e80361c85014925c19a6`, recorded in the [twelve-demo audit](../evidence/demo-portfolio-audit-20260908.md). VO task 1144 is complete. Gallery integration task 1143 and publication task 1145 remain open.
 
@@ -53,6 +53,8 @@ Use React with Vite and React Router's [static prerendering](https://reactrouter
 Follow Vite's [Pages base-path configuration](https://vite.dev/guide/static-deploy.html). Preserve today's published `<base>/<lean-slug>/` routes as generated aliases to the new demo routes. Test source-preview `/demos/<lean-slug>/` paths too. Alias pages preserve query strings and anchors and provide a normal link without JavaScript. Raw artifact aliases serve the actual files with the correct content type, never the HTML app fallback.
 
 Proposed ownership:
+
+The implemented foundation places components in `site/app/components/`, route modules in `site/app/routes/`, and the content registry in `site/registry.mjs`. Compiled Markdown lives only in the ignored `build/site-content/` directory.
 
 | Location | Responsibility |
 | --- | --- |
@@ -149,4 +151,6 @@ The author and publishing work can proceed alongside the UI migration after the 
 7. Build metadata identifies the source revision and emitted artifact hashes. Content generation uses an explicit allowlist; secrets and arbitrary repository files never enter the site. Documentation examples cannot initiate production publication.
 8. Preserve the previous verified static artifact, record the cutover and rollback commands, and verify the deployed routes only after deployment is authorized. A completed React build alone does not close publication task 1145.
 
-The next implementation step is task 1186, followed by the shared shell and Myers pilot. Do not begin by rewriting all twelve demos at once.
+The initial implementation lives in [site/](../../site/README.md). It uses explicit route modules for each canonical guide, a shared React shell, and a route-owned Myers workbench. The other eleven demos retain their standalone pages and all twelve retain their raw artifact URLs.
+
+After the initial batch passes acceptance, task 1188 starts with sweep-and-prune for pointer and animation stress, then Dinic. Tasks 1190 through 1193 add the deeper author, consumer, publishing, reference, and concept material. Do not treat the initial audience hubs as completion of those tutorials.
