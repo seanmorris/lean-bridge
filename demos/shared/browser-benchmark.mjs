@@ -16,7 +16,6 @@ const svgElement = (name, attributes = {}) => {
 	return node;
 };
 
-const frame = () => new Promise(globalThis.requestAnimationFrame);
 const percentile = (sorted, fraction) => sorted[Math.min(sorted.length - 1,
 	Math.max(0, Math.ceil(sorted.length * fraction) - 1))];
 
@@ -78,7 +77,7 @@ export const measureSyncBenchmark = (operation, minimumMs = 12) => {
  * @param root0.summarize Summary formatter for completed samples.
  * @param root0.trialCount Number of measured samples.
  * @param root0.warmupCount Number of excluded warm-up samples.
- * @returns {{cancel: () => void, run: () => Promise<void>}} Benchmark controls.
+ * @returns {{cancel: () => void, run: () => Promise<void>, dispose: () => void}} Benchmark controls.
  */
 export const attachBrowserBenchmark = ({
 	root, prepare, sample, summarize, trialCount = 100, warmupCount = 5
@@ -97,11 +96,33 @@ export const attachBrowserBenchmark = ({
 	let revision = 0;
 	let startedOnce = false;
 	let histogramValues = [];
+	let disposed = false;
+	let lifetime = 0;
+	let visibilityObserver;
+	const frames = new Map();
+	const frame = () => new Promise(resolve => {
+		const handle = globalThis.requestAnimationFrame(() => {
+			frames.delete(handle);
+			resolve();
+		});
+		frames.set(handle, resolve);
+	});
+	const releaseFrames = () => {
+		for(const [handle, resolve] of frames)
+		{
+			globalThis.cancelAnimationFrame?.(handle);
+			resolve();
+		}
+		frames.clear();
+	};
 	let preparation;
 	const prepareOnce = () => {
 		if(!preparation)
 		{
-			const pending = Promise.resolve().then(prepare).finally(() => {
+			const current = lifetime;
+			const pending = Promise.resolve().then(() => {
+				if(!disposed && current === lifetime) return prepare();
+			}).finally(() => {
 				if(preparation === pending) preparation = undefined;
 			});
 			preparation = pending;
@@ -160,15 +181,17 @@ export const attachBrowserBenchmark = ({
 	};
 
 	let resizeFrame = 0;
-	new globalThis.ResizeObserver(() => {
-		if(histogramValues.length === 0 || resizeFrame) return;
+	const resizeObserver = new globalThis.ResizeObserver(() => {
+		if(disposed || histogramValues.length === 0 || resizeFrame) return;
 		resizeFrame = globalThis.requestAnimationFrame(() => {
 			resizeFrame = 0;
-			drawHistogram(histogramValues);
+			if(!disposed) drawHistogram(histogramValues);
 		});
-	}).observe(elements.histogram);
+	});
+	resizeObserver.observe(elements.histogram);
 
 	const cancel = () => {
+		if(disposed) return;
 		startedOnce = true;
 		revision += 1;
 		elements.rerun.disabled = false;
@@ -177,6 +200,7 @@ export const attachBrowserBenchmark = ({
 	};
 
 	const run = async () => {
+		if(disposed) return;
 		startedOnce = true;
 		const current = ++revision;
 		elements.rerun.disabled = true;
@@ -244,22 +268,37 @@ export const attachBrowserBenchmark = ({
 
 	elements.rerun.addEventListener("click", run);
 	elements.cancel.addEventListener("click", cancel);
-	globalThis.addEventListener?.("pagehide", () => {
+	const hide = () => {
+		lifetime++;
 		cancel();
 		preparation = undefined;
-	});
+		releaseFrames();
+	};
+	globalThis.addEventListener?.("pagehide", hide);
 	elements.cancel.disabled = true;
 	if("IntersectionObserver" in globalThis)
 	{
-		const observer = new globalThis.IntersectionObserver(entries => {
-			if(!startedOnce && entries.some(entry => entry.isIntersecting))
+		visibilityObserver = new globalThis.IntersectionObserver(entries => {
+			if(!disposed && !startedOnce && entries.some(entry => entry.isIntersecting))
 			{
-				observer.disconnect();
+				visibilityObserver.disconnect();
 				void run();
 			}
 		}, { rootMargin: "160px 0px", threshold: .05 });
-		observer.observe(root);
+		visibilityObserver.observe(root);
 	}
 	else void run();
-	return { cancel, run };
+	const dispose = () => {
+		if(disposed) return;
+		hide();
+		disposed = true;
+		elements.rerun.removeEventListener?.("click", run);
+		elements.cancel.removeEventListener?.("click", cancel);
+		globalThis.removeEventListener?.("pagehide", hide);
+		resizeObserver.disconnect();
+		visibilityObserver?.disconnect();
+		if(resizeFrame) globalThis.cancelAnimationFrame?.(resizeFrame);
+		resizeFrame = 0;
+	};
+	return { cancel, run, dispose };
 };
