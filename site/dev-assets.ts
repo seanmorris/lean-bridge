@@ -20,20 +20,21 @@ export const demoAssets = (repository: string): Plugin => ({
 	, configureServer(server) {
 		const base = normalizeBase(process.env.LEAN_BRIDGE_SITE_BASE);
 		server.middlewares.use(async (request, response, next) => {
-			const pathname = new URL(request.url || "/", "http://localhost").pathname;
+			const url = new URL(request.url || "/", "http://localhost");
+			const pathname = url.pathname;
 			if(!pathname.startsWith(base)) return next();
 			let path = pathname.slice(base.length);
 			const demo = demos.find(entry => path === entry.slug || path.startsWith(entry.entrypoint));
 			if(demo && path === demo.slug)
 			{
-				response.writeHead(302, { Location: base + demo.entrypoint }).end();
+				response.writeHead(302, { Location: base + demo.entrypoint + url.search }).end();
 				return;
 			}
 			if(demo && (path === demo.entrypoint || path === demo.entrypoint + "index.html"))
 			{
 				if(demo.renderingMode === "react")
 				{
-					response.writeHead(302, { Location: base + demo.canonicalPage.slice(1) }).end();
+					response.writeHead(302, { Location: base + demo.canonicalPage.slice(1) + url.search }).end();
 					return;
 				}
 				path = demo.entrypoint + "index.html";

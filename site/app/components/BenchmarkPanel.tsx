@@ -5,17 +5,28 @@
  */
 
 import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import { attachBrowserBenchmark } from "../../../demos/shared/browser-benchmark.mjs";
 import type { BenchmarkSample } from "../../../demos/shared/browser-benchmark.mjs";
+import "./demo-page.css";
 
-/** Artifact directory containing the unchanged Myers benchmark module. */
-interface BenchmarkPanelProps { artifactBase: string; }
+/** Copy and summary projection supplied by each algorithm's route. */
+export interface BenchmarkConfig<T extends BenchmarkWorkload> {
+	title: ReactNode;
+	description: string;
+	initialSummary: string;
+	histogramLabel: string;
+	summarize(benchmark: T, trialCount: number): string;
+}
+
+/** Artifact directory containing the unchanged benchmark module. */
+interface BenchmarkPanelProps<T extends BenchmarkWorkload> {
+	artifactBase: string;
+	config: BenchmarkConfig<T>;
+}
 
 /** Prepared ownership contract exposed by the original benchmark workload. */
-interface MyersBenchmark {
-	beforeLength: number;
-	afterLength: number;
-	distance: number;
+export interface BenchmarkWorkload {
 	sample(index: number): BenchmarkSample;
 	dispose(): void;
 }
@@ -27,15 +38,16 @@ interface MyersBenchmark {
  *
  * @param root0 Component properties.
  * @param root0.artifactBase Directory containing the compiled algorithm artifacts.
+ * @param root0.config Algorithm copy and checked-workload summary.
  */
-export const BenchmarkPanel = ({ artifactBase }: BenchmarkPanelProps) => {
+export const BenchmarkPanel = <T extends BenchmarkWorkload,>({ artifactBase, config }: BenchmarkPanelProps<T>) => {
 	const root = useRef<HTMLElement>(null);
 	useEffect(() => {
 		const element = root.current;
 		if(!element) return;
 		let disposed = false;
 		let lifetime = 0;
-		let benchmark: MyersBenchmark | undefined;
+		let benchmark: T | undefined;
 		const progress = element.querySelector("[data-benchmark-progress]");
 		if(progress) progress.textContent = "Waiting to enter view";
 		const controls = attachBrowserBenchmark({
@@ -46,7 +58,7 @@ export const BenchmarkPanel = ({ artifactBase }: BenchmarkPanelProps) => {
 				const base = new URL(artifactBase, globalThis.location.href);
 				if(!base.pathname.endsWith("/")) base.pathname += "/";
 				const url = new URL("benchmark-workload.mjs", base).href;
-				const module = await import(/* @vite-ignore */ url) as {createBenchmark(): Promise<MyersBenchmark>};
+				const module = await import(/* @vite-ignore */ url) as {createBenchmark(): Promise<T>};
 				if(disposed || current !== lifetime) return;
 				const prepared = await module.createBenchmark();
 				if(disposed || current !== lifetime) prepared.dispose();
@@ -56,9 +68,7 @@ export const BenchmarkPanel = ({ artifactBase }: BenchmarkPanelProps) => {
 				if(!benchmark) throw new Error("The benchmark solver is not ready");
 				return benchmark.sample(index);
 			}
-			, summarize: ({ trialCount }) => `${trialCount} checked shortest scripts from ${benchmark!.beforeLength} to `
-				+ `${benchmark!.afterLength} tokens, each requiring ${benchmark!.distance} edits. `
-				+ "Both return every operation. Lean certification is timed; tokenization, setup and warmup are excluded."
+			, summarize: ({ trialCount }) => config.summarize(benchmark!, trialCount)
 		});
 		const hide = () => {
 			lifetime++;
@@ -73,21 +83,21 @@ export const BenchmarkPanel = ({ artifactBase }: BenchmarkPanelProps) => {
 			controls.dispose();
 			globalThis.removeEventListener("pagehide", hide);
 		};
-	}, [artifactBase]);
+	}, [artifactBase, config]);
 	return <section ref={root} id="browser-benchmark" className="browser-benchmark" aria-labelledby="benchmark-title">
 		<div className="browser-benchmark-copy"><p className="label">Live browser benchmark</p>
-			<h2 id="benchmark-title">What does a proven<br />shortest diff cost?</h2>
-			<p>Lean/Wasm and JavaScript compare the same token sequences. Five excluded runs warm both solvers before 100 measured samples. Each comparison checks the edit count and replays the returned script.</p>
+			<h2 id="benchmark-title">{config.title}</h2>
+			<p>{config.description}</p>
 			<div className="browser-benchmark-actions"><button type="button" data-benchmark-run>Run again</button>
 				<button type="button" data-benchmark-cancel className="secondary" disabled>Cancel</button></div></div>
 		<div className="browser-benchmark-card"><div className="browser-benchmark-summary">
-			<b data-benchmark-summary>Preparing the edit-script benchmark.</b>
+			<b data-benchmark-summary>{config.initialSummary}</b>
 			<span data-benchmark-progress role="status">Waiting to enter view</span></div>
 		<dl className="browser-benchmark-metrics"><div><dt>Lean median</dt><dd data-benchmark-lean>—</dd></div>
 			<div><dt>Lean p95</dt><dd data-benchmark-p95>—</dd></div>
 			<div><dt>JS median</dt><dd data-benchmark-js>—</dd></div>
 			<div><dt>Relative cost</dt><dd data-benchmark-ratio>—</dd></div></dl>
 		<svg className="browser-benchmark-histogram" data-benchmark-histogram role="img"
-			aria-label="Histogram of compiled Lean Myers latency" viewBox="0 0 620 200" /></div>
+			aria-label={config.histogramLabel} viewBox="0 0 620 200" /></div>
 	</section>;
 };

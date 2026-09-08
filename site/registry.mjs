@@ -6,13 +6,15 @@
 
 import manifest from '../demos/manifest.json' with { type: 'json' };
 
+const reactDemoSlugs = new Set(['lean-myers', 'lean-sweep-and-prune', 'lean-dinic']);
+
 export const demos = Object.freeze(manifest.demos.map(demo => Object.freeze({
 	...demo
-	, canonicalPage: demo.slug === 'lean-myers'
-		? '/demos/lean-myers/'
+	, canonicalPage: reactDemoSlugs.has(demo.slug)
+		? `/demos/${demo.slug}/`
 		: `/${demo.entrypoint}`
 	, artifactBase: `/${demo.entrypoint}`
-	, renderingMode: demo.slug === 'lean-myers' ? 'react' : 'standalone'
+	, renderingMode: reactDemoSlugs.has(demo.slug) ? 'react' : 'standalone'
 })));
 
 export const docPages = Object.freeze([

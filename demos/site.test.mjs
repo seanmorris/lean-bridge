@@ -380,7 +380,7 @@ test("token bucket publishes its request timeline, exact admission proof, and be
 
 test("Dinic publishes its capacity editor, optimality proof, and benchmark dependencies", async () => {
 	const root = resolve(siteRoot, "lean-dinic");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-dinic/index.html"), "utf8");
 	for(const id of ["widen-bottleneck", "network-svg", "edge-capacity", "cut-links", "reset-network"])
 		assert.ok(html.includes(`id="${id}"`));
 	assert.match(html, /data-comparator-theorem="solve_total"/u);
@@ -411,7 +411,7 @@ test("Myers publishes its editable diff, exact reconstruction proof, and benchma
 
 test("sweep and prune publishes its draggable scene, both pair sets, and exact proof", async () => {
 	const root = resolve(siteRoot, "lean-sweep-and-prune");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-sweep-and-prune/index.html"), "utf8");
 	for(const id of ["scene", "projection", "toggle-motion", "step-motion", "new-scene", "candidate-count", "overlap-count"])
 		assert.ok(html.includes(`id="${id}"`));
 	assert.match(html, /data-comparator-theorem="solve_total"/u);
@@ -460,7 +460,8 @@ test("published routes, static pages, and search retain exact output identities"
 	const routes = JSON.parse(await readFile(resolve(siteRoot, "routes.json"), "utf8"));
 	assert.deepEqual(routes, identity.routes);
 	assert.deepEqual(routes.prerender, prerenderPaths);
-	assert.equal(routes.demos.filter(demo => demo.renderingMode === "react").length, 1);
+	assert.deepEqual(routes.demos.filter(demo => demo.renderingMode === "react").map(demo => demo.slug),
+		["lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
 	for(const [path, receipt] of Object.entries(identity.staticFiles))
 	{
 		assert.ok(!Object.hasOwn(identity.artifacts, path));
@@ -489,14 +490,18 @@ test("every canonical guide renders its content without hidden streaming fragmen
 	}
 });
 
-test("old Myers address redirects to its canonical workbench without losing raw artifacts", async () => {
+test("migrated addresses redirect to canonical workbenches without losing raw artifacts", async () => {
 	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
-	const html = await readFile(resolve(siteRoot, "lean-myers/index.html"), "utf8");
-	assert.match(html, /http-equiv="refresh"/u);
-	assert.ok(html.includes(`href="${withBase(identity.siteBase, "/demos/lean-myers/")}"`));
-	assert.match(html, /location\.replace\([^<]+\+location\.search\+location\.hash\)/u);
-	for(const file of ["EditSpec.lean", "MyersCore.lean", "Myers.lean", "runtime.mjs", "runtime/proof-audit.json", "runtime/lean-myers.wasm"])
-		await access(resolve(siteRoot, "lean-myers", file));
+	for(const demo of demos.filter(entry => entry.renderingMode === "react"))
+	{
+		const html = await readFile(resolve(siteRoot, demo.slug, "index.html"), "utf8");
+		assert.match(html, /http-equiv="refresh"/u);
+		assert.ok(html.includes(`href="${withBase(identity.siteBase, demo.canonicalPage)}"`));
+		assert.match(html, /location\.replace\([^<]+\+location\.search\+location\.hash\)/u);
+		const audit = JSON.parse(await readFile(resolve(siteRoot, demo.slug, "runtime/proof-audit.json"), "utf8"));
+		for(const file of [...Object.keys(audit.sourceFiles), "runtime.mjs", `runtime/${demo.slug}.wasm`])
+			await access(resolve(siteRoot, demo.slug, file));
+	}
 	for(const demo of demos.filter(entry => entry.renderingMode === "standalone"))
 	{
 		const standalone = await readFile(resolve(siteRoot, demo.slug, "index.html"), "utf8");

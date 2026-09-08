@@ -11,6 +11,7 @@ import {
 	, openProofChecker, proofSourceNames, verifyProofAudit
 } from "../../../demos/shared/proof-services.mjs";
 import type { ProofConfiguration } from "../../../demos/shared/proof-services.mjs";
+import "./demo-page.css";
 
 /** Artifact names, theorem selection, and visible labels for a proof panel. */
 export interface ProofViewerConfig extends ProofConfiguration {
@@ -101,7 +102,7 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 				{
 					try
 					{
-						const wasmUrl = await buildWasmUrl(config, result.sources);
+						const wasmUrl = await buildWasmUrl(config, result.sources, signal);
 						if(disposed || signal.aborted) return;
 						setState(previous => ({ ...previous, wasmUrl }));
 					}

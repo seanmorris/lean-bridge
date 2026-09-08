@@ -80,6 +80,17 @@ test("artifact requests remain under the supplied prefix and preserve abort sign
 	await assert.rejects(loadProofSources("https://example.test/", config), /HTTP 404/u);
 });
 
+test("checker compression rejects cancellation before and during stream consumption", async () => {
+	const before = new AbortController();
+	before.abort();
+	await assert.rejects(buildWasmUrl(config, sources, before.signal), { name: "AbortError" });
+	const during = new AbortController();
+	const pending = buildWasmUrl(config, sources, during.signal);
+	during.abort();
+	await assert.rejects(pending, { name: "AbortError" });
+	assert.ok((await buildWasmUrl(config, sources)).startsWith("https://lean.cau.li/#s="));
+});
+
 test("checker tabs focus, reopen, and remain user-owned after popup failure", context => {
 	const previous = globalThis.open;
 	context.after(() => {

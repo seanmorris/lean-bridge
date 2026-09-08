@@ -193,15 +193,19 @@ const toBase64Url = bytes => {
  *
  * @param config Source ordering and theorem names.
  * @param sources Loaded source text by filename.
+ * @param {AbortSignal} [signal] Cancel pending compression when its owner leaves.
  */
-export const buildWasmUrl = async (config, sources) => {
+export const buildWasmUrl = async (config, sources, signal) => {
+	signal?.throwIfAborted();
 	const workspace = JSON.stringify({
 		files: [{ name: config.proof, content: interactiveSource(config, sources) }]
 		, active: config.proof
 	});
 	const compressed = new Blob([new TextEncoder().encode(workspace)])
-		.stream().pipeThrough(new CompressionStream("gzip"));
-	return `https://lean.cau.li/#s=${toBase64Url(new Uint8Array(await new Response(compressed).arrayBuffer()))}`;
+		.stream().pipeThrough(new CompressionStream("gzip"), { signal });
+	const bytes = await new Response(compressed).arrayBuffer();
+	signal?.throwIfAborted();
+	return `https://lean.cau.li/#s=${toBase64Url(new Uint8Array(bytes))}`;
 };
 
 /**

@@ -11,9 +11,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import test from 'node:test';
-import { prerenderPaths } from './registry.mjs';
+import { demos, prerenderPaths } from './registry.mjs';
 import {
-	allowedDemoPath, assembleSite, myersRedirect, publishStagedSite, reactOutputPath
+	allowedDemoPath, assembleSite, demoRedirect, publishStagedSite, reactOutputPath
 	, validateOutputDirectory
 } from '../scripts/build-demos-site.mjs';
 
@@ -50,18 +50,24 @@ test('React output strips configured prefixes but never publishes a SPA fallback
 	assert.throws(() => reactOutputPath('index.html', '//evil/'), /absolute directory/u);
 });
 
-test('legacy Myers redirect preserves query and hash with a no-JavaScript link fallback', () => {
-	const html = myersRedirect('/nested/project/');
-	assert.match(html, /content="0;url=\/nested\/project\/demos\/lean-myers\/"/u);
-	assert.match(html, /<a href="\/nested\/project\/demos\/lean-myers\/">Open/u);
-	const script = html.match(/<script>([^<]*)<\/script>/u)[1];
-	for(const [search, hash] of [['', ''], ['?mode=characters', '#proof-code'], ['?q=%3Cscript%3E', '#section']])
+test('every migrated redirect preserves query and hash with a no-JavaScript link fallback', () => {
+	for(const demo of demos.filter(entry => entry.renderingMode === 'react'))
 	{
-		let destination;
-		vm.runInNewContext(script, { location: { search, hash, replace: value => { destination = value; } } });
-		assert.equal(destination, `/nested/project/demos/lean-myers/${search}${hash}`);
+		const html = demoRedirect('/nested/project/', demo.slug);
+		const target = `/nested/project${demo.canonicalPage}`;
+		assert.ok(html.includes(`content="0;url=${target}"`));
+		assert.ok(html.includes(`<a href="${target}">Open`));
+		const script = html.match(/<script>([^<]*)<\/script>/u)[1];
+		for(const [search, hash] of [['', ''], ['?mode=characters', '#proof-code'], ['?q=%3Cscript%3E', '#section']])
+		{
+			let destination;
+			vm.runInNewContext(script, { location: { search, hash, replace: value => { destination = value; } } });
+			assert.equal(destination, `${target}${search}${hash}`);
+		}
+		assert.throws(() => demoRedirect('/"><script>/', demo.slug));
 	}
-	assert.throws(() => myersRedirect('/"><script>/'));
+	assert.throws(() => demoRedirect('/', 'lean-dijkstra'), /No React redirect/u);
+	assert.throws(() => demoRedirect('/', '../.env'), /No React redirect/u);
 });
 
 test('output validation rejects source, checkout ancestors, and compiler overlaps before writes', async () => {

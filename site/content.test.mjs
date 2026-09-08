@@ -23,19 +23,20 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const revision = '1234567890abcdef1234567890abcdef12345678';
 const page = docPages.find(entry => entry.id === 'javascript-typescript');
 
-test('registry preserves all artifacts and migrates only the Myers page', () => {
+test('registry preserves all artifacts and migrates Myers, sweep-and-prune, and Dinic', () => {
 	assert.equal(demos.length, manifest.demos.length);
 	assert.deepEqual(demos.map(demo => demo.slug), manifest.demos.map(demo => demo.slug));
-	assert.equal(demos.filter(demo => demo.renderingMode === 'react').length, 1);
+	const migrated = ['lean-dinic', 'lean-myers', 'lean-sweep-and-prune'];
+	assert.deepEqual(demos.filter(demo => demo.renderingMode === 'react').map(demo => demo.slug), migrated);
 	for(const demo of demos)
 	{
 		assert.equal(demo.artifactBase, `/${demo.entrypoint}`);
-		assert.equal(demo.canonicalPage, demo.slug === 'lean-myers'
-			? '/demos/lean-myers/' : demo.artifactBase);
+		assert.equal(demo.canonicalPage, migrated.includes(demo.slug)
+			? `/demos/${demo.slug}/` : demo.artifactBase);
 		assert.equal(prerenderPaths.includes(demo.canonicalPage), demo.renderingMode === 'react');
 	}
 	assert.equal(new Set(prerenderPaths).size, prerenderPaths.length);
-	assert.equal(prerenderPaths.length, 14);
+	assert.equal(prerenderPaths.length, 16);
 	assert.equal(docPages.filter(entry => entry.source).length, 8);
 	assert.equal(new Set(docPages.filter(entry => entry.source)
 		.map(entry => entry.source)).size, 8);

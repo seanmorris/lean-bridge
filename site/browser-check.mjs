@@ -12,7 +12,7 @@ import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
 import { chromium, firefox, webkit } from "playwright";
 import { startSiteServer } from "./serve.mjs";
-import { docPages, prerenderPaths } from "./registry.mjs";
+import { demos, docPages, prerenderPaths } from "./registry.mjs";
 
 const root = resolve(process.env.SITE_ARTIFACT_ROOT ?? "build/github-pages");
 const identity = JSON.parse(await readFile(resolve(root, "build-identity.json"), "utf8"));
@@ -195,8 +195,15 @@ try
 			assert.equal(await page.locator(".portfolio-nav").count(), 0, "No double demo shell");
 			await checkLayout(page);
 			await page.screenshot({ path: resolve(output, `${engine}-myers-desktop.png`), fullPage: true });
-			await page.goto(server.url + "lean-myers/");
-			await page.waitForURL("**/demos/lean-myers/");
+			for(const demo of demos.filter(entry => entry.renderingMode === "react"))
+			{
+				await page.goto(server.url + demo.entrypoint + "?from=legacy#main-content");
+				await page.waitForURL(server.url + demo.canonicalPage.slice(1) + "?from=legacy#main-content");
+				await page.waitForFunction(() => globalThis.document.querySelector("#runtime-status")?.textContent.includes("ready"));
+				assert.equal(await page.locator(".site-header").count(), 1);
+				assert.equal(await page.locator(".portfolio-nav").count(), 0);
+				await checkLayout(page);
+			}
 			assert.deepEqual(errors, [], `${engine}: client navigation errors`);
 			await page.close();
 			report.checks.push({ engine, staticRoutes: prerenderPaths.length, status: "passed" });
@@ -206,6 +213,7 @@ try
 				for(const script of [
 					"site/myers-browser-check.mjs", "site/proof-browser-check.mjs"
 					, "site/search-browser-check.mjs", "site/performance-check.mjs"
+					, "site/graph-browser-check.mjs"
 				]) {
 					const result = await execute(process.execPath, [resolve(script), server.url], {
 						timeout: 180000, env: { ...process.env, CHROMIUM_PATH: executablePath }

@@ -1,5 +1,5 @@
 /**
- * Route the static documentation shell and the first React algorithm workbench.
+ * Route the static documentation shell and migrated React algorithm workbenches.
  *
  * @file
  */
@@ -11,6 +11,8 @@ export default [
 	index("routes/home.tsx")
 	, route("demos", "routes/gallery.tsx")
 	, route("demos/lean-myers", "routes/myers.tsx")
+	, route("demos/lean-sweep-and-prune", "routes/sweep.tsx")
+	, route("demos/lean-dinic", "routes/dinic.tsx")
 	, route("docs", "routes/guides/documentation.tsx")
 	, route("docs/lean", "routes/guides/lean-author.tsx")
 	, route("docs/consume", "routes/docs.tsx", { id: "consume" })

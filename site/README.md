@@ -2,7 +2,7 @@
 
 This directory owns the React presentation layer. Lean algorithms, C bridges, runtime APIs, proof sources, and benchmarks remain in `demos/`.
 
-The initial migration covers the shared site shell, eight canonical guides, two audience hubs, and the Myers workbench. The other eleven demos remain standalone. No algorithm package is published by building this site.
+The migration covers the shared site shell, eight canonical guides, two audience hubs, and the Myers, sweep-and-prune, and Dinic workbenches. The other nine demos remain standalone. No algorithm package is published by building this site.
 
 ## Develop
 
@@ -26,7 +26,7 @@ DEMO_BROWSERS=chromium,firefox,webkit npm run demos:browser
 
 Install the audit browsers with `npx playwright install --with-deps chromium firefox webkit`. `CHROMIUM_PATH` can select an existing Chromium binary. Browser checks serve the assembled artifact themselves; they do not require a running development server.
 
-`demos:verify` retains the twelve proof builds, differential suites, and benchmark budgets. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, and Myers model. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, proof failure recovery, and repeated resource cleanup.
+`demos:verify` retains the twelve proof builds, differential suites, and benchmark budgets. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, and the three React workbench models. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
 
 ## Static publication
 
@@ -42,7 +42,7 @@ LEAN_BRIDGE_SITE_BASE=/lean-bridge/ npm run demos:site
 
 The base is an absolute directory path ending in `/`. It must match the host's deployment directory. GitHub Pages needs no application server or SPA fallback. Every registered route has HTML; `404.html` is a real not-found document. The existing Pages workflow checks and uploads this artifact. Running the commands above does not deploy it.
 
-`/lean-myers/` redirects to `/demos/lean-myers/`, preserving query and fragment in JavaScript and providing a normal no-JavaScript link. Its raw sources, loader, Wasm, and receipt stay under `/lean-myers/`. The other eleven demo URLs do not change.
+`/lean-myers/`, `/lean-sweep-and-prune/`, and `/lean-dinic/` redirect to their `/demos/<slug>/` routes, preserving query and fragment in JavaScript and providing normal no-JavaScript links. Raw sources, loaders, Wasm, and receipts stay at their original addresses. The other nine demo URLs do not change.
 
 `build-identity.json` binds the revision, deployment base, route metadata, and exact output hashes. Its original 36 Wasm/loader/receipt subjects remain unchanged. This local identity is an unsigned consistency record, not a signed release authorization.
 
@@ -55,6 +55,8 @@ The base is an absolute directory path ending in `/`. It must match the host's d
 - Documentation search loads its separate index only on use. Prose pages do not import or request a Wasm runtime. The initial JavaScript budget is 200 KiB gzip per landing or documentation page.
 - `app/components/ProofViewer.tsx` owns source loading and controls. Framework-neutral proof services verify hashes and construct checker payloads; legacy pages use the same services.
 - `BenchmarkPanel.tsx` owns one scoped controller and prepared solver. The controller owns metric and histogram leaves. Unmount disposes observers, listeners, animation frames, and prepared handles.
+- Each React route supplies its benchmark copy and summary projection; workload modules and sample counts stay unchanged. `app/components/demo-page.css` supplies shared proof, receipt, and benchmark styling.
 - Myers keeps exact text, selections, mode, and history in page-memory across React routes. History retains at most 100 edits or 8 MiB per editor, dropping oldest history before current text. A reload starts fresh. The Wasm initialization promise remains cached for the browser document; prepared handles do not survive route departure.
+- Sweep-and-prune retains scene inputs, seed, axis, and selection across React routes. Dinic retains capacities and selected edge. Leaving either route stops its animation and cancels pending work. A full reload restores the default example. Each visited algorithm keeps its own initialized Wasm module for the browser document; prepared handles are released separately.
 
-The [migration plan](../docs/architecture/react-documentation-site-plan.md) tracks the remaining eleven ports and deeper author, consumer, publishing, reference, and concept work.
+The [migration plan](../docs/architecture/react-documentation-site-plan.md) tracks the remaining nine ports and deeper author, consumer, publishing, reference, and concept work.

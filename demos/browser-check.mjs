@@ -107,8 +107,7 @@ const auditDemo = async (browser, engine, demo) => {
 		await page.locator("[data-benchmark-run]").scrollIntoViewIfNeeded();
 		await page.waitForFunction(() => globalThis.document.querySelector("[data-benchmark-progress]").textContent
 			!== "Waiting to enter view");
-		if(await page.locator("[data-benchmark-cancel]").isEnabled())
-			await page.locator("[data-benchmark-cancel]").click();
+		await page.locator("[data-benchmark-cancel]").evaluate(button => { if(!button.disabled) button.click(); });
 		await page.locator("[data-benchmark-run]").click();
 		await page.evaluate(() => {
 			globalThis.dispatchEvent(new globalThis.PageTransitionEvent("pagehide", { persisted: true }));
@@ -169,7 +168,8 @@ const auditFailures = async browser => {
 	await page.waitForFunction(() => globalThis.document.querySelector("#build-identity").textContent.includes("Source"));
 	assert.equal(await page.locator(".demo-card").count(), manifest.demos.length);
 	await page.route("**/Sweep.lean", route => route.fulfill({ status: 404, body: "Missing" }));
-	await page.goto(base + "lean-sweep-and-prune/");
+	await page.goto(base + "demos/lean-sweep-and-prune/");
+	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	await page.waitForFunction(() => globalThis.document.querySelector("#audit-status").textContent === "Proof receipt unavailable");
 	assert.equal(await page.locator("#copy-source").isDisabled(), true);
 	assert.equal(await page.locator("#launch-wasm").isDisabled(), true);
@@ -179,6 +179,7 @@ const auditFailures = async browser => {
 		await route.fulfill({ response, body: (await response.text()) + "\n-- changed source\n" });
 	});
 	await page.reload();
+	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	await page.waitForFunction(() => globalThis.document.querySelector("#audit-status").textContent === "Proof receipt unavailable");
 	assert.equal(await page.locator("#launch-lean-web").isDisabled(), true);
 	await page.unroute("**/Sweep.lean");
@@ -186,6 +187,7 @@ const auditFailures = async browser => {
 	const delayed = new Promise(resolve => { releaseSource = resolve; });
 	await page.route("**/Sweep.lean", async route => { await delayed; await route.continue(); });
 	await page.reload({ waitUntil: "domcontentloaded" });
+	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	assert.equal(await page.locator("#copy-source").isDisabled(), true);
 	for(const tab of await page.locator(".source-tab").all()) assert.equal(await tab.isDisabled(), true);
 	releaseSource();
@@ -193,12 +195,14 @@ const auditFailures = async browser => {
 	await page.unroute("**/Sweep.lean");
 	await page.route("**/Sweep.lean", route => route.fulfill({ status: 404, body: "Missing after reload" }));
 	await page.reload();
+	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	await page.waitForFunction(() => globalThis.document.querySelector("#audit-status").textContent === "Proof receipt unavailable");
 	assert.equal(await page.locator("#launch-wasm").isDisabled(), true);
 	assert.equal(await page.locator("#launch-lean-web").isDisabled(), true);
 	await page.unroute("**/Sweep.lean");
 	await page.addInitScript(() => { delete globalThis.CompressionStream; });
 	await page.reload();
+	await page.locator(".proof-section").scrollIntoViewIfNeeded();
 	await page.waitForFunction(() => !globalThis.document.querySelector("#launch-lean-web").disabled);
 	assert.equal(await page.locator("#launch-wasm").isDisabled(), true);
 	assert.equal(await page.locator("#audit-status").textContent(), "Source matches checked build");
@@ -266,9 +270,9 @@ try
 				const checks = [
 					["lean-dijkstra/browser-ux-check.mjs", "lean-dijkstra/"]
 					, ["lean-aho-corasick/browser-ux-check.mjs", "lean-aho-corasick/"]
-					, ["lean-dinic/browser-animation-check.mjs", "lean-dinic/"]
+					, ["lean-dinic/browser-animation-check.mjs", "demos/lean-dinic/"]
 					, ["lean-myers/browser-ux-check.mjs", "demos/lean-myers/"]
-					, ["lean-sweep-and-prune/browser-ux-check.mjs", "lean-sweep-and-prune/"]
+					, ["lean-sweep-and-prune/browser-ux-check.mjs", "demos/lean-sweep-and-prune/"]
 					, ["interaction-check.mjs", ""]
 					, ["runtime-retry-check.mjs", ""]
 				];

@@ -81,8 +81,9 @@ export function comparatorChallenge(config: ProofConfiguration, sources: Map<str
  *
  * @param config Source ordering and named proof guarantees.
  * @param sources Loaded source text by filename.
+ * @param signal Cancel pending compression when its owner leaves.
  */
-export function buildWasmUrl(config: ProofConfiguration, sources: Map<string, string>): Promise<string>;
+export function buildWasmUrl(config: ProofConfiguration, sources: Map<string, string>, signal?: AbortSignal): Promise<string>;
 /**
  * Encode a Comparator challenge and solution.
  *

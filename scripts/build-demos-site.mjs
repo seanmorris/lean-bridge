@@ -74,18 +74,24 @@ export function reactOutputPath(localPath, base)
  * Produces a redirect with a usable link when JavaScript is disabled.
  *
  * @param base - Validated deployment prefix.
+ * @param slug - Registered React demo whose old address remains a public alias.
  */
-export function myersRedirect(base)
+export function demoRedirect(base, slug)
 {
-	const target = withBase(base, '/demos/lean-myers/');
+	const demo = demos.find(entry => entry.slug === slug && entry.renderingMode === 'react');
+	if(!demo) throw new Error(`No React redirect registered for ${slug}`);
+	const target = withBase(base, demo.canonicalPage);
+	const title = demo.title.replace(/[&<>"']/gu, character => ({
+		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+	})[character]);
 	return `<!doctype html>\n<html lang="en"><head><meta charset="utf-8">`
 		+ `<meta name="viewport" content="width=device-width, initial-scale=1">`
 		+ `<script>location.replace(${JSON.stringify(target)}+location.search+location.hash);</script>`
 		+ `<meta http-equiv="refresh" content="0;url=${target}">`
 		+ `<meta name="robots" content="noindex"><link rel="canonical" href="${target}">`
-		+ `<title>Myers shortest edit script | Lean Bridge</title></head><body>`
-		+ `<main><h1>Myers shortest edit script</h1><p>The workbench has moved.</p>`
-		+ `<p><a href="${target}">Open the Myers workbench</a></p>`
+		+ `<title>${title} | Lean Bridge</title></head><body>`
+		+ `<main><h1>${title}</h1><p>The workbench has moved.</p>`
+		+ `<p><a href="${target}">Open the ${title} workbench</a></p>`
 		+ `<p>Lean sources, the runtime, and the proof receipt remain at this address.</p>`
 		+ `</main></body></html>\n`;
 }
@@ -285,7 +291,8 @@ export async function assembleSite(options = {})
 			}))
 		};
 		await Promise.all([
-			writeFile(resolve(staging, 'lean-myers/index.html'), myersRedirect(base))
+			...demos.filter(demo => demo.renderingMode === 'react').map(demo =>
+				writeFile(resolve(staging, demo.slug, 'index.html'), demoRedirect(base, demo.slug)))
 			, cp(resolve(staging, '404/index.html'), resolve(staging, '404.html'))
 			, cp(resolve(root, 'build/site-content/search-index.json'), resolve(staging, 'search-index.json'))
 			, writeFile(resolve(staging, '.nojekyll'), '')
