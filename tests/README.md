@@ -38,7 +38,7 @@ Consumer commands install generated archives into new projects using ordinary ec
 
 ### Documentation tests
 
-[`documentation.test.mjs`](documentation.test.mjs) validates internal links, code references, directory explainers, support-table consistency, public example boundaries, repository paths, and writing-rule checks. `npm run test:docs` is the focused local entrypoint.
+[`documentation.test.mjs`](documentation.test.mjs) validates internal links, code references, directory explainers, support-table consistency, public example boundaries, repository paths, and writing-rule checks. `npm run test:docs` also checks the author fixture, installed-package example contracts, and the documented box-overlap call against the checked-in Wasm binary. These checks belong to the Node-only contract profile. The full author build and installed React/worker acceptance commands are described in the [site guide](../site/README.md#build-and-check).
 
 ## Running tests
 

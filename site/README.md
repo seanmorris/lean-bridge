@@ -2,7 +2,7 @@
 
 This directory owns the React presentation layer. Lean algorithms, C bridges, runtime APIs, proof sources, and benchmarks remain in `demos/`.
 
-The migration covers the shared site shell, eight canonical guides, two audience hubs, and the Myers, sweep-and-prune, and Dinic workbenches. The other nine demos remain standalone. No algorithm package is published by building this site.
+The site renders 24 canonical documentation pages and the Myers, sweep-and-prune, and Dinic workbenches. The other nine demos remain standalone. Author, consumer, publisher, and concept guides share searchable Markdown, grouped navigation, and previous/next links. No algorithm package is published by building this site.
 
 ## Develop
 
@@ -19,6 +19,9 @@ The development server serves the existing demo artifacts through the same allow
 ```sh
 npm run site:typecheck
 npm run site:test
+npm run bootstrap
+npm run test:docs
+npm run test:docs:proof
 npm run demos:verify
 SITE_BROWSERS=chromium,firefox,webkit npm run site:browser
 DEMO_BROWSERS=chromium,firefox,webkit npm run demos:browser
@@ -27,6 +30,10 @@ DEMO_BROWSERS=chromium,firefox,webkit npm run demos:browser
 Install the audit browsers with `npx playwright install --with-deps chromium firefox webkit`. `CHROMIUM_PATH` can select an existing Chromium binary. Browser checks serve the assembled artifact themselves; they do not require a running development server.
 
 `demos:verify` retains the twelve proof builds, differential suites, and benchmark budgets. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, and the three React workbench models. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
+
+`test:docs` checks copyable author files against the maintained fixture, theorem metadata, public consumer imports, numeric input guards, and a local demo-API example against the compiled solver. `test:docs:proof` uses the pinned Lean version and commit to check the tutorial theorem, require an empty axiom set, and reject changed-implementation and `sorry` variants. It reads the fixture and passes mutations through stdin without changing source files. Pages CI runs both commands after toolchain bootstrap.
+
+Full author and installed React/worker acceptance use `npm run acceptance:docs:author` and `npm run acceptance:docs:consumer`; prepare the toolchain and shared runtime described in the [author setup](../docs/lean/setup.md) first. The consumer command requires the exact archives produced by the author command. Neither command publishes a package.
 
 ## Static publication
 

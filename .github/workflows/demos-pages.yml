@@ -35,6 +35,10 @@ jobs:
         run: npm run site:typecheck && npm run site:test
       - name: Bootstrap pinned Lean and Wasm toolchains
         run: npm run bootstrap
+      - name: Check documentation snippets and author contracts
+        run: npm run test:docs
+      - name: Check the tutorial proof and reject unsound variants
+        run: npm run test:docs:proof
       - name: Build and verify demo artifacts
         run: npm run demos:verify
       - name: Reject stale generated artifacts
@@ -59,6 +63,7 @@ jobs:
           path: |
             build/demo-browser-audit
             build/react-site-audit
+            build/documentation-site-audit
           if-no-files-found: ignore
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'

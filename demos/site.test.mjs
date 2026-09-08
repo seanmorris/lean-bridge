@@ -477,7 +477,7 @@ test("published routes, static pages, and search retain exact output identities"
 	assert.equal(await readFile(resolve(siteRoot, "404.html"), "utf8"),
 		await readFile(resolve(siteRoot, "404/index.html"), "utf8"));
 	const search = JSON.parse(await readFile(resolve(siteRoot, "search-index.json"), "utf8"));
-	assert.equal(search.length, 8);
+	assert.equal(search.length, docPages.filter(page => page.source).length);
 	for(const entry of search) assert.ok(entry.source.startsWith("docs/") || entry.source === "src/release/README.md");
 });
 

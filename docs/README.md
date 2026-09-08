@@ -1,6 +1,30 @@
 # Documentation map
 
-This directory separates current user workflows, versioned support claims, architecture requirements, implementation status, and executed evidence. Use the document that owns the claim instead of copying a value into several pages.
+Build a Lean component, call it from an application, or prepare it for a release. Each path uses the same example and links to the commands, source files, and verification records it needs.
+
+## Choose your starting point
+
+| Your task | Start here | Result |
+| --- | --- | --- |
+| I write Lean | [Package a Lean library](lean-author-guide.md) | A checked source project, a component bundle, and two local npm archives. |
+| I build applications | [Use a Lean package](consume.md) | Verified archive installation and calls from Node, React, or a browser worker. |
+| I ship libraries | [Publish a Lean package](publishing.md) | A local handoff or a reviewed release workflow with its required records. |
+| I maintain this site | [Publish the documentation site](publish/github-pages.md) | A tested static artifact for domain-root or project Pages hosting. |
+
+The CLI is currently installed from a local checkout. Follow [toolchain setup](lean/setup.md) before the author tutorial. An application consuming generated archives does not need the author toolchain.
+
+## Follow one complete example
+
+The author tutorial defines `add` and `isEmpty`, then adds an addition theorem. Lean checks the theorem; analysis records which functions can be exported and which theorem relationships it found. The build produces a component, and a reproducibility dry run produces the runtime and component archives.
+
+Follow [Build your first component](lean/first-component.md), then [JavaScript and TypeScript](javascript-typescript.md). The [React](react.md) and [worker](browser-workers.md) guides use that package by name. They do not import repository fixtures into the consuming application.
+
+## Understand the demos
+
+- [From proof to browser result](concepts/lean-to-wasm.md) traces the sweep-and-prune guarantee through Lean, compilation, and the browser adapter.
+- [Read the benchmarks](concepts/benchmarks.md) explains warmup, medians, p95, histograms, and the JavaScript comparison.
+- [Use a demo's local API](demo-api.md) calls a compiled box solver without the webpage.
+- [Run the algorithm collection](../demos/index.html) to change inputs and inspect the results.
 
 ## Claim ownership
 
@@ -21,6 +45,8 @@ The root README is a landing page. It links to canonical records and selects a s
 |---|---|
 | Lean package authors | [Lean author guide](lean-author-guide.md) |
 | JavaScript and TypeScript consumers | [JavaScript and TypeScript guide](javascript-typescript.md) |
+| React applications and browser workers | [React](react.md), [browser assets and workers](browser-workers.md) |
+| Library and site publishers | [Publishing guide](publishing.md) |
 | Native PHP and PHP-Wasm consumers | [PHP guide](php.md) |
 | .NET, JVM, and Ruby consumers | [.NET, JVM, and Ruby guide](dotnet-jvm-ruby.md) |
 | Python, Rust, C, C++, browser npm, and WIT/WASI consumers | [Consumer guide](consumers.md) |

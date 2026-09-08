@@ -12,14 +12,22 @@ import { fileURLToPath } from 'node:url';
 import { compile } from '@mdx-js/mdx';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter } from 'shiki';
-import { docPages, documentationImages } from '../site/registry.mjs';
+import { demos, docPages, documentationImages } from '../site/registry.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const repositoryUrl = 'https://github.com/seanmorris/lean-bridge';
+const publicWorkflowReferences = new Set([
+	'.github/workflows/demos-pages.yml'
+	, '.github/workflows/reproducible-release.yml'
+]);
 const sourcePages = new Map(docPages.filter(page => page.source)
 	.map(page => [page.source, page]));
+const demoPages = new Map([
+	['demos/index.html', '/demos/']
+	, ...demos.map(demo => [`demos/${demo.entrypoint}index.html`, demo.canonicalPage])
+]);
 const languages = [
-	'sh', 'js', 'ts', 'json', 'lean', 'toml', 'php', 'python'
+	'sh', 'js', 'ts', 'tsx', 'html', 'json', 'lean', 'toml', 'php', 'python'
 	, 'rust', 'c', 'cpp', 'csharp', 'java', 'ruby', 'xml'
 ];
 
@@ -92,10 +100,12 @@ function sourceTarget(value, source)
 	const target = path.posix.normalize(path.posix.join(
 		path.posix.dirname(source), decoded
 	));
-	if(target === '..' || target.startsWith('../')
-		|| target.split('/').some(part => part.startsWith('.'))){
+	const privatePath = target.split('/').some(part => part.startsWith('.'))
+		&& !publicWorkflowReferences.has(target);
+	if(target === '..' || target.startsWith('../') || privatePath)
+	{
 		throw new Error(`Private or escaping documentation link: ${value}`);
-		}
+	}
 	return target;
 }
 
@@ -128,10 +138,10 @@ export function rewriteDocumentationLink(value, page, options)
 	const localPath = split < 0 ? value : value.slice(0, split);
 	const suffix = split < 0 ? '' : value.slice(split);
 	const target = localPath ? sourceTarget(localPath, page.source) : page.source;
-	const registered = sourcePages.get(target);
-	if(registered)
+	const route = sourcePages.get(target)?.route ?? demoPages.get(target);
+	if(route)
 	{
-		const relative = path.posix.relative(page.route, registered.route);
+		const relative = path.posix.relative(page.route, route);
 		return `${relative ? `${relative}/` : './'}${suffix}`;
 	}
 	if(options.trackedFiles && !options.trackedFiles.has(target))
@@ -290,6 +300,8 @@ export function validateDocumentationAnchors(results)
 			}
 			const destination = results[target.pathname];
 			const fragment = decodeURIComponent(target.hash.slice(1));
+			// Demo fragments are checked against their assembled HTML by the browser gate.
+			if([...demoPages.values()].includes(target.pathname)) continue;
 			if(!destination?.metadata.headings.some(heading => heading.id === fragment))
 			{
 				throw new Error(`Missing documentation heading: ${route} -> ${link}`);

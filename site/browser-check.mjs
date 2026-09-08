@@ -148,13 +148,13 @@ try
 				if(guide) assert.ok((await noScript.locator("main").innerText()).length > 500, `${path}: full guide, not a hub placeholder`);
 				await checkLinks(noScript);
 				if(path === "/") assert.equal(await noScript.locator(".demo-card").count(), 12);
-				if(path === "/docs/lean/") assert.ok(await noScript.locator("pre code").count() > 0);
+				if(path === "/docs/lean/first-component/") assert.ok(await noScript.locator("pre code").count() > 0);
 			}
 			const missing = await noScript.goto(server.url + "there-is-no-such-guide/");
 			assert.equal(missing.status(), 404);
 			assert.match(await noScript.locator("h1").innerText(), /no page/u);
 			await noScript.close();
-			for(const path of ["/", "/docs/lean/", "/docs/consume/javascript-typescript/"])
+			for(const path of ["/", ...docPages.map(entry => entry.route)])
 				await measurePage(browser, path, engine);
 
 			const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -214,6 +214,7 @@ try
 					"site/myers-browser-check.mjs", "site/proof-browser-check.mjs"
 					, "site/search-browser-check.mjs", "site/performance-check.mjs"
 					, "site/graph-browser-check.mjs"
+					, "site/docs-browser-check.mjs"
 				]) {
 					const result = await execute(process.execPath, [resolve(script), server.url], {
 						timeout: 180000, env: { ...process.env, CHROMIUM_PATH: executablePath }

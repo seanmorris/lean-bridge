@@ -102,6 +102,13 @@ code { overflow-wrap: anywhere; }
 .doc-outline a { display: block; text-decoration: none; color: var(--muted); font-size: .8rem; line-height: 1.4; padding: 7px 0; overflow-wrap: anywhere; }
 .doc-outline a:hover { color: var(--cyan); }
 .doc-source { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .78rem; color: var(--muted); }
+.doc-pagination { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 36px; }
+.doc-pagination a { padding: 16px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; overflow-wrap: anywhere; font-size: .9rem; background: var(--panel); }
+.doc-pagination a[rel="next"] { grid-column: 2; text-align: right; }
+.doc-pagination a:hover { border-color: var(--cyan); }
+.doc-pagination span { display: block; color: var(--muted); font-size: .75rem; margin-bottom: 6px; }
+.concept-links { display: flex; flex-wrap: wrap; gap: 12px 24px; font-size: .9rem; }
+@media (max-width: 560px) { .doc-pagination { grid-template-columns: minmax(0, 1fr); } .doc-pagination a[rel="next"] { grid-column: 1; } }
 .guide-links { display: grid; gap: 10px; }
 .guide-links a { text-decoration: none; background: var(--panel); border: 1px solid var(--line); padding: 16px; border-radius: 6px; font-weight: 600; }
 .guide-links span { display: block; font-size: .85rem; color: var(--muted); font-weight: 400; margin-top: 5px; }
@@ -124,9 +131,9 @@ code { overflow-wrap: anywhere; }
 	.demo-card > a { padding: 22px; }
 	.docs-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
 	.docs-sidebar { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); padding: 18px 0; }
-	.docs-sidebar nav { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; }
-	.docs-sidebar nav section { display: contents; }
-	.docs-sidebar nav h2 { display: none; }
+	.docs-sidebar nav { display: grid; gap: 8px; margin-top: 12px; }
+	.docs-sidebar nav section { display: block; }
+	.docs-sidebar nav h2 { margin-top: 14px; }
 	.docs-sidebar nav a { font-size: .8rem; padding: 4px 0; border-left: 0; }
 	.docs-sidebar nav a[aria-current] { text-decoration: underline; background: none; }
 	.doc-content { padding-top: 28px; }

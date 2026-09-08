@@ -11,6 +11,7 @@ import test from "node:test";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import { docPages } from "../site/registry.mjs";
 import {
 	ConsumerSupportError,
 	consumerSummaryMarkdown,
@@ -67,6 +68,7 @@ const publicDocuments = Object.freeze([
 	, "docs/architecture/patches.md"
 	, "docs/architecture/adr/README.md"
 	, ...directoryDocuments
+	, ...docPages.filter(page => page.source).map(page => page.source)
 ]);
 
 const codeFences = source => [...source.matchAll(/^```[^\n]*\n([\s\S]*?)^```\s*$/gm)].map(match => match[1]);

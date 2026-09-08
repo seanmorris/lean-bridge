@@ -227,7 +227,7 @@ export default [
 		}
 	}
 	, {
-		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts']
+		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}']
 		, languageOptions: {
 			parser: tseslint.parser
 			, globals: { ...globals.browser }

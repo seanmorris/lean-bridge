@@ -7,9 +7,13 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 ## Verified algorithm gallery
 
 - [Twelve-demo correctness, lifecycle, and browser audit, 8 September 2026](demo-portfolio-audit-20260908.md)
+- [React site foundation and Myers pilot, 8 September 2026](react-site-foundation-20260908.md)
+- [React sweep-and-prune and Dinic migration, 8 September 2026](react-graph-migration-20260908.md)
+- [Documentation expansion and reading-layout checks, 8 September 2026](documentation-site-20260908.md)
 
 ## Author workflow and release
 
+- [Executable author tutorial, 8 September 2026](documentation-author-20260908.md)
 - [Lean project analysis](lean-project-analysis.md)
 - [Zero-configuration acceptance](zero-configuration-acceptance.md)
 - [Plain project package acceptance](plain-project-package-acceptance.md)
@@ -24,6 +28,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 
 ## Consumer packages
 
+- [Installed React and worker tutorial, 8 September 2026](documentation-consumer-20260908.md)
 - [npm package](npm-package.md)
 - [Browser bundler acceptance](browser-bundler-acceptance.md)
 - [Browser package acceptance](browser-package-acceptance.md)

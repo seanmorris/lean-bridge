@@ -36,10 +36,10 @@ test('registry preserves all artifacts and migrates Myers, sweep-and-prune, and 
 		assert.equal(prerenderPaths.includes(demo.canonicalPage), demo.renderingMode === 'react');
 	}
 	assert.equal(new Set(prerenderPaths).size, prerenderPaths.length);
-	assert.equal(prerenderPaths.length, 16);
-	assert.equal(docPages.filter(entry => entry.source).length, 8);
+	assert.equal(prerenderPaths.length, 30);
+	assert.equal(docPages.filter(entry => entry.source).length, 24);
 	assert.equal(new Set(docPages.filter(entry => entry.source)
-		.map(entry => entry.source)).size, 8);
+		.map(entry => entry.source)).size, 24);
 });
 
 test('source-relative links preserve route fragments and deployment prefixes', () => {
@@ -67,6 +67,20 @@ test('non-rendered source links pin a full revision and require tracked paths', 
 	assert.throws(() => rewriteDocumentationLink('#typescript', page, { revision: 'main' }), /full Git revision/);
 });
 
+test('documentation links to maintained demos use canonical pages under both bases', () => {
+	for(const demo of demos)
+	{
+		const link = rewriteDocumentationLink(`../demos/${demo.entrypoint}index.html#main-content`, page, { revision });
+		for(const base of ['/', '/lean-bridge/'])
+		{
+			const target = new URL(link, `https://example.test${base}${page.route.slice(1)}`);
+			assert.equal(target.pathname, `${base}${demo.canonicalPage.slice(1)}`);
+			assert.equal(target.hash, '#main-content');
+		}
+	}
+	assert.equal(rewriteDocumentationLink('../demos/index.html', page, { revision }), '../../../demos/');
+});
+
 test('unsafe, secret, escaping, and host-root links fail instead of being published', () => {
 	for(const link of [
 		'javascript:alert(1)', 'data:text/html,example', '//outside.example/path'
@@ -75,6 +89,14 @@ test('unsafe, secret, escaping, and host-root links fail instead of being publis
 	]){
 		assert.throws(() => rewriteDocumentationLink(link, page, { revision }));
 	}
+});
+
+test('reviewed workflow references remain source links without allowing private directories', () => {
+	const target = '.github/workflows/demos-pages.yml';
+	assert.equal(rewriteDocumentationLink(`../${target}`, page, {
+		revision, trackedFiles: new Set([target])
+	}), `https://github.com/seanmorris/lean-bridge/blob/${revision}/${target}`);
+	assert.throws(() => rewriteDocumentationLink('../.github/private.json', page, { revision }), /Private/u);
 });
 
 test('Markdown metadata matches generated headings and keeps search text separate', async () => {
@@ -115,6 +137,17 @@ test('raw HTML, images, and non-canonical sources cannot enter compiled modules'
 	assert.doesNotMatch(inert.code, /^import value from/mu);
 });
 
+test('React and HTML examples are highlighted as inert documentation', async () => {
+	const compiled = await compileDocumentationPage([
+		'# React example', '', '```tsx'
+		, 'export const Example = () => <output>42</output>;', '```'
+		, '', '```html', '<script type="module" src="/main.tsx"></script>', '```'
+	].join('\n'), page, { revision });
+	assert.match(compiled.code, /"data-language": "tsx"/u);
+	assert.match(compiled.code, /"data-language": "html"/u);
+	assert.doesNotMatch(compiled.code, /^export const Example/mu);
+});
+
 test('broken local and cross-guide fragments fail the build', () => {
 	const results = {
 		'/docs/lean/': {
@@ -141,8 +174,8 @@ test('all generated modules render without browser runtimes and match source has
 		const index = await readFile(path.join(output, 'index.mjs'), 'utf8');
 		const metadata = await readFile(path.join(output, 'metadata.mjs'), 'utf8');
 		const search = JSON.parse(await readFile(path.join(output, 'search-index.json'), 'utf8'));
-		assert.equal(Object.keys(generated.pages).length, 8);
-		assert.equal(search.length, 8);
+		assert.equal(Object.keys(generated.pages).length, docPages.length);
+		assert.equal(search.length, docPages.length);
 		assert.doesNotMatch(index, /searchText|node:|@mdx-js|shiki/u);
 		assert.doesNotMatch(metadata, /searchText|import\(|pageModules/u);
 		assert.deepEqual((await readdir(output)).sort(), [
