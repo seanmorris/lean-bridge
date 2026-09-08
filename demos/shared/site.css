@@ -1,9 +1,13 @@
-.portfolio-nav { position:sticky; z-index:30; top:0; min-height:48px; display:flex; justify-content:space-between; align-items:center; gap:18px; padding:8px max(24px,calc((100% - 1440px) / 2)); border-bottom:1px solid rgba(114,216,255,.24); background:linear-gradient(90deg,rgba(13,27,47,.97),rgba(9,17,31,.94) 55%,rgba(15,30,50,.97)); box-shadow:0 8px 28px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035); backdrop-filter:blur(15px); font:700 11px/1 ui-monospace,monospace; letter-spacing:.05em; }
-.portfolio-nav::after { content:""; position:absolute; right:0; bottom:-1px; left:0; height:1px; background:linear-gradient(90deg,transparent 4%,#72d8ff 22%,rgba(173,247,182,.28) 54%,transparent 94%); opacity:.55; }
+.portfolio-nav { box-sizing:border-box; position:sticky; z-index:30; top:0; min-height:62px; display:flex; align-items:center; gap:24px; padding:8px max(24px,calc((100% - 1440px) / 2)); border-bottom:1px solid rgba(173,204,235,.16); background:rgba(9,17,31,.96); font:600 13px/1.4 Inter,ui-sans-serif,system-ui,sans-serif; }
 .portfolio-nav a { display:flex; align-items:center; gap:9px; color:#dcecf9; text-decoration:none; }
 .portfolio-nav a:hover { color:#fff; }
-.portfolio-mark { width:27px; height:27px; display:grid; place-items:center; border:1px solid rgba(173,247,182,.5); border-radius:6px; background:rgba(173,247,182,.11); color:#adf7b6; box-shadow:0 0 18px rgba(173,247,182,.12); font:800 16px/1 Georgia,serif; }
-.portfolio-nav a span { color:inherit; letter-spacing:.07em; }
-.portfolio-current { max-width:52%; overflow:hidden; padding:6px 9px; border:1px solid rgba(173,204,235,.12); border-radius:4px; background:rgba(7,17,30,.42); color:#8da4bb; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:.11em; }
+.portfolio-mark { width:29px; height:29px; display:grid; place-items:center; color:#adf7b6; font:800 27px/1 Georgia,serif; }
+.portfolio-home { flex:0 0 auto; font-size:16px; font-weight:750; }
+.portfolio-nav a span { color:inherit; }
+.portfolio-links { display:flex; align-items:center; gap:24px; margin-left:auto; }
+.portfolio-links a { padding:9px 0; color:#9fb1c4; }
+.portfolio-nav a:focus-visible { outline:2px solid #72d8ff; outline-offset:4px; border-radius:3px; }
+.portfolio-current { min-width:0; overflow:hidden; color:#8da4bb; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
 @media (max-width:850px) { .portfolio-nav { padding-inline:max(12px,calc((100% - 720px) / 2)); } }
-@media (max-width:560px) { .portfolio-nav { padding-inline:12px; }.portfolio-nav a span { display:none; }.portfolio-current { max-width:72%; } }
+@media (max-width:720px) { .portfolio-current { display:none; } }
+@media (max-width:560px) { .portfolio-nav { min-height:56px; gap:12px; padding-inline:14px; }.portfolio-home span { display:none; }.portfolio-links { gap:22px; } }

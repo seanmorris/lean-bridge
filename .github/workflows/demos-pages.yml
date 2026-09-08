@@ -17,6 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      LEAN_BRIDGE_SITE_BASE: /lean-bridge/
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -25,10 +27,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.23.2
           cache: npm
       - name: Install dependencies
         run: npm ci --ignore-scripts
+      - name: Check the React site and canonical documentation
+        run: npm run site:typecheck && npm run site:test
       - name: Bootstrap pinned Lean and Wasm toolchains
         run: npm run bootstrap
       - name: Build and verify demo artifacts
@@ -43,12 +47,18 @@ jobs:
         env:
           DEMO_BROWSERS: chromium,firefox,webkit
         run: npm run demos:browser
+      - name: Audit static documentation and React navigation
+        env:
+          SITE_BROWSERS: chromium,firefox,webkit
+        run: npm run site:browser
       - name: Preserve browser audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: demo-browser-audit
-          path: build/demo-browser-audit
+          path: |
+            build/demo-browser-audit
+            build/react-site-audit
           if-no-files-found: ignore
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'

@@ -14,6 +14,8 @@ import {
 	attachBrowserBenchmark, measureAsyncBenchmark, measureSyncBenchmark
 } from "./shared/browser-benchmark.mjs";
 import { renderGalleryCard } from "./shared/gallery-card.mjs";
+import { demos, docPages, prerenderPaths } from "../site/registry.mjs";
+import { normalizeBase, withBase } from "../site/paths.mjs";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = resolve(repositoryRoot, "demos");
@@ -214,7 +216,7 @@ test("benchmark reruns share preparation and pagehide invalidates the old lifeti
 	assert.equal(browser.elements.get("[data-benchmark-summary]").textContent, "completed");
 });
 
-test("gallery manifest names every published standalone demo", async () => {
+test("gallery manifest preserves every published demo artifact directory", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
 	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket", "lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
 	for(const demo of manifest.demos)
@@ -229,20 +231,24 @@ test("gallery manifest names every published standalone demo", async () => {
 test("assembled Pages artifact is commit-bound and base-path safe", async () => {
 	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
 	assert.match(identity.commit, /^[0-9a-f]{40}$/u);
+	assert.equal(normalizeBase(identity.siteBase), identity.siteBase);
 	await access(resolve(siteRoot, ".nojekyll"));
-	for(const path of ["index.html", "lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html", "lean-dinic/index.html", "lean-myers/index.html", "lean-sweep-and-prune/index.html"])
-	{
+	for(const path of [
+		...prerenderPaths.map(route => `${route.slice(1)}index.html`)
+		, ...demos.map(demo => `${demo.slug}/index.html`)
+	]){
 		const html = await readFile(resolve(siteRoot, path), "utf8");
-		assert.doesNotMatch(html, /(?:href|src)="\/(?!\/)/u,
-			`${path} must not assume a domain-root deployment`);
+		for(const link of html.matchAll(/(?:href|src)="(\/(?!\/)[^"]*)"/gu))
+			assert.ok(link[1].startsWith(identity.siteBase), `${path}: ${link[1]}`);
 	}
 });
 
 test("published gallery is readable without JavaScript and escapes manifest text", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
-	const html = await readFile(resolve(siteRoot, "index.html"), "utf8");
-	assert.equal((html.match(/class="demo-card"/gu) ?? []).length, manifest.demos.length);
-	for(const demo of manifest.demos) assert.ok(html.includes(`href="${demo.entrypoint}"`));
+	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
+	const html = await readFile(resolve(siteRoot, "demos/index.html"), "utf8");
+	assert.equal((html.match(/class="demo-card(?: |")/gu) ?? []).length, manifest.demos.length);
+	for(const demo of demos) assert.ok(html.includes(`href="${withBase(identity.siteBase, demo.canonicalPage)}"`));
 	const malicious = { ...manifest.demos[0], title: '<script>alert("hello")</script>' };
 	assert.doesNotMatch(renderGalleryCard(malicious), /<script>/u);
 	assert.throws(() => renderGalleryCard({ ...malicious, entrypoint: "javascript:alert(1)" }), /entrypoint/u);
@@ -299,15 +305,19 @@ test("Aho–Corasick publishes editable overlapping scans and its byte matcher",
 });
 
 test("every proof demo publishes an automatic prewarmed browser benchmark", async () => {
-	for(const path of ["lean-dijkstra/index.html", "lean-flood-fill/index.html", "lean-union-find/index.html", "lean-topological-sort/index.html", "lean-aho-corasick/index.html", "lean-lru-cache/index.html", "lean-a-star/index.html", "lean-tarjan/index.html", "lean-token-bucket/index.html", "lean-dinic/index.html", "lean-myers/index.html", "lean-sweep-and-prune/index.html"])
+	for(const demo of demos)
 	{
+		const path = `${demo.canonicalPage.slice(1)}index.html`;
 		const html = await readFile(resolve(siteRoot, path), "utf8");
 		assert.match(html, /id="browser-benchmark"/u);
 		assert.match(html, /Five excluded runs warm both (?:solvers|implementations)/u);
 		assert.match(html, /data-benchmark-histogram/u);
 		assert.match(html, /Run again/u);
-		assert.match(html, /\.\.\/shared\/demo-page\.mjs/u);
-		assert.match(html, /\.\.\/shared\/proof-page\.css/u);
+		if(demo.renderingMode === "standalone")
+		{
+			assert.match(html, /\.\.\/shared\/demo-page\.mjs/u);
+			assert.match(html, /\.\.\/shared\/proof-page\.css/u);
+		}
 	}
 	await access(resolve(siteRoot, "shared/browser-benchmark.mjs"));
 	await access(resolve(siteRoot, "shared/browser-benchmark.css"));
@@ -385,7 +395,7 @@ test("Dinic publishes its capacity editor, optimality proof, and benchmark depen
 
 test("Myers publishes its editable diff, exact reconstruction proof, and benchmark", async () => {
 	const root = resolve(siteRoot, "lean-myers");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-myers/index.html"), "utf8");
 	for(const id of ["before-text", "after-text", "swap-text", "diff-preview", "edit-count", "replay-title"])
 		assert.ok(html.includes(`id="${id}"`));
 	assert.match(html, /data-comparator-theorem="solve_total"/u);
@@ -420,7 +430,8 @@ test("browser proof bundles include every local import in dependency order", asy
 	for(const demo of manifest.demos)
 	{
 		const root = resolve(siteRoot, demo.slug);
-		const html = await readFile(resolve(root, "index.html"), "utf8");
+		const route = demos.find(entry => entry.slug === demo.slug).canonicalPage;
+		const html = await readFile(resolve(siteRoot, route.slice(1), "index.html"), "utf8");
 		const core = html.match(/data-proof-core="([^"]+)"/u)[1];
 		const proof = html.match(/data-proof-module="([^"]+)"/u)[1];
 		const dependencies = (html.match(/data-proof-dependencies="([^"]*)"/u)?.[1] || "")
@@ -431,6 +442,9 @@ test("browser proof bundles include every local import in dependency order", asy
 		for(const [index, file] of files.entries())
 		{
 			const source = await readFile(resolve(root, file), "utf8");
+			assert.equal(Buffer.byteLength(source), audit.sourceFiles[file].bytes, `${demo.slug}/${file}`);
+			assert.equal(createHash("sha256").update(source).digest("hex"),
+				audit.sourceFiles[file].sha256, `${demo.slug}/${file}`);
 			for(const imported of source.matchAll(/^import (\w+)$/gmu))
 			{
 				if(["Init", "Std"].includes(imported[1])) continue;
@@ -438,5 +452,54 @@ test("browser proof bundles include every local import in dependency order", asy
 					`${demo.slug}/${file}: checker bundle must load ${imported[1]} first`);
 			}
 		}
+	}
+});
+
+test("published routes, static pages, and search retain exact output identities", async () => {
+	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
+	const routes = JSON.parse(await readFile(resolve(siteRoot, "routes.json"), "utf8"));
+	assert.deepEqual(routes, identity.routes);
+	assert.deepEqual(routes.prerender, prerenderPaths);
+	assert.equal(routes.demos.filter(demo => demo.renderingMode === "react").length, 1);
+	for(const [path, receipt] of Object.entries(identity.staticFiles))
+	{
+		assert.ok(!Object.hasOwn(identity.artifacts, path));
+		assert.notEqual(path, "build-identity.json");
+		assert.doesNotMatch(path, /(?:^|\/)(?:\.env|\.vite|node_modules|__spa-fallback\.html)(?:\/|$)|\.test\.mjs$/u);
+		const bytes = await readFile(resolve(siteRoot, path));
+		assert.equal(receipt.bytes, bytes.length, path);
+		assert.equal(receipt.sha256, createHash("sha256").update(bytes).digest("hex"), path);
+	}
+	assert.ok(identity.staticFiles["404.html"]);
+	assert.ok(identity.staticFiles["routes.json"]);
+	assert.ok(identity.staticFiles["search-index.json"]);
+	assert.equal(await readFile(resolve(siteRoot, "404.html"), "utf8"),
+		await readFile(resolve(siteRoot, "404/index.html"), "utf8"));
+	const search = JSON.parse(await readFile(resolve(siteRoot, "search-index.json"), "utf8"));
+	assert.equal(search.length, 8);
+	for(const entry of search) assert.ok(entry.source.startsWith("docs/") || entry.source === "src/release/README.md");
+});
+
+test("every canonical guide renders its content without hidden streaming fragments", async () => {
+	for(const page of docPages.filter(entry => entry.source))
+	{
+		const html = await readFile(resolve(siteRoot, page.route.slice(1), "index.html"), "utf8");
+		assert.doesNotMatch(html, /Loading guide|<(?:div|template)\b[^>]*id="[SB]:/u, page.route);
+		assert.match(html, /<article><(?:!--\$-->|h1)/u, page.route);
+	}
+});
+
+test("old Myers address redirects to its canonical workbench without losing raw artifacts", async () => {
+	const identity = JSON.parse(await readFile(resolve(siteRoot, "build-identity.json"), "utf8"));
+	const html = await readFile(resolve(siteRoot, "lean-myers/index.html"), "utf8");
+	assert.match(html, /http-equiv="refresh"/u);
+	assert.ok(html.includes(`href="${withBase(identity.siteBase, "/demos/lean-myers/")}"`));
+	assert.match(html, /location\.replace\([^<]+\+location\.search\+location\.hash\)/u);
+	for(const file of ["EditSpec.lean", "MyersCore.lean", "Myers.lean", "runtime.mjs", "runtime/proof-audit.json", "runtime/lean-myers.wasm"])
+		await access(resolve(siteRoot, "lean-myers", file));
+	for(const demo of demos.filter(entry => entry.renderingMode === "standalone"))
+	{
+		const standalone = await readFile(resolve(siteRoot, demo.slug, "index.html"), "utf8");
+		assert.ok(standalone.includes(`data-site-base="${identity.siteBase}"`));
 	}
 });

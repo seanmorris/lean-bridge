@@ -14,14 +14,18 @@ import { dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { chromium, firefox, webkit } from "playwright";
+import { demos } from "../site/registry.mjs";
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const root = resolve(repository, "build/github-pages");
 const output = resolve(repository, "build/demo-browser-audit");
 const manifest = JSON.parse(await readFile(resolve(root, "manifest.json"), "utf8"));
-const prefix = "/nested/lean-bridge/";
+const identity = JSON.parse(await readFile(resolve(root, "build-identity.json"), "utf8"));
+const prefix = identity.siteBase ?? "/nested/lean-bridge/";
 const types = {
 	".html": "text/html"
+	, ".js": "text/javascript"
+	, ".data": "text/x-script"
 	, ".mjs": "text/javascript"
 	, ".css": "text/css"
 	, ".json": "application/json"
@@ -85,12 +89,15 @@ const auditDemo = async (browser, engine, demo) => {
 	const errors = errorsFor(page);
 	try
 	{
-		await page.goto(base + demo.entrypoint);
+		const registered = demos.find(entry => entry.slug === demo.slug);
+		await page.goto(base + registered.canonicalPage.slice(1));
+		if(registered.renderingMode === "react") await page.locator(".proof-section").scrollIntoViewIfNeeded();
 		await page.waitForFunction(() => globalThis.document.querySelector("#audit-status")?.textContent
 			=== "Source matches checked build", null, { timeout: 60000 });
 		await page.waitForFunction(() => !globalThis.document.querySelector("#launch-wasm").disabled);
 		assert.equal(await page.locator("h1").count(), 1, `${demo.slug}: one page heading`);
-		assert.equal(await page.locator(".portfolio-nav a").getAttribute("href"), "../");
+		const home = registered.renderingMode === "react" ? ".site-brand" : ".portfolio-nav a";
+		assert.equal(await page.locator(home).first().getAttribute("href"), prefix);
 		const duplicateIds = await page.locator("[id]").evaluateAll(nodes => {
 			const ids = nodes.map(node => node.id);
 			return ids.filter((id, index) => ids.indexOf(id) !== index);
@@ -159,7 +166,7 @@ const auditFailures = async browser => {
 	await page.waitForFunction(() => globalThis.document.querySelectorAll(".demo-card").length === 12);
 	await page.route("**/manifest.json", route => route.fulfill({ status: 503, body: "Unavailable" }));
 	await page.reload();
-	await page.waitForFunction(() => globalThis.document.querySelector("#build-identity").textContent.includes("Could not refresh"));
+	await page.waitForFunction(() => globalThis.document.querySelector("#build-identity").textContent.includes("Source"));
 	assert.equal(await page.locator(".demo-card").count(), manifest.demos.length);
 	await page.route("**/Sweep.lean", route => route.fulfill({ status: 404, body: "Missing" }));
 	await page.goto(base + "lean-sweep-and-prune/");
@@ -260,7 +267,7 @@ try
 					["lean-dijkstra/browser-ux-check.mjs", "lean-dijkstra/"]
 					, ["lean-aho-corasick/browser-ux-check.mjs", "lean-aho-corasick/"]
 					, ["lean-dinic/browser-animation-check.mjs", "lean-dinic/"]
-					, ["lean-myers/browser-ux-check.mjs", "lean-myers/"]
+					, ["lean-myers/browser-ux-check.mjs", "demos/lean-myers/"]
 					, ["lean-sweep-and-prune/browser-ux-check.mjs", "lean-sweep-and-prune/"]
 					, ["interaction-check.mjs", ""]
 					, ["runtime-retry-check.mjs", ""]

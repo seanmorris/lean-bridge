@@ -142,6 +142,8 @@ npm run demos:verify
 
 The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
 
+The [React documentation site](site/README.md) adds author, consumer, and publishing guides around the collection. Myers is the first React workbench; the other eleven demos retain their standalone pages and runtime URLs. Use `npm run site:dev` to work on the site, or `LEAN_BRIDGE_SITE_BASE=/lean-bridge/ npm run demos:site` to assemble the Pages-prefixed artifact.
+
 ## Documentation
 
 - [Documentation map](docs/README.md)

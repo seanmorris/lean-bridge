@@ -10,6 +10,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 import jsdocPlugin, { jsdoc } from 'eslint-plugin-jsdoc';
 import { recommended as smNoSaccadeRecommended } from 'sm-no-saccade-style';
+import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 const sourceFiles = ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'];
 const browserFiles = [
@@ -81,6 +83,7 @@ export default [
 			, '.lean-bridge-docker-nix/**'
 			, '.toolchains/**'
 			, 'build/**'
+			, 'site/.react-router/**'
 			, 'coverage/**'
 			, 'docs/**'
 			, 'demos/lean-dijkstra/runtime/lean-dijkstra.mjs'
@@ -221,6 +224,28 @@ export default [
 			// TypeScript validates the richer checked-JavaScript types used by this module.
 			'jsdoc/no-undefined-types': 'off'
 			, 'jsdoc/valid-types': 'off'
+		}
+	}
+	, {
+		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts']
+		, languageOptions: {
+			parser: tseslint.parser
+			, globals: { ...globals.browser }
+		}
+		, plugins: { '@typescript-eslint': tseslint.plugin, 'react-hooks': reactHooks }
+		, settings: { jsdoc: { mode: 'typescript' } }
+		, rules: {
+			'no-undef': 'off'
+			, 'no-unused-vars': 'off'
+			, '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+			, 'react-hooks/rules-of-hooks': 'error'
+			, 'react-hooks/exhaustive-deps': 'error'
+			, 'jsdoc/no-undefined-types': 'off'
+			, 'jsdoc/require-param': 'off'
+			, 'jsdoc/require-jsdoc': ['error', {
+				enableFixer: false
+				, require: { FunctionDeclaration: true, ClassDeclaration: true }
+			}]
 		}
 	}
 ];
