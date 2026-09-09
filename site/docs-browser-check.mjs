@@ -11,6 +11,7 @@ import { access, mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright";
 import { demos, docPages } from "./registry.mjs";
+import { waitForWorkbench } from "./workbench-readiness.mjs";
 import contributingCompatibility from "../tests/fixtures/documentation/contributing-compatibility.json" with { type: "json" };
 
 const base = new URL(process.argv[2] ?? process.env.SITE_BASE_URL ?? "http://127.0.0.1:39061/");
@@ -229,22 +230,30 @@ try
 		await page.waitForFunction(() => !globalThis.document.querySelector(".doc-navigation").open);
 		assert.equal(await page.locator("main article h1").isVisible(), true);
 	}
-	const sweep = demos.find(demo => demo.slug === "lean-sweep-and-prune");
-	for(const guide of docPages.filter(entry => entry.group === "Concepts"))
-	{
+	report.conceptWorkbenches = [];
+	for(const [id, slug] of [
+		["proof-to-wasm", "lean-sweep-and-prune"]
+		, ["benchmarks", "lean-sweep-and-prune"]
+		, ["dijkstra-explained", "lean-dijkstra"]
+		, ["flood-fill-explained", "lean-flood-fill"]
+	]){
+		const guide = docPages.find(entry => entry.id === id);
+		const demo = demos.find(entry => entry.slug === slug);
+		assert.ok(guide && demo, `${id}: documented workbench exists`);
 		await page.goto(target(guide.route));
-		const link = page.locator(`article a[href="${new URL(target(sweep.canonicalPage)).pathname}"]`).first();
-		assert.ok(await link.count(), `${guide.id}: a link opens the actual Sweep workbench`);
+		await page.waitForFunction(() => globalThis.performance.getEntriesByName("site-hydrated").length > 0);
+		await page.evaluate(() => { globalThis.documentationVisit = "same-document"; });
+		const link = page.locator(`article a[href="${new URL(target(demo.canonicalPage)).pathname}"]`).first();
+		assert.ok(await link.count(), `${guide.id}: a link opens the documented ${slug} workbench`);
 		await link.click();
-		await page.waitForURL(target(sweep.canonicalPage));
-		await page.locator("#scene").waitFor();
-		await page.waitForFunction(() => globalThis.document.querySelector("#runtime-status")?.textContent.includes("ready"));
+		await page.waitForURL(target(demo.canonicalPage));
+		await waitForWorkbench(page, slug);
+		assert.equal(await page.evaluate(() => globalThis.documentationVisit), "same-document",
+			`${guide.id}: the concept link stays in the React document`);
+		report.conceptWorkbenches.push({ from: guide.route, to: demo.canonicalPage });
 	}
 	assert.deepEqual(errors, [], "Concept-to-demo navigation has no browser errors");
 	report.mobileGroups = groups;
-	report.conceptWorkbenches = docPages.filter(entry => entry.group === "Concepts").map(entry => ({
-		from: entry.route, to: sweep.canonicalPage
-	}));
 	report.status = "passed";
 }
 catch(error)

@@ -43,4 +43,8 @@ The container may isolate a build, but isolation alone does not establish reprod
 
 When changing a base image, copied file, mount, or environment setting, update `builder/manifest.json`, regenerate its reviewed hashes, rebuild through the repository command, and compare the complete component output against the native engine.
 
+After building the image, `npm run test:builder-ownership` exercises its entrypoint with real Nix and foreign-owned disposable Git fixtures. It requires the selected repository to work, unrelated repositories to remain rejected, ignored files to stay outside the source closure, and the host Git configuration to remain unchanged. The check runs without network access.
+
+The entrypoint adds an exact source-path trust entry to the disposable container's Git configuration. Nix uses libgit2, so an environment-only `GIT_CONFIG_COUNT` override does not resolve this ownership mismatch. Source mounts remain read-only; the entrypoint does not change host ownership or trust settings.
+
 See the [Docker engine evidence](../docs/evidence/docker-component-engine.md), [native component engine evidence](../docs/evidence/native-component-engine.md), and [toolchain inventory](../docs/evidence/toolchain-inventory.md) for executed paths and pinned identities.

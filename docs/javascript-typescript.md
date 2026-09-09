@@ -449,6 +449,8 @@ No. The component declares its exact runtime dependency, npm resolves it, and th
 
 The local archive recipe supplies the runtime tarball alongside the component because that handoff does not depend on a registry copy. Both go through one install command; the application code stays the same.
 
+[Combine Lean packages](concepts/shared-runtime.md) explains compatible runtime sharing and separate worker instances. [Types and values](reference/types.md) and [Ownership and cleanup](concepts/ownership.md) cover the call boundary.
+
 ## Start from a raw Lean package
 
 A Lake project must be compiled and packaged before these applications can import it. Complete [author setup](lean/setup.md), check the project's [export shapes](lean/export-decisions.md), and commit the source you intend to build. The setup selects the matching Lean toolchain, isolated builder, and shared runtime.

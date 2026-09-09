@@ -39,7 +39,7 @@ test('registry preserves all artifacts and routes every demo through React', () 
 	assert.equal(new Set(prerenderPaths).size, prerenderPaths.length);
 	assert.equal(new Set(docPages.map(entry => entry.id)).size, docPages.length);
 	assert.equal(prerenderPaths.length, docPages.length + demos.length + 3);
-	assert.equal(docPages.filter(entry => entry.source).length, 54);
+	assert.equal(docPages.filter(entry => entry.source).length, 68);
 	assert.equal(new Set(docPages.filter(entry => entry.source)
 		.map(entry => entry.source)).size, docPages.length);
 });

@@ -7,6 +7,13 @@ restore_output_owner() {
   fi
 }
 
+trust_source_repository() {
+  # Nix opens repositories through libgit2, which does not read GIT_CONFIG_COUNT.
+  # This config belongs to the disposable container, not the mounted checkout or host.
+  # Trust only this explicitly selected source path; unrelated repositories stay protected.
+  git config --global --add safe.directory "$1"
+}
+
 run_component() {
   engine_root=${LEAN_BRIDGE_ENGINE:-/workspace/engine}
   engine_flake="path:$engine_root"
@@ -31,10 +38,8 @@ run_component() {
     exit 2
   fi
 
-  export GIT_CONFIG_COUNT=1
-  export GIT_CONFIG_KEY_0=safe.directory
-  export GIT_CONFIG_VALUE_0="$engine_root"
   if [ -e "$engine_root/.git" ]; then
+    trust_source_repository "$engine_root"
     engine_flake="git+file://$engine_root"
   fi
   umask 022
@@ -68,9 +73,6 @@ run_build() {
   output_root=${LEAN_BRIDGE_OUTPUT:-/workspace/output}
   project_root=/workspace/project
   flake_ref=path:.
-  export GIT_CONFIG_COUNT=1
-  export GIT_CONFIG_KEY_0=safe.directory
-  export GIT_CONFIG_VALUE_0="$source_root"
 
   if [ ! -f "$source_root/flake.nix" ] || [ ! -f "$source_root/flake.lock" ]; then
     echo "error: canonical flake inputs are missing from $source_root" >&2
@@ -81,6 +83,9 @@ run_build() {
     exit 2
   fi
 
+  if [ -e "$source_root/.git" ]; then
+    trust_source_repository "$source_root"
+  fi
   mkdir -p "$output_root/bundle" "$output_root/packages"
   umask 022
   mkdir -p "$project_root"

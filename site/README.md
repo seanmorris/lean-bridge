@@ -63,6 +63,9 @@ Run `npm run test:docs` before committing. The documentation test checks local l
 
 ## Content and ownership
 
+- `site/reference/` contains the reviewed templates for generated CLI, npm API, scalar type, and algorithm reference pages. Run `npm run docs:reference:write` after changing a template or its source contract. `npm run docs:reference` compares the generated Markdown without writing; site generation runs this check automatically.
+- The reference generator uses actual CLI help and result schemas, emitted TypeScript declarations, the scalar capability list, and each algorithm's adapter exports and proof receipt. It rejects selected theorems missing from a receipt and Lean sources whose hashes differ. The downstream support table remains owned by `docs/consumer-support.v1.json` and its existing checked guide.
+- Concept examples for Dijkstra, flood fill, and prepared ownership execute against the maintained compiled adapters in `npm run test:docs`. The [prepared-package reference check](../docs/contributing/testing.md#reference-package-examples) also runs the documented imports from installed archives in Node and three browser engines.
 - `registry.mjs` maps the existing demo manifest and canonical Markdown sources to public routes. Register each canonical source once; compatibility pages use separate Markdown sources and remain outside primary navigation and search.
 - `app/routes/guides/` gives each guide a separate route chunk. Guides import generated MDX instead of duplicating prose.
 - `scripts/generate-site-content.mjs` compiles the explicit allowlist with MDX, GFM, and build-time Shiki highlighting. Output lives in `build/site-content`.

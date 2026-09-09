@@ -158,6 +158,30 @@ export const docPages = Object.freeze([
 		, group: 'Contributing'
 		, searchAliases
 	}))
+	, ...[
+		['concepts', '', 'index', 'Understand and adopt a verified core']
+		, ['change-risk', 'change-risk/', 'change-risk', 'Use proofs to check a change']
+		, ['auditable-claims', 'auditable-claims/', 'auditable-claims', 'Audit a correctness claim']
+		, ['reusable-cores', 'reusable-cores/', 'reusable-cores', 'Reuse the algorithm, not the screen']
+		, ['trust-boundaries', 'trust-boundaries/', 'trust-boundaries', 'Check the integration']
+		, ['shared-runtime', 'shared-runtime/', 'shared-runtime', 'Combine Lean packages']
+		, ['ownership', 'ownership/', 'ownership', 'Ownership and cleanup']
+		, ['adoption', 'adoption/', 'adoption', 'Plan an adoption']
+		, ['dijkstra-explained', 'dijkstra/', 'dijkstra', 'Dijkstra on a delivery graph']
+		, ['flood-fill-explained', 'flood-fill/', 'flood-fill', 'Flood fill with keys and permissions']
+	].map(([id, slug, source, title]) => ({
+		id
+		, route: `/docs/concepts/${slug}`
+		, source: `docs/concepts/${source}.md`
+		, title
+		, group: 'Concepts'
+		, searchAliases: {
+			'shared-runtime': ['Shared runtime', 'Composition', 'Combine packages']
+			, ownership: ['Ownership', 'Cleanup', 'Dispose']
+			, 'dijkstra-explained': ['Dijkstra', 'Shortest path', 'CSR']
+			, 'flood-fill-explained': ['Flood fill', 'Capability closure', 'Reachability']
+		}[id]
+	}))
 	, {
 		id: 'proof-to-wasm', route: '/docs/concepts/lean-to-wasm/'
 		, source: 'docs/concepts/lean-to-wasm.md'
@@ -168,6 +192,24 @@ export const docPages = Object.freeze([
 		, source: 'docs/concepts/benchmarks.md'
 		, title: 'Read the benchmarks', group: 'Concepts'
 	}
+	, ...[
+		['cli', 'CLI reference']
+		, ['package-api', 'Generated package API']
+		, ['types', 'Types and values']
+		, ['algorithms', 'Algorithm APIs and proofs']
+	].map(([slug, title]) => ({
+		id: `reference-${slug}`
+		, route: `/docs/reference/${slug}/`
+		, source: `docs/reference/${slug}.md`
+		, title
+		, group: 'Reference'
+		, searchAliases: {
+			cli: ['CLI', 'Command line', 'Exit codes', 'Configuration']
+			, 'package-api': ['API', 'Generated API', 'Declarations']
+			, types: ['Types', 'Nat', 'bigint', 'Unicode', 'ByteArray']
+			, algorithms: ['Algorithms', 'Algorithm API', 'Theorems']
+		}[slug]
+	}))
 	, {
 		id: 'status'
 		, route: '/status/'

@@ -86,6 +86,22 @@ try
 		await languageSearch.locator(".search-results a").first().click();
 		await languageSearch.waitForURL(new URL("docs/consume/python/", base).href);
 		assert.equal(await languageSearch.locator("#doc-search").inputValue(), "", "Choosing a guide clears the query");
+		for(const [query, destination] of [
+			['CLI', 'reference/cli/']
+			, ['Generated API', 'reference/package-api/']
+			, ['ByteArray', 'reference/types/']
+			, ['Algorithms', 'reference/algorithms/']
+			, ['Shared runtime', 'concepts/shared-runtime/']
+			, ['Dispose', 'concepts/ownership/']
+			, ['Dijkstra', 'concepts/dijkstra/']
+			, ['Capability closure', 'concepts/flood-fill/']
+		]) {
+			await languageSearch.locator('#doc-search').fill(query);
+			const first = languageSearch.locator('.search-results a').first();
+			await first.waitFor();
+			assert.equal(new URL(await first.getAttribute('href'), base).href,
+				new URL(`docs/${destination}`, base).href, `${query}: reference or concept ranks first`);
+		}
 		for(const [query, slug] of [
 			["Contributing", ""]
 			, ["Site development", "documentation/"]

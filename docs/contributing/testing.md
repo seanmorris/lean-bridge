@@ -100,6 +100,25 @@ The acceptance runner installs the original CLI tarball with scripts disabled, c
 
 Without `--runtime`, the packager creates a source-only candidate for packaging tests. Runtime correctness, registry acceptance, namespace ownership, and release approval remain required before publication.
 
+## Reference package examples
+
+The API and runtime-composition guides use the prepared `onboarding-small` and `onboarding-scalars` releases. To verify their examples, supply both package directories from checked builds with the same exact runtime dependency:
+
+```sh
+node scripts/check-reference-packages.mjs \
+  --tutorial /path/to/tutorial-packages \
+  --scalars /path/to/scalar-packages \
+  --output build/reference-package-acceptance
+```
+
+Each input directory must contain `component-package-receipt.json` and its original runtime and component archives. The output directory must not exist. This is a contributor check; downstream applications follow the normal installation guide.
+
+The runner verifies both receipts, installs the archives offline with scripts disabled, and compares the installed declaration files with the generated API reference. It executes the documentation's unmodified imports, checks large integers, invalid types, copied bytes, and strict TypeScript errors, then bundles the same examples for Chromium, Firefox, and WebKit. The browser check expects one shared runtime binary and two component binaries, including after a repeated import.
+
+The result and package identities are retained in `report.json` under the output directory. No registry upload occurs. The input packages must come from the same intended runtime build; a mismatched dependency fails before installation.
+
+## Local registry rehearsal
+
 Rehearse publication against a disposable local registry:
 
 ```sh

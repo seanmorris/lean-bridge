@@ -29,7 +29,7 @@
       "status": "available",
       "summary": "A generic checked partition finds when open passages first cross a braided porous maze.",
       "entrypoint": "lean-union-find/",
-      "theorems": ["partitionCertificate_exact", "certifiedPartition_correct"],
+      "theorems": ["solvePartition_correct", "connected_equivalence"],
       "accent": "gold"
     },
     {

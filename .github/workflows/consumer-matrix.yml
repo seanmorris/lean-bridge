@@ -371,6 +371,8 @@ jobs:
           npm run bootstrap
       - name: Build the pinned builder image
         run: npm run build:builder-image
+      - name: Check the mounted repository ownership boundary
+        run: npm run test:builder-ownership
       - name: Execute the clean consumer through Docker
         env:
           LEAN_BRIDGE_BUILD_BACKEND: docker

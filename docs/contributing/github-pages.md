@@ -62,15 +62,35 @@ The first suite checks the algorithm pages, live runtimes, proof controls, layou
 
 Inspect `build/github-pages/build-identity.json` for the source revision, base path, route map, and recorded file hashes. Keep it with the workflow logs when investigating a deployment. It is an unsigned artifact inventory; the workflow run identifies who built and deployed it.
 
+## Preserve the checked artifact
+
+After reviewing and committing the source changes, rebuild and check that revision. Package the checked directory without rebuilding it again:
+
+```sh
+npm run demos:archive
+```
+
+The command requires a clean source identity matching `HEAD`. It checks every recorded file, rejects missing or extra files and symbolic links, and creates `build/pages-artifact/artifact.tar`. The companion `pages-artifact.json` records the revision, deployment base, file count, build-identity hash, and archive hash. Existing output directories are rejected. Use `-- --output build/another-pages-artifact` to retain a separate handoff.
+
+The tar contains the exact inventory, including `.nojekyll` and React navigation-data files. The pinned `upload-pages-artifact@v4` action excludes hidden files, so this workflow uploads our checked tar with `upload-artifact@v4` instead. This uses the same single-tar transport as the [pinned Pages upload action](https://github.com/actions/upload-pages-artifact/blob/v4/action.yml).
+
 ## Review the deployment workflow
 
 The [Pages workflow](../../.github/workflows/demos-pages.yml) runs on pull requests, pushes to `master`, and manual dispatches. Its build job installs dependencies, checks TypeScript and tests, rebuilds the demos, rejects stale generated files, assembles the site, and runs all three browser engines.
 
-Pull requests run the checks and upload audit reports, but do not upload or deploy a Pages artifact. Non-pull-request runs upload `build/github-pages/`, then a separate job deploys it to the `github-pages` environment. A manual dispatch can select a ref, so review that ref before starting a deployment.
+Pull requests run the checks, package the site locally, and upload audit reports, but do not upload or deploy a Pages artifact. Non-pull-request runs upload the checked tar as `github-pages`, then a separate job deploys it to the `github-pages` environment. A manual dispatch can select a ref, so review that ref before starting a deployment.
 
 Configure the repository's Pages publishing source as GitHub Actions and apply the intended protection rules to the `github-pages` environment, following [GitHub's custom-workflow setup](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). The deployment job requests `pages: write` and `id-token: write`; the build job has read-only repository contents access. The workflow reports the deployed page URL after completion.
 
 If a check fails, inspect the uploaded audit artifacts and fix the source or generated output. Do not publish a different locally assembled directory to bypass the failed run.
+
+## Retain a rollback
+
+The workflow retains `github-pages` and `demo-browser-audit` for 30 days. Before replacing a live site, download the previous successful run's artifacts and record its run ID, source revision, archive hash, and deployed build identity. Keep that backup separately from the new candidate. A rebuild of an old commit is a new artifact and needs its own checks.
+
+For an approved rollback within the retained run's lifetime, re-run only its `deploy` job, which consumes that run's existing `github-pages` artifact. Do not re-run its build job. Confirm the restored site's `build-identity.json` and runtime hashes against the retained record. GitHub documents [re-running a specific job](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs#re-running-a-specific-job); expired artifacts require a separately reviewed restore or rebuild.
+
+For a first deployment, record that no previous live artifact exists. A locally tested fallback can be retained, but it must not be described as the previously deployed site. Deployment and rollback both require operator approval.
 
 ## Keep website and package authority separate
 

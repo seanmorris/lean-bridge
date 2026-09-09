@@ -20,7 +20,7 @@ test("Contributing owns six canonical guides and keeps the established audience 
 		, ["/docs/contributing/release-pipeline/", "src/release/README.md"]
 		, ["/docs/contributing/github-pages/", "docs/contributing/github-pages.md"]
 	]);
-	assert.equal(docPages.filter(page => !page.legacy).length, 46);
+	assert.equal(docPages.filter(page => !page.legacy).length, 60);
 	assert.ok(docPages.filter(page => page.group === "Contributing").every(page => !page.legacy));
 });
 

@@ -26,6 +26,7 @@ const profileManifest = Object.freeze({
 		, "docker-consumer-ci"
 		, "documentation"
 		, "documentation-demo-api"
+		, "reference-documentation"
 		, "generated-package-gate"
 		, "host-object-generator"
 		, "independent-confirmation"

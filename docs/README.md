@@ -11,7 +11,7 @@ Build a Lean component, call it from an application, or prepare it for a release
 | I ship libraries | [Publish a Lean package](publishing.md) | Ecosystem-specific packaging, registry uploads, verification, and release records. |
 | I contribute to Lean Bridge | [Contributing](../CONTRIBUTING.md) | Repository development, documentation, demos, tests, and site deployment. |
 
-The CLI is currently installed from a local checkout. Follow [toolchain setup](lean/setup.md) before the author tutorial. An application consuming generated archives does not need the author toolchain.
+Follow [toolchain setup](lean/setup.md) to install a prepared CLI before the author tutorial. An application consuming generated archives does not need the author toolchain.
 
 ## Follow one complete example
 
@@ -23,10 +23,21 @@ Follow [Build your first component](lean/first-component.md), then [JavaScript a
 
 ## Understand the demos
 
+- [Understand and adopt a verified core](concepts/index.md) connects change checks, audit evidence, reusable APIs, integration tests, and adoption decisions.
+- [Dijkstra on a delivery graph](concepts/dijkstra.md) and [Flood fill with keys and permissions](concepts/flood-fill.md) include executable graph examples.
 - [From proof to browser result](concepts/lean-to-wasm.md) traces the sweep-and-prune guarantee through Lean, compilation, and the browser adapter.
 - [Read the benchmarks](concepts/benchmarks.md) explains warmup, medians, p95, histograms, and the JavaScript comparison.
 - [Use a demo's local API](demo-api.md) calls a compiled box solver without the webpage.
 - [Run the algorithm collection](../demos/index.html) to change inputs and inspect the results.
+
+## Look up a contract
+
+- [CLI reference](reference/cli.md) includes generated help, parser defaults, result fields, and exit codes.
+- [Generated package API](reference/package-api.md) shows the actual declarations for the tutorial and scalar fixtures.
+- [Types and values](reference/types.md) explains integers, floating point, Unicode, copied bytes, and supported signatures.
+- [Algorithm APIs and proofs](reference/algorithms.md) links all twelve adapters to their selected theorems and source-checked receipts.
+
+For application lifetimes, read [Combine Lean packages](concepts/shared-runtime.md) and [Ownership and cleanup](concepts/ownership.md). These guides separate automatic package initialization from the explicit cleanup needed by resource APIs.
 
 ## Claim ownership
 

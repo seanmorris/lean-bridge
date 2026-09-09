@@ -55,6 +55,8 @@ jobs:
         env:
           SITE_BROWSERS: chromium,firefox,webkit
         run: npm run site:browser
+      - name: Package the exact checked Pages inventory
+        run: npm run demos:archive
       - name: Preserve browser audit evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,15 +66,20 @@ jobs:
             build/demo-browser-audit
             build/react-site-audit
             build/documentation-site-audit
+            build/pages-artifact/pages-artifact.json
           if-no-files-found: ignore
+          retention-days: 30
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
-          path: build/github-pages
+          name: github-pages
+          path: build/pages-artifact/artifact.tar
+          if-no-files-found: error
+          retention-days: 30
 
   deploy:
     if: github.event_name != 'pull_request'

@@ -294,6 +294,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /NODE_VERSION: "22"/);
   assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
   assert.match(workflow, /npm run build:builder-image/);
+  assert.match(workflow, /npm run test:builder-ownership/);
+  assert.equal(packageDocument.scripts["test:builder-ownership"], "node scripts/check-builder-ownership.mjs");
   assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:node"], /\.\#npm-package/);

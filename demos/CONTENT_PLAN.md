@@ -1,62 +1,46 @@
 # Verified algorithms content plan
 
-Status: content backlog within the [React gallery and documentation-site plan](../docs/architecture/react-documentation-site-plan.md), VO phase 1185. The newer plan owns site architecture, routes, migration order, and publication gates. The concepts below become `/docs/concepts/` pages; do not build a separate guide shell.
+Status: implemented under VO1193, within the [React documentation-site plan](../docs/architecture/react-documentation-site-plan.md), phase 1185. The site uses the shared documentation shell and `/docs/concepts/` routes. Root and nested artifacts include the guides; public deployment remains a separate task.
 
-## Goal
+## Delivered concept pages
 
-Extend the gallery with pages that connect four homepage claims to source files, proof receipts, benchmarks, and live demos. Business readers get plain explanations. Engineers and reviewers can follow the same claims to technical evidence.
+Routes are relative to the configured site base. Canonical Markdown, route metadata, search, and pagination use the existing documentation registry.
 
-The homepage remains the concise entry point. Deeper pages expand its claims and link to concrete proof receipts, source, benchmarks, and demos. Do not add a homepage link until its destination ships in the assembled Pages artifact.
+| Route under `/docs/concepts/` | Reader's question | Canonical guide |
+| --- | --- | --- |
+| The section root | Where should I start? | [Understand and adopt a verified core](../docs/concepts/index.md) |
+| `change-risk/` | What happens when a change breaks a guarantee? | [Use proofs to check a change](../docs/concepts/change-risk.md) |
+| `auditable-claims/` | What evidence can I inspect? | [Audit a correctness claim](../docs/concepts/auditable-claims.md) |
+| `reusable-cores/` | Is the algorithm tied to its screen? | [Reuse the algorithm](../docs/concepts/reusable-cores.md) |
+| `trust-boundaries/` | Which integration decisions need tests? | [Check the integration](../docs/concepts/trust-boundaries.md) |
+| `lean-to-wasm/` | How does checked code become browser code? | [From proof to browser result](../docs/concepts/lean-to-wasm.md) |
+| `shared-runtime/` | Do consumers manage a Lean heap? | [Combine Lean packages](../docs/concepts/shared-runtime.md) |
+| `ownership/` | What needs cleanup? | [Ownership and cleanup](../docs/concepts/ownership.md) |
+| `adoption/` | How should a team evaluate a verified core? | [Plan an adoption](../docs/concepts/adoption.md) |
+| `dijkstra/` | What does a returned shortest path guarantee? | [Dijkstra on a delivery graph](../docs/concepts/dijkstra.md) |
+| `flood-fill/` | What do reachability and capability closure guarantee? | [Flood fill with keys and permissions](../docs/concepts/flood-fill.md) |
+| `benchmarks/` | What do the timing numbers measure? | [Read the benchmarks](../docs/concepts/benchmarks.md) |
 
-## Information architecture
+The homepage's three business cards link to the change-check, audit, and reuse guides. The explanation stays below the three cards. Deeper integration and adoption material lives in the guides.
 
-| Route | Primary question | Core content | Primary next step |
-| --- | --- | --- | --- |
-| `guides/` | Where should I start? | A role-based guide hub for product leaders, engineers, and reviewers. | Choose a concept or live demo. |
-| `guides/change-risk/` | How does this reduce software risk? | Explain proof-checking as a build gate, contrast examples/tests/proofs, and show a deliberately rejected change. | Open a proof receipt. |
-| `guides/auditable-claims/` | What evidence can a reviewer inspect? | Trace one claim through theorem, source hash, compiler receipt, Wasm artifact, and independent browser checker. | Audit a demo. |
-| `guides/reusable-cores/` | Is the proof tied to one screen or product? | Show generic graph interfaces, adapters, and why Dijkstra and flood fill are not grid-specific. | View the core Lean APIs. |
-| `guides/trust-boundaries/` | Where does proof coverage end? | Separate theorem, compiler, generated artifact, ABI, browser adapter, input model, and UI responsibilities. Include failure scenarios. | Read a demo-specific boundary. |
-| `guides/proof-to-wasm/` | How does checked code become browser code? | A step-by-step build pipeline from Lean source to checked declaration, optimized core, C bridge, Wasm, receipt, and page. | Reproduce the build. |
-| `lean-dijkstra/explained/` | What does the shortest-path proof guarantee? | Plain-language algorithm walkthrough, theorem map, benchmark interpretation, and grid-adapter boundary. | Run Dijkstra and inspect its proof. |
-| `lean-flood-fill/explained/` | What does reachability and key closure guarantee? | Room/key example, directed edges and ledges, least-fixed-point explanation, theorem map, and map-adapter boundary. | Run flood fill and inspect its proof. |
+## Contract-backed reference
 
-## Shared page shape
+Four pages under `/docs/reference/` cover [CLI commands](../docs/reference/cli.md), [generated package APIs](../docs/reference/package-api.md), [types and values](../docs/reference/types.md), and [all twelve local algorithm APIs](../docs/reference/algorithms.md).
 
-Every guide should use the same reading path:
+The generator reads executable CLI contracts, actual generated declarations, scalar capabilities, demo exports, and proof receipts. It checks selected theorem names and source hashes. Contributors edit reviewed templates and explicitly regenerate the canonical Markdown. A stale reference fails the site build.
 
-1. State the business question and answer it in the first screen.
-2. Give one concrete, non-technical example.
-3. Name the exact guarantee.
-4. Show the evidence chain with links to repository artifacts.
-5. Place the trust boundary beside the guarantee.
-6. Offer a technical deep dive and a live-demo action as separate choices.
+The existing versioned consumer-support contract remains the owner of runtime support claims. Reference generation does not add a second support inventory.
 
-Use a shared guide template, the same 1440px content rail, existing radius tokens, and the portfolio navigation. Diagrams should be HTML or SVG so they remain accessible, responsive, and reviewable in source.
+## Executable examples and acceptance
 
-## Delivery sequence
+The change-check lesson runs the strict Lean tutorial check and requires rejection of both a broken implementation and an admitted proof. Dijkstra, flood fill, and cleanup snippets run against the maintained compiled adapters. Package API and composition snippets run against installed archives in Node, strict TypeScript, Chromium, Firefox, and WebKit.
 
-### Phase 1: Explain the homepage promises
+The site audit checks links and anchors, route aliases, reading widths, scrollable code and tables, grouped pagination, search, keyboard navigation, and no-JavaScript article parity. Prose routes do not fetch Wasm. Concept links open their corresponding running workbench.
 
-Build the guide hub and the four pages represented by the homepage explainer: change risk, auditable claims, reusable cores, and trust boundaries. Add links to the explainer cards only when all four routes pass the static-site checks.
+The [reference-documentation evidence](../docs/evidence/reference-documentation-20260909.md) records source owners, prerequisites, tested revisions, expected results, commands, and artifact identities.
 
-### Phase 2: Connect claims to implementation
+## Remaining publication work
 
-Add the proof-to-Wasm pipeline and the two algorithm-specific walkthroughs. Reuse theorem and receipt metadata from `demos/manifest.json` instead of copying names into multiple pages.
+VO1194 owns the combined release acceptance, rollback artifact, and exact Pages cutover handoff. VO1145 owns deployment after explicit authorization. Contributor instructions for site deployment stay under [Contributing](../docs/contributing/github-pages.md), separate from publishing library packages.
 
-### Phase 3: Add decision evidence
-
-Add measured build/runtime costs, adoption considerations, and a small case-study format. Keep performance measurements machine-generated and label environmental limitations. Avoid generalized ROI numbers unless the repository contains evidence for them.
-
-## Publishing work
-
-- Extend the gallery build script to copy `guides/` and nested demo explainer routes.
-- Add guide metadata to a dedicated manifest rather than mixing editorial pages with executable demos.
-- Generate shared breadcrumbs, previous/next navigation, titles, and descriptions from that manifest.
-- Add structural tests for every declared route, relative asset URL, unique page title, single `h1`, and valid internal link.
-- Add browser checks at desktop, tablet, and narrow-mobile widths.
-- Render each page's core content before JavaScript loads. Use JavaScript for progressive enhancement.
-
-## Definition of done
-
-A concept page is ready when a non-technical reader can accurately summarize the claim after a five-minute read, every technical claim points to inspectable evidence, the guarantee and limitation are visually paired, the page is keyboard-readable, and the assembled GitHub Pages artifact contains no dead or domain-root links.
+Further algorithm walkthroughs can follow the Dijkstra and flood-fill pattern when a concrete reader question warrants one. Application case studies need measured application workloads and outcomes; the current solver benchmarks do not establish a financial return or a general application speedup.

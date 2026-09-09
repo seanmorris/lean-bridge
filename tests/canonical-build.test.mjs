@@ -275,6 +275,10 @@ test("the reviewed Debian builder contains Nix, not a second compiler policy", a
   assert.match(entrypoint, /#component-build-engine/);
   assert.match(entrypoint, /\/workspace\/component/);
   assert.match(entrypoint, /\/workspace\/request/);
+  assert.match(entrypoint, /git config --global --add safe\.directory "\$1"/);
+  assert.match(entrypoint, /trust_source_repository "\$engine_root"/);
+  assert.match(entrypoint, /trust_source_repository "\$source_root"/);
+  assert.doesNotMatch(entrypoint, /export GIT_CONFIG_COUNT|safe\.directory ['"]?\*/);
   assert.doesNotMatch(entrypoint, /build-lean|emcc|lake build/);
   assert.match(flake, /component-build-engine = pkgs\.writeShellApplication[\s\S]*runtimeInputs = \[ pkgs\.coreutils pkgs\.nodejs_22 pkgs\.python3 \]/);
   const schema = JSON.parse(await readFile("schema/builder-manifest.schema.json", "utf8"));

@@ -10,6 +10,8 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [React site foundation and Myers pilot, 8 September 2026](react-site-foundation-20260908.md)
 - [React sweep-and-prune and Dinic migration, 8 September 2026](react-graph-migration-20260908.md)
 - [Documentation expansion and reading-layout checks, 8 September 2026](documentation-site-20260908.md)
+- [Remaining React workbench ports, 9 September 2026](react-workbench-migration-20260909.md)
+- [Generated reference, concepts, and installed examples, 9 September 2026](reference-documentation-20260909.md)
 
 ## Author workflow and release
 

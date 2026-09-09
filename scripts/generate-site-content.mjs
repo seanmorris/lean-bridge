@@ -13,6 +13,7 @@ import { compile } from '@mdx-js/mdx';
 import remarkGfm from 'remark-gfm';
 import { createHighlighter } from 'shiki';
 import { demos, docPages, documentationImages } from '../site/registry.mjs';
+import { generateReferenceDocs } from './generate-reference-docs.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const repositoryUrl = 'https://github.com/seanmorris/lean-bridge';
@@ -319,6 +320,7 @@ export function validateDocumentationAnchors(results)
 export async function generateSiteContent(options = {})
 {
 	const root = options.root ?? repositoryRoot;
+	await generateReferenceDocs({ root });
 	const output = options.output ?? path.join(root, 'build/site-content');
 	const revision = execFileSync('git', ['rev-parse', 'HEAD'], {
 		cwd: root, encoding: 'utf8'
