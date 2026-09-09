@@ -66,7 +66,7 @@ test('every migrated redirect preserves query and hash with a no-JavaScript link
 		}
 		assert.throws(() => demoRedirect('/"><script>/', demo.slug));
 	}
-	assert.throws(() => demoRedirect('/', 'lean-dijkstra'), /No React redirect/u);
+	assert.throws(() => demoRedirect('/', 'unknown-demo'), /No React redirect/u);
 	assert.throws(() => demoRedirect('/', '../.env'), /No React redirect/u);
 });
 

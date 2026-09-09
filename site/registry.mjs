@@ -6,7 +6,7 @@
 
 import manifest from '../demos/manifest.json' with { type: 'json' };
 
-const reactDemoSlugs = new Set(['lean-myers', 'lean-sweep-and-prune', 'lean-dinic']);
+const reactDemoSlugs = new Set(manifest.demos.map(demo => demo.slug));
 
 export const demos = Object.freeze(manifest.demos.map(demo => Object.freeze({
 	...demo

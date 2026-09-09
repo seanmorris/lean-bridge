@@ -271,7 +271,7 @@ test("build identity binds every published Wasm binary, loader, and proof receip
 });
 
 test("union-find places its shared browser benchmark after the editable sample", async () => {
-	const html = await readFile(resolve(siteRoot, "lean-union-find/index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-union-find/index.html"), "utf8");
 	assert.equal((html.match(/id="site-grid"/gu) || []).length, 1);
 	assert.doesNotMatch(html, /id="panel-trials"/u);
 	assert.match(html, /Five excluded runs warm both solvers/u);
@@ -284,7 +284,7 @@ test("union-find places its shared browser benchmark after the editable sample",
 });
 
 test("topological sort publishes both graph outcomes and its standalone benchmark", async () => {
-	const html = await readFile(resolve(siteRoot, "lean-topological-sort/index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-topological-sort/index.html"), "utf8");
 	assert.match(html, /id="healthy-preset"/u);
 	assert.match(html, /id="cycle-preset"/u);
 	assert.match(html, /id="dependency-list"/u);
@@ -294,7 +294,7 @@ test("topological sort publishes both graph outcomes and its standalone benchmar
 });
 
 test("Aho–Corasick publishes editable overlapping scans and its byte matcher", async () => {
-	const html = await readFile(resolve(siteRoot, "lean-aho-corasick/index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-aho-corasick/index.html"), "utf8");
 	assert.match(html, /id="patterns"/u);
 	assert.match(html, /id="highlighted-text"/u);
 	assert.match(html, /data-scenario="operations"/u);
@@ -326,7 +326,7 @@ test("every proof demo publishes an automatic prewarmed browser benchmark", asyn
 });
 
 test("LRU publishes the shared benchmark workload required by its browser entry point", async () => {
-	const app = await readFile(resolve(siteRoot, "lean-lru-cache/app.mjs"), "utf8");
+	const app = await readFile(resolve(siteRoot, "lean-lru-cache/workbench.mjs"), "utf8");
 	assert.match(app, /from "\.\/benchmark-workload\.mjs"/u);
 	const workload = await readFile(resolve(siteRoot, "lean-lru-cache/benchmark-workload.mjs"), "utf8");
 	assert.match(workload, /from "\.\/runtime\.mjs"/u);
@@ -336,7 +336,7 @@ test("LRU publishes the shared benchmark workload required by its browser entry 
 
 test("A* publishes both graph comparisons, benchmark dependencies, and shared proof sources", async () => {
 	const root = resolve(siteRoot, "lean-a-star");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-a-star/index.html"), "utf8");
 	assert.match(html, /data-comparator-theorem="solve_total"/u);
 	assert.match(html, /LeanAStar\.solve_unreachable/u);
 	assert.match(html, /Dijkstra/u);
@@ -350,7 +350,7 @@ test("A* publishes both graph comparisons, benchmark dependencies, and shared pr
 
 test("Tarjan publishes its editable graph, exact exported partition proof, and benchmark", async () => {
 	const root = resolve(siteRoot, "lean-tarjan");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-tarjan/index.html"), "utf8");
 	assert.match(html, /id="toggle-feedback"/u);
 	assert.match(html, /id="collapse-groups"/u);
 	assert.match(html, /id="import-list"/u);
@@ -364,7 +364,7 @@ test("Tarjan publishes its editable graph, exact exported partition proof, and b
 
 test("token bucket publishes its request timeline, exact admission proof, and benchmark", async () => {
 	const root = resolve(siteRoot, "lean-token-bucket");
-	const html = await readFile(resolve(root, "index.html"), "utf8");
+	const html = await readFile(resolve(siteRoot, "demos/lean-token-bucket/index.html"), "utf8");
 	for(const id of ["replay-example", "send-request", "play-clock", "request-timeline", "reset-bucket"])
 		assert.ok(html.includes(`id="${id}"`));
 	assert.match(html, /data-comparator-theorem="exportedRun_no_over_admission"/u);
@@ -461,7 +461,7 @@ test("published routes, static pages, and search retain exact output identities"
 	assert.deepEqual(routes, identity.routes);
 	assert.deepEqual(routes.prerender, prerenderPaths);
 	assert.deepEqual(routes.demos.filter(demo => demo.renderingMode === "react").map(demo => demo.slug),
-		["lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
+		demos.map(demo => demo.slug));
 	for(const [path, receipt] of Object.entries(identity.staticFiles))
 	{
 		assert.ok(!Object.hasOwn(identity.artifacts, path));

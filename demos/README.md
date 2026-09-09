@@ -1,6 +1,6 @@
 # Develop and verify demos
 
-This directory owns the Lean algorithms, proofs, C adapters, runtime APIs, differential tests, and benchmark workloads used by the [algorithm gallery](index.html). The [documentation site](../site/README.md) owns the React presentation for Myers, sweep-and-prune, and Dinic; the other demos retain their standalone pages.
+This directory owns the Lean algorithms, proofs, C adapters, runtime APIs, differential tests, and benchmark workloads used by the [algorithm gallery](index.html). The [documentation site](../site/README.md) owns the React presentation for all twelve demos. Source-preview pages mount the same scoped controllers; published legacy URLs redirect to their React routes.
 
 To call a maintained solver without changing it, use the [demo-local API guide](../docs/demo-api.md). To produce an installable library from your own Lean source, follow the [author guide](../docs/lean-author-guide.md).
 

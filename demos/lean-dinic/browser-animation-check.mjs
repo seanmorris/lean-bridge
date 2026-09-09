@@ -72,11 +72,15 @@ try
 		const errors = [];
 		page.on("pageerror", error => errors.push(error.message));
 		// Keep this interaction check separate from the automatic performance trial.
-		await page.route("**/browser-benchmark.mjs", route => route.fulfill({
+		await page.route(/\/(?:browser-benchmark|benchmark-workload)\.mjs$/u, route => route.fulfill({
 			contentType: "text/javascript"
-			, body: "export const mountBenchmark = () => ({});"
+			, body: "export const mountBenchmark = () => ({}); export const createBenchmark = () => new Promise(() => {});"
 		}));
 		await page.goto(url);
+		// Chromium rerasterizes the stationary rounded selection ring independently
+		// of SVG motion. Exclude that decoration, not flow pixels or animation clocks.
+		// Selection/focus behavior is covered by the React graph interaction audit.
+		await page.addStyleTag({ content: ".edge-label[aria-pressed=true] { outline: none !important; }" });
 		await page.waitForFunction(() => globalThis.document.querySelectorAll(".flow-packet").length > 0);
 		await page.locator(".network-canvas").scrollIntoViewIfNeeded();
 		if(reducedMotion === "reduce")

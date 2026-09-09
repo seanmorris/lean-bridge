@@ -1,23 +1,23 @@
 /**
- * Automatic prewarmed token-bucket timing with the gallery's shared benchmark layout.
+ * Attach the shared benchmark to its route-owned lifetime.
  *
  * @file
  */
 
-import { attachBrowserBenchmark } from "../shared/browser-benchmark.mjs";
 import { createBenchmark } from "./benchmark-workload.mjs";
 
 /**
  * Mount matched integer-credit traces with cancellation and prepared-state cleanup.
  *
+ * @param scope Route-owned benchmark scaffold and resource lifetime.
  * @returns {object} Shared benchmark controls.
  */
-export const mountBenchmark = () => {
+export const mountBenchmark = scope => {
 	let benchmark;
 	let preparing;
 	let lifetime = 0;
-	const controls = attachBrowserBenchmark({
-		root: globalThis.document.querySelector("#browser-benchmark")
+	const controls = scope.benchmark({
+		root: scope.root.querySelector("#browser-benchmark")
 		, prepare: async () => {
 			if(benchmark) return;
 			if(preparing) return preparing;
@@ -37,7 +37,7 @@ export const mountBenchmark = () => {
 			+ `${benchmark.regressionCount} rejected clock regressions per trace. `
 			+ "Both return all decisions, balances, refill amounts, and retry delays. Setup and warmup are excluded."
 	});
-	globalThis.addEventListener("pagehide", () => {
+	scope.listen(globalThis, "pagehide", () => {
 		lifetime += 1;
 		controls.cancel();
 		benchmark?.dispose();

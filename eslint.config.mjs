@@ -16,6 +16,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 const sourceFiles = ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'];
 const browserFiles = [
 	'demos/{gallery,shared/{site-nav,proof-viewer}}.mjs'
+	, 'demos/lean-*/workbench.mjs'
 	, 'demos/lean-dijkstra/{app,runtime}.mjs'
 	, 'demos/lean-flood-fill/{app,runtime}.mjs'
 	, 'demos/lean-union-find/{app,runtime}.mjs'

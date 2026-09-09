@@ -142,7 +142,7 @@ npm run demos:verify
 
 The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
 
-The [React documentation site](site/README.md) includes author, consumer, publisher, and contributor guides. Myers, sweep-and-prune, and Dinic use React workbenches; the other nine demos retain their standalone pages and runtime URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
+The [React documentation site](site/README.md) includes author, consumer, publisher, and contributor guides and all twelve algorithm workbenches. Each demo retains its original runtime and proof URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
 
 ## Documentation
 

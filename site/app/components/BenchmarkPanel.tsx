@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 import { attachBrowserBenchmark } from "../../../demos/shared/browser-benchmark.mjs";
 import type { BenchmarkSample } from "../../../demos/shared/browser-benchmark.mjs";
 import "./demo-page.css";
@@ -84,10 +84,22 @@ export const BenchmarkPanel = <T extends BenchmarkWorkload,>({ artifactBase, con
 			globalThis.removeEventListener("pagehide", hide);
 		};
 	}, [artifactBase, config]);
-	return <section ref={root} id="browser-benchmark" className="browser-benchmark" aria-labelledby="benchmark-title">
+	return <BenchmarkScaffold rootRef={root} config={config} />;
+};
+
+/** Shared React markup, also used by the scoped grid and graph controllers. */
+interface BenchmarkScaffoldProps {
+	rootRef?: Ref<HTMLElement>;
+	config: Pick<BenchmarkConfig<BenchmarkWorkload>, "title" | "description" | "initialSummary" | "histogramLabel">;
+}
+
+/** Render the same benchmark controls and metric leaves on every demo route. */
+export function BenchmarkScaffold({ rootRef, config }: BenchmarkScaffoldProps)
+{
+	return <section ref={rootRef} id="browser-benchmark" className="browser-benchmark" aria-labelledby="benchmark-title">
 		<div className="browser-benchmark-copy"><p className="label">Live browser benchmark</p>
 			<h2 id="benchmark-title">{config.title}</h2>
-			<p>{config.description}</p>
+			<p id="benchmark-description">{config.description}</p>
 			<div className="browser-benchmark-actions"><button type="button" data-benchmark-run>Run again</button>
 				<button type="button" data-benchmark-cancel className="secondary" disabled>Cancel</button></div></div>
 		<div className="browser-benchmark-card"><div className="browser-benchmark-summary">
@@ -100,4 +112,4 @@ export const BenchmarkPanel = <T extends BenchmarkWorkload,>({ artifactBase, con
 		<svg className="browser-benchmark-histogram" data-benchmark-histogram role="img"
 			aria-label={config.histogramLabel} viewBox="0 0 620 200" /></div>
 	</section>;
-};
+}

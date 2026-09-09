@@ -2,7 +2,7 @@
 
 This directory owns the React presentation layer. Lean algorithms, C bridges, runtime APIs, proof sources, and benchmarks remain in `demos/`.
 
-The site renders the documentation and the Myers, sweep-and-prune, and Dinic workbenches. The other nine demos remain standalone. Author, consumer, publisher, contributor, and concept guides share searchable Markdown, grouped navigation, and previous/next links. Building this site does not publish an algorithm package.
+The site renders the documentation and all twelve algorithm workbenches. Author, consumer, publisher, contributor, and concept guides share searchable Markdown, grouped navigation, and previous/next links. Building this site does not publish an algorithm package.
 
 ## Develop
 
@@ -30,7 +30,7 @@ DEMO_BROWSERS=chromium,firefox,webkit npm run demos:browser
 
 Install the audit browsers with `npx playwright install --with-deps chromium firefox webkit`. `CHROMIUM_PATH` can select an existing Chromium binary. Browser checks serve the assembled artifact themselves; they do not require a running development server.
 
-`demos:verify` runs the twelve proof builds, differential suites, and benchmark regression checks. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, and the three React workbench models. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
+`demos:verify` runs the twelve proof builds, differential suites, and benchmark regression checks. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, workbench models, and scoped controller ownership. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
 
 `test:docs` checks copyable author files against the maintained fixture, theorem metadata, public consumer imports, numeric input guards, and a local demo-API example against the compiled solver. `test:docs:proof` uses the pinned Lean version and commit to check the tutorial theorem, require an empty axiom set, and reject changed-implementation and `sorry` variants. It reads the fixture and passes mutations through stdin without changing source files. Pages CI runs both commands after toolchain bootstrap.
 
@@ -74,9 +74,12 @@ Run `npm run test:docs` before committing. The documentation test checks local l
 - `app/components/ProofViewer.tsx` owns source loading and controls. Framework-neutral proof services verify hashes and construct checker payloads; legacy pages use the same services.
 - `BenchmarkPanel.tsx` owns one scoped controller and prepared solver. The controller owns metric and histogram leaves. Unmount disposes observers, listeners, animation frames, and prepared handles.
 - Each React route supplies its benchmark copy and summary projection; workload modules and sample counts stay unchanged. `app/components/demo-page.css` supplies shared proof, receipt, and benchmark styling.
+- `WorkbenchHost.tsx` mounts the Dijkstra, flood-fill, percolation, topological-sort, Aho–Corasick, LRU, A*, Tarjan, and token-bucket controllers. React renders their page markup and shared proof and benchmark scaffolds. Scoped controllers own drawing surfaces, uncontrolled editor inputs, and result leaves. No workbench uses an iframe or injects a complete HTML page.
+- `demos/shared/workbench-scope.mjs` owns controller listeners, frames, timers, observers, and prepared handles, including handles that resolve after unmount. Input snapshots contain only cloneable model data and survive client navigation in page memory. Restored playback stays paused. A failed module or Wasm load exposes a retry button.
+- `workbench-browser-check.mjs` checks editor state, restored pages, repeated navigation, native handle balance, and bounded scratch storage. `workbench-recovery-check.mjs` checks failed downloads and pending route changes. Both run as part of `site:browser`; `WORKBENCH_BROWSERS=chromium,firefox,webkit` selects all lifecycle engines when running that check directly against a served site.
 - Myers keeps exact text, selections, mode, and history in page-memory across React routes. History retains at most 100 edits or 8 MiB per editor, dropping oldest history before current text. A reload starts fresh. The Wasm initialization promise remains cached for the browser document; prepared handles do not survive route departure.
 - Sweep-and-prune retains scene inputs, seed, axis, and selection across React routes. Dinic retains capacities and selected edge. Leaving either route stops its animation and cancels pending work. A full reload restores the default example. Each visited algorithm keeps its own initialized Wasm module for the browser document; prepared handles are released separately.
 
-The old `/lean-myers/`, `/lean-sweep-and-prune/`, and `/lean-dinic/` addresses redirect to `/demos/<slug>/`, preserving query and fragment in JavaScript and providing normal no-JavaScript links. Raw sources, loaders, Wasm, and receipts remain at their original addresses. The other nine demo URLs do not change.
+Every old `/lean-<algorithm>/` address redirects to `/demos/lean-<algorithm>/`, preserving query and fragment in JavaScript and providing normal no-JavaScript links. Raw sources, loaders, Wasm, and receipts remain at their original addresses. Local source-preview pages also remain usable.
 
-The [migration plan](../docs/architecture/react-documentation-site-plan.md) tracks the remaining nine ports and deeper author, consumer, publishing, reference, and concept work.
+The [migration plan](../docs/architecture/react-documentation-site-plan.md) tracks the React ports and deeper author, consumer, publishing, reference, and concept work.

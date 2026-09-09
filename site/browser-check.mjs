@@ -15,6 +15,7 @@ import { startSiteServer } from "./serve.mjs";
 import { demos, docPages, prerenderPaths } from "./registry.mjs";
 import { checkSidebarScroll } from "./sidebar-browser-check.mjs";
 import { checkSiteHeaders } from "./header-browser-check.mjs";
+import { waitForWorkbench } from "./workbench-readiness.mjs";
 
 const root = resolve(process.env.SITE_ARTIFACT_ROOT ?? "build/github-pages");
 const identity = JSON.parse(await readFile(resolve(root, "build-identity.json"), "utf8"));
@@ -205,7 +206,7 @@ try
 			{
 				await page.goto(server.url + demo.entrypoint + "?from=legacy#main-content");
 				await page.waitForURL(server.url + demo.canonicalPage.slice(1) + "?from=legacy#main-content");
-				await page.waitForFunction(() => globalThis.document.querySelector("#runtime-status")?.textContent.includes("ready"));
+				await waitForWorkbench(page, demo.slug);
 				assert.equal(await page.locator(".site-header").count(), 1);
 				assert.equal(await page.locator(".portfolio-nav").count(), 0);
 				await checkLayout(page);
@@ -220,10 +221,13 @@ try
 					"site/myers-browser-check.mjs", "site/proof-browser-check.mjs"
 					, "site/search-browser-check.mjs", "site/performance-check.mjs"
 					, "site/graph-browser-check.mjs"
+					, "site/workbench-browser-check.mjs"
+					, "site/workbench-recovery-check.mjs"
 					, "site/docs-browser-check.mjs"
 				]) {
 					const result = await execute(process.execPath, [resolve(script), server.url], {
-						timeout: 180000, env: { ...process.env, CHROMIUM_PATH: executablePath }
+						timeout: script === "site/workbench-browser-check.mjs" ? 360000 : 180000
+						, env: { ...process.env, CHROMIUM_PATH: executablePath }
 					});
 					process.stdout.write(result.stdout);
 					report.checks.push({ engine, script, status: "passed" });

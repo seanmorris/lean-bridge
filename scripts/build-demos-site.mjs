@@ -19,12 +19,12 @@ const rootFiles = new Set(['gallery.css', 'gallery.mjs', 'manifest.json']);
 const sharedFiles = new Set([
 	'browser-benchmark.mjs', 'browser-benchmark.css', 'demo-page.mjs'
 	, 'proof-page.css', 'proof-viewer.mjs', 'proof-services.mjs'
-	, 'site-nav.mjs', 'site.css', 'gallery-card.mjs'
+	, 'site-nav.mjs', 'site.css', 'gallery-card.mjs', 'workbench-scope.mjs'
 ]);
 const demoFiles = new Set([
 	'app.mjs', 'benchmark-workload.mjs', 'browser-benchmark.mjs', 'graph.mjs'
 	, 'index.html', 'network.mjs', 'percolation.mjs', 'README.md', 'reference.mjs'
-	, 'runtime.mjs', 'scenario.mjs', 'styles.css', 'terrain.mjs'
+	, 'runtime.mjs', 'scenario.mjs', 'styles.css', 'terrain.mjs', 'workbench.mjs'
 ]);
 
 /**

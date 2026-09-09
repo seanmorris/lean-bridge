@@ -1,23 +1,23 @@
 /**
- * Shared, automatically starting and prewarmed Tarjan browser benchmark.
+ * Attach the shared benchmark to its route-owned lifetime.
  *
  * @file
  */
 
-import { attachBrowserBenchmark } from "../shared/browser-benchmark.mjs";
 import { createBenchmark } from "./benchmark-workload.mjs";
 
 /**
  * Mount the matched Tarjan comparison into the standard benchmark section.
  *
+ * @param scope Route-owned benchmark scaffold and resource lifetime.
  * @returns {object} Shared benchmark controls.
  */
-export const mountBenchmark = () => {
+export const mountBenchmark = scope => {
 	let benchmark;
 	let preparing;
 	let lifetime = 0;
-	const controls = attachBrowserBenchmark({
-		root: globalThis.document.querySelector("#browser-benchmark")
+	const controls = scope.benchmark({
+		root: scope.root.querySelector("#browser-benchmark")
 		, prepare: async () => {
 			if(benchmark) return;
 			if(preparing) return preparing;
@@ -36,7 +36,7 @@ export const mountBenchmark = () => {
 			+ `${benchmark.vertexCount} vertices and ${benchmark.edgeCount} edges into ${samples[0].componentCount} components. `
 			+ "Both use iterative Tarjan and return the same members and condensation edges. Setup and warmup are excluded."
 	});
-	globalThis.addEventListener("pagehide", () => {
+	scope.listen(globalThis, "pagehide", () => {
 		lifetime += 1;
 		controls.cancel();
 		benchmark?.dispose();

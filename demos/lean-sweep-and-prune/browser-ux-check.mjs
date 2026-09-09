@@ -106,7 +106,11 @@ try
 	for(const width of [320, 390, 441, 500, 650, 768, 850, 1024, 1440, 1920])
 	{
 		await page.setViewportSize({ width, height: 1000 });
-		assert.equal(await page.evaluate(() => globalThis.document.documentElement.scrollWidth), width, `No page overflow at ${width}px`);
+		const dimensions = await page.evaluate(() => ({
+			scroll: globalThis.document.documentElement.scrollWidth
+			, client: globalThis.document.documentElement.clientWidth
+		}));
+		assert.ok(dimensions.scroll <= dimensions.client, `No page overflow at ${width}px: ${JSON.stringify(dimensions)}`);
 	}
 	await page.setViewportSize({ width: 1440, height: 1080 });
 	await page.locator("#reset-scene").click();

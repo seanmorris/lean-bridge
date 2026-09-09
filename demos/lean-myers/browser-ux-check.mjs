@@ -99,7 +99,11 @@ try
 	for(const width of [320, 390, 441, 500, 650, 768, 850, 1024, 1440, 1920])
 	{
 		await page.setViewportSize({ width, height: 900 });
-		assert.equal(await page.evaluate(() => globalThis.document.documentElement.scrollWidth), width);
+		const dimensions = await page.evaluate(() => ({
+			scroll: globalThis.document.documentElement.scrollWidth
+			, client: globalThis.document.documentElement.clientWidth
+		}));
+		assert.ok(dimensions.scroll <= dimensions.client, `No page overflow at ${width}px: ${JSON.stringify(dimensions)}`);
 	}
 	assert.deepEqual(errors, []);
 	console.log("PASS: real Wasm diff, Unicode code points, raw CRLF/CR/LF paste, undo/redo, explicit newline edits, no truncation, revision changes, escaped preview, and 320–1920 px layouts.");

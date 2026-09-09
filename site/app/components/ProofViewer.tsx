@@ -219,12 +219,12 @@ const ProofViewerMount = ({ artifactBase, config }: ProofViewerProps) => {
 						aria-selected={activeSource === tab.name} aria-controls="proof-code" disabled={!available}
 						tabIndex={activeSource === tab.name || (!tabSelected && index === 0) ? 0 : -1}
 						onClick={() => setActiveSource(tab.name)} onKeyDown={event => changeTab(event, index)}>{tab.label}</button>)}
-				</div><select {...proofControlAttributes} className="source-select" data-source-select aria-label="Supporting Lean source"
+				</div>{supporting.length > 0 && <select {...proofControlAttributes} className="source-select" data-source-select aria-label="Supporting Lean source"
 					disabled={!available} value={supporting.includes(activeSource) ? activeSource : ""}
 					onChange={event => { if(event.target.value) setActiveSource(event.target.value); }}>
 					<option value="">Supporting sources</option>
 					{supporting.map(name => <option key={name} value={name}>{config.sourceLabels?.[name] ?? name}</option>)}
-				</select></div><div className="source-meta"><span id="source-label">{activeSource}</span>
+				</select>}</div><div className="source-meta"><span id="source-label">{activeSource}</span>
 				<span id="source-stats">{source === undefined ? state.phase === "failed" ? "Source unavailable" : "Loading…"
 					: `${source.split("\n").length} lines · ${new TextEncoder().encode(source).length} bytes`}</span>
 				<button {...proofControlAttributes} id="copy-source" type="button" disabled={!available} title={copyTitle} onClick={() => void copy()}>{copyLabel}</button>
