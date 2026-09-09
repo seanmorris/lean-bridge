@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { chromium, firefox, webkit } from "playwright";
 import { demos } from "../site/registry.mjs";
+import { checkUnionFindBenchmarkScheduling } from "../site/union-find-benchmark-check.mjs";
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const root = resolve(repository, "build/github-pages");
@@ -274,6 +275,9 @@ try
 			await checkLayout(noScript, `${engine}/gallery-without-JS`);
 			await noScript.close();
 			for(const demo of manifest.demos) await auditDemo(browser, engine, demo);
+			const scheduling = await checkUnionFindBenchmarkScheduling(browser, base);
+			report.checks.push({ engine, script: "union-find-benchmark-scheduling", ...scheduling });
+			console.log(`PASS ${engine}: union-find benchmark waits for visibility and settled animation`);
 			await auditFailures(browser);
 			if(engine === "chromium")
 			{

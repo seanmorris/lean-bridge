@@ -62,8 +62,33 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 	let painting = false;
 	let drawTool = saved.drawTool ?? "open";
 	let dragSolveFrame = 0;
+	let initializing = true;
+	let pendingSolves = 0;
+	let settled = false;
+	let settleTimer = 0;
+	let benchmark;
+	const filling = new Set();
+	const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 	const previousWet = new Uint8Array(SITE_COUNT);
 	scope.remember(() => order ? ({ active, walls, order, cursor, seed, firstSpanCount, sequenceIntact, drawTool }) : saved);
+	const activityChanged = () => {
+		if(!scope.active) return;
+		scope.clearTimeout(settleTimer);
+		settleTimer = 0;
+		settled = false;
+		benchmark?.refresh();
+		if(initializing || running || painting || pendingSolves || dragSolveFrame || filling.size) return;
+		// Let the final tile and boundary transitions finish before measuring.
+		settleTimer = scope.setTimeout(() => {
+			settleTimer = 0;
+			settled = true;
+			benchmark?.refresh();
+		}, 200);
+	};
+	const clearFill = cell => {
+		cell.classList.remove("filling");
+		filling.delete(cell);
+	};
 
 	const cells = Array.from({ length: SITE_COUNT }, (_, site) => {
 		const cell = document.createElement("button");
@@ -74,12 +99,18 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		cell.setAttribute("role", "gridcell");
 		cell.setAttribute("aria-rowindex", String(Math.floor(site / WIDTH) + 1));
 		cell.setAttribute("aria-colindex", String(site % WIDTH + 1));
-		scope.listen(cell, "animationend", () => cell.classList.remove("filling"));
+		const finishFill = () => { clearFill(cell); activityChanged(); };
+		scope.listen(cell, "animationend", finishFill);
+		scope.listen(cell, "animationcancel", finishFill);
 		elements.grid.append(cell);
 		return cell;
 	});
 	elements.grid.setAttribute("aria-rowcount", String(HEIGHT));
 	elements.grid.setAttribute("aria-colcount", String(WIDTH));
+	scope.listen(reducedMotion, "change", () => {
+		if(reducedMotion.matches) for(const cell of filling) clearFill(cell);
+		activityChanged();
+	});
 
 	const freshSeed = () => {
 		const values = new Uint32Array(1);
@@ -98,7 +129,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 
 	const draw = (result, elapsed) => {
 		const analysis = analyzePartition(active, result.representatives, walls);
-		const distances = running ? inletDistances(active, walls) : null;
+		const distances = running && !reducedMotion.matches ? inletDistances(active, walls) : null;
 		for(let site = 0; site < SITE_COUNT; site += 1)
 		{
 			const cell = cells[site];
@@ -122,8 +153,9 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 			{
 				cell.style.setProperty("--fill-delay", `${Math.min(480, Math.max(0, distances[site]) * 12)}ms`);
 				cell.classList.add("filling");
+				filling.add(cell);
 			}
-			else if(!topConnected) cell.classList.remove("filling");
+			else if(!topConnected) clearFill(cell);
 			previousWet[site] = Number(topConnected);
 			cell.setAttribute("aria-pressed", String(isActive));
 			cell.setAttribute("aria-label", `Row ${Math.floor(site / WIDTH) + 1}, column ${site % WIDTH + 1}: ${isWall ? "maze wall" : isActive ? "open passage" : "unopened passage"}${topConnected ? ", filled from inlet" : ""}${inSpanningCluster ? ", in spanning wet cluster" : ""}${outletContact ? ", touches outlet" : ""}`);
@@ -159,14 +191,24 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 
 	const solve = async () => {
 		const revision = ++solveRevision;
-		const snapshot = active.slice();
-		const links = linksForActive(snapshot, walls, true);
-		const started = performance.now();
-		const result = await partition({ elementCount: GRAPH_COUNT, links });
-		const elapsed = performance.now() - started;
-		if(revision !== solveRevision) return null;
-		draw(result, elapsed);
-		return result;
+		pendingSolves++;
+		activityChanged();
+		try
+		{
+			const snapshot = active.slice();
+			const links = linksForActive(snapshot, walls, true);
+			const started = performance.now();
+			const result = await partition({ elementCount: GRAPH_COUNT, links });
+			const elapsed = performance.now() - started;
+			if(revision !== solveRevision) return null;
+			draw(result, elapsed);
+			return result;
+		}
+		finally
+		{
+			pendingSolves--;
+			activityChanged();
+		}
 	};
 
 	const activateNext = count => {
@@ -196,6 +238,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 	const startRun = () => {
 		if(running || !order || cursor >= order.length) return;
 		running = true;
+		activityChanged();
 		elements.pause.disabled = false;
 		elements.run.disabled = true;
 		runFrame = scope.requestAnimationFrame(runLoop);
@@ -207,6 +250,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		elements.pause.disabled = true;
 		elements.run.disabled = false;
 		if(message) elements.editStatus.textContent = message;
+		activityChanged();
 	};
 
 	const reset = async () => {
@@ -246,7 +290,8 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		firstSpanCount = null;
 		cells[site].classList.toggle("wall", nextWall);
 		cells[site].classList.toggle("active", nextActive && !nextWall);
-		cells[site].classList.remove("top-connected", "spanning", "filling");
+		cells[site].classList.remove("top-connected", "spanning");
+		clearFill(cells[site]);
 		if(nextActive && !nextWall)
 		{
 			cells[site].style.setProperty("--cluster-hue", String((site * 137.508 + 203) % 360));
@@ -263,6 +308,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 				void solve();
 			});
 		}
+		activityChanged();
 	};
 
 	const selectTool = tool => {
@@ -289,6 +335,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		event.preventDefault();
 		pause();
 		painting = true;
+		activityChanged();
 		paint(Number(cell.dataset.site));
 		elements.grid.setPointerCapture(event.pointerId);
 	});
@@ -461,10 +508,10 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 	});
 	const preparedJavaScriptPartition = () => jsPartition(benchmarkRequest);
 
-	scope.benchmark({
+	benchmark = scope.benchmark({
 		root: byId("browser-benchmark")
+		, canRun: () => settled
 		, prepare: async () => {
-			if(running) pause("Sequence paused while benchmarking.");
 			await prepareLeanPartition();
 		}
 		, sample: async index => {
@@ -507,7 +554,7 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		showSeed();
 		await solve();
 		if(saved.order) return;
-		if(matchMedia("(prefers-reduced-motion: reduce)").matches)
+		if(reducedMotion.matches)
 		{
 			const threshold = await thresholdForOrder(order);
 			active = activeFromPrefix(order, threshold.count);
@@ -523,5 +570,10 @@ export const mountWorkbench = async (root, scope, saved = {}) => {
 		elements.resultTitle.textContent = "The checked module did not start.";
 		elements.resultCopy.textContent = error instanceof Error ? error.message : String(error);
 		for(const button of root.querySelectorAll(".controls button, .trial-actions button")) button.disabled = true;
+	}
+	finally
+	{
+		initializing = false;
+		activityChanged();
 	}
 };

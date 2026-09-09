@@ -16,7 +16,7 @@ export interface BenchmarkSummary {
 	trialCount: number;
 }
 /** Actions owned by a benchmark mount. */
-export interface BenchmarkControls {cancel(): void; run(): Promise<void>; dispose(): void;}
+export interface BenchmarkControls {cancel(): void; run(): Promise<void>; refresh(): void; dispose(): void;}
 /**
  * Attach a disposable controller to an otherwise static DOM scaffold.
  *
@@ -25,6 +25,7 @@ export interface BenchmarkControls {cancel(): void; run(): Promise<void>; dispos
  * @param options.prepare Prepare the owned solver.
  * @param options.sample Return checked solver timings.
  * @param options.summarize Format the completed comparison.
+ * @param options.canRun Whether the demo has settled; notify changes with refresh().
  * @param options.trialCount Number of measured samples.
  * @param options.warmupCount Number of excluded warmups.
  */
@@ -33,6 +34,7 @@ export function attachBrowserBenchmark(options: {
 	prepare: () => Promise<void>;
 	sample: (index: number, warmup: boolean) => BenchmarkSample | Promise<BenchmarkSample>;
 	summarize: (summary: BenchmarkSummary) => string;
+	canRun?: () => boolean;
 	trialCount?: number;
 	warmupCount?: number;
 }): BenchmarkControls;

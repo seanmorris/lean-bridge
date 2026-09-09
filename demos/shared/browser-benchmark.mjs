@@ -75,12 +75,19 @@ export const measureSyncBenchmark = (operation, minimumMs = 12) => {
  * @param root0.prepare Promise-returning runtime preparation function.
  * @param root0.sample One checked Lean-versus-JavaScript sample.
  * @param root0.summarize Summary formatter for completed samples.
+ * @param root0.canRun Whether the owning demo has settled; call refresh when it changes.
  * @param root0.trialCount Number of measured samples.
  * @param root0.warmupCount Number of excluded warm-up samples.
- * @returns {{cancel: () => void, run: () => Promise<void>, dispose: () => void}} Benchmark controls.
+ * @returns {{cancel: () => void, run: () => Promise<void>, refresh: () => void, dispose: () => void}} Benchmark controls.
  */
 export const attachBrowserBenchmark = ({
-	root, prepare, sample, summarize, trialCount = 100, warmupCount = 5
+	root
+	, prepare
+	, sample
+	, summarize
+	, canRun = () => true
+	, trialCount = 100
+	, warmupCount = 5
 }) => {
 	const elements = {
 		cancel: requireElement(root, "[data-benchmark-cancel]")
@@ -99,6 +106,13 @@ export const attachBrowserBenchmark = ({
 	let disposed = false;
 	let lifetime = 0;
 	let visibilityObserver;
+	let fallbackVisibility;
+	let inView = false;
+	let eligibilityRevision = 0;
+	let eligible = false;
+	let wake;
+	const runnable = () => inView && !globalThis.document.hidden && canRun();
+	const releaseWaiter = () => { const resolve = wake; wake = undefined; resolve?.(); };
 	const frames = new Map();
 	const frame = () => new Promise(resolve => {
 		const handle = globalThis.requestAnimationFrame(() => {
@@ -194,36 +208,61 @@ export const attachBrowserBenchmark = ({
 		if(disposed) return;
 		startedOnce = true;
 		revision += 1;
+		releaseWaiter();
+		releaseFrames();
 		elements.rerun.disabled = false;
 		elements.cancel.disabled = true;
 		elements.progress.textContent = "Cancelled";
+	};
+	const waitUntilRunnable = async current => {
+		while(!disposed && current === revision && !runnable())
+		{
+			elements.progress.textContent = !inView ? "Waiting to enter view"
+				: globalThis.document.hidden ? "Waiting for this tab" : "Waiting for demo to settle";
+			await new Promise(resolve => { wake = resolve; });
+		}
+		return !disposed && current === revision;
 	};
 
 	const run = async () => {
 		if(disposed) return;
 		startedOnce = true;
 		const current = ++revision;
+		releaseWaiter();
+		releaseFrames();
 		elements.rerun.disabled = true;
 		elements.cancel.disabled = false;
 		try
 		{
+			if(!await waitUntilRunnable(current) || current !== revision) return;
 			await prepareOnce();
 			if(current !== revision) return;
 			const started = performance.now();
-			for(let index = 0; index < warmupCount; index += 1)
-			{
-				if(current !== revision) return;
-				elements.progress.textContent = `Warming up ${index + 1} / ${warmupCount}`;
-				await sample(index, true);
-				if(current !== revision) return;
-				await frame();
-			}
 			const samples = [];
-			for(let index = 0; index < trialCount; index += 1)
+			let warmed = 0;
+			let uninterrupted = eligibilityRevision;
+			while(samples.length < trialCount)
 			{
+				if(!await waitUntilRunnable(current) || current !== revision) return;
+				if(uninterrupted !== eligibilityRevision)
+				{
+					// Resume with fresh warmups and one uninterrupted measurement set.
+					uninterrupted = eligibilityRevision;
+					warmed = 0;
+					samples.length = 0;
+				}
+				const warmup = warmed < warmupCount;
+				const index = warmup ? warmed : samples.length;
+				if(warmup) elements.progress.textContent = `Warming up ${index + 1} / ${warmupCount}`;
+				const result = await sample(index, warmup);
 				if(current !== revision) return;
-				const result = await sample(index, false);
-				if(current !== revision) return;
+				if(uninterrupted !== eligibilityRevision || !runnable()) continue;
+				if(warmup)
+				{
+					warmed++;
+					await frame();
+					continue;
+				}
 				if(!Number.isFinite(result.leanMs) || result.leanMs < 0
 					|| !Number.isFinite(result.javascriptMs) || result.javascriptMs < 0)
 					throw new Error("Benchmark sample must contain finite, nonnegative timings");
@@ -265,6 +304,14 @@ export const attachBrowserBenchmark = ({
 			console.error(error);
 		}
 	};
+	const refresh = () => {
+		if(disposed) return;
+		const next = runnable();
+		if(eligible && !next) eligibilityRevision++;
+		eligible = next;
+		releaseWaiter();
+		if(!startedOnce && inView && !globalThis.document.hidden) void run();
+	};
 
 	elements.rerun.addEventListener("click", run);
 	elements.cancel.addEventListener("click", cancel);
@@ -275,19 +322,29 @@ export const attachBrowserBenchmark = ({
 		releaseFrames();
 	};
 	globalThis.addEventListener?.("pagehide", hide);
+	globalThis.document.addEventListener?.("visibilitychange", refresh);
 	elements.cancel.disabled = true;
-	if("IntersectionObserver" in globalThis)
+	if(typeof globalThis.IntersectionObserver === "function")
 	{
 		visibilityObserver = new globalThis.IntersectionObserver(entries => {
-			if(!disposed && !startedOnce && entries.some(entry => entry.isIntersecting))
-			{
-				visibilityObserver.disconnect();
-				void run();
-			}
-		}, { rootMargin: "160px 0px", threshold: .05 });
+			inView = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .05);
+			refresh();
+		}, { rootMargin: "0px", threshold: .05 });
 		visibilityObserver.observe(root);
 	}
-	else void run();
+	else
+	{
+		fallbackVisibility = () => {
+			const bounds = root.getBoundingClientRect();
+			const width = Math.max(0, Math.min(bounds.right, globalThis.innerWidth) - Math.max(bounds.left, 0));
+			const height = Math.max(0, Math.min(bounds.bottom, globalThis.innerHeight) - Math.max(bounds.top, 0));
+			inView = bounds.width > 0 && bounds.height > 0 && width * height / (bounds.width * bounds.height) >= .05;
+			refresh();
+		};
+		globalThis.addEventListener("scroll", fallbackVisibility, { passive: true });
+		globalThis.addEventListener("resize", fallbackVisibility);
+		fallbackVisibility();
+	}
 	const dispose = () => {
 		if(disposed) return;
 		hide();
@@ -295,10 +352,16 @@ export const attachBrowserBenchmark = ({
 		elements.rerun.removeEventListener?.("click", run);
 		elements.cancel.removeEventListener?.("click", cancel);
 		globalThis.removeEventListener?.("pagehide", hide);
+		globalThis.document.removeEventListener?.("visibilitychange", refresh);
+		if(fallbackVisibility)
+		{
+			globalThis.removeEventListener("scroll", fallbackVisibility);
+			globalThis.removeEventListener("resize", fallbackVisibility);
+		}
 		resizeObserver.disconnect();
 		visibilityObserver?.disconnect();
 		if(resizeFrame) globalThis.cancelAnimationFrame?.(resizeFrame);
 		resizeFrame = 0;
 	};
-	return { cancel, run, dispose };
+	return { cancel, run, refresh, dispose };
 };
