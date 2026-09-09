@@ -82,6 +82,8 @@ Pull requests run the checks, package the site locally, and upload audit reports
 
 Configure the repository's Pages publishing source as GitHub Actions and apply the intended protection rules to the `github-pages` environment, following [GitHub's custom-workflow setup](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). The deployment job requests `pages: write` and `id-token: write`; the build job has read-only repository contents access. The workflow reports the deployed page URL after completion.
 
+This repository allows only `master` to deploy to `github-pages` and requires approval by `seanmorris`. When the build passes, download that run's `github-pages` and `demo-browser-audit` artifacts. Check the tar against `pages-artifact.json`, restore it into a separate directory, and verify its recorded file hashes before approving the waiting deployment job. Approval deploys the existing uploaded artifact; it does not rebuild the site.
+
 If a check fails, inspect the uploaded audit artifacts and fix the source or generated output. Do not publish a different locally assembled directory to bypass the failed run.
 
 ## Retain a rollback

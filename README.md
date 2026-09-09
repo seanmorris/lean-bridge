@@ -1,5 +1,7 @@
 # Lean Bridge
 
+[Documentation](https://seanmorris.github.io/lean-bridge/docs/) · [Interactive algorithm demos](https://seanmorris.github.io/lean-bridge/)
+
 Lean Bridge packages ordinary Lean declarations for direct use from host languages. The proof of concept compiles one runtime-free Lean component, generates typed bindings, and places the component beside a shared Lean runtime. Consumers install package archives and call named functions or classes without writing a Wasm loader or foreign-function wrapper.
 
 The current implementation gives package authors:
@@ -132,7 +134,7 @@ These are observational end-user API measurements, not cross-machine comparisons
 
 ## Verified algorithm demos
 
-The static [demo gallery](demos/) runs twelve proof-backed Lean algorithms directly in the browser, covering graphs, text, caches, rate limits, and collision pairs. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark. The [gallery manifest](demos/manifest.json) lists the algorithms and their named guarantees.
+The [demo gallery](https://seanmorris.github.io/lean-bridge/) runs twelve proof-backed Lean algorithms directly in the browser, covering graphs, text, caches, rate limits, and collision pairs. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark. The [demo sources](demos/) and [gallery manifest](demos/manifest.json) list the algorithms and their named guarantees.
 
 Build and verify the complete GitHub Pages artifact with:
 
