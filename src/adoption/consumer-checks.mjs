@@ -105,6 +105,7 @@ export const assertConsumerRuntimeIdentity = ({ verification, receipt, runtimePa
 	assert.equal(receipt.runtime.package, runtime);
 	assert.equal(componentPackage.dependencies[runtimePackage.name], runtimePackage.version);
 	assert.equal(verification.component, receipt.component.id);
+	assert.equal(receipt.component.id, component);
 	assert.equal(verification.package, component);
 	assert.equal(receipt.package.package, component);
 };

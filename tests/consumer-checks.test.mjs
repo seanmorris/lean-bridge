@@ -127,6 +127,7 @@ test("installed-consumer checks reject ABI, hash, receipt, dependency, and packa
 		, value => { value.componentPackage.version = "2.0.0"; }
 		, value => { value.receipt.package.package = "other@1.0.0"; }
 		, value => { value.receipt.component.id = "other@1.0.0"; }
+		, value => { value.verification.component = value.receipt.component.id = "other@1.0.0"; }
 	];
 	for(const mutate of mutations)
 	{
