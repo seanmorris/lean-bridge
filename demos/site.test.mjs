@@ -26,6 +26,7 @@ const mockBenchmarkBrowser = context => {
 	const frames = [];
 	const waiting = [];
 	const events = new Map();
+	const observers = [];
 	const makeElement = () => ({
 		textContent: "unchanged", disabled: false, clientWidth: 620
 		, addEventListener: () => undefined, setAttribute: () => undefined
@@ -34,14 +35,24 @@ const mockBenchmarkBrowser = context => {
 	/** Keep automatic observation dormant until the test starts a run. */
 	class ObserverMock
 	{
-		/** Leave visibility and resize callbacks under test control. */
-		observe() { return undefined; }
+		/**
+		 * Leave visibility and resize callbacks under test control.
+		 *
+		 * @param callback Observer notification callback.
+		 */
+		constructor(callback) { this.callback = callback; observers.push(this); }
+		/**
+		 * Record the observed element.
+		 *
+		 * @param target Element whose visibility the test controls.
+		 */
+		observe(target) { this.target = target; }
 		/** Release the inert observer. */
 		disconnect() { return undefined; }
 	}
 	const replacements = {
 		ResizeObserver: ObserverMock, IntersectionObserver: ObserverMock
-		, document: { createElementNS: makeElement }
+		, document: { createElementNS: makeElement, hidden: false }
 		, addEventListener: (name, listener) => events.set(name, listener)
 		, requestAnimationFrame: callback => {
 			frames.push(callback);
@@ -66,6 +77,10 @@ const mockBenchmarkBrowser = context => {
 	} };
 	return {
 		root, elements, events
+		, enterView: () => {
+			for(const observer of observers.filter(observer => observer.target === root))
+				observer.callback([{ target: root, isIntersecting: true, intersectionRatio: 1 }]);
+		}
 		, waitForFrame: () => frames.length ? Promise.resolve() : new Promise(resolve => waiting.push(resolve))
 		, releaseFrame: () => { assert.ok(frames.length > 0); frames.shift()(0); }
 	};
@@ -95,6 +110,7 @@ test("browser benchmark cancellation during a warmup frame prevents another samp
 		, summarize: () => { summarized = true; return "completed"; }
 	});
 	const running = controller.run();
+	browser.enterView();
 	await browser.waitForFrame();
 	controller.cancel();
 	disposed = true;
@@ -119,6 +135,7 @@ test("browser benchmark cancellation while its last sample is pending preserves 
 		, summarize: () => { summarized = true; return "completed"; }
 	});
 	const running = controller.run();
+	browser.enterView();
 	await started;
 	controller.cancel();
 	releaseSample({ leanMs: 1, javascriptMs: 1 });
@@ -138,6 +155,7 @@ test("browser benchmark cancellation during its final measured frame prevents co
 		, summarize: () => { summarized = true; return "completed"; }
 	});
 	const running = controller.run();
+	browser.enterView();
 	await browser.waitForFrame();
 	assert.equal(calls, 2);
 	controller.cancel();
@@ -174,7 +192,9 @@ test("browser benchmark rejects invalid timing samples without rendering NaN", a
 			, sample: () => ({ leanMs, javascriptMs: 1 })
 			, summarize: () => { throw new Error("Invalid samples must not be summarized"); }
 		});
-		await controller.run();
+		const running = controller.run();
+		browser.enterView();
+		await running;
 		assert.equal(browser.elements.get("[data-benchmark-progress]").textContent, "Benchmark failed");
 		assert.match(browser.elements.get("[data-benchmark-summary]").textContent, /finite, nonnegative/u);
 		assert.equal(browser.elements.get("[data-benchmark-lean]").textContent, "unchanged");
@@ -197,6 +217,7 @@ test("benchmark reruns share preparation and pagehide invalidates the old lifeti
 	});
 	const first = controller.run();
 	const second = controller.run();
+	browser.enterView();
 	await new Promise(resolve => setImmediate(resolve));
 	assert.equal(preparations, 1);
 	browser.events.get("pagehide")();
