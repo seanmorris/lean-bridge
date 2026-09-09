@@ -4,7 +4,7 @@ An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and up
 
 ## Publish an ordinary component
 
-Install the prepared CLI candidate using [author setup](../lean/setup.md), then complete [your first component](../lean/first-component.md). Choose a package name and version you own in `lakefile.toml`, declare its license in `package.json`, and include `LICENSE` in the committed source.
+Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Choose a package name and version you own in `lakefile.toml`, declare its license in `package.json`, and include `LICENSE` in the committed source.
 
 The runtime is published centrally by Lean Bridge. Your publisher checks that its exact dependency coordinate and tarball hash already exist in the selected registry. It does not upload the runtime under your credentials. A missing or different runtime blocks publication before the component upload.
 

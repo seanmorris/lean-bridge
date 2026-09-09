@@ -2,7 +2,7 @@
 
 Create a Lake project that exports addition and a string predicate. Check its commutativity theorem, build local npm archives, and call both functions from a separate JavaScript project.
 
-Complete [author setup](setup.md) first. The commands below use its `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables.
+Complete [author setup](setup.md) first. The commands below use its `LEAN_BRIDGE_WORK` and `LEAN_BRIDGE_BUILD_BACKEND` variables. The prepared CLI finds its bundled runtime automatically; only the checkout-based setup needs `LEAN_BRIDGE_RUNTIME_ROOT`.
 
 ## Create the project files
 

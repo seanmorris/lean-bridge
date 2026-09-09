@@ -79,3 +79,22 @@ test("Publishing retains operational checks and links contributor-owned policy a
 			`${page.id}: repository-wide fixture checks link to Contributing`);
 	}
 });
+
+test("release documentation distinguishes author publication from universal project approvals", async () => {
+	const pipeline = await readFile("src/release/README.md", "utf8");
+	const publication = pipeline.split("### Publication and receipts\n")[1].split("## Release invariants\n")[0];
+	assert.match(publication, /Ordinary component publications use version-two `lean-bridge\.cli\.json`/);
+	assert.match(publication, /do not require the project's deployment-profile approvals or `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN`/);
+	assert.match(publication, /Universal version-one releases retain the project deployment-profile gate/);
+	const policy = pipeline.split("## Project release approval policy\n")[1].split("## Publisher signer integration\n")[0];
+	assert.match(policy, /governs Lean Bridge's universal project releases/);
+	assert.match(policy, /Ordinary component authors publish under their own registry and signing authority/);
+});
+
+test("contributor acceptance documents checkout setup and the current exact-integer results", async () => {
+	const testing = await readFile("docs/contributing/testing.md", "utf8");
+	assert.ok(testing.includes("../lean/setup.md#install-the-local-cli"));
+	assert.match(testing, /numeric-boundary-diagnostic\.json` records successful addition/);
+	assert.match(testing, /above `2\^4096`/);
+	assert.doesNotMatch(testing, /records the current runtime failure/);
+});

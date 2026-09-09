@@ -116,7 +116,7 @@ The runner removes its registry storage and successful consumer scratch director
 
 ## Author acceptance
 
-Complete [author setup](../lean/setup.md) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`.
+Complete the [checkout-based author setup](../lean/setup.md#install-the-local-cli) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`. To check a prepared CLI archive without a checkout or runtime override, use the [standalone CLI acceptance runner](#standalone-cli-package) instead.
 
 Run the [author tutorial runner](../../scripts/check-lean-author-tutorial.mjs) with a fresh output directory:
 
@@ -164,7 +164,7 @@ node scripts/check-component-browser-consumer.mjs \
 
 The command verifies the supplied archives, installs them in an external temporary project, type-checks the fixtures, and exercises Node, plain browser JavaScript, production React, development StrictMode, and module workers in Chromium, Firefox, and WebKit.
 
-It checks loading, unmount during loading, invalid input, the supported numeric boundary, failed assets, reload recovery, and deployment prefixes. A successful run writes `acceptance.json` with `status: "passed"`. The adjacent `numeric-boundary-diagnostic.json` records the current runtime failure just beyond the supported numeric boundary. Acceptance neither rebuilds the component nor publishes it.
+It checks loading, unmount during loading, invalid input, exact large-integer arithmetic, failed assets, reload recovery, and deployment prefixes. A successful run writes `acceptance.json` with `status: "passed"`. The adjacent `numeric-boundary-diagnostic.json` records successful addition at the 31-bit and 64-bit boundaries and for an input above `2^4096`. Acceptance neither rebuilds the component nor publishes it.
 
 ## Consumer acceptance
 

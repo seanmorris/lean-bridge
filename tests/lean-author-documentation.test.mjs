@@ -20,6 +20,33 @@ const documents = [
 const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/gm)]
 	.map(match => ({ language: match[1], source: match[2] }));
 
+test("author setup starts with a prepared CLI and keeps checkout-only runtime work separate", async () => {
+	const [setup, hub, tutorial, diagnostics, publishing, manifest] = await Promise.all([
+		"docs/lean/setup.md", "docs/lean-author-guide.md"
+		, "docs/lean/first-component.md", "docs/lean/diagnostics.md"
+		, "docs/publish/npm.md", "config/cli-package.v1.json"
+	].map(path => readFile(path, "utf8")));
+	const [prepared, checkout] = setup.split("## Install the local CLI\n");
+	assert.ok(checkout, "Keep the contributor setup and its existing anchor");
+	assert.match(prepared, /^## Install a prepared CLI$/m);
+	const configuration = JSON.parse(manifest);
+	const archiveName = `${configuration.name.replace(/^@/, "").replace("/", "-")}-${configuration.version}.tgz`;
+	assert.ok(prepared.includes(`/absolute/path/to/${archiveName}`));
+	assert.match(prepared, /sha256sum "\$LEAN_BRIDGE_CLI_ARCHIVE"/);
+	assert.match(prepared, /package\/cli-package-inventory\.json/);
+	assert.match(prepared, /runtimeIncluded: true/);
+	const commands = fences(prepared).map(block => block.source).join("\n");
+	assert.match(commands, /npm install --prefix "\$LEAN_BRIDGE_WORK\/cli" --offline --ignore-scripts --no-audit --no-fund "\$LEAN_BRIDGE_CLI_ARCHIVE"/);
+	assert.match(commands, /export PATH="\$LEAN_BRIDGE_WORK\/cli\/node_modules\/\.bin:\$PATH"/);
+	assert.doesNotMatch(commands, /LEAN_BRIDGE_CHECKOUT|LEAN_BRIDGE_RUNTIME_ROOT|npm run bootstrap/);
+	assert.match(checkout, /export LEAN_BRIDGE_RUNTIME_ROOT=/);
+	assert.match(hub, /prepared CLI archive/);
+	assert.match(tutorial, /only the checkout-based setup needs `LEAN_BRIDGE_RUNTIME_ROOT`/);
+	assert.ok(publishing.includes("../lean/setup.md#install-a-prepared-cli"));
+	assert.ok(diagnostics.includes("setup.md#install-a-prepared-cli"));
+	assert.doesNotMatch(diagnostics, /publish\/production-release\.md/);
+});
+
 test("the first component's copyable files exactly match the author fixture", async () => {
 	const content = await readFile("docs/lean/first-component.md", "utf8");
 	const blocks = fences(content);

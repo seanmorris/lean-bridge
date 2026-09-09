@@ -33,7 +33,7 @@ A first interrupt cancels the active process and returns 130.
 | `lean-toolchain-drift` | The source requests a different Lean version from the builder. | Compare `lean-toolchain` with the pinned builder and runtime. |
 | `lean-compiler-drift` | Compiler and runtime Git identities differ. | Rebuild using the matching pinned toolchain and runtime. |
 | `docker-unavailable` or `nix-unavailable` | The selected isolated builder is unavailable. | Start Docker or install Nix, then repeat [setup](setup.md). |
-| `shared-runtime-package-unavailable` | The package step cannot find `main.mjs` and `main.wasm`. | Set `LEAN_BRIDGE_RUNTIME_ROOT` to the completed shared runtime's `lazy` directory. |
+| `shared-runtime-package-unavailable` | The package step cannot find `main.mjs` and `main.wasm`. | Reinstall a [prepared CLI with its bundled runtime](setup.md#install-a-prepared-cli). Checkout users must complete the manual runtime build and set `LEAN_BRIDGE_RUNTIME_ROOT` to its `lazy` directory. |
 | `package-dependency-download-failed` | The isolated builder could not fetch a pinned input. | Check access to the named source and retry the same locked build. |
 | `package-build-failed` | The isolated build failed after analysis. | Retain the JSON diagnostic and build log; inspect the compiler error before changing the source. |
 | `package-ineligible` | The requested projection lacks a required artifact or adapter. | Check [export shapes](export-decisions.md) and the [consumer support contract](../consumer-support.v1.json). |
@@ -52,4 +52,4 @@ Contributors reproducing this failure with the tutorial runner can select that c
 
 Keep the receipt, verifier, and both archives from the same completed dry run in one directory. Verify that directory before installation. Do not edit a receipt to match a changed archive; rebuild the candidate from the intended committed source.
 
-Return to [your first component](first-component.md#create-and-verify-local-archives) to create another local candidate. Follow [production release review](../publish/production-release.md) for publication authorization, candidate checks, and signed receipt verification.
+Return to [your first component](first-component.md#create-and-verify-local-archives) to create another local candidate. Follow [ordinary component publishing](../publish/npm.md#publish-an-ordinary-component) for signed publication and recovery.

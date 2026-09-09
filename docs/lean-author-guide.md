@@ -2,11 +2,11 @@
 
 Turn a Lake project into a component, build local npm archives, and call its public functions from JavaScript. The worked example exports `add` and `isEmpty` and checks a theorem about `add`.
 
-Lean Bridge currently installs from this checkout. No CLI registry release is available.
+Install a prepared CLI archive, or use a checkout when developing Lean Bridge. No public CLI registry release is available yet.
 
 ## Prerequisites
 
-[Set up the author tools](lean/setup.md): Node 22, Git, Lean 4.32.2, an isolated builder, and one prepared shared runtime. The setup page separates the Nix and Docker commands.
+[Set up the author tools](lean/setup.md): Node 22, Git, Lean 4.32.2, and Nix or Docker. The prepared CLI includes the shared runtime; the setup page also covers manual runtime builds for checkout users.
 
 ## Create a plain Lake project
 
@@ -32,4 +32,4 @@ For the theorem and its recorded relationship, read [Proofs and assurance metada
 
 ## Common failures
 
-Use the [diagnostic table](lean/diagnostics.md#match-the-diagnostic), keeping the command's code and build log. A local dry run creates archives; it performs no registry write. Continue with the [publishing guide](../src/release/README.md#publication-and-receipts) when preparing a release.
+Use the [diagnostic table](lean/diagnostics.md#match-the-diagnostic), keeping the command's code and build log. A local dry run creates archives; it performs no registry write. Continue with [ordinary component publishing](publish/npm.md#publish-an-ordinary-component) when preparing a release.

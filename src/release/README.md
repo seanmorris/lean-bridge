@@ -66,7 +66,11 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 
 [`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`archive-subjects.mjs`](archive-subjects.mjs) records each ecosystem, coordinate, filename, byte length, and hash. [`release-receipt.mjs`](release-receipt.mjs) signs the completed result and copies [`release-archive-verifier.mjs`](release-archive-verifier.mjs), the receipt, and the public policy beside every archive. The verifier requires a separately trusted policy hash and no repository checkout. [`component-package-receipt.mjs`](component-package-receipt.mjs) checks unsigned local dry-run packages.
 
-The installed CLI includes the npm transaction adapter. It defaults to production mode, but production writes remain blocked by the reviewed deployment-profile gate and require `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production`. A local registry rehearsal uses `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and optionally `LEAN_BRIDGE_NPM_REGISTRY_URL`; sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint. In both modes the adapter hashes the authorized tarball before the write and hashes the immutable registry tarball afterward.
+The installed CLI includes the npm transaction adapter. Ordinary component publications use version-two `lean-bridge.cli.json` to select the registry, tag, access, authentication mode, and signer policy. The dry run binds those settings into the publication manifest. The author's explicit configuration authorizes that destination; these publications do not require the project's deployment-profile approvals or `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN`. Follow [ordinary component publishing](../../docs/publish/npm.md#publish-an-ordinary-component).
+
+Universal version-one releases retain the project deployment-profile gate. Their installed adapter defaults to production mode and requires `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production` before production writes. A universal local-registry rehearsal uses `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and optionally `LEAN_BRIDGE_NPM_REGISTRY_URL`; sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint.
+
+Both publication paths hash the authorized tarball before upload and verify the immutable registry tarball afterward.
 
 Cargo, PyPI, NuGet, Maven, and RubyGems have publication-plan destinations but no installed transaction adapters. C, C++, and WIT/WASI use archive-retention targets without registry endpoints. The [ecosystem publishing guides](../../docs/publishing.md#choose-the-package-ecosystem) describe the package builders and operator-run upload flows. Those uploads do not produce a signed Lean Bridge completion receipt.
 
@@ -85,7 +89,9 @@ These invariants make a registry package a projection of the reviewed bundle ins
 
 ## Project release approval policy
 
-The [versioned deployment profile](../../config/production-deployment-profile.v1.json) owns the supported platform and version requirements. The checked-in profile has candidate status and no approvals, so production publication is blocked.
+This policy governs Lean Bridge's universal project releases. Ordinary component authors publish under their own registry and signing authority.
+
+The [versioned deployment profile](../../config/production-deployment-profile.v1.json) owns the supported platform and version requirements. The checked-in profile has candidate status and no approvals, so universal project production publication is blocked.
 
 The current profile requires the release owner, runtime owner, and security owner to review the exact profile revision, with evidence for:
 
@@ -119,7 +125,7 @@ The signer provider exposes `kind`, `keyId`, and `sign(bytes)`. Its `keyId` must
 
 The handler verifies the manifest and candidate, checks the deployment profile when configured, and preflights required credential names before signing the publication statement. It verifies that signature before invoking the transaction publisher. The transaction preflights every target before its first write and accesses credentials through the scoped boundary. The handler uses the same policy and signer to create the completion receipt only after the transaction reports `complete`.
 
-Follow [sandbox publisher configuration](../../docs/publish/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/publish/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
+Follow [sandbox publisher configuration](../../docs/publish/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Universal production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/publish/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
 
 ## Adding an ecosystem package
 
