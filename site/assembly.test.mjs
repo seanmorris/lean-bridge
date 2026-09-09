@@ -149,21 +149,37 @@ test('standalone navigation honors the published base and source preview fallbac
 	const script = await readFile(fileURLToPath(new URL('../demos/shared/site-nav.mjs', import.meta.url)), 'utf8');
 	for(const base of [undefined, '/', '/lean-bridge/'])
 	{
-		let nav;
-		const element = () => {
+		let header;
+		const element = tagName => {
 			const children = [];
-			return { children, setAttribute: () => undefined, append: (...items) => children.push(...items) };
+			const attributes = {};
+			return { tagName, children, attributes, setAttribute: (name, value) => { attributes[name] = value; }, append: (...items) => children.push(...items) };
 		};
 		const document = {
 			documentElement: { dataset: { demoTitle: 'Example algorithm', siteBase: base } }
-			, createElement: element, body: { prepend: value => { nav = value; } }
+			, createElement: element, body: { prepend: value => { header = value; } }
 		};
 		vm.runInNewContext(script, { document });
-		assert.equal(nav.children[0].href, base ?? '../');
-		assert.equal(nav.children[1].textContent, 'Example algorithm');
-		const links = nav.children[2].children;
-		assert.deepEqual(links.map(link => link.textContent), ['Home', 'Demos', 'Docs']);
+		assert.equal(header.tagName, 'header');
+		assert.equal(header.className, 'site-header');
+		const inner = header.children[0];
+		assert.equal(inner.className, 'site-header-inner');
+		assert.equal(inner.children[0].href, base ?? '../');
+		assert.equal(inner.children[0].className, 'site-brand');
+		const nav = inner.children[1];
+		assert.equal(nav.attributes['aria-label'], 'Main navigation');
+		const links = nav.children;
+		assert.deepEqual(links.map(link => link.textContent.trim()), ['Home', 'Demos', 'Docs', 'GitHub']);
 		assert.equal(links[1].href, base ? `${base}demos/` : '../');
+		assert.equal(links[1].attributes['aria-current'], 'page');
 		assert.equal(links[2].href, base ? `${base}docs/` : '../../build/github-pages/docs/');
+		assert.equal(links[3].href, 'https://github.com/seanmorris/lean-bridge');
+		assert.equal(links[3].children[0].attributes['aria-hidden'], 'true');
+		const mobile = inner.children[2];
+		assert.equal(mobile.tagName, 'details');
+		assert.equal(mobile.className, 'mobile-navigation');
+		assert.equal(mobile.children[0].textContent, 'Menu');
+		assert.equal(mobile.children[1].attributes['aria-label'], 'Mobile navigation');
+		assert.deepEqual(mobile.children[1].children.map(link => link.href), links.map(link => link.href));
 	}
 });

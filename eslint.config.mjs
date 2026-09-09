@@ -30,6 +30,7 @@ const browserFiles = [
 	, 'demos/lean-sweep-and-prune/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
+	, 'tests/fixtures/documentation/consumers/browser/main.js'
 ];
 const generatedSourceTemplateFiles = [
 	'scripts/test-managed-native-bindings.mjs'
@@ -227,7 +228,7 @@ export default [
 		}
 	}
 	, {
-		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}']
+		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}', 'tests/fixtures/documentation/consumers/**/*.{ts,tsx}']
 		, languageOptions: {
 			parser: tseslint.parser
 			, globals: { ...globals.browser }

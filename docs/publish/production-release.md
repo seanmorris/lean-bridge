@@ -1,6 +1,6 @@
 # Review a production release
 
-The installed publisher defaults to production mode and checks the versioned deployment profile before reading registry credentials. The checked-in profile currently has candidate status and no approvals, so production publication is blocked.
+Lean Bridge's universal project release checks the versioned deployment profile before reading registry credentials. The checked-in profile currently has candidate status and no approvals, so that production release is blocked. Downstream authors publish ordinary components with their own [npm configuration](npm.md#publish-an-ordinary-component).
 
 ## Inspect the approval state
 
@@ -10,17 +10,9 @@ Run this from the Lean Bridge checkout:
 npm run deployment:check
 ```
 
-Exit code `2` means the profile is not eligible. The output identifies missing approval roles and the evidence categories required for review. The current profile requires the release owner, runtime owner, and security owner, with evidence for:
+Exit code `2` means the profile is not eligible. The output identifies missing approval roles and the evidence categories required for review. Follow the required [project release approval policy](../../src/release/README.md#project-release-approval-policy) in Contributing for reviewer roles, evidence, and authorization of the exact profile revision.
 
-- Green full CI.
-- External reconstruction of the candidate.
-- A human clean-room consumer run.
-- An actual npm sandbox publication.
-- Security and assurance review.
-
-The [profile file](../../config/production-deployment-profile.v1.json) owns the supported platform and version requirements. The evaluator checks the profile state and approval records. Reviewers must inspect the referenced evidence; the evaluator does not perform those external reviews for them.
-
-Editing `status` or inserting names is not a substitute for approval. The responsible reviewers must authorize the specific profile revision and record their decisions through the project's review process.
+The evaluator checks profile state and approval records. Reviewers must inspect the referenced evidence; the evaluator does not perform those external reviews for them. Editing `status` or inserting names does not supply approval.
 
 ## Freeze the candidate and authority
 
@@ -34,7 +26,7 @@ npm run verify:release-authorization -- \
 
 Check the exact source revision, package coordinates, target order, archive hashes, and installation evidence. Rebuilds or target changes produce a new candidate and require renewed review. Preserve the signed input when recovering an interrupted transaction.
 
-The release integration must already supply the accepted signer policy and signer provider described in the [sandbox tutorial](sandbox-release.md#configure-the-publisher-integration). The installed CLI does not expose those inputs through flags or its configuration file.
+The universal release integration must supply the accepted signer policy and signer provider described in the [sandbox tutorial](sandbox-release.md#configure-the-publisher-integration). Version-two CLI configuration supplies these inputs for ordinary component publication; universal release integration uses the handler factory.
 
 The npm adapter also requires the exact production opt-in value `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production` before it writes. That value expresses the operator's intent; it does not replace the deployment approvals, candidate verification, signer policy, or registry permissions. Keep production tokens in the approved credential provider, not in a committed configuration or command transcript.
 
@@ -76,4 +68,6 @@ Do not delete an existing transaction lock automatically. Confirm which process 
 
 If the package itself needs correction, the release owner chooses an approved corrective release and any registry-specific recovery action. The [transactional release record](../evidence/transactional-registry-release.md) documents the supported recovery classifications.
 
-The repository's [reproducible-release workflow](../../.github/workflows/reproducible-release.yml) builds and verifies candidate artifacts. Its `release-ready` job does not publish a registry package. The [Pages workflow](github-pages.md) deploys website files under separate authority.
+The repository's [reproducible-release workflow](../../.github/workflows/reproducible-release.yml) builds and verifies candidate artifacts. Its `release-ready` job does not publish a registry package. The [Pages workflow](../contributing/github-pages.md) deploys website files under separate authority.
+
+For registry-specific package preparation and upload commands, choose an [ecosystem publishing guide](../publishing.md#choose-the-package-ecosystem). Operator-run uploads require an approved distribution workflow and retain their own upload evidence; they do not generate the signed records described on this page.

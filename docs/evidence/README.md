@@ -13,6 +13,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 
 ## Author workflow and release
 
+- [npm scalar ABI and signed release hardening, 9 September 2026](npm-release-hardening-20260909.md)
 - [Executable author tutorial, 8 September 2026](documentation-author-20260908.md)
 - [Lean project analysis](lean-project-analysis.md)
 - [Zero-configuration acceptance](zero-configuration-acceptance.md)
@@ -28,6 +29,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 
 ## Consumer packages
 
+- [Consumer and publishing guides, executable examples, 8 September 2026](documentation-runtimes-20260908.md)
 - [Installed React and worker tutorial, 8 September 2026](documentation-consumer-20260908.md)
 - [npm package](npm-package.md)
 - [Browser bundler acceptance](browser-bundler-acceptance.md)

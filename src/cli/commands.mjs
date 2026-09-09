@@ -36,6 +36,8 @@ import {
 	RegistryTransactionError,
 } from "../release/registry-transaction.mjs";
 import { createNpmRegistryAdapter } from "../release/npm-registry-adapter.mjs";
+import { createKeyFileSigner, readPublishConfiguration } from "../release/publish-configuration.mjs";
+import { canonicalJson } from "../capsule/node.mjs";
 import {
 	ReleaseReceiptError,
 	writeReleaseReceipt,
@@ -349,7 +351,7 @@ export const createCliHandlers = ({
 				});
 				signal?.throwIfAborted();
 				emitProgress?.({ phase: "authorize", state: "completed", message: "Publish manifest and release authorization verified" });
-				if(deploymentProfileGate !== null)
+				if(deploymentProfileGate !== null && verified.authorizationDocument?.kind !== "lean-bridge-component-authorization")
 				{
 					const deployment = await deploymentProfileGate();
 					if(deployment?.eligible !== true)
@@ -401,10 +403,11 @@ export const createCliHandlers = ({
 				signal?.throwIfAborted();
 				emitProgress?.({ phase: "credentials", state: "completed", message: "Registry credential requirements are available" });
 				emitProgress?.({ phase: "attestation", state: "started", message: "Authorizing the exact publication closure" });
+				const signer = typeof attestationSigner === "function" ? await attestationSigner() : attestationSigner;
 				publicationAttestation = await authorizePublish({
 					verified
 					, policy: attestationPolicy
-					, signer: attestationSigner
+					, signer
 				});
 				signal?.throwIfAborted();
 				emitProgress?.({ phase: "attestation", state: "completed", message: "Publication closure signature verified" });
@@ -452,7 +455,7 @@ export const createCliHandlers = ({
 						, transactionResult: result
 						, publicationAttestation
 						, policy: attestationPolicy
-						, signer: attestationSigner
+						, signer
 						, signal
 					});
 					signal?.throwIfAborted();
@@ -634,10 +637,45 @@ const installedNpmAdapter = createNpmRegistryAdapter({
 	, productionOptIn: process.env.LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN
 });
 const installedDeploymentGate = installedNpmMode === "production"
-	? async () => evaluateProductionDeploymentProfile(await loadProductionDeploymentProfile())
+	? async () => evaluateProductionDeploymentProfile(await loadProductionDeploymentProfile(
+		resolve(installedEngineRoot, "config/production-deployment-profile.v1.json")
+	))
 	: null;
 
-export const cliHandlers = createCliHandlers({
+const defaultHandlers = createCliHandlers({
 	registryAdapters: [installedNpmAdapter]
 	, deploymentProfileGate: installedDeploymentGate
+});
+
+export const cliHandlers = Object.freeze({
+	...defaultHandlers,
+	publish: async (request, context) => {
+		try
+		{
+			const configuration = await readPublishConfiguration(request.publication?.config, request.publication?.directory);
+			if(configuration === null) return defaultHandlers.publish(request, context);
+			const { options, policy } = configuration;
+			const registry = new URL(options.registry);
+			const mode = ["localhost", "127.0.0.1", "[::1]"].includes(registry.hostname) ? "sandbox" : "production";
+			const adapter = createNpmRegistryAdapter({ mode, registry: options.registry, productionOptIn: "publish-to-production" });
+			return createCliHandlers({
+				registryAdapters: [adapter], deploymentProfileGate: installedDeploymentGate
+				, attestationPolicy: policy
+				, attestationSigner: () => createKeyFileSigner(configuration)
+				, gate: inputs => runSelectedReproducibilityGate({ ...inputs, publication: options })
+				, verifyPublishPlan: async inputs => {
+					const verified = await verifyPublishManifest(inputs);
+					if(verified.manifest.schemaVersion !== 2 || canonicalJson(verified.manifest.publication) !== canonicalJson(options))
+					{
+						throw new PublishManifestError("publish-configuration-drift", "Publication settings differ from the dry run; recreate the dry run with this configuration");
+					}
+					return verified;
+				}
+			}).publish(request, context);
+		} catch(error)
+		{
+			if(!(error instanceof PublicationAttestationError)) throw error;
+			return { status: "blocked", result: null, diagnostics: [diagnostic({ code: error.code, message: error.message })], prompts: [], nextActions: [] };
+		}
+	}
 });

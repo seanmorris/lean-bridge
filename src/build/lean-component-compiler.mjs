@@ -10,6 +10,8 @@ import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
+import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
+import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -130,7 +132,10 @@ export const compileLeanComponentSources = async ({
 		}
 		const generatedPath = join(inputs, "generated/LeanBridgeGenerated.lean");
 		const generatedBytes = await readChecked(generatedPath, { sha256: compilationPlan.document.compilerAdapters.leanSourceSha256 }, "generated Lean compiler adapter");
-		await writeFile(join(leanRoot, "LeanBridgeGenerated.lean"), generatedBytes, { mode: 0o444 });
+		const adapterPlan = JSON.parse(await readChecked(join(inputs, "generated/compiler-adapters.json"), { sha256: compilationPlan.document.compilerAdapters.planSha256 }, "compiler adapter plan"));
+		validateCompilerAdapterPlan(adapterPlan);
+		const generatedSource = join(leanRoot, `${compilationPlan.document.compilerAdapters.module}.lean`);
+		await writeFile(generatedSource, generatedBytes, { mode: 0o444 });
 		inputIdentities.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
 		const compileEnvironment = {
 			...compilerEnvironment,
@@ -140,7 +145,7 @@ export const compileLeanComponentSources = async ({
 		for(const module of compilationPlan.document.source.compileOrder)
 		{
 			const generated = module === compilationPlan.document.compilerAdapters.module;
-			const source = generated ? join(leanRoot, "LeanBridgeGenerated.lean") : join(leanRoot, sourceByModule.get(module).path);
+			const source = generated ? generatedSource : join(leanRoot, sourceByModule.get(module).path);
 			const paths = modulePaths(staging, module);
 			await mkdir(dirname(paths.olean), { recursive: true });
 			await mkdir(dirname(paths.c), { recursive: true });
@@ -157,6 +162,7 @@ export const compileLeanComponentSources = async ({
 			{
 				fail("lean-component-compile-failed", `Lean failed to compile ${module}`, { module, cause: error.message, compilerDetails: error.details ?? null });
 			}
+			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${generateComponentScalarAdapters(adapterPlan.privateAbi)}`);
 			const [cBytes, oleanBytes] = await Promise.all([readFile(paths.c), readFile(paths.olean)]);
 			records.push(Object.freeze({
 				module

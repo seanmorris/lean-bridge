@@ -182,6 +182,7 @@ const authorizedBundleFiles = ({ componentPlan, compilationPlan }) => Object.fre
 	, "metadata/component-artifact-manifest.json"
 	, "metadata/provenance.json"
 	, "metadata/runtime-requirement.json"
+	, "metadata/sbom.json"
 	, "metadata/side-module-audit.json"
 	, ...componentPlan.document.source.inputs.map(input => `source/${input.path}`)
 ].sort());

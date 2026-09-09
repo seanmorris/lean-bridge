@@ -8,6 +8,7 @@ import { mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/p
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { assertComponentSignature } from "../abi/component-scalars.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -98,7 +99,7 @@ export const validateCompilerAdapterPlan = plan => {
 	if(plan.schemaVersion !== 1) fail("invalid-compiler-adapter-plan", "compiler adapter plan version must be 1");
 	if(typeof plan.component !== "string" || plan.component === "") fail("invalid-compiler-adapter-plan", "component must be a string");
 	for(const value of [plan.componentPlanSha256, plan.leanSourceSha256]) if(typeof value !== "string" || !/^[0-9a-f]{64}$/.test(value)) fail("invalid-compiler-adapter-plan", "compiler adapter hashes must be SHA-256 values");
-	if(plan.module !== "LeanBridgeGenerated") fail("invalid-compiler-adapter-plan", "generated compiler module name is unsupported");
+	if(plan.module !== `LeanBridgeGenerated${sha256(plan.component).slice(0, 16)}`) fail("invalid-compiler-adapter-plan", "generated compiler module name is unsupported");
 	if(!Array.isArray(plan.imports) || plan.imports.length === 0 || new Set(plan.imports).size !== plan.imports.length) fail("invalid-compiler-adapter-plan", "imports must be a unique non-empty array");
 	if(!Array.isArray(plan.exports) || plan.exports.length === 0) fail("invalid-compiler-adapter-plan", "compiler adapter plan must export declarations");
 	const symbols = new Set();
@@ -115,7 +116,7 @@ export const validateCompilerAdapterPlan = plan => {
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
 	}
 	exactKeys(plan.privateAbi, ["version", "dispatch", "exports"], "private ABI");
-	if(plan.privateAbi.version !== 1 || plan.privateAbi.dispatch !== "direct-symbols") fail("invalid-compiler-adapter-plan", "private ABI must use direct symbols");
+	if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2");
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{
@@ -125,27 +126,28 @@ export const validateCompilerAdapterPlan = plan => {
 			fail("invalid-compiler-adapter-plan", "private ABI export order and identities must match generated exports");
 		}
 		if(!Array.isArray(item.parameters) || item.result === null || typeof item.result !== "object") fail("invalid-compiler-adapter-plan", "private ABI type shapes are incomplete");
+		assertComponentSignature(item);
 	}
 	return true;
 };
 
-const renderLeanSource = ({ imports, exports }) => {
+const renderLeanSource = ({ imports, exports, module }) => {
 	const lines = [
 		...imports.map(module => `import ${module}`)
 		, ""
-		, "namespace LeanBridgeGenerated"
+		, `namespace ${module}`
 		, ""
 	];
 	for(const item of exports)
 	{
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
 		const arguments_ = item.parameters.map(parameter => parameter.name).join(" ");
-		lines.push(`@[export ${item.symbol}]`);
-		lines.push(`def ${item.wrapper}${parameters === "" ? "" : ` ${parameters}`} : ${item.leanEffect === null ? item.leanResultType : `${item.leanEffect} ${item.leanResultType}`} :=`);
+		lines.push(`@[export ${item.symbol}_lean]`);
+		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : Unit)" : parameters} : ${item.leanEffect === null ? item.leanResultType : `${item.leanEffect} ${item.leanResultType}`} :=`);
 		lines.push(`  ${item.sourceDeclaration}${arguments_ === "" ? "" : ` ${arguments_}`}`);
 		lines.push("");
 	}
-	lines.push("end LeanBridgeGenerated", "");
+	lines.push(`end ${module}`, "");
 	return lines.join("\n");
 };
 
@@ -161,6 +163,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	if(componentPlan?.document?.bindingIr?.semanticSha256 !== analysis.bindingIr.semanticSha256) fail("compiler-adapter-plan-drift", "Component plan and Binding IR identities differ");
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
 	const exports = analysis.bindingIr.document.declarations.map(declaration => {
+    assertComponentSignature(declaration);
     if(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null) fail("unsupported-compiler-declaration", `Compiler adapter cannot emit ${declaration.id}`);
     const sourceDeclaration = declaration.source.declaration;
     const candidate = candidates.get(sourceDeclaration);
@@ -180,10 +183,11 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
     return item;
 	});
 	const imports = Object.freeze([...new Set(exports.map(item => item.sourceModule))].sort());
-	const leanSource = renderLeanSource({ imports, exports });
+	const module = `LeanBridgeGenerated${sha256(analysis.bindingIr.document.component.id).slice(0, 16)}`;
+	const leanSource = renderLeanSource({ imports, exports, module });
 	const privateAbi = Object.freeze({
-		version: 1
-		, dispatch: "direct-symbols"
+		version: 2
+		, dispatch: "scalar-frame-v2"
 		, exports: Object.freeze(exports.map(item => Object.freeze({
 			bindingId: item.bindingId
 			, symbol: item.symbol
@@ -196,7 +200,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 		schemaVersion: 1
 		, component: analysis.bindingIr.document.component.id
 		, componentPlanSha256: componentPlan.sha256
-		, module: "LeanBridgeGenerated"
+		, module
 		, imports
 		, exports: Object.freeze(exports)
 		, privateAbi

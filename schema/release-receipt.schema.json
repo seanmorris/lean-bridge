@@ -129,6 +129,9 @@
       "required": ["kind", "endpoint"],
       "properties": {
         "kind": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+        "access": { "enum": ["public", "restricted"] },
+        "authMode": { "enum": ["token", "oidc"] },
         "endpoint": {
           "oneOf": [
             { "type": "string", "minLength": 1 },
@@ -231,10 +234,13 @@
               "additionalProperties": false,
               "required": ["candidate", "authorization", "manifest", "flake", "componentGraph"],
               "properties": {
-                "candidate": { "$ref": "reproducibility-report.schema.json#/$defs/candidate" },
+                "candidate": { "oneOf": [
+                  { "$ref": "reproducibility-report.schema.json#/$defs/candidate" },
+                  { "$ref": "component-authorization.schema.json#/$defs/candidate" }
+                ] },
                 "authorization": { "$ref": "#/$defs/artifact" },
                 "manifest": { "$ref": "#/$defs/artifact" },
-                "flake": { "$ref": "#/$defs/artifact" },
+                "flake": { "oneOf": [{ "$ref": "#/$defs/artifact" }, { "type": "null" }] },
                 "componentGraph": { "$ref": "#/$defs/artifact" }
               }
             },

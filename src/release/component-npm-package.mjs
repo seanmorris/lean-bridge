@@ -18,6 +18,7 @@ import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { validateComponentReleaseBundleManifest } from "./component-release-bundle.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
+import { assertComponentSignature, componentScalarAbi } from "../abi/component-scalars.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -47,119 +48,9 @@ const verifiedBundle = async bundleRoot => {
 	return Object.freeze({ root, manifest: Object.freeze(manifest), manifestSha256: sha256(canonicalJson(manifest)) });
 };
 
-const runtimeVersion = runtime =>
-	`0.0.0-abi${runtime.abiVersion}.${runtime.leanCommit.slice(0, 12)}.${runtime.patchSetSha256.slice(0, 12)}`;
-
 const runtimeModule = () => `import createMain from "./internal/main.mjs";
-
-const mainWasm = new URL("./internal/main.wasm", import.meta.url);
-const componentAssets = new Map();
-const module = await createMain({
-  locateFile(path) {
-    if (path === "main.wasm") return mainWasm.href;
-    return componentAssets.get(path) ?? path;
-  },
-});
-if (!module._bridge_lean_runtime_init()) throw new Error("The shared Lean runtime failed to initialize");
-
-const loaded = new Map();
-const encoder = new TextEncoder();
-
-const digest = async bytes => {
-  const value = await globalThis.crypto.subtle.digest("SHA-256", bytes);
-  return [...new Uint8Array(value)].map(byte => byte.toString(16).padStart(2, "0")).join("");
-};
-
-const readArtifact = async url => {
-  if (url.protocol === "file:") {
-    const { readFile } = await import("node:fs/promises");
-    return new Uint8Array(await readFile(url));
-  }
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(\`Unable to read Lean component: HTTP \${response.status}\`);
-  return new Uint8Array(await response.arrayBuffer());
-};
-
-const withBytes = (bytes, operation) => {
-  const pointer = module._malloc(Math.max(1, bytes.length + 1));
-  try {
-    module.HEAP8.set(bytes, pointer);
-    module.HEAP8[pointer + bytes.length] = 0;
-    return operation(pointer, bytes.length);
-  } finally {
-    module._free(pointer);
-  }
-};
-
-const withCString = (value, operation) => withBytes(encoder.encode(value), operation);
-
-const checkCall = (component, result) => {
-  const code = module._bridge_lean_component_last_error();
-  if (code !== 0) throw new Error(\`Lean component \${component} rejected an internal call (\${code})\`);
-  return result;
-};
-
-const compileCall = (descriptor, declaration, abi) => {
-  const parameters = abi.parameters.map(type => type.kind === "primitive" ? type.name : null);
-  const result = abi.result.kind === "primitive" ? abi.result.name : null;
-  if (parameters.length === 2 && parameters.every(type => type === "nat") && result === "nat") {
-    return args => {
-      if (args.length !== 2) throw new TypeError(\`\${declaration.name} expects 2 arguments\`);
-      return withCString(abi.symbol, pointer => checkCall(
-        descriptor.id,
-        module._bridge_lean_component_call_nat2_nat(pointer, args[0], args[1]),
-      ));
-    };
-  }
-  if (parameters.length === 1 && parameters[0] === "string" && result === "bool") {
-    return args => {
-      if (args.length !== 1) throw new TypeError(\`\${declaration.name} expects 1 argument\`);
-      return withCString(abi.symbol, symbol => withBytes(encoder.encode(args[0]), (input, size) =>
-        checkCall(descriptor.id, module._bridge_lean_component_call_string_bool(symbol, input, size)) === 1));
-    };
-  }
-  throw new TypeError(\`The installed shared runtime does not support \${declaration.id}\`);
-};
-
-export const loadComponent = async descriptor => {
-  const existing = loaded.get(descriptor.id);
-  if (existing) {
-    if (existing.buildHash !== descriptor.buildHash) throw new Error(\`Lean component identity conflict for \${descriptor.id}\`);
-    return existing.runtime;
-  }
-  const bytes = await readArtifact(descriptor.sideModule);
-  const actual = await digest(bytes);
-  if (actual !== descriptor.integrity) throw new Error(\`Lean component integrity mismatch for \${descriptor.id}\`);
-  const name = decodeURIComponent(descriptor.sideModule.pathname.split("/").at(-1));
-  componentAssets.set(name, descriptor.sideModule.href);
-  await module.loadDynamicLibrary(name, { global: true, loadAsync: true, nodelete: true });
-  const initialized = withCString(descriptor.initializer, pointer =>
-    module._bridge_lean_component_initialize(pointer));
-  checkCall(descriptor.id, initialized);
-  if (!initialized) throw new Error(\`Lean component initialization failed for \${descriptor.id}\`);
-
-  const declarations = new Map(descriptor.bindingIr.declarations.map(item => [item.id, item]));
-  const calls = new Map(descriptor.privateAbi.exports.map(item => {
-    const declaration = declarations.get(item.bindingId);
-    if (!declaration) throw new Error(\`Private binding does not match \${descriptor.id}\`);
-    return [item.bindingId, compileCall(descriptor, declaration, item)];
-  }));
-  const requireCall = id => {
-    const call = calls.get(id);
-    if (!call) throw new TypeError(\`Unknown Lean declaration \${id}\`);
-    return call;
-  };
-  const runtime = Object.freeze({
-    call: (id, args) => requireCall(id)(args),
-    method() { throw new TypeError("This component has no projected classes"); },
-    construct() { throw new TypeError("This component has no projected classes"); },
-    dispose() { return false; },
-    iterate: (id, args) => requireCall(id)(args),
-    iterateAsync: (id, args) => requireCall(id)(args),
-  });
-  loaded.set(descriptor.id, Object.freeze({ buildHash: descriptor.buildHash, runtime }));
-  return runtime;
-};
+import { createComponentRuntime } from "./internal/component-runtime.mjs";
+export const { loadComponent } = await createComponentRuntime(createMain, new URL("./internal/main.wasm", import.meta.url));
 `;
 
 const descriptorModule = ({ manifest, ir, abi, artifact, initializer }) => `const sideModule = new URL(${JSON.stringify(`./wasm/${basename(artifact.path)}`)}, import.meta.url);
@@ -203,26 +94,59 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, readFile(join(runtime, "main.wasm"))
 	]);
 	const artifact = bundle.manifest.files.find(item => item.role === "component");
-	const version = runtimeVersion(bundle.manifest.runtime);
+	if(abi.version !== componentScalarAbi || abi.dispatch !== "scalar-frame-v2") throw new Error("Rebuild this component for scalar ABI 2");
+	for(const declaration of ir.declarations) assertComponentSignature(declaration);
+	for(const declaration of abi.exports) assertComponentSignature(declaration);
+	const runtimeSource = (await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
+	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
+	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
+	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
+	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
+	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => item.name));
+	for(const item of WebAssembly.Module.imports(side))
+	{
+		const provided = item.kind === "function" ? runtimeExports.has(`function:${item.name}`)
+			: item.kind === "memory" ? item.module === "env" && item.name === "memory"
+				: item.kind === "table" ? item.module === "env" && item.name === "__indirect_function_table"
+					: item.module === "GOT.func" ? sideExports.has(item.name) || runtimeExports.has(`function:${item.name}`)
+						: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
+		if(!provided) throw new Error(`Prepared runtime cannot resolve component import ${item.module}.${item.name}`);
+	}
+	const runtimeFiles = new Map([
+		["index.mjs", runtimeModule()]
+		, ["internal/main.mjs", mainModule]
+		, ["internal/main.wasm", mainWasm]
+		, ["internal/component-runtime.mjs", runtimeSource]
+		, ["internal/component-scalars.mjs", scalarSource]
+		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
+	]);
+	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
+	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
+	const runtimeMetadata = {
+		name: "@lean-bridge/runtime"
+		, description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages."
+		, license: "MIT", type: "module", sideEffects: true, engines: { node: ">=22" }
+		, exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } }
+		, files: ["index.mjs", "internal", "LICENSE", "notices", "runtime-identity.json"]
+		, leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime, componentScalarAbi }
+	};
+	const identityBasis = {
+		schemaVersion: 1, metadata: runtimeMetadata
+		, packing: { archiveRoot: "package", sourceDateEpoch: 1, implementationSha256: sha256(await readFile(new URL("./deterministic-archive.mjs", import.meta.url))) }
+		, files: [...runtimeFiles].map(([path, bytes]) => ({ path, sha256: sha256(bytes) })).sort((a, b) => a.path.localeCompare(b.path))
+	};
+	const runtimeIdentity = sha256(canonicalJson(identityBasis));
+	const version = `0.0.0-abi${componentScalarAbi}.${runtimeIdentity}`;
 	const runtimePackage = join(output, "runtime", "package");
 	const componentPackage = join(output, "component", "package");
 	await mkdir(join(runtimePackage, "internal"), { recursive: true });
-	await Promise.all([
-		writeFile(join(runtimePackage, "index.mjs"), runtimeModule())
-		, writeFile(join(runtimePackage, "internal/main.mjs"), mainModule)
-		, writeFile(join(runtimePackage, "internal/main.wasm"), mainWasm)
-		, writeFile(join(runtimePackage, "package.json"), json({
-			name: "@lean-bridge/runtime"
-			, version
-			, description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages."
-			, type: "module"
-			, sideEffects: true
-			, engines: { node: ">=22" }
-			, exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } }
-			, files: ["index.mjs", "internal"]
-			, leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime }
-		}))
-	]);
+	runtimeFiles.set("runtime-identity.json", canonicalJson(identityBasis));
+	runtimeFiles.set("package.json", json({ ...runtimeMetadata, version, leanBridge: { ...runtimeMetadata.leanBridge, runtimeIdentity } }));
+	for(const [path, bytes] of runtimeFiles)
+	{
+		await mkdir(dirname(join(runtimePackage, path)), { recursive: true });
+		await writeFile(join(runtimePackage, path), bytes);
+	}
 
 	const generated = generateJavaScriptPackage(ir);
 	for(const [path, contents] of Object.entries(generated))
@@ -231,11 +155,14 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		await writeFile(join(componentPackage, path), contents);
 	}
 	const componentPackageJson = JSON.parse(generated["package.json"]);
+	const sbom = JSON.parse(await readFile(join(bundle.root, "metadata/sbom.json"), "utf8"));
+	for(const notice of sbom.notices) await copy(join(bundle.root, notice.path), join(componentPackage, basename(notice.path)));
 	const componentExports = componentPackageJson.exports?.["."] ?? {};
 	await writeFile(join(componentPackage, "package.json"), json({
 		name: ir.component.name
 		, ...componentPackageJson
 		, version: ir.component.version
+		, license: sbom.license
 		, description: ir.documentation.summary
 		, engines: { node: ">=22" }
 		, exports: {
@@ -269,6 +196,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["metadata/assurance.json", "assurance.json"]
 		, ["metadata/provenance.json", "provenance.json"]
 		, ["metadata/runtime-requirement.json", "runtime-requirement.json"]
+		, ["metadata/sbom.json", "sbom.json"]
 	]) await copy(join(bundle.root, source), join(componentPackage, "metadata", destination));
 
 	const sourceDateEpoch = 1;

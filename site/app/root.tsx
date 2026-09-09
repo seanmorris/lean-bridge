@@ -56,7 +56,7 @@ export const Layout = ({ children }: { children: ReactNode }) => <html lang="en"
 		<SiteNavigation />
 		{children}
 		<footer className="site-footer"><div><b>Lean Bridge</b><p>Checked Lean. Ordinary application code.</p></div>
-			<div className="footer-links"><Link to="/status/">Implementation status</Link><a href={assetHref("/build-identity.json")}>Build identity</a>
+			<div className="footer-links"><Link to="/docs/contributing/">Contributing</Link><Link to="/status/">Implementation status</Link><a href={assetHref("/build-identity.json")}>Build identity</a>
 				<span id="build-identity">Source {__BUILD_REVISION__.slice(0, 7)}{__BUILD_MODIFIED__ ? " + local changes" : ""}</span></div>
 		</footer>
 		<ScrollRestoration /><Scripts />

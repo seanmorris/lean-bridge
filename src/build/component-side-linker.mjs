@@ -166,6 +166,7 @@ export const linkComponentSideModule = async ({
 		const cInputs = targetManifest.manifest.modules.map(module => join(targetC, module.targetC));
 		const flags = [
 			"-O2", "-fwasm-exceptions", "-flto", "-fPIC", "-ffp-contract=off"
+			, `-I${join(resolve(engineRoot), "poc/lean-link-spike")}`
 			, `-ffile-prefix-map=${targetC}=/workspace/target-c`
 			, `-fdebug-prefix-map=${targetC}=/workspace/target-c`
 			, `-fmacro-prefix-map=${targetC}=/workspace/target-c`

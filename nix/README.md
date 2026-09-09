@@ -50,4 +50,6 @@ Do not solve a missing source error by admitting the entire checkout. Add the sp
 
 ## Verification and evidence
 
+The [signed Nix package publishing guide](../docs/publish/nix.md) covers signing approved output closures, distributing them through a binary cache, configuring consumer trust, and checking substitution. Nix cache signatures and Lean Bridge's signed registry receipts are separate records.
+
 `npm run test:nix` builds the primary Wasm proof target without creating a result link. Engine and package commands in [`../package.json`](../package.json) select the named flake outputs used by CI. The [toolchain inventory](../docs/evidence/toolchain-inventory.md), [component input closure evidence](../docs/evidence/component-compilation-input-closure.md), and [Docker engine evidence](../docs/evidence/docker-component-engine.md) record the pinned revisions, boundaries, and executed paths.

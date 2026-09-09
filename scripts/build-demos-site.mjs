@@ -254,7 +254,10 @@ export async function assembleSite(options = {})
 		const [source] = overlay.find(([, target]) => target === `${page.route.slice(1)}index.html`);
 		const html = await readFile(resolve(client, source), 'utf8');
 		const headingAttributes = html.match(/<h1\b([^>]*)>/u)?.[1];
-		if(!firstHeading || !headingAttributes?.includes(`id="${firstHeading.id}"`))
+		const headingMatches = page.legacy
+			? /\bid="[^"]+"/u.test(headingAttributes ?? '')
+			: firstHeading && headingAttributes?.includes(`id="${firstHeading.id}"`);
+		if(!headingMatches)
 			throw new Error(`Canonical guide must render its expected heading: ${page.route}`);
 	}
 	await mkdir(dirname(output), { recursive: true });

@@ -13,6 +13,7 @@ import test from 'node:test';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import manifest from '../demos/manifest.json' with { type: 'json' };
+import contributingCompatibility from '../tests/fixtures/documentation/contributing-compatibility.json' with { type: 'json' };
 import { demos, docPages, prerenderPaths } from './registry.mjs';
 import {
 	compileDocumentationPage, generateSiteContent
@@ -36,10 +37,11 @@ test('registry preserves all artifacts and migrates Myers, sweep-and-prune, and 
 		assert.equal(prerenderPaths.includes(demo.canonicalPage), demo.renderingMode === 'react');
 	}
 	assert.equal(new Set(prerenderPaths).size, prerenderPaths.length);
-	assert.equal(prerenderPaths.length, 30);
-	assert.equal(docPages.filter(entry => entry.source).length, 24);
+	assert.equal(new Set(docPages.map(entry => entry.id)).size, docPages.length);
+	assert.equal(prerenderPaths.length, docPages.length + 6);
+	assert.equal(docPages.filter(entry => entry.source).length, 54);
 	assert.equal(new Set(docPages.filter(entry => entry.source)
-		.map(entry => entry.source)).size, 24);
+		.map(entry => entry.source)).size, docPages.length);
 });
 
 test('source-relative links preserve route fragments and deployment prefixes', () => {
@@ -137,14 +139,18 @@ test('raw HTML, images, and non-canonical sources cannot enter compiled modules'
 	assert.doesNotMatch(inert.code, /^import value from/mu);
 });
 
-test('React and HTML examples are highlighted as inert documentation', async () => {
+test('React, HTML, and Nix examples are highlighted as inert documentation', async () => {
 	const compiled = await compileDocumentationPage([
 		'# React example', '', '```tsx'
 		, 'export const Example = () => <output>42</output>;', '```'
 		, '', '```html', '<script type="module" src="/main.tsx"></script>', '```'
+		, '', '```nix', '{ nix.settings.require-sigs = true; }', '```'
+		, '', '```ini', 'require-sigs = true', '```'
 	].join('\n'), page, { revision });
 	assert.match(compiled.code, /"data-language": "tsx"/u);
 	assert.match(compiled.code, /"data-language": "html"/u);
+	assert.match(compiled.code, /"data-language": "nix"/u);
+	assert.match(compiled.code, /"data-language": "ini"/u);
 	assert.doesNotMatch(compiled.code, /^export const Example/mu);
 });
 
@@ -175,7 +181,8 @@ test('all generated modules render without browser runtimes and match source has
 		const metadata = await readFile(path.join(output, 'metadata.mjs'), 'utf8');
 		const search = JSON.parse(await readFile(path.join(output, 'search-index.json'), 'utf8'));
 		assert.equal(Object.keys(generated.pages).length, docPages.length);
-		assert.equal(search.length, docPages.length);
+		assert.equal(search.length, docPages.filter(entry => !entry.legacy).length);
+		assert.deepEqual(search.map(entry => entry.route), docPages.filter(entry => !entry.legacy).map(entry => entry.route));
 		assert.doesNotMatch(index, /searchText|node:|@mdx-js|shiki/u);
 		assert.doesNotMatch(metadata, /searchText|import\(|pageModules/u);
 		assert.deepEqual((await readdir(output)).sort(), [
@@ -197,6 +204,21 @@ test('all generated modules render without browser runtimes and match source has
 			for(const heading of entry.headings)
 			{
 				assert.ok(html.includes(`id="${heading.id}"`));
+			}
+		}
+		for(const migration of contributingCompatibility)
+		{
+			const entry = generated.pages[migration.route];
+			assert.equal(entry.legacy, true, migration.id);
+			assert.deepEqual(entry.headings.map(({ depth, id }) => [depth, id]),
+				migration.headings, `${migration.id}: historical headings stay available at the old URL`);
+			assert.equal(generated.pages[migration.target].group, 'Contributing');
+			const module = await generated.pageModules[migration.route]();
+			const html = renderToStaticMarkup(createElement(module.default));
+			for(const [, id] of migration.headings)
+			{
+				const destination = path.posix.relative(migration.route, migration.target) + `/#${id}`;
+				assert.ok(html.includes(`href="${destination}"`), `${migration.id}: forwarding link for ${id}`);
 			}
 		}
 	}

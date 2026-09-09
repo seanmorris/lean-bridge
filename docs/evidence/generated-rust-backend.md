@@ -1,6 +1,6 @@
 # Generated Rust Backend Evidence
 
-Status: the Alpha Binding IR generates a Rust 2021 crate that compiles without warnings and passes a native consumer test. The runtime used by this test implements the generated typed trait. The real Lean runtime connection remains a later conformance task.
+Historical generator-stage evidence: the Alpha Binding IR generated a Rust 2021 crate that compiled without warnings and passed a native consumer test using a fixture implementation of the generated typed trait. The later [native consumer acceptance](native-consumer-acceptance.md) connects the installed crate to real Lean. For current installation and usage, see the [Rust guide](../consume/rust.md).
 
 ## Backend decision
 
@@ -57,6 +57,6 @@ pub struct Payload {
 
 Generation is deterministic and hash-bound. The audit rejects public dispatcher names and private bridge machinery. Negative fixtures reject Promise delivery and arbitrary-precision integers because this dependency-free POC crate cannot preserve them. Finite generic metadata produces only the concrete Rust functions supported by the component.
 
-## Current boundary
+## Boundary of these historical checks
 
 The compiled runtime fixture proves the Rust API shape, ownership behavior, borrow shape, failure convention, generated integration contract, and cleanup. It does not connect that trait to the current Lean Wasm private symbols. Cross-language conformance must connect JavaScript, C, and Rust projections to the same Alpha implementation and compare behavior, identity, cleanup, and failures.

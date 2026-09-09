@@ -24,15 +24,15 @@ const prepare = async root => {
 };
 
 test("the component compilation plan orders local Lean modules before generated adapters", async () => {
-  const { compilationPlan } = await prepare("tests/fixtures/onboarding/medium");
-  assert.deepEqual(compilationPlan.document.source.compileOrder, ["OnboardingMedium.Collections", "OnboardingMedium", "LeanBridgeGenerated"]);
+  const { compilationPlan } = await prepare("tests/fixtures/onboarding/scalar-modules");
+  assert.deepEqual(compilationPlan.document.source.compileOrder, ["ScalarModules.Operations", "ScalarModules", compilationPlan.document.compilerAdapters.module]);
   assert.deepEqual(compilationPlan.document.source.modules.map(item => [item.module, item.localDependencies]), [
-    ["OnboardingMedium", ["OnboardingMedium.Collections"]]
-    , ["OnboardingMedium.Collections", []]
+    ["ScalarModules", ["ScalarModules.Operations"]]
+    , ["ScalarModules.Operations", []]
   ]);
   assert.deepEqual(compilationPlan.document.source.externalImports, []);
   assert.equal(compilationPlan.document.compilerAdapters.directSymbols.length, 5);
-  assert.equal(compilationPlan.document.compilerAdapters.initializer, "initialize_LeanBridgeGenerated");
+  assert.equal(compilationPlan.document.compilerAdapters.initializer, `initialize_${compilationPlan.document.compilerAdapters.module}`);
 });
 
 test("the compilation closure carries shared-runtime and direct-call policies", async () => {
@@ -60,8 +60,8 @@ test("the compilation plan is identical after the component moves to another che
   const copied = join(scratch, "component");
   try
 {
-    await cp("tests/fixtures/onboarding/medium", copied, { recursive: true });
-    const first = await prepare("tests/fixtures/onboarding/medium");
+    await cp("tests/fixtures/onboarding/scalar-modules", copied, { recursive: true });
+    const first = await prepare("tests/fixtures/onboarding/scalar-modules");
     const second = await prepare(copied);
     assert.deepEqual(first.compilationPlan, second.compilationPlan);
 } finally

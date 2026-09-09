@@ -9,6 +9,7 @@ import { mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises
 import { basename, dirname, join, resolve } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";
+import { verifyComponentPublication } from "./component-publication.mjs";
 import {
 	validateReleaseAuthorization,
 	verifyReleaseAuthorization,
@@ -518,8 +519,15 @@ export const verifyPublishManifest = async ({ manifestPath, requestedTargets = [
 	{
 		fail("invalid-publish-manifest-json", "Publish manifest is not valid JSON", { cause: error.message });
 	}
-	validatePublishManifest(manifest);
 	if(source !== canonicalJson(manifest)) fail("noncanonical-publish-manifest", "Publish manifest JSON is not canonical");
+	if(manifest.kind === "lean-bridge-component-publish-plan")
+	{
+		try
+		{ return await verifyComponentPublication({ manifestPath: path, manifest, manifestSha256, requestedTargets }); }
+		catch
+		{ fail("invalid-component-publication", "Component publication evidence is invalid; recreate the dry run with the current CLI"); }
+	}
+	validatePublishManifest(manifest);
 	const requested = [...new Set(requestedTargets)].sort();
 	if(requested.length > 0 && JSON.stringify(requested) !== JSON.stringify(manifest.selection.requested))
 	{

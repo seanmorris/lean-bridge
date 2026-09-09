@@ -58,7 +58,7 @@ const collectModuleClosure = async entry => {
 
 test("the Nix component engine source boundary closes the executable module graph", async () => {
   const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
-  const dataFiles = ["poc/lean-link-spike/graph-lock.json"];
+  const dataFiles = ["poc/lean-link-spike/graph-lock.json", "poc/lean-link-spike/component_scalar.h"];
   const executableFiles = boundary.includedFiles.filter(path => !dataFiles.includes(path)).sort();
   assert.deepEqual(await collectModuleClosure("scripts/run-component-engine.mjs"), executableFiles);
 });

@@ -205,6 +205,12 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     await run(join(repository, "node_modules/.bin/tsc"), ["--project", "tsconfig.json"], { cwd: consumer });
     const typescript = JSON.parse((await run("node", ["dist/index.js"], { cwd: consumer })).stdout);
     assert.equal(typescript.checksum, STEADY_STATE_BOX_VALUE * typescript.iterations);
+		const documentationFixtures = join(repository, "tests/fixtures/documentation/consumers");
+		await cp(join(documentationFixtures, "javascript"), join(consumer, "guide-javascript"), { recursive: true });
+		await cp(join(documentationFixtures, "typescript"), join(consumer, "guide-typescript"), { recursive: true });
+		assert.deepEqual(JSON.parse((await run("node", ["guide-javascript/index.mjs"], { cwd: consumer })).stdout), { sum: "123", empty: true, nonempty: false });
+		await run(join(repository, "node_modules/.bin/tsc"), ["--project", "guide-typescript/tsconfig.json"], { cwd: consumer });
+		assert.deepEqual(JSON.parse((await run("node", ["guide-typescript/dist/index.js"], { cwd: consumer })).stdout), { sum: "42", empty: true });
     await writeConsumerPerformance({
       consumer: "node-typescript"
       , operation: STEADY_STATE_OPERATION
@@ -225,6 +231,16 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     const receipt = JSON.parse(await readFile(join(release, "component-package-receipt.json"), "utf8"));
     assert.equal(receipt.runtime.archive, runtimeArchive);
     assert.equal(receipt.package.archive, componentArchive);
+		if(process.env.LEAN_BRIDGE_DOCUMENTATION_BROWSERS)
+		{
+			await run(process.execPath, [
+				join(repository, "scripts/check-component-browser-consumer.mjs")
+				, "--release"
+				, release
+				, "--output", join(repository, "build/documentation-consumer-acceptance")
+				, "--browsers", process.env.LEAN_BRIDGE_DOCUMENTATION_BROWSERS
+			], { cwd: repository });
+		}
 
     const sourceAfter = await Promise.all(sourceFiles.map(path => readFile(path)));
     assert.deepEqual(sourceAfter, sourceBefore);

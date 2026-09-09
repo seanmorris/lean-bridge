@@ -23,6 +23,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 
 import { buildCanonicalProject, processBuildRunner } from "../build/canonical-build.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
+import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
 import { ReleaseCandidateState } from "./release-candidate-state.mjs";
@@ -198,7 +199,7 @@ export const prepareCleanGitSources = async ({ projectRoot, scratchRoot, runner 
 	return Object.freeze({
 		roots: Object.freeze(roots)
 		, source: Object.freeze({
-			repository: repositoryIdentity
+			repository: publicRepositoryIdentity(repositoryIdentity)
 			, projectPath: projectRelative === "" ? "." : portable(projectRelative)
 			, revision
 			, tree

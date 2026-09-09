@@ -52,15 +52,23 @@ export const docPages = Object.freeze([
 		, source: 'docs/javascript-typescript.md'
 		, title: 'JavaScript and TypeScript'
 		, group: 'Consume'
+		, consumerIds: ['node-javascript', 'node-typescript', 'browser-javascript']
+		, searchAliases: ['JavaScript', 'TypeScript', 'JS', 'TS', 'Browser', 'Browser JavaScript', 'React', 'Workers', 'Browser Workers', 'Node.js']
 	}
+	, ...[
+		['receive-package', 'Receive a package']
+		, ['javascript', 'JavaScript (Node.js)']
+		, ['typescript', 'TypeScript (Node.js)']
+		, ['browser', 'Browser JavaScript']
+	].map(([id, title]) => ({ id, route: `/docs/consume/${id}/`, source: `docs/consume/${id}.md`, title, group: 'Consume', ...(id === 'receive-package' ? {} : { legacy: true }) }))
 	, {
 		id: 'react', route: '/docs/consume/react/', source: 'docs/react.md'
-		, title: 'Use a component from React', group: 'Consume'
+		, title: 'Use a component from React', group: 'Consume', legacy: true
 	}
 	, {
 		id: 'browser-workers', route: '/docs/consume/browser-workers/'
 		, source: 'docs/browser-workers.md'
-		, title: 'Browser assets and workers', group: 'Consume'
+		, title: 'Browser assets and workers', group: 'Consume', legacy: true
 	}
 	, {
 		id: 'demo-api', route: '/docs/consume/demo-api/', source: 'docs/demo-api.md'
@@ -73,18 +81,32 @@ export const docPages = Object.freeze([
 		, title: 'PHP'
 		, group: 'Consume'
 	}
+	, ...[
+		['python', 'Python', ['python']]
+		, ['rust', 'Rust', ['rust']]
+		, ['c', 'C', ['c']]
+		, ['cpp', 'C++', ['cpp']]
+		, ['dotnet', 'C# / .NET', ['dotnet']]
+		, ['java', 'Java', ['jvm']]
+		, ['kotlin', 'Kotlin', ['jvm']]
+		, ['ruby', 'Ruby', ['ruby']]
+		, ['php-native', 'Native PHP', ['php-native']]
+		, ['php-wasm', 'PHP-Wasm', ['php-wasm']]
+		, ['wit-wasi', 'WIT / WASI', ['wit-wasi']]
+	].map(([id, title, consumerIds]) => ({ id, route: `/docs/consume/${id}/`, source: `docs/consume/${id}.md`, title, group: 'Consume', consumerIds }))
 	, {
 		id: 'dotnet-jvm-ruby'
 		, route: '/docs/consume/dotnet-jvm-ruby/'
 		, source: 'docs/dotnet-jvm-ruby.md'
 		, title: '.NET, JVM, and Ruby'
 		, group: 'Consume'
+		, legacy: true
 	}
 	, {
 		id: 'runtimes'
 		, route: '/docs/consume/runtimes/'
 		, source: 'docs/consumers.md'
-		, title: 'Downstream consumers'
+		, title: 'Runtime and package reference'
 		, group: 'Consume'
 	}
 	, {
@@ -98,15 +120,44 @@ export const docPages = Object.freeze([
 		['publish-local', 'local-handoff', 'Share a local package']
 		, ['publish-sandbox', 'sandbox-release', 'Rehearse a release']
 		, ['publish-production', 'production-release', 'Approve a production release']
-		, ['publish-pages', 'github-pages', 'Publish the documentation site']
+		, ['publish-npm', 'npm', 'Publish to npm']
+		, ['publish-pypi', 'pypi', 'Publish to PyPI']
+		, ['publish-cargo', 'cargo', 'Publish Rust crates with Cargo']
+		, ['publish-nuget', 'nuget', 'Publish to NuGet']
+		, ['publish-maven', 'maven', 'Publish to Maven repositories']
+		, ['publish-rubygems', 'rubygems', 'Publish to RubyGems']
+		, ['publish-composer', 'composer', 'Publish with Composer']
+		, ['publish-archives', 'archives', 'Distribute C, C++, and WASI archives']
+		, ['publish-nix', 'nix', 'Publish signed Nix packages']
 	].map(([id, slug, title]) => ({ id, route: `/docs/publish/${slug}/`, source: `docs/publish/${slug}.md`, title, group: 'Publish' }))
+	, {
+		id: 'publish-pages', route: '/docs/publish/github-pages/'
+		, source: 'docs/publish/github-pages.md'
+		, title: 'Publish the documentation site', group: 'Publish', legacy: true
+	}
 	, {
 		id: 'release-pipeline'
 		, route: '/docs/publish/pipeline/'
-		, source: 'src/release/README.md'
+		, source: 'docs/publish/pipeline.md'
 		, title: 'Release pipeline'
 		, group: 'Publish'
+		, legacy: true
 	}
+	, ...[
+		['contributing', '', 'CONTRIBUTING.md', 'Contributing to Lean Bridge', ['Contributing', 'Contribute']]
+		, ['contributing-documentation', 'documentation/', 'site/README.md', 'Develop the documentation site', ['Documentation development', 'Site development']]
+		, ['contributing-demos', 'demos/', 'demos/README.md', 'Develop and verify demos', ['Demo development', 'Demo testing']]
+		, ['contributing-testing', 'testing/', 'docs/contributing/testing.md', 'Build example packages and run checks', ['Example packages', 'Acceptance tests']]
+		, ['contributing-release-pipeline', 'release-pipeline/', 'src/release/README.md', 'Release tooling and package extensions', ['Release tooling', 'Signer integration']]
+		, ['contributing-pages', 'github-pages/', 'docs/contributing/github-pages.md', 'Publish the documentation and demos', ['GitHub Pages', 'Site deployment']]
+	].map(([id, slug, source, title, searchAliases]) => ({
+		id
+		, route: `/docs/contributing/${slug}`
+		, source
+		, title
+		, group: 'Contributing'
+		, searchAliases
+	}))
 	, {
 		id: 'proof-to-wasm', route: '/docs/concepts/lean-to-wasm/'
 		, source: 'docs/concepts/lean-to-wasm.md'

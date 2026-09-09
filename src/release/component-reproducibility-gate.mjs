@@ -19,8 +19,10 @@ import { fileURLToPath } from "node:url";
 
 import { buildCanonicalProject, processBuildRunner } from "../build/canonical-build.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
+import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { buildComponentNpmPackages } from "./component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { writeComponentPublication } from "./component-publication.mjs";
 import {
 	collectReleaseInventory,
 	compareReleaseInventories,
@@ -147,7 +149,7 @@ export const prepareCleanComponentSources = async ({
 	return Object.freeze({
 		roots: Object.freeze(roots)
 		, source: Object.freeze({
-			repository
+			repository: publicRepositoryIdentity(repository)
 			, projectPath: projectPath === "" ? "." : portable(projectPath)
 			, revision: revision.stdout.trim()
 			, tree: tree.stdout.trim()
@@ -189,42 +191,6 @@ const inventoryRecords = inventory => [...inventory.entries()].map(([path, item]
 	, sha256: sha256(item.bytes)
 })).sort((left, right) => left.path.localeCompare(right.path));
 
-const packageTarget = ({ packages, candidateId }) => Object.freeze({
-	ecosystem: "npm"
-	, component: packages.report.component.id
-	, candidateId
-	, runtime: Object.freeze({
-		coordinate: packages.report.runtime.package
-		, path: `release/packages/npm/${packages.report.runtime.archive}`
-		, sha256: packages.report.runtime.sha256
-	})
-	, package: Object.freeze({
-		coordinate: packages.report.package.package
-		, path: `release/packages/npm/${packages.report.package.archive}`
-		, sha256: packages.report.package.sha256
-	})
-});
-
-const publishManifest = ({ createdAt, source, candidateId, inventorySha256, packages, receipt }) => Object.freeze({
-	schemaVersion: 1
-	, kind: "lean-bridge-component-publish-plan"
-	, mode: "authorized-no-publish"
-	, createdAt
-	, source
-	, candidate: Object.freeze({ id: candidateId, inventorySha256 })
-	, receipt: Object.freeze({
-		path: "release/packages/npm/component-package-receipt.json"
-		, sha256: receipt.receiptSha256
-		, componentIdentitySha256: receipt.componentIdentitySha256
-	})
-	, targets: Object.freeze([packageTarget({ packages, candidateId })])
-	, policy: Object.freeze({
-		networkPublicationPerformed: false
-		, externalRegistryWritesPerformed: false
-		, credentialsRead: false
-		, byteIdenticalRebuildRequired: true
-	})
-});
 
 const initialReport = createdAt => ({
 	schemaVersion: 1
@@ -261,6 +227,8 @@ const initialReport = createdAt => ({
  * @param root0.packageComponent - Injected packager that turns a compiled component into the independently verified package.
  * @param root0.verifyReceipt - Injected verifier that validates the independently packaged component receipt.
  * @param root0.sourcePreparer - Injected function that creates a clean, isolated source tree for each rebuild.
+ * @param root0.writePublication - Injected writer that binds the verified component inventory to publication.
+ * @param root0.publication - Public registry and signer-policy settings for the candidate.
  * @param root0.now - Injected clock returning the current timestamp for deterministic lifecycle records.
  * @param root0.targets - Closed target identifiers selected for planning, building, or reproducibility comparison.
  * @param root0.cache - Cache settings propagated to the isolated build while preserving the requested cache policy.
@@ -277,6 +245,8 @@ export const runComponentReproducibilityGate = async ({
 	, packageComponent = buildComponentNpmPackages
 	, verifyReceipt = verifyComponentPackageReceipt
 	, sourcePreparer = prepareCleanComponentSources
+	, writePublication = writeComponentPublication
+	, publication = null
 	, now = () => Date.now()
 	, targets = []
 	, cache = { policy: "use", directory: null }
@@ -366,22 +336,10 @@ export const runComponentReproducibilityGate = async ({
 		const copiedReceipt = await verifyReceipt({
 			receiptPath: join(staging, "release", "packages", "npm", "component-package-receipt.json")
 		});
-		const manifest = publishManifest({
-			createdAt
-			, source: report.source
-			, candidateId
-			, inventorySha256
-			, packages: left.packages
-			, receipt: copiedReceipt
-		});
 		await mkdir(join(staging, "evidence"), { recursive: true });
 		const reportSource = canonicalJson(report);
-		const manifestSource = canonicalJson(manifest);
-		await Promise.all([
-			writeFile(join(staging, "evidence", "reproducibility.json"), reportSource)
-			, writeFile(join(staging, "publish-manifest.json"), manifestSource)
-			, writeFile(join(staging, "publish-manifest.sha256"), `${sha256(manifestSource)}  publish-manifest.json\n`)
-		]);
+		await writeFile(join(staging, "evidence", "reproducibility.json"), reportSource);
+		const { manifest, manifestSha256 } = await writePublication({ gateRoot: staging, publication, requestedTargets: targets });
 		await rename(staging, output);
 		return Object.freeze({
 			kind: "lean-bridge-component-reproducibility-gate"
@@ -391,17 +349,18 @@ export const runComponentReproducibilityGate = async ({
 			, report: join(output, "evidence", "reproducibility.json")
 			, reportSha256: sha256(reportSource)
 			, publishManifest: join(output, "publish-manifest.json")
-			, publishManifestSha256: sha256(manifestSource)
+			, publishManifestSha256: manifestSha256
 			, plannedTargets: manifest.targets
-			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, manifest.receipt.path) })
+			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, "release/packages/npm/component-package-receipt.json") })
 			, packages: Object.freeze({
-				runtime: join(output, manifest.targets[0].runtime.path)
-				, component: join(output, manifest.targets[0].package.path)
+				runtime: join(output, "release/packages/npm", left.packages.report.runtime.archive)
+				, component: join(output, "release/packages/npm", left.packages.report.package.archive)
 			})
 			, externalRegistryWrites: false
 		});
 	} catch(error)
 	{
+		report.result = "failed";
 		report.failure = {
 			code: error.code ?? "component-reproducibility-gate-failed"
 			, message: error.message ?? String(error)

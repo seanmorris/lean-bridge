@@ -71,7 +71,7 @@ console.assert(add(100n, 23n) === 123n);
 console.assert(isEmpty("") === true);
 ```
 
-The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives with lifecycle scripts disabled, runs these calls in a clean project, compiles the TypeScript surface in strict mode, and verifies the component receipt. The [PHP guide](docs/php.md) covers native Zend and PHP-Wasm through one generated PHP API.
+The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives, checks generated declarations, and runs the same package in Node, browser JavaScript, React, and workers. [Receive a package](docs/consume/receive-package.md) covers receipt verification. The [PHP chooser](docs/php.md) links to separate native PHP and PHP-Wasm guides.
 
 ## Type conversions
 
@@ -142,19 +142,21 @@ npm run demos:verify
 
 The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
 
-The [React documentation site](site/README.md) adds author, consumer, and publishing guides around the collection. Myers is the first React workbench; the other eleven demos retain their standalone pages and runtime URLs. Use `npm run site:dev` to work on the site, or `LEAN_BRIDGE_SITE_BASE=/lean-bridge/ npm run demos:site` to assemble the Pages-prefixed artifact.
+The [React documentation site](site/README.md) includes author, consumer, publisher, and contributor guides. Myers, sweep-and-prune, and Dinic use React workbenches; the other nine demos retain their standalone pages and runtime URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
 
 ## Documentation
 
 - [Documentation map](docs/README.md)
 - [Lean package author guide](docs/lean-author-guide.md)
-- [JavaScript and TypeScript consumer guide](docs/javascript-typescript.md)
+- [JavaScript and TypeScript, including browser, React, and workers](docs/javascript-typescript.md)
 - [PHP consumer guide](docs/php.md)
-- [.NET, JVM, and Ruby consumer guide](docs/dotnet-jvm-ruby.md)
-- [Python, Rust, C, C++, browser, and WIT/WASI status](docs/consumers.md)
+- [C# / .NET](docs/consume/dotnet.md), [Java](docs/consume/java.md), [Kotlin](docs/consume/kotlin.md), and [Ruby](docs/consume/ruby.md)
+- [Python](docs/consume/python.md), [Rust](docs/consume/rust.md), [C](docs/consume/c.md), and [C++](docs/consume/cpp.md)
+- [WIT / WASI](docs/consume/wit-wasi.md) and [runtime profiles](docs/consumers.md)
+- [Publish a Lean package](docs/publishing.md)
 - [Implementation status and inventory](docs/status.md)
 - [Architecture index](docs/architecture/README.md)
 - [Evidence index](docs/evidence/README.md)
 - [Contributing](CONTRIBUTING.md)
 
-This repository is an architecture-testing proof of concept. Its documented consumer workflows install local package archives, not a public registry release. The CLI includes an npm registry adapter; production writes require an approved deployment profile, credentials, a signer policy, and explicit opt-in. The [release pipeline](src/release/README.md#publication-and-receipts) documents those controls and the separate sandbox mode.
+This repository is an architecture-testing proof of concept. Its documented consumer workflows install local package archives, not a public registry release. The CLI includes an npm registry adapter; production writes require an approved deployment profile, credentials, a signer policy, and explicit opt-in. Follow the [production release guide](docs/publish/production-release.md) for those checks or [rehearse a release](docs/publish/sandbox-release.md) against a sandbox.

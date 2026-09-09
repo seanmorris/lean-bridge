@@ -9,8 +9,7 @@ import type { MDXComponents } from "mdx/types";
 import { Link, useLocation } from "react-router";
 import { pages } from "../../../build/site-content/metadata.mjs";
 import { docPages } from "../../registry.mjs";
-import { DocSearch } from "./DocSearch";
-import { DocNavigation } from "./DocNavigation";
+import { DocSidebar } from "./DocSidebar";
 import NotFound from "../routes/not-found";
 
 /** Describe each canonical document without making a runtime network request. */
@@ -33,11 +32,11 @@ export default function Documentation({ Content }: { Content: ComponentType<{ co
 	if(!entry) return <NotFound />;
 	const metadata = pages[route];
 	const headings = metadata?.headings ?? [];
-	const sequence = docPages.filter(page => page.group === entry.group);
+	const sequence = entry.legacy ? [] : docPages.filter(page => page.group === entry.group && !page.legacy);
 	const position = sequence.findIndex(page => page.route === route);
 	const previous = sequence[position - 1];
 	const next = sequence[position + 1];
-	return <div className="docs-layout"><aside className="docs-sidebar" aria-label="Documentation navigation"><DocSearch /><DocNavigation /></aside>
+	return <div className="docs-layout"><DocSidebar />
 		<main className="doc-content" id="main-content"><p className="eyebrow">Documentation / {entry.group}</p><article>
 			<Content components={{ a: DocumentationLink }} />
 		</article>{(previous || next) && <nav className="doc-pagination" aria-label="Continue reading">

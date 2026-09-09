@@ -96,8 +96,9 @@ const auditDemo = async (browser, engine, demo) => {
 			=== "Source matches checked build", null, { timeout: 60000 });
 		await page.waitForFunction(() => !globalThis.document.querySelector("#launch-wasm").disabled);
 		assert.equal(await page.locator("h1").count(), 1, `${demo.slug}: one page heading`);
-		const home = registered.renderingMode === "react" ? ".site-brand" : ".portfolio-nav a";
-		assert.equal(await page.locator(home).first().getAttribute("href"), prefix);
+		assert.equal(await page.locator(".site-header").count(), 1, `${demo.slug}: one shared site header`);
+		assert.equal(await page.locator(".portfolio-nav").count(), 0, `${demo.slug}: no legacy header`);
+		assert.equal(await page.locator(".site-brand").getAttribute("href"), prefix);
 		const duplicateIds = await page.locator("[id]").evaluateAll(nodes => {
 			const ids = nodes.map(node => node.id);
 			return ids.filter((id, index) => ids.indexOf(id) !== index);

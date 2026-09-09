@@ -94,6 +94,8 @@ const allowedFunctionImport = name => name === "initialize_Init"
   || name === "free"
   || name === "abort"
   || name.startsWith("lean_")
+  || name.startsWith("bridge_scalar_")
+  || name.startsWith("l_")
   || name.startsWith("emscripten_")
   || name.startsWith("__cxa_");
 

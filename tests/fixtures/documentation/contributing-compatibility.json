@@ -1,0 +1,33 @@
+[
+  {
+    "id": "publish-pages",
+    "route": "/docs/publish/github-pages/",
+    "target": "/docs/contributing/github-pages/",
+    "headings": [
+      [1, "publish-the-documentation-and-demos"],
+      [2, "build-for-the-deployment-path"],
+      [2, "preview-the-exact-artifact"],
+      [2, "run-the-browser-checks"],
+      [2, "review-the-deployment-workflow"],
+      [2, "keep-website-and-package-authority-separate"]
+    ]
+  },
+  {
+    "id": "release-pipeline",
+    "route": "/docs/publish/pipeline/",
+    "target": "/docs/contributing/release-pipeline/",
+    "headings": [
+      [1, "release-pipeline"],
+      [2, "architecture-position"],
+      [2, "module-groups"],
+      [3, "canonical-inputs-and-artifact-identity"],
+      [3, "deterministic-archive-construction"],
+      [3, "ecosystem-projections"],
+      [3, "reproducibility-and-independent-confirmation"],
+      [3, "publication-and-receipts"],
+      [2, "release-invariants"],
+      [2, "adding-an-ecosystem-package"],
+      [2, "verification-and-evidence"]
+    ]
+  }
+]

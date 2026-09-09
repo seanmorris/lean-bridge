@@ -4,18 +4,23 @@ Lean Bridge proposes host functions from public `def`, `opaque`, and `abbrev` de
 
 ## Start with the runnable npm shapes
 
-The ordinary-project npm runtime currently implements these call shapes:
+Ordinary npm components support pure functions with any number of primitive arguments, including zero:
 
-| Lean declaration shape | Public example |
+| Lean type | JavaScript / TypeScript value |
 | --- | --- |
-| `Nat → Nat → Nat` | `add(100n, 23n)` |
-| `String → Bool` | `isEmpty("")` |
+| `Unit`, `Bool` | `undefined`, `boolean` |
+| `UInt8`, `UInt16`, `UInt32`, `Int8`, `Int16`, `Int32` | Range-checked integer `number` |
+| `UInt64`, `Int64` | Range-checked `bigint` |
+| `Nat`, `Int` | Arbitrary-precision `bigint`; `Nat` must be nonnegative |
+| `Float32`, `Float` | `number`, including NaN, infinities, and negative zero |
+| `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
+| `ByteArray` | Copied `Uint8Array` |
 
-For the current `Nat` adapter, use nonnegative `bigint` inputs whose sum is at most `2147483647n` (`2^31 - 1`). The installed-package acceptance found that larger natural numbers fail. This is a runtime limit; Lean's `Nat` type has no such bound.
+Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
 
-The [first-component tutorial](first-component.md) executes both shapes from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
+The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
-The source analyzer understands more types than this runtime can execute. A generated type declaration establishes a binding shape; execution requires the target runtime's implementation of that shape.
+Analysis, compilation, packaging, and loading check the same ordinary-component capability contract.
 
 ## Types understood by source analysis
 
@@ -26,7 +31,7 @@ The source-only analyzer recognizes:
 - `Float32`, `Float`, `String`, and `ByteArray`;
 - nested `Array T`, `Option T`, and `Except E T` with supported arguments.
 
-`IO T` and `Task T` receive Promise delivery for a supported result type. `EIO`, function arguments or results, implicit or instance parameters, unsupported structures, and ambiguous foreign declarations require an adapter decision.
+Ordinary components reject `IO`, `Task`, collection types, records, callbacks, and resources before compilation. Recognizing a source type does not authorize publishing it. Richer reviewed Binding IR and universal-package backends remain separate from this pure primitive path.
 
 Reviewed Binding IR can describe richer APIs than source-only inference. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles; it does not imply that every inferred declaration runs through the ordinary-project npm path.
 

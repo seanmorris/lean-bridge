@@ -23,7 +23,7 @@ const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/g
 test("the first component's copyable files exactly match the author fixture", async () => {
 	const content = await readFile("docs/lean/first-component.md", "utf8");
 	const blocks = fences(content);
-	for(const [language, file] of [["toml", "lakefile.toml"], ["gitignore", ".gitignore"], ["lean", "OnboardingSmall.lean"]])
+	for(const [language, file] of [["toml", "lakefile.toml"], ["gitignore", ".gitignore"], ["lean", "OnboardingSmall.lean"], ["json", "package.json"]])
 		assert.equal(blocks.find(block => block.language === language).source, await readFile(`${fixture}/${file}`, "utf8"));
 	assert.equal(blocks.find(block => block.language === "text").source, await readFile(`${fixture}/lean-toolchain`, "utf8"));
 	const proof = fences(await readFile("docs/lean/proofs-and-assurance.md", "utf8")).find(block => block.language === "lean").source;

@@ -192,7 +192,7 @@ const normalizePreflight = (raw, target) => {
 		, "artifacts"
 		, "dependencies"
 	], `${target.ecosystem} preflight`, "invalid-registry-adapter-result");
-	if(!new Set(["granted", "denied"]).has(raw.permission))
+	if(!new Set(["granted", "denied", ...(target.ecosystem === "npm" && target.destination?.authMode === "oidc" ? ["deferred-to-publish"] : [])]).has(raw.permission))
 	{
 		fail("invalid-registry-adapter-result", `${target.ecosystem} permission must be granted or denied`);
 	}
@@ -346,7 +346,7 @@ const createInitialState = ({ plan, manifestPath, manifestSha256, attestation, n
 
 const validatePreflightRecord = (preflight, label) => {
 	exactKeys(preflight, ["permission", "coordinateState", "immutable", "registryReference", "artifacts", "dependencies"], label);
-	if(!new Set(["granted", "denied", "not-required"]).has(preflight.permission)) fail("invalid-registry-transaction", `${label}.permission is invalid`);
+	if(!new Set(["granted", "denied", "not-required", "deferred-to-publish"]).has(preflight.permission)) fail("invalid-registry-transaction", `${label}.permission is invalid`);
 	if(!new Set(["available", "matching", "collision", "local"]).has(preflight.coordinateState)) fail("invalid-registry-transaction", `${label}.coordinateState is invalid`);
 	if(typeof preflight.immutable !== "boolean") fail("invalid-registry-transaction", `${label}.immutable must be boolean`);
 	if(preflight.registryReference !== null) string(preflight.registryReference, `${label}.registryReference`);
@@ -552,7 +552,7 @@ const acquireLock = async (path, transactionId, now) => {
 };
 
 const preflightFailure = (preflight, target, targets) => {
-	if(preflight.permission !== "granted") return { code: "registry-permission-denied", retryable: false };
+	if(preflight.permission !== "granted" && !(preflight.permission === "deferred-to-publish" && target.ecosystem === "npm" && target.destination?.authMode === "oidc")) return { code: "registry-permission-denied", retryable: false };
 	if(preflight.immutable !== true) return { code: "registry-immutability-unverified", retryable: false };
 	if(preflight.coordinateState === "collision") return { code: "registry-coordinate-collision", retryable: false };
 	for(const dependency of preflight.dependencies)
@@ -669,6 +669,22 @@ export const createRegistryTransactionPublisher = ({
 			signal?.throwIfAborted();
 			state = await loadState(path) ?? createInitialState({ plan, manifestPath, manifestSha256, attestation, now });
 			assertStateIdentity({ state, plan, manifestPath, manifestSha256, attestation });
+			if(state.status === "complete")
+			{
+				// A completed transaction is a signed receipt subject. Recheck remote
+				// bytes without changing its timestamps, attempt count, or hash.
+				for(const target of plan.targets)
+				{
+					if(target.operation === "retain") continue;
+					const adapter = byEcosystem.get(target.ecosystem);
+					if(!adapter) fail("registry-adapter-unavailable", `No registry adapter is installed for ${target.ecosystem}`);
+					const raw = await credentials.withTarget(target, credentialView => adapter.preflight({ target, candidateRoot, manifestSha256, attestation, credentials: credentialView, signal }));
+					const preflight = normalizePreflight(raw, target);
+					const blocked = preflightFailure(preflight, target, plan.targets);
+					if(blocked || preflight.coordinateState !== "matching") fail(blocked?.code ?? "registry-coordinate-drift", `Completed registry coordinate no longer matches ${target.coordinate}`, { result: stateResult(state, path) });
+				}
+				return stateResult(state, path);
+			}
 			state.attemptCount += 1;
 			state.status = "preflighting";
 			await persist();

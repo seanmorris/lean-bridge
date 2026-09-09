@@ -3,6 +3,10 @@
 /build/
 .lean-bridge-docker-nix/
 node_modules/
+.env
+.env.*
+!.env.example
+.npmrc
 .cache/
 site/.react-router/
 *.log

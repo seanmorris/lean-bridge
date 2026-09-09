@@ -11,19 +11,21 @@ import { access, mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright";
 import { demos, docPages } from "./registry.mjs";
+import contributingCompatibility from "../tests/fixtures/documentation/contributing-compatibility.json" with { type: "json" };
 
 const base = new URL(process.argv[2] ?? process.env.SITE_BASE_URL ?? "http://127.0.0.1:39061/");
 assert.ok(base.pathname.endsWith("/"), "The site base URL must end with a slash");
 const variant = base.pathname === "/" ? "root" : "prefixed";
 const output = resolve("build/documentation-site-audit", variant);
 const groups = [...new Set(docPages.map(guide => guide.group))];
+const visibleGuides = docPages.filter(guide => !guide.legacy);
 const artifact = await fetch(new URL("build-identity.json", base), { signal: AbortSignal.timeout(30000) });
 assert.equal(artifact.status, 200, "The audit needs an assembled site identity");
 const identity = await artifact.json();
 const report = {
 	createdAt: new Date().toISOString(), base: base.href, status: "running"
 	, artifact: { commit: identity.commit, sourceState: identity.sourceState, generatedAt: identity.generatedAt }
-	, guides: []
+	, guides: [], compatibility: []
 };
 const target = route => new URL(route.slice(1), base).href;
 const normalize = text => text.replace(/\s+/gu, " ").trim();
@@ -63,7 +65,7 @@ const checkContainedContent = async page => page.locator("article pre, article t
  * @param {typeof docPages[number]} guide Registry entry for the current guide.
  */
 const checkPagination = async (page, guide) => {
-	const sequence = docPages.filter(entry => entry.group === guide.group);
+	const sequence = guide.legacy ? [] : visibleGuides.filter(entry => entry.group === guide.group);
 	const index = sequence.findIndex(entry => entry.route === guide.route);
 	const expected = [];
 	if(sequence[index - 1]) expected.push({ rel: "prev", href: target(sequence[index - 1].route) });
@@ -101,13 +103,20 @@ const checkGuide = async (page, noScript, guide) => {
 	assert.equal(await page.locator("main").count(), 1, `${guide.id}: one main landmark`);
 	assert.equal(await page.locator("h1").count(), 1, `${guide.id}: one page heading`);
 	assert.equal(await page.locator("main article h1").isVisible(), true);
+	if(guide.consumerIds?.length || ["consume", "receive-package", "php"].includes(guide.id))
+	{
+		assert.deepEqual(await page.locator("article h2").allTextContents(),
+			["Use a prepared release", "Start from a raw Lean package"], `${guide.id}: consumer flow precedes source preparation`);
+		assert.deepEqual(await page.locator(".doc-outline a").allTextContents(),
+			["Use a prepared release", "Start from a raw Lean package"], `${guide.id}: both entry points are visible in the outline`);
+	}
 	assert.equal(await page.locator(".portfolio-nav").count(), 0, `${guide.id}: no legacy shell`);
 	const active = page.locator('.doc-navigation a[aria-current="page"]');
-	assert.equal(await active.count(), 1, `${guide.id}: one active guide`);
-	assert.equal(await active.getAttribute("href"), new URL(target(guide.route)).pathname);
+	assert.equal(await active.count(), guide.legacy ? 0 : 1, `${guide.id}: active guide excludes compatibility pages`);
+	if(!guide.legacy) assert.equal(await active.getAttribute("href"), new URL(target(guide.route)).pathname);
 	assert.deepEqual(await page.locator(".doc-navigation nav > section > h2").allTextContents(), groups);
 	const article = normalize(await page.locator("main article").innerText());
-	assert.ok(article.length > 500, `${guide.id}: complete article`);
+	assert.ok(article.length > (guide.legacy ? 100 : 500), `${guide.id}: complete article`);
 	const layouts = [];
 	for(const width of [320, 390, 1440])
 	{
@@ -142,9 +151,46 @@ const checkGuide = async (page, noScript, guide) => {
 	assert.equal(normalize(await noScript.locator("main article").innerText()), article,
 		`${guide.id}: no-JS article matches the hydrated article`);
 	assert.equal(await noScript.locator(".doc-navigation").getAttribute("open"), "");
-	assert.equal(await noScript.locator(".doc-navigation a").count(), docPages.length);
+	assert.equal(await noScript.locator(".doc-navigation a").count(), visibleGuides.length);
 	report.guides.push({ id: guide.id, route: guide.route, characters: article.length, layouts });
 	console.log(`PASS documentation: ${guide.id} (three widths, pagination, no-JS parity)`);
+};
+
+/**
+ * Follow historical heading bookmarks through readable compatibility pages.
+ *
+ * @param {import('playwright').Page} page Hydrated document.
+ * @param {import('playwright').Page} noScript JavaScript-disabled document.
+ */
+const checkCompatibility = async (page, noScript) => {
+	for(const migration of contributingCompatibility)
+	{
+		for(const [depth, id] of migration.headings)
+		{
+			for(const [reader, javaScriptEnabled] of [[page, true], [noScript, false]])
+			{
+				const bookmark = target(migration.route) + `?from=bookmark#${id}`;
+				assert.equal((await reader.goto(bookmark)).status(), 200);
+				assert.equal((await reader.reload()).status(), 200);
+				if(javaScriptEnabled) await reader.waitForFunction(() =>
+					globalThis.performance.getEntriesByName("site-hydrated").length > 0);
+				assert.equal(reader.url(), bookmark, "Compatibility pages retain the bookmarked address on reload");
+				const heading = reader.locator(`article h${depth}[id="${id}"]`);
+				assert.equal(await heading.count(), 1, `${migration.id}: historical ${id}`);
+				const forwarding = heading.locator("xpath=following-sibling::p[1]//a").first();
+				const destination = target(migration.target) + `#${id}`;
+				assert.equal(await forwarding.evaluate(link => link.href), destination);
+				if(javaScriptEnabled) await reader.evaluate(() => { globalThis.documentationVisit = "same-document"; });
+				await forwarding.click();
+				await reader.waitForURL(destination);
+				assert.equal(await reader.locator(`article [id="${id}"]`).count(), 1);
+				if(javaScriptEnabled) assert.equal(await reader.evaluate(() => globalThis.documentationVisit), "same-document",
+					"Compatibility links stay in the React document");
+				report.compatibility.push({ from: bookmark, to: destination, javaScriptEnabled });
+			}
+		}
+		console.log(`PASS documentation bookmarks: ${migration.id} (reload, section links, with and without JavaScript)`);
+	}
 };
 
 try
@@ -161,6 +207,13 @@ try
 		url: request.url(), error: request.failure()?.errorText
 	}));
 	for(const guide of docPages) await checkGuide(page, noScript, guide);
+	await checkCompatibility(page, noScript);
+	await page.evaluate(() => { globalThis.documentationVisit = "same-document"; });
+	await page.locator('.site-footer a[href$="/docs/contributing/"]').click();
+	await page.waitForURL(target("/docs/contributing/"));
+	assert.equal(await page.locator("article h1").isVisible(), true, "The shared footer opens Contributing");
+	assert.equal(await page.evaluate(() => globalThis.documentationVisit), "same-document",
+		"The contributor footer link stays in the React document");
 	assert.deepEqual(errors, [], "Guides render and navigate without browser errors");
 	assert.equal(requests.some(url => /\.wasm(?:\?|$)|\/runtime\/|benchmark-workload/u.test(url)), false,
 		"Documentation visits do not fetch algorithm runtimes");
@@ -168,7 +221,7 @@ try
 	await page.waitForFunction(() => !globalThis.document.querySelector(".doc-navigation").open);
 	for(const group of groups)
 	{
-		const guide = docPages.filter(entry => entry.group === group).at(-1);
+		const guide = visibleGuides.filter(entry => entry.group === group).at(-1);
 		await page.locator(".doc-navigation > summary").click();
 		const link = page.locator(".doc-navigation a").filter({ hasText: guide.title });
 		await link.click();

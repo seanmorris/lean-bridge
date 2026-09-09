@@ -7,10 +7,10 @@
 
 
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
 import {
@@ -25,18 +25,23 @@ const execute = promisify(execFile);
 const options = new Map();
 for(let index = 2; index < process.argv.length; index += 2) options.set(process.argv[index], process.argv[index + 1]);
 for(const required of ["--nuget", "--maven", "--rubygem"]) if(!options.has(required)) throw new Error(`missing ${required}`);
-const dotnet = options.get("--dotnet") ?? process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
-const java = options.get("--java") ?? process.env.LEAN_BRIDGE_JAVA ?? "java";
-const javac = options.get("--javac") ?? process.env.LEAN_BRIDGE_JAVAC ?? "javac";
-const kotlin = options.get("--kotlin") ?? process.env.LEAN_BRIDGE_KOTLIN ?? "kotlin";
-const kotlinc = options.get("--kotlinc") ?? process.env.LEAN_BRIDGE_KOTLINC ?? "kotlinc";
-const maven = options.get("--mvn") ?? process.env.LEAN_BRIDGE_MAVEN ?? "mvn";
-const ruby = options.get("--ruby") ?? process.env.LEAN_BRIDGE_RUBY ?? "ruby";
-const gem = options.get("--gem") ?? process.env.LEAN_BRIDGE_GEM ?? "gem";
+const executable = value => value.includes("/") ? resolve(value) : value;
+const dotnet = executable(options.get("--dotnet") ?? process.env.LEAN_BRIDGE_DOTNET ?? "dotnet");
+const java = executable(options.get("--java") ?? process.env.LEAN_BRIDGE_JAVA ?? "java");
+const javac = executable(options.get("--javac") ?? process.env.LEAN_BRIDGE_JAVAC ?? "javac");
+const kotlin = executable(options.get("--kotlin") ?? process.env.LEAN_BRIDGE_KOTLIN ?? "kotlin");
+const kotlinc = executable(options.get("--kotlinc") ?? process.env.LEAN_BRIDGE_KOTLINC ?? "kotlinc");
+const maven = executable(options.get("--mvn") ?? process.env.LEAN_BRIDGE_MAVEN ?? "mvn");
+const ruby = executable(options.get("--ruby") ?? process.env.LEAN_BRIDGE_RUBY ?? "ruby");
+const gem = executable(options.get("--gem") ?? process.env.LEAN_BRIDGE_GEM ?? "gem");
 const nugetRoot = resolve(options.get("--nuget"));
 const mavenRoot = resolve(options.get("--maven"));
 const rubyGem = resolve(options.get("--rubygem"));
 const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-managed-registry-"));
+const fixtureRoot = fileURLToPath(new URL("../tests/fixtures/documentation/consumers/", import.meta.url));
+const reportPath = resolve(options.get("--report") ?? "build/documentation-consumers/managed.json");
+const documentation = {};
+const expectedDocumentationOutput = "Box: 42\nPayload count: 42\nCallback: 44\nCallable: 42\nErrors and cleanup: passed";
 
 const run = async (command, args, settings = {}) => {
 	try
@@ -66,9 +71,16 @@ const parseMeasurement = stdout => {
 	return value;
 };
 
-const dotnetRoot = join(scratch, "dotnet");
-await write(join(dotnetRoot, "Consumer.csproj"), `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup><PackageReference Include="LeanBridge.Alpha" Version="0.0.0" /></ItemGroup></Project>\n`);
-await write(join(dotnetRoot, "Program.cs"), `using System.Diagnostics;
+const checkDocumentation = (consumer, stdout) => {
+	if(stdout.trim() !== expectedDocumentationOutput) throw new Error(`${consumer} documentation output mismatch:\n${stdout}`);
+	documentation[consumer] = { result: "passed", publicApiOnly: true, stdout: stdout.trim() };
+};
+
+try
+{
+	const dotnetRoot = join(scratch, "dotnet");
+	await write(join(dotnetRoot, "Consumer.csproj"), `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup><PackageReference Include="LeanBridge.Alpha" Version="0.0.0" /></ItemGroup></Project>\n`);
+	await write(join(dotnetRoot, "Program.cs"), `using System.Diagnostics;
 using LeanBridge.Alpha;
 var initializationStarted = Stopwatch.GetTimestamp();
 using var box = new Box(${STEADY_STATE_BOX_VALUE});
@@ -108,17 +120,27 @@ try { box.Read(); throw new Exception("stale Box use was accepted"); } catch (Di
 if (!((uint[])snapshotRead.Invoke(null, null)!).SequenceEqual(new uint[] { 1, 2, 2, 0 })) throw new Exception("native cleanup snapshot failed");
 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { iterations = ${STEADY_STATE_MEASURED_ITERATIONS}, durationNanoseconds = (long)duration, checksum, initializationNanoseconds = (long)initializationNanoseconds, operationIterations, copiedValueNanoseconds = (long)copiedValueNanoseconds, callbackNanoseconds = (long)callbackNanoseconds, callableNanoseconds = (long)callableNanoseconds, peakRssBytes = Process.GetCurrentProcess().PeakWorkingSet64 }));
 `);
-const dotnetEnvironment = { ...process.env, DOTNET_CLI_HOME: join(scratch, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(scratch, "nuget-cache") };
-await run(dotnet, ["restore", join(dotnetRoot, "Consumer.csproj"), "--source", nugetRoot, "--ignore-failed-sources", "--nologo"], { env: dotnetEnvironment });
-await run(dotnet, ["build", join(dotnetRoot, "Consumer.csproj"), "--configuration", "Release", "--no-restore", "--nologo", "--disable-build-servers"], { env: dotnetEnvironment });
-const dotnetMeasurement = parseMeasurement((await run(dotnet, [join(dotnetRoot, "bin/Release/net8.0/Consumer.dll")], { env: dotnetEnvironment })).stdout);
+	const dotnetEnvironment = { ...process.env, DOTNET_CLI_HOME: join(scratch, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(scratch, "nuget-cache") };
+	const dotnetDocsRoot = join(scratch, "documentation/dotnet");
+	await cp(join(fixtureRoot, "dotnet"), dotnetDocsRoot, { recursive: true });
+	await run(dotnet, ["restore", "Consumer.csproj", "--source", nugetRoot, "--ignore-failed-sources"], { cwd: dotnetDocsRoot, env: dotnetEnvironment });
+	await run(dotnet, ["build", "Consumer.csproj", "--configuration", "Release", "--no-restore", "--disable-build-servers"], { cwd: dotnetDocsRoot, env: dotnetEnvironment });
+	checkDocumentation("dotnet", (await run(dotnet, ["bin/Release/net8.0/Consumer.dll"], { cwd: dotnetDocsRoot, env: dotnetEnvironment })).stdout);
+	await run(dotnet, ["restore", join(dotnetRoot, "Consumer.csproj"), "--source", nugetRoot, "--ignore-failed-sources", "--nologo"], { env: dotnetEnvironment });
+	await run(dotnet, ["build", join(dotnetRoot, "Consumer.csproj"), "--configuration", "Release", "--no-restore", "--nologo", "--disable-build-servers"], { env: dotnetEnvironment });
+	const dotnetMeasurement = parseMeasurement((await run(dotnet, [join(dotnetRoot, "bin/Release/net8.0/Consumer.dll")], { env: dotnetEnvironment })).stdout);
 
-const mavenRepository = join(mavenRoot, "repository");
-const localRepository = join(scratch, "maven-repository");
-await run(maven, ["--batch-mode", "--quiet", `-Dmaven.repo.local=${localRepository}`, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get", "-Dartifact=org.leanbridge:lean-alpha:0.0.0", `-DremoteRepositories=lean-bridge::default::${pathToFileURL(mavenRepository).href}`, "-Dtransitive=false"]);
-const jar = join(localRepository, "org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar");
-const jvmRoot = join(scratch, "jvm");
-await write(join(jvmRoot, "Consumer.java"), `package org.leanbridge.alpha;
+	const mavenRepository = join(mavenRoot, "repository");
+	const localRepository = join(scratch, "maven-repository");
+	await run(maven, ["--batch-mode", "--quiet", `-Dmaven.repo.local=${localRepository}`, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get", "-Dartifact=org.leanbridge:lean-alpha:0.0.0", `-DremoteRepositories=lean-bridge::default::${pathToFileURL(mavenRepository).href}`, "-Dtransitive=false"]);
+	const jar = join(localRepository, "org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar");
+	const javaDocsRoot = join(scratch, "documentation/java");
+	await cp(join(fixtureRoot, "java"), javaDocsRoot, { recursive: true });
+	await mkdir(join(javaDocsRoot, "classes"), { recursive: true });
+	await run(javac, ["--release", "22", "-encoding", "UTF-8", "-cp", jar, "-d", "classes", "Consumer.java"], { cwd: javaDocsRoot });
+	checkDocumentation("java", (await run(java, ["--enable-native-access=ALL-UNNAMED", "-cp", `classes:${jar}`, "Consumer"], { cwd: javaDocsRoot })).stdout);
+	const jvmRoot = join(scratch, "jvm");
+	await write(join(jvmRoot, "Consumer.java"), `package org.leanbridge.alpha;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -180,28 +202,23 @@ public final class Consumer {
     System.out.printf("{\\\"iterations\\\":${STEADY_STATE_MEASURED_ITERATIONS},\\\"durationNanoseconds\\\":%d,\\\"checksum\\\":%d,\\\"initializationNanoseconds\\\":%d,\\\"operationIterations\\\":%d,\\\"copiedValueNanoseconds\\\":%d,\\\"callbackNanoseconds\\\":%d,\\\"callableNanoseconds\\\":%d,\\\"peakRssBytes\\\":%d}%n", duration, checksum, initializationNanoseconds, operationIterations, copiedValueNanoseconds, callbackNanoseconds, callableNanoseconds, peakRssBytes());
   }
 } }\n`);
-await mkdir(join(jvmRoot, "classes"), { recursive: true });
-await run(javac, ["--release", "22", "-g:none", "-encoding", "UTF-8", "-cp", jar, "-d", join(jvmRoot, "classes"), join(jvmRoot, "Consumer.java")]);
-const jvmMeasurement = parseMeasurement((await run(java, ["--enable-native-access=ALL-UNNAMED", `-Dlean.bridge.test.jar=${jar}`, "-cp", `${join(jvmRoot, "classes")}:${jar}`, "org.leanbridge.alpha.Consumer"])).stdout);
+	await mkdir(join(jvmRoot, "classes"), { recursive: true });
+	await run(javac, ["--release", "22", "-g:none", "-encoding", "UTF-8", "-cp", jar, "-d", join(jvmRoot, "classes"), join(jvmRoot, "Consumer.java")]);
+	const jvmMeasurement = parseMeasurement((await run(java, ["--enable-native-access=ALL-UNNAMED", `-Dlean.bridge.test.jar=${jar}`, "-cp", `${join(jvmRoot, "classes")}:${jar}`, "org.leanbridge.alpha.Consumer"])).stdout);
 
-const kotlinRoot = join(scratch, "kotlin");
-await write(join(kotlinRoot, "Consumer.kt"), `import org.leanbridge.alpha.Alpha
-import org.leanbridge.alpha.Box
+	const kotlinRoot = join(scratch, "kotlin");
+	await cp(join(fixtureRoot, "kotlin"), kotlinRoot, { recursive: true });
+	await mkdir(join(kotlinRoot, "classes"), { recursive: true });
+	await run(kotlinc, ["-classpath", jar, "-d", join(kotlinRoot, "classes"), join(kotlinRoot, "Consumer.kt")]);
+	checkDocumentation("kotlin", (await run(kotlin, ["-J--enable-native-access=ALL-UNNAMED", "-classpath", `${join(kotlinRoot, "classes")}:${jar}`, "ConsumerKt"])).stdout);
 
-fun main() {
-    Box(42).use { require(it.read() == 42L) }
-    require(Alpha.withCallback(40) { value -> value + 2 } == 44L)
-    Alpha.makeAdder(2).use { require(it.apply(40) == 42L) }
-}
-`);
-await mkdir(join(kotlinRoot, "classes"), { recursive: true });
-await run(kotlinc, ["-classpath", jar, "-d", join(kotlinRoot, "classes"), join(kotlinRoot, "Consumer.kt")]);
-await run(kotlin, ["-J--enable-native-access=ALL-UNNAMED", "-classpath", `${join(kotlinRoot, "classes")}:${jar}`, "ConsumerKt"]);
-
-const gemHome = join(scratch, "gem-home");
-await run(gem, ["install", rubyGem, "--local", "--install-dir", gemHome, "--no-document"]);
-const rubyRoot = join(scratch, "ruby");
-await write(join(rubyRoot, "consumer.rb"), `require "lean_bridge/alpha"
+	const gemHome = join(scratch, "gem-home");
+	await run(gem, ["install", rubyGem, "--local", "--install-dir", gemHome, "--no-document"]);
+	const rubyDocsRoot = join(scratch, "documentation/ruby");
+	await cp(join(fixtureRoot, "ruby"), rubyDocsRoot, { recursive: true });
+	checkDocumentation("ruby", (await run(ruby, ["consumer.rb"], { cwd: rubyDocsRoot, env: { ...process.env, GEM_HOME: gemHome, GEM_PATH: gemHome } })).stdout);
+	const rubyRoot = join(scratch, "ruby");
+	await write(join(rubyRoot, "consumer.rb"), `require "lean_bridge/alpha"
 include LeanBridge
 initialization_started = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
 box = Alpha::Box.new(${STEADY_STATE_BOX_VALUE})
@@ -240,21 +257,33 @@ raise "native cleanup snapshot failed" unless Alpha::Native.snapshot[:live_ident
 peak_rss_bytes = File.readlines("/proc/self/status").grep(/^VmHWM:/).first[/\\d+/].to_i * 1024
 require "json"; puts JSON.generate(iterations: ${STEADY_STATE_MEASURED_ITERATIONS}, durationNanoseconds: duration, checksum: checksum, initializationNanoseconds: initialization_nanoseconds, operationIterations: operation_iterations, copiedValueNanoseconds: copied_value_nanoseconds, callbackNanoseconds: callback_nanoseconds, callableNanoseconds: callable_nanoseconds, peakRssBytes: peak_rss_bytes)
 `);
-const rubyMeasurement = parseMeasurement((await run(ruby, [join(rubyRoot, "consumer.rb")], { env: { ...process.env, GEM_HOME: gemHome, GEM_PATH: gemHome } })).stdout);
+	const rubyMeasurement = parseMeasurement((await run(ruby, [join(rubyRoot, "consumer.rb")], { env: { ...process.env, GEM_HOME: gemHome, GEM_PATH: gemHome } })).stdout);
 
-const measurements = { dotnet: dotnetMeasurement, jvm: jvmMeasurement, ruby: rubyMeasurement };
-for(const [consumer, measurement] of Object.entries(measurements))
-{
-	await writeConsumerPerformance({ consumer, operation: STEADY_STATE_OPERATION, timingMode: "steady-state", scope: `steady-state clean ${consumer} registry consumer`, iterations: measurement.iterations, durationNanoseconds: measurement.durationNanoseconds });
+	const measurements = { dotnet: dotnetMeasurement, jvm: jvmMeasurement, ruby: rubyMeasurement };
+	for(const [consumer, measurement] of Object.entries(measurements))
+	{
+		await writeConsumerPerformance({ consumer, operation: STEADY_STATE_OPERATION, timingMode: "steady-state", scope: `steady-state clean ${consumer} registry consumer`, iterations: measurement.iterations, durationNanoseconds: measurement.durationNanoseconds });
+	}
+	const receipts = {
+		dotnet: JSON.parse(await readFile(join(nugetRoot, "package/lean-bridge/package-receipt.json"), "utf8"))
+		, jvm: JSON.parse(await readFile(join(mavenRoot, "jar/META-INF/lean-bridge/package-receipt.json"), "utf8"))
+		, ruby: JSON.parse(await readFile(join(gemHome, "gems/lean_bridge_alpha-0.0.0/lean-bridge/package-receipt.json"), "utf8"))
+	};
+	const packageBytes = {
+		dotnet: (await stat(join(nugetRoot, "LeanBridge.Alpha.0.0.0.nupkg"))).size
+		, jvm: (await stat(join(mavenRoot, "repository/org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar"))).size
+		, ruby: (await stat(rubyGem)).size
+	};
+	const report = { result: "passed", packageInstallation: true, realLeanExecution: true, consumers: Object.keys(measurements), documentation, measurements, packageBytes, receipts };
+	await write(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+	process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 }
-const receipts = {
-	dotnet: JSON.parse(await readFile(join(nugetRoot, "package/lean-bridge/package-receipt.json"), "utf8"))
-	, jvm: JSON.parse(await readFile(join(mavenRoot, "jar/META-INF/lean-bridge/package-receipt.json"), "utf8"))
-	, ruby: JSON.parse(await readFile(join(gemHome, "gems/lean_bridge_alpha-0.0.0/lean-bridge/package-receipt.json"), "utf8"))
-};
-const packageBytes = {
-	dotnet: (await stat(join(nugetRoot, "LeanBridge.Alpha.0.0.0.nupkg"))).size
-	, jvm: (await stat(join(mavenRoot, "repository/org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar"))).size
-	, ruby: (await stat(rubyGem)).size
-};
-process.stdout.write(`${JSON.stringify({ result: "passed", packageInstallation: true, realLeanExecution: true, consumers: Object.keys(measurements), measurements, packageBytes, receipts }, null, 2)}\n`);
+catch(error)
+{
+	await write(reportPath, `${JSON.stringify({ result: "failed", documentation, error: error.stack ?? String(error) }, null, 2)}\n`);
+	throw error;
+}
+finally
+{
+	await rm(scratch, { recursive: true, force: true });
+}

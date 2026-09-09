@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { assertComponentSignature } from "../abi/component-scalars.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 
 /**
@@ -104,6 +105,7 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [] }) =>
 	if(analysis.bindingIr === null) fail("component-binding-ir-required", "Build requires a complete Binding IR", { hints: analysis.adapterHints.map(item => item.id) });
 	const requiredHints = analysis.adapterHints.filter(item => item.required);
 	if(requiredHints.length > 0) fail("component-adapter-hints-required", "Build requires decisions for unresolved adapter hints", { hints: requiredHints.map(item => item.id) });
+	if(analysis.bindingIr.origin === "statically-inferred") for(const declaration of analysis.bindingIr.document.declarations) assertComponentSignature(declaration);
 	const document = Object.freeze({
 		schemaVersion: 1
 		, component: Object.freeze({ ...analysis.bindingIr.document.component })

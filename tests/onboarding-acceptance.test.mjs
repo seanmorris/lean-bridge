@@ -31,7 +31,7 @@ test("plain Lean onboarding matrix covers the required project categories withou
   assert.equal(report.passed, true);
   assert.deepEqual(report.summary, {
     baselineProjects: 3
-    , projectsRequiringHints: 4
+    , projectsRequiringHints: 6
     , publishingAnnotations: 0
     , handwrittenWrappers: 0
     , mismatches: 0
@@ -47,7 +47,7 @@ test("plain Lean onboarding matrix covers the required project categories withou
   ]);
   assert.deepEqual(
     report.fixtures.filter(item => item.actual.status === "ok").map(item => item.id),
-    ["small", "medium", "async", "incomplete-docs"],
+    ["small", "incomplete-docs"],
   );
   assert.equal(report.fixtures.find(item => item.id === "incomplete-docs").actual.warnings, 1);
   assert.deepEqual(

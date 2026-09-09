@@ -167,6 +167,7 @@ test("public documentation has valid local links, portable paths, and plain punc
 }
     for(const match of source.matchAll(/`((?:tests|scripts|schema|poc|containers|acceptance)\/[^`\s]+)`/g))
 {
+      if(match[1] === "poc/lean-alpha" || /^poc\/[^/]+@\d/u.test(match[1])) continue; // Composer package coordinates are not repository paths.
       await assert.doesNotReject(access(resolve(match[1])), `${path} -> ${match[1]}`);
 }
 }
@@ -323,12 +324,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
 
 test("Python consumers run the exact wheel compatibility preflight before pip", async () => {
 	const [guide, packageDocument] = await Promise.all([
-		readFile("docs/consumers.md", "utf8")
+		readFile("docs/consume/python.md", "utf8")
 		, readFile("package.json", "utf8").then(JSON.parse)
 	]);
 	assert.equal(packageDocument.scripts["preflight:python-wheel"], "node src/release/python-wheel-preflight.mjs");
 	assert.match(guide, /node \.\/python-wheel-preflight\.mjs/);
 	assert.match(guide, /glibc 2\.38 or newer/);
 	assert.match(guide, /Python 3\.11 or newer/);
-	assert.match(guide, /Do not rename, retag, or unpack the wheel/);
+	assert.match(guide, /Do not rename, retag, or unpack the (?:wheel|archive)/);
 });

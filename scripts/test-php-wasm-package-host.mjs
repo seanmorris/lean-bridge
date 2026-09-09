@@ -7,7 +7,7 @@
 
 
 import { execFile } from "node:child_process";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -33,11 +33,7 @@ const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-consumer-"))
 
 try
 {
-	await writeFile(join(consumer, "package.json"), `${JSON.stringify({
-		name: "lean-bridge-php-wasm-consumer"
-		, private: true
-		, type: "module"
-	}, null, 2)}\n`);
+	await cp(new URL("../tests/fixtures/documentation/consumers/php-wasm/", import.meta.url), consumer, { recursive: true });
 	const pack = async root => {
 		const { stdout } = await run("npm", [
 			"pack"
@@ -63,6 +59,12 @@ try
 		, phpWasmArchive
 		, packageArchive
 	], { cwd: consumer, maxBuffer: 64 * 1024 * 1024 });
+	const documentation = await run(process.execPath, ["main.mjs"], { cwd: consumer, maxBuffer: 16 * 1024 * 1024 });
+	const documentationExpected = { box: 41, identity: true, payload: [true, 9, "consumer", "007fff", [1, 5, 13]], callback: 42, closure: 42 };
+	if(documentation.stderr !== "" || JSON.stringify(JSON.parse(documentation.stdout)) !== JSON.stringify(documentationExpected))
+	{
+		throw new Error(`PHP-Wasm documentation result mismatch: ${documentation.stderr || documentation.stdout}`);
+	}
 	const [{ PhpNode }, { default: leanAlpha }] = await Promise.all([
 		import(pathToFileURL(join(consumer, "node_modules/php-wasm/PhpNode.mjs")))
 		, import(pathToFileURL(join(consumer, "node_modules/php-wasm-lean-alpha/index.mjs")))

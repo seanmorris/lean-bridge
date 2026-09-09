@@ -44,11 +44,11 @@ test("the compiler follows the planned module order and writes outside the sourc
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-target-c-test-"));
   try
 {
-    const prepared = await fixture({ root: "tests/fixtures/onboarding/medium", scratch });
+    const prepared = await fixture({ root: "tests/fixtures/onboarding/scalar-modules", scratch });
     const calls = [];
     const output = join(scratch, "target-c");
     const result = await compileLeanComponentSources({ inputRoot: prepared.inputs, outputRoot: output, engineRoot: process.cwd(), compilationPlan: prepared.compilationPlan, runner: fakeRunner(calls) });
-    assert.deepEqual(result.manifest.modules.map(module => module.module), ["OnboardingMedium.Collections", "OnboardingMedium", "LeanBridgeGenerated"]);
+    assert.deepEqual(result.manifest.modules.map(module => module.module), ["ScalarModules.Operations", "ScalarModules", prepared.compilationPlan.document.compilerAdapters.module]);
     assert.equal(calls.length, 4);
     assert.ok(calls.slice(1).every(call => call.args.includes("-R") && call.env.LEAN_PATH.startsWith(output.slice(0, output.lastIndexOf("/") + 1))));
     assert.equal(result.manifest.sourceReadOnly, true);
@@ -93,8 +93,8 @@ test("the pinned Lean compiler emits root-independent target C with every direct
     const relocated = await fixture({ root: relocatedRoot, scratch: join(scratch, "relocated") });
     const second = await compileLeanComponentSources({ inputRoot: relocated.inputs, outputRoot: join(scratch, "second"), engineRoot: process.cwd(), compilationPlan: relocated.compilationPlan });
     assert.deepEqual(first.manifest, second.manifest);
-    const firstGenerated = await readFile(join(scratch, "first/c/LeanBridgeGenerated.c"), "utf8");
-    const secondGenerated = await readFile(join(scratch, "second/c/LeanBridgeGenerated.c"), "utf8");
+    const firstGenerated = await readFile(join(scratch, `first/c/${original.compilationPlan.document.compilerAdapters.module}.c`), "utf8");
+    const secondGenerated = await readFile(join(scratch, `second/c/${original.compilationPlan.document.compilerAdapters.module}.c`), "utf8");
     assert.equal(firstGenerated, secondGenerated);
     assert.match(firstGenerated, /initialize_LeanBridgeGenerated/);
     for(const symbol of original.compilationPlan.document.compilerAdapters.directSymbols) assert.match(firstGenerated, new RegExp(symbol));

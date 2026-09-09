@@ -2,6 +2,10 @@
 
 This directory turns one verified canonical bundle into deterministic ecosystem packages and durable release records. It is the compiler-free half of the compile-once workflow.
 
+This Contributing guide owns release architecture, approval policy, and publisher integration. Use the [package publishing guides](../../docs/publishing.md) for artifact preparation, sandbox transactions, production verification, and recovery.
+
+Standalone CLI archives use a reviewed source allowlist and can include a prepared runtime. The [CLI packaging checks](../../docs/contributing/testing.md#standalone-cli-package) verify tarball installations without a checkout or registry upload. The remaining release work is recorded in `docs/architecture/npm-release-plan.md`.
+
 ## Architecture position
 
 ```text
@@ -50,7 +54,7 @@ The canonical input boundary requires the manifest file to equal its canonical n
 | [`nuget-package.mjs`](nuget-package.mjs), [`maven-package.mjs`](maven-package.mjs), [`rubygems-package.mjs`](rubygems-package.mjs) | .NET, JVM, and Ruby registry layouts. |
 | [`wasi-package.mjs`](wasi-package.mjs) | WIT, component, native host source, and WASI consumer metadata. |
 
-PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They consume the same canonical bundle boundary.
+PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They take PHP package manifests and compiler inputs, rather than the universal bundle's `--bundle` input. Neither PHP package is a target in the universal publication manifest. [Composer distribution](../../docs/publish/composer.md) covers native PHP; [npm publication](../../docs/publish/npm.md#publish-the-php-wasm-profile) covers PHP-Wasm.
 
 ### Reproducibility and independent confirmation
 
@@ -64,6 +68,10 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 
 The installed CLI includes the npm transaction adapter. It defaults to production mode, but production writes remain blocked by the reviewed deployment-profile gate and require `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production`. A local registry rehearsal uses `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and optionally `LEAN_BRIDGE_NPM_REGISTRY_URL`; sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint. In both modes the adapter hashes the authorized tarball before the write and hashes the immutable registry tarball afterward.
 
+Cargo, PyPI, NuGet, Maven, and RubyGems have publication-plan destinations but no installed transaction adapters. C, C++, and WIT/WASI use archive-retention targets without registry endpoints. The [ecosystem publishing guides](../../docs/publishing.md#choose-the-package-ecosystem) describe the package builders and operator-run upload flows. Those uploads do not produce a signed Lean Bridge completion receipt.
+
+[Signed Nix publication](../../docs/publish/nix.md) distributes the flake's output closures through a binary cache. Nix signs store-path metadata and uses configured public keys to verify substitutes. It is a separate distribution flow, not a universal publication target or a Lean Bridge release receipt.
+
 ## Release invariants
 
 - Package builders consume a verified canonical input and a fixed generated projection.
@@ -74,6 +82,44 @@ The installed CLI includes the npm transaction adapter. It defaults to productio
 - A signed release receipt binds each published coordinate to the exact archive filename, byte length, and SHA-256.
 
 These invariants make a registry package a projection of the reviewed bundle instead of an independent build product.
+
+## Project release approval policy
+
+The [versioned deployment profile](../../config/production-deployment-profile.v1.json) owns the supported platform and version requirements. The checked-in profile has candidate status and no approvals, so production publication is blocked.
+
+The current profile requires the release owner, runtime owner, and security owner to review the exact profile revision, with evidence for:
+
+- Green full CI.
+- External reconstruction of the candidate.
+- A human clean-room consumer run.
+- An actual npm sandbox publication.
+- Security and assurance review.
+
+The responsible reviewers must inspect that evidence and record their decisions through the project's review process. The deployment evaluator checks profile state and approval records; it does not perform the external reviews. Editing `status` or inserting names does not supply approval.
+
+The [production release procedure](../../docs/publish/production-release.md#inspect-the-approval-state) gives the approval-state check and the commands for candidate and receipt verification. Approval applies to the reviewed candidate and profile revision. Rebuilds or target changes require renewed review.
+
+## Publisher signer integration
+
+The installed CLI accepts ordinary component publication settings through version-two `lean-bridge.cli.json`: npm registry, tag, access, explicit token or OIDC authentication, a public signer-policy file, and an environment reference to an Ed25519 private-key file. `lean-bridge-signing-policy` creates a public policy from an existing public key. See [the author publishing recipe](../../docs/publish/npm.md#publish-an-ordinary-component).
+
+`component-publication.mjs` reconstructs version-two authorization from the two-build report, complete artifact inventory, component receipt, license notices, and source identity. It uses the same signed transaction and receipt executor as universal version-one releases. Ordinary authors do not use this repository's production approval gate. Universal release integrations still supply the providers below.
+
+A reviewed integration composes [`createCliHandlers`](../cli/commands.mjs) with these dependencies:
+
+| Handler option | Integration responsibility |
+|---|---|
+| `registryAdapters` | Supply reviewed adapters for the manifest's registry targets. The installed adapter covers npm. |
+| `deploymentProfileGate` | Preserve the production approval check before credential access. The factory defaults to no gate; the installed production handler supplies one. |
+| `credentialProvider` | Make the required credential names available within their target-scoped boundary. The default provider reads the environment; npm requires `NPM_TOKEN`. |
+| `attestationPolicy` | Supply the accepted public keys, signer identities, and signature algorithms through a trusted review process. |
+| `attestationSigner` | Supply the provider that signs the publication statement and completed release receipt. |
+
+The signer provider exposes `kind`, `keyId`, and `sign(bytes)`. Its `keyId` must match an accepted policy key. `sign(bytes)` returns a nonempty `Buffer` or `Uint8Array`, directly or asynchronously. The attestation implementation passes DSSE preauthentication bytes to the provider and verifies the returned signature against the accepted public key. Keep private keys outside release records and logs.
+
+The handler verifies the manifest and candidate, checks the deployment profile when configured, and preflights required credential names before signing the publication statement. It verifies that signature before invoking the transaction publisher. The transaction preflights every target before its first write and accesses credentials through the scoped boundary. The handler uses the same policy and signer to create the completion receipt only after the transaction reports `complete`.
+
+Follow [sandbox publisher configuration](../../docs/publish/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/publish/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
 
 ## Adding an ecosystem package
 
@@ -90,3 +136,5 @@ Package scaffolding alone does not establish runtime support. The [consumer supp
 ## Verification and evidence
 
 Release tests under [`../../tests`](../../tests/README.md) cover every package builder, canonical manifests, deterministic outputs, release state, credential isolation, independent confirmation, transactions, and receipts. The [compile-once architecture decision](../../docs/architecture/adr/README.md#adr-22-compile-once-package-many-times), [universal bundle evidence](../../docs/evidence/universal-release-bundle.md), [release rehearsal evidence](../../docs/evidence/release-rehearsal.md), and [release receipt evidence](../../docs/evidence/release-receipt.md) provide the design and executed records.
+
+Run the [release-tooling checks](../../docs/contributing/testing.md#release-tooling-checks) when changing these modules. Fixture tests use injected registry clients; retain an actual sandbox publication record before production review.

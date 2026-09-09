@@ -1,4 +1,5 @@
 /* Shared site chrome and documentation. Workbench styles remain route-scoped. */
+@import "../../demos/shared/site.css";
 :root { color-scheme: dark; --bg: #09111f; --panel: #101d31; --line: rgba(173,204,235,.16); --ink: #edf7ff; --muted: #9eb2c9; --mint: #adf7b6; --cyan: #72d8ff; --gold: #ffd36e; --coral: #ff8b7b; --violet: #c6a0ff; font: 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
 * { box-sizing: border-box; }
 body { margin: 0; }
@@ -18,14 +19,6 @@ code { overflow-wrap: anywhere; }
 [id] { scroll-margin-top: 84px; }
 .skip-link { position: fixed; z-index: 30; top: -100px; left: 16px; background: var(--ink); color: var(--bg); padding: 10px 16px; }
 .skip-link:focus { top: 8px; }
-.site-header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line); background: rgba(9,17,31,.96); }
-.site-header-inner { width: min(1440px, calc(100% - 48px)); min-height: 62px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.site-brand { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; font-weight: 750; letter-spacing: -.025em; font-size: 1.2rem; }
-.site-brand b { color: var(--mint); font: 700 32px/1 Georgia, serif; }
-.site-links { display: flex; gap: 28px; }
-.site-links a, .mobile-navigation a { text-decoration: none; color: var(--muted); font-weight: 600; }
-.site-links a:hover, .site-links a[aria-current], .mobile-navigation a[aria-current] { color: var(--mint); }
-.mobile-navigation { display: none; }
 .site-main, .site-footer { width: min(1440px, calc(100% - 48px)); margin-inline: auto; }
 .site-main { padding-block: 44px 64px; }
 .home-hero { padding: 18px 0 44px; max-width: 1000px; }
@@ -116,12 +109,7 @@ code { overflow-wrap: anywhere; }
 @media (min-width: 1600px) { .doc-content { max-width: 78ch; } }
 @media (max-width: 1150px) { .docs-layout { grid-template-columns: 210px minmax(0, 1fr); gap: 30px; } .doc-outline { display: none; } }
 @media (max-width: 760px) {
-	.site-header-inner, .site-main, .site-footer, .docs-layout { width: calc(100% - 28px); }
-	.site-header-inner { min-height: 56px; }
-	.site-links { display: none; }
-	.mobile-navigation { display: block; }
-	.mobile-navigation summary { cursor: pointer; color: var(--muted); }
-	.mobile-navigation nav { position: absolute; right: 14px; top: 56px; padding: 16px; min-width: 180px; display: grid; gap: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 0 0 6px 6px; }
+	.site-main, .site-footer, .docs-layout { width: calc(100% - 28px); }
 	.site-main { padding-top: 28px; }
 	.home-hero { padding-top: 12px; }
 	.three-up, .demo-grid { grid-template-columns: 1fr; }

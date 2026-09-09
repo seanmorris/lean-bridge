@@ -26,14 +26,7 @@ Some other demos use checked runtime certificates. Dinic, for example, returns a
 
 ## Reproduce this demo
 
-From a prepared repository checkout:
-
-```sh
-bash demos/lean-sweep-and-prune/build.sh
-node --test demos/lean-sweep-and-prune/test.mjs
-node demos/lean-sweep-and-prune/benchmark.mjs --assert
-npm run demos:site
-```
+The contributor guide gives the [build, differential-test, and regression commands](../../demos/README.md#reproduce-a-demo) for reproducing this demo from a repository checkout.
 
 The [build script](../../demos/lean-sweep-and-prune/build.sh) selects the maintained modules. The [audit generator](../../demos/lean-sweep-and-prune/generate-proof-audit.mjs) names the required declarations. The resulting [proof receipt](../../demos/lean-sweep-and-prune/runtime/proof-audit.json) identifies those sources.
 

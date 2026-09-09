@@ -44,6 +44,12 @@ export interface DocPage
 	title: string;
 	/** Audience group used by documentation navigation. */
 	group: string;
+	/** Compatibility routes stay available without appearing in navigation or search. */
+	legacy?: boolean;
+	/** Supported consumer profiles whose primary documentation lives on this page. */
+	consumerIds?: readonly string[];
+	/** Alternate reader-facing names that locate a shared guide in search. */
+	searchAliases?: readonly string[];
 }
 
 export const demos: readonly Demo[];

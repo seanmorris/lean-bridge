@@ -45,7 +45,7 @@ test("a plain component links once against shared runtime imports and direct exp
     assert.deepEqual(exports.filter(item => item.kind === "memory" || item.kind === "table"), []);
     const functionExports = new Set(exports.filter(item => item.kind === "function").map(item => item.name));
     for(const symbol of built.compilationPlan.document.compilerAdapters.directSymbols) assert.equal(functionExports.has(symbol), true);
-    assert.equal(functionExports.has("initialize_LeanBridgeGenerated"), true);
+    assert.equal(functionExports.has(built.compilationPlan.document.compilerAdapters.initializer), true);
     assert.equal(functionExports.has(built.linked.manifest.exports.internalInitializer), true);
     const linkMap = await readFile(join(built.side, built.linked.manifest.linkMap.path), "utf8");
     assert.doesNotMatch(linkMap, /libleanrt\.a|libInit\.a|ccall|cwrap|generic.?dispatch/);

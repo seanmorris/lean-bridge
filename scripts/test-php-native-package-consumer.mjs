@@ -94,6 +94,16 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
 `);
 
 	const extension = join(packageRoot, "lib/php/lean_alpha.so");
+	const documentationProgram = join(consumer, "main.php");
+	await cp(new URL("../tests/fixtures/documentation/consumers/php-native/main.php", import.meta.url), documentationProgram);
+	const documentation = await run("php", ["-n", "-d", `extension=${extension}`, documentationProgram], {
+		maxBuffer: 16 * 1024 * 1024
+	});
+	const documentationExpected = { box: 41, identity: true, payload: [true, 9, "consumer", "007fff", [1, 5, 13]], callback: 42, closure: 42 };
+	if(documentation.stderr !== "" || JSON.stringify(JSON.parse(documentation.stdout)) !== JSON.stringify(documentationExpected))
+	{
+		throw new Error(`native PHP documentation result mismatch: ${documentation.stderr || documentation.stdout}`);
+	}
 	const { stdout, stderr } = await run("php", ["-n", "-d", `extension=${extension}`, program], {
 		maxBuffer: 16 * 1024 * 1024
 	});

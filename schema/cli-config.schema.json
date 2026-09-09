@@ -4,25 +4,141 @@
   "title": "Lean Bridge CLI configuration",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion"],
+  "required": [
+    "schemaVersion"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "project": { "type": "string", "minLength": 1 },
+    "schemaVersion": {
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1
+    },
     "targets": {
       "type": "array",
       "uniqueItems": true,
-      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" }
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]*$"
+      }
     },
     "cache": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["policy", "directory"],
+      "required": [
+        "policy",
+        "directory"
+      ],
       "properties": {
-        "policy": { "enum": ["use", "refresh", "off"] },
-        "directory": { "type": ["string", "null"], "minLength": 1 }
+        "policy": {
+          "enum": [
+            "use",
+            "refresh",
+            "off"
+          ]
+        },
+        "directory": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        }
       }
     },
-    "format": { "enum": ["human", "json"] },
-    "progress": { "enum": ["auto", "none", "plain", "json"] }
-  }
+    "format": {
+      "enum": [
+        "human",
+        "json"
+      ]
+    },
+    "progress": {
+      "enum": [
+        "auto",
+        "none",
+        "plain",
+        "json"
+      ]
+    },
+    "publish": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "npm",
+        "signing"
+      ],
+      "properties": {
+        "npm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "registry",
+            "tag",
+            "access",
+            "authMode"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "format": "uri"
+            },
+            "tag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "access": {
+              "enum": [
+                "public",
+                "restricted"
+              ]
+            },
+            "authMode": {
+              "enum": [
+                "token",
+                "oidc"
+              ]
+            }
+          }
+        },
+        "signing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policyFile",
+            "keyFileEnvironment"
+          ],
+          "properties": {
+            "policyFile": {
+              "type": "string",
+              "minLength": 1
+            },
+            "keyFileEnvironment": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "publish"
+        ]
+      },
+      "then": {
+        "properties": {
+          "schemaVersion": {
+            "const": 2
+          }
+        }
+      }
+    }
+  ]
 }

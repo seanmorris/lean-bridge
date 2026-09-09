@@ -21,16 +21,19 @@ import { startSiteServer } from "../site/serve.mjs";
 
 const execute = promisify(execFile);
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const documentationFixtures = join(repository, "tests/fixtures/documentation/consumers");
 const options = new Map();
 for(let index = 2; index < process.argv.length; index += 2)
 {
 	const name = process.argv[index];
-	if(!["--release", "--output", "--browsers"].includes(name) || !process.argv[index + 1])
+	if(!["--release", "--output", "--browsers", "--registry"].includes(name) || options.has(name) || !process.argv[index + 1])
 		throw new Error("Usage: check-component-browser-consumer.mjs --release DIRECTORY [--output DIRECTORY] [--browsers chromium,firefox,webkit]");
 	options.set(name, process.argv[index + 1]);
 }
 if(!options.has("--release")) throw new Error("--release must name the author's exact npm release directory");
 const release = resolve(options.get("--release"));
+const registry = options.get("--registry");
+if(registry) assert.ok(new URL(registry).protocol === "http:" && ["localhost", "127.0.0.1"].includes(new URL(registry).hostname), "Consumer rehearsal registry must be loopback HTTP");
 const output = resolve(options.get("--output") ?? join(repository, "build/documentation-consumer-acceptance"));
 const engines = (options.get("--browsers") ?? "chromium,firefox,webkit").split(",");
 for(const engine of engines) assert.ok(["chromium", "firefox", "webkit"].includes(engine), `Unknown browser ${engine}`);
@@ -41,7 +44,16 @@ const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-installed-react-"));
 const observations = [];
 const base = "/consumer-example/";
-const maximum = ((1n << 31n) - 1n).toString();
+const maximum = ((1n << 128n) - 1n).toString();
+
+const installPackage = async directory => {
+	const flags = ["install", "--ignore-scripts", "--no-audit", "--no-fund"];
+	if(registry) await execute("npm", flags, { cwd: directory, maxBuffer: 8_000_000 });
+	await execute("npm", [...flags
+		, ...(registry
+			? ["--registry", registry, receipt.package.package]
+			: [join(release, receipt.runtime.archive), join(release, receipt.package.archive)])], { cwd: directory, maxBuffer: 8_000_000 });
+};
 
 /**
  * Wait for an observable installed-component result, not a script handle.
@@ -121,8 +133,7 @@ const checkPage = async (browser, url, engine, variant) => {
 		assert.match(await page.locator("#lean-result").textContent(), new RegExp(`^Sum: ${maximum}\\.`));
 		await page.locator("#left").fill(maximum);
 		await page.locator("#calculate").click();
-		await page.locator('#lean-result[data-status="error"]').waitFor();
-		assert.match(await page.locator("#lean-result").textContent(), /supports sums through/u);
+		await page.locator("#lean-result").filter({ hasText: `Sum: ${BigInt(maximum) + 1n}.` }).waitFor();
 		await page.locator("#left").fill("-1");
 		await page.locator("#calculate").click();
 		await page.locator("#lean-result").filter({ hasText: "Enter nonnegative whole numbers." }).waitFor();
@@ -218,12 +229,53 @@ const checkFailure = async (browser, url, engine) => {
 	{ await page.close(); }
 };
 
+/**
+ * Execute the framework-free guide and verify asset failures and reload recovery.
+ *
+ * @param browser Selected Playwright browser.
+ * @param url Deployed plain JavaScript example URL.
+ * @param engine Browser engine name recorded in the report.
+ */
+const checkPlainBrowser = async (browser, url, engine) => {
+	const page = await browser.newPage();
+	const assets = [];
+	const errors = [];
+	page.on("pageerror", error => errors.push(error.message));
+	page.on("response", response => {
+		if(response.url().endsWith(".wasm")) assets.push({ path: new URL(response.url()).pathname, status: response.status(), type: response.headers()["content-type"] });
+	});
+	try
+	{
+		await page.goto(url);
+		await page.locator('#result[data-status="ready"]').waitFor();
+		assert.equal(await page.locator("#result").innerText(), "Sum: 42. Empty string: true.");
+		assert.ok(assets.length >= 2);
+		for(const asset of assets)
+		{
+			assert.ok(asset.path.startsWith(base));
+			assert.equal(asset.status, 200);
+			assert.match(asset.type, /^application\/wasm/u);
+		}
+		assert.deepEqual(errors, []);
+		await page.route("**/*.wasm", route => route.fulfill({ status: 404, body: "Missing test asset" }));
+		await page.reload();
+		await page.locator('#result[data-status="error"]').waitFor();
+		assert.match(await page.locator("#result").innerText(), /Could not load Lean/u);
+		await page.unroute("**/*.wasm");
+		await page.reload();
+		await page.locator('#result[data-status="ready"]').waitFor();
+		return { engine, variant: "plain-javascript", result: "passed", failedAssetAndReload: "passed" };
+	}
+	finally
+	{ await page.close(); }
+};
+
 try
 {
 	const portable = JSON.parse((await execute(process.execPath, [join(release, "verify-component-package-receipt.mjs"), "--receipt", receiptPath], { cwd: scratch })).stdout);
 	assert.deepEqual(portable, verified, "The shipped standalone verifier accepts the exact author archives");
 	await cp(join(repository, "tests/fixtures/component-consumer"), scratch, { recursive: true });
-	await execute("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", join(release, receipt.runtime.archive), join(release, receipt.package.archive)], { cwd: scratch, maxBuffer: 8_000_000 });
+	await installPackage(scratch);
 	const manifest = JSON.parse(await readFile(join(scratch, "node_modules/onboarding-small/package.json"), "utf8"));
 	assert.equal(manifest.leanBridge.componentIdentitySha256, verified.componentIdentitySha256);
 	assert.equal(manifest.exports["."].browser, "./index.mjs");
@@ -236,29 +288,43 @@ try
 	const versions = { node: process.versions.node };
 	for(const dependency of ["react", "react-dom", "typescript", "vite"])
 		versions[dependency] = JSON.parse(await readFile(join(scratch, "node_modules", dependency, "package.json"), "utf8")).version;
-	const nodeResult = JSON.parse((await execute(process.execPath, ["--input-type=module", "-e", 'import {add,isEmpty} from "onboarding-small"; process.stdout.write(JSON.stringify({sum:String(add(100n,23n)),empty:isEmpty(""),nonempty:isEmpty("Lean")}));'], { cwd: scratch })).stdout);
+	await cp(join(documentationFixtures, "javascript"), join(scratch, "node-javascript"), { recursive: true });
+	await cp(join(documentationFixtures, "typescript"), join(scratch, "node-typescript"), { recursive: true });
+	const nodeResult = JSON.parse((await execute(process.execPath, ["node-javascript/index.mjs"], { cwd: scratch })).stdout);
 	assert.deepEqual(nodeResult, { sum: "123", empty: true, nonempty: false });
+	await execute(join(scratch, "node_modules/.bin/tsc"), ["--project", "node-typescript/tsconfig.json"], { cwd: scratch });
+	const typescriptResult = JSON.parse((await execute(process.execPath, ["node-typescript/dist/index.js"], { cwd: scratch })).stdout);
+	assert.deepEqual(typescriptResult, { sum: "42", empty: true });
+	await execute(process.execPath, ["--input-type=module", "-e"
+		, `
+import assert from "node:assert/strict";
+import { addInput } from "./node-typescript/dist/input.js";
+assert.equal(addInput("20", "22"), 42n);
+assert.equal(addInput("2147483647", "0"), 2147483647n);
+assert.equal(addInput("18446744073709551616", "7"), 18446744073709551623n);
+for(const [left, right] of [["-1", "0"], ["1.5", "1"], ["", "0"]])
+  assert.throws(() => addInput(left, right), RangeError);
+`], { cwd: scratch });
 	const numericBoundarySource = `import {add} from "onboarding-small";
-const maximum = (1n << 31n) - 1n;
-const unsupported = [[maximum + 1n, 0n], [maximum, 1n]].map(([left, right]) => {
-  try { return {left: String(left), right: String(right), result: String(add(left, right))}; }
-  catch(error) { return {left: String(left), right: String(right), error: error.message}; }
-});
-process.stdout.write(JSON.stringify({maximum: String(maximum), inputAtMaximum: String(add(maximum, 0n)), sumAtMaximum: String(add(maximum - 1n, 1n)), unsupported}));`;
+const values = [1n << 31n, 1n << 64n, (1n << 4096n) + 123n];
+process.stdout.write(JSON.stringify(values.map(value => ({ input: String(value), sum: String(add(value, 7n)) }))));`;
 	const numericBoundary = JSON.parse((await execute(process.execPath, ["--input-type=module", "-e", numericBoundarySource], { cwd: scratch })).stdout);
-	assert.deepEqual(numericBoundary, {
-		maximum, inputAtMaximum: maximum, sumAtMaximum: maximum
-		, unsupported: [
-			{ left: "2147483648", right: "0", error: "resolved is not a function" }
-			, { left: maximum, right: "1", error: "resolved is not a function" }
-		]
-	}, "Record the current runtime limitation so a runtime change forces the tutorial range to be revisited");
+	assert.deepEqual(numericBoundary, [1n << 31n, 1n << 64n, (1n << 4096n) + 123n].map(value => ({ input: String(value), sum: String(value + 7n) })), "Installed Nat arithmetic preserves arbitrary precision");
 	await execute("npm", ["run", "build"], { cwd: scratch, maxBuffer: 8_000_000 });
 	await build({ root: scratch, configFile: join(scratch, "vite.config.ts"), envDir: false, logLevel: "error", define: { "process.env.NODE_ENV": JSON.stringify("development") }, build: { outDir: "dist-strict", minify: false } });
-	const production = await startSiteServer({ root: join(scratch, "dist"), base });
-	const strict = await startSiteServer({ root: join(scratch, "dist-strict"), base });
+	const plainRoot = join(scratch, "plain-browser");
+	await cp(join(documentationFixtures, "browser"), plainRoot, { recursive: true });
+	await installPackage(plainRoot);
+	await execute("npm", ["run", "build"], { cwd: plainRoot, maxBuffer: 8_000_000 });
+	const servers = [];
 	try
 	{
+		const production = await startSiteServer({ root: join(scratch, "dist"), base });
+		servers.push(production);
+		const strict = await startSiteServer({ root: join(scratch, "dist-strict"), base });
+		servers.push(strict);
+		const plain = await startSiteServer({ root: join(plainRoot, "dist"), base });
+		servers.push(plain);
 		for(const engine of engines)
 		{
 			const launchOptions = { headless: true };
@@ -275,13 +341,14 @@ process.stdout.write(JSON.stringify({maximum: String(maximum), inputAtMaximum: S
 				observations.push(await checkPage(browser, strict.url, engine, "strict"));
 				observations.push(await checkPending(browser, strict.url, engine));
 				observations.push(await checkFailure(browser, production.url, engine));
+				observations.push(await checkPlainBrowser(browser, plain.url, engine));
 			}
 			finally
 			{ await browser.close(); }
 		}
 	}
 	finally
-	{ await production.close(); await strict.close(); }
+	{ await Promise.all(servers.map(server => server.close())); }
 	assert.deepEqual(await verifyComponentPackageReceipt({ receiptPath }), verified, "Acceptance does not rewrite the author's package bytes");
 	const report = {
 		schemaVersion: 1, kind: "lean-bridge-installed-component-consumer"
@@ -290,9 +357,12 @@ process.stdout.write(JSON.stringify({maximum: String(maximum), inputAtMaximum: S
 		, archives: { runtime: receipt.runtime, component: receipt.package }
 		, installation: {
 			outsideRepository: true, lifecycleScripts: false
+			, componentOnlyFromRegistry: Boolean(registry)
+			, runtimeResolvedAutomatically: Boolean(registry)
 			, publicPackage: "onboarding-small", privateRepositoryImports: false
 		}
 		, node: nodeResult
+		, typescript: typescriptResult
 		, numericBoundary
 		, typecheck: { strict: true, publicAny: false, wrongTypesRejected: true }
 		, versions, requestedBrowsers: engines
@@ -307,6 +377,17 @@ process.stdout.write(JSON.stringify({maximum: String(maximum), inputAtMaximum: S
 	}, null, 2)}\n`);
 	await writeFile(join(output, "acceptance.json"), `${JSON.stringify(report, null, 2)}\n`);
 	process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+}
+catch(error)
+{
+	await mkdir(output, { recursive: true });
+	await writeFile(join(output, "acceptance.json"), `${JSON.stringify({
+		schemaVersion: 1, kind: "lean-bridge-installed-component-consumer"
+		, status: "failed", createdAt: new Date().toISOString(), receipt: verified
+		, requestedBrowsers: engines, browsers: observations
+		, error: error.message, stdout: error.stdout, stderr: error.stderr
+	}, null, 2)}\n`);
+	throw error;
 }
 finally
 { await rm(scratch, { recursive: true, force: true }); }

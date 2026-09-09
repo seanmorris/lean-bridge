@@ -27,7 +27,7 @@ test("plain functions receive deterministic generated Lean exports and direct pr
   assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(left : Nat\) \(right : Nat\) : Nat :=\n {2}OnboardingSmall\.add left right/);
   assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(value : String\) : Bool :=\n {2}OnboardingSmall\.isEmpty value/);
   assert.equal((generated.files["LeanBridgeGenerated.lean"].match(/@\[export lean_bridge_/g) ?? []).length, 2);
-  assert.equal(generated.plan.privateAbi.dispatch, "direct-symbols");
+  assert.equal(generated.plan.privateAbi.dispatch, "scalar-frame-v2");
   assert.ok(generated.plan.privateAbi.exports.every(item => /^lean_bridge_[0-9a-f]{24}$/.test(item.symbol)));
   assert.doesNotMatch(JSON.stringify(generated), /ccall|cwrap|generic.?dispatch|Alpha/);
   assert.doesNotMatch(await readFile("tests/fixtures/onboarding/small/OnboardingSmall.lean", "utf8"), /@\[export/);
@@ -38,11 +38,11 @@ test("compiler adapters are identical across source checkout roots", async () =>
   const copied = join(copyRoot, "component");
   try
 {
-    await cp(resolve("tests/fixtures/onboarding/medium"), copied, { recursive: true });
-    const first = await generate("tests/fixtures/onboarding/medium");
+    await cp(resolve("tests/fixtures/onboarding/scalar-modules"), copied, { recursive: true });
+    const first = await generate("tests/fixtures/onboarding/scalar-modules");
     const second = await generate(copied);
     assert.deepEqual(first, second);
-    assert.deepEqual(first.plan.imports, ["OnboardingMedium", "OnboardingMedium.Collections"]);
+    assert.deepEqual(first.plan.imports, ["ScalarModules", "ScalarModules.Operations"]);
     assert.equal(first.plan.exports.length, 5);
 } finally
 {
@@ -50,12 +50,10 @@ test("compiler adapters are identical across source checkout roots", async () =>
 }
 });
 
-test("IO declarations become generated effectful exports and Promise ABI results", async () => {
-  const generated = await generate("tests/fixtures/onboarding/async");
-  assert.match(generated.files["LeanBridgeGenerated.lean"], /\(value : String\) : IO String :=/);
-  assert.equal(generated.plan.exports[0].leanEffect, "IO");
-  assert.equal(generated.plan.exports[0].resultMode, "promise");
-  assert.equal(generated.plan.privateAbi.exports[0].resultMode, "promise");
+test("ordinary IO exports are blocked before compilation", async () => {
+  const analysis = await analyzeLeanProject("tests/fixtures/onboarding/async");
+  assert.ok(analysis.adapterHints.some(item => item.required));
+  await assert.rejects(generate("tests/fixtures/onboarding/async"), { code: "component-binding-ir-required" });
 });
 
 test("existing hand-authored Binding IR cannot silently enter the inferred adapter generator", async () => {

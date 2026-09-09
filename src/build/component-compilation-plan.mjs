@@ -86,7 +86,7 @@ export const validateComponentCompilationPlan = plan => {
 	if(!validHash(plan.componentPlanSha256)) fail("invalid-component-compilation-plan", "component plan identity must be a SHA-256 value");
 	exactKeys(plan.compilerAdapters, ["planSha256", "leanSourceSha256", "module", "initializer", "directSymbols"], "compiler adapters");
 	if(!validHash(plan.compilerAdapters.planSha256) || !validHash(plan.compilerAdapters.leanSourceSha256)) fail("invalid-component-compilation-plan", "compiler adapter identities must be SHA-256 values");
-	if(plan.compilerAdapters.module !== "LeanBridgeGenerated" || plan.compilerAdapters.initializer !== "initialize_LeanBridgeGenerated") fail("invalid-component-compilation-plan", "compiler adapter module or initializer is unsupported");
+	if(plan.compilerAdapters.module !== `LeanBridgeGenerated${sha256(plan.component.id).slice(0, 16)}` || plan.compilerAdapters.initializer !== `initialize_${plan.compilerAdapters.module}`) fail("invalid-component-compilation-plan", "compiler adapter module or initializer is unsupported");
 	if(!Array.isArray(plan.compilerAdapters.directSymbols) || plan.compilerAdapters.directSymbols.length === 0 || new Set(plan.compilerAdapters.directSymbols).size !== plan.compilerAdapters.directSymbols.length || plan.compilerAdapters.directSymbols.some(symbol => !/^lean_bridge_[0-9a-f]{24}$/.test(symbol)))
 	{
 		fail("invalid-component-compilation-plan", "compiler adapters must expose unique direct symbols");

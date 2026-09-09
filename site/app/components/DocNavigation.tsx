@@ -43,7 +43,7 @@ export const DocNavigation = () => {
 	return <details className="doc-navigation" ref={disclosure} open>
 		<summary>Browse guides</summary>
 		<nav aria-label="Guides" onClick={navigate}>{groups.map(group => <section key={group}>
-			<h2>{group}</h2>{docPages.filter(page => page.group === group).map(page =>
+			<h2>{group}</h2>{docPages.filter(page => page.group === group && !page.legacy).map(page =>
 				<NavLink end key={page.route} to={page.route}>{page.title}</NavLink>)}
 		</section>)}</nav>
 	</details>;

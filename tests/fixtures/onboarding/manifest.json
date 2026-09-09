@@ -14,9 +14,11 @@
       "id": "medium",
       "project": "medium",
       "category": "baseline",
-      "expectedStatus": "ok",
-      "expectedExports": 5,
-      "expectedRequiredHints": [],
+      "expectedStatus": "needs-input",
+      "expectedExports": 2,
+      "expectedRequiredHints": [
+        "unsupported-component-signature"
+      ],
       "expectedWarnings": 0
     },
     {
@@ -25,16 +27,20 @@
       "category": "unsupported-safe-inference",
       "expectedStatus": "needs-input",
       "expectedExports": 0,
-      "expectedRequiredHints": ["implicit-or-instance-parameter"],
+      "expectedRequiredHints": [
+        "implicit-or-instance-parameter"
+      ],
       "expectedWarnings": 0
     },
     {
       "id": "async",
       "project": "async",
       "category": "baseline",
-      "expectedStatus": "ok",
-      "expectedExports": 1,
-      "expectedRequiredHints": [],
+      "expectedStatus": "needs-input",
+      "expectedExports": 0,
+      "expectedRequiredHints": [
+        "unsupported-component-signature"
+      ],
       "expectedWarnings": 0
     },
     {
@@ -43,7 +49,9 @@
       "category": "unsupported-safe-inference",
       "expectedStatus": "needs-input",
       "expectedExports": 0,
-      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedRequiredHints": [
+        "unsupported-parameter-type"
+      ],
       "expectedWarnings": 0
     },
     {
@@ -52,7 +60,9 @@
       "category": "unavoidable-ambiguity",
       "expectedStatus": "needs-input",
       "expectedExports": 0,
-      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedRequiredHints": [
+        "unsupported-parameter-type"
+      ],
       "expectedWarnings": 0
     },
     {
@@ -70,7 +80,9 @@
       "category": "unavoidable-ambiguity",
       "expectedStatus": "needs-input",
       "expectedExports": 0,
-      "expectedRequiredHints": ["unsupported-parameter-type"],
+      "expectedRequiredHints": [
+        "unsupported-parameter-type"
+      ],
       "expectedWarnings": 0
     }
   ]

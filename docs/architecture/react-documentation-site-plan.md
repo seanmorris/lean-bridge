@@ -97,7 +97,7 @@ lean-bridge publish --project . --target npm --dry-run --output build/lean-bridg
 
 Document Node 22, Git, the pinned Lean toolchain, Nix or Docker, and the prepared shared runtime before these commands. The source project must be committed for the reproducibility dry run. Explain each emitted directory, including analysis decisions, the component-neutral bundle, archives, and receipts.
 
-Keep three capabilities separate: source analysis, generated binding types, and execution through a particular package runtime. The current [plain-component npm runtime](../../src/release/component-npm-package.mjs) supports `Nat × Nat → Nat` and `String → Bool`. The analyzer's broader type table and richer Alpha fixture do not establish that every ordinary-project declaration runs through this package path. Every tutorial must execute its exact generated archive; unsupported shapes need a documented diagnostic or a separately implemented adapter.
+Keep three capabilities separate: source analysis, generated binding types, and execution through a particular package runtime. The [plain-component npm runtime](../../src/release/component-npm-package.mjs) now supports pure functions over Unit, Bool, fixed-width integers, Nat, Int, floats, String, and ByteArray, including zero and multiple arguments. Its scalar capability contract rejects unsupported signatures. Every tutorial must execute its exact generated archive; the richer Alpha fixture does not establish support for other ordinary-project signatures.
 
 ### Downstream consumer
 

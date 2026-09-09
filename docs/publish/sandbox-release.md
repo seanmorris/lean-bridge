@@ -4,18 +4,7 @@ Run the local release checks before connecting a publisher to a registry. A real
 
 ## Check the release machinery locally
 
-From the Lean Bridge checkout, run the focused tests:
-
-```sh
-npm run test:release-rehearsal
-npm run test:release-authorization
-npm run test:publication-attestation
-npm run test:registry-transaction
-node --test tests/npm-registry-adapter.test.mjs
-npm run test:release-receipt
-```
-
-These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release.
+Run the [release-tooling fixture checks](../contributing/testing.md#release-tooling-checks) from the Contributing testing guide. Their injected clients do not establish that an actual sandbox accepted a release.
 
 If you already have a universal bundle, inspect its package projections without connecting to a registry:
 
@@ -47,7 +36,7 @@ This universal gate differs from the ordinary-component dry run in the [local ha
 
 ## Configure the publisher integration
 
-The installed CLI includes the npm registry adapter, but does not currently wire a signer policy or provider. There is no supported `--signer` flag or signer field in the CLI configuration file. A maintainer must supply the accepted policy and provider through [`createCliHandlers`](../../src/cli/commands.mjs) in a reviewed release integration.
+Ordinary component authors use the installed CLI's version-two publication configuration, documented in [npm publishing](npm.md#publish-an-ordinary-component). The universal project release described here uses a reviewed signer policy and provider integration. The [publisher signer integration](../../src/release/README.md#publisher-signer-integration) in Contributing documents that handler factory and provider interface.
 
 That integration needs:
 
@@ -57,9 +46,9 @@ That integration needs:
 | A sandbox npm adapter | Use the approved endpoint; never reuse production credentials. |
 | A credential provider | Make `NPM_TOKEN` available only to the npm target. Keep its value out of logs and source files. |
 | An accepted signer policy | Identify the allowed public keys and signer identities through a trusted review process. |
-| A signer provider | Supply `kind`, `keyId`, and `sign(bytes)`; return a signature without exposing its private key to the release records. |
+| A signer provider | Sign the approved publication and completion receipt without exposing its private key to the release records. |
 
-The installed adapter recognizes `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and `LEAN_BRIDGE_NPM_REGISTRY_URL`. Sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the public npm production endpoint. A custom URL can point elsewhere, so the release owner must inspect it. Registry settings alone do not supply the missing signer integration.
+The universal adapter recognizes `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and `LEAN_BRIDGE_NPM_REGISTRY_URL`. Sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the public npm production endpoint. A custom URL can point elsewhere, so the release owner must inspect it. These registry settings do not configure a signer.
 
 The handler verifies the manifest, checks required credential names, and verifies the publication signature before invoking the transaction publisher. The transaction preflights every target before its first write. The npm adapter checks the archive hash, publishes with lifecycle scripts disabled, and compares the registry's tarball hash with the authorized bytes.
 

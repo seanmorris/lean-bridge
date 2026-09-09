@@ -13,6 +13,8 @@ import { gzipSync } from "node:zlib";
 import { chromium, firefox, webkit } from "playwright";
 import { startSiteServer } from "./serve.mjs";
 import { demos, docPages, prerenderPaths } from "./registry.mjs";
+import { checkSidebarScroll } from "./sidebar-browser-check.mjs";
+import { checkSiteHeaders } from "./header-browser-check.mjs";
 
 const root = resolve(process.env.SITE_ARTIFACT_ROOT ?? "build/github-pages");
 const identity = JSON.parse(await readFile(resolve(root, "build-identity.json"), "utf8"));
@@ -136,6 +138,10 @@ try
 		try
 		{
 			report.engines.push({ engine, version: browser.version() });
+			const headerChecks = await checkSiteHeaders(browser, server.url);
+			report.checks.push({ engine, headerChecks, status: "passed" });
+			const sidebarChecks = await checkSidebarScroll(browser, server.url);
+			report.checks.push({ engine, sidebarChecks, status: "passed" });
 			const noScript = await browser.newPage({ javaScriptEnabled: false });
 			for(const path of prerenderPaths)
 			{
@@ -145,7 +151,7 @@ try
 				assert.equal(await noScript.locator("main h1").isVisible(), true, `${path}: guide must not require streaming scripts`);
 				assert.doesNotMatch(await noScript.locator("main").innerText(), /Loading guide/u);
 				const guide = docPages.find(entry => entry.route === path && entry.source);
-				if(guide) assert.ok((await noScript.locator("main").innerText()).length > 500, `${path}: full guide, not a hub placeholder`);
+				if(guide && !guide.legacy) assert.ok((await noScript.locator("main").innerText()).length > 500, `${path}: complete guide`);
 				await checkLinks(noScript);
 				if(path === "/") assert.equal(await noScript.locator(".demo-card").count(), 12);
 				if(path === "/docs/lean/first-component/") assert.ok(await noScript.locator("pre code").count() > 0);

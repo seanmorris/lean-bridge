@@ -162,6 +162,58 @@ test("C projection requires complete artifacts and an explicit source runtime co
   );
 }));
 
+test("extracted C++ archives advertise only packaged include directories", async () => withBundle(async ({ scratch, bundle }) => {
+  const eligible = join(scratch, "eligible-cpp-source");
+  await cp(bundle, eligible, { recursive: true });
+  const manifest = structuredClone(parseCanonicalPackageManifest(
+    await readFile(join(eligible, "canonical-package.json"), "utf8"),
+  ));
+  const cppArtifacts = manifest.artifacts.filter(artifact => artifact.path.startsWith("bindings/cpp/"));
+  cppArtifacts.forEach(artifact => { artifact.target = "cpp-bindings"; });
+  const header = cppArtifacts.find(artifact => artifact.path.endsWith("include/lean_alpha.hpp"));
+  const cHeader = manifest.artifacts.find(artifact => artifact.path === "bindings/c/include/lean_alpha.h");
+  cHeader.target = "cpp-bindings";
+  manifest.targets.push({
+    id: "cpp-bindings"
+    , eligible: true
+    , reason: null
+    , platforms: ["cpp20"]
+    , capabilities: ["external-runtime-adapter", "source-bindings", "typed-bindings"]
+    , entryPoints: [{ name: "library", kind: "library", artifact: header.id }]
+  });
+  const mapping = manifest.packages.find(candidate => candidate.ecosystem === "cpp");
+  Object.assign(mapping, {
+    target: "cpp-bindings"
+    , eligible: true
+    , reason: null
+    , publicArtifacts: [...cppArtifacts.map(artifact => artifact.id), cHeader.id, "license", "assurance", "core-artifact-set", "sbom", "provenance"]
+  });
+  await rewriteIdentity(eligible, manifest);
+  const first = await buildCppPackage({ bundleRoot: eligible, outputRoot: join(scratch, "cpp-first") });
+  const second = await buildCppPackage({ bundleRoot: eligible, outputRoot: join(scratch, "cpp-second") });
+  assert.equal(first.archiveSha256, second.archiveSha256);
+  const extracted = join(scratch, "extracted");
+  await mkdir(extracted);
+  await execute("tar", ["-xzf", first.archive, "-C", extracted]);
+  const packageRoot = join(extracted, "lean-bridge-alpha-0.0.0-cpp");
+  const targets = await readFile(join(packageRoot, "lib/cmake/LeanBridgeAlpha/LeanBridgeAlphaTargets.cmake"), "utf8");
+  assert.match(targets, /INTERFACE_INCLUDE_DIRECTORIES "\$\{_LEAN_BRIDGE_PREFIX\}\/include"/);
+  assert.doesNotMatch(targets, /\/internal/);
+  const { stdout: flags } = await execute("pkg-config", ["--cflags", "lean-bridge-alpha"], {
+    env: { ...process.env, PKG_CONFIG_PATH: join(packageRoot, "lib/pkgconfig") }
+  });
+  assert.match(flags, /include/);
+  assert.doesNotMatch(flags, /internal/);
+
+  const consumer = join(scratch, "cpp-consumer");
+  await mkdir(consumer);
+  await writeFile(join(consumer, "main.cpp"), '#include "lean_alpha.hpp"\nint main() { return sizeof(lean_bridge::alpha::Payload) > 0 ? 0 : 1; }\n');
+  await writeFile(join(consumer, "CMakeLists.txt"), `cmake_minimum_required(VERSION 3.20)\nproject(consumer CXX)\nset(CMAKE_CXX_STANDARD 20)\nfind_package(LeanBridgeAlpha 0.0.0 EXACT CONFIG REQUIRED)\nadd_executable(consumer main.cpp)\ntarget_link_libraries(consumer PRIVATE LeanBridge::Alpha)\n`);
+  await execute("cmake", ["-S", consumer, "-B", join(consumer, "build"), `-DCMAKE_PREFIX_PATH=${packageRoot}`]);
+  await execute("cmake", ["--build", join(consumer, "build")]);
+  await execute(join(consumer, "build/consumer"));
+}));
+
 test("C++ projection rejects an eligible target without a native runtime artifact", async () => withBundle(async ({ scratch, bundle }) => {
   const eligible = join(scratch, "eligible-cpp");
   await cp(bundle, eligible, { recursive: true });

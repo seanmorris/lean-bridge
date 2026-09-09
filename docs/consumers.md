@@ -1,171 +1,59 @@
-# Downstream consumers
+# Runtime and package reference
 
-The [versioned support contract](consumer-support.v1.json) records thirteen consumers separately. `supported` means that a clean consumer installs the documented artifact and executes real Lean through the generated public API. The current proof of concept supports every listed row. Native packages target x86-64 Linux with glibc 2.38 or newer.
+The [versioned support contract](consumer-support.v1.json) records each runtime separately. A supported profile installs its documented package in a clean consumer and executes real Lean. This table is checked against that contract by the documentation tests.
+
+## Tested profiles
+
+| Consumer | State | Tested profile | Guide |
+| --- | --- | --- | --- |
+| JavaScript on Node | `supported` | Node 22 ESM with separate generated runtime and component npm archives | [JavaScript](javascript-typescript.md#javascript) |
+| TypeScript on Node | `supported` | TypeScript 5.9 strict compilation to Node 22 ESM | [TypeScript](javascript-typescript.md#typescript) |
+| Browser JavaScript | `supported` | Installed npm archive selected through a browser conditional export and bundled with Vite | [Browser JavaScript](javascript-typescript.md#use-the-package-in-a-browser) |
+| Native PHP | `supported` | PHP 8.2 NTS on x86-64 Linux with glibc 2.38 or newer through the generated Zend extension | [php-native](consume/php-native.md) |
+| PHP-Wasm | `supported` | PHP 8.4 in the Node-hosted php-wasm 0.1.0 runtime, lazy and startup profiles | [php-wasm](consume/php-wasm.md) |
+| .NET | `supported` | .NET 8 on x86-64 Linux with glibc 2.38 or newer through the generated LibraryImport transport and NuGet package | [C# / .NET](consume/dotnet.md) |
+| JVM | `supported` | JDK 22 on x86-64 Linux with glibc 2.38 or newer through finalized FFM and a Maven package | [java](consume/java.md), [kotlin](consume/kotlin.md) |
+| Ruby | `supported` | MRI Ruby 3.3 on x86-64 Linux with glibc 2.38 or newer through Fiddle and a RubyGem without a native extension build | [ruby](consume/ruby.md) |
+| Python | `supported` | Python 3.11 or newer on x86-64 Linux with glibc 2.38 or newer through the generated wheel and native runtime adapter | [python](consume/python.md) |
+| Rust | `supported` | Rust 2021 crate on x86-64 Linux with glibc 2.38 or newer and the packaged native runtime adapter | [rust](consume/rust.md) |
+| C | `supported` | C11 package on x86-64 Linux with glibc 2.38 or newer, CMake, and pkg-config discovery | [c](consume/c.md) |
+| C++ | `supported` | C++20 package on x86-64 Linux with glibc 2.38 or newer, typed RAII wrappers, and CMake discovery | [C++](consume/cpp.md) |
+| WIT/WASI | `supported` | Component Model adapter in the pinned Wasmtime 42 host profile on x86-64 Linux with glibc 2.38 or newer | [wit-wasi](consume/wit-wasi.md) |
+
+The JavaScript examples install the prepared `onboarding-small` npm release. Native, managed, PHP, and WIT/WASI guides install the Alpha interoperability package. Read the named guide for its actual exports, installation format, and compiler or host requirements.
 
 ## Authenticate a release archive
 
-A completed release places `release-receipt.json`, `publication-signer-policy.json`, and `verify-release-archive.mjs` beside each npm, wheel, crate, C, C++, managed, PHP, and WIT/WASI archive. Obtain the expected signer-policy SHA-256 through reviewed configuration or another trusted channel. The adjacent policy and its adjacent hash file are not a trust anchor.
-
-Run the verifier before installation. Supply the exact signed subject path and coordinate printed by the release handoff:
-
-```sh
-node verify-release-archive.mjs \
-  --archive ./downloaded-package \
-  --receipt ./release-receipt.json \
-  --policy ./publication-signer-policy.json \
-  --policy-sha256 <trusted-policy-sha256> \
-  --subject <signed-subject-path> \
-  --coordinate <expected-coordinate>
-```
-
-The verifier uses only Node built-ins. It checks both Ed25519-signed decisions, the separately trusted policy identity, coordinate, filename, byte length, and archive SHA-256. The [release receipt evidence](evidence/release-receipt.md) defines the complete handoff.
+[Receive a package](consume/receive-package.md#authenticate-a-signed-archive) covers the standalone verifier, trusted signer-policy hash, signed subject, and expected coordinate. Authenticate the original archive before installation or extraction.
 
 ## Browser JavaScript
 
-The npm archive exposes its public module through a browser conditional export. Install with lifecycle scripts disabled, then use an ordinary bare-package import:
-
-```sh
-npm install --ignore-scripts ./lean-bridge-alpha-0.0.0.tgz
-```
-
-```js
-import { Box, roundTrip } from "@lean-bridge/alpha";
-
-const box = new Box(42);
-console.assert(box.read() === 42);
-box.dispose();
-
-const value = roundTrip({
-  enabled: true,
-  count: 41,
-  label: "browser",
-  bytes: new Uint8Array([0, 127, 255]),
-  values: [1, 5, 13],
-});
-console.assert(value.count === 42);
-```
-
-`npm run test:consumer:browser` installs the archive in a clean directory, bundles the bare import with Vite, and executes the real Lean component in Chromium. Raw ESM, workers, Rollup, Webpack, and React remain covered by the broader [browser bundler evidence](evidence/browser-bundler-acceptance.md).
+The [JavaScript and TypeScript guide](javascript-typescript.md) includes a complete Vite project, React effects, and module-worker ownership using the same prepared archives. The support matrix also checks the installed Alpha npm browser export.
 
 ## Python
 
-The platform wheel contains generated Python, its lazy native adapter, one component library, and the shared runtime:
-
-```sh
-node ./python-wheel-preflight.mjs \
-  --wheel ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
-```
-
-The generated PyPI handoff places `python-wheel-preflight.mjs` beside the wheel. It reports the detected operating system, architecture, selected Python runtime's glibc version, Python version, and pip wheel-tag decision. It exits with status 2 when the host cannot install the exact wheel. The current package requires Linux x86-64, glibc 2.38 or newer, Python 3.11 or newer, and pip acceptance of `py3-none-manylinux_2_38_x86_64`.
-
-```sh
-python3 -m pip install --no-index --no-deps ./lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl
-```
-
-Install the original wheel after the preflight passes. Do not rename, retag, or unpack the wheel to bypass pip's compatibility decision.
-
-```python
-from lean_alpha import Box, Payload, make_adder, round_trip, with_callback
-
-with Box(42) as box:
-    assert box.read() == 42
-    assert box.identity() is box
-
-value = round_trip(Payload(True, 41, "python", b"\x00\xff", (1, 5, 13)))
-assert value.count == 42
-assert with_callback(40, lambda current: current + 2) == 44
-with make_adder(2) as add_two:
-    assert add_two(40) == 42
-```
-
-The Alpha `round_trip` fixture toggles `enabled`, increments `count`, and preserves the label, bytes, and values. The generated dataclass, callback, and returned callable hide the native adapter.
-
-After authenticating the wheel archive, verify its internal canonical package identity without a Lean Bridge checkout:
-
-```python
-from hashlib import sha256
-from importlib.resources import files
-
-metadata = files("lean_alpha").joinpath("lean_bridge", "metadata")
-manifest = metadata.joinpath("canonical-package.json").read_bytes()
-expected = metadata.joinpath("canonical-package.sha256").read_text().split()[0]
-actual = sha256(manifest).hexdigest()
-assert actual == expected
-print(actual)
-```
-
-This internal check detects damaged installed metadata. It does not authenticate the wheel or its release signer by itself.
+[Python](consume/python.md) covers the exact wheel, selected-interpreter compatibility preflight, isolated installation, generated values, and resource cleanup.
 
 ## Rust
 
-Extract the deterministic `.crate` into a local registry or vendor directory and add `lean_bridge_alpha` as a normal dependency. The crate locates its packaged component without an installation script:
-
-```rust
-use lean_bridge_alpha::{make_adder, with_callback, Box};
-
-let boxed = Box::new(42)?;
-assert_eq!(boxed.read()?, 42);
-assert_eq!(with_callback(40, |value| Ok(value + 2))?, 44);
-let add_two = make_adder(2)?;
-assert_eq!(add_two.call(40)?, 42);
-```
-
-`Drop` releases identity-bearing Lean resources. The exported Lean closure remains an explicit `.call(...)` method because stable Rust does not permit generated implementations of the `Fn` traits.
+[Rust](consume/rust.md) provides a complete Cargo project with an extracted archive dependency and the packaged native library's current location requirement.
 
 ## C
 
-The C archive provides CMake and pkg-config discovery, the generated C11 header, and both native libraries:
-
-```c
-#include <lean_alpha.h>
-
-lean_alpha_error error = {0};
-lean_alpha_box *box = NULL;
-uint32_t value = 0;
-
-if (lean_alpha_box_create(42, &box, &error) == LEAN_ALPHA_STATUS_OK) {
-  lean_alpha_box_read(box, &value, &error);
-}
-lean_alpha_box_dispose(&box);
-```
-
-With CMake, use `find_package(LeanBridgeAlpha 0.0.0 EXACT CONFIG REQUIRED)` and link `LeanBridge::Alpha`.
+[C](consume/c.md) includes a complete C11 program and CMake project, explicit status checks, and cleanup for resources and copied buffers.
 
 ## C++
 
-The C++20 archive adds typed values and deterministic RAII wrappers over the same C component:
-
-```cpp
-#include <lean_alpha.hpp>
-
-lean_bridge::alpha::Box box{42};
-auto value = box.read();
-auto add_two = lean_bridge::alpha::make_adder(2);
-auto result = add_two(40);
-```
-
-The wrapper is move-only. Destructors release `Box` and returned `Transform` values; `close()` is also available for deterministic early release.
-
-`npm run test:consumer:native` builds all four deterministic projections, installs each in a separate clean directory, and executes retained resources, copied values, callbacks, closures, and disposal against real Lean. See [native consumer acceptance](evidence/native-consumer-acceptance.md).
+[C++](consume/cpp.md) uses the C++20 archive's typed values and RAII wrappers, with a complete CMake project.
 
 ## .NET, JVM, and Ruby
 
-The NuGet, Maven, and RubyGems archives package idiomatic generated APIs over the same shared native runtime and independently compiled Alpha and Beta components. .NET 8 uses source-generated `LibraryImport`, JDK 22 uses the finalized Foreign Function and Memory API without JNI, and MRI Ruby 3.3 uses `Fiddle` without compiling a native extension.
-
-`npm run test:consumer:managed` restores or installs every archive in a clean project and executes copied values, identity-bearing resources, callbacks, returned callables, repeated close, stale-use rejection, and two-component composition against real Lean. The JVM check also compiles Kotlin and uses isolated class loaders. See the [.NET, JVM, and Ruby guide](dotnet-jvm-ruby.md) and [managed consumer acceptance](evidence/managed-consumer-acceptance.md).
+[C# / .NET](consume/dotnet.md), [Java](consume/java.md), [Kotlin](consume/kotlin.md), and [Ruby](consume/ruby.md) each have their own installed-package guide. Java and Kotlin consume the same generated Maven artifact through JDK 22's FFM API.
 
 ## WIT and WASI
 
-The WIT/WASI archive contains the generated portable WIT projection, a binary Component Model adapter, an independent Wasmtime 42 host, and the same shared native Lean runtime. Run it directly after extracting the archive:
-
-```sh
-./lean-bridge-alpha-wasi-0.0.0/bin/lean-alpha-wasi-host
-```
-
-The host prints `42`. Wasmtime enters the packaged component, the component invokes its typed host import, and the host constructs and reads a real Lean `Box` through the generated C API. The adapter package also retains the broader WIT projection for `Box`, `read`, and `roundTrip`. Callback values and receiver-anchored borrowed results remain outside that portable WIT subset, but they are not required by the supported adapter entry point.
-
-`npm run test:consumer:wasi` extracts the deterministic archive, invokes the component, and validates the binary independently with wasm-tools. See [WIT and WASI consumer acceptance](evidence/wasi-consumer-acceptance.md).
+[WIT / WASI](consume/wit-wasi.md) explains the executable adapter entry point, the bundled Wasmtime host, and the broader WIT projection. The adapter requires its typed native host import.
 
 ## Promotion rule
 
-CI fails if any supported consumer does not install its package and execute real Lean. The workflow publishes all thirteen observations in the GitHub job summary.
+CI checks package installation and real Lean execution for all supported profiles. [Consumer acceptance evidence](evidence/native-consumer-acceptance.md) and the versioned contract identify the commands and records behind those states. A newly documented example does not change a support state by itself.

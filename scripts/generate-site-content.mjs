@@ -28,7 +28,8 @@ const demoPages = new Map([
 ]);
 const languages = [
 	'sh', 'js', 'ts', 'tsx', 'html', 'json', 'lean', 'toml', 'php', 'python'
-	, 'rust', 'c', 'cpp', 'csharp', 'java', 'ruby', 'xml'
+	, 'rust', 'c', 'cpp', 'csharp', 'java', 'kotlin', 'ruby'
+	, 'xml', 'cmake', 'wit', 'nix', 'ini'
 ];
 
 /**
@@ -354,7 +355,7 @@ export async function generateSiteContent(options = {})
 	const modules = Object.entries(results).map(([route, result]) =>
 		`${JSON.stringify(route)}: () => import('./${result.metadata.id}.mjs')`
 	);
-	const search = Object.values(results).map(result => ({
+	const search = Object.values(results).filter(result => !result.metadata.legacy).map(result => ({
 		...result.metadata, searchText: result.searchText
 	}));
 	await mkdir(output, { recursive: true });
@@ -370,7 +371,7 @@ export async function generateSiteContent(options = {})
 	].join('\n'));
 	await writeFile(path.join(output, 'metadata.d.mts'), [
 		'export interface Heading { depth: number; id: string; text: string; }'
-		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
+		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; legacy?: boolean; consumerIds?: string[]; searchAliases?: string[]; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
 		, 'export const pages: Record<string, Page>;'
 	].join('\n'));
 	await writeFile(path.join(output, 'index.d.mts'), [

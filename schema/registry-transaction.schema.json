@@ -95,7 +95,7 @@
         "dependencies"
       ],
       "properties": {
-        "permission": { "enum": ["granted", "denied", "not-required"] },
+        "permission": { "enum": ["granted", "denied", "not-required", "deferred-to-publish"] },
         "coordinateState": { "enum": ["available", "matching", "collision", "local"] },
         "immutable": { "type": "boolean" },
         "registryReference": {

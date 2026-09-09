@@ -16,6 +16,7 @@ import {
 	writeFile,
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { homedir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ComponentBuildPlanError, prepareComponentBuildPlan } from "./component-plan.mjs";
@@ -306,7 +307,8 @@ export const runNativeComponentEngine = async ({
 const prepareDockerNixClosureCache = async ({ engineRoot, selection, runner, environment, cache }) => {
 	if(cache.policy === "off" || selection.available.nix.available !== true) return null;
 	const nixCommand = environment.LEAN_BRIDGE_NIX ?? "nix";
-	const root = resolve(environment.LEAN_BRIDGE_DOCKER_NIX_CACHE_ROOT ?? join(engineRoot, ".lean-bridge-docker-nix"));
+	const userCache = environment.XDG_CACHE_HOME ?? join(homedir(), ".cache");
+	const root = resolve(environment.LEAN_BRIDGE_DOCKER_NIX_CACHE_ROOT ?? join(userCache, "lean-bridge", "docker-nix"));
 	if(root.includes(",")) fail("unsupported-docker-mount-path", "Docker Nix cache path cannot contain commas");
 	await mkdir(root, { recursive: true });
 	const common = [
@@ -625,8 +627,9 @@ const buildPlainComponentProject = async ({
 }) => {
 	await mkdir(dirname(output), { recursive: true });
 	const workParent = selection.backend === "docker"
-		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? engine)
+		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? dirname(output))
 		: dirname(output);
+	await mkdir(workParent, { recursive: true });
 	const work = await mkdtemp(join(workParent, ".lean-bridge-component-work-"));
 	const finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
 	const isolatedStore = selection.backend === "nix" && cache.policy === "off" ? `${work}-nix-store` : null;

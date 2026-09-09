@@ -10,6 +10,10 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/abi/component-scalars.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/abi/error-envelope.mjs",
 			"classification": "strict-migration-backlog"
 		},
@@ -246,6 +250,10 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/build/component-scalar-adapters.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/build/component-side-linker.mjs",
 			"classification": "strict-migration-backlog"
 		},
@@ -366,11 +374,19 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/release/cli-npm-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/release/component-npm-package.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
 			"path": "src/release/component-package-receipt.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-publication.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
@@ -380,6 +396,10 @@
 		{
 			"path": "src/release/component-reproducibility-gate.mjs",
 			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/component-runtime.mjs",
+			"classification": "generated-runtime-import-boundary"
 		},
 		{
 			"path": "src/release/core-artifact-set.mjs",
@@ -434,6 +454,10 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/release/publish-configuration.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/release/publish-manifest.mjs",
 			"classification": "strict-migration-backlog"
 		},
@@ -475,6 +499,10 @@
 		},
 		{
 			"path": "src/release/rubygems-package.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/source-identity.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{

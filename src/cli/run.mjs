@@ -4,6 +4,7 @@
  * @file
  */
 
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { canonicalJson } from "../capsule/node.mjs";
@@ -17,6 +18,8 @@ import {
 	parseCliArguments,
 	validateCliResult,
 } from "./contract.mjs";
+
+const installedVersion = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")).version;
 
 const configurationSources = Object.freeze({
 	project: "default"
@@ -144,7 +147,7 @@ export const runCli = async ({
 	, cwd = process.cwd()
 	, environment = process.env
 	, stderrIsTTY = process.stderr?.isTTY === true
-	, version = "0.0.0-poc"
+	, version = installedVersion
 	, signal = undefined
 	, onProgress = undefined
 }) => {

@@ -1,33 +1,54 @@
 # Use a Lean package
 
-Install the runtime and component archives produced by a Lean author, then import the component by its package name. You do not need Lean or a compiler in the consuming application.
+Install a prepared release and call its generated API from your application. The language guides start with the completed package; building from Lean source is a [separate workflow below](#start-from-a-raw-lean-package).
 
-## Start with the tutorial package
+## Use a prepared release
 
-The author tutorial produces `onboarding-small`, with two exports: `add` and `isEmpty`. Start with [JavaScript and TypeScript](javascript-typescript.md) to verify the receipt, install the exact archives, and make your first call.
+Get the package for your language and platform from its publisher, either through the configured registry or as an archive. The package supplies the compiled Lean code and its runtime dependency. Use your application's language tools to install and call it.
 
-Then choose where those calls run:
+### Choose your language
 
-| Application | Guide | What you will build |
+| Application | Prepared package | Guide |
 | --- | --- | --- |
-| React | [Use a component from React](react.md) | Load a package, handle errors, and retire pending work when the component unmounts. |
-| Browser or worker | [Browser assets and workers](browser-workers.md) | Serve the compiled assets under a subdirectory and run calls in a module worker. |
-| An existing algorithm demo | [Use a demo's local API](demo-api.md) | Call the box-overlap solver without the workbench or React. |
+| JavaScript, TypeScript, browser, React, and workers | npm package | [JavaScript and TypeScript](javascript-typescript.md) |
+| Python | Platform wheel | [Python](consume/python.md) |
+| Rust | Cargo crate with native libraries | [Rust](consume/rust.md) |
+| C | Native archive and CMake target | [C](consume/c.md) |
+| C++ | Native archive and CMake target | [C++](consume/cpp.md) |
+| C# / .NET | NuGet package | [C# / .NET](consume/dotnet.md) |
+| Java | Maven JAR and POM | [Java](consume/java.md) |
+| Kotlin | The same Maven JAR and POM as Java | [Kotlin](consume/kotlin.md) |
+| Ruby | RubyGem | [Ruby](consume/ruby.md) |
+| Native PHP | Compiled extension and Composer library | [Native PHP](consume/php-native.md) |
+| PHP-Wasm | npm package for the PHP-Wasm host | [PHP-Wasm](consume/php-wasm.md) |
+| WIT / WASI | Component and host archive | [WIT / WASI](consume/wit-wasi.md) |
 
-The tutorial package returns copied numbers and booleans. It does not expose a handle or require a `dispose()` call. Other APIs can own resources; use the cleanup contract documented for that API.
+The JavaScript examples install `onboarding-small@1.0.0`, which exports `add` and `isEmpty`. Native, managed, PHP, and WIT/WASI examples install the Alpha interoperability package in their language's format. Each guide names the exact archive and API it uses; the examples do not assume a public registry release.
 
-## Other runtimes
+The [runtime and package reference](consumers.md) lists the tested platform for every supported consumer. [PHP](php.md) compares its two runtime options. The [demo API guide](demo-api.md) covers the algorithm demos' local APIs separately.
 
-The [downstream consumer guide](consumers.md) records tested package paths. It links to the versioned support contract and executed evidence for each runtime.
+### Receive a release
 
-- [PHP](php.md) covers native PHP and PHP-Wasm packages.
-- [.NET, JVM, and Ruby](dotnet-jvm-ruby.md) covers managed bindings and their registry consumers.
-- [All downstream consumers](consumers.md) includes Python, Rust, C, C++, and WIT/WASI.
+[Receive a package](consume/receive-package.md) identifies the files to request and the verification steps for each handoff. Continue with your language guide's install command, program, expected output, and cleanup steps.
 
-Support belongs to the named package and runtime profile. The tutorial package and the richer interoperability fixture do not expose the same call shapes.
+JavaScript packages declare their runtime dependency, and their imports load it automatically. A local npm handoff includes the runtime archive alongside the component so the install can resolve both without a registry copy.
 
-## Receive a release
+Consumers need their application toolchain and the platform named by the package. They do not need Lean or Lake. Nix users can receive the flake's outputs from a [signed binary cache](publish/nix.md), with a trusted cache key and substitution checks.
 
-For a local handoff, verify the component receipt and both archives before installation. For a signed release, also verify the completed release receipt against a signer policy whose hash you obtained separately. The [handoff guide](publish/local-handoff.md) explains which files to request.
+## Start from a raw Lean package
 
-If you need to produce those files, start with [Package a Lean library](lean-author-guide.md).
+If you received `.lean` files and a Lake project, prepare a host-language package before installing it in your application:
+
+1. Complete [author setup](lean/setup.md) and check the [supported exports](lean/export-decisions.md).
+2. [Analyze, build, and create local archives](publish/local-handoff.md#prepare-the-lean-project) from the source project's root. The local dry run checks two builds without uploading a package.
+3. Verify the resulting handoff and follow the prepared-release installation for its target language.
+
+The documented ordinary Lake-project workflow produces npm archives. The Alpha builds for Python, Rust, C, C++, managed runtimes, PHP, and WIT/WASI use target-specific inputs and compiled bundles from this repository. A raw Lake project alone does not supply those bundles or their target API metadata. Each language page links its Alpha build path separately.
+
+### Start with the tutorial package
+
+[Build your first component](lean/first-component.md) gives the exact Lean source and build steps for `onboarding-small`. Once its archives exist, use the [JavaScript and TypeScript guide](javascript-typescript.md) for Node, browsers, React, and workers.
+
+### Produce or publish a package
+
+[Package a Lean library](lean-author-guide.md) covers source preparation. [Share a local package](publish/local-handoff.md) prepares an archive handoff; [Publish a Lean package](publishing.md) covers ecosystem releases and their authorization.

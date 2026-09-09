@@ -2,6 +2,8 @@
 
 Observed on 2026-09-08. The final run completed at 07:01:09 UTC.
 
+The numeric limits below describe these historical archives. [Scalar ABI 2 acceptance on 9 September](npm-release-hardening-20260909.md) supersedes them with exact large-integer transport.
+
 The consumer installed the exact `onboarding-small@1.0.0` archives from the Lean author tutorial into a temporary project outside the repository. It imported the public package without rebuilding the component, invoking package lifecycle scripts, or publishing an archive.
 
 ## Results

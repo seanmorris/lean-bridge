@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:component-publication:v2",
+  "title": "Lean Bridge ordinary component publication plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "mode",
+    "createdAt",
+    "authorization",
+    "selection",
+    "publication",
+    "targets",
+    "policy"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "kind": {
+      "const": "lean-bridge-component-publish-plan"
+    },
+    "mode": {
+      "const": "authorized-no-publish"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "candidatePath",
+        "candidateId"
+      ],
+      "properties": {
+        "path": {
+          "const": "release-authorization.json"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "candidatePath": {
+          "const": "release"
+        },
+        "candidateId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allTargets",
+        "requested",
+        "plannedEcosystems"
+      ],
+      "properties": {
+        "allTargets": {
+          "type": "boolean"
+        },
+        "requested": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "npm",
+              "javascript"
+            ]
+          }
+        },
+        "plannedEcosystems": {
+          "const": [
+            "npm"
+          ]
+        }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry",
+        "tag",
+        "access",
+        "authMode",
+        "signerPolicySha256"
+      ],
+      "properties": {
+        "registry": {
+          "type": "string",
+          "format": "uri"
+        },
+        "tag": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9._-]*$"
+        },
+        "access": {
+          "enum": [
+            "public",
+            "restricted"
+          ]
+        },
+        "authMode": {
+          "enum": [
+            "token",
+            "oidc"
+          ]
+        },
+        "signerPolicySha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/target"
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "credentialsRead",
+        "externalRegistryWritesPerformed",
+        "immutableAuthorizedArtifacts",
+        "idempotentExecutionRequired"
+      ],
+      "properties": {
+        "credentialsRead": {
+          "const": false
+        },
+        "externalRegistryWritesPerformed": {
+          "const": false
+        },
+        "immutableAuthorizedArtifacts": {
+          "const": true
+        },
+        "idempotentExecutionRequired": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "endpoint",
+        "tag",
+        "access",
+        "authMode"
+      ],
+      "properties": {
+        "kind": {
+          "const": "registry"
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        },
+        "tag": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9._-]*$"
+        },
+        "access": {
+          "enum": [
+            "public",
+            "restricted"
+          ]
+        },
+        "authMode": {
+          "enum": [
+            "token",
+            "oidc"
+          ]
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order",
+        "candidateId",
+        "ecosystem",
+        "name",
+        "version",
+        "target",
+        "operation",
+        "destination",
+        "coordinate",
+        "backendPlan",
+        "archives",
+        "dependencies",
+        "credentialEnvironment",
+        "idempotencyKey"
+      ],
+      "properties": {
+        "order": {
+          "const": 1
+        },
+        "candidateId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ecosystem": {
+          "const": "npm"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "const": "javascript"
+        },
+        "operation": {
+          "const": "publish"
+        },
+        "destination": {
+          "$ref": "#/$defs/destination"
+        },
+        "coordinate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backendPlan": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "bytes",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "archives": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "path",
+              "bytes",
+              "sha256"
+            ],
+            "properties": {
+              "kind": {
+                "const": "tar-gzip"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "coordinate",
+              "sha256"
+            ],
+            "properties": {
+              "coordinate": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "credentialEnvironment": {
+          "oneOf": [
+            {
+              "const": [
+                "NPM_TOKEN"
+              ]
+            },
+            {
+              "const": [
+                "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+                "ACTIONS_ID_TOKEN_REQUEST_URL"
+              ]
+            }
+          ]
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

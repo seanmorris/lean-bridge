@@ -16,8 +16,8 @@
       "properties": {
         "planSha256": { "$ref": "#/$defs/sha256" },
         "leanSourceSha256": { "$ref": "#/$defs/sha256" },
-        "module": { "const": "LeanBridgeGenerated" },
-        "initializer": { "const": "initialize_LeanBridgeGenerated" },
+        "module": { "type": "string", "pattern": "^LeanBridgeGenerated[0-9a-f]{16}$" },
+        "initializer": { "type": "string", "pattern": "^initialize_LeanBridgeGenerated[0-9a-f]{16}$" },
         "directSymbols": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" } }
       }
     },

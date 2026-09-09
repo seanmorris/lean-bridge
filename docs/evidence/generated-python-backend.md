@@ -1,6 +1,6 @@
 # Generated Python Backend Evidence
 
-Status: the Alpha Binding IR generates an ordinary Python 3.11 package with inline types, `.pyi` stubs, and a private typed runtime protocol. A native Python consumer fixture executes the public package. The protocol is not yet connected to the real Lean runtime.
+Historical generator-stage evidence: the Alpha Binding IR generated an ordinary Python 3.11 package with inline types, `.pyi` stubs, and a private typed runtime protocol. The tests below used a fixture runtime. The later [native consumer acceptance](native-consumer-acceptance.md) connects the installed wheel to real Lean. For current installation and usage, see the [Python guide](../consume/python.md).
 
 ## Generated package
 
@@ -64,6 +64,6 @@ Python runtime categories must distinguish every finite specialization. A packag
 
 The four Python generator tests run as part of the 177-test Node suite.
 
-## Current boundary
+## Boundary of these historical checks
 
 The native Python fixture proves package shape, type preservation, validation, identity behavior, lifecycle conventions, callback syntax, stub generation, and runtime initialization policy. It does not prove the private Python protocol against the real Lean implementation. Cross-language conformance must connect Python, JavaScript, C, and Rust to the same component and compare values, errors, identities, callback traces, initialization, and cleanup.

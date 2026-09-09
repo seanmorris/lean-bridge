@@ -6,6 +6,7 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { validatePublishConfiguration } from "../release/publish-configuration.mjs";
 
 import {
 	AnalysisPolicyError,
@@ -177,10 +178,18 @@ const validateStringArray = (value, label, { code = "invalid-cli-config", minimu
  */
 export const validateCliConfig = config => {
 	if(config === null || typeof config !== "object" || Array.isArray(config)) fail("invalid-cli-config", "CLI configuration must be an object");
-	const allowed = new Set(["schemaVersion", "project", "targets", "cache", "format", "progress"]);
+	const allowed = new Set(["schemaVersion", "project", "targets", "cache", "format", "progress", "publish"]);
 	const unknown = Object.keys(config).filter(key => !allowed.has(key));
 	if(unknown.length > 0) fail("invalid-cli-config", "CLI configuration fields must be closed", { unknown });
-	if(config.schemaVersion !== 1) fail("invalid-cli-config", "CLI configuration version must be 1");
+	if(![1, 2].includes(config.schemaVersion)) fail("invalid-cli-config", "CLI configuration version must be 1 or 2");
+	if(config.publish !== undefined)
+	{
+		if(config.schemaVersion !== 2) fail("invalid-cli-config", "Publication settings require CLI configuration version 2");
+		try
+		{ validatePublishConfiguration(config.publish); }
+		catch(error)
+		{ fail("invalid-cli-config", error.message); }
+	}
 	if(config.project !== undefined && (typeof config.project !== "string" || config.project === "")) fail("invalid-cli-config", "configured project must be a non-empty path");
 	if(config.targets !== undefined)
 	{
@@ -394,6 +403,7 @@ export const parseCliArguments = (argv, {
 		, format
 		, interactive: parsed.interactive
 		, configuration: Object.freeze({ path: configuration.path, sources })
+		, publication: config.publish === undefined ? null : Object.freeze({ config: config.publish, directory: configuration.directory })
 		, selection: Object.freeze({ allTargets: targets.length === 0, targets: Object.freeze(targets) })
 		, cache: Object.freeze({
 			policy: cachePolicy

@@ -22,7 +22,7 @@ const hydrated = page => page.waitForFunction(() =>
 
 try
 {
-	for(const failure of ["unavailable", "malformed", "invalid-route"])
+	for(const failure of ["unavailable", "malformed", "invalid-route", "invalid-aliases"])
 	{
 		const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 		const errors = [];
@@ -33,7 +33,9 @@ try
 			if(requests > 1) return route.continue();
 			const body = failure === "invalid-route"
 				? JSON.stringify([{ title: "Untrusted", searchText: "ABI", route: "https://example.invalid/" }])
-				: "{}";
+				: failure === "invalid-aliases"
+					? JSON.stringify([{ title: "Guide", searchText: "ABI", route: "/docs/", searchAliases: [false] }])
+					: "{}";
 			return route.fulfill({ status: failure === "unavailable" ? 503 : 200, contentType: "application/json", body });
 		});
 		try
@@ -54,6 +56,54 @@ try
 		{ await page.close(); }
 	}
 
+	const languageSearch = await browser.newPage();
+	try
+	{
+		await languageSearch.goto(docs.href);
+		await hydrated(languageSearch);
+		for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "Composer", "Nix"])
+		{
+			await languageSearch.locator("#doc-search").fill(name);
+			const first = languageSearch.locator(".search-results a").first();
+			await first.waitFor();
+			assert.equal(new URL(await first.getAttribute("href"), base).href,
+				new URL(`docs/publish/${name.toLowerCase()}/`, base).href, `${name}: publishing guide ranks first`);
+		}
+		for(const [query, slug] of [
+			...["JavaScript", "JS", "TypeScript", "TS", "Browser", "React", "worker", "Workers"].map(query => [query, "javascript-typescript"])
+			, ["Java", "java"]
+			, ["C", "c"]
+			, ["C++", "cpp"]
+			, ["C#/.NET", "dotnet"]
+			, ["Python", "python"]
+		]){
+			await languageSearch.locator("#doc-search").fill(query);
+			const first = languageSearch.locator(".search-results a").first();
+			const expected = new URL(`docs/consume/${slug}/`, base);
+			await first.waitFor();
+			assert.equal(new URL(await first.getAttribute("href"), base).href, expected.href, `${query}: the named guide ranks first`);
+		}
+		await languageSearch.locator(".search-results a").first().click();
+		await languageSearch.waitForURL(new URL("docs/consume/python/", base).href);
+		assert.equal(await languageSearch.locator("#doc-search").inputValue(), "", "Choosing a guide clears the query");
+		for(const [query, slug] of [
+			["Contributing", ""]
+			, ["Site development", "documentation/"]
+			, ["Demo testing", "demos/"]
+			, ["Acceptance tests", "testing/"]
+			, ["Signer integration", "release-pipeline/"]
+			, ["GitHub Pages", "github-pages/"]
+		]){
+			await languageSearch.locator("#doc-search").fill(query);
+			const first = languageSearch.locator(".search-results a").first();
+			await first.waitFor();
+			assert.equal(new URL(await first.getAttribute("href"), base).href,
+				new URL(`docs/contributing/${slug}`, base).href, `${query}: canonical contributor guide ranks first`);
+		}
+	}
+	finally
+	{ await languageSearch.close(); }
+
 	const page = await browser.newPage({ viewport: { width: 390, height: 850 } });
 	try
 	{
@@ -61,7 +111,7 @@ try
 		await hydrated(page);
 		const disclosure = page.locator(".doc-navigation");
 		const summary = disclosure.locator("summary");
-		assert.equal(await page.locator(".docs-sidebar nav a").count(), docPages.length, "One navigation tree");
+		assert.equal(await page.locator(".docs-sidebar nav a").count(), docPages.filter(guide => !guide.legacy).length, "One navigation tree without compatibility pages");
 		await page.waitForFunction(() => !globalThis.document.querySelector(".doc-navigation").open);
 		assert.equal(await summary.isVisible(), true);
 		assert.equal(await page.locator("#doc-search").isVisible(), true);
@@ -102,7 +152,7 @@ try
 	}
 	finally
 	{ await noScript.close(); }
-	console.log("PASS search HTTP/malformed/route recovery, lazy requests, mobile guide disclosure, resize, focus, and no-JS navigation");
+	console.log("PASS search HTTP/malformed/route recovery, language/ecosystem/contributor relevance, lazy requests, mobile guide disclosure, resize, focus, and no-JS navigation");
 }
 finally
 { await browser.close(); }

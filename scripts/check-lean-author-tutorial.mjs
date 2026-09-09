@@ -71,7 +71,7 @@ try
 		rejected.push({ name, exitCode: result.status, output: result.stdout.trim() });
 	}
 	await run("Initialize a separate source repository", "git", ["init", "--quiet"]);
-	await run("Stage the four tutorial inputs", "git", ["add", ".gitignore", "lakefile.toml", "lean-toolchain", "OnboardingSmall.lean"]);
+	await run("Stage the tutorial source and license", "git", ["add", ".gitignore", "lakefile.toml", "lean-toolchain", "OnboardingSmall.lean", "package.json", "LICENSE"]);
 	await run("Commit the exact tutorial source", "git", ["-c", "user.name=Lean Bridge tutorial", "-c", "user.email=tutorial@example.invalid", "commit", "--quiet", "-m", "Add documented Lean component"]);
 	const revision = (await run("Read the candidate revision", "git", ["rev-parse", "HEAD"])).stdout.trim();
 	await cli("Analyze the documented exports", ["analyze", "--project", ".", "--check", "--output", "build/analysis"]);

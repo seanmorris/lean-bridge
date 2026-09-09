@@ -56,7 +56,7 @@ Preparation copies the input before awaiting initialization. Mutating the origin
 
 Release a prepared solve in `finally`, including when later application work throws. `dispose()` is idempotent, and calling the solver afterward throws. Disposing a handle releases its prepared resources; the shared initialized module remains cached.
 
-In a UI, a preparation can finish after navigation. If its owner has already left, dispose that late handle without using its result. The [React guide](react.md) covers asynchronous ownership for the separately packaged tutorial; this local prepared API additionally requires explicit disposal.
+In a UI, a preparation can finish after navigation. If its owner has already left, dispose that late handle without using its result. The [React section](javascript-typescript.md#react) covers asynchronous ownership for the separately packaged tutorial; this local prepared API additionally requires explicit disposal.
 
 ## Choose the integration path
 

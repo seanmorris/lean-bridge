@@ -54,6 +54,7 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
     , bundle: null
     , authorization: null
     , manifest: null
+    , publication: null
     , format: "human"
     , interactive: false
     , configuration: {
@@ -106,6 +107,7 @@ test("CLI parsing is noninteractive by default and keeps command options closed"
       }
     }
     , selection: { allTargets: false, targets: ["cargo", "npm"] }
+    , publication: null
     , cache: { policy: "refresh", directory: "/workspace/cache" }
     , analysis: { check: false, policy: null }
     , progress: "json"
@@ -1102,5 +1104,5 @@ test("the published CLI result schema is closed", async () => {
 
   const configSchema = JSON.parse(await readFile("schema/cli-config.schema.json", "utf8"));
   assert.equal(configSchema.additionalProperties, false);
-  assert.equal(configSchema.properties.schemaVersion.const, 1);
+  assert.deepEqual(configSchema.properties.schemaVersion.enum, [1, 2]);
 });

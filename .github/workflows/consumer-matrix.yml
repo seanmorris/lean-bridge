@@ -55,10 +55,38 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Install documentation browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Package and execute clean Node consumers
         id: consumer
         continue-on-error: true
+        env:
+          LEAN_BRIDGE_DOCUMENTATION_BROWSERS: chromium,firefox,webkit
         run: npm run test:consumer:node
+      - name: Prepare the standalone CLI archive with its prebuilt runtime
+        run: npm run build:cli-package -- --output build/cli-package --runtime build/consumer-ci-runtime/lazy
+      - name: Build and consume a Lean project through the tarball-installed CLI
+        run: npm run acceptance:cli-package -- --candidate build/cli-package --output build/cli-package-acceptance --backend nix
+      - name: Install the disposable npm registry
+        run: npm install --prefix build/registry-tools --ignore-scripts --no-audit --no-fund verdaccio@6.2.0
+      - name: Publish through the installed CLI and consume only the component
+        run: >-
+          node scripts/check-local-npm-release.mjs
+          --verdaccio build/registry-tools/node_modules/.bin/verdaccio
+          --candidate build/cli-package --output build/cli-registry-acceptance
+          --backend nix --browsers chromium,firefox,webkit
+      - name: Preserve the CLI candidate and installed-author evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cli-package-acceptance-${{ github.sha }}
+          path: |
+            build/cli-package/*.tgz
+            build/cli-package/cli-package-report.json
+            build/cli-package-acceptance
+            build/cli-registry-acceptance
+          if-no-files-found: warn
+          retention-days: 30
       - name: Record Node observations
         if: always()
         shell: bash
@@ -79,6 +107,14 @@ jobs:
       - name: Enforce Node support
         if: steps.consumer.outcome != 'success'
         run: exit 1
+      - name: Preserve executable documentation observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: documentation-consumer-results-${{ github.sha }}
+          path: build/documentation-consumer-acceptance
+          if-no-files-found: warn
+          retention-days: 30
 
   browser-consumer:
     name: Browser npm boundary

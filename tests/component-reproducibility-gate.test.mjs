@@ -9,6 +9,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 
 import { runComponentReproducibilityGate } from "../src/release/component-reproducibility-gate.mjs";
 import { ReproducibilityGateError } from "../src/release/reproducibility-gate.mjs";
@@ -89,6 +90,12 @@ test("a plain component dry run emits an installable byte-identical release", as
       , build: fakeBuild
       , packageComponent: fakePackage(false)
       , verifyReceipt
+      , writePublication: async ({ gateRoot }) => {
+        const manifest = { schemaVersion: 2, kind: "lean-bridge-component-publish-plan", targets: [{ coordinate: "plain@1.0.0" }], policy: { externalRegistryWritesPerformed: false } };
+        const source = canonicalJson(manifest);
+        await writeFile(join(gateRoot, "publish-manifest.json"), source);
+        return { manifest, manifestSha256: sha256(source) };
+      }
       , sourcePreparer
       , now: () => 0
       , targets: ["npm"]
@@ -103,7 +110,7 @@ test("a plain component dry run emits an installable byte-identical release", as
     assert.equal(report.builds.length, 2);
     assert.equal(report.differences.length, 0);
     assert.equal(manifest.kind, "lean-bridge-component-publish-plan");
-    assert.equal(manifest.targets[0].package.coordinate, "plain@1.0.0");
+    assert.equal(manifest.targets[0].coordinate, "plain@1.0.0");
     assert.equal(manifest.policy.externalRegistryWritesPerformed, false);
 } finally
 {

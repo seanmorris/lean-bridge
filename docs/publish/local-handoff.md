@@ -38,7 +38,7 @@ The output also contains:
 | `release/packages/npm/component-package-receipt.json` | The two archive identities and their relationship |
 | `release/packages/npm/verify-component-package-receipt.mjs` | Recipient-side verification without the Lean compiler |
 
-This `publish-manifest.json` has `kind: lean-bridge-component-publish-plan`. It is not the universal manifest accepted by the registry executor. Do not pass it to `publish --manifest` as a shortcut to registry publication.
+This version-two `publish-manifest.json` has `kind: lean-bridge-component-publish-plan`. The registry executor accepts it when its publication settings match your CLI configuration. For registry publication, configure the destination and public signing policy before the dry run using the [npm publishing guide](npm.md#publish-an-ordinary-component). The local archive handoff itself needs no registry credentials.
 
 ## Verify before sending
 

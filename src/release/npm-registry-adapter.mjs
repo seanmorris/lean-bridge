@@ -64,30 +64,52 @@ const npmrcKey = registry => {
 };
 
 const withNpmCredential = async ({ registry, token, operation }) => {
+	if(token !== undefined && token !== null && (typeof token !== "string" || /[\r\n]|\$\{/.test(token))) fail("invalid-npm-token", "npm token contains configuration syntax");
 	const root = await mkdtemp(`${tmpdir()}${sep}lean-bridge-npm-`);
 	const userconfig = resolve(root, "npmrc");
+	const globalconfig = resolve(root, "global-npmrc");
 	try
 	{
-		await writeFile(userconfig, `${npmrcKey(registry)}=${token}\nalways-auth=true\n`, { mode: 0o600, flag: "wx" });
-		return await operation(userconfig);
+		await writeFile(userconfig, token ? `${npmrcKey(registry)}=${token}\n` : "", { mode: 0o600, flag: "wx" });
+		await writeFile(globalconfig, "", { mode: 0o600, flag: "wx" });
+		return await operation({ root, userconfig, globalconfig });
 	} finally
 	{
 		await rm(root, { recursive: true, force: true });
 	}
 };
 
-const npmCommand = async ({ arguments_: commandArguments, registry, token, signal }) => withNpmCredential({
+const npmCommand = async ({ arguments_: commandArguments, registry, token, signal, coordinate = "", authMode = "token", oidcEnvironment = {} }) => withNpmCredential({
 	registry
 	, token
-	, operation: userconfig => run("npm", [
+	, operation: ({ root, userconfig, globalconfig }) => run("npm", [
 		...commandArguments
 		, "--registry", registry
+		, ...(coordinate.startsWith("@") ? [`--${coordinate.split("/")[0]}:registry=${registry}`] : [])
 		, "--userconfig", userconfig
+		, "--globalconfig", globalconfig
+		, "--cache", resolve(root, "cache")
 		, "--loglevel", "error"
-	], { encoding: "utf8", maxBuffer: 1024 * 1024, signal })
+	], {
+		cwd: root, encoding: "utf8", maxBuffer: 1024 * 1024, signal
+		, env: { ...Object.fromEntries(Object.entries(process.env).filter(([name]) =>
+			new Set(["PATH", "SystemRoot", "WINDIR", "ComSpec", "PATHEXT", "TEMP", "TMP", "LANG", "LC_ALL", "TZ", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE"]).has(name)
+			|| (authMode === "oidc" && /^GITHUB_[A-Z_]+$/.test(name)),
+		)), ...(authMode === "oidc" ? oidcEnvironment : {}) }
+	})
 });
 
 const notFound = error => error?.code === 1 && /(?:E404|404 Not Found)/u.test(`${error.stderr ?? ""}\n${error.stdout ?? ""}`);
+
+const versionAtLeast = (actual, minimum) => {
+	if(!/^\d+\.\d+\.\d+$/.test(actual)) return false;
+	const values = actual.split(".").map(Number);
+	for(let index = 0; index < minimum.length; index += 1)
+	{
+		if(values[index] !== minimum[index]) return values[index] > minimum[index];
+	}
+	return true;
+};
 
 /**
  * Creates the real npm CLI and registry HTTP client used by the adapter.
@@ -96,7 +118,13 @@ const notFound = error => error?.code === 1 && /(?:E404|404 Not Found)/u.test(`$
  * @param root0.fetch_ - Fetch implementation used to retrieve immutable registry tarballs.
  */
 export const createNpmCliRegistryClient = ({ fetch_ = globalThis.fetch } = {}) => Object.freeze({
-	inspect:
+	trustedPublisher: async ({ registry, signal }) => {
+		if(registry !== productionRegistry || !versionAtLeast(process.versions.node, [22, 14, 0])) fail("npm-oidc-version-required", "Trusted publishing requires Node 22.14.0 or newer and npm 11.5.1 or newer");
+		const { stdout } = await npmCommand({ arguments_: ["--version"], registry, signal });
+		if(!versionAtLeast(stdout.trim(), [11, 5, 1])) fail("npm-oidc-version-required", "Trusted publishing requires npm 11.5.1 or newer");
+		return "deferred-to-publish";
+	}
+	, inspect:
 		/**
 		 * Resolves a coordinate and hashes the registry's exact tarball bytes.
 		 *
@@ -112,6 +140,7 @@ export const createNpmCliRegistryClient = ({ fetch_ = globalThis.fetch } = {}) =
 			{
 				({ stdout } = await npmCommand({
 					arguments_: ["view", coordinate, "dist.tarball", "--json"]
+					, coordinate
 					, registry
 					, token
 					, signal
@@ -133,7 +162,11 @@ export const createNpmCliRegistryClient = ({ fetch_ = globalThis.fetch } = {}) =
 			{
 				fail("npm-registry-response-invalid", `npm did not return a tarball URL for ${coordinate}`);
 			}
-			const headers = new URL(tarball).host === new URL(registry).host
+			const tarballUrl = new URL(tarball);
+			const registryUrl = new URL(registry);
+			if(tarballUrl.username || tarballUrl.password || !["http:", "https:"].includes(tarballUrl.protocol)
+				|| (registryUrl.protocol === "https:" && tarballUrl.protocol !== "https:")) fail("npm-registry-response-invalid", "Registry returned an unsafe tarball URL");
+			const headers = token && tarballUrl.origin === registryUrl.origin && tarballUrl.pathname.startsWith(registryUrl.pathname)
 				? { authorization: `Bearer ${token}` }
 				: {};
 			const response = await fetch_(tarball, { headers, signal });
@@ -173,12 +206,18 @@ export const createNpmCliRegistryClient = ({ fetch_ = globalThis.fetch } = {}) =
 		 * @param root0.registry - Registry endpoint.
 		 * @param root0.token - Transient npm credential.
 		 * @param root0.signal - Abort signal.
+		 * @param root0.coordinate - Exact package coordinate authorized by the publication manifest.
+		 * @param root0.tag - Distribution tag explicitly selected in the dry run.
+		 * @param root0.access - Public or restricted package access selected in the dry run.
+		 * @param root0.authMode - Explicit token or GitHub OIDC authentication mode.
+		 * @param root0.oidcEnvironment - OIDC request URL and token obtained through the credential boundary.
 		 */
-		async function({ archivePath, registry, token, signal }) {
+		async function({ archivePath, registry, token, signal, coordinate, tag = "next", access = "public", authMode = "token", oidcEnvironment }) {
 			try
 			{
 				await npmCommand({
-					arguments_: ["publish", archivePath, "--ignore-scripts"]
+					arguments_: ["publish", archivePath, "--ignore-scripts", "--tag", tag, "--access", access]
+					, coordinate, authMode, oidcEnvironment
 					, registry
 					, token
 					, signal
@@ -243,14 +282,26 @@ export const createNpmRegistryAdapter = ({
 		fail("invalid-npm-registry-client", "The npm registry client must implement inspect, permission, and publish");
 	}
 
+	const authentication = (target, credentials) => {
+		if(target.destination && normalizedRegistry(target.destination.endpoint) !== endpoint) fail("npm-destination-drift", "npm adapter differs from the authorized registry");
+		const authMode = target.destination?.authMode ?? "token";
+		if(authMode === "token") return { token: credentials.get("NPM_TOKEN"), authMode };
+		if(authMode !== "oidc" || endpoint !== productionRegistry) fail("invalid-npm-authentication", "Unsupported npm authentication mode or registry");
+		return { authMode, oidcEnvironment: Object.fromEntries(["ACTIONS_ID_TOKEN_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_URL"].map(name => [name, credentials.get(name)])) };
+	};
 	const inspect = async ({ target, credentials, signal }) => {
 		const archive = expectedArchive(target);
-		const token = credentials.get("NPM_TOKEN");
-		const [permission, remote] = await Promise.all([
-			client.permission({ registry: endpoint, token, signal })
+		const { token, authMode } = authentication(target, credentials);
+		if(authMode === "oidc" && typeof client.trustedPublisher !== "function") fail("npm-oidc-unavailable", "npm client cannot validate trusted-publisher prerequisites");
+		const [permission, remote, dependencies] = await Promise.all([
+			authMode === "oidc" ? client.trustedPublisher({ registry: endpoint, signal }) : client.permission({ registry: endpoint, token, signal })
 			, client.inspect({ coordinate: target.coordinate, registry: endpoint, token, signal })
+			, Promise.all((target.dependencies ?? []).map(async dependency => {
+				const result = await client.inspect({ coordinate: dependency.coordinate, registry: endpoint, token, signal });
+				return { coordinate: dependency.coordinate, status: result?.status === "published" && result.archiveSha256 === dependency.sha256 ? "available" : "unavailable" };
+			}))
 		]);
-		if(!new Set(["granted", "denied"]).has(permission)) fail("invalid-npm-permission-result", "npm permission result is invalid");
+		if(!(authMode === "oidc" ? ["deferred-to-publish"] : ["granted", "denied"]).includes(permission)) fail("invalid-npm-permission-result", "npm permission result is invalid");
 		if(remote?.status === "available")
 		{
 			return {
@@ -259,7 +310,7 @@ export const createNpmRegistryAdapter = ({
 				, immutable: true
 				, registryReference: null
 				, artifacts: []
-				, dependencies: []
+				, dependencies
 			};
 		}
 		if(remote?.status !== "published" || typeof remote.registryReference !== "string" || !/^[0-9a-f]{64}$/.test(remote.archiveSha256))
@@ -273,7 +324,7 @@ export const createNpmRegistryAdapter = ({
 			, immutable: true
 			, registryReference: remote.registryReference
 			, artifacts: matching ? resultArtifacts(target) : []
-			, dependencies: []
+			, dependencies
 		};
 	};
 
@@ -311,8 +362,9 @@ export const createNpmRegistryAdapter = ({
 				{
 					fail("npm-archive-hash-drift", "The npm tarball bytes differ from the authorized SHA-256", { path: archive.path });
 				}
-				const token = credentials.get("NPM_TOKEN");
-				await client.publish({ archivePath, registry: endpoint, token, signal });
+				const auth = authentication(target, credentials);
+				const { token } = auth;
+				await client.publish({ archivePath, registry: endpoint, ...auth, signal, coordinate: target.coordinate, tag: target.destination?.tag ?? "latest", access: target.destination?.access ?? "public" });
 				const remote = await client.inspect({ coordinate: target.coordinate, registry: endpoint, token, signal });
 				if(remote?.status !== "published" || remote.archiveSha256 !== archive.sha256)
 				{

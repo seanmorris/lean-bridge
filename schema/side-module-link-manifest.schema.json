@@ -30,7 +30,7 @@
       "required": ["directSymbols", "initializer", "internalInitializer"],
       "properties": {
         "directSymbols": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" } },
-        "initializer": { "const": "initialize_LeanBridgeGenerated" },
+        "initializer": { "type": "string", "pattern": "^initialize_LeanBridgeGenerated[0-9a-f]{16}$" },
         "internalInitializer": { "type": "string", "pattern": "^lean_bridge_internal_initialize_[0-9a-f]{16}$" }
       }
     },

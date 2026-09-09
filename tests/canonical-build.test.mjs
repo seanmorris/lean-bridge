@@ -220,6 +220,7 @@ test("a plain project runs the same closed request through separate Docker mount
     const copy = calls.find(call => call.command === "nix" && call.args.includes("copy"));
     assert.ok(calls.indexOf(realize) < calls.indexOf(copy));
     const run = calls.find(call => call.args[0] === "run");
+    assert.ok(sourceForMount(run.args, "/workspace/component").startsWith(join(scratch, ".lean-bridge-component-work-")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/engine,readonly")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/component,readonly")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/request,readonly")));
@@ -234,6 +235,25 @@ test("a plain project runs the same closed request through separate Docker mount
     assert.equal(executionReport.backend, "docker-nix");
     assert.equal(executionReport.engineIdentitySha256, executionRequest.engine.identitySha256);
     assert.equal(executionReport.inputClosureSha256, executionRequest.component.inputClosureSha256);
+    calls.length = 0;
+    const userCache = join(scratch, "user-cache");
+    const staging = join(scratch, "custom-staging");
+    await buildCanonicalProject({
+      projectRoot: "tests/fixtures/onboarding/small"
+      , engineRoot: process.cwd()
+      , outputRoot: join(scratch, "user-cache-result")
+      , targets: ["npm"]
+      , runner
+      , environment: {
+        LEAN_BRIDGE_BUILD_BACKEND: "docker"
+        , XDG_CACHE_HOME: userCache
+        , LEAN_BRIDGE_DOCKER_STAGING_ROOT: staging
+      }
+    });
+    const userCopy = calls.find(call => call.command === "nix" && call.args.includes("copy"));
+    assert.equal(userCopy.args[userCopy.args.indexOf("--to") + 1], `local?root=${join(userCache, "lean-bridge", "docker-nix")}&require-sigs=false`);
+    const stagedRun = calls.find(call => call.args[0] === "run");
+    assert.ok(sourceForMount(stagedRun.args, "/workspace/component").startsWith(join(staging, ".lean-bridge-component-work-")));
 } finally
 {
     await rm(scratch, { recursive: true, force: true });

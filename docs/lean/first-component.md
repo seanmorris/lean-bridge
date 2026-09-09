@@ -57,6 +57,14 @@ end OnboardingSmall
 
 The two `def` declarations become host functions. The theorem remains Lean evidence and does not become a JavaScript export.
 
+Declare the package license in `package.json`:
+
+```json
+{ "license": "MIT" }
+```
+
+Add a `LICENSE` file containing your license text and copyright notice. The tutorial uses the [MIT license](../../LICENSE). Choose the license that applies to your own code. Publication requires an explicit license and its text; neither is inferred from a repository URL.
+
 ## Check and commit the source
 
 ```sh
@@ -69,11 +77,11 @@ Expected output:
 'OnboardingSmall.add_commutative' does not depend on any axioms
 ```
 
-The [proof lesson](proofs-and-assurance.md) explains this result and the separate assurance record. Commit the four inputs before asking the reproducibility gate to clone them:
+The [proof lesson](proofs-and-assurance.md) explains this result and the separate assurance record. Commit the source and license before asking the reproducibility gate to clone them:
 
 ```sh
 git init
-git add .gitignore lakefile.toml lean-toolchain OnboardingSmall.lean
+git add .gitignore lakefile.toml lean-toolchain OnboardingSmall.lean package.json LICENSE
 git commit -m "Add documented Lean component"
 ```
 
@@ -176,7 +184,7 @@ true
 false
 ```
 
-The generated package exposes `Nat` as `bigint`. For this runtime, keep both inputs nonnegative and their sum at most `2147483647n` (`2^31 - 1`). Larger natural numbers currently fail in the installed runtime. The Lean theorem still quantifies over all natural numbers.
+The generated package exposes `Nat` as nonnegative `bigint` and preserves arbitrary precision. The installed-package checks cover values beyond `2^64`, including 4,096-bit integers.
 
 Continue with [JavaScript and TypeScript](../javascript-typescript.md), or inspect [export decisions](export-decisions.md) before adding another public function.
 

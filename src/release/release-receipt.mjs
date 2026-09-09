@@ -194,8 +194,11 @@ export const releaseInstallFor = target => {
 			, commands: target.archives.map(archive => `tar -xf ${archive.path}`)
 		};
 	}
+	const npmRegistry = target.destination?.endpoint;
+	const registryOption = npmRegistry && npmRegistry !== "https://registry.npmjs.org/"
+		? ` --registry '${npmRegistry.replaceAll("'", "'\\''")}'` : "";
 	const commands = {
-		npm: `npm install ${target.coordinate}`
+		npm: `npm install ${target.coordinate}${registryOption}`
 		, cargo: `cargo add ${target.name}@${target.version}`
 		, pypi: `python -m pip install ${target.coordinate}`
 		, nuget: `dotnet add package ${target.name} --version ${target.version}`
@@ -311,9 +314,10 @@ export const createReleaseReceiptStatement = ({
 		, transactionSha256
 		, publicationAttestation
 	});
-	const flake = lockArtifact(authorization, "flake.lock");
-	const graph = lockArtifact(authorization, "graph-lock.json");
-	if(flake.sha256 !== authorization.candidate.flakeLockSha256)
+	const component = authorization.schemaVersion === 2 && authorization.kind === "lean-bridge-component-authorization";
+	const flake = component ? null : lockArtifact(authorization, "flake.lock");
+	const graph = lockArtifact(authorization, component ? "component-build-plan.json" : "graph-lock.json");
+	if(!component && flake.sha256 !== authorization.candidate.flakeLockSha256)
 	{
 		fail("release-receipt-flake-drift", "Authorized flake lock differs from the release candidate identity");
 	}

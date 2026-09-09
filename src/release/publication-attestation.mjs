@@ -197,8 +197,8 @@ export const publicationSignerPolicySha256 = policy => {
 };
 
 const artifactReference = artifact => Object.freeze({ path: artifact.path, sha256: artifact.sha256 });
-const isManifest = path => /(?:^|\/)(?:canonical-package|publication-index)\.json$/.test(path);
-const isLock = path => /(?:^|\/)locks\/(?:flake\.lock|graph-lock\.json)$/.test(path);
+const isManifest = path => /(?:^|\/)(?:canonical-package|publication-index|component-release-bundle|component-artifact-manifest)\.json$/.test(path);
+const isLock = path => /(?:^|\/)locks\/(?:flake\.lock|graph-lock\.json|component-build-plan\.json)$/.test(path);
 const isAssurance = path => /(?:^|\/)(?:assurance|proof)(?:[./]|$)/.test(path);
 const isSbom = path => /(?:^|\/)(?:sbom(?:\.|\/)|[^/]*\.spdx\.json$)/.test(path);
 const isProvenance = path => /(?:provenance|\.intoto\.json$)/.test(path);
@@ -226,7 +226,8 @@ const requireVerifiedInput = verified => {
     || document.evidence === null || typeof document.evidence !== "object"
     || !Array.isArray(document.authorizedArtifacts) || document.authorizedArtifacts.length === 0
 	) fail("verified-publication-required", "Verified release authorization document is incomplete");
-	for(const field of [
+	const component = document.schemaVersion === 2 && document.kind === "lean-bridge-component-authorization";
+	for(const field of component ? ["id", "artifactInventorySha256"] : [
 		"id"
 		, "flakeLockSha256"
 		, "canonicalManifestSha256"

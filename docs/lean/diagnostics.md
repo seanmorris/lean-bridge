@@ -46,20 +46,10 @@ Run `lean -DwarningAsError=true OnboardingSmall.lean` again after fixing the the
 
 Nix can reject a mounted Git checkout when its owner differs from the builder's effective user. Use a task-owned copy of the committed engine source instead of changing ownership of the original checkout or trusting every Git directory.
 
-For the [acceptance runner](../../scripts/check-lean-author-tutorial.mjs), `--engine` selects that copy's unchanged CLI and builder inputs. `--runtime` selects the already prepared shared runtime; `--lean` selects the local proof checker. The default runner uses this checkout and its bootstrapped compiler.
-
-```sh
-node "$LEAN_BRIDGE_CHECKOUT/scripts/check-lean-author-tutorial.mjs" \
-  --backend docker \
-  --engine /path/to/owned-engine-copy \
-  --runtime "$LEAN_BRIDGE_RUNTIME_ROOT" \
-  --output "$LEAN_BRIDGE_WORK/author-acceptance"
-```
-
-The runner creates and commits its fixture in a separate temporary repository. It retains that directory and command logs on failure and removes only its own temporary workspace after success.
+Contributors reproducing this failure with the tutorial runner can select that copy using the [author acceptance instructions](../contributing/testing.md#author-acceptance).
 
 ## A receipt does not verify
 
 Keep the receipt, verifier, and both archives from the same completed dry run in one directory. Verify that directory before installation. Do not edit a receipt to match a changed archive; rebuild the candidate from the intended committed source.
 
-Return to [your first component](first-component.md#create-and-verify-local-archives) to create another local candidate. Production publication uses the separate [release pipeline](../../src/release/README.md#publication-and-receipts).
+Return to [your first component](first-component.md#create-and-verify-local-archives) to create another local candidate. Follow [production release review](../publish/production-release.md) for publication authorization, candidate checks, and signed receipt verification.

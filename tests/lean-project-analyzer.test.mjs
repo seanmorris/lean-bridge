@@ -40,9 +40,9 @@ const makePureProject = async () => {
 /-- Cap a natural number at a limit. -/
 def cap (limit value : Nat) : Nat := Nat.min limit value
 
-/-- Check copied strings, bytes, options, and arrays without serializing them. -/
-def acceptsRichPrimitives (name : String) (data : ByteArray) (limit : Option Nat) (samples : Array UInt32) : Bool :=
-  !name.isEmpty && data.size > 0 && limit.isSome && samples.size > 0
+/-- Check copied strings, bytes, and integers without serializing them. -/
+def acceptsRichPrimitives (name : String) (data : ByteArray) (limit : Nat) (samples : UInt32) : Bool :=
+  !name.isEmpty && data.size > 0 && limit > 0 && samples > 0
 
 /-- The result never exceeds the limit. -/
 theorem cap_le_limit (limit value : Nat) : cap limit value ≤ limit := by simp [cap]
@@ -74,8 +74,8 @@ test("analysis infers a deterministic copied-value Binding IR without changing t
     assert.deepEqual(rich.parameters.map(item => item.type), [
       { kind: "primitive", name: "string" }
       , { kind: "primitive", name: "bytes" }
-      , { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "nat" }] }
-      , { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] }
+      , { kind: "primitive", name: "nat" }
+      , { kind: "primitive", name: "uint32" }
     ]);
     assert.ok(rich.parameters.every(item => item.ownership === "copy" && item.lifetime === null));
     const assurance = first.bindingIr.document.assurance.find(item => item.subject === "lean:Sample.Api.cap");
@@ -113,31 +113,26 @@ structure Secret where value : Nat
 def expose (secret : Secret) : Nat := secret.value
 `);
     const report = await analyzeLeanProject(root);
-    assert.notEqual(report.bindingIr, null);
+    assert.equal(report.bindingIr, null);
     assert.deepEqual(report.exportCandidates.map(item => [item.declaration, item.reasons]), [
       ["expose", ["unsupported-parameter-type"]]
-      , ["fetch", []]
+      , ["fetch", ["unsupported-component-signature"]]
       , ["foreignBox", ["foreign-contract-required"]]
     ]);
     assert.deepEqual(report.adapterHints.map(item => [item.declaration, item.choices]), [
       ["expose", ["exclude", "provide-adapter"]]
+      , ["fetch", ["exclude", "provide-adapter"]]
       , ["foreignBox", ["exclude", "provide-foreign-contract"]]
     ]);
-    const fetch = report.bindingIr.document.declarations.find(item => item.name === "fetch");
-    assert.deepEqual(fetch.effects, ["async"]);
-    assert.equal(fetch.resultMode, "promise");
-    assert.deepEqual(fetch.result.type, { kind: "primitive", name: "string" });
-    assert.equal(fetch.source.extensions["lean-lang.org/inferred-export"], "async-function");
-    assert.equal(fetch.source.extensions["lean-lang.org/effect"], "IO");
     assert.equal(JSON.stringify(report).includes('"ownership":"borrow"'), false);
-    assert.equal(report.diagnostics.some(item => item.code === "binding-ir-unavailable"), false);
+    assert.equal(report.diagnostics.some(item => item.code === "binding-ir-unavailable"), true);
 } finally
 {
     await rm(root, { recursive: true, force: true });
 }
 });
 
-test("analysis projects Task results as promises and keeps EIO fail-closed", async () => {
+test("ordinary analysis blocks Task and EIO before promising an executable API", async () => {
   const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-effects-"));
   try
 {
@@ -147,13 +142,10 @@ def scheduled (value : UInt32) : Task UInt32 := Task.pure value
 def typed (value : UInt32) : EIO String UInt32 := pure value
 `);
     const report = await analyzeLeanProject(root);
-    const scheduled = report.bindingIr.document.declarations.find(item => item.name === "scheduled");
-    assert.equal(scheduled.resultMode, "promise");
-    assert.deepEqual(scheduled.effects, ["async"]);
-    assert.equal(scheduled.source.extensions["lean-lang.org/effect"], "Task");
+    assert.equal(report.bindingIr, null);
     assert.deepEqual(
       report.adapterHints.map(item => [item.declaration, item.reason]),
-      [["typed", "effect-adapter-required"]],
+      [["scheduled", "unsupported-component-signature"], ["typed", "effect-adapter-required"]],
     );
 } finally
 {

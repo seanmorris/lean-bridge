@@ -11,7 +11,7 @@ import test from "node:test";
 import ts from "typescript";
 
 const fixture = "tests/fixtures/component-consumer";
-const docs = ["docs/javascript-typescript.md", "docs/react.md", "docs/browser-workers.md"];
+const docs = ["docs/javascript-typescript.md", "docs/consume/javascript.md", "docs/consume/typescript.md", "docs/consume/browser.md", "docs/react.md", "docs/browser-workers.md"];
 
 test("consumer docs use portable paths, valid local links, and public package imports", async () => {
 	for(const path of docs)
@@ -46,12 +46,13 @@ test("React and worker fixtures import the installed component without repositor
 test("the example validates the supported numeric boundary before invoking the package", async () => {
 	const source = await readFile(`${fixture}/lean.ts`, "utf8");
 	const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-	const { calculate, maximumSum } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+	const { calculate } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+	const large = 1n << 128n;
 	const calls = [];
 	const api = { add: (left, right) => { calls.push([left, right]); return left + right; }, isEmpty: value => value === "" };
 	assert.deepEqual(calculate(api, { left: "20", right: "22", text: "" }), { sum: "42", empty: true });
-	assert.deepEqual(calculate(api, { left: String(maximumSum), right: "0", text: "Lean" }), { sum: "2147483647", empty: false });
-	for(const input of [{ left: "-1", right: "0" }, { left: "1.5", right: "1" }, { left: "", right: "1" }, { left: String(maximumSum), right: "1" }])
+	assert.deepEqual(calculate(api, { left: String(large), right: "1", text: "Lean" }), { sum: String(large + 1n), empty: false });
+	for(const input of [{ left: "-1", right: "0" }, { left: "1.5", right: "1" }, { left: "", right: "1" }])
 		assert.throws(() => calculate(api, { ...input, text: "" }), RangeError);
 	assert.equal(calls.length, 2, "Rejected inputs never reach the installed call");
 });

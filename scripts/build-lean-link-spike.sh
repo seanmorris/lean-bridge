@@ -13,8 +13,19 @@ RUNTIME_BUILD="$RUNTIME_ROOT/cmake"
 RUNTIME_SOURCE="$RUNTIME_ROOT/source"
 LEAN_RUNTIME="$RUNTIME_BUILD/lib/lean/libleanrt.a"
 LEAN_INIT="$RUNTIME_BUILD/lib/lean/libInit.a"
+LEAN_UV="$RUNTIME_BUILD/libuv/src/libuv/libuv.a"
 
-bash "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
+if [[ "${1:-}" == "--link-only" ]]; then
+  # Contributor iteration over an already built, pinned runtime. Release gates
+  # use the default full build in two independent environments.
+  expected_runtime_stamp="$LEAN_WASM_LEAN_COMMIT $LEAN_WASM_PATCH_SET_SHA $LEAN_WASM_RUNTIME_PROFILE"
+  [[ -f "$LEAN_INIT" && -f "$LEAN_RUNTIME" && "$(<"$RUNTIME_SOURCE/.lean-wasm-patched")" == "$expected_runtime_stamp" ]] || {
+    echo "Pinned runtime is not prepared; run the full runtime build first." >&2
+    exit 1
+  }
+else
+  bash "$LEAN_WASM_PROJECT_ROOT/scripts/build-lean-runtime.sh"
+fi
 
 SOURCE_DIR="$LEAN_WASM_PROJECT_ROOT/poc/lean-link-spike"
 GRAPH_LOCK="$SOURCE_DIR/graph-lock.json"
@@ -125,6 +136,12 @@ BRIDGE_EXPORTS=(
   _bridge_lean_component_call_nat2_nat
   _bridge_lean_component_call_string_bool
   _bridge_lean_component_last_error
+  _bridge_scalar_call
+  _bridge_scalar_frame_clear
+  _bridge_scalar_frame_validate
+  _bridge_scalar_slot_validate
+  _bridge_scalar_decode_object
+  _bridge_scalar_encode_object
   _bridge_test_lean_runtime_force_init_error
   _bridge_test_lean_heap_size
   _bridge_test_lean_grow_heap
@@ -176,6 +193,9 @@ compile_main_objects() {
   em++ "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
     -I"$RUNTIME_SOURCE/src" \
     -c "$SOURCE_DIR/runtime_lifecycle.cpp" -o "$output_dir/runtime_lifecycle.o"
+  em++ "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -I"$RUNTIME_SOURCE/src" \
+    -c "$SOURCE_DIR/component_scalar.cpp" -o "$output_dir/component_scalar.o"
 }
 
 build_main() {
@@ -185,9 +205,11 @@ build_main() {
   em++ \
     "$output_dir/main.o" \
     "$output_dir/runtime_lifecycle.o" \
+    "$output_dir/component_scalar.o" \
     -Wl,--start-group \
     "$LEAN_INIT" \
     "$LEAN_RUNTIME" \
+    "$LEAN_UV" \
     -Wl,--end-group \
     "$@" \
     "${MAIN_FLAGS[@]}" \
@@ -220,11 +242,14 @@ done \
 {
   printf '%s\n' "${BRIDGE_EXPORTS[@]}"
   sed -n '/^_/p' "$SIDE_IMPORTS"
+  "$LEAN_WASM_EMSDK/upstream/bin/llvm-nm" --defined-only --extern-only "$LEAN_RUNTIME" "$LEAN_INIT" \
+    | awk '$2 ~ /^[TW]$/ && $3 ~ /^(lean_|l_|initialize_)/ {print "_" $3}'
 } \
   | sort -u \
   | grep -Fvx -f "$SIDE_PROVIDED_SYMBOLS" \
   > "$EXPORT_MANIFEST"
 mapfile -t MAIN_EXPORTS < "$EXPORT_MANIFEST"
+node -e 'const fs = require("node:fs"); fs.writeFileSync(process.argv[2], JSON.stringify(fs.readFileSync(process.argv[1], "utf8").trim().split("\n")));' "$EXPORT_MANIFEST" "$AUDIT_DIR/main-exports.json"
 
 MAIN_FLAGS=(
   "${TARGET_FLAGS[@]}"
@@ -233,8 +258,8 @@ MAIN_FLAGS=(
   -sEXPORT_ES6=1
   -sENVIRONMENT=web,worker,node
   -sALLOW_MEMORY_GROWTH=1
-  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8
-  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")"
+  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8,FS
+  -sEXPORTED_FUNCTIONS=@"$AUDIT_DIR/main-exports.json"
   -Wl,--no-entry
   "${INCLUDES[@]}"
 )
@@ -256,8 +281,8 @@ MAIN_FLAGS=(
   -sEXPORT_ES6=1
   -sENVIRONMENT=web,worker
   -sALLOW_MEMORY_GROWTH=1
-  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8
-  -sEXPORTED_FUNCTIONS="$(IFS=,; printf '%s' "${MAIN_EXPORTS[*]}")"
+  -sEXPORTED_RUNTIME_METHODS=loadDynamicLibrary,HEAP8,FS
+  -sEXPORTED_FUNCTIONS=@"$AUDIT_DIR/main-exports.json"
   -Wl,--no-entry
   "${INCLUDES[@]}"
 )
@@ -307,10 +332,12 @@ fi
 em++ \
   "$FINAL_STATIC_DIR/main.o" \
   "$FINAL_STATIC_DIR/runtime_lifecycle.o" \
+  "$FINAL_STATIC_DIR/component_scalar.o" \
   "${FINAL_STATIC_OBJECTS[@]}" \
   -Wl,--start-group \
   "$LEAN_INIT" \
   "$LEAN_RUNTIME" \
+  "$LEAN_UV" \
   -Wl,--end-group \
   "${FINAL_STATIC_FLAGS[@]}" \
   -o "$FINAL_STATIC_DIR/main.mjs"

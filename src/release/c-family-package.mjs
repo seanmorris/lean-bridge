@@ -67,6 +67,8 @@ const nativeExtensions = new Set([".a", ".so", ".dylib", ".dll", ".lib"]);
 const nativeLibraries = selected => selected.filter(artifact =>
 	nativeExtensions.has(extname(artifact.path)) || /\.so(?:\.[0-9]+)+$/.test(artifact.path));
 
+const hasInternalHeaders = generatedManifest => generatedManifest.files.some(path => path.startsWith("internal/"));
+
 const pkgConfig = ({ mapping, manifest, generatedManifest, libraries }) => {
 	const libraryFlags = libraries.map(artifact => {
     const file = basename(artifact.path);
@@ -79,8 +81,7 @@ const pkgConfig = ({ mapping, manifest, generatedManifest, libraries }) => {
 	return `# Generated from ${manifest.component.id}.
 prefix=\${pcfiledir}/../..
 includedir=\${prefix}/include
-internalincludedir=\${prefix}/internal
-libdir=\${prefix}/lib
+${hasInternalHeaders(generatedManifest) ? "internalincludedir=${prefix}/internal\n" : ""}libdir=\${prefix}/lib
 lean_bridge_binding_source=\${prefix}/${generatedManifest.implementation}
 lean_bridge_abi=${manifest.runtime.abiVersion}
 
@@ -88,12 +89,13 @@ Name: ${mapping.name}
 Description: Generated C bindings for ${manifest.component.name}
 Version: ${mapping.version}
 Libs: ${libraryFlags.length === 0 ? "" : `-L\${libdir} ${libraryFlags.join(" ")}`}
-Cflags: -I\${includedir} -I\${internalincludedir}
+Cflags: -I\${includedir}${hasInternalHeaders(generatedManifest) ? " -I${internalincludedir}" : ""}
 `;
 };
 
 const cmakeTargets = ({ manifest, generatedManifest, libraries }) => {
 	const names = cmakeNames(manifest);
+	const includes = "${_LEAN_BRIDGE_PREFIX}/include" + (hasInternalHeaders(generatedManifest) ? ";${_LEAN_BRIDGE_PREFIX}/internal" : "");
 	if(libraries.length > 0)
 	{
 		const locations = libraries.map(library => `\${_LEAN_BRIDGE_PREFIX}/lib/${basename(library.path)}`).join(";");
@@ -102,7 +104,7 @@ if(NOT TARGET ${names.target})
   add_library(${names.target} INTERFACE IMPORTED)
   set_target_properties(${names.target} PROPERTIES
     INTERFACE_LINK_LIBRARIES "${locations}"
-    INTERFACE_INCLUDE_DIRECTORIES "\${_LEAN_BRIDGE_PREFIX}/include;\${_LEAN_BRIDGE_PREFIX}/internal"
+    INTERFACE_INCLUDE_DIRECTORIES "${includes}"
     INTERFACE_LEAN_BRIDGE_ABI_VERSION "${manifest.runtime.abiVersion}"
   )
 endif()
@@ -113,7 +115,7 @@ unset(_LEAN_BRIDGE_PREFIX)
 if(NOT TARGET ${names.target})
   add_library(${names.target} INTERFACE IMPORTED)
   set_target_properties(${names.target} PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "\${_LEAN_BRIDGE_PREFIX}/include;\${_LEAN_BRIDGE_PREFIX}/internal"
+    INTERFACE_INCLUDE_DIRECTORIES "${includes}"
     INTERFACE_SOURCES "\${_LEAN_BRIDGE_PREFIX}/${generatedManifest.implementation}"
     INTERFACE_LEAN_BRIDGE_ABI_VERSION "${manifest.runtime.abiVersion}"
   )
@@ -228,7 +230,6 @@ const build = async ({ bundleRoot, outputRoot, ecosystem }) => {
 	{
 		await copy(join(bundle, `${prefix}${path}`), join(packageRoot, path));
 	}
-	await mkdir(join(packageRoot, "internal"), { recursive: true });
 	await copy(join(bundle, "LICENSE"), join(packageRoot, "LICENSE"));
 
 	const libraries = nativeLibraries(selected);

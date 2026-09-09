@@ -1,0 +1,14 @@
+The shared runtime contains Lean 4, libuv, and Emscripten-generated JavaScript
+and system libraries. Lean Bridge's glue code is covered by the root LICENSE.
+
+Upstream notices are retained in this directory:
+lean.txt: Lean 4 license (Apache-2.0).
+lean-bundled.txt: notices accompanying the pinned Lean distribution.
+emscripten.txt: Emscripten (MIT or NCSA).
+llvm.txt: libc++, libc++abi, compiler-rt, and libunwind (Apache-2.0 with LLVM exceptions).
+musl.txt: musl libc copyright and license notices.
+libuv.txt: libuv and its bundled-source notices.
+
+Lean Bridge modifies Lean's Emscripten runtime signatures, conditional pthread
+support, and offline libuv source selection. The exact patches and upstream
+commits are recorded in the CLI source and the component runtime requirement.

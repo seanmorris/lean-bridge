@@ -39,14 +39,7 @@ Follow the [Sweep workload](../../demos/lean-sweep-and-prune/benchmark-workload.
 
 Keep the device, browser, workload, and tab visibility the same. Close unrelated heavy work, let the page settle, and use Run again to see whether the distribution repeats. Investigate a long tail instead of selecting only the fastest sample.
 
-For a command-line regression check from the repository:
-
-```sh
-node demos/lean-sweep-and-prune/benchmark.mjs --assert
-node demos/lean-dinic/benchmark.mjs --assert
-```
-
-These commands exercise the CLI workloads and their regression limits. A passing limit does not establish parity with JavaScript; the output reports the actual timings and ratios.
+Contributors can [run the command-line regression checks](../../demos/README.md#run-regression-checks) from a repository checkout. Those checks exercise separate CLI workloads and limits; a passing limit does not establish parity with JavaScript.
 
 Measure cold downloads and application responsiveness separately. The React migration evidence records fetched JavaScript, unchanged Wasm bytes, route cleanup, and cold readiness independently of solver timing.
 

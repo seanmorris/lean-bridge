@@ -221,7 +221,7 @@ export const runOnboardingFixtureMatrix = async ({
 		const actual = Object.freeze({
 			status: statusOf(analysis)
 			, exports: analysis.proposedExports.length
-			, requiredHints: analysis.adapterHints.filter(item => item.required).map(item => item.reason).sort()
+			, requiredHints: [...new Set(analysis.adapterHints.filter(item => item.required).map(item => item.reason))].sort()
 			, warnings: analysis.diagnostics.filter(item => item.severity === "warning").length
 			, sourceFiles: surface.sourceFiles
 			, publishingAnnotations: surface.publishingAnnotations

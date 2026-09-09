@@ -1,5 +1,7 @@
 # Lean-author tutorial acceptance, 8 September 2026
 
+The numeric limits below describe the 8 September archives. [Scalar ABI 2 acceptance on 9 September](npm-release-hardening-20260909.md) supersedes them with exact large-integer transport.
+
 The complete author runner passed against the committed [tutorial fixture](../../tests/fixtures/documentation/lean-author/OnboardingSmall.lean). It checked the theorem, rejected two invalid variants, analyzed the exports, built the component, completed two isolated dry-run builds, verified the receipt, and called the installed npm package.
 
 ## Completed command

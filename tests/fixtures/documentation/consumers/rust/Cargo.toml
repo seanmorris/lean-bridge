@@ -1,0 +1,7 @@
+[package]
+name = "lean-alpha-docs"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+lean_bridge_alpha = { path = "vendor/lean_bridge_alpha-0.0.0" }

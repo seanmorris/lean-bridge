@@ -10,6 +10,7 @@ import { basename, join, relative, resolve } from "node:path";
 
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
+import { componentSignatureProblem } from "../abi/component-scalars.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -526,6 +527,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
     || relevantProjectFiles.has(basename(path))
+    || /^(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(basename(path))
 	);
 	const inputs = [];
 	for(const absolute of relevant)
@@ -580,6 +582,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		{
 			shape = preliminaryShapes.get(declaration.fullName);
 			if(shape?.blocker) reasons.push(shape.blocker);
+			if(shape && !shape.blocker && componentSignatureProblem(shape)) reasons.push("unsupported-component-signature");
 			if(!shape?.blocker && projectedNameCounts.get(declaration.name) > 1) reasons.push("public-name-collision");
 		}
 		const exportable = reasons.length === 0;
@@ -594,6 +597,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		}
 		for(const reason of reasons.filter(reason => new Set([
 			"foreign-contract-required"
+			, "unsupported-component-signature"
 			, "effect-adapter-required"
 			, "callable-projection-required"
 			, "unsupported-parameter-type"
