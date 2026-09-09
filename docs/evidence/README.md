@@ -12,6 +12,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Documentation expansion and reading-layout checks, 8 September 2026](documentation-site-20260908.md)
 - [Remaining React workbench ports, 9 September 2026](react-workbench-migration-20260909.md)
 - [Generated reference, concepts, and installed examples, 9 September 2026](reference-documentation-20260909.md)
+- [Full React-site acceptance and Pages handoff, 9 September 2026](react-site-acceptance-20260909.md)
 
 ## Author workflow and release
 

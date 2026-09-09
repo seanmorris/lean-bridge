@@ -106,6 +106,7 @@ test('archiving cannot overwrite a previous handoff or write inside the public s
 
 test('Pages CI uploads the checked tar and keeps it available for rollback', async () => {
 	const workflow = await readFile('.github/workflows/demos-pages.yml', 'utf8');
+	assert.match(workflow, /timeout-minutes: 45/u);
 	const step = workflow.split('      - name: Upload Pages artifact\n')[1].split('\n  deploy:')[0];
 	assert.match(workflow, /run: npm run demos:archive/u);
 	assert.match(step, /actions\/upload-artifact@v4/u);

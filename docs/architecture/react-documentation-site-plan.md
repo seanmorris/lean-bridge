@@ -1,8 +1,8 @@
 # React gallery and documentation-site plan
 
-Status: all twelve React ports are implemented and verified as of 9 September 2026. VO1188's interaction and lifecycle checks passed in Chromium, Firefox, and WebKit. VO phase 1185 extends portfolio plan 1123. Tasks 1186, 1187, and 1189 delivered the foundation, shell, and Myers pilot; the remaining ports are committed as `3e764d2`. VO1193 adds four generated reference pages and ten concept guides, bringing the site to 68 documentation routes and 83 React routes overall. See the [workbench evidence](../evidence/react-workbench-migration-20260909.md) and [reference-documentation evidence](../evidence/reference-documentation-20260909.md). VO1194 owns the remaining combined acceptance and Pages cutover handoff. This work does not deploy the site.
+Status: implementation and combined acceptance are complete as of 9 September 2026. VO phase 1185 extends portfolio plan 1123. Tasks 1186, 1187, and 1189 delivered the foundation, shell, and Myers pilot; the remaining ports are committed as `3e764d2`. VO1193 added four generated reference pages and ten concept guides, bringing the site to 68 documentation routes and 83 React routes overall. Clean candidate `2249a33` passed VO1194's root and deployment-path checks in Chromium, Firefox, and WebKit. Its exact archive and a separately tested fallback are retained for the [Pages handoff](../evidence/react-site-acceptance-20260909.md). VO1145 owns the first public deployment and requires separate authority.
 
-Audit prerequisite: commit `949b5005f85fee13a270e80361c85014925c19a6`, recorded in the [twelve-demo audit](../evidence/demo-portfolio-audit-20260908.md). VO task 1144 is complete. Gallery integration task 1143 and publication task 1145 remain open.
+Audit prerequisite: commit `949b5005f85fee13a270e80361c85014925c19a6`, recorded in the [twelve-demo audit](../evidence/demo-portfolio-audit-20260908.md). VO tasks 1143 and 1144 are complete. Publication task 1145 remains open.
 
 ## Product outcome
 
@@ -138,9 +138,9 @@ Documentation CI uses local artifacts and sandbox rehearsals. It must never publ
 | 1191 | Downstream tutorials and clean installed React fixture | After 1190. No repository-private imports; exact archives execute, TypeScript checks pass, and Strict Mode cleanup works. |
 | 1192 | Package-release and Pages-publication guides | After 1190. Local/sandbox flows and rejection cases pass; production operations remain explicitly gated. |
 | 1193 | Generated reference, status, search content, and concept guides | Complete. Contract-generated references, connected concepts, installed examples, source ownership, and root/nested three-browser acceptance are recorded in the reference evidence. |
-| 1194 | Full acceptance evidence and Pages cutover handoff | After all delivery tasks. Preserve rollback artifacts and hand the verified result to publication task 1145. |
+| 1194 | Full acceptance evidence and Pages cutover handoff | Complete. Clean root/deployment-path candidates, installed packages, and a retained fallback passed acceptance; exact identities are handed to publication task 1145. |
 
-The author and publishing work can proceed alongside the UI migration after the initial contracts are recorded. Task 1143's gallery/navigation requirements are fulfilled through 1187, 1188, and 1193; they are not marked complete by this plan. The earlier [concept-page plan](../../demos/CONTENT_PLAN.md) supplies content for `/docs/concepts/`, not a second competing site implementation.
+Task 1143's gallery/navigation requirements were fulfilled through 1187, 1188, and 1193 and reconciled as complete during the acceptance handoff. The earlier [concept-page plan](../../demos/CONTENT_PLAN.md) supplies content for `/docs/concepts/`, not a second competing site implementation.
 
 ## Release acceptance
 
