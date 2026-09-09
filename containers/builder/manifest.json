@@ -4,7 +4,7 @@
   "platform": "linux/amd64",
   "sourceDateEpoch": 1786261809,
   "image": {
-    "localTag": "lean-bridge-builder:35dab9930520eccb",
+    "localTag": "lean-bridge-builder:1740e1c12b9ec3eb",
     "configSha256": "f1fafe58e820cc3eb6af3c09a7f86b3280bfb0ec11b8a90c81092a31f17d5257",
     "publishedReference": null,
     "publicationStatus": "local-reproducible"
@@ -32,14 +32,14 @@
     },
     {
       "path": "entrypoint.sh",
-      "sha256": "835c16638f5b497b18bac4d2d2077e726e2cc344d25c68afb55af8ae07b3feb7"
+      "sha256": "dfc6d7102aff9de74ffcc36b9ff05622928ca8ab458f71caf55f9ffe314a3fe1"
     },
     {
       "path": "nix.conf",
       "sha256": "b17d03bcbb0824a40e19a3802d105e4931d0c0f51d226767c2ff4708ec741406"
     }
   ],
-  "definitionSha256": "35dab9930520eccb6cfd17538417b8d2126cb299b3643cf85a324e591666f9d7",
+  "definitionSha256": "1740e1c12b9ec3ebb03105066af5039cd5d6a5bb36fb7539d175ea34c86d28ce",
   "execution": {
     "user": "root",
     "uid": 0,

@@ -38,10 +38,6 @@ run_component() {
     exit 2
   fi
 
-  if [ -e "$engine_root/.git" ]; then
-    trust_source_repository "$engine_root"
-    engine_flake="git+file://$engine_root"
-  fi
   umask 022
   if [ -n "${LEAN_BRIDGE_ENGINE_PROGRAM:-}" ]; then
     if [ ! -x "$LEAN_BRIDGE_ENGINE_PROGRAM" ]; then
@@ -55,6 +51,12 @@ run_component() {
       --engine "$engine_root" \
       --backend docker-nix
   else
+    # Only Nix's Git fetcher needs this trust entry. The cached closure runs
+    # directly, and its read-only store mount can hide the image's Git and Nix.
+    if [ -e "$engine_root/.git" ]; then
+      trust_source_repository "$engine_root"
+      engine_flake="git+file://$engine_root"
+    fi
     nix --extra-experimental-features "nix-command flakes" run \
       --no-write-lock-file \
       "$engine_flake#component-build-engine" \

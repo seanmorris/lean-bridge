@@ -5,12 +5,11 @@
  */
 
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { promisify } from "node:util";
+import { assertConsumerRuntimeIdentity, runConsumerCommand } from "../src/adoption/consumer-checks.mjs";
 
 import {
 	STEADY_STATE_BOX_VALUE,
@@ -20,13 +19,10 @@ import {
 	writeConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
-const execute = promisify(execFile);
 const repository = resolve(".");
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_RUNTIME_ROOT ?? "build/consumer-ci-runtime/lazy");
 const alphaPackageRoot = resolve(process.env.LEAN_BRIDGE_ALPHA_NPM_PACKAGE_ROOT ?? "build/consumer-node-alpha-package");
-const maxBuffer = 64 * 1024 * 1024;
-
-const run = (command, args, options = {}) => execute(command, args, { maxBuffer, ...options });
+const run = runConsumerCommand;
 
 const filesAt = async directory => {
 	const files = [];
@@ -226,9 +222,11 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
     ], { cwd: consumer })).stdout);
     assert.equal(verification.verified, true);
     assert.equal(verification.component, "onboarding-small@1.0.0");
-    assert.match(verification.runtime, /^@lean-bridge\/runtime@0\.0\.0-abi1\./);
     assert.equal(verification.package, "onboarding-small@1.0.0");
     const receipt = JSON.parse(await readFile(join(release, "component-package-receipt.json"), "utf8"));
+    const runtimePackage = JSON.parse(await readFile(join(consumer, "node_modules/@lean-bridge/runtime/package.json"), "utf8"));
+    const componentPackage = JSON.parse(await readFile(join(consumer, "node_modules/onboarding-small/package.json"), "utf8"));
+    assertConsumerRuntimeIdentity({ verification, receipt, runtimePackage, componentPackage });
     assert.equal(receipt.runtime.archive, runtimeArchive);
     assert.equal(receipt.package.archive, componentArchive);
 		if(process.env.LEAN_BRIDGE_DOCUMENTATION_BROWSERS)

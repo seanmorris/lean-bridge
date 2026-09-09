@@ -6,12 +6,11 @@
  */
 
 
-import { execFile } from "node:child_process";
 import { cp, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { promisify } from "node:util";
+import { assertConsumerJsonResult, runConsumerCommand } from "../src/adoption/consumer-checks.mjs";
 
 import {
 	STEADY_STATE_BOX_VALUE,
@@ -28,7 +27,7 @@ const option = name => {
 
 const packageRoot = resolve(option("--package") ?? "build/php-wasm-package");
 const phpWasmRoot = resolve(option("--php-wasm") ?? "build/php-wasm-host/node_modules/php-wasm");
-const run = promisify(execFile);
+const run = runConsumerCommand;
 const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-consumer-"));
 
 try
@@ -59,12 +58,15 @@ try
 		, phpWasmArchive
 		, packageArchive
 	], { cwd: consumer, maxBuffer: 64 * 1024 * 1024 });
-	const documentation = await run(process.execPath, ["main.mjs"], { cwd: consumer, maxBuffer: 16 * 1024 * 1024 });
 	const documentationExpected = { box: 41, identity: true, payload: [true, 9, "consumer", "007fff", [1, 5, 13]], callback: 42, closure: 42 };
-	if(documentation.stderr !== "" || JSON.stringify(JSON.parse(documentation.stdout)) !== JSON.stringify(documentationExpected))
-	{
-		throw new Error(`PHP-Wasm documentation result mismatch: ${documentation.stderr || documentation.stdout}`);
-	}
+	const documentation = await run(process.execPath, ["main.mjs"], { cwd: consumer, maxBuffer: 16 * 1024 * 1024 })
+		.catch(error => ({ status: error.code, signal: error.signal, stdout: error.stdout, stderr: error.stderr }));
+	assertConsumerJsonResult({
+		label: "PHP-Wasm documentation example"
+		, ...documentation
+		, expected: documentationExpected, allowNodeJsonImportWarning: true
+	});
+	if(documentation.stderr) process.stderr.write(documentation.stderr);
 	const [{ PhpNode }, { default: leanAlpha }] = await Promise.all([
 		import(pathToFileURL(join(consumer, "node_modules/php-wasm/PhpNode.mjs")))
 		, import(pathToFileURL(join(consumer, "node_modules/php-wasm-lean-alpha/index.mjs")))

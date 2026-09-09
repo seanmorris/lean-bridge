@@ -21,6 +21,7 @@ const profileManifest = Object.freeze({
 		, "component-runtime"
 		, "publish-configuration"
 		, "consumer-guide-docs"
+		, "consumer-checks"
 		, "contributing-docs"
 		, "credential-boundary"
 		, "docker-consumer-ci"
