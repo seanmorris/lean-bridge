@@ -1,10 +1,14 @@
 # Types and values
 
-Use this reference when choosing Lean exports or passing values to a prepared npm component. It covers the ordinary pure-function path. The analyzer can describe more types than that path can compile; [export decisions](../lean/export-decisions.md) explains the distinction.
+Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below document the ordinary pure-function path.
 
-The table is generated from the scalar capability list and the actual TypeScript declarations for the scalar fixture.
+## Full type surface
+
+{{TYPE_SURFACE}}
 
 ## Generated host types
+
+This npm table is generated from the scalar capability list and the actual TypeScript declarations for the scalar fixture.
 
 {{SCALAR_TYPES}}
 

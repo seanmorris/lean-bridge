@@ -25,14 +25,15 @@ const fixtureRoot = resolve("tests/fixtures/documentation/consumers");
 const guides = docPages.filter(page => page.consumerIds?.length);
 
 /**
- * Read the three-column conversion table without including another guide section.
+ * Read the worked example's three-column API table, separate from the generated inventory.
  *
  * @param source - Canonical Markdown for one consumer guide.
  */
 function conversionTable(source)
 {
-	const section = source.split("### Type conversions\n")[1]?.split(/^### /mu)[0];
-	assert.ok(section, "The guide must include a Type conversions section");
+	const heading = source.includes("### Alpha example API\n") ? "Alpha example API" : "Scalar package example";
+	const section = source.split(`### ${heading}\n`)[1]?.split(/^### /mu)[0];
+	assert.ok(section, "The guide must keep its worked example's API table");
 	const rows = section.split("\n").filter(line => line.startsWith("| "));
 	assert.ok(rows.length >= 7, "Document a header, separator, and the five shared value types");
 	const cells = rows.slice(2).map(line => line.slice(2, -2).split(" | "));

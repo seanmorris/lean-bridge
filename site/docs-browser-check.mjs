@@ -14,6 +14,8 @@ import { demos, docPages } from "./registry.mjs";
 import { waitForWorkbench } from "./workbench-readiness.mjs";
 import contributingCompatibility from "../tests/fixtures/documentation/contributing-compatibility.json" with { type: "json" };
 import consumerSections from "../tests/fixtures/documentation/consumer-sections.json" with { type: "json" };
+import typeSurface from "../docs/type-surface.v1.json" with { type: "json" };
+import { typeGuideProfiles } from "../scripts/generate-type-docs.mjs";
 
 const base = new URL(process.argv[2] ?? process.env.SITE_BASE_URL ?? "http://127.0.0.1:39061/");
 assert.ok(base.pathname.endsWith("/"), "The site base URL must end with a slash");
@@ -123,6 +125,14 @@ const checkGuide = async (page, noScript, guide) => {
 	assert.deepEqual(await page.locator(".doc-navigation nav > section > h2").allTextContents(), groups);
 	const article = normalize(await page.locator("main article").innerText());
 	assert.ok(article.length > (guide.legacy ? 100 : 500), `${guide.id}: complete article`);
+	if(Object.hasOwn(typeGuideProfiles, guide.source) || guide.source === "docs/reference/types.md")
+	{
+		const heading = guide.source === "docs/reference/types.md" ? "Ownership, absence and failure" : "Current evidence";
+		const table = page.locator("article table").filter({ has: page.locator("th", { hasText: heading }) });
+		assert.equal(await table.count(), 1, `${guide.id}: one full type table`);
+		assert.deepEqual(await table.locator("tbody tr td:first-child").allTextContents(),
+			typeSurface.shapes.map(shape => shape.lean), `${guide.id}: every inventoried type renders in order`);
+	}
 	const layouts = [];
 	for(const width of [320, 390, 1440])
 	{

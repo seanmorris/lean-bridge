@@ -14,6 +14,7 @@ import test from 'node:test';
 import { cliUsage, cliExitCodes, validateCliResult } from '../src/cli/contract.mjs';
 import { componentScalarTypes } from '../src/abi/component-scalars.mjs';
 import { docPages, demos } from '../site/registry.mjs';
+import { typeGuideProfiles } from '../scripts/generate-type-docs.mjs';
 import {
 	adapterExports, algorithmReferences, generateReferenceDocs, packageReference, renderReferenceDocuments
 } from '../scripts/generate-reference-docs.mjs';
@@ -23,9 +24,9 @@ const text = relative => readFile(path.join(root, relative), 'utf8');
 const blocks = (markdown, language) => [...markdown.matchAll(new RegExp(`^\`\`\`${language}\\n([\\s\\S]*?)^\`\`\`\\s*$`, 'gmu'))]
 	.map(match => match[1].trim());
 
-test('all four generated reference pages match the current contracts exactly', async () => {
+test('generated references and consumer type sections match the current contracts exactly', async () => {
 	const documents = await generateReferenceDocs();
-	assert.equal(Object.keys(documents).length, 4);
+	assert.equal(Object.keys(documents).length, 4 + Object.keys(typeGuideProfiles).length);
 	assert.deepEqual(await renderReferenceDocuments(), documents, 'Generation is deterministic');
 	for(const [filename, content] of Object.entries(documents))
 	{

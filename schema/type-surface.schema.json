@@ -110,6 +110,10 @@
               "additionalProperties": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/text" }] }
             }
           },
+          "conversionNotes": {
+            "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/id" },
+            "additionalProperties": { "$ref": "#/$defs/text" }
+          },
           "stages": {
             "type": "object", "additionalProperties": false,
             "required": ["analysis", "generation", "compilation", "packaging", "installedExecution"],

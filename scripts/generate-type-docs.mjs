@@ -1,0 +1,199 @@
+/**
+ * Render consumer conversion tables from position- and path-scoped type evidence.
+ *
+ * @file
+ */
+
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
+
+export const typeGuideProfiles = Object.freeze({
+	"docs/javascript-typescript.md": ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"]
+	, "docs/php.md": ["php-native", "php-wasm"]
+	, ...Object.fromEntries(["php-native", "php-wasm", "dotnet", "java", "kotlin", "ruby", "python", "rust", "c", "cpp", "wit-wasi"]
+		.map(profile => [`docs/consume/${profile}.md`, [profile]]))
+});
+
+const names = {
+	"node-javascript": "Node JavaScript"
+	, "node-typescript": "TypeScript"
+	, "browser-javascript": "Browser"
+	, "browser-react": "React"
+	, "browser-worker": "Worker"
+	, "php-native": "Native PHP"
+	, "php-wasm": "PHP-Wasm"
+	, dotnet: "C#"
+	, java: "Java"
+	, kotlin: "Kotlin"
+	, ruby: "Ruby"
+	, python: "Python"
+	, rust: "Rust"
+	, c: "C"
+	, cpp: "C++"
+	, "wit-wasi": "WIT/WASI"
+};
+const positions = { parameter: "input", result: "result", field: "field", "callback-parameter": "callback input", "callback-result": "callback result", signature: "signature" };
+const paths = { "ordinary-source": "Ordinary source", "reviewed-ir": "Reviewed IR" };
+const escapeCell = value => String(value).replaceAll("|", "\\|").replace(/\s+/gu, " ").trim();
+const inline = value => `\`${String(value).replaceAll("`", "'")}\``;
+const table = (headings, rows) => [headings, headings.map(() => "---"), ...rows]
+	.map(row => `| ${row.map(escapeCell).join(" | ")} |`).join("\n");
+const unique = values => [...new Set(values)];
+
+/**
+ * Classify a single cell without borrowing evidence from another stage or position.
+ *
+ * @param cell - One expanded, validated inventory cell.
+ */
+export function cellTypeCoverage(cell)
+{
+	const stages = cell.stages;
+	if(stages.installedExecution.state === "passed") return "Installed checks passed";
+	if(stages.installedExecution.state === "limited") return "Installed checks: limited";
+	if(stages.installedExecution.state === "rejected") return "Installed execution rejected";
+	if(stages.packaging.state === "rejected") return "Packaging rejected";
+	if(stages.compilation.state === "rejected") return "Compilation rejected";
+	if(stages.generation.state === "rejected") return "Generation rejected";
+	if(stages.analysis.state === "rejected") return "Analysis rejected";
+	if(stages.packaging.state === "passed") return "Packaged; execution unaudited";
+	if(stages.compilation.state === "passed") return "Compiled; installation unaudited";
+	if(stages.generation.state === "passed") return "Generation tested; compilation unaudited";
+	if(stages.generation.state === "limited") return "Generation tested: limited";
+	if(stages.generation.state === "inspected") return cell.hostType === null ? "Inspected: no host mapping" : "Generator inspected";
+	if(stages.analysis.state === "inspected") return "Analyzer inspected";
+	return "Not audited";
+}
+
+const groupedProfiles = (profiles, project) => {
+	const groups = new Map();
+	for(const profile of profiles)
+	{
+		const value = project(profile);
+		if(value === "") continue;
+		if(!groups.has(value)) groups.set(value, []);
+		groups.get(value).push(names[profile]);
+	}
+	return [...groups].map(([value, group]) => profiles.length === 1 || group.length === profiles.length
+		? value : `${group.join(" / ")}: ${value}`).join("; ");
+};
+
+const coverageText = (cells, profiles) => Object.entries(paths).map(([source, label]) => {
+	const description = groupedProfiles(profiles, profile => {
+		const selected = cells.filter(cell => cell.profile === profile && cell.path === source);
+		const groups = new Map();
+		for(const cell of selected)
+		{
+			const state = cellTypeCoverage(cell);
+			if(!groups.has(state)) groups.set(state, []);
+			groups.get(state).push(positions[cell.position]);
+		}
+		const descriptions = [...groups].map(([state, sites]) => groups.size === 1
+			? state : `${state} (${sites.join(", ")})`);
+		return descriptions.join("; ");
+	});
+	return `${label}: ${description}`;
+}).join(". ");
+
+const hostText = (cells, profiles) => groupedProfiles(profiles, profile => {
+	const selected = cells.filter(cell => cell.profile === profile && cell.hostType !== null);
+	const groups = new Map();
+	for(const cell of selected)
+	{
+		if(!groups.has(cell.hostType)) groups.set(cell.hostType, []);
+		groups.get(cell.hostType).push(positions[cell.position]);
+	}
+	if(groups.size === 0) return "No host mapping recorded";
+	return [...groups].map(([type, sites]) => `${inline(type)} (${unique(sites).join(", ")})`).join("; ");
+});
+
+/**
+ * Render every inventoried shape for an exact set of consumer profiles.
+ *
+ * @param inventory - Validated inventory and independent contracts.
+ * @param inventory.document - Versioned type surface.
+ * @param profiles - Exact runtime profiles, not inferred language aliases.
+ * @param reference - Relative link to the shared type rules.
+ */
+export function renderTypeTable({ document, ...contracts }, profiles, reference)
+{
+	assert.ok(profiles.length > 0 && new Set(profiles).size === profiles.length, "Empty or duplicate type profiles");
+	for(const profile of profiles) assert.ok(document.profiles.some(item => item.id === profile), `Unknown type profile ${profile}`);
+	const cells = typeSurfaceCells(document, contracts).filter(cell => profiles.includes(cell.profile));
+	const rows = document.shapes.map(shape => {
+		const selected = cells.filter(cell => cell.shape === shape.id);
+		const notes = groupedProfiles(profiles, profile => unique(selected.filter(cell => cell.profile === profile)
+			.map(cell => cell.conversionNote).filter(Boolean)).join(" "));
+		return [inline(shape.lean), hostText(selected, profiles), coverageText(selected, profiles), `${notes ? notes + " " : ""}Required: ${shape.bounds}`];
+	});
+	return [
+		"### Type conversions"
+		, ""
+		, `Profiles: ${profiles.map(profile => names[profile]).join(", ")}. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.`
+		, ""
+		, `The [conversion rules](${reference}#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](${reference.replace(/reference\/types\.md$/u, "type-surface.v1.json")}) records commands, source hashes, limitations and implementation owners.`
+		, ""
+		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
+		, ""
+	].join("\n");
+}
+
+/**
+ * Replace only the generated section, retaining every installation step and old URL.
+ *
+ * @param source - Existing canonical consumer guide.
+ * @param section - Generated Type conversions section.
+ */
+export function replaceTypeSection(source, section)
+{
+	const heading = "### Type conversions\n";
+	assert.equal(source.split(heading).length, 2, "Each guide needs exactly one Type conversions heading");
+	const start = source.indexOf(heading);
+	const rest = source.slice(start + heading.length);
+	const end = rest.search(/^#{1,3} /mu);
+	assert.ok(end >= 0, "The generated type section needs a following guide section");
+	return source.slice(0, start) + section + "\n" + rest.slice(end);
+}
+
+/**
+ * Render guide sections and the shared inventory reference without writing.
+ *
+ * @param options - Canonical source location.
+ * @param options.root - Repository root.
+ */
+export async function renderTypeDocuments({ root })
+{
+	const inventory = await readTypeSurface({ repository: root });
+	const documents = {};
+	for(const [filename, profiles] of Object.entries(typeGuideProfiles))
+	{
+		const reference = path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md");
+		const source = await readFile(path.join(root, filename), "utf8");
+		documents[filename] = replaceTypeSection(source, renderTypeTable(inventory, profiles, reference));
+	}
+	const { document } = inventory;
+	const profileRows = document.profiles.map(profile => {
+		const guide = Object.entries(typeGuideProfiles).find(([filename, profiles]) => filename !== "docs/php.md" && profiles.includes(profile.id))[0];
+		const relative = path.posix.relative("docs/reference", guide);
+		return [`[${names[profile.id]}](${relative}#type-conversions)`, profile.context, profile.wordBits === null ? "Not audited" : `${profile.wordBits}-bit Lean target`];
+	});
+	const shapeRows = document.shapes.map(shape => {
+		const rule = document.rules[document.families[shape.family].rule];
+		return [inline(shape.lean), shape.meaning, shape.bounds, `${rule.ownership} ${rule.absence} ${rule.failure}`];
+	});
+	return {
+		documents
+		, reference: [
+			`Inventory ${document.contractVersion} covers ${document.shapes.length} source forms and ${document.profiles.length} consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.`
+			, ""
+			, table(["Consumer table", "Runtime context", "Compiled Lean width"], profileRows)
+			, ""
+			, table(["Lean type or source form", "Meaning", "Bounds and representation", "Ownership, absence and failure"], shapeRows)
+			, ""
+			, "The ordinary npm scalar path has installed acceptance for its 16 primitive input/result types. Alpha's reviewed profiles exercise a narrower selection of records, arrays, resources and callables. C++, C#, Java, Kotlin and Ruby currently use fixed Alpha projections; they do not implement general mappings for all the rows above."
+			, ""
+			, "PHP's numeric and async declarations, Python's rich annotations and WIT's declarations extend beyond their installed transport coverage. Rust rejects arbitrary-precision integers. JavaScript rejects anonymous Option, result and tuple applications. Missing implementations remain assigned work in the [type inventory](../type-surface.v1.json)."
+		].join("\n")
+	};
+}

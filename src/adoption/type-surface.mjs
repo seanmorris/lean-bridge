@@ -177,6 +177,8 @@ export function validateTypeSurface(document, { irSchema, consumers })
 	for(const observation of document.observations)
 	{
 		exactSet(Object.keys(observation.hostTypes), observation.shapes, `${observation.id}: host types`);
+		for(const shape of Object.keys(observation.conversionNotes ?? {}))
+			assert.ok(observation.shapes.includes(shape), `${observation.id}: conversion note outside observed shapes`);
 		for(const profile of observation.profiles) assert.ok(profiles.has(profile), `${observation.id}: unknown profile ${profile}`);
 		for(const shape of observation.shapes)
 		{
@@ -283,6 +285,7 @@ export function typeSurfaceCells(document, contracts)
 						, hostType: observation?.hostTypes[shape.id][position] ?? null
 						, observation: observation?.id ?? null
 						, scope: observation?.scope ?? "Not yet audited."
+						, conversionNote: observation?.conversionNotes?.[shape.id] ?? null
 						, limitations: structuredClone(observation?.limitations ?? [])
 						, stages: structuredClone(observation?.stages ?? unreviewedStages)
 					});

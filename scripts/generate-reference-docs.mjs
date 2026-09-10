@@ -14,6 +14,7 @@ import { analyzeLeanProject } from '../src/analyze/lean-project.mjs';
 import { generateJavaScriptPackage } from '../src/backends/javascript/generate.mjs';
 import { componentScalarTypes, scalarCopyLimit } from '../src/abi/component-scalars.mjs';
 import { cliUsage, cliExitCodes, parseCliArguments } from '../src/cli/contract.mjs';
+import { renderTypeDocuments } from './generate-type-docs.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 export const referenceNames = Object.freeze(['cli', 'package-api', 'types', 'algorithms']);
@@ -110,6 +111,7 @@ export async function packageReference(projectRoot)
  */
 export async function renderReferenceDocuments({ root = repositoryRoot } = {})
 {
+	const typeDocuments = await renderTypeDocuments({ root });
 	const [tutorial, scalars, algorithms, schema] = await Promise.all([
 		packageReference(path.join(root, 'tests/fixtures/documentation/lean-author'))
 		, packageReference(path.join(root, 'tests/fixtures/onboarding/scalars'))
@@ -143,6 +145,7 @@ export async function renderReferenceDocuments({ root = repositoryRoot } = {})
 		, SCALAR_API: fence('ts', scalars.declarations)
 		, SCALAR_TYPES: table(['Primitive in Binding IR', 'Generated TypeScript result', 'Checked fixture function'], rows)
 		, COPY_LIMIT: String(scalarCopyLimit / (1024 * 1024))
+		, TYPE_SURFACE: typeDocuments.reference
 		, ALGORITHM_INDEX: table(['Algorithm', 'Use it for'], algorithms.map(item => [
 			`[${item.title}](#${item.slug})`, item.summary
 		]))
@@ -158,7 +161,7 @@ export async function renderReferenceDocuments({ root = repositoryRoot } = {})
 			, `[Benchmark source](../../${item.directory}/${item.benchmark}) · [Correctness tests](../../${item.directory}/test.mjs)`
 		].join('\n')).join('\n\n')
 	};
-	const documents = {};
+	const documents = { ...typeDocuments.documents };
 	for(const name of referenceNames)
 	{
 		const template = await readFile(path.join(root, 'site/reference', `${name}.md`), 'utf8');

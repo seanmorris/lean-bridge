@@ -42,6 +42,8 @@ Consumer commands install generated archives into new projects using ordinary ec
 
 [`type-surface.test.mjs`](type-surface.test.mjs) checks the separate type-by-profile inventory. It rejects missing IR or source classifications, lost consumers, stale evidence, claims beyond the recorded test stage, and evidence leaking between positions or source paths. `npm run test:type-surface` runs these checks without a Lean compiler. The installed primitive acceptance remains in [`component-scalars.test.mjs`](component-scalars.test.mjs).
 
+[`type-surface-docs.test.mjs`](type-surface-docs.test.mjs) compares every generated consumer table with that inventory, preserves prepared-release instructions and worked examples, and exercises the real constructor/integer rejection guards. It checks PHP-Wasm limits, Java/Kotlin type differences and evidence isolation. Both the contract profile and `npm run test:docs` include it.
+
 ## Running tests
 
 `npm test` prepares the link, Lean, threaded runtime, performance, and scaling fixtures before running the Node test corpus. `npm run lint` checks JavaScript and TypeScript source style. `npm run typecheck` checks the JavaScript project with TypeScript analysis. `npm run check` adds the environment inventory and runs the complete local sequence.

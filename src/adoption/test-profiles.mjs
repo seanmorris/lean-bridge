@@ -49,6 +49,7 @@ const profileManifest = Object.freeze({
 		, "reproducibility-gate"
 		, "target-runtime-profiles"
 		, "type-surface"
+		, "type-surface-docs"
 		, "test-profiles"
 		, "time-to-package"
 		, "toolchain-preflight"

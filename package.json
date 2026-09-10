@@ -322,7 +322,7 @@
     "test:component-npm-package": "node --test tests/component-npm-package.test.mjs",
     "docs:reference": "node scripts/generate-reference-docs.mjs --check",
     "docs:reference:write": "node scripts/generate-reference-docs.mjs --write",
-    "test:docs": "node --test tests/documentation.test.mjs tests/consumer-guide-docs.test.mjs tests/contributing-docs.test.mjs tests/lean-author-documentation.test.mjs tests/component-consumer-docs.test.mjs tests/documentation-demo-api.test.mjs tests/reference-documentation.test.mjs",
+    "test:docs": "node --test tests/documentation.test.mjs tests/consumer-guide-docs.test.mjs tests/contributing-docs.test.mjs tests/lean-author-documentation.test.mjs tests/component-consumer-docs.test.mjs tests/documentation-demo-api.test.mjs tests/reference-documentation.test.mjs tests/type-surface-docs.test.mjs",
     "test:docs:proof": "node scripts/check-documentation-proofs.mjs",
     "acceptance:docs:author": "node scripts/check-lean-author-tutorial.mjs",
     "acceptance:docs:consumer": "node scripts/check-component-browser-consumer.mjs --release build/documentation-author-acceptance/release/packages/npm",
