@@ -141,7 +141,7 @@ Publish the matching verification files and reviewed installation instructions a
 
 ## Verify the consumer handoff
 
-When an existing signed receipt covers the exact archives, give consumers the policy hash through a separate trusted channel and follow [Receive a package](../consume/receive-package.md#authenticate-a-signed-archive). Distribution must preserve each signed filename, byte length, and SHA-256.
+When an existing signed receipt covers the exact archives, give consumers the policy hash through a separate trusted channel and follow [Use a prepared release](../consume/receive-package.md#authenticate-a-signed-archive). Distribution must preserve each signed filename, byte length, and SHA-256.
 
 For an unsigned local handoff, name the trusted sender and transfer channel, retain the reviewed hashes, and do not label it a signed release. Direct consumers to the [C](../consume/c.md), [C++](../consume/cpp.md), or [WIT/WASI](../consume/wit-wasi.md) installation guide.
 

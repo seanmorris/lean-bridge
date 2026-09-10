@@ -18,7 +18,7 @@ getconf GNU_LIBC_VERSION
 
 ### Obtain the package
 
-Request the native Alpha package `poc/lean-alpha-php-native@0.0.0`. For a distributed archive, follow [Receive a package](receive-package.md) before extracting it or loading native code. Set `LEAN_ALPHA_PHP_PACKAGE` to the extracted directory containing `lib/` and `share/`:
+Request the native Alpha package `poc/lean-alpha-php-native@0.0.0`. For a distributed archive, follow [Use a prepared release](receive-package.md) before extracting it or loading native code. Set `LEAN_ALPHA_PHP_PACKAGE` to the extracted directory containing `lib/` and `share/`:
 
 ```sh
 export LEAN_ALPHA_PHP_PACKAGE=/absolute/path/to/extracted-native-package

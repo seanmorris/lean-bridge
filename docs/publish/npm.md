@@ -99,7 +99,7 @@ For an ordinary component, the CLI verifies the centrally published runtime depe
 
 ## Prepare and verify the candidate
 
-For a local Alpha archive, start with the prepared bundle from [Receive a package](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer):
+For a local Alpha archive, start with the prepared bundle from the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer):
 
 ```sh
 node scripts/build-npm-package.mjs \
@@ -209,7 +209,7 @@ try {
 '
 ```
 
-Use the actual package name and exports for a renamed component. If the integration produced a signed release receipt, also verify the downloaded archives through [Receive a package](../consume/receive-package.md#authenticate-a-signed-archive).
+Use the actual package name and exports for a renamed component. If the integration produced a signed release receipt, also verify the downloaded archives through [Use a prepared release](../consume/receive-package.md#authenticate-a-signed-archive).
 
 ## Publish the PHP-Wasm profile
 

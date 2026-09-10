@@ -10,7 +10,7 @@ TestPyPI has its own accounts and package database. Establish ownership of the p
 
 ## Build and verify the candidate
 
-From the checkout, prepare the native universal bundle as described in [Receive a package](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then project it into a new directory:
+From the checkout, prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then project it into a new directory:
 
 ```sh
 node scripts/build-pypi-package.mjs \

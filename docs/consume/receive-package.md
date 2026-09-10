@@ -1,10 +1,10 @@
-# Receive a Lean package
+# Use a prepared release
 
 Obtain the prepared release for your language and platform from its publisher. A prepared release already contains the compiled code; verification and installation do not require a Lean source checkout.
 
-## Use a prepared release
+## Check the release files
 
-### Choose the handoff
+### Identify the release type
 
 | Package | Files to request | Next step |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ Keep these variables when following the [JavaScript and TypeScript guide](../jav
 
 The separate runtime archive is an installation dependency. The component loads it automatically when imported. If the publisher distributes both packages through your configured registry, npm resolves that dependency from the component's metadata.
 
-To receive flake outputs from a binary cache, follow [signed Nix package consumption](../publish/nix.md). Obtain the cache's public key through a trusted channel and check substitution before relying on the installed output. A Nix cache signature and a Lean Bridge archive receipt authenticate different records.
+To install flake outputs from a binary cache, follow [signed Nix package consumption](../publish/nix.md). Obtain the cache's public key through a trusted channel and check substitution before relying on the installed output. A Nix cache signature and a Lean Bridge archive receipt authenticate different records.
 
 ### Continue with your language
 

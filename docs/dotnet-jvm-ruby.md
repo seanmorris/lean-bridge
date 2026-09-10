@@ -16,4 +16,4 @@ Use the [Ruby guide](consume/ruby.md) to install the original gem into an isolat
 
 ## Verification
 
-[Receive a package](consume/receive-package.md) covers local and signed artifact handoffs. The [managed acceptance evidence](evidence/managed-consumer-acceptance.md) records installed-package checks. Contributors can [run the managed acceptance checks](contributing/testing.md#consumer-acceptance) against the public examples from the individual guides.
+[Use a prepared release](consume/receive-package.md) covers local and signed artifact handoffs. The [managed acceptance evidence](evidence/managed-consumer-acceptance.md) records installed-package checks. Contributors can [run the managed acceptance checks](contributing/testing.md#consumer-acceptance) against the public examples from the individual guides.

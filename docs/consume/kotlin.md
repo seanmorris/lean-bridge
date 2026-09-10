@@ -8,7 +8,7 @@ Use Alpha's Java API directly from Kotlin. The package is the same Maven JAR use
 
 Use JDK 22, the Kotlin JVM command-line compiler and runner, and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `kotlinc -version`, `kotlin -version`, `mvn -version`, and `ldd --version`. Run all JVM tools with JDK 22. The [support contract](../consumer-support.v1.json) records the shared JVM profile; the pinned consumer environment supplies Kotlin.
 
-Follow [Receive a package](receive-package.md) for the authenticated Alpha Maven release, `org.leanbridge:lean-alpha:0.0.0`. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute directory containing its `repository/` directory. No Gradle project or registry publication is required for this example.
+Follow [Use a prepared release](receive-package.md) for the authenticated Alpha Maven release, `org.leanbridge:lean-alpha:0.0.0`. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute directory containing its `repository/` directory. No Gradle project or registry publication is required for this example.
 
 ### Resolve the JAR
 

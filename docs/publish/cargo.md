@@ -12,7 +12,7 @@ Choose either an operator-controlled Cargo registry with a publishing API or cra
 
 ## Build and verify the Lean Bridge archive
 
-Prepare the native universal bundle from [Receive a package](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
+Prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
 
 ```sh
 node scripts/build-cargo-package.mjs \

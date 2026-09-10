@@ -27,9 +27,9 @@ The JavaScript examples install `onboarding-small@1.0.0`, which exports `add` an
 
 The [runtime and package reference](consumers.md) lists the tested platform for every supported consumer. [PHP](php.md) compares its two runtime options. The [demo API guide](demo-api.md) covers the algorithm demos' local APIs separately.
 
-### Receive a release
+### Verify a release
 
-[Receive a package](consume/receive-package.md) identifies the files to request and the verification steps for each handoff. Continue with your language guide's install command, program, expected output, and cleanup steps.
+[Use a prepared release](consume/receive-package.md) identifies the files to request and the verification steps for each handoff. Continue with your language guide's install command, program, expected output, and cleanup steps.
 
 JavaScript packages declare their runtime dependency, and their imports load it automatically. A local npm handoff includes the runtime archive alongside the component so the install can resolve both without a registry copy.
 

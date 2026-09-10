@@ -8,7 +8,7 @@ Resolve Alpha from a Maven repository and call its public Java API. The JAR carr
 
 Use JDK 22 and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `javac -version`, `mvn -version`, and `ldd --version`; Maven must also run on JDK 22. The [support contract](../consumer-support.v1.json) records this JVM profile.
 
-This example uses `org.leanbridge:lean-alpha:0.0.0`, the Alpha interoperability package. Follow [Receive a package](receive-package.md) to obtain and authenticate its Maven release. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`. Keep the repository's POM and JAR together. No Maven Central publication is assumed.
+This example uses `org.leanbridge:lean-alpha:0.0.0`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate its Maven release. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`. Keep the repository's POM and JAR together. No Maven Central publication is assumed.
 
 ### Resolve the package
 

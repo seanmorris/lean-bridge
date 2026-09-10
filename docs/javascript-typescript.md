@@ -27,7 +27,7 @@ Use this option when the publisher supplies package files instead of a registry 
 
 #### Verify the handoff
 
-For a local archive release, [Receive a package](consume/receive-package.md#verify-the-local-npm-receipt) explains how to verify the supplied receipt and select its two archives. Keep `LEAN_BRIDGE_RUNTIME_ARCHIVE` and `LEAN_BRIDGE_COMPONENT_ARCHIVE` set to their absolute paths.
+For a local archive release, [Use a prepared release](consume/receive-package.md#verify-the-local-npm-receipt) explains how to verify the supplied receipt and select its two archives. Keep `LEAN_BRIDGE_RUNTIME_ARCHIVE` and `LEAN_BRIDGE_COMPONENT_ARCHIVE` set to their absolute paths.
 
 The component archive supplies its generated module, TypeScript declarations, metadata, and binary. The runtime archive satisfies its exact `@lean-bridge/runtime` dependency.
 

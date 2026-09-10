@@ -8,7 +8,7 @@ The Alpha C++20 package provides typed values and move-only RAII wrappers over t
 
 Use a C++20 compiler, CMake 3.20 or newer, and tar on Linux x86-64 with glibc 2.38 or newer. The [support contract](../consumer-support.v1.json) records the tested profile.
 
-Request `lean-bridge-alpha-0.0.0-cpp.tar.gz` and the authentication files in [Receive a package](receive-package.md). Authenticate the archive before extraction.
+Request `lean-bridge-alpha-0.0.0-cpp.tar.gz` and the authentication files in [Use a prepared release](receive-package.md). Authenticate the archive before extraction.
 
 ### Create the project
 

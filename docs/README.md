@@ -48,7 +48,7 @@ The [documentation ownership map](../site/README.md#claim-ownership) identifies 
 | Audience | Guide |
 |---|---|
 | Lean package authors | [Lean author guide](lean-author-guide.md) |
-| Package recipients | [Receive a package](consume/receive-package.md) |
+| Package recipients | [Use a prepared release](consume/receive-package.md) |
 | JavaScript, TypeScript, browser, React, and workers | [JavaScript and TypeScript](javascript-typescript.md) |
 | Library publishers | [Publishing guide](publishing.md) |
 | Repository, documentation, and demo contributors | [Contributing](../CONTRIBUTING.md) |

@@ -8,7 +8,7 @@ Install the Alpha NuGet package and call its generated C# API from a .NET 8 cons
 
 Use the .NET 8 SDK on x86-64 Linux with glibc 2.38 or newer. Check your machine with `dotnet --list-sdks`, `uname -m`, and `ldd --version`. The [support contract](../consumer-support.v1.json) records the tested platform.
 
-This example consumes `LeanBridge.Alpha.0.0.0.nupkg`, the Alpha interoperability package. Follow [Receive a package](receive-package.md) to obtain and authenticate the archive. Put it in a local directory and set `LEAN_BRIDGE_NUGET` to that directory's absolute path. No public NuGet feed is assumed.
+This example consumes `LeanBridge.Alpha.0.0.0.nupkg`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate the archive. Put it in a local directory and set `LEAN_BRIDGE_NUGET` to that directory's absolute path. No public NuGet feed is assumed.
 
 ### Create the application
 

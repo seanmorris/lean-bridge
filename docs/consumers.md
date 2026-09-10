@@ -24,7 +24,7 @@ The JavaScript examples install the prepared `onboarding-small` npm release. Nat
 
 ## Authenticate a release archive
 
-[Receive a package](consume/receive-package.md#authenticate-a-signed-archive) covers the standalone verifier, trusted signer-policy hash, signed subject, and expected coordinate. Authenticate the original archive before installation or extraction.
+[Use a prepared release](consume/receive-package.md#authenticate-a-signed-archive) covers the standalone verifier, trusted signer-policy hash, signed subject, and expected coordinate. Authenticate the original archive before installation or extraction.
 
 ## Browser JavaScript
 

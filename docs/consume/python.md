@@ -8,7 +8,7 @@ Install the Alpha interoperability wheel and import `lean_alpha`. The wheel incl
 
 Use Python 3.11 or newer on Linux x86-64 with glibc 2.38 or newer, with pip and Python's `venv` module. The [support contract](../consumer-support.v1.json) records the tested profile.
 
-Obtain `lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl` from the publisher's release channel. [Receive a package](receive-package.md) covers handoff authentication separately.
+Obtain `lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl` from the publisher's release channel. [Use a prepared release](receive-package.md) covers handoff authentication separately.
 
 ### Install the wheel
 

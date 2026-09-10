@@ -8,7 +8,7 @@ Install Alpha as a RubyGem and call its generated Ruby API. The gem includes the
 
 Use MRI Ruby 3.3 and RubyGems on x86-64 Linux with glibc 2.38 or newer. Check `ruby -v`, `gem --version`, `uname -m`, and `ldd --version`. The [support contract](../consumer-support.v1.json) records the tested Ruby profile.
 
-This guide uses `lean_bridge_alpha-0.0.0.gem`, the Alpha interoperability package. Follow [Receive a package](receive-package.md) to obtain and authenticate that archive. No RubyGems.org publication is assumed.
+This guide uses `lean_bridge_alpha-0.0.0.gem`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate that archive. No RubyGems.org publication is assumed.
 
 ### Install the gem
 

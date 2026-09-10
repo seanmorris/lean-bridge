@@ -165,7 +165,7 @@ The runner creates and commits its fixture in a separate temporary repository. I
 
 ## JavaScript and browser acceptance
 
-Use the completed `onboarding-small@1.0.0` npm handoff from the [author tutorial](../lean/first-component.md#create-and-verify-local-archives). Set `LEAN_BRIDGE_RELEASE` to its absolute `release/packages/npm` directory, containing the receipt, verifier, and both original archives. The [receiving instructions](../consume/receive-package.md#verify-the-local-npm-receipt) identify those files.
+Use the completed `onboarding-small@1.0.0` npm handoff from the [author tutorial](../lean/first-component.md#create-and-verify-local-archives). Set `LEAN_BRIDGE_RELEASE` to its absolute `release/packages/npm` directory, containing the receipt, verifier, and both original archives. The [receipt verification instructions](../consume/receive-package.md#verify-the-local-npm-receipt) identify those files.
 
 Install the browser engines from the checkout. `--with-deps` also installs browser system dependencies and may require administrator access:
 

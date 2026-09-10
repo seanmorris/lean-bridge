@@ -166,7 +166,7 @@ Packagist indexes a public VCS repository. It discovers versions from tags; it d
 4. Sign in to Packagist, submit the public repository URL, and enable its update hook. For later releases, push a new reviewed tag and confirm Packagist has indexed the intended version.
 5. Install the exact package version in a clean application, verify the separately distributed native libraries, and run the check above.
 
-Neither this VCS workflow nor the private index writes a Lean Bridge `registry-transaction.json` or signed `release-receipt.json`. If another reviewed release integration supplies a signed receipt for the exact distribution bytes, verify it through [Receive a package](../consume/receive-package.md). Do not manufacture one from an unsigned inventory or claim that the built-in publisher issued it.
+Neither this VCS workflow nor the private index writes a Lean Bridge `registry-transaction.json` or signed `release-receipt.json`. If another reviewed release integration supplies a signed receipt for the exact distribution bytes, verify it through [Use a prepared release](../consume/receive-package.md). Do not manufacture one from an unsigned inventory or claim that the built-in publisher issued it.
 
 ## Recover an interrupted publication
 

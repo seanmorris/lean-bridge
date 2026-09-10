@@ -73,7 +73,7 @@ console.assert(add(100n, 23n) === 123n);
 console.assert(isEmpty("") === true);
 ```
 
-The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives, checks generated declarations, and runs the same package in Node, browser JavaScript, React, and workers. [Receive a package](docs/consume/receive-package.md) covers receipt verification. The [PHP chooser](docs/php.md) links to separate native PHP and PHP-Wasm guides.
+The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives, checks generated declarations, and runs the same package in Node, browser JavaScript, React, and workers. [Use a prepared release](docs/consume/receive-package.md) covers receipt verification. The [PHP chooser](docs/php.md) links to separate native PHP and PHP-Wasm guides.
 
 ## Type conversions
 

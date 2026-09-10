@@ -108,7 +108,7 @@ For a signed downloaded package, run `dotnet nuget verify --all "$LEAN_BRIDGE_NU
 
 After verification, install the downloaded archive into a fresh directory with the [C# guide](../consume/dotnet.md). Adjust its PackageReference to your approved package identity if you changed the fixture coordinate. Record the feed URL, coordinate, upload outcome, downloaded digest, and consumer output with the candidate.
 
-If an integrated publisher has supplied a signed release receipt, also perform the recipient-side checks in [Receive a package](../consume/receive-package.md#authenticate-a-signed-archive).
+If an integrated publisher has supplied a signed release receipt, also perform the recipient-side checks in [Use a prepared release](../consume/receive-package.md#authenticate-a-signed-archive).
 
 ## Recover without overwriting a release
 

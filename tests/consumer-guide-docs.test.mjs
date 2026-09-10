@@ -133,6 +133,24 @@ test("Alpha conversion tables match the generated public Payload field types", a
 	}
 });
 
+test("the PHP overview exposes conversions without requiring a transport guide", async () => {
+	const source = await readFile("docs/php.md", "utf8");
+	const overview = conversionTable(source);
+	assert.ok(source.indexOf("### Type conversions\n") < source.indexOf("### Verify the native release\n"));
+	for(const profile of ["php-native", "php-wasm"])
+	{
+		const detailed = conversionTable(await readFile(`docs/consume/${profile}.md`, "utf8"));
+		assert.deepEqual([...overview.rows.keys()], [...detailed.rows.keys()], profile);
+		for(const lean of ["Bool", "UInt32", "String", "ByteArray", "Array UInt32", "Payload", "Box"])
+			assert.equal(overview.rows.get(`\`${lean}\``).host, detailed.rows.get(`\`${lean}\``).host, `${profile}: ${lean}`);
+		assert.ok(overview.section.includes(`(consume/${profile}.md#type-conversions)`), profile);
+	}
+	const range = overview.rows.get("`UInt32`").rules;
+	assert.match(range, /Native PHP: `0\.\.4294967295` with 64-bit/u);
+	assert.match(range, /PHP-Wasm: `0\.\.2147483647` with 32-bit signed/u);
+	assert.match(overview.section, /result above `PHP_INT_MAX`/u);
+});
+
 test("conversion tables distinguish full-width integers and executable WASI support", async () => {
 	const javascript = conversionTable(await readFile("docs/javascript-typescript.md", "utf8"));
 	const scalarReference = await readFile("docs/reference/types.md", "utf8");
@@ -162,7 +180,7 @@ test("consumer guides put prepared release use before source-package preparation
 	{
 		const source = await readFile(page.source, "utf8");
 		assert.deepEqual([...source.matchAll(/^## (.+)$/gmu)].map(match => match[1]),
-			["Use a prepared release", "Start from a raw Lean package"], page.id);
+			[page.id === "receive-package" ? "Check the release files" : "Use a prepared release", "Start from a raw Lean package"], page.id);
 		const boundary = source.indexOf("## Start from a raw Lean package");
 		const prepared = source.slice(0, boundary);
 		assert.doesNotMatch(prepared, /lean-bridge (?:analyze|build|publish)|lean\/setup\.md|lean\/first-component\.md/u,
@@ -172,6 +190,16 @@ test("consumer guides put prepared release use before source-package preparation
 		assert.match(source.slice(boundary), /\]\([^)]*(?:lean\/setup|publish\/local-handoff|contributing\/testing|publish\/npm|consume)\.md(?:#|\))/u,
 			`${page.id}: source path links to the applicable build workflow`);
 	}
+});
+
+test("the prepared release guide uses its chosen title and preserves its existing route", async () => {
+	const guide = docPages.find(page => page.id === "receive-package");
+	assert.equal(guide.title, "Use a prepared release");
+	assert.equal(guide.route, "/docs/consume/receive-package/");
+	assert.equal(guide.source, "docs/consume/receive-package.md");
+	assert.match(await readFile(guide.source, "utf8"), /^# Use a prepared release\n/u);
+	for(const path of new Set(["README.md", ...docPages.map(page => page.source)]))
+		assert.doesNotMatch(await readFile(path, "utf8"), /\[(?:Receive|Verify) a package\]|^# (?:Receive a Lean|Verify a) package$/mu, path);
 });
 
 test("JavaScript uses automatic runtime loading and Python installs with its own package tools", async () => {

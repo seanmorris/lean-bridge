@@ -11,6 +11,26 @@ Install the prepared Alpha package for the PHP runtime that will execute your ap
 
 The native release includes its compiled extension, Lean runtime, and Composer library. The PHP-Wasm npm archive includes its compiled side modules and loader metadata. Installing either prepared package needs no Lean compiler.
 
+### Type conversions
+
+Both prepared Alpha profiles use these PHP types. Keep `declare(strict_types=1)` in application files so PHP does not coerce arguments before the bindings validate them.
+
+| Lean type | PHP type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Pass `true` or `false`. |
+| `UInt32` | `int` | Native PHP: `0..4294967295` with 64-bit integers. PHP-Wasm: `0..2147483647` with 32-bit signed integers. Inputs and results must fit the host range. |
+| `String` | `string` | Valid UTF-8 text; embedded NUL is preserved. |
+| `ByteArray` | `LeanAlpha\Bytes` | Use `Bytes::fromString` for binary data and `toString()` to retrieve it. |
+| `Array UInt32` | `array` documented as `list<int>` | Sequential keys starting at zero; each element obeys the host's `UInt32` range above. |
+| `Payload` | `LeanAlpha\Payload` | Readonly copied value with typed fields; no JSON conversion. |
+| `Box` | `LeanAlpha\Box` | Resource with canonical object identity; close it in `finally`. |
+| `UInt32 → UInt32` callback | `callable` taking and returning `int` | Synchronous PHP callback; arguments and results obey the host integer range. |
+| Returned Lean closure | `LeanAlpha\Transform` | Invokable resource; call it in its originating runtime and release it with `close()`. |
+
+In PHP-Wasm, a Lean result above `PHP_INT_MAX` cannot be represented. Alpha's `roundTrip` increments its count, so input `2147483647` cannot produce a representable count. The prepared Alpha API exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations.
+
+See the [native PHP conversion table](consume/php-native.md#type-conversions) or the [PHP-Wasm conversion table](consume/php-wasm.md#type-conversions) for the profile's ownership rules and examples.
+
 ### Verify the native release
 
 [Authenticate a distributed archive](consume/receive-package.md) before loading its extension. The [native release evidence](evidence/native-php-release-package.md) records package contents, ABI checks, and the two-build comparison.

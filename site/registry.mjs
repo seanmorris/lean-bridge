@@ -56,7 +56,7 @@ export const docPages = Object.freeze([
 		, searchAliases: ['JavaScript', 'TypeScript', 'JS', 'TS', 'Browser', 'Browser JavaScript', 'React', 'Workers', 'Browser Workers', 'Node.js']
 	}
 	, ...[
-		['receive-package', 'Receive a package']
+		['receive-package', 'Use a prepared release']
 		, ['javascript', 'JavaScript (Node.js)']
 		, ['typescript', 'TypeScript (Node.js)']
 		, ['browser', 'Browser JavaScript']

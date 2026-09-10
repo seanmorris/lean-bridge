@@ -211,7 +211,7 @@ LEAN_BRIDGE_CONSUMED_STORE=$(nix --extra-experimental-features 'nix-command flak
 test "$LEAN_BRIDGE_CONSUMED_STORE" = "$LEAN_BRIDGE_PACKAGES_STORE"
 ```
 
-`--max-jobs 0 --builders ''` prevents local and remote compilation of these release outputs for this substitution check. An absent or rejected output therefore fails instead of compiling a replacement. Nix still needs access to the pinned flake and its locked inputs for evaluation. Keep the printed store path equal to the approved record, then select its archive using [Receive a package](../consume/receive-package.md) and run the matching [consumer example](../consume.md). The output link protects the downloaded package from garbage collection. [Nix build options](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-build.html), [Nix build and substituter settings](https://nix.dev/manual/nix/2.24/command-ref/conf-file).
+`--max-jobs 0 --builders ''` prevents local and remote compilation of these release outputs for this substitution check. An absent or rejected output therefore fails instead of compiling a replacement. Nix still needs access to the pinned flake and its locked inputs for evaluation. Keep the printed store path equal to the approved record, then select its archive using [Use a prepared release](../consume/receive-package.md) and run the matching [consumer example](../consume.md). The output link protects the downloaded package from garbage collection. [Nix build options](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-build.html), [Nix build and substituter settings](https://nix.dev/manual/nix/2.24/command-ref/conf-file).
 
 ## Rotate keys and recover publication
 

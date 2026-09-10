@@ -8,7 +8,7 @@ The Alpha crate exposes Rust values, resource types with `Drop`, and fallible ca
 
 Use Cargo, a Rust compiler supporting edition 2021, and tar on Linux x86-64 with glibc 2.38 or newer. The [support contract](../consumer-support.v1.json) records the tested profile.
 
-Request `lean_bridge_alpha-0.0.0.crate` and the authentication files in [Receive a package](receive-package.md). Authenticate the archive before extracting it.
+Request `lean_bridge_alpha-0.0.0.crate` and the authentication files in [Use a prepared release](receive-package.md). Authenticate the archive before extracting it.
 
 ### Create the project
 
