@@ -51,10 +51,11 @@ for(const workload of [{ count: 256, degree: 3, budget: 8 }, { count: 1024, degr
 	const lean = measure(solve);
 	const javascript = measure(() => javascriptSort(workload.count, edges));
 	const ratio = lean.medianMs / javascript.medianMs;
+	process.stdout.write(`${workload.count} vertices / ${edges.length / 2} edges: `
+		+ `Lean ${lean.medianMs.toFixed(4)} ms (p95 ${lean.p95Ms.toFixed(4)} ms), `
+		+ `JS ${javascript.medianMs.toFixed(4)} ms (p95 ${javascript.p95Ms.toFixed(4)} ms), `
+		+ `${ratio.toFixed(2)}x relative cost (${iterations} samples, Node ${process.versions.node})\n`);
 	if(assertBudgets && lean.medianMs > workload.budget)
 		throw new Error(`${workload.count}-vertex median exceeded budget`);
 	if(assertBudgets && ratio > 8) throw new Error(`${workload.count}-vertex relative cost exceeded 8x`);
-	process.stdout.write(`${workload.count} vertices / ${edges.length / 2} edges: `
-		+ `Lean ${lean.medianMs.toFixed(2)} ms, JS ${javascript.medianMs.toFixed(2)} ms, `
-		+ `${ratio.toFixed(1)}x relative cost\n`);
 }
