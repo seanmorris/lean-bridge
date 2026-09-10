@@ -12,7 +12,7 @@ The [TypeScript section](../javascript-typescript.md#typescript) includes the co
 
 ## Validate numeric inputs
 
-Use the [complete input validator](../javascript-typescript.md#validate-numeric-inputs) to enforce the installed runtime's current numeric range.
+Use the [type-conversion table](../javascript-typescript.md#type-conversions) and [complete input validator](../javascript-typescript.md#validate-numeric-inputs) to choose host types and validate user-entered numbers.
 
 ## Check rejected types
 

@@ -12,7 +12,7 @@ The [JavaScript example](../javascript-typescript.md#javascript) includes the co
 
 ## Inputs, errors, and lifetime
 
-See [numeric input validation](../javascript-typescript.md#validate-numeric-inputs) and the [JavaScript API's return types and lifetime](../javascript-typescript.md#javascript).
+See the [type-conversion table](../javascript-typescript.md#type-conversions), [numeric input validation](../javascript-typescript.md#validate-numeric-inputs), and the [JavaScript API's return types and lifetime](../javascript-typescript.md#javascript).
 
 ## Troubleshooting
 

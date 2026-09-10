@@ -106,6 +106,24 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+### Type conversions
+
+These mappings describe the prepared Alpha NuGet package's `LeanBridge.Alpha` namespace.
+
+| Lean type | C# type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Native Boolean value. |
+| `UInt32` | `uint` | Full unsigned 32-bit range. Use `checked` when converting signed or wider application values. |
+| `String` | `string` | Encoded as UTF-8 across the native boundary; `null` is rejected. |
+| `ByteArray` | `ReadOnlyMemory<byte>` | Accepts a `byte[]`; `Payload` copies it and exposes read-only memory. |
+| `Array UInt32` | `ReadOnlyMemory<uint>` | Accepts a `uint[]`; `Payload` copies the elements. |
+| `Payload` | `Payload` | Sealed record with get-only properties and copied buffers. |
+| `Box` | `Box` | `IDisposable` resource; `Identity()` returns the same wrapper. Use `using`. |
+| `UInt32 → UInt32` callback | `Transform` | Generated `uint Transform(uint value)` delegate; runs synchronously. |
+| Returned Lean closure | `OwnedTransform` | `IDisposable` resource with `Invoke(uint)`; use `using`. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. It does not map Lean arbitrary-precision integers to `uint` or automatically turn a Lean function into a .NET `Task`.
+
 ### Values and resource ownership
 
 Lean `UInt32` maps to C# `uint`. The public API also copies `bool`, UTF-8 strings, byte sequences, and unsigned integer sequences. `Payload` copies incoming buffers; its `Bytes` and `Values` properties expose `ReadOnlyMemory<T>`.

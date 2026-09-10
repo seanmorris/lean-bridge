@@ -84,6 +84,24 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+### Type conversions
+
+These are the prepared Alpha package's public types in `lean_bridge::alpha`. The C++ wrapper handles the underlying C status and buffer cleanup.
+
+| Lean type | C++ type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Native Boolean value. |
+| `UInt32` | `std::uint32_t` | Full unsigned 32-bit range. Check wider or signed values before conversion; a cast can wrap or truncate. |
+| `String` | `std::string` | Owned UTF-8 bytes, including embedded NUL; length is explicit. |
+| `ByteArray` | `std::vector<std::uint8_t>` | Owned byte buffer copied across the boundary. |
+| `Array UInt32` | `std::vector<std::uint32_t>` | Owned vector of unsigned 32-bit elements. |
+| `Payload` | `Payload` | Copyable value struct. `round_trip` borrows its input and returns an owned copy. |
+| `Box` | `Box` | Move-only RAII resource; `identity()` returns a reference to the same wrapper. |
+| `UInt32 → UInt32` callback | Callable taking and returning `std::uint32_t` | Pass a lambda or function object to the templated `with_callback`; it runs synchronously. |
+| Returned Lean closure | `Transform` | Move-only RAII resource with `operator()` and optional early `close()`. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. Its generated `lean_alpha.hpp` defines the available API.
+
 ### Types, errors, and cleanup
 
 `Payload` owns its `std::string` and `std::vector` fields. `round_trip` toggles `enabled`, increments `count`, and preserves the other values. Alpha adds two to the host callback result, giving 44 in the example. Scalar values use `std::uint32_t`.

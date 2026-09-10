@@ -70,6 +70,24 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+### Type conversions
+
+This table describes the prepared Alpha wheel used above. Names such as `Payload` and `Box` refer to its generated API, not a conversion of every Lean structure into that Python class.
+
+| Lean type | Python type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Requires `True` or `False`. |
+| `UInt32` | `int` | Requires an integer from `0` through `4294967295`; `bool` is rejected even though Python treats it as an integer subclass. |
+| `String` | `str` | Encoded as UTF-8 on input and decoded on return. |
+| `ByteArray` | `bytes` | `Payload` copies byte input into immutable `bytes`; returned bytes are owned Python data. |
+| `Array UInt32` | `tuple[int, ...]` | `Payload` copies the sequence into a tuple and validates each unsigned element. |
+| `Payload` | `Payload` | Frozen dataclass with the five fields shown above; no explicit cleanup. |
+| `Box` | `Box` | Identity-bearing wrapper. `identity()` returns the same object; use `with` or `close()`. |
+| `UInt32 → UInt32` callback | `Callable[[int], int]` | Synchronous Python callable; arguments and results obey the `UInt32` range. |
+| Returned Lean closure | `Transform` | Callable object returned by `make_adder`; use `with` or `close()`. |
+
+Alpha does not export `Nat`, `Int`, floating-point, optional, or asynchronous operations. Python's ability to represent those values does not add them to this wheel's API. For another release, read its generated `.pyi` declarations.
+
 ### Types, errors, and cleanup
 
 `Payload` is a frozen dataclass. It copies bytes and sequence inputs into `bytes` and `tuple`. Alpha uses unsigned 32-bit integers, so pass integers from 0 through 4,294,967,295. Generated validation rejects out-of-range inputs before calling Lean.

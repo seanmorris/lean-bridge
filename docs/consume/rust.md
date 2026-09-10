@@ -80,6 +80,24 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+### Type conversions
+
+These are the public types in the prepared Alpha crate. Fallible calls return `Result<T, lean_bridge_alpha::Error>`; use `?` to propagate a call failure.
+
+| Lean type | Rust type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Native Boolean value. |
+| `UInt32` | `u32` | Full unsigned 32-bit range. Use checked conversion such as `u32::try_from` for wider application integers. |
+| `String` | `String` | Owned UTF-8 text. |
+| `ByteArray` | `Vec<u8>` | Owned byte buffer copied across the native boundary. |
+| `Array UInt32` | `Vec<u32>` | Owned vector; each element retains its unsigned 32-bit width. |
+| `Payload` | `Payload` | Owned struct; `round_trip` takes it by value and returns a new value. |
+| `Box` | `Box` | Resource released by `Drop`; `identity()` returns a borrowed `&Box` inside `Result`. |
+| `UInt32 → UInt32` callback | `FnMut(u32) -> Result<u32, Error>` | Synchronous borrowed closure; return `Ok(value)` on success. |
+| Returned Lean closure | `Transform` | Owned resource with `.call(value)` and `Drop`, not a Rust `Fn` implementation. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. The current Rust generator rejects arbitrary-precision `Nat` and `Int` rather than narrowing them to machine integers.
+
 ### Types, errors, and cleanup
 
 Alpha uses `u32` for its unsigned 32-bit values. `Payload` owns its `String`, `Vec<u8>`, and `Vec<u32>` fields. `round_trip` toggles the boolean, increments the count, and preserves the other fields.

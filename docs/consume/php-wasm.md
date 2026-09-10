@@ -152,6 +152,26 @@ Register the output listeners before awaiting initialization. `php.run()` return
 
 The host copies `main.php` into PHP's virtual filesystem and requires it as a file. This preserves PHP's `strict_types` declaration; passing the entire file directly to `php.run()` places it inside the host's evaluation wrapper.
 
+### Type conversions
+
+The API values below are PHP values inside the PHP-Wasm instance, not JavaScript values in the Node host. Keep `declare(strict_types=1)` in the PHP application file.
+
+| Lean type | PHP-Wasm type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Pass `true` or `false`. |
+| `UInt32` | `int` | This PHP 8.4 Wasm host has 32-bit signed integers: positive inputs and results must fit `0..2147483647`. |
+| `String` | `string` | Valid UTF-8 text; embedded NUL is preserved. |
+| `ByteArray` | `LeanAlpha\Bytes` | Use `Bytes::fromString` and `toString()` for binary data, not a JavaScript typed array. |
+| `Array UInt32` | `array` documented as `list<int>` | Sequential keys starting at zero; each element must fit the PHP-Wasm integer range. |
+| `Payload` | `LeanAlpha\Payload` | Readonly copied PHP value; the transport does not serialize it as JSON. |
+| `Box` | `LeanAlpha\Box` | Resource tied to its PHP-Wasm instance; close it in `finally`. |
+| `UInt32 → UInt32` callback | PHP `callable` taking and returning `int` | Synchronous PHP callback, not a Node function; the host integer limit applies to its result too. |
+| Returned Lean closure | `LeanAlpha\Transform` | Invokable PHP resource; call it in its originating instance and release it with `close()`. |
+
+The full Lean `UInt32` range is not representable by this PHP-Wasm API. `4294967295` becomes a PHP float and a strict `int` argument rejects it. A Lean result above `PHP_INT_MAX` can also fail during return conversion: Alpha's `roundTrip` increments its count, so input `2147483647` cannot produce a representable count. Use [native 64-bit PHP](php-native.md#type-conversions) when you need the full unsigned range.
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. Node's `bigint` support does not extend the integer range inside PHP.
+
 ### Types, ownership, and errors
 
 PHP-Wasm exposes the same copied `Payload`, binary `Bytes`, canonical `Box` identity, PHP callbacks, and invokable Lean closures as [native PHP](php-native.md#types-ownership-and-errors). Alpha changes the record's Boolean and count; the callback and returned callable each produce `42` in this example.

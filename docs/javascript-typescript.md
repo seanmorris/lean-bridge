@@ -161,6 +161,33 @@ void wrongResult;
 
 Run `npx tsc --project tsconfig.json` again, but do not execute `dist/typecheck.js`. If the generated declarations start accepting one of these invalid calls, TypeScript reports an unused `@ts-expect-error` directive.
 
+### Type conversions
+
+These mappings apply to the ordinary pure-function npm packages in Node.js, browsers, React, and workers. JavaScript and TypeScript use the same runtime values. `onboarding-small` uses `Nat`, `String`, and `Bool`; the [scalar reference](reference/types.md) covers the other supported exports.
+
+| Lean type | JavaScript / TypeScript | Conversion rules |
+| --- | --- | --- |
+| `Unit` | `undefined` / `void` result | Pass `undefined` for a unit argument; no result value needs cleanup. |
+| `Bool` | `boolean` | Pass `true` or `false`, not `0` or `1`. |
+| `UInt8` | `number` | Integer from `0` through `255`. |
+| `UInt16` | `number` | Integer from `0` through `65535`. |
+| `UInt32` | `number` | Integer from `0` through `4294967295`. |
+| `UInt64` | `bigint` | Integer from `0n` through `2n ** 64n - 1n`. |
+| `Int8` | `number` | Integer from `-128` through `127`. |
+| `Int16` | `number` | Integer from `-32768` through `32767`. |
+| `Int32` | `number` | Integer from `-2147483648` through `2147483647`. |
+| `Int64` | `bigint` | Integer from `-(2n ** 63n)` through `2n ** 63n - 1n`. |
+| `Nat` | `bigint` | Nonnegative arbitrary-precision integer. Use `42n`, not `42`. |
+| `Int` | `bigint` | Arbitrary-precision integer of either sign. |
+| `Float32` | `number` | Rounds to IEEE single precision; NaN, infinities, and negative zero are accepted. |
+| `Float` | `number` | IEEE double precision; NaN, infinities, and negative zero are accepted. |
+| `String` | `string` | Copied as UTF-8. Embedded NUL is allowed; unpaired UTF-16 surrogates are rejected. |
+| `ByteArray` | `Uint8Array` | Inputs and results are copied, not views into the Lean heap. |
+
+The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
+
+Arrays, records, resources, callbacks, `IO`, and `Task` are not accepted by this ordinary component build path. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+
 ### Validate numeric inputs
 
 The installed Wasm runtime preserves arbitrary-precision `Nat` values as nonnegative `bigint`. The acceptance checks include values beyond `2^64` and 4,096-bit integers.
@@ -188,7 +215,7 @@ export function addInput(leftText: string, rightText: string): bigint
 }
 ```
 
-Invalid text and out-of-range sums throw `RangeError` before invoking Lean. The React and worker example applies the same checks in its shared `lean.ts` helper. Use `sum.toString()` for display or JSON.
+Invalid text throws `RangeError` before invoking Lean. The sum has no fixed-width integer bound; the runtime's copy limit still applies. The React and worker example applies the same text checks in its shared `lean.ts` helper. Use `sum.toString()` for display or JSON.
 
 ### Use the package in a browser
 

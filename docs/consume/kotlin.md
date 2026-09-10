@@ -102,6 +102,24 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+### Type conversions
+
+Kotlin consumes the generated Java API, so its types follow that API rather than Kotlin-specific unsigned wrappers.
+
+| Lean type | Kotlin type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `Boolean` | Native Boolean value. |
+| `UInt32` | `Long` | Range `0L..0xffff_ffffL`; pass `42L`, not a Kotlin `UInt`. |
+| `String` | `String` | Encoded as UTF-8 across the native boundary; the Java API rejects `null`. |
+| `ByteArray` | `ByteArray` | Signed bytes preserve their bits; `255.toByte()` represents `0xff`. |
+| `Array UInt32` | `LongArray` | Use `longArrayOf`; each element must be in the `UInt32` range. |
+| `Payload` | `Payload` | Java record with methods such as `count()`; constructor and array accessors copy buffers. |
+| `Box` | `Box` | `AutoCloseable` resource; `identity()` returns the same wrapper. Use `use`. |
+| `UInt32 → UInt32` callback | `Transform` via a `(Long) -> Long` lambda | Kotlin converts the lambda to the Java functional interface; invocation is synchronous. |
+| Returned Lean closure | `OwnedTransform` | `AutoCloseable` resource with `apply(Long)`; use `use`. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. Kotlin coroutines do not change the synchronous contract of these calls.
+
 ### Kotlin types and resource scopes
 
 Use `Long` for Lean `UInt32` values, with range `0L..0xffff_ffffL`. The Java API expects `Long`, not Kotlin `UInt`. Use `longArrayOf` for integer arrays and `byteArrayOf` for byte buffers; `255.toByte()` represents `0xff`.

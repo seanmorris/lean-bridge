@@ -121,6 +121,24 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+### Type conversions
+
+These names come from the prepared Alpha package's `lean_alpha.h`. Fallible functions return `lean_alpha_status` and write their result through an output parameter. Read that output only after `LEAN_ALPHA_STATUS_OK`.
+
+| Lean type | C type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Boolean from `<stdbool.h>`. |
+| `UInt32` | `uint32_t` | Full unsigned 32-bit range. Validate wider or signed application values before casting. |
+| `String` | `lean_alpha_string` | UTF-8 `data` plus byte `length`; no NUL terminator is required. |
+| `ByteArray` | `lean_alpha_bytes` | `const uint8_t *data` plus byte `length`. |
+| `Array UInt32` | `lean_alpha_array_uint32_span` | `const uint32_t *data` plus element `length`, not a byte count. |
+| `Payload` | `lean_alpha_payload` | Field-preserving struct. Call `lean_alpha_payload_clear` on the returned copy. |
+| `Box` | `lean_alpha_box *` | Opaque owned resource; dispose with `lean_alpha_box_dispose`. `identity` returns a borrowed `const lean_alpha_box *`. |
+| `UInt32 → UInt32` callback | `lean_alpha_transform` | Typed function pointer plus context; writes the result and returns a status. Both must remain valid throughout the synchronous call. |
+| Returned Lean closure | `lean_alpha_owned_transform *` | Call with `lean_alpha_owned_transform_call`; release with `lean_alpha_owned_transform_dispose`. |
+
+Input buffers may borrow application storage for the call. Returned buffers carry package-provided cleanup; use their generated `clear` functions, not `free`. This Alpha header does not expose `Nat`, `Int`, floating-point, optional, or asynchronous operations.
+
 ### Types, errors, and cleanup
 
 Alpha's scalar values use `uint32_t`. Strings, bytes, and arrays pair a pointer with an explicit length; a string need not be null-terminated. `round_trip` returns copied buffers, toggles `enabled`, and increments `count`. Alpha adds two to the host callback result, giving 44 in the example.

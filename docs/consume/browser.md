@@ -8,7 +8,7 @@ Create the [plain browser application](../javascript-typescript.md#use-the-packa
 
 ## Load and call the component
 
-The [browser example](../javascript-typescript.md#use-the-package-in-a-browser) includes the page, dynamic import, and visible success and failure states.
+The [browser example](../javascript-typescript.md#use-the-package-in-a-browser) includes the page, dynamic import, and visible success and failure states. Its values use the shared [type-conversion table](../javascript-typescript.md#type-conversions).
 
 ## Keep the binary assets
 

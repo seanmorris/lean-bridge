@@ -118,6 +118,24 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+### Type conversions
+
+These mappings describe the prepared Alpha JAR's `org.leanbridge.alpha` API.
+
+| Lean type | Java type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `boolean` | Primitive Boolean, not nullable `Boolean`. |
+| `UInt32` | `long` | Range `0L..0xffff_ffffL`. A Java `int` cannot represent the upper half as positive values. |
+| `String` | `String` | Encoded as UTF-8 across the native boundary; `null` is rejected. |
+| `ByteArray` | `byte[]` | Signed Java bytes preserve their eight bits; `(byte)255` represents `0xff`. |
+| `Array UInt32` | `long[]` | Every element must be in the `UInt32` range. |
+| `Payload` | `Payload` | Java record; constructor and array accessors copy buffers. |
+| `Box` | `Box` | `AutoCloseable` resource; `identity()` returns the same wrapper. |
+| `UInt32 → UInt32` callback | `Transform` | Generated functional interface with `long apply(long)`; accepts a synchronous lambda. |
+| Returned Lean closure | `OwnedTransform` | `AutoCloseable` resource with `apply(long)`; use try-with-resources. |
+
+Invalid unsigned values raise `IllegalArgumentException`. This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations; its `long` mapping is specifically for `UInt32`, not arbitrary Lean integers.
+
 ### Types, callbacks, and cleanup
 
 The JVM API represents Lean `UInt32` as a `long` in the range `0..0xffff_ffffL`. It rejects negative or larger input values with `IllegalArgumentException`. Java bytes are signed, so use `(byte)255` to supply the byte `0xff`. `Payload` copies input arrays and returns copies from its array accessors.

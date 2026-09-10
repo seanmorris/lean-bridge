@@ -94,6 +94,24 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+### Type conversions
+
+These mappings describe the prepared Alpha gem's `LeanBridge::Alpha` API.
+
+| Lean type | Ruby type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `true` or `false` | Ordinary Ruby truthiness is not accepted as a Boolean conversion. |
+| `UInt32` | `Integer` | Range `0..2**32 - 1`; invalid types raise `TypeError`, out-of-range integers raise `RangeError`. |
+| `String` | `String` | UTF-8 text; `Payload` duplicates and freezes the label. |
+| `ByteArray` | Binary `String` | Use `.b` for binary data. `Payload` copies the bytes and freezes the result. |
+| `Array UInt32` | `Array` of `Integer` | Every element is range-checked; `Payload` copies and freezes the array. |
+| `Payload` | `Payload` | Frozen value object with named fields. |
+| `Box` | `Box` | Identity-bearing resource; `identity` returns the same wrapper. Close it in `ensure`. |
+| `UInt32 → UInt32` callback | Block or object responding to `call` | Synchronous; input and result obey the `UInt32` range. |
+| Returned Lean closure | `OwnedTransform` | Resource with `call`, `close`, and `closed?`; close it in `ensure`. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. Ruby's arbitrary-precision `Integer` does not remove the `UInt32` bounds on this API.
+
 ### Values and resource ownership
 
 Lean `UInt32` maps to Ruby `Integer` values in the range `0..2**32 - 1`. Supply bytes as a binary `String` and integer sequences as an `Array`. `Payload` copies and freezes the label, bytes, and values, then freezes itself.

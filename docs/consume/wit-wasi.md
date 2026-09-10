@@ -63,6 +63,24 @@ Expected output:
 
 The first invocation discovers its component relative to the executable and supplies the default input `42`. The second provides the component path and input `73`. The command-line sample accepts an unsigned 32-bit input; validate application input before passing it to this host because its command-line parser does not reject every malformed or out-of-range value.
 
+### Type conversions
+
+The executable adapter only exposes `read-box: u32 -> u32`. The package also includes a broader WIT description; the availability column distinguishes those declarations from operations you can call through this adapter.
+
+| Lean type | WIT type | Availability and conversion rules |
+| --- | --- | --- |
+| `UInt32` | `u32` | Executable input and result of `read-box`; full unsigned 32-bit width. The command-line parser still needs application-side validation. |
+| `Bool` | `bool` | Declared in the broader `payload` record; not exposed by the executable adapter. |
+| `String` | `string` | Text in the WIT projection; not exposed by the executable adapter. |
+| `ByteArray` | `list<u8>` | Byte sequence in the WIT projection; not exposed by the executable adapter. |
+| `Array UInt32` | `list<u32>` | Unsigned integer sequence in the WIT projection; not exposed by the executable adapter. |
+| `Payload` | `record payload` | Copied fields in the WIT projection; `round-trip` is not exported by this adapter. |
+| `Box` | `resource box` | Declared in WIT. The executable host creates and disposes a native box internally; it does not return a resource to the caller. |
+| `UInt32 → UInt32` callback or returned Lean closure | No callable value mapping | Omitted from the WIT projection and executable adapter. |
+| `Nat` or `Int` | No lossless built-in mapping | Arbitrary-precision integer signatures are rejected by the current WIT generator, not narrowed to `u64` or `s64`. |
+
+The `result<u32, bridge-error>` on the broader WIT `box.read` method describes its declared failures. It is not the return type of the executable `read-box`, which returns `u32`.
+
 ### What the component executes
 
 The packaged adapter exports `read-box: u32 -> u32` and imports `lean-read-box: u32 -> u32`. The supplied host implements that import by constructing a native Lean `Box`, reading it, and disposing it before returning through the component call.

@@ -110,6 +110,24 @@ Expected output:
 
 The program uses explicit checks, so it fails even when PHP assertions are disabled. Alpha's `roundTrip` flips the Boolean and increments the count. `withCallback(40, identity)` returns `42`; `makeAdder(2)` returns a callable that adds two.
 
+### Type conversions
+
+These mappings describe the prepared native Alpha package's `LeanAlpha` namespace on 64-bit PHP. Keep `declare(strict_types=1)` in application files to prevent PHP from coercing arguments before the generated validators see them.
+
+| Lean type | PHP type | Conversion rules |
+| --- | --- | --- |
+| `Bool` | `bool` | Pass `true` or `false`. |
+| `UInt32` | `int` | Range `0..4294967295`; the supported native PHP build has 64-bit integers. |
+| `String` | `string` | Valid UTF-8 text; embedded NUL is preserved. |
+| `ByteArray` | `LeanAlpha\Bytes` | Use `Bytes::fromString` for arbitrary bytes and `toString()` to retrieve them. |
+| `Array UInt32` | `array` documented as `list<int>` | Sequential integer keys starting at zero; every element is range-checked. |
+| `Payload` | `LeanAlpha\Payload` | Readonly value object with typed fields and copied values; no JSON conversion. |
+| `Box` | `LeanAlpha\Box` | Resource with canonical object identity; close it in `finally`. |
+| `UInt32 → UInt32` callback | `callable` taking and returning `int` | Synchronous; input and result obey the `UInt32` range. |
+| Returned Lean closure | `LeanAlpha\Transform` | Invokable resource; call `$transform($value)` and release it with `close()`. |
+
+This Alpha release exposes no `Nat`, `Int`, floating-point, optional, or asynchronous operations. The [PHP-Wasm profile](php-wasm.md#type-conversions) uses the same PHP classes but has a smaller host integer range.
+
 ### Types, ownership, and errors
 
 `Payload` is a copied PHP value. Its text remains UTF-8 text, `Bytes` preserves binary data, and `values` is a typed list. The transport does not encode the record as JSON; this example uses JSON only to print its result.

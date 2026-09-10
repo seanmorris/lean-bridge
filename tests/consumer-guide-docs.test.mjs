@@ -10,9 +10,34 @@ import test from "node:test";
 import { docPages } from "../site/registry.mjs";
 import { readConsumerSupport } from "../src/adoption/consumer-support.mjs";
 import { publicationDestinationFor } from "../src/release/publish-manifest.mjs";
+import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
+import { generatePythonBindingPackage } from "../src/backends/python/generate.mjs";
+import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
+import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { generateCppBindingPackage } from "../src/backends/cpp/generate.mjs";
+import { generateDotnetBindingPackage } from "../src/backends/dotnet/generate.mjs";
+import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
+import { generateRubyBindingPackage } from "../src/backends/ruby/generate.mjs";
+import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 
 const fixtureRoot = resolve("tests/fixtures/documentation/consumers");
 const guides = docPages.filter(page => page.consumerIds?.length);
+
+/**
+ * Read the three-column conversion table without including another guide section.
+ *
+ * @param source - Canonical Markdown for one consumer guide.
+ */
+function conversionTable(source)
+{
+	const section = source.split("### Type conversions\n")[1]?.split(/^### /mu)[0];
+	assert.ok(section, "The guide must include a Type conversions section");
+	const rows = section.split("\n").filter(line => line.startsWith("| "));
+	assert.ok(rows.length >= 7, "Document a header, separator, and the five shared value types");
+	const cells = rows.slice(2).map(line => line.slice(2, -2).split(" | "));
+	for(const row of cells) assert.equal(row.length, 3, "Conversion tables must retain three columns");
+	return { section, rows: new Map(cells.map(([lean, host, rules]) => [lean, { host, rules }])) };
+}
 
 /**
  * Recursively list the tutorial files whose contents must appear in a guide.
@@ -45,6 +70,90 @@ test("every supported consumer has a discoverable language guide", async () => {
 	assert.deepEqual(guides.find(guide => guide.id === "javascript-typescript").consumerIds, ["node-javascript", "node-typescript", "browser-javascript"]);
 	const landing = await readFile("docs/consume.md", "utf8");
 	for(const guide of guides) assert.ok(landing.includes(`(${guide.source.slice(5)})`), guide.id);
+});
+
+test("each consumer guide documents type conversions within prepared-package use", async () => {
+	for(const guide of guides)
+	{
+		const source = await readFile(guide.source, "utf8");
+		assert.ok(source.indexOf("### Type conversions\n") < source.indexOf("## Start from a raw Lean package"), guide.id);
+		const { rows } = conversionTable(source);
+		for(const lean of ["Bool", "UInt32", "String", "ByteArray"])
+			assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
+		if(guide.id !== "javascript-typescript")
+		{
+			for(const lean of ["Array UInt32", "Payload", "Box"])
+				assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
+			assert.match(source, /callback|callable/u, guide.id);
+		}
+	}
+});
+
+test("Alpha conversion tables match the generated public Payload field types", async () => {
+	const fields = "enabled|count|label|bytes|values";
+	const python = generatePythonBindingPackage(alpha.bindingIr)["lean_alpha/__init__.pyi"];
+	const rust = generateRustBindingPackage(alpha.bindingIr)["src/lib.rs"];
+	const c = generateCBindingPackage(alpha.bindingIr)["include/lean_alpha.h"];
+	const cpp = generateCppBindingPackage(alpha.bindingIr)["include/lean_alpha.hpp"];
+	const dotnet = generateDotnetBindingPackage(alpha.bindingIr)["src/LeanBridge.Alpha/Alpha.cs"];
+	const java = generateJvmBindingPackage(alpha.bindingIr)["src/main/java/org/leanbridge/alpha/Payload.java"];
+	const ruby = generateRubyBindingPackage(alpha.bindingIr)["sig/lean_bridge/alpha.rbs"];
+	const php = generatePhpBindingPackage(alpha.bindingIr)["src/Payload.php"];
+	const namedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, name, type]) => [name, type]));
+	const typedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, type, name]) => [name.toLowerCase(), type.replace(/^\\/u, "")]));
+	const jvmFields = typedFirst(java, new RegExp(`([a-zA-Z\\[\\]]+) (${fields})(?=[,)])`, "gu"));
+	const kotlinTypes = { boolean: "Boolean", long: "Long", String: "String", "byte[]": "ByteArray", "long[]": "LongArray" };
+	const targets = {
+		python: namedFirst(python, new RegExp(`^    (${fields}): (.+)$`, "gmu"))
+		, rust: namedFirst(rust, new RegExp(`^    pub (${fields}): (.+),$`, "gmu"))
+		, c: typedFirst(c, new RegExp(`^  (.+) (${fields});$`, "gmu"))
+		, cpp: typedFirst(cpp, new RegExp(`^  (.+) (${fields});$`, "gmu"))
+		, dotnet: typedFirst(dotnet, /^ {4}public (.+) (Enabled|Count|Label|Bytes|Values) \{ get; \}$/gmu)
+		, java: jvmFields
+		, kotlin: new Map([...jvmFields].map(([name, type]) => [name, kotlinTypes[type]]))
+		, ruby: namedFirst(ruby, new RegExp(`^      attr_reader (${fields}): (.+)$`, "gmu"))
+		, "php-native": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
+		, "php-wasm": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
+	};
+	const leanNames = { bool: "Bool", uint32: "UInt32", string: "String", bytes: "ByteArray" };
+	for(const [target, generated] of Object.entries(targets))
+	{
+		const { rows } = conversionTable(await readFile(`docs/consume/${target}.md`, "utf8"));
+		const payload = alpha.bindingIr.types.find(type => type.name === "Payload");
+		assert.equal(generated.size, payload.fields.length, `${target}: extract all generated fields`);
+		for(const field of payload.fields)
+		{
+			const lean = field.type.kind === "primitive" ? leanNames[field.type.name] : `Array ${leanNames[field.type.arguments[0].name]}`;
+			const host = generated.get(field.name);
+			assert.ok(host, `${target}: generated type for ${field.name}`);
+			const displayed = target === "ruby" && host === "bool" ? "`true` or `false`"
+				: target === "ruby" && host === "Array[Integer]" ? "`Array` of `Integer`" : `\`${host}\``;
+			assert.ok(rows.get(`\`${lean}\``)?.host.includes(displayed), `${target}: ${lean} must document ${host}`);
+		}
+	}
+});
+
+test("conversion tables distinguish full-width integers and executable WASI support", async () => {
+	const javascript = conversionTable(await readFile("docs/javascript-typescript.md", "utf8"));
+	const scalarReference = await readFile("docs/reference/types.md", "utf8");
+	const leanNames = { unit: "Unit", bool: "Bool", nat: "Nat", int: "Int", float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray" };
+	const scalars = [...scalarReference.matchAll(/^\| `([a-z0-9]+)` \| `([^`]+)` \|/gmu)];
+	assert.equal(javascript.rows.size, scalars.length);
+	for(const [, primitive, host] of scalars)
+	{
+		const lean = leanNames[primitive] ?? primitive.replace(/^uint/u, "UInt").replace(/^int/u, "Int");
+		assert.ok(javascript.rows.get(`\`${lean}\``)?.host.includes(`\`${host}\``), `${lean}: ${host}`);
+	}
+	assert.match(javascript.section, /16 MiB/u);
+	const phpNative = conversionTable(await readFile("docs/consume/php-native.md", "utf8"));
+	const phpWasm = conversionTable(await readFile("docs/consume/php-wasm.md", "utf8"));
+	assert.match(phpNative.rows.get("`UInt32`").rules, /4294967295/u);
+	assert.match(phpWasm.rows.get("`UInt32`").rules, /32-bit signed.*2147483647/u);
+	assert.match(phpWasm.section, /result above `PHP_INT_MAX`/u);
+	const wasi = conversionTable(await readFile("docs/consume/wit-wasi.md", "utf8"));
+	assert.match(wasi.rows.get("`UInt32`").rules, /Executable input and result/u);
+	for(const lean of ["Bool", "String", "ByteArray", "Array UInt32"])
+		assert.match(wasi.rows.get(`\`${lean}\``).rules, /not exposed by the executable adapter/u);
 });
 
 test("consumer guides put prepared release use before source-package preparation", async () => {
