@@ -19,6 +19,7 @@ import { generateDotnetBindingPackage } from "../src/backends/dotnet/generate.mj
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
 import { generateRubyBindingPackage } from "../src/backends/ruby/generate.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
+import consumerSections from "./fixtures/documentation/consumer-sections.json" with { type: "json" };
 
 const fixtureRoot = resolve("tests/fixtures/documentation/consumers");
 const guides = docPages.filter(page => page.consumerIds?.length);
@@ -174,14 +175,28 @@ test("conversion tables distinguish full-width integers and executable WASI supp
 		assert.match(wasi.rows.get(`\`${lean}\``).rules, /not exposed by the executable adapter/u);
 });
 
+test("consumer section overrides name unique canonical consumer guides", () => {
+	const ids = consumerSections.overrides.map(entry => entry.id);
+	assert.equal(new Set(ids).size, ids.length);
+	for(const entry of consumerSections.overrides)
+	{
+		const guide = docPages.find(page => page.id === entry.id);
+		assert.ok(guide && !guide.legacy && guide.group === "Consume", entry.id);
+		assert.ok(entry.prepared.length > 0, entry.id);
+		assert.notEqual(entry.prepared, consumerSections.source, entry.id);
+	}
+});
+
 test("consumer guides put prepared release use before source-package preparation", async () => {
 	const pages = [...guides, ...docPages.filter(page => ["consume", "receive-package", "php"].includes(page.id))];
 	for(const page of pages)
 	{
 		const source = await readFile(page.source, "utf8");
+		const preparedHeading = consumerSections.overrides.find(entry => entry.id === page.id)?.prepared
+			?? consumerSections.prepared;
 		assert.deepEqual([...source.matchAll(/^## (.+)$/gmu)].map(match => match[1]),
-			[page.id === "receive-package" ? "Check the release files" : "Use a prepared release", "Start from a raw Lean package"], page.id);
-		const boundary = source.indexOf("## Start from a raw Lean package");
+			[preparedHeading, consumerSections.source], page.id);
+		const boundary = source.indexOf(`## ${consumerSections.source}`);
 		const prepared = source.slice(0, boundary);
 		assert.doesNotMatch(prepared, /lean-bridge (?:analyze|build|publish)|lean\/setup\.md|lean\/first-component\.md/u,
 			`${page.id}: source preparation is not an installation prerequisite`);

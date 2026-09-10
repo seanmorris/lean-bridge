@@ -13,6 +13,7 @@ import { chromium } from "playwright";
 import { demos, docPages } from "./registry.mjs";
 import { waitForWorkbench } from "./workbench-readiness.mjs";
 import contributingCompatibility from "../tests/fixtures/documentation/contributing-compatibility.json" with { type: "json" };
+import consumerSections from "../tests/fixtures/documentation/consumer-sections.json" with { type: "json" };
 
 const base = new URL(process.argv[2] ?? process.env.SITE_BASE_URL ?? "http://127.0.0.1:39061/");
 assert.ok(base.pathname.endsWith("/"), "The site base URL must end with a slash");
@@ -106,10 +107,14 @@ const checkGuide = async (page, noScript, guide) => {
 	assert.equal(await page.locator("main article h1").isVisible(), true);
 	if(guide.consumerIds?.length || ["consume", "receive-package", "php"].includes(guide.id))
 	{
+		const expected = [
+			consumerSections.overrides.find(entry => entry.id === guide.id)?.prepared ?? consumerSections.prepared
+			, consumerSections.source
+		];
 		assert.deepEqual(await page.locator("article h2").allTextContents(),
-			["Use a prepared release", "Start from a raw Lean package"], `${guide.id}: consumer flow precedes source preparation`);
+			expected, `${guide.id}: consumer flow precedes source preparation`);
 		assert.deepEqual(await page.locator(".doc-outline a").allTextContents(),
-			["Use a prepared release", "Start from a raw Lean package"], `${guide.id}: both entry points are visible in the outline`);
+			expected, `${guide.id}: both entry points are visible in the outline`);
 	}
 	assert.equal(await page.locator(".portfolio-nav").count(), 0, `${guide.id}: no legacy shell`);
 	const active = page.locator('.doc-navigation a[aria-current="page"]');
