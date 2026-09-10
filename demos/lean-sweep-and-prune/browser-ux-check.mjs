@@ -23,8 +23,18 @@ try
 		contentType: "text/javascript"
 		, body: "export const mountBenchmark = () => ({});"
 	}));
+	await page.route("**/lean-sweep-and-prune/runtime.mjs", async route => {
+		const response = await route.fetch();
+		const source = await response.text();
+		const entry = "export const prepareSweep = async request => {";
+		assert.ok(source.includes(entry), "The delayed test must wrap the real compiled solver adapter");
+		await route.fulfill({ response
+		, body: source.replace(entry,
+			`${entry}\nif (globalThis.__sweepAuditGate) await globalThis.__sweepAuditGate;`) });
+	});
 	await page.goto(url);
-	await page.waitForFunction(() => globalThis.document.querySelector("#runtime-status").textContent.includes("ready"));
+	const settled = () => page.waitForFunction(() => globalThis.document.querySelector("#runtime-status").textContent.includes("ready"));
+	await settled();
 	const frame = () => page.locator("#frame-number").textContent();
 	const nextFrame = previous => page.waitForFunction(value => globalThis.document.querySelector("#frame-number").textContent !== value, previous);
 	const positions = () => page.locator(".body").evaluateAll(nodes => nodes.map(node => node.getAttribute("transform")));
@@ -75,16 +85,27 @@ try
 	await page.locator("#scene-seed").fill("2026");
 	await page.locator("#body-count").selectOption("12");
 	await page.locator("#new-scene").click();
+	await settled();
 	await page.waitForFunction(() => globalThis.document.querySelector("#all-count").textContent === "66");
 	const seeded = await positions();
 	await page.locator("#scene-seed").fill("2026");
 	await page.locator("#new-scene").click();
+	await settled();
 	await page.waitForFunction(() => globalThis.document.querySelector("#frame-number").textContent === "Frame 1");
 	assert.deepEqual(await positions(), seeded, "Re-entering the visible seed reproduces the scene");
+	// Keep preparation pending across selection, then let the real Lean solver finish.
+	await page.evaluate(() => {
+		globalThis.__sweepAuditGate = new Promise(resolve => { globalThis.__releaseSweepAudit = resolve; });
+	});
 	await page.locator("#new-scene").click();
 	await page.waitForFunction(previous => JSON.stringify(Array.from(globalThis.document.querySelectorAll(".body"), node => node.getAttribute("transform"))) !== JSON.stringify(previous), seeded);
 	assert.equal(await page.locator("#scene-seed").inputValue(), "2027");
 	await page.locator("#selected-body").selectOption("3");
+	assert.equal(await page.locator("#selected-body").inputValue(), "3");
+	assert.match(await page.locator("#selection-summary").textContent(), /Checking/);
+	await page.evaluate(() => { globalThis.__releaseSweepAudit(); delete globalThis.__sweepAuditGate; });
+	await settled();
+	await page.waitForFunction(() => /^Box D:/.test(globalThis.document.querySelector("#selection-summary").textContent));
 	assert.match(await page.locator("#selection-summary").textContent(), /Box D/);
 	const beforeNudge = await page.locator('[data-body="3"]').getAttribute("transform");
 	await page.locator('[data-nudge="right"]').click();
@@ -102,6 +123,7 @@ try
 
 	await page.locator("#body-count").selectOption("24");
 	await page.locator("#new-scene").click();
+	await settled();
 	await page.waitForFunction(() => globalThis.document.querySelector("#all-count").textContent === "276");
 	for(const width of [320, 390, 441, 500, 650, 768, 850, 1024, 1440, 1920])
 	{
@@ -114,6 +136,7 @@ try
 	}
 	await page.setViewportSize({ width: 1440, height: 1080 });
 	await page.locator("#reset-scene").click();
+	await settled();
 	await page.waitForFunction(() => globalThis.document.querySelector("#all-count").textContent === "15");
 	assert.equal(await page.locator("#candidate-count").textContent(), "2");
 	assert.equal(await page.locator("#overlap-count").textContent(), "1");
