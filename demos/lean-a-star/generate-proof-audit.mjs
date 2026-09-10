@@ -21,12 +21,15 @@ const files = [
 ];
 const theorems = [
 	"certificate_shortest"
+	, "allUpTo_eq_allDownFrom"
 	, "consistent_admissible"
 	, "reduced_shortest_iff"
 	, "heuristicCheck_sound"
+	, "labelsFrom_eq"
 	, "labelsCheck_sound"
 	, "cutCheck_sound"
 	, "searchLoop_stale"
+	, "searchPrepared_eq_searchRaw"
 	, "total_shortest_correct"
 	, "total_shortest_unreachable"
 	, "solve_prepared_correct"

@@ -46,17 +46,22 @@ def heuristicCheck (input : Input) : Bool :=
     let stop := arrayGet input.offsets (source + 1) 0
     heuristicFrom input source stop (stop - first + 1) first
 
+def searchInfinity (input : Input) : Nat :=
+  (input.weights.foldl max 0 + 1) * (input.count + 1)
+
 structure Prepared where
   input : Input
   bounds : input.start < input.count ∧ input.target < input.count
   shape : shapeCheck input = true
   heuristicValid : heuristicCheck input = true
+  infinity : Nat
+  infinityValid : infinity = searchInfinity input
 
 def prepare (input : Input) : Option Prepared :=
   if bounds : input.start < input.count ∧ input.target < input.count then
     if shape : shapeCheck input = true then
       if heuristicValid : heuristicCheck input = true then
-        some ⟨input, bounds, shape, heuristicValid⟩
+        some ⟨input, bounds, shape, heuristicValid, searchInfinity input, rfl⟩
       else none
     else none
   else none
@@ -120,23 +125,24 @@ def isStale (infinity : Nat) (state : State) (entry : Entry) : Bool :=
   arrayGet state.closed entry.vertex true ||
     entry.distance != arrayGet state.distance entry.vertex infinity
 
+-- Pass the owned arrays through the loop directly. Rebuilding State and
+-- Frontier after every improving edge would allocate two short-lived objects.
 private def relax (input : Input) (source sourceDistance infinity stop : Nat) :
-    Nat → Nat → Frontier → Frontier
-  | 0, _, frontier => frontier
-  | fuel + 1, index, frontier =>
-      if stop ≤ index then frontier else
+    Nat → Nat → Array Entry → Array Nat → Array Nat → Array Bool → Array Nat → Frontier
+  | 0, _, queue, distance, previous, closed, expanded =>
+      ⟨queue, ⟨distance, previous, closed, expanded⟩⟩
+  | fuel + 1, index, queue, distance, previous, closed, expanded =>
+      if stop ≤ index then ⟨queue, ⟨distance, previous, closed, expanded⟩⟩ else
         let vertex := arrayGet input.targets index input.count
         let alternative := sourceDistance + arrayGet input.weights index 0
-        if vertex < input.count && !arrayGet frontier.state.closed vertex true &&
-            alternative < arrayGet frontier.state.distance vertex infinity then
-          relax input source sourceDistance infinity stop fuel (index + 1) {
-            queue := push frontier.queue
-              ⟨vertex, alternative, alternative + input.h vertex⟩
-            state := { frontier.state with
-              distance := frontier.state.distance.setIfInBounds vertex alternative
-              previous := frontier.state.previous.setIfInBounds vertex source }
-          }
-        else relax input source sourceDistance infinity stop fuel (index + 1) frontier
+        if vertex < input.count && !arrayGet closed vertex true &&
+            alternative < arrayGet distance vertex infinity then
+          relax input source sourceDistance infinity stop fuel (index + 1)
+            (push queue ⟨vertex, alternative, alternative + input.h vertex⟩)
+            (distance.setIfInBounds vertex alternative)
+            (previous.setIfInBounds vertex source) closed expanded
+        else relax input source sourceDistance infinity stop fuel (index + 1)
+          queue distance previous closed expanded
 
 def searchLoop (input : Input) (infinity : Nat) : Nat → Frontier → State
   | 0, frontier => frontier.state
@@ -155,7 +161,7 @@ def searchLoop (input : Input) (infinity : Nat) : Nat → Frontier → State
             let stop := arrayGet input.offsets (entry.vertex + 1) 0
             searchLoop input infinity fuel
               (relax input entry.vertex entry.distance infinity stop (stop - first + 1)
-                first ⟨remaining, state⟩)
+                first remaining state.distance state.previous state.closed state.expanded)
 
 /-- Stale heap entries are discarded without changing any search-state field. -/
 theorem searchLoop_stale (input : Input) (infinity fuel : Nat) (frontier : Frontier)
@@ -165,11 +171,7 @@ theorem searchLoop_stale (input : Input) (infinity fuel : Nat) (frontier : Front
       searchLoop input infinity fuel { frontier with queue := pop frontier.queue } := by
   simp [searchLoop, nonempty, stale]
 
-def searchInfinity (input : Input) : Nat :=
-  (input.weights.foldl max 0 + 1) * (input.count + 1)
-
-def searchRaw (input : Input) : State :=
-  let infinity := searchInfinity input
+private def searchWithInfinity (input : Input) (infinity : Nat) : State :=
   searchLoop input infinity (input.targets.size + input.count + 1) {
     queue := #[⟨input.start, 0, input.h input.start⟩]
     state := {
@@ -178,6 +180,17 @@ def searchRaw (input : Input) : State :=
       closed := Array.replicate input.count false
       expanded := #[] }
   }
+
+def searchRaw (input : Input) : State :=
+  searchWithInfinity input (searchInfinity input)
+
+/-- Preparation computes the graph's distance sentinel once, not on every run. -/
+def searchPrepared (prepared : Prepared) : State :=
+  searchWithInfinity prepared.input prepared.infinity
+
+theorem searchPrepared_eq_searchRaw (prepared : Prepared) :
+    searchPrepared prepared = searchRaw prepared.input := by
+  simp only [searchPrepared, searchRaw, prepared.infinityValid]
 
 def reconstruct (previous : Array Nat) (start sentinel : Nat) :
     Nat → Nat → List Nat → Option (List Nat)
@@ -188,16 +201,28 @@ def reconstruct (previous : Array Nat) (start sentinel : Nat) :
         if parent = sentinel then none else
           reconstruct previous start sentinel fuel parent (current :: path)
 
-def labels (input : Input) (state : State) (cutoff vertex : Nat) : Nat :=
+@[inline] def labels (input : Input) (state : State) (cutoff vertex : Nat) : Nat :=
   min (arrayGet state.distance vertex 0) (cutoff - input.h vertex)
+
+/-- Check a row using its cached source label, with no label-function closure. -/
+def labelsFrom (input : Input) (state : State) (cutoff sourceLabel stop : Nat) :
+    Nat → Nat → Bool
+  | 0, _ => true
+  | fuel + 1, index =>
+      if stop ≤ index then true else
+        let target := arrayGet input.targets index 0
+        let weight := arrayGet input.weights index 0
+        (if target < input.count then
+          decide (labels input state cutoff target ≤ sourceLabel + weight)
+        else true) && labelsFrom input state cutoff sourceLabel stop fuel (index + 1)
 
 def labelsCheck (input : Input) (state : State) (cutoff : Nat) : Bool :=
   labels input state cutoff input.start == 0 && allUpTo input.count fun source =>
     if arrayGet state.distance source 0 < cutoff - input.h source then
       let first := arrayGet input.offsets source 0
       let stop := arrayGet input.offsets (source + 1) 0
-      csrFeasibleFrom input.count source input.targets input.weights stop
-        (labels input state cutoff) (stop - first + 1) first
+      labelsFrom input state cutoff (labels input state cutoff source) stop
+        (stop - first + 1) first
     else true
 
 def cutFrom (input : Input) (closed : Array Bool) (stop : Nat) : Nat → Nat → Bool

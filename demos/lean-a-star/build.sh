@@ -30,15 +30,15 @@ node "$DEMO_ROOT/generate-proof-audit.mjs"
 INCLUDES=(-I"$GENERATED_DIR" -I"$RUNTIME_BUILD/include" -I"$RUNTIME_SOURCE/src/include")
 OBJECTS=()
 for module in "${MODULES[@]}"; do
-  emcc -O3 "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
+  emcc -O3 -flto "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
     -c "$GENERATED_DIR/$module.c" -o "$BUILD_DIR/$module.o"
   OBJECTS+=("$BUILD_DIR/$module.o")
 done
-emcc -O3 "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
+emcc -O3 -flto "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
   -c "$DEMO_ROOT/bridge.c" -o "$BUILD_DIR/bridge.o"
 em++ "${OBJECTS[@]}" "$BUILD_DIR/bridge.o" \
   -Wl,--start-group "$RUNTIME_BUILD/lib/lean/libInit.a" "$RUNTIME_BUILD/lib/lean/libleanrt.a" -Wl,--end-group \
-  -O3 "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
+  -O3 -flto "${LEAN_WASM_PROFILE_CC_FLAGS[@]}" "${INCLUDES[@]}" \
   -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web,node -sALLOW_MEMORY_GROWTH=1 \
   -sEXPORTED_RUNTIME_METHODS=HEAPU8,HEAPU32 \
   -sEXPORTED_FUNCTIONS=_lean_astar_runtime_init,_lean_astar_prepare_c,_lean_astar_run,_lean_astar_release,_malloc,_free \

@@ -4,8 +4,8 @@
   "assurance": "Lean elaboration completed before this receipt was generated",
   "sourceFiles": {
     "DijkstraCore.lean": {
-      "bytes": 20404,
-      "sha256": "c340ea1788f0ab2783e47aa77a1f808f8d788a6feafede724af65119eda66c10"
+      "bytes": 20885,
+      "sha256": "605598c1fafae16185e2d6483d41b5a62e3e5f6060fdca08844324476f6f8423"
     },
     "Dijkstra.lean": {
       "bytes": 13453,
@@ -24,6 +24,7 @@
     "csrEdgeWeight_eq",
     "csrPathCost_sound",
     "allUpTo_get",
+    "allUpTo_eq_allDownFrom",
     "csrFeasibleLabelsCheck_sound",
     "dijkstraRec_correct",
     "dijkstra_correct",

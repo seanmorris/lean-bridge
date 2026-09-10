@@ -78,7 +78,7 @@ structure QueueEntry where
   distance : Nat
 deriving Inhabited
 
-def arrayGet (values : Array α) (index : Nat) (fallback : α) : α :=
+@[inline] def arrayGet (values : Array α) (index : Nat) (fallback : α) : α :=
   values.getD index fallback
 
 private def swapEntries (heap : Array QueueEntry) (left right : Nat) : Array QueueEntry :=
@@ -409,7 +409,7 @@ theorem bucket_storage_bounded (maximumWeight : Nat) (small : maximumWeight ≤ 
   unfold maximumBucketWeight at small
   omega
 
-def csrFeasibleFrom (vertexCount source : Nat) (targets weights : Array Nat)
+@[specialize] def csrFeasibleFrom (vertexCount source : Nat) (targets weights : Array Nat)
     (stop : Nat) (distance : Nat → Nat) : Nat → Nat → Bool
   | 0, _ => true
   | fuel + 1, index =>
@@ -422,9 +422,20 @@ def csrFeasibleFrom (vertexCount source : Nat) (targets weights : Array Nat)
         else true) &&
           csrFeasibleFrom vertexCount source targets weights stop distance fuel index.succ
 
-def allUpTo : Nat → (Nat → Bool) → Bool
+@[specialize] def allUpTo : Nat → (Nat → Bool) → Bool
   | 0, _ => true
   | count + 1, predicate => allUpTo count predicate && predicate count
+
+/-- The executable traversal keeps no stack frame for each checked vertex. -/
+@[specialize] def allDownFrom : Nat → (Nat → Bool) → Bool
+  | 0, _ => true
+  | count + 1, predicate => predicate count && allDownFrom count predicate
+
+@[csimp] theorem allUpTo_eq_allDownFrom : allUpTo = allDownFrom := by
+  funext count predicate
+  induction count with
+  | zero => rfl
+  | succ count ih => simp only [allUpTo, allDownFrom, ih, Bool.and_comm]
 
 def csrFeasibleLabelsCheck (vertexCount : Nat) (offsets targets weights : Array Nat)
     (distance : Nat → Nat) (start cutoff : Nat) : Bool :=

@@ -88,6 +88,24 @@ test("prepared A* snapshots every graph array before awaiting initialization", a
 	{ search.dispose(); }
 });
 
+test("large sparse graphs prepare and certify without a stack frame per vertex", async () => {
+	const vertexCount = 20000;
+	for(const target of [0, vertexCount - 1])
+	{
+		const request = graphRequest(vertexCount, [], 0, target);
+		const search = await prepareSearch(request);
+		try
+		{
+			const expected = prepareJavascriptSearch(request)();
+			assert.deepEqual(search(), expected);
+			assert.deepEqual(search(), expected, "the prepared sentinel remains valid on repeated runs");
+			assert.equal(expected.usedFallback, false);
+		}
+		finally
+		{ search.dispose(); }
+	}
+});
+
 test("weighted detours, zero-cost cycles, unreachable goals, and singleton paths", async () => {
 	await initRuntime();
 	const fixtures = [

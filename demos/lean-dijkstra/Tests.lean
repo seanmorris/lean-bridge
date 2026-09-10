@@ -4,6 +4,14 @@ namespace LeanDijkstra.Tests
 
 open LeanDijkstra
 
+-- Empty, successful and rejecting traversals share the same truth value.
+#guard allUpTo 0 (fun _ => false) = true
+#guard allDownFrom 0 (fun _ => false) = true
+#guard allUpTo 100 (fun index => index < 100) = true
+#guard allDownFrom 100 (fun index => index < 100) = true
+#guard allUpTo 100 (fun index => index != 0) = false
+#guard allDownFrom 100 (fun index => index != 99) = false
+
 def weightedDiamond : Graph where
   size := 4
   outgoing := fun
@@ -49,5 +57,6 @@ example : costOfPath (fun _ _ => 1) 0 7 [8, 9, 10] = 3 := by decide
 #print axioms dijkstraRawCsr_large_uses_heap
 #print axioms bucket_storage_bounded
 #print axioms dijkstraCsr_correct
+#print axioms allUpTo_eq_allDownFrom
 
 end LeanDijkstra.Tests

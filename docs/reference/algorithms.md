@@ -43,7 +43,7 @@ A generic weighted-graph solver with a certified shortest-path result.
 
 Selected theorems: `dijkstra_correct`, `dijkstraCsr_correct`.
 
-The [proof receipt](../../demos/lean-dijkstra/runtime/proof-audit.json) records 17 required declarations checked with Lean v4.32.2. This reference build verifies every listed source hash against the Lean files.
+The [proof receipt](../../demos/lean-dijkstra/runtime/proof-audit.json) records 18 required declarations checked with Lean v4.32.2. This reference build verifies every listed source hash against the Lean files.
 
 [Benchmark source](../../demos/lean-dijkstra/benchmark.mjs) · [Correctness tests](../../demos/lean-dijkstra/test.mjs)
 
@@ -158,7 +158,7 @@ A checked heuristic guides a generic shortest-path search. Compare its route and
 
 Selected theorems: `solve_total`, `solve_path_shortest`, `solve_unreachable`, `exported_search_correct`.
 
-The [proof receipt](../../demos/lean-a-star/runtime/proof-audit.json) records 19 required declarations checked with Lean v4.32.2. This reference build verifies every listed source hash against the Lean files.
+The [proof receipt](../../demos/lean-a-star/runtime/proof-audit.json) records 22 required declarations checked with Lean v4.32.2. This reference build verifies every listed source hash against the Lean files.
 
 [Benchmark source](../../demos/lean-a-star/benchmark-workload.mjs) · [Correctness tests](../../demos/lean-a-star/test.mjs)
 

@@ -45,11 +45,26 @@ theorem heuristicCheck_sound (input : Input)
       simp only [bounded, ↓reduceIte, decide_eq_true_eq] at accepted
       simpa [Graph.weight, found, targetEq, weightEq] using accepted
 
+/-- Caching the source label preserves the shared CSR certificate predicate. -/
+theorem labelsFrom_eq (input : Input) (state : State)
+    (cutoff source stop fuel index : Nat) :
+    labelsFrom input state cutoff (labels input state cutoff source) stop fuel index =
+      csrFeasibleFrom input.count source input.targets input.weights stop
+        (labels input state cutoff) fuel index := by
+  induction fuel generalizing index with
+  | zero => rfl
+  | succ fuel ih =>
+      simp only [labelsFrom, csrFeasibleFrom]
+      split
+      · rfl
+      · rw [ih]
+
 theorem labelsCheck_eq (input : Input) (state : State) (cutoff : Nat) :
     labelsCheck input state cutoff =
       astarLabelsCheck input.graph input.h
         (fun vertex => arrayGet state.distance vertex 0) cutoff input.start := by
-  simp only [labelsCheck, astarLabelsCheck, Input.graph, csrGraph,
+  simp only [labelsCheck, labelsFrom_eq]
+  simp only [astarLabelsCheck, Input.graph, csrGraph,
     csrFeasibleFrom_eq, labels, astarLabel]
   rfl
 

@@ -24,6 +24,7 @@ const requiredTheorems = [
 	, "csrEdgeWeight_eq"
 	, "csrPathCost_sound"
 	, "allUpTo_get"
+	, "allUpTo_eq_allDownFrom"
 	, "csrFeasibleLabelsCheck_sound"
 	, "dijkstraRec_correct"
 	, "dijkstra_correct"

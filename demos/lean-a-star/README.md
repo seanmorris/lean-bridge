@@ -28,7 +28,7 @@ const result = search();
 search.dispose();
 ```
 
-Preparation copies the inputs and asks Lean to check the graph and heuristic. Handles have independent storage. Calls are synchronous after preparation; returned arrays own their data. Disposal is idempotent and subsequent use throws. `solveGraph(request)` prepares, searches, and disposes in one call. `solveGraphTotal(request)` exercises the reference fallback directly and is intended for small diagnostic graphs.
+Preparation copies the inputs, asks Lean to check the graph and heuristic, and caches the graph's distance sentinel. Lean proves that using the cached sentinel produces the same candidate as recomputing it. Handles have independent storage. Calls are synchronous after preparation; returned arrays own their data. Disposal is idempotent and subsequent use throws. `solveGraph(request)` prepares, searches, and disposes in one call. `solveGraphTotal(request)` exercises the reference fallback directly and is intended for small diagnostic graphs.
 
 An unreachable result has `kind: "unreachable"`, an empty path, and cost zero. Invalid input throws during preparation. The two outcomes are distinct.
 
@@ -41,6 +41,8 @@ The JavaScript wrapper rejects input or output buffers exceeding the Wasm32 allo
 The binary heap orders by `g + h`, then larger `g`, then vertex id. Search discards stale entries, closes each vertex once, and stops when it removes the goal. Preparation checks `h(goal) = 0` and `h(u) ≤ weight(u,v) + h(v)` for every edge. `consistent_admissible` proves that these conditions make the estimate a lower bound on every route to the goal.
 
 For a candidate with cost `C`, the certificate uses labels `L(v) = min(g(v), C − h(v))`, with natural-number subtraction. The consistency proof makes the cap itself feasible. Certification therefore scans outgoing edges only where `g(v) < C − h(v)`; other rows follow from the cap lemma. A checked path whose cost equals its goal label is globally shortest. An unreachable candidate supplies a set containing the source, excluding the goal, and closed under every outgoing edge.
+
+The compiled certificate traversal uses constant stack space for its vertex scan, with `allUpTo_eq_allDownFrom` proving equivalence to the shared specification. `labelsFrom_eq` proves that caching each source label preserves the edge checks. Array reads and generic predicates specialize at compilation, and relaxation carries its arrays directly through the loop to avoid allocating state wrappers per improving edge.
 
 The executable solver retains those checks. If a candidate fails them, it runs a constructive reference solver that removes vertices as it explores simple paths. Its proof removes repeated vertices from arbitrary walks without increasing cost, then proves that the selected path is globally shortest or that no walk exists. Recursion strictly decreases the remaining vertex-list length. This fallback is exponential in the worst case; it is not the benchmarked heap path. Ordinary runtime tests assert that it is not used.
 
@@ -64,11 +66,13 @@ node --test demos/lean-a-star/test.mjs
 node demos/lean-a-star/benchmark.mjs --assert
 ```
 
-Tests compare both compiled paths against Bellman–Ford for all 512 three-vertex directed graphs and all nine source/goal pairs. They also cover random weighted graphs with nonzero consistent heuristics, zero-weight cycles, stale entries, early exit, large costs, invalid inputs, independent handles, and disposal.
+Tests compare both compiled paths against Bellman–Ford for all 512 three-vertex directed graphs and all nine source/goal pairs. They also cover random weighted graphs with nonzero consistent heuristics, zero-weight cycles, stale entries, early exit, large costs, invalid inputs, independent handles, disposal, and repeated searches on 20,000-vertex sparse graphs.
 
 The browser benchmark compares Lean A* with an independent typed-array JavaScript A* on the same graph, heuristic, tie breaks, and output shape. Both stop at the goal. Setup and heuristic validation occur before timing. Five excluded samples warm both implementations; adaptive batches avoid timer-resolution artifacts. Every measured pair must agree on cost, route, and expansion order. The page's A*-versus-Dijkstra comparison is separate from this implementation benchmark.
 
-On the development machine, the 1,008-vertex browser benchmark measured a 0.74 ms Lean median versus 0.13 ms JavaScript, with a 1.10 ms Lean p95. These measurements are from Chromium on September 7, 2026; the page measures the current browser again.
+On September 10, 2026, Chromium measured the optimized solver at 0.491 ms versus the previous build's 0.725 ms for 1,008 vertices, and 0.894 ms versus 1.306 ms for 1,728 vertices. The page's own 100-sample benchmark reported 0.50 ms Lean versus 0.13 ms JavaScript, with a 0.51 ms Lean p95. The page measures the current browser again.
+
+On September 10, a paired Node 22.23.2 comparison measured the optimized solver at 0.513 ms versus the previous build's 0.808 ms for 1,008 vertices, and 0.940 ms versus 1.475 ms for 1,728 vertices. That is about 37% less search time. See the [measurement and proof record](../../docs/evidence/astar-optimization-20260910.md) for the machine, artifact hashes and validation scope. The benchmark workloads, JavaScript reference and performance gates are unchanged.
 
 ## Sources
 

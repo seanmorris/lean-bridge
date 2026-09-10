@@ -32,12 +32,27 @@ def observe (input : Input) : Option (Option (List Nat) × Nat × Bool) :=
 #guard observe sameGoal = some (some [], 0, false)
 #guard observe noEdges = some (none, 0, false)
 
+-- The cached certificate still rejects an infeasible label, including a
+-- forged improvement on the vertex directly before the goal.
+#guard labelsCheck diamond (searchRaw diamond) 2 = true
+#guard labelsCheck diamond
+  { searchRaw diamond with distance := #[0, 4, 0, 2] } 2 = false
+#guard labelsFrom diamond (searchRaw diamond) 2 0 2 0 0 = true
+#guard labelsFrom diamond (searchRaw diamond) 2 0 0 5 0 = true
+
 def diamondPrepared : Prepared :=
-  ⟨diamond, by decide, by simp [shapeCheck, diamond, allUpTo, arrayGet, Array.getD], by decide⟩
+  ⟨diamond, by decide, by simp [shapeCheck, diamond, allUpTo, arrayGet, Array.getD],
+    by decide, searchInfinity diamond, rfl⟩
 def disconnectedPrepared : Prepared :=
-  ⟨disconnected, by decide, by simp [shapeCheck, disconnected, allUpTo, arrayGet, Array.getD], by decide⟩
+  ⟨disconnected, by decide, by simp [shapeCheck, disconnected, allUpTo, arrayGet, Array.getD],
+    by decide, searchInfinity disconnected, rfl⟩
 def sameGoalPrepared : Prepared :=
-  ⟨sameGoal, by decide, by simp [shapeCheck, sameGoal, allUpTo, arrayGet, Array.getD], by decide⟩
+  ⟨sameGoal, by decide, by simp [shapeCheck, sameGoal, allUpTo, arrayGet, Array.getD],
+    by decide, searchInfinity sameGoal, rfl⟩
+
+#guard diamondPrepared.infinity = 25
+#guard (searchPrepared diamondPrepared).distance = (searchRaw diamond).distance
+#guard (searchPrepared diamondPrepared).expanded = (searchRaw diamond).expanded
 
 -- The internal path excludes its source; the wire path includes it exactly once.
 #guard solveExport diamondPrepared = #[0, 2, 0, 3, 3, 0, 2, 3, 0, 2, 3]
@@ -108,6 +123,8 @@ example (input : Input)
 #print axioms exported_search_correct
 #print axioms heuristicCheck_sound
 #print axioms labelsCheck_sound
+#print axioms labelsFrom_eq
+#print axioms searchPrepared_eq_searchRaw
 #print axioms cutCheck_sound
 #print axioms solveExport_no_failure
 #print axioms solveExport_unreachable_iff

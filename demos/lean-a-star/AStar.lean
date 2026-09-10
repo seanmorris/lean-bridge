@@ -59,7 +59,7 @@ def fallback (prepared : Prepared) (expanded : Array Nat) : CertifiedResult prep
         by simpa [Total.AnswerValid, found] using answer.property, rfl⟩
 
 def solvePrepared (prepared : Prepared) : CertifiedResult prepared.input :=
-  let state := searchRaw prepared.input
+  let state := searchPrepared prepared
   match certify prepared state with
   | some result => result
   | none => fallback prepared state.expanded
@@ -112,7 +112,7 @@ theorem solve_total (input : Input)
     (shape : shapeCheck input = true) (heuristic : heuristicCheck input = true) :
     ∃ prepared, prepare input = some prepared ∧
       ResultValid input (solvePrepared prepared).answer (solvePrepared prepared).cost := by
-  let prepared : Prepared := ⟨input, bounds, shape, heuristic⟩
+  let prepared : Prepared := ⟨input, bounds, shape, heuristic, searchInfinity input, rfl⟩
   exact ⟨prepared, by simp [prepare, bounds, shape, heuristic, prepared],
     (solvePrepared prepared).valid⟩
 
