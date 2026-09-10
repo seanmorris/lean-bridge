@@ -45,6 +45,8 @@ Copied records cannot contain identity-bearing fields. Identity values cannot de
 
 ## Rich values cross as rich values
 
+The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.
+
 The Alpha fixture declares this copied record:
 
 ```json

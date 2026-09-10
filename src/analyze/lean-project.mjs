@@ -334,7 +334,7 @@ const typeRef = source => {
 	{
 		const error = typeRef(parts[1]);
 		const result = typeRef(parts[2]);
-		return error === null || result === null ? null : { kind: "apply", constructor: "result", arguments: [error, result] };
+		return error === null || result === null ? null : { kind: "apply", constructor: "result", arguments: [result, error] };
 	}
 	return null;
 };

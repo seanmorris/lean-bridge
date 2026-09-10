@@ -153,6 +153,34 @@ def typed (value : UInt32) : EIO String UInt32 := pure value
 }
 });
 
+test("analysis preserves Except success and error types while compound compilation remains blocked", async () => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-analyze-results-"));
+	try
+	{
+		await writeFile(join(root, "Main.lean"), `def parse (value : Except String UInt32) : Except String UInt32 := value
+def invert (value : Except UInt32 String) : Except UInt32 String := value
+`);
+		const report = await analyzeLeanProject(root);
+		const primitive = name => ({ kind: "primitive", name });
+		const result = (success, error) => ({ kind: "apply", constructor: "result", arguments: [success, error] });
+		for(const [name, expected] of [
+			["parse", result(primitive("uint32"), primitive("string"))]
+			, ["invert", result(primitive("string"), primitive("uint32"))]
+		]){
+			const candidate = report.exportCandidates.find(item => item.declaration === name);
+			assert.deepEqual(candidate.shape.result, expected, `${name} result order`);
+			assert.deepEqual(candidate.shape.parameters[0].type, expected, `${name} parameter order`);
+			assert.equal(candidate.status, "blocked");
+			assert.deepEqual(candidate.reasons, ["unsupported-component-signature"]);
+		}
+		assert.equal(report.bindingIr, null);
+		assert.deepEqual(report.proposedExports, []);
+	} finally
+	{
+		await rm(root, { recursive: true, force: true });
+	}
+});
+
 test("analysis correlates Lake compiled interface metadata without trusting it as proof", async () => {
   const root = await makePureProject();
   try
