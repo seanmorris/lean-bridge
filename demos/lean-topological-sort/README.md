@@ -51,3 +51,11 @@ bash demos/lean-topological-sort/build.sh
 node --test demos/lean-topological-sort/test.mjs
 node demos/lean-topological-sort/benchmark.mjs --assert
 ```
+
+The command-line benchmark measures steady-state calls to the prepared checked
+Lean solver and the JavaScript Kahn implementation. It excludes five warmup
+pairs, then alternates which implementation runs first across 50 measured pairs.
+Each sample uses the browser harness's adaptive batches with a 12 ms target;
+event-loop yields and result comparisons occur outside timing. Graph preparation
+is excluded, while Lean's certificate check and result copy remain timed. The
+8x relative-cost gate and the 8 ms / 35 ms absolute budgets remain enforced.
