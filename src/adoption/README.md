@@ -7,6 +7,7 @@ This directory turns author and consumer observations into versioned, machine-ch
 | Module | Responsibility |
 |---|---|
 | [`consumer-support.mjs`](consumer-support.mjs) | Validates the downstream matrix, validates one CI result per consumer, detects support loss, and renders the GitHub summary. |
+| [`type-surface.mjs`](type-surface.mjs) | Validates the required type baseline, hashes scoped evidence, and reports missing analysis, generation, compilation, packaging and installed-execution checks. Maintainer tooling only; not part of an installed consumer or CLI. |
 | [`consumer-performance.mjs`](consumer-performance.mjs) | Defines the retained `Box` workload and normalizes per-consumer timing plus environment metadata. |
 | [`target-runtime-profiles.mjs`](target-runtime-profiles.mjs) | Validates supported runtime, platform, transport, lifecycle, and capability-gap profiles. |
 | [`onboarding.mjs`](onboarding.mjs) | Validates the onboarding fixture manifest and runs the Lean project matrix. |
@@ -32,11 +33,20 @@ The evaluator rejects missing and duplicate consumers. A supported target fails 
 | Record | Location |
 |---|---|
 | Downstream support states | [`../../docs/consumer-support.v1.json`](../../docs/consumer-support.v1.json) |
+| Type/profile baseline and scoped audit | [`../../docs/type-surface.v1.json`](../../docs/type-surface.v1.json), validated by [`../../schema/type-surface.schema.json`](../../schema/type-surface.schema.json) |
 | Runtime and platform profiles | [`../../docs/target-runtime-profiles.v1.json`](../../docs/target-runtime-profiles.v1.json) |
 | Clean-room and zero-configuration inputs | [`../../acceptance`](../../acceptance/README.md) |
 | Human-readable results | [Evidence index](../../docs/evidence/README.md) |
 
 ## Adding an adoption check
+
+Run `npm run types:check` to validate the type inventory. `npm run types:report -- --profile rust --shape nat` prints every position and source path for one type, its evidence stages, and the VO owners of outstanding work. Neither command compiles Lean, executes recorded evidence commands, publishes packages, or changes the supported-consumer contract.
+
+The first type audit records ordinary npm scalar acceptance, inspected PHP numeric projections, Rust and WIT primitive rejections, and the PHP-Wasm unsigned-integer defect. Other combinations remain explicitly unreviewed. A passing Alpha example does not establish an arbitrary type mapping. The complete mapping audit, host-representation decisions and generated language tables continue in VO1213/1214/1215.
+
+Observation selectors name exact profiles, positions and either ordinary source or reviewed IR. Their scopes must not overlap. Each stage identifies its evidence independently; inspected generator code cannot count as an installed execution. Accepted installed evidence records archive hashes. Source hashes are checked on every inventory read, so changing an audited implementation requires an updated review. Historical archive hashes identify the recorded acceptance; they are not a fresh verification or publication of those archives.
+
+All listed runtime shapes remain required delivery work unless a recorded review decision and follow-up justify a profile exclusion. Proof-only shapes require correct erasure. Unreviewed cells are not assertions of missing implementation, and rejected cells do not complete the plan. The baseline includes nested options, result argument order, host null versus omitted arguments, platform integer width and runtime refinement checks.
 
 Add a schema or validator for the new record, one accepted fixture, rejection tests for unsupported claims, and a command that produces the record from a clean workflow. Documentation may claim support only after the consumer matrix executes the installed package.
 

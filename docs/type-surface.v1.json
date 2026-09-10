@@ -1,0 +1,879 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "0.1.0",
+  "bindingIrVersion": 3,
+  "consumerContractVersion": "1.3.0",
+  "planNode": 1208,
+  "baseline": { "default": "required", "exclusions": [] },
+  "paths": ["ordinary-source", "reviewed-ir"],
+  "positions": ["parameter", "result", "field", "callback-parameter", "callback-result", "signature"],
+  "stages": ["analysis", "generation", "compilation", "packaging", "installedExecution"],
+  "states": {
+    "unreviewed": "No type-specific audit has been recorded for this profile, position and path.",
+    "inspected": "Implementation was read; this is not an executed test.",
+    "passed": "The named check passed for the recorded scope and artifact.",
+    "limited": "The check covers only the explicitly recorded subset.",
+    "rejected": "The path explicitly rejects this shape. Required delivery remains outstanding."
+  },
+  "irFacets": {
+    "typeReference": ["primitive", "named", "parameter", "apply"],
+    "primitive": ["unit", "bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "nat", "int", "float32", "float64", "string", "bytes"],
+    "constructor": ["array", "option", "result", "tuple"],
+    "namedKind": ["record", "resource", "alias", "callback", "variant"],
+    "declaration": ["function", "constructor", "method", "static-method", "property"],
+    "representation": ["copied", "identity"],
+    "genericRepresentation": ["copied", "identity", "any"],
+    "mutability": ["immutable", "read", "write"],
+    "ownership": ["copy", "borrow", "lease", "transfer"],
+    "lifetime": ["call", "receiver", "parameter", "explicit", "runtime"],
+    "delivery": ["value", "promise", "iterator", "async-iterator"],
+    "effect": ["allocates", "reads-resource", "writes-resource", "fails", "host-call", "async", "nondeterministic"],
+    "failure": ["none", "declared"],
+    "unexpectedFailure": ["trap", "poison-runtime"],
+    "errorCategory": ["domain", "boundary", "capability"],
+    "callbackInvocation": ["once", "many"],
+    "callbackReentry": ["same-agent", "disallowed"],
+    "callbackSelfDisposal": ["reject", "defer"],
+    "callbackDelivery": ["value", "promise"],
+    "resourceDisposal": ["required", "scope", "runtime"],
+    "resourceFallback": ["none", "queued-finalizer"],
+    "resourceCycles": ["no-back-edges", "explicit-cut"],
+    "hostTarget": ["javascript", "python", "dotnet", "jvm", "ruby"],
+    "hostIdentity": ["weak-canonical", "strong-canonical"]
+  },
+  "rules": {
+    "copied": {
+      "ownership": "Inputs and results are copied values; no Lean handle or runtime cleanup reaches the consumer.",
+      "absence": "No implicit null, omission or default conversion. Unit, Option, optional parameters and host null are separate cases.",
+      "failure": "Reject invalid host values before calling Lean. Preserve declared errors and unexpected-failure policy."
+    },
+    "identity": {
+      "ownership": "Preserve nominal identity, runtime and generation. Generate borrow, lease, transfer and deterministic disposal from the declared lifetime.",
+      "absence": "A missing or disposed resource is not a null value. Optional identity values require an explicit Option mapping.",
+      "failure": "Reject stale, wrong-kind and wrong-runtime values. Cleanup must also run on callback re-entry and failure."
+    },
+    "signature": {
+      "ownership": "Preserve every argument and result ownership transition, including cleanup after rejection or cancellation.",
+      "absence": "Keep parameter omission, declared defaults, Option.none and host null distinct.",
+      "failure": "Preserve declared errors, effect order and delivery protocol; reject unsupported signatures before producing a release."
+    },
+    "erased": {
+      "ownership": "Proof-only values have no host allocation or handle.",
+      "absence": "Erasure is determined by elaborated Lean types, not by substituting null for an unknown type.",
+      "failure": "Keep runtime refinement checks and theorem provenance even when proof arguments are erased."
+    }
+  },
+  "families": {
+    "primitive": { "owner": 1218, "rule": "copied", "positions": ["parameter", "result", "field", "callback-parameter", "callback-result"] },
+    "collection": { "owner": 1219, "rule": "copied", "positions": ["parameter", "result", "field", "callback-parameter", "callback-result"] },
+    "generic": { "owner": 1220, "rule": "signature", "positions": ["signature"] },
+    "checked-value": { "owner": 1220, "rule": "signature", "positions": ["parameter", "result", "field", "callback-parameter", "callback-result"] },
+    "identity": { "owner": 1221, "rule": "identity", "positions": ["parameter", "result", "field", "callback-parameter", "callback-result"] },
+    "effect": { "owner": 1222, "rule": "signature", "positions": ["signature"] },
+    "delivery": { "owner": 1223, "rule": "signature", "positions": ["signature"] },
+    "proof": { "owner": 1220, "rule": "erased", "positions": ["parameter", "result", "field", "callback-parameter", "callback-result", "signature"] }
+  },
+  "shapes": [
+    { "id": "unit", "lean": "Unit", "family": "primitive", "ir": "primitive:unit", "meaning": "The single unit value.", "bounds": "One inhabitant. A result with no host return value still requires an explicit argument and field mapping." },
+    { "id": "bool", "lean": "Bool", "family": "primitive", "ir": "primitive:bool", "meaning": "False or true.", "bounds": "Exactly two Boolean values; do not coerce numbers or strings." },
+    { "id": "uint8", "lean": "UInt8", "family": "primitive", "ir": "primitive:uint8", "meaning": "Unsigned 8-bit integer.", "bounds": "0..255; reject overflow before narrowing." },
+    { "id": "uint16", "lean": "UInt16", "family": "primitive", "ir": "primitive:uint16", "meaning": "Unsigned 16-bit integer.", "bounds": "0..65535; reject overflow before narrowing." },
+    { "id": "uint32", "lean": "UInt32", "family": "primitive", "ir": "primitive:uint32", "meaning": "Unsigned 32-bit integer.", "bounds": "0..4294967295, including on hosts with 32-bit signed integers." },
+    { "id": "uint64", "lean": "UInt64", "family": "primitive", "ir": "primitive:uint64", "meaning": "Unsigned 64-bit integer.", "bounds": "0..18446744073709551615; no conversion through a floating-point host number." },
+    { "id": "int8", "lean": "Int8", "family": "primitive", "ir": "primitive:int8", "meaning": "Signed 8-bit integer.", "bounds": "-128..127; reject overflow before narrowing." },
+    { "id": "int16", "lean": "Int16", "family": "primitive", "ir": "primitive:int16", "meaning": "Signed 16-bit integer.", "bounds": "-32768..32767; reject overflow before narrowing." },
+    { "id": "int32", "lean": "Int32", "family": "primitive", "ir": "primitive:int32", "meaning": "Signed 32-bit integer.", "bounds": "-2147483648..2147483647; reject overflow before narrowing." },
+    { "id": "int64", "lean": "Int64", "family": "primitive", "ir": "primitive:int64", "meaning": "Signed 64-bit integer.", "bounds": "-9223372036854775808..9223372036854775807; preserve exact values." },
+    { "id": "nat", "lean": "Nat", "family": "primitive", "ir": "primitive:nat", "meaning": "Arbitrary-precision nonnegative integer.", "bounds": "No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits." },
+    { "id": "int", "lean": "Int", "family": "primitive", "ir": "primitive:int", "meaning": "Arbitrary-precision signed integer.", "bounds": "Preserve sign and magnitude without narrowing; enforce documented allocation limits." },
+    { "id": "float32", "lean": "Float32", "family": "primitive", "ir": "primitive:float32", "meaning": "Single-precision floating-point value.", "bounds": "Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test." },
+    { "id": "float64", "lean": "Float", "family": "primitive", "ir": "primitive:float64", "meaning": "Double-precision floating-point value.", "bounds": "Preserve binary64 values, NaN classification, infinities and signed zero." },
+    { "id": "string", "lean": "String", "family": "primitive", "ir": "primitive:string", "meaning": "Unicode text.", "bounds": "Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits." },
+    { "id": "bytes", "lean": "ByteArray", "family": "primitive", "ir": "primitive:bytes", "meaning": "An ordered sequence of bytes.", "bounds": "Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits." },
+    { "id": "array", "lean": "Array α", "family": "collection", "ir": "constructor:array", "meaning": "An ordered, finite sequence of values.", "bounds": "Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α." },
+    { "id": "option", "lean": "Option α", "family": "collection", "ir": "constructor:option", "meaning": "None or one present value.", "bounds": "Keep none, some unit and nested options distinct; do not flatten them all to null." },
+    { "id": "result", "lean": "Except ε α", "family": "collection", "ir": "constructor:result", "meaning": "A success value or a declared error value.", "bounds": "Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order." },
+    { "id": "tuple", "lean": "Prod α β / tuples", "family": "collection", "ir": "constructor:tuple", "meaning": "A fixed ordered product of values.", "bounds": "Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays." },
+    { "id": "record", "lean": "Copied structure", "family": "collection", "ir": "namedKind:record", "meaning": "A named copied product with declared fields.", "bounds": "Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records." },
+    { "id": "alias", "lean": "Type alias", "family": "collection", "ir": "namedKind:alias", "meaning": "A named reference to another semantic type.", "bounds": "Resolve aliases without losing constraints, identity or ownership; reject alias cycles." },
+    { "id": "variant", "lean": "Inductive sum", "family": "collection", "ir": "namedKind:variant", "meaning": "One named constructor with its typed fields.", "bounds": "Preserve constructor identity and payloads without exposing Lean constructor numbers." },
+    { "id": "resource", "lean": "Identity-bearing value", "family": "identity", "ir": "namedKind:resource", "meaning": "A nominal value retained in the shared runtime.", "bounds": "Preserve cross-component identity and explicit disposal; reject stale or foreign resources." },
+    { "id": "callback", "lean": "Host function passed to Lean", "family": "identity", "ir": "namedKind:callback", "meaning": "A host callable with a declared signature and lifetime.", "bounds": "Preserve argument/result types, re-entry, invocation count, self-disposal and errors." },
+    { "id": "list", "lean": "List α", "family": "collection", "ir": null, "meaning": "A finite ordered Lean list.", "bounds": "Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering." },
+    { "id": "char", "lean": "Char", "family": "primitive", "ir": null, "meaning": "A Unicode scalar value.", "bounds": "0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string." },
+    { "id": "usize", "lean": "USize", "family": "primitive", "ir": null, "meaning": "An unsigned platform-sized Lean integer.", "bounds": "Bind width to the compiled Lean target, not the consumer process; reject out-of-range values." },
+    { "id": "isize", "lean": "ISize", "family": "primitive", "ir": null, "meaning": "A signed platform-sized Lean integer.", "bounds": "Bind signed width to the compiled Lean target and record architecture explicitly." },
+    { "id": "fin", "lean": "Fin n", "family": "checked-value", "ir": null, "meaning": "A natural value strictly below a bound.", "bounds": "Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value." },
+    { "id": "subtype", "lean": "Subtype / {x // p x}", "family": "checked-value", "ir": null, "meaning": "A value satisfying a Lean predicate.", "bounds": "Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates." },
+    { "id": "dependent", "lean": "Dependent parameters and results", "family": "generic", "ir": null, "meaning": "A runtime type or constraint depends on an earlier value.", "bounds": "Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument." },
+    { "id": "recursive", "lean": "Recursive copied structures", "family": "collection", "ir": null, "meaning": "Finite recursive records or variants.", "bounds": "Bound nesting and allocation; reject host cycles unless the declared identity model supports them." },
+    { "id": "generic", "lean": "Polymorphic exports", "family": "generic", "ir": "typeReference:parameter", "meaning": "Exports parameterized by types or instances.", "bounds": "Deliver checked finite specializations; record open-generic gaps without using an untyped transport." },
+    { "id": "implicit", "lean": "Implicit arguments {α}", "family": "generic", "ir": null, "meaning": "Arguments inferred during Lean elaboration.", "bounds": "Separate erased type arguments from implicit runtime values; resolve them from elaborated information." },
+    { "id": "instance", "lean": "Instance arguments [C α]", "family": "generic", "ir": null, "meaning": "Typeclass dictionaries supplied by elaboration.", "bounds": "Specialize or supply the selected dictionary without changing runtime behavior." },
+    { "id": "proof", "lean": "Prop / theorem / proof arguments", "family": "proof", "ir": null, "meaning": "Proof-only declarations and arguments are erased at runtime.", "bounds": "Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement." },
+    { "id": "optional-parameter", "lean": "Optional parameter with default", "family": "generic", "ir": null, "meaning": "A callable permits an omitted argument.", "bounds": "Apply only the declared default; distinguish omitted input from a supplied Option.none." },
+    { "id": "host-null", "lean": "Explicit nullable host value", "family": "checked-value", "ir": null, "meaning": "Null from a declared host API.", "bounds": "Select an explicit host projection; null does not stand for every missing, erased or unsupported value." },
+    { "id": "io", "lean": "IO α", "family": "effect", "ir": null, "meaning": "A Lean action with IO effects and IO errors.", "bounds": "Executing IO is not automatically asynchronous. Preserve effect order and exceptions." },
+    { "id": "eio", "lean": "EIO ε α", "family": "effect", "ir": null, "meaning": "An effectful action with a declared error type.", "bounds": "Preserve typed failures separately from transport validation and unexpected traps." },
+    { "id": "declared-error", "lean": "Declared failure contract", "family": "effect", "ir": "failure:declared", "meaning": "A callable's named error alternatives.", "bounds": "Project every declared error and payload; preserve trap or poisoned-runtime handling separately." },
+    { "id": "task", "lean": "Task α / asynchronous result", "family": "delivery", "ir": "delivery:promise", "meaning": "A computation whose result arrives later.", "bounds": "Keep completion, rejection, cancellation and runtime lifetime distinct; do not block a browser event loop." },
+    { "id": "host-object", "lean": "Declared host object", "family": "identity", "ir": null, "meaning": "An identity-bearing object owned by the host.", "bounds": "Generate typed members and preserve receiver identity, dynamic-access policy and lifetime." },
+    { "id": "closure", "lean": "Lean function returned to the host", "family": "identity", "ir": null, "meaning": "A retained Lean closure callable through a generated host API.", "bounds": "Preserve captured state, call signature, errors and deterministic disposal." },
+    { "id": "cancellation", "lean": "Cancellation protocol", "family": "delivery", "ir": null, "meaning": "A declared request to stop pending work.", "bounds": "Specify acknowledgement and late completion; release pending work exactly once." },
+    { "id": "iterator", "lean": "Synchronous iterator", "family": "delivery", "ir": "delivery:iterator", "meaning": "A sequence delivered by explicit pulls.", "bounds": "Preserve values, end-of-sequence, failure, early return and cleanup." },
+    { "id": "async-iterator", "lean": "Asynchronous iterator", "family": "delivery", "ir": "delivery:async-iterator", "meaning": "A sequence whose individual pulls can complete later.", "bounds": "Preserve backpressure, pending-pull cancellation and terminal cleanup." }
+  ],
+  "profiles": [
+    { "id": "node-javascript", "consumer": "node-javascript", "language": "javascript", "context": "Node ESM", "wordBits": 32 },
+    { "id": "node-typescript", "consumer": "node-typescript", "language": "typescript", "context": "Strict TypeScript over Node ESM", "wordBits": 32 },
+    { "id": "browser-javascript", "consumer": "browser-javascript", "language": "javascript", "context": "Browser main thread", "wordBits": 32 },
+    { "id": "browser-react", "consumer": "browser-javascript", "language": "javascript", "context": "React lifecycle on the browser main thread", "wordBits": 32 },
+    { "id": "browser-worker", "consumer": "browser-javascript", "language": "javascript", "context": "Dedicated browser worker", "wordBits": 32 },
+    { "id": "php-native", "consumer": "php-native", "language": "php", "context": "Native Zend extension; PHP_INT_SIZE = 8", "wordBits": 64 },
+    { "id": "php-wasm", "consumer": "php-wasm", "language": "php", "context": "Node-hosted PHP-Wasm; PHP_INT_SIZE = 4; lazy and startup adapters", "wordBits": 32 },
+    { "id": "dotnet", "consumer": "dotnet", "language": "csharp", "context": "C# over LibraryImport", "wordBits": 64 },
+    { "id": "java", "consumer": "jvm", "language": "java", "context": "Java over finalized FFM", "wordBits": 64 },
+    { "id": "kotlin", "consumer": "jvm", "language": "kotlin", "context": "Kotlin calling the generated Java API", "wordBits": 64 },
+    { "id": "ruby", "consumer": "ruby", "language": "ruby", "context": "MRI over Fiddle", "wordBits": 64 },
+    { "id": "python", "consumer": "python", "language": "python", "context": "CPython wheel with native adapter", "wordBits": 64 },
+    { "id": "rust", "consumer": "rust", "language": "rust", "context": "Rust crate with native adapter", "wordBits": 64 },
+    { "id": "c", "consumer": "c", "language": "c", "context": "C11 native package", "wordBits": 64 },
+    { "id": "cpp", "consumer": "cpp", "language": "cpp", "context": "C++20 over the generated C API", "wordBits": 64 },
+    { "id": "wit-wasi", "consumer": "wit-wasi", "language": "wit", "context": "Pinned Wasmtime Component Model adapter; audit the embedded Lean target separately", "wordBits": null }
+  ],
+  "evidence": [
+    {
+      "id": "npm-installed-scalars",
+      "kind": "installed",
+      "revision": "2249a33163c5943f2ffb8dea0e61fce68e404c37",
+      "command": "node scripts/check-reference-packages.mjs --tutorial PREPARED_TUTORIAL --scalars PREPARED_SCALARS --output NEW_DIRECTORY; node --test tests/component-scalars.test.mjs",
+      "scope": "Recorded installed scalar acceptance and exact archive identities from 9 September 2026. The scalar suite was also rerun successfully on 10 September while starting VO1213. These archives identify the recorded acceptance, not a newly published release.",
+      "files": [
+        {
+          "path": "docs/evidence/reference-documentation-20260909.md",
+          "sha256": "319a3e136f3b409a51bf86d49e02057b48c43453573079fd77556e1f6450c889"
+        },
+        {
+          "path": "tests/component-scalars.test.mjs",
+          "sha256": "6a7f57432888857d49c0b9e7417c22a4bf2f357fa77847a54ea395b8e9056561"
+        },
+        {
+          "path": "tests/fixtures/onboarding/scalars/OnboardingScalars.lean",
+          "sha256": "720a371113fdf93ac16a2e54dd37af0ccba7760013c9f18e8c85c1e33940b3eb"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "onboarding-scalars-1.0.0.tgz",
+          "sha256": "1787339d72344b929821a93503e89fb3372c37d8d11cf2fe71bca4714175b85f"
+        },
+        {
+          "path": "shared-runtime.tgz",
+          "sha256": "6345fc7dcb5c7315a697c750a67d7824242d8a73de051855b36f8e4f847fe32f"
+        }
+      ]
+    },
+    {
+      "id": "npm-source-pipeline",
+      "kind": "inspection",
+      "revision": "445502a10f0ee7478c40e1d0ee8cbd29e09e0cbc",
+      "command": "Inspect the source analyzer, scalar guard, generated declarations, compiled adapters and npm package builder; node --test tests/lean-project-analyzer.test.mjs.",
+      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. Analysis is source scanning, not the unfinished elaborator cutover.",
+      "files": [
+        {
+          "path": "src/analyze/lean-project.mjs",
+          "sha256": "d6b3d1aa592fbc178d97ac0c11bbb705ea3aa7faf2e6555e99c1a78adc21b877"
+        },
+        {
+          "path": "tests/lean-project-analyzer.test.mjs",
+          "sha256": "5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"
+        },
+        {
+          "path": "docs/architecture/binding-ir.md",
+          "sha256": "0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "96054f9a60b536af64462c6a4173a161202b1032dc92c7e41ff70bbdb4462bdf"
+        },
+        {
+          "path": "src/abi/component-scalars.mjs",
+          "sha256": "c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"
+        },
+        {
+          "path": "src/release/component-runtime.mjs",
+          "sha256": "daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"
+        },
+        {
+          "path": "src/release/component-npm-package.mjs",
+          "sha256": "f61e3d60a5989cf3a2f3ba2a08ac3d32f61eec061596a5c6b841afb75067e6c8"
+        }
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "php-numeric-projection",
+      "kind": "inspection",
+      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
+      "command": "Inspect primitiveProjection in src/backends/php/projection.mjs.",
+      "scope": "Host syntax and validation descriptors only. PHP generator output does not establish compiled or installed support for these types.",
+      "files": [
+        {
+          "path": "src/backends/php/projection.mjs",
+          "sha256": "087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"
+        }
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "rust-integer-rejection",
+      "kind": "inspection",
+      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
+      "command": "Inspect rustType in src/backends/rust/generate.mjs.",
+      "scope": "The generator explicitly rejects Nat and Int with unsupported-arbitrary-integer. This required mapping remains assigned to VO1218.",
+      "files": [
+        {
+          "path": "src/backends/rust/generate.mjs",
+          "sha256": "ff3ce0db6e9e406080775821c835a49a86b6ecea6f5a90e3669c25725dee1c5b"
+        }
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "wit-primitive-rejection",
+      "kind": "inspection",
+      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
+      "command": "Inspect witType in src/backends/wit/generate.mjs.",
+      "scope": "The WIT generator has no built-in Unit, Nat or Int value mapping. Per-position unit lowering and exact integer transport require review.",
+      "files": [
+        {
+          "path": "src/backends/wit/generate.mjs",
+          "sha256": "b535bf760c02ecaf266aeba4651e8fe64c30e3ae5b2c44bfc38a57844ae3b1ab"
+        }
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "php-wasm-integer-boundary",
+      "kind": "inspection",
+      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
+      "command": "Inspect the PHP scalar projection and the documented PHP-Wasm host integer boundary.",
+      "scope": "The PHP-Wasm API uses a 32-bit signed PHP int for UInt32. VO1206 owns the existing defect; generator range metadata alone cannot repair it.",
+      "files": [
+        {
+          "path": "src/backends/php/projection.mjs",
+          "sha256": "087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"
+        },
+        {
+          "path": "docs/consume/php-wasm.md",
+          "sha256": "3752ebd03947d35cd42b88566fd00822265af4c0c7b57a14f5eeb42572092cbb"
+        }
+      ],
+      "artifacts": []
+    }
+  ],
+  "observations": [
+    {
+      "id": "npm-node-primitive-values",
+      "profiles": [
+        "node-javascript"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Pure scalar fixture arguments and results through installed Node npm archives.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "undefined",
+          "result": "undefined"
+        },
+        "bool": {
+          "parameter": "boolean",
+          "result": "boolean"
+        },
+        "uint8": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint16": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint64": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "int8": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int16": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int64": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "nat": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "int": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "float32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "float64": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string"
+        },
+        "bytes": {
+          "parameter": "Uint8Array",
+          "result": "Uint8Array"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-scalars"
+          ],
+          "note": "Installed compiled scalar fixture acceptance; see its exact archives and recorded test boundaries."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-scalars"
+          ],
+          "note": "Installed compiled scalar fixture acceptance; see its exact archives and recorded test boundaries."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-scalars"
+          ],
+          "note": "Installed compiled scalar fixture acceptance; see its exact archives and recorded test boundaries."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-scalars"
+          ],
+          "note": "Installed compiled scalar fixture acceptance; see its exact archives and recorded test boundaries."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-scalars"
+          ],
+          "note": "Installed compiled scalar fixture acceptance; see its exact archives and recorded test boundaries."
+        }
+      },
+      "limitations": [
+        "Pure functions only. No field, callback, resource, IO or Task evidence is implied.",
+        "The 16 MiB per-value copy limit applies. Tests include large exact integers but cannot exhaust unbounded inputs.",
+        "The current source analyzer has not completed the elaborator-backed cutover in VO1107/1108."
+      ]
+    },
+    {
+      "id": "npm-other-scalar-paths-inspected",
+      "profiles": [
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Inspected shared scalar pipeline. Full per-type installed acceptance for these contexts remains to be attached in VO1214.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "void (host value undefined)",
+          "result": "void (host value undefined)"
+        },
+        "bool": {
+          "parameter": "boolean",
+          "result": "boolean"
+        },
+        "uint8": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint16": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "uint64": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "int8": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int16": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "int64": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "nat": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "int": {
+          "parameter": "bigint",
+          "result": "bigint"
+        },
+        "float32": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "float64": {
+          "parameter": "number",
+          "result": "number"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string"
+        },
+        "bytes": {
+          "parameter": "Uint8Array",
+          "result": "Uint8Array"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "inspected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "Inspected ordinary scalar path; do not substitute this review for a context-specific execution test."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "Inspected ordinary scalar path; do not substitute this review for a context-specific execution test."
+        },
+        "compilation": {
+          "state": "inspected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "Inspected ordinary scalar path; do not substitute this review for a context-specific execution test."
+        },
+        "packaging": {
+          "state": "inspected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "Inspected ordinary scalar path; do not substitute this review for a context-specific execution test."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Browser and React/worker examples already execute some types; this observation does not generalize those examples to every scalar or position.",
+        "No change to the existing consumer-level supported states. This is a separate type-specific evidence inventory."
+      ]
+    },
+    {
+      "id": "php-exact-and-floating-projection",
+      "profiles": [
+        "php-native",
+        "php-wasm"
+      ],
+      "shapes": [
+        "nat",
+        "int",
+        "float32",
+        "float64"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Numeric PHP projection descriptors from explicit Binding IR, without a compiled arbitrary-project adapter.",
+      "hostTypes": {
+        "nat": {
+          "parameter": "Generated BigInteger value",
+          "result": "Generated BigInteger value"
+        },
+        "int": {
+          "parameter": "Generated BigInteger value",
+          "result": "Generated BigInteger value"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float"
+        },
+        "float64": {
+          "parameter": "float",
+          "result": "float"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-numeric-projection"
+          ],
+          "note": "Nat/Int use BigInteger; Float32/Float use PHP float. These are generator mappings, not Alpha exports."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "BigInteger projection does not establish installed arbitrary-precision runtime support.",
+        "Float width validation and special values need compiled round-trip tests."
+      ]
+    },
+    {
+      "id": "rust-arbitrary-integers-rejected",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "nat",
+        "int"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Explicit arbitrary-integer value types passed to the Rust generator.",
+      "hostTypes": {
+        "nat": {
+          "parameter": null,
+          "result": null
+        },
+        "int": {
+          "parameter": null,
+          "result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "rejected",
+          "evidence": [
+            "rust-integer-rejection"
+          ],
+          "note": "unsupported-arbitrary-integer: no lossless host mapping currently selected."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "This is required implementation work, not an approved Rust profile exclusion."
+      ]
+    },
+    {
+      "id": "wit-missing-primitive-values",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "unit",
+        "nat",
+        "int"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Primitive value positions evaluated by witType, not all possible lowered WIT encodings.",
+      "hostTypes": {
+        "unit": {
+          "parameter": null,
+          "result": null
+        },
+        "nat": {
+          "parameter": null,
+          "result": null
+        },
+        "int": {
+          "parameter": null,
+          "result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "rejected",
+          "evidence": [
+            "wit-primitive-rejection"
+          ],
+          "note": "unsupported-wit-primitive: the current built-in mapping rejects this value type."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Unit result elision and a lossless arbitrary-integer value representation require per-position decisions."
+      ]
+    },
+    {
+      "id": "npm-compound-compile-rejection",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "array",
+        "option",
+        "result"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Simple written Array UInt32, Option UInt32 and Except String UInt32 signatures, not general nested-source analysis.",
+      "hostTypes": {
+        "array": {
+          "parameter": null,
+          "result": null
+        },
+        "option": {
+          "parameter": null,
+          "result": null
+        },
+        "result": {
+          "parameter": null,
+          "result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "inspected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "The source scanner recognizes simple Array, Option and Except signatures."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "assertComponentSignature rejects every non-primitive parameter and result before compilation."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Generator syntax does not imply this ordinary-source path can be compiled.",
+        "Except analysis now uses canonical [success, error] argument order, with asymmetric parameter/result regression coverage. This does not implement a compiled result adapter; VO1219 remains open.",
+        "Nested Option and Option Unit require disjoint host representations; flattening both branches to null or None loses information."
+      ]
+    },
+    {
+      "id": "php-wasm-uint32-projection-boundary",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "uint32"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Existing Alpha-shaped PHP-Wasm projection, inspected against its documented 32-bit PHP integer boundary.",
+      "hostTypes": {
+        "uint32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-wasm-integer-boundary"
+          ],
+          "note": "The declared UInt32 range exceeds PHP_INT_MAX on this host; VO1206 must deliver an exact mapping."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific audit is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "The present positive PHP int range is 0..2147483647; the required UInt32 range is 0..4294967295.",
+        "Do not advertise full UInt32 support from small Alpha inputs. The existing repair is VO1206."
+      ]
+    }
+  ]
+}

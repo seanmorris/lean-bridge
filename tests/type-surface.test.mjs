@@ -1,0 +1,232 @@
+/**
+ * Keep the type baseline complete and prevent evidence from crossing profiles or stages.
+ *
+ * @file
+ */
+
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { promisify } from "node:util";
+import test from "node:test";
+import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
+
+const execute = promisify(execFile);
+const root = path.resolve(import.meta.dirname, "..");
+const { document, ...contracts } = await readTypeSurface();
+const clone = value => structuredClone(value);
+const stage = (state = "unreviewed") => ({ state, evidence: state === "unreviewed" ? [] : ["test-evidence"], note: "Scope of this test observation." });
+const observationFixture = () => {
+	const candidate = clone(document);
+	candidate.observations = [];
+	candidate.evidence = [{
+		id: "test-evidence"
+		, kind: "inspection"
+		, revision: "0".repeat(40)
+		, command: "Inspect the fixture generator."
+		, scope: "Test-only evidence."
+		, files: [{ path: "src/abi/component-scalars.mjs", sha256: "0".repeat(64) }]
+		, artifacts: []
+	}];
+	candidate.observations.push({
+		id: "test-nat"
+		, profiles: ["node-javascript"]
+		, shapes: ["nat"]
+		, positions: ["parameter", "result"]
+		, path: "ordinary-source"
+		, scope: "One exact-integer fixture; no field or callback coverage."
+		, hostTypes: { nat: { parameter: "bigint", result: "bigint" } }
+		, stages: Object.fromEntries(candidate.stages.map(name => [name, stage(name === "generation" ? "inspected" : "unreviewed")]))
+		, limitations: []
+	});
+	return candidate;
+};
+
+test("the versioned inventory classifies every profile, IR alternative and required source shape", async () => {
+	await assertJsonSchema("type-surface", document);
+	assert.equal(validateTypeSurface(document, contracts), true);
+	assert.equal(document.profiles.length, 16);
+	assert.equal(document.shapes.length, 48);
+	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "jvm").map(profile => profile.id), ["java", "kotlin"]);
+	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "browser-javascript").map(profile => profile.id),
+		["browser-javascript", "browser-react", "browser-worker"]);
+	const cells = typeSurfaceCells(document, contracts);
+	const expected = document.profiles.length * document.paths.length * document.shapes.reduce((count, shape) => count + document.families[shape.family].positions.length, 0);
+	assert.equal(cells.length, expected);
+	assert.equal(new Set(cells.map(cell => cell.id)).size, expected);
+	for(const cell of cells)
+	{
+		assert.ok(cell.owner > 0 && cell.bounds && cell.ownership && cell.absence && cell.failure && cell.platform);
+		assert.deepEqual(Object.keys(cell.stages), document.stages);
+	}
+});
+
+for(const [name, change] of [
+	["primitive", schema => schema.$defs.typeRef.oneOf[0].properties.name.enum.push("decimal")]
+	, ["constructor", schema => schema.$defs.typeRef.oneOf[3].properties.constructor.enum.push("map")]
+	, ["named kind", schema => schema.$defs.typeDefinition.properties.kind.enum.push("union")]
+	, ["type reference", schema => schema.$defs.typeRef.oneOf.push({ properties: { kind: { const: "dependent" } } })]
+	, ["declaration", schema => schema.$defs.declaration.properties.kind.enum.push("event")]
+	, ["delivery", schema => schema.$defs.declaration.properties.resultMode.enum.push("stream")]
+	, ["ownership", schema => schema.$defs.ownershipSite.properties.ownership.enum.push("shared")]
+	, ["callback ownership", schema => schema.$defs.parameter.properties.ownership.enum.push("shared")]
+	, ["callback effect", schema => schema.$defs.callable.properties.effects.items.enum.push("transaction")]
+]) test(`a new ${name} fails until its type-surface classification is reviewed`, () => {
+	const irSchema = clone(contracts.irSchema);
+	change(irSchema);
+	assert.throws(() => validateTypeSurface(document, { ...contracts, irSchema }), /unclassified or missing/);
+});
+
+test("missing, duplicate, foreign and unclassified source/profile entries cannot disappear", () => {
+	for(const change of [
+		value => value.shapes.splice(value.shapes.findIndex(shape => shape.id === "proof"), 1)
+		, value => value.shapes.push({ ...value.shapes[0], id: "unclassified" })
+		, value => value.profiles.splice(0, 1)
+		, value => value.profiles.push(clone(value.profiles[0]))
+		, value => { value.profiles[0].consumer = "php-native"; }
+		, value => { value.profiles[0].language = "php"; }
+		, value => { value.shapes.find(shape => shape.id === "nat").ir = "primitive:int"; }
+	]){
+		const candidate = clone(document);
+		change(candidate);
+		assert.throws(() => validateTypeSurface(candidate, contracts));
+	}
+	const consumers = clone(contracts.consumers);
+	consumers.consumers.push({ ...consumers.consumers[0], id: "new-language" });
+	assert.throws(() => validateTypeSurface(document, { ...contracts, consumers }), /consumer profiles/);
+});
+
+test("refinements, host null and erased proofs retain their individual value positions", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	for(const shape of ["fin", "subtype", "host-null", "proof"])
+	{
+		const selected = cells.filter(cell => cell.profile === "python" && cell.path === "ordinary-source" && cell.shape === shape);
+		assert.deepEqual(selected.map(cell => cell.position), document.positions.filter(position => shape === "proof" || position !== "signature"));
+		assert.ok(selected.every(cell => cell.requirement === (shape === "proof" ? "required-erasure" : "required")));
+	}
+});
+
+test("unknown fields, versions, evidence states and unsafe paths fail closed", () => {
+	for(const change of [
+		value => { value.schemaVersion = 2; }
+		, value => { value.hiddenSupport = true; }
+		, value => { value.shapes[0].supported = true; }
+		, value => { value.observations[0].stages.generation.state = "probably-supported"; }
+		, value => { value.evidence[0].files[0].path = "../outside"; }
+		, value => { value.evidence[0].files[0].path = "/etc/passwd"; }
+		, value => { value.evidence[0].files[0].path = "C:/outside"; }
+		, value => { value.evidence[0].files[0].sha256 = "not-a-hash"; }
+	]){
+		const candidate = observationFixture();
+		change(candidate);
+		assert.throws(() => validateTypeSurface(candidate, contracts));
+	}
+});
+
+test("inspection, generation, installation and execution are distinct evidence stages", () => {
+	const candidate = observationFixture();
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.observations[0].stages.generation.state = "passed";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /inspection cannot establish a passing test/);
+	candidate.evidence[0].kind = "test";
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.observations[0].stages.installedExecution = stage("passed");
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution needs archive evidence/);
+	candidate.evidence[0].kind = "installed";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed evidence needs exact archives/);
+	candidate.evidence[0].artifacts = [{ path: "example-1.0.0.tgz", sha256: "f".repeat(64) }];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution lacks analysis/);
+	for(const name of candidate.stages) candidate.observations[0].stages[name] = stage("passed");
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	assert.equal(typeSurfaceGapReport(candidate, contracts).installedTestedCells, 2);
+	candidate.observations[0].hostTypes.nat.result = null;
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution needs host types/);
+});
+
+test("missing evidence and ambiguous overlapping observations are rejected", () => {
+	const candidate = observationFixture();
+	candidate.observations[0].stages.generation.evidence = ["missing"];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /unknown evidence/);
+	candidate.observations[0].stages.generation.evidence = [];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /missing or unexplained evidence/);
+	candidate.observations[0].stages.generation = stage("inspected");
+	candidate.observations.push({ ...clone(candidate.observations[0]), id: "conflicting-audit" });
+	assert.throws(() => validateTypeSurface(candidate, contracts), /Overlapping observations/);
+});
+
+test("partial evidence cannot leak across a position, source path or language profile", () => {
+	const candidate = observationFixture();
+	const cells = typeSurfaceCells(candidate, contracts);
+	assert.equal(cells.filter(cell => cell.observation !== null).length, 2);
+	for(const id of [
+		"node-javascript/nat/ordinary-source/field"
+		, "node-javascript/nat/ordinary-source/callback-parameter"
+		, "node-javascript/nat/reviewed-ir/parameter"
+		, "node-typescript/nat/ordinary-source/parameter"
+		, "browser-worker/nat/ordinary-source/parameter"
+	]){
+		const cell = cells.find(entry => entry.id === id);
+		assert.equal(cell.hostType, null, id);
+		assert.equal(cell.stages.generation.state, "unreviewed", id);
+	}
+	cells.find(cell => cell.observation !== null).stages.generation.state = "passed";
+	assert.equal(candidate.observations[0].stages.generation.state, "inspected", "Returned evidence cannot mutate the inventory");
+});
+
+test("rejections and partial ranges remain required work, and exclusions need review evidence", () => {
+	const candidate = observationFixture();
+	candidate.observations[0].stages.generation = stage("rejected");
+	const report = typeSurfaceGapReport(candidate, contracts);
+	assert.equal(report.complete, false);
+	assert.ok(report.gaps.some(gap => gap.state === "rejected" && gap.implementationOwner === 1218 && gap.requirement === "required"));
+	candidate.observations[0].stages.generation = stage("limited");
+	candidate.evidence[0].kind = "test";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /limited result needs its boundary/);
+	candidate.observations[0].limitations = ["Only small integers were tested."];
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.baseline.exclusions.push({ profile: "node-javascript", shape: "nat", reason: "Test exclusion", decisionEvidence: "test-evidence", followUp: 1218 });
+	assert.throws(() => validateTypeSurface(candidate, contracts), /recorded review decision/);
+});
+
+test("the inventory command keeps unknown filters closed and emits unreviewed cells as JSON", async () => {
+	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "rust", "--shape", "char"], { cwd: root });
+	const report = JSON.parse(result.stdout);
+	assert.equal(report.complete, false);
+	assert.equal(report.selectedCells.length, 10);
+	assert.equal(report.cells, 10);
+	assert.equal(report.profiles, 1);
+	assert.equal(report.shapes, 1);
+	assert.equal(report.requiredGaps, report.gaps.length);
+	assert.ok(report.selectedCells.every(cell => cell.profile === "rust" && cell.shape === "char"));
+	assert.ok(report.gaps.every(gap => gap.cell.startsWith("rust/char/")));
+	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "unknown"], { cwd: root }), /Unknown profile/);
+	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--unknown"], { cwd: root }), /Use --json/);
+});
+
+test("changing an audited source fails before the inventory can feed a report", async () => {
+	assert.ok(document.evidence.length > 0, "The initial audit must record evidence, not only empty cells");
+	const temporary = await mkdtemp(path.join(tmpdir(), "lean-type-surface-"));
+	try
+	{
+		const files = [
+			"docs/type-surface.v1.json"
+			, "schema/binding-ir.schema.json"
+			, "docs/consumer-support.v1.json"
+			, ...document.evidence.flatMap(entry => entry.files.map(file => file.path))
+		];
+		for(const file of files)
+		{
+			await mkdir(path.dirname(path.join(temporary, file)), { recursive: true });
+			await cp(path.join(root, file), path.join(temporary, file));
+		}
+		assert.ok((await readTypeSurface({ repository: temporary })).document);
+		const file = document.evidence[0].files[0].path;
+		await writeFile(path.join(temporary, file), `${await readFile(path.join(temporary, file), "utf8")}\n// changed\n`);
+		await assert.rejects(readTypeSurface({ repository: temporary }), /stale source evidence/);
+	}
+	finally
+{ await rm(temporary, { recursive: true, force: true }); }
+});

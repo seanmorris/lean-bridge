@@ -40,6 +40,8 @@ Consumer commands install generated archives into new projects using ordinary ec
 
 [`documentation.test.mjs`](documentation.test.mjs) validates internal links, code references, directory explainers, support-table consistency, public example boundaries, repository paths, and writing-rule checks. `npm run test:docs` also checks the author fixture, installed-package example contracts, and the documented box-overlap call against the checked-in Wasm binary. These checks belong to the Node-only contract profile. The full author build and installed React/worker acceptance commands are described in the [site guide](../site/README.md#build-and-check).
 
+[`type-surface.test.mjs`](type-surface.test.mjs) checks the separate type-by-profile inventory. It rejects missing IR or source classifications, lost consumers, stale evidence, claims beyond the recorded test stage, and evidence leaking between positions or source paths. `npm run test:type-surface` runs these checks without a Lean compiler. The installed primitive acceptance remains in [`component-scalars.test.mjs`](component-scalars.test.mjs).
+
 ## Running tests
 
 `npm test` prepares the link, Lean, threaded runtime, performance, and scaling fixtures before running the Node test corpus. `npm run lint` checks JavaScript and TypeScript source style. `npm run typecheck` checks the JavaScript project with TypeScript analysis. `npm run check` adds the environment inventory and runs the complete local sequence.

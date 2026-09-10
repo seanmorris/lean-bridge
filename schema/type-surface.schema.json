@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.invalid/schema/type-surface.schema.json",
+  "title": "Reviewed type-surface inventory and scoped evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contractVersion", "bindingIrVersion", "consumerContractVersion", "planNode", "baseline", "paths", "positions", "stages", "states", "irFacets", "rules", "families", "shapes", "profiles", "evidence", "observations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "contractVersion": { "$ref": "#/$defs/version" },
+    "bindingIrVersion": { "const": 3 },
+    "consumerContractVersion": { "$ref": "#/$defs/version" },
+    "planNode": { "$ref": "#/$defs/node" },
+    "baseline": {
+      "type": "object", "additionalProperties": false, "required": ["default", "exclusions"],
+      "properties": {
+        "default": { "const": "required" },
+        "exclusions": {
+          "type": "array", "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["profile", "shape", "reason", "decisionEvidence", "followUp"],
+            "properties": {
+              "profile": { "$ref": "#/$defs/id" }, "shape": { "$ref": "#/$defs/id" },
+              "reason": { "$ref": "#/$defs/text" }, "decisionEvidence": { "$ref": "#/$defs/id" },
+              "followUp": { "$ref": "#/$defs/node" }
+            }
+          }
+        }
+      }
+    },
+    "paths": { "const": ["ordinary-source", "reviewed-ir"] },
+    "positions": { "const": ["parameter", "result", "field", "callback-parameter", "callback-result", "signature"] },
+    "stages": { "const": ["analysis", "generation", "compilation", "packaging", "installedExecution"] },
+    "states": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unreviewed", "inspected", "passed", "limited", "rejected"],
+      "properties": {
+        "unreviewed": { "$ref": "#/$defs/text" }, "inspected": { "$ref": "#/$defs/text" },
+        "passed": { "$ref": "#/$defs/text" }, "limited": { "$ref": "#/$defs/text" }, "rejected": { "$ref": "#/$defs/text" }
+      }
+    },
+    "irFacets": {
+      "type": "object", "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Za-z]+$" }, "additionalProperties": { "$ref": "#/$defs/ids" }
+    },
+    "rules": {
+      "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false, "required": ["ownership", "absence", "failure"],
+        "properties": {
+          "ownership": { "$ref": "#/$defs/text" }, "absence": { "$ref": "#/$defs/text" }, "failure": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "families": {
+      "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false, "required": ["owner", "rule", "positions"],
+        "properties": {
+          "owner": { "$ref": "#/$defs/node" }, "rule": { "$ref": "#/$defs/id" }, "positions": { "$ref": "#/$defs/ids" }
+        }
+      }
+    },
+    "shapes": {
+      "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "lean", "family", "ir", "meaning", "bounds"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" }, "lean": { "$ref": "#/$defs/text" }, "family": { "$ref": "#/$defs/id" },
+          "ir": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[A-Za-z]+:[a-z][a-z-0-9]*$" }] },
+          "meaning": { "$ref": "#/$defs/text" }, "bounds": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "profiles": {
+      "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "consumer", "language", "context", "wordBits"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" }, "consumer": { "$ref": "#/$defs/id" },
+          "language": { "$ref": "#/$defs/id" }, "context": { "$ref": "#/$defs/text" },
+          "wordBits": { "enum": [32, 64, null], "description": "Compiled Lean target word size, not the host's general integer range. Null means the target width still needs audit." }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "revision", "command", "scope", "files", "artifacts"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" }, "kind": { "enum": ["inspection", "test", "installed", "decision"] },
+          "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "command": { "$ref": "#/$defs/text" }, "scope": { "$ref": "#/$defs/text" },
+          "files": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
+          "artifacts": { "type": "array", "items": { "$ref": "#/$defs/file" } }
+        }
+      }
+    },
+    "observations": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "profiles", "shapes", "positions", "path", "scope", "hostTypes", "stages", "limitations"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" }, "profiles": { "$ref": "#/$defs/ids" },
+          "shapes": { "$ref": "#/$defs/ids" }, "positions": { "$ref": "#/$defs/ids" },
+          "path": { "enum": ["ordinary-source", "reviewed-ir"] }, "scope": { "$ref": "#/$defs/text" },
+          "hostTypes": {
+            "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/id" },
+            "additionalProperties": {
+              "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/id" },
+              "additionalProperties": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/text" }] }
+            }
+          },
+          "stages": {
+            "type": "object", "additionalProperties": false,
+            "required": ["analysis", "generation", "compilation", "packaging", "installedExecution"],
+            "properties": {
+              "analysis": { "$ref": "#/$defs/stage" }, "generation": { "$ref": "#/$defs/stage" },
+              "compilation": { "$ref": "#/$defs/stage" }, "packaging": { "$ref": "#/$defs/stage" },
+              "installedExecution": { "$ref": "#/$defs/stage" }
+            }
+          },
+          "limitations": { "type": "array", "items": { "$ref": "#/$defs/text" }, "uniqueItems": true }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "ids": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "text": { "type": "string", "minLength": 1 },
+    "node": { "type": "integer", "minimum": 1 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "file": {
+      "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/text" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "stage": {
+      "type": "object", "additionalProperties": false, "required": ["state", "evidence", "note"],
+      "properties": {
+        "state": { "enum": ["unreviewed", "inspected", "passed", "limited", "rejected"] },
+        "evidence": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "note": { "$ref": "#/$defs/text" }
+      }
+    }
+  }
+}
