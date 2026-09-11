@@ -6,7 +6,7 @@ Start with a Lake project that already builds. Choose the functions an applicati
 
 Keep the library's source and proof history. Work on a branch, inspect `lean-toolchain`, and use the compiler selected by the project to run its existing build and tests. The current bridge builders require Lean 4.32.2; a library pinned to another version needs a checked migration before packaging.
 
-Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Locked external Lake dependency support is part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages); the current native source builder accepts local modules and the pinned Lean standard library.
+Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Native/CPAN builds accept [locked pure-Lean dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including relative local packages and cached Git checkouts at full commit pins. npm/WASM dependency builds remain part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages).
 
 ## Choose the application API
 

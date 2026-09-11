@@ -13,6 +13,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
+import { captureLockedLakeProject, resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 export const pinnedNativeLean = "f3b06c705e6c85f5314019d5d3baab0fec5b580c";
@@ -88,7 +89,7 @@ int lb_native_callback_take_error(void) { int result = callback_error; callback_
 export const buildNativeSharedRuntime = async ({ outputRoot, leanPrefix, cc = "cc" }) => {
 	if(process.platform !== "linux" || process.arch !== "x64") throw new Error("native-library-v1 currently supports Linux x86-64 only");
 	const output = resolve(outputRoot); await absent(output); await mkdir(dirname(output), { recursive: true });
-	const staging = await mkdtemp(join(dirname(output), ".native-runtime-"));
+	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-native-runtime-"));
 	try
 	{
 		const probe = await run(join(leanPrefix, "bin/lean"), ["--version"]);
@@ -169,7 +170,8 @@ export const buildNativeComponent = async ({ projectRoot
 	, signal }) => {
 	const output = resolve(outputRoot), project = resolve(projectRoot), runtime = resolve(runtimeRoot);
 	await absent(output); await mkdir(dirname(output), { recursive: true });
-	const staging = await mkdtemp(join(dirname(output), ".native-component-"));
+	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-native-component-"));
+	let lakeWorkspace;
 	try
 	{
 		const record = await readExportConfiguration(project, { signal });
@@ -195,34 +197,55 @@ export const buildNativeComponent = async ({ projectRoot
 		const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 		if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
 		const sources = analysis.inputs.filter(input => input.path.endsWith(".lean") && input.path !== "lakefile.lean");
-		const sourceByModule = new Map(sources.map(input => [input.path.replace(/\.lean$/, "").replaceAll("/", "."), input]));
+		let sourceByModule = new Map(sources.map(input => [input.path.replace(/\.lean$/, "").replaceAll("/", "."), input]));
 		const selectedModules = modules ?? [...sourceByModule.keys()];
 		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !sourceByModule.has(name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
+		const lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
+		let lakeModules;
+		if(lakeSnapshot)
+		{
+			lakeWorkspace = await resolveLockedLakeWorkspace({ snapshot: lakeSnapshot, modules: selectedModules, leanPrefix, signal });
+			if(lakeWorkspace.document.leanCommit !== pinnedNativeLean) throw new Error("native Lake resolver/compiler identity mismatch");
+			lakeModules = new Map(lakeWorkspace.document.modules.map(module => [module.module, module]));
+			sourceByModule = new Map(lakeWorkspace.document.modules.map(module => [module.module, { ...module.source, path: module.path }]));
+		}
+		const sourcePathFor = (name, input) => lakeWorkspace ? `${name.replaceAll(".", "/")}.lean` : input.path;
+		const originalSource = (name, input) => lakeWorkspace
+			? join(lakeWorkspace.sourceRoot, sourcePathFor(name, input)) : join(project, input.path);
 		const sourceRoot = join(staging, "source"), oleanRoot = join(staging, "olean");
 		await mkdir(oleanRoot); const compiled = new Set(), active = new Set(), compileOrder = [];
 		const sourceByPath = new Map();
 		for(const [name, input] of sourceByModule)
 		{
-			const bytes = await readFile(join(project, input.path));
+			const bytes = await readFile(originalSource(name, input));
 			if(sha256(bytes) !== input.sha256) throw new Error(`native source drift: ${input.path}`);
-			const path = resolve(sourceRoot, input.path);
+			const path = resolve(sourceRoot, sourcePathFor(name, input));
 			await save(path, bytes); sourceByPath.set(path, name);
 		}
-		const env = { ...process.env, LEAN_PATH: oleanRoot, LEAN_SRC_PATH: sourceRoot, PATH: `${join(leanPrefix, "bin")}:${process.env.PATH}` };
+		const env = { ...process.env, LEAN_SYSROOT: resolve(leanPrefix), LEAN_PATH: oleanRoot, LEAN_SRC_PATH: sourceRoot, PATH: `${join(leanPrefix, "bin")}:${process.env.PATH}` };
 		const compile = async name => {
 			if(compiled.has(name)) return;
 			if(active.has(name)) throw new Error(`cyclic native source imports: ${name}`);
 			active.add(name);
-			const input = sourceByModule.get(name), sourceBytes = await readFile(join(project, input.path));
+			const input = sourceByModule.get(name), sourceBytes = await readFile(originalSource(name, input));
 			if(sha256(sourceBytes) !== input.sha256) throw new Error(`native source drift: ${input.path}`);
-			const sourcePath = join(sourceRoot, input.path), cPath = join(staging, `c/${input.path.replace(/\.lean$/, ".c")}`), olean = join(oleanRoot, `${name.replaceAll(".", "/")}.olean`);
-			const dependencies = await run(lean, ["--src-deps", sourcePath], { cwd: sourceRoot, env, signal });
-			for(const path of dependencies.stdout.trim().split("\n"))
+			const path = sourcePathFor(name, input);
+			const sourcePath = join(sourceRoot, path), cPath = join(staging, `c/${path.replace(/\.lean$/, ".c")}`), olean = join(oleanRoot, `${name.replaceAll(".", "/")}.olean`);
+			if(lakeModules)
 			{
-				const dependency = sourceByPath.get(resolve(path));
-				if(dependency) await compile(dependency);
+				for(const dependency of lakeModules.get(name).imports)
+					if(lakeModules.has(dependency)) await compile(dependency);
+			}
+			else
+			{
+				const dependencies = await run(lean, ["--src-deps", sourcePath], { cwd: sourceRoot, env, signal });
+				for(const path of dependencies.stdout.trim().split("\n"))
+				{
+					const dependency = sourceByPath.get(resolve(path));
+					if(dependency) await compile(dependency);
+				}
 			}
 			await save(sourcePath, sourceBytes); await mkdir(dirname(cPath), { recursive: true }); await mkdir(dirname(olean), { recursive: true });
 			await run(lean, ["-R", sourceRoot, "-o", olean, "-c", cPath, sourcePath], { cwd: sourceRoot, env, signal });
@@ -247,6 +270,9 @@ export const buildNativeComponent = async ({ projectRoot
 			, extractorSha256: sha256(await readFile(join(engineRoot, "src/analyze/NativeExports.lean")))
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };
+		if(lakeWorkspace) sourceIdentity.lakeDependencies = { snapshot: lakeSnapshot.document
+			, snapshotSha256: lakeSnapshot.sha256, resolution: lakeWorkspace.document
+			, resolutionSha256: lakeWorkspace.sha256 };
 		const model = createNativeModel({ metadata
 			, component: { id: `${analysis.project.name}@${analysis.project.version}`, name: analysis.project.name, version: analysis.project.version }
 			, moduleName: moduleName ?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}`
@@ -301,6 +327,10 @@ export const buildNativeComponent = async ({ projectRoot
 			, compiler: (await run(cc, ["--version"])).stdout.split("\n")[0]
 			, exports: model.exports.map(item => ({ declaration: item.name, symbol: item.symbol })) };
 		for(const input of analysis.inputs) if(sha256(await readFile(join(project, input.path))) !== input.sha256) throw new Error(`native source changed during compilation: ${input.path}`);
+		if(lakeSnapshot && (await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal }))?.sha256 !== lakeSnapshot.sha256)
+			throw new Error("native Lake dependency sources changed during compilation");
+		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
+			throw new Error("native Lean compiler changed during compilation");
 		await save(join(staging, "metadata.json"), json(metadata)); await save(join(staging, "model.json"), json(model));
 		await save(join(staging, "binding-ir.json"), json(model.bindingIr)); await save(join(staging, "native-component.json"), json(receipt));
 		await save(join(staging, "generated.lean"), adapters.leanSource);
@@ -312,4 +342,6 @@ export const buildNativeComponent = async ({ projectRoot
 		return { root: output, model, receipt };
 	} catch(error)
 	{ await rm(staging, { recursive: true, force: true }); throw error; }
+	finally
+	{ await lakeWorkspace?.dispose(); }
 	};

@@ -93,6 +93,7 @@ const profileManifest = Object.freeze({
 	])
 	, native: Object.freeze([
 		"c-family-package"
+		, "lake-workspace"
 		, "c-generator"
 		, "cargo-package"
 		, "cpp-generator"

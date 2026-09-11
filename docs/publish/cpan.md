@@ -45,6 +45,20 @@ nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-
 
 The output contains `native/runtime`, `native/component`, prepared distributions under `packages`, and the two `.tar.gz` files and checksum receipts under `archives`. `native-release.json` records the component, runtime, Binding IR and archive identities. The native profile is `native-library-v1`; it does not alter the WebAssembly side-module ABI.
 
+### Build with locked Lake dependencies
+
+Keep the reviewed `lake-manifest.json` beside `lean-toolchain`. Supply each local path dependency at its recorded relative path and each Git checkout in the lock's package cache directory, normally `.lake/packages/<name>`. Git pins must contain the full commit hash. Install Git so the builder can verify the cached commit, tree, and file contents. The build does not fetch packages or update the lock.
+
+For a project with a lock, the native builder captures the root project and every locked dependency, including inherited entries. It stages those inputs privately, evaluates the captured Lake configuration, and uses Lean's import parser to resolve module ownership and compilation order. It compiles imported dependency modules from source before extracting the selected public API from fresh interfaces. Existing `.lake` build caches do not supply compiled interfaces.
+
+Both `lakefile.toml` and `lakefile.lean` work. Dependencies may use custom source directories; a Git subdirectory package can use sibling source files inside its captured checkout. Select root modules whose names match their project-relative file paths, as in the configuration above. Dependency toolchains must match Lean 4.32.2.
+
+This build path currently supports pure-Lean dependencies. It rejects missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, custom native targets, precompiled modules, and extra compiler/linker flags. Generated sources, external native libraries, custom Lake build behavior, and root modules laid out under a custom `srcDir` need further builder support.
+
+`native/component/native-component.json` records the dependency snapshot and Lake resolution under `sourceIdentity.lakeDependencies`. Their hashes bind the locks, source files, compiler, resolver, and Lake library to the component model; `sourceIdentity.modules` records each freshly compiled interface hash. A dependency edit during compilation rejects the output. Review these identities when comparing relocated builds.
+
+Lake configuration and Lean elaboration execute code. Private staging keeps normal builds out of the author tree; it is not an operating-system sandbox for hostile source. Use an isolated build environment for projects you do not trust.
+
 ## Verify the release candidate
 
 Before publication:

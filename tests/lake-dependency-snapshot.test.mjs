@@ -125,6 +125,38 @@ test("relocated locks and cached Git produce identical offline snapshots", async
 		, (await inputState(right.output)).map(({ path, mode, sha256: digest }) => ({ path, mode, digest })));
 });
 
+test("complete project snapshots bind root inputs without changing the dependency-only contract", async t => {
+	const context = await fixture(t, { withGit: true });
+	const dependencyOnly = await context.capture();
+	const first = await context.capture({ includeProject: true });
+	assert.equal(dependencyOnly.document.schemaVersion, 1);
+	assert.equal(dependencyOnly.document.rootInputs.length, 2);
+	assert.equal(first.document.schemaVersion, 2);
+	assert.ok(first.document.rootInputs.some(input => input.path === "Project.lean"));
+	assert.ok(first.document.rootInputs.some(input => input.path === "lakefile.toml"));
+	await assertJsonSchema("lake-dependency-snapshot", first.document);
+	await save(context.root, "Project.lean", "def Project.changed : Nat := 99\n");
+	assert.deepEqual(await context.capture(), dependencyOnly);
+	assert.notEqual((await context.capture({ includeProject: true })).sha256, first.sha256);
+	const output = await write(context, first);
+	assert.equal(await readFile(join(output.output, "root/Project.lean"), "utf8"), "def Project.value : Nat := 42\n");
+	await verifyLakeDependencySnapshot({ snapshot: first, snapshotRoot: output.output });
+	await assert.rejects(() => context.capture({ includeProject: "yes" }), { code: "invalid-lake-snapshot" });
+});
+
+test("complete project capture applies source exclusions, aggregate limits and relocation to root files", async t => {
+	const context = await fixture(t, { withGit: true });
+	const first = await context.capture({ includeProject: true });
+	for(const path of ["build/output", ".env.local", ".lean-bridge-native-component-test/generated.c"])
+		await save(context.root, path, "excluded");
+	assert.deepEqual(await context.capture({ includeProject: true }), first);
+	await cp(join(context.directory, "workspace"), join(context.directory, "relocated"), { recursive: true });
+	assert.deepEqual(await prepareLakeDependencySnapshot({ projectRoot: join(context.directory, "relocated/project"), includeProject: true }), first);
+	await assert.rejects(() => context.capture({ includeProject: true, limits: { files: 2 } }), { code: "lake-snapshot-limit" });
+	await symlink(join(context.root, "Project.lean"), join(context.root, "Linked.lean"));
+	await assert.rejects(() => context.capture({ includeProject: true }), { code: "unsafe-lake-source" });
+});
+
 test("snapshot schema rejects undeclared fields and malformed file identities", async t => {
 	const context = await fixture(t, { withGit: true });
 	const { document } = await context.capture();

@@ -5,7 +5,7 @@ Choose the package backend before installing its build tools. All current source
 | Target | Author tools | Runtime preparation |
 | --- | --- | --- |
 | [JavaScript / TypeScript (npm)](../publish/npm.md) | Node 22, Git, Lean 4.32.2, and Nix or Docker | Use the prepared CLI's bundled Wasm runtime. |
-| Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
+| Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, Git for locked Git dependencies, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
 | Python | The prepared native bundle, Python and pip; see [PyPI](../publish/pypi.md) | Install the matching native runtime package. |
 | Rust | The prepared native bundle, Rust and Cargo; see [Cargo](../publish/cargo.md) | The generated crate selects its native runtime inputs. |
 | C | The prepared native bundle, a C compiler, CMake or pkg-config; see [C packages](../publish/c.md) | Use the archive's runtime and link metadata. |

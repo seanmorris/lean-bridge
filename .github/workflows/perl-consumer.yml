@@ -54,6 +54,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
       - name: Install only the pinned Lean compiler
         run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Check locked Lake resolution and installed dependency packages
+        env:
+          LEAN_BRIDGE_LAKE_WORKSPACE_TEST: "1"
+        run: node --test tests/lake-workspace.test.mjs
       - name: Restore checksummed Perl toolchains
         uses: actions/cache@v4
         with:

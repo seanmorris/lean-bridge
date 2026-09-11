@@ -256,8 +256,10 @@ const rejectOverrides = async (root, lakeDir) => {
  * @param options.projectRoot - Read-only Lake project with an existing lock.
  * @param options.signal - Optional cancellation signal.
  * @param options.limits - Optional positive package, file and byte limits.
+ * @param options.includeProject - Capture root project files as well as dependency inputs.
  */
-export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limits = {} }) => {
+export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limits = {}, includeProject = false }) => {
+	if(typeof includeProject !== "boolean") fail("invalid-lake-snapshot", "includeProject must be a boolean");
 	const bound = policy(limits);
 	const root = await realpath(projectRoot);
 	const lock = await optional(() => readRegular(join(root, "lake-manifest.json"), bound.fileBytes, signal));
@@ -276,7 +278,11 @@ export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limit
 	const packagesDir = manifest.packagesDir ?? ".lake/packages";
 	if(!safePath(lakeDir) || !safePath(packagesDir)) fail("invalid-lake-snapshot", "Lake cache directories must stay inside the source project");
 	await rejectOverrides(root, lakeDir);
-	const files = new Map([["root/lake-manifest.json", lock], ["root/lean-toolchain", toolchain]]);
+	const rootFiles = includeProject ? await inventory(root, bound, signal)
+		: new Map([["lake-manifest.json", lock], ["lean-toolchain", toolchain]]);
+	for(const [path, expected] of [["lake-manifest.json", lock], ["lean-toolchain", toolchain]])
+		if(!rootFiles.get(path)?.bytes.equals(expected.bytes)) fail("lake-source-drift", "Root inputs changed before project capture");
+	const files = new Map([...rootFiles].map(([path, file]) => [`root/${path}`, file]));
 	checkAggregate(files, bound);
 	const packages = [], checks = [];
 	const names = new Set();
@@ -320,9 +326,11 @@ export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limit
 		if(!same(describe(new Map([[path, await readRegular(join(root, path), bound.fileBytes, signal)]])), describe(new Map([[path, expected]]))))
 			fail("lake-source-drift", "Root lock or toolchain changed during capture");
 	await rejectOverrides(root, lakeDir);
-	const document = frozen({ schemaVersion: 1
+	if(includeProject && !same(describe(await inventory(root, bound, signal)), describe(rootFiles)))
+		fail("lake-source-drift", "Root project changed during capture");
+	const document = frozen({ schemaVersion: includeProject ? 2 : 1
 		, kind: "lean-bridge-lake-dependency-snapshot", toolchain: version
-		, rootInputs: describe(new Map([["lake-manifest.json", lock], ["lean-toolchain", toolchain]]))
+		, rootInputs: describe(rootFiles)
 		, packages: packages.sort((left, right) => compare(left.name, right.name)) });
 	const snapshot = Object.freeze({ document, sha256: sha256(canonicalJson(document)) });
 	captured.set(snapshot, { files, limits: bound, roots: [root, ...checks.map(check => check.location)] });

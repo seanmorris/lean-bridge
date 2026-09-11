@@ -30,13 +30,15 @@ Perl uses the [shared configuration](../lean/existing-package.md#configure-expor
 
 The current source scanner is still provisional. Tasks 1107 and 1108 make fresh elaboration the shared semantic authority. The current native compiler already checks fresh interfaces and emitted C representations. Configuration support alone does not complete that cutover or enable additional source targets.
 
-## Locked dependency snapshot milestone
+## Locked dependency milestones
 
 Task 1239 now has an offline input snapshotter for the flat package list in `lake-manifest.json`, including inherited entries. It verifies cached Git files against full pinned commits and hashes local package files, native sources, and data. Snapshot identities survive relocation. Capture leaves projects and locks unchanged; writing uses the captured bytes in a new staging directory outside the input projects.
 
 The [snapshot contract](../../schema/lake-dependency-snapshot.schema.json) records the root lock, selected toolchain, package sources, executable modes, and file hashes. The snapshotter rejects changed Git inputs, symlinks, submodules, missing declared files, package overrides, and mismatched toolchains. It neither fetches dependencies nor runs Lake configuration, Git filters, or package hooks.
 
-This module is not connected to the build commands yet. It captures the package list already recorded by Lake; fresh Lake resolution must still establish complete imports and declared native inputs outside package roots. Tasks 1239, 1107, and 1108 also retain isolated compilation, compiler/interface identity binding, and relocated offline rebuild acceptance. The snapshot alone does not authorize export signatures or add a supported type/profile cell.
+The native/CPAN builder now uses a version-2 snapshot that also captures the root project's files. A shared Lean/Lake resolver evaluates captured configurations in private staging and resolves the selected modules through Lake and Lean's import parser. The native compiler builds the resolved pure-Lean dependency closure from source, then checks exports through fresh interfaces. Receipts bind the snapshot, resolution, compiler, Lake library, and interface hashes. Two unrelated projects produce identical receipts and CPAN archives after relocation, and their installed Perl APIs run correctly. See the [native dependency milestone evidence](../evidence/lake-native-workspace-20260911.md).
+
+Task 1239 remains open for npm/WASM engine integration, authenticated snapshots passed across processes, and declared native/generated input closure. Custom native targets and additional compiler/linker options currently fail explicitly. Root custom source layouts and other Lake build customizations also need support. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
 
 ## Package and consumer requirements
 

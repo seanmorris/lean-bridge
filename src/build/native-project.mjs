@@ -37,7 +37,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	catch(error)
 	{ if(error.code !== "ENOENT") throw error; }
 	await mkdir(dirname(output), { recursive: true });
-	const working = await mkdtemp(join(dirname(output), ".native-project-"));
+	const working = await mkdtemp(join(dirname(output), ".lean-bridge-native-project-"));
 	try
 	{
 		const leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim();
