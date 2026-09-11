@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "module": "LeanBridge::Workshop",
+  "modules": ["Workshop"],
+  "resources": ["Workshop.Counter"],
+  "arities": {"Workshop.makeAdder": 1, "Workshop.keepCallback": 1, "Workshop.newRunner": 1},
+  "cpanVersion": "0.001"
+}

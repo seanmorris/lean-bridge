@@ -31,7 +31,7 @@ const guides = docPages.filter(page => page.consumerIds?.length);
  */
 function conversionTable(source)
 {
-	const heading = source.includes("### Alpha example API\n") ? "Alpha example API" : "Scalar package example";
+	const heading = source.includes("### Alpha example API\n") ? "Alpha example API" : source.includes("### Workshop example API\n") ? "Workshop example API" : "Scalar package example";
 	const section = source.split(`### ${heading}\n`)[1]?.split(/^### /mu)[0];
 	assert.ok(section, "The guide must keep its worked example's API table");
 	const rows = section.split("\n").filter(line => line.startsWith("| "));
@@ -84,7 +84,7 @@ test("each consumer guide documents type conversions within prepared-package use
 			assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
 		if(guide.id !== "javascript-typescript")
 		{
-			for(const lean of ["Array UInt32", "Payload", "Box"])
+			for(const lean of guide.id === "perl" ? ["Array UInt32", "Packet", "Counter"] : ["Array UInt32", "Payload", "Box"])
 				assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
 			assert.match(source, /callback|callable/u, guide.id);
 		}

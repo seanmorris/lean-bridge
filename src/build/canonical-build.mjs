@@ -30,6 +30,7 @@ import { validateComponentReleaseBundleManifest } from "../release/component-rel
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
+import { buildPerlProject } from "./perl-project.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
 
@@ -747,6 +748,11 @@ export const buildCanonicalProject = async ({
 		fail("invalid-package-targets", "Build targets must be an array of non-empty names");
 	}
 	if(new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
+	if(targets.includes("cpan") || targets.includes("perl"))
+	{
+		if(targets.length !== 1) fail("invalid-package-targets", "Build the native CPAN target separately from WebAssembly targets");
+		return buildPerlProject({ projectRoot: root, outputRoot, environment, signal, onProgress });
+	}
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{
 		fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");

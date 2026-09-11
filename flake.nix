@@ -35,6 +35,7 @@
             nodejs_22
             openssl
             patchelf
+            perl
             php82
             php82.unwrapped.dev
             php82Packages.composer
@@ -75,6 +76,7 @@
           '';
           coreSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/core-source-boundary.json);
           componentEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/component-engine-source-boundary.json);
+          perlEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/perl-engine-source-boundary.json);
           sourceRoot = toString self;
           relativeSourcePath = path:
             let absolute = toString path;
@@ -316,6 +318,24 @@
               cp build/lean-link-spike/audit/artifact-manifest.json "$out/audit/"
               runHook postInstall
             '';
+          };
+
+          perl-build-engine = pkgs.writeShellApplication {
+            name = "lean-bridge-perl-engine";
+            runtimeInputs = [ pkgs.nodejs_22 pkgs.stdenv.cc pkgs.perl pkgs.gnumake pkgs.gnutar pkgs.gzip pkgs.coreutils pkgs.glibc.bin ];
+            text = let perlSource = builtins.path {
+              name = "lean-bridge-perl-source";
+              path = self;
+              filter = path: type:
+                let relative = relativeSourcePath path;
+                in if type == "directory" then relative == "" || pkgs.lib.any
+                  (file: pkgs.lib.hasPrefix "${relative}/" file) perlEngineSourceBoundary.includedFiles
+                else builtins.elem relative perlEngineSourceBoundary.includedFiles;
+            }; in ''
+              export LEAN_BRIDGE_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              '${pkgs.nodejs_22}/bin/node' '${perlSource}/scripts/run-perl-engine.mjs' "$@"
+            '';
+            meta.platforms = [ "x86_64-linux" ];
           };
 
           component-build-engine = pkgs.writeShellApplication {

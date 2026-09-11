@@ -12,7 +12,7 @@ import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.
 export const typeGuideProfiles = Object.freeze({
 	"docs/javascript-typescript.md": ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"]
 	, "docs/php.md": ["php-native", "php-wasm"]
-	, ...Object.fromEntries(["php-native", "php-wasm", "dotnet", "java", "kotlin", "ruby", "python", "rust", "c", "cpp", "wit-wasi"]
+	, ...Object.fromEntries(["php-native", "php-wasm", "dotnet", "java", "kotlin", "ruby", "perl", "python", "rust", "c", "cpp", "wit-wasi"]
 		.map(profile => [`docs/consume/${profile}.md`, [profile]]))
 });
 
@@ -28,6 +28,7 @@ const names = {
 	, java: "Java"
 	, kotlin: "Kotlin"
 	, ruby: "Ruby"
+	, perl: "Perl"
 	, python: "Python"
 	, rust: "Rust"
 	, c: "C"

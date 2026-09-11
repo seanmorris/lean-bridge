@@ -33,6 +33,8 @@ test("every repository test receives exactly one named execution profile", async
 	for(const name of ["component-consumer-docs", "consumer-guide-docs", "documentation-demo-api", "lean-author-documentation", "reference-documentation"])
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`));
 	assert.ok(grouped.native.includes("tests/rust-generator.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/perl-contract.test.mjs"));
+	assert.ok(grouped.native.includes("tests/perl-native.test.mjs"));
 	assert.ok(grouped.component.includes("tests/release-rehearsal.test.mjs"));
 	assert.ok(grouped.component.includes("tests/internal/abi/js-pending-operations.test.mjs"));
 	assert.ok(grouped.consumer.includes("tests/consumer-node.test.mjs"));

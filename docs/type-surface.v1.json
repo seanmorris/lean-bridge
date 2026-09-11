@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.2.0",
+  "contractVersion": "0.3.0",
   "bindingIrVersion": 3,
-  "consumerContractVersion": "1.3.0",
+  "consumerContractVersion": "1.4.0",
   "planNode": 1208,
   "baseline": {
     "default": "required",
@@ -137,6 +137,7 @@
     {"id":"async-iterator","lean":"Asynchronous iterator","family":"delivery","ir":"delivery:async-iterator","meaning":"A sequence whose individual pulls can complete later.","bounds":"Preserve backpressure, pending-pull cancellation and terminal cleanup."}
   ],
   "profiles": [
+    {"id":"perl","consumer":"perl","language":"perl","context":"Native Perl XS; Linux x86-64; one process-wide Lean runtime","wordBits":64},
     {"id":"node-javascript","consumer":"node-javascript","language":"javascript","context":"Node ESM","wordBits":32},
     {"id":"node-typescript","consumer":"node-typescript","language":"typescript","context":"Strict TypeScript over Node ESM","wordBits":32},
     {"id":"browser-javascript","consumer":"browser-javascript","language":"javascript","context":"Browser main thread","wordBits":32},
@@ -155,6 +156,141 @@
     {"id":"wit-wasi","consumer":"wit-wasi","language":"wit","context":"Wasmtime Component Model wrapper over an x86-64 native Lean host","wordBits":64}
   ],
   "evidence": [
+    {
+      "id": "perl-installed-native-20260911",
+      "kind": "installed",
+      "revision": "e603b1cd70bb009a4ec0f4b47abb33a079707090",
+      "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 npm run test:consumer:perl; install the recorded four-ABI glibc 2.38 archives on glibc 2.39 with prebuilt-only and build-xs; run tests/fixtures/perl/consumer.t and the documentation fixture.",
+      "scope": "Ordinary Workshop and Other projects; all four pinned Perl ABIs. Source hashes pin the working-tree implementation. Development matrix and separate production-floor archive acceptance are described in the evidence record. No publication.",
+      "files": [
+        {
+          "path": "docs/evidence/perl-native-acceptance-20260911.md",
+          "sha256": "3a933290c241f544ac7cdc4bb29b1820a96db8a44dddef47718c4ad65ba4a00e"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "509998b60f8b9048c3bb482784f8f9e381527f56373d9551daa5feb5577525bb"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "8b399e28dca98de6698d1d9a1387bfd19b9188c2ef94763aa5994893662f3dc8"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5f01c3d4620eb59d657bfffc4f053bd1fdd7869daec5af2f8143a0457b3c635a"
+        },
+        {
+          "path": "src/build/native-artifacts.mjs",
+          "sha256": "ba9cfdb51b96e51f3388c64242daf2c3aa2fabfefb59b8165c09e9a860624a1c"
+        },
+        {
+          "path": "src/build/perl-project.mjs",
+          "sha256": "de4ff0766cc65e3ff9fb83c24473307e8f5c08f152773579dead06549bd5a0f4"
+        },
+        {
+          "path": "src/build/perl-xs.mjs",
+          "sha256": "a6facdef7e87bd6207d4818dcd6f29d9e5e614af90d61a18315a66e1156907b3"
+        },
+        {
+          "path": "src/backends/native/runtime-broker.mjs",
+          "sha256": "f1fbd1982d14972511abe6989c4a823de71b1e7172f19e8c66c4e5db3f6321af"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "d63e5e93106c6590d1b565e416fa476d570cb77b33d3b8517ba45a1189b5668c"
+        },
+        {
+          "path": "src/backends/perl/Runtime.xs",
+          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+        },
+        {
+          "path": "src/backends/perl/runtime.h",
+          "sha256": "7731519eff572a66a7c3932d25b6b0f5b4e0e65667994979695bf64e2b0f708c"
+        },
+        {
+          "path": "src/backends/perl/Runtime.pm",
+          "sha256": "b6b4ace67b0d73e53505d1c88df386c10f5c5f38eeef14e3778140c794e741c1"
+        },
+        {
+          "path": "src/backends/perl/Build.pm",
+          "sha256": "7dc3797a6b8465fd1441f85379adeb90b3093df365f8c36cebae5469aa75de11"
+        },
+        {
+          "path": "src/backends/perl/Platform.pm",
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "bac3dd440580a52fd7c41105254e197b4e42fc2f8cd5fb285db349c18e8080e5"
+        },
+        {
+          "path": "src/release/cpan-install-trace.mjs",
+          "sha256": "97f350aba5f9d4e67702cba6d8a98af834477799799f68eb1f38e2435b888d47"
+        },
+        {
+          "path": "tests/perl-native.test.mjs",
+          "sha256": "4b63da6c06b6c6fa9fa5187d53c4829ef529020333a8d2f9e6eefd0fb9c49576"
+        },
+        {
+          "path": "tests/fixtures/perl/ordinary/Workshop.lean",
+          "sha256": "0b0a5fc9be85ab2d73b48a554219a780596aa5576244fde70637c967af5cbd7e"
+        },
+        {
+          "path": "tests/fixtures/perl/other/Other.lean",
+          "sha256": "e5d19820092889389d6d9b2dc774a10f7437715481c0f8f90e6c22f77eaf3651"
+        },
+        {
+          "path": "tests/fixtures/perl/rejected/Rejections.lean",
+          "sha256": "50519cfab8e842a8bdf2cb25665216a509c2dfd6fe3d6470978282c2796408fc"
+        },
+        {
+          "path": "tests/fixtures/perl/consumer.t",
+          "sha256": "dd6f3454beb19447b253bab2f20cddfa408357f7cb72c93b4122f2d186c86eea"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/perl/consumer.pl",
+          "sha256": "7eaadb04829023849684da106ab55276ec6a27575d9e3f4380228d2cf963bc5a"
+        },
+        {
+          "path": "scripts/test-perl-consumers.mjs",
+          "sha256": "eba6d5d8e4aa0fe37db2204e4efd32894426313522f993bb82e268960028501b"
+        },
+        {
+          "path": "scripts/benchmark-perl.mjs",
+          "sha256": "beb635507550d72bdfb742d0d19f37b8f3b0a14c0d1a8b3dc1d00f78cec7f717"
+        },
+        {
+          "path": "tests/fixtures/perl/benchmark.c",
+          "sha256": "37ba937ac4b6ed5fe20a6272dbcf587f64ed2c7a940ed745948b9c5abdb92499"
+        },
+        {
+          "path": "tests/fixtures/perl/benchmark.pl",
+          "sha256": "a5e4af0ef45bc8c578ea952582e570677692a51d6cb412d2f7f0837af5e587ad"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "LeanBridge-Runtime-0.001.tar.gz",
+          "sha256": "cc5e66b72119f02388f9daab902b76cd1467f3c3f8740e987aa5add4f356a582"
+        },
+        {
+          "path": "LeanBridge-Workshop-0.001.tar.gz",
+          "sha256": "0ffdab7d4c1787480beab4bb172d50bed1220dee7e75a7449ae8a8b642d1697a"
+        },
+        {
+          "path": "perl-5.38.2-threaded/LeanBridge-Runtime-0.001.tar.gz",
+          "sha256": "3457a4cb161311d59faae6d14bbe03958be46d34f6864aae50d3b6a42e632f73"
+        },
+        {
+          "path": "perl-5.38.2-threaded/LeanBridge-Workshop-0.002.tar.gz",
+          "sha256": "42bc2488254d242f15ba406524e93fc64b84d68a910c789953c58917c57b6682"
+        },
+        {
+          "path": "perl-5.38.2-threaded/LeanBridge-Other-0.001.tar.gz",
+          "sha256": "24e2e77ac70f0de2685256e94be01c5e7885ec03292f3d1a65e8b8293bcd713e"
+        }
+      ]
+    },
     {
       "id": "npm-installed-scalars",
       "kind": "installed",
@@ -356,6 +492,461 @@
     }
   ],
   "observations": [
+    {
+      "id": "perl-native-scalars",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "undef",
+          "result": "undef",
+          "field": "undef",
+          "callback-parameter": "undef",
+          "callback-result": "undef"
+        },
+        "bool": {
+          "parameter": "Native Perl boolean scalar; generated true()/false()",
+          "result": "Native Perl boolean scalar; generated true()/false()",
+          "field": "Native Perl boolean scalar; generated true()/false()",
+          "callback-parameter": "Native Perl boolean scalar; generated true()/false()",
+          "callback-result": "Native Perl boolean scalar; generated true()/false()"
+        },
+        "uint8": {
+          "parameter": "Exact integer scalar (UV)",
+          "result": "Exact integer scalar (UV)",
+          "field": "Exact integer scalar (UV)",
+          "callback-parameter": "Exact integer scalar (UV)",
+          "callback-result": "Exact integer scalar (UV)"
+        },
+        "uint16": {
+          "parameter": "Exact integer scalar (UV)",
+          "result": "Exact integer scalar (UV)",
+          "field": "Exact integer scalar (UV)",
+          "callback-parameter": "Exact integer scalar (UV)",
+          "callback-result": "Exact integer scalar (UV)"
+        },
+        "uint32": {
+          "parameter": "Exact integer scalar (UV)",
+          "result": "Exact integer scalar (UV)",
+          "field": "Exact integer scalar (UV)",
+          "callback-parameter": "Exact integer scalar (UV)",
+          "callback-result": "Exact integer scalar (UV)"
+        },
+        "uint64": {
+          "parameter": "Exact 64-bit integer scalar (UV)",
+          "result": "Exact 64-bit integer scalar (UV)",
+          "field": "Exact 64-bit integer scalar (UV)",
+          "callback-parameter": "Exact 64-bit integer scalar (UV)",
+          "callback-result": "Exact 64-bit integer scalar (UV)"
+        },
+        "int8": {
+          "parameter": "Exact integer scalar (IV)",
+          "result": "Exact integer scalar (IV)",
+          "field": "Exact integer scalar (IV)",
+          "callback-parameter": "Exact integer scalar (IV)",
+          "callback-result": "Exact integer scalar (IV)"
+        },
+        "int16": {
+          "parameter": "Exact integer scalar (IV)",
+          "result": "Exact integer scalar (IV)",
+          "field": "Exact integer scalar (IV)",
+          "callback-parameter": "Exact integer scalar (IV)",
+          "callback-result": "Exact integer scalar (IV)"
+        },
+        "int32": {
+          "parameter": "Exact integer scalar (IV)",
+          "result": "Exact integer scalar (IV)",
+          "field": "Exact integer scalar (IV)",
+          "callback-parameter": "Exact integer scalar (IV)",
+          "callback-result": "Exact integer scalar (IV)"
+        },
+        "int64": {
+          "parameter": "Exact 64-bit integer scalar (IV)",
+          "result": "Exact 64-bit integer scalar (IV)",
+          "field": "Exact 64-bit integer scalar (IV)",
+          "callback-parameter": "Exact 64-bit integer scalar (IV)",
+          "callback-result": "Exact 64-bit integer scalar (IV)"
+        },
+        "nat": {
+          "parameter": "Math::BigInt (nonnegative)",
+          "result": "Math::BigInt (nonnegative)",
+          "field": "Math::BigInt (nonnegative)",
+          "callback-parameter": "Math::BigInt (nonnegative)",
+          "callback-result": "Math::BigInt (nonnegative)"
+        },
+        "int": {
+          "parameter": "Math::BigInt (signed)",
+          "result": "Math::BigInt (signed)",
+          "field": "Math::BigInt (signed)",
+          "callback-parameter": "Math::BigInt (signed)",
+          "callback-result": "Math::BigInt (signed)"
+        },
+        "float32": {
+          "parameter": "Numeric scalar (NV), rounded to binary32",
+          "result": "Numeric scalar (NV), rounded to binary32",
+          "field": "Numeric scalar (NV), rounded to binary32",
+          "callback-parameter": "Numeric scalar (NV), rounded to binary32",
+          "callback-result": "Numeric scalar (NV), rounded to binary32"
+        },
+        "float64": {
+          "parameter": "Numeric scalar (NV), binary64",
+          "result": "Numeric scalar (NV), binary64",
+          "field": "Numeric scalar (NV), binary64",
+          "callback-parameter": "Numeric scalar (NV), binary64",
+          "callback-result": "Numeric scalar (NV), binary64"
+        },
+        "string": {
+          "parameter": "Unicode scalar string",
+          "result": "Unicode scalar string",
+          "field": "Unicode scalar string",
+          "callback-parameter": "Unicode scalar string",
+          "callback-result": "Unicode scalar string"
+        },
+        "bytes": {
+          "parameter": "Octet scalar string, UTF-8 flag off",
+          "result": "Octet scalar string, UTF-8 flag off",
+          "field": "Octet scalar string, UTF-8 flag off",
+          "callback-parameter": "Octet scalar string, UTF-8 flag off",
+          "callback-result": "Octet scalar string, UTF-8 flag off"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Sixteen scalars exercised in installed ordinary-source parameters, results, copied fields and synchronous callbacks."
+        }
+      },
+      "conversionNotes": {
+        "uint64": "Preserves the complete UInt64 range with UV; no intermediate floating point.",
+        "int64": "Preserves signed 64-bit endpoints with IV; no intermediate floating point.",
+        "nat": "Requires Math::BigInt; rejects negative values and nonfinite decimal text.",
+        "int": "Requires Math::BigInt; preserves sign and magnitude.",
+        "bool": "Requires a native Boolean value; does not use Perl truthiness as a conversion.",
+        "string": "Preserves Unicode scalar values and embedded NUL; rejects invalid Unicode.",
+        "bytes": "Requires an unflagged octet string; copies owned result bytes."
+      },
+      "limitations": [
+        "Linux x64 and the pinned four-ABI Perl matrix. No claim for other architectures or asynchronous calls.",
+        "16 MiB per-call copy budget. Arbitrary integers were exercised through 4096-bit boundaries, not exhaustively.",
+        "Float32 finite rounding and binary64 NaN/infinity/signed zero are tested. NaN payload preservation is not a contract."
+      ]
+    },
+    {
+      "id": "perl-native-copied-values",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks.",
+      "hostTypes": {
+        "array": {
+          "parameter": "Array reference of generated copied element values",
+          "result": "Array reference of generated copied element values",
+          "field": "Array reference of generated copied element values",
+          "callback-parameter": "Array reference of generated copied element values",
+          "callback-result": "Array reference of generated copied element values"
+        },
+        "record": {
+          "parameter": "Generated blessed record with named fields",
+          "result": "Generated blessed record with named fields",
+          "field": "Generated blessed record with named fields",
+          "callback-parameter": "Generated blessed record with named fields",
+          "callback-result": "Generated blessed record with named fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "limited",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks."
+        },
+        "generation": {
+          "state": "limited",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks."
+        },
+        "compilation": {
+          "state": "limited",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks."
+        },
+        "packaging": {
+          "state": "limited",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks."
+        },
+        "installedExecution": {
+          "state": "limited",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks."
+        }
+      },
+      "limitations": [
+        "Finite, acyclic, nongeneric copied shapes only. These fixtures do not establish every Array element or record composition.",
+        "Field evidence uses Array UInt32 and nested Label. Callback evidence uses Packet and Array Packet.",
+        "Resources and callbacks inside copied values need an ownership or retention policy and are rejected."
+      ]
+    },
+    {
+      "id": "perl-native-resources",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "resource"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component.",
+      "hostTypes": {
+        "resource": {
+          "parameter": "Generated resource object with close/closed and canonical identity",
+          "result": "Generated resource object with close/closed and canonical identity"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed Workshop.Counter identity, including exchange with the independently compiled Other component."
+        }
+      },
+      "limitations": [
+        "Counter is the audited heap-identity resource. No field, resource-valued callback or foreign-runtime projection is implied.",
+        "Handles stay on the initiating process and interpreter thread."
+      ]
+    },
+    {
+      "id": "perl-native-host-callbacks",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "CODE reference, valid for the synchronous call"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed synchronous host callbacks, n-ary calls, reentry, original exceptions, invalid result cleanup and callback expiry."
+        }
+      },
+      "limitations": [
+        "Host callbacks cannot escape the call. Async delivery, identity results and identity fields are not covered."
+      ]
+    },
+    {
+      "id": "perl-native-returned-closures",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing.",
+      "hostTypes": {
+        "closure": {
+          "result": "Generated closure object with call, close and closed"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-installed-native-20260911"
+          ],
+          "note": "Installed captured Lean closures, explicit/fallback close, stale-call rejection and self-close while executing."
+        }
+      },
+      "limitations": [
+        "Audited signatures return copied values. No asynchronous or cross-interpreter use is supported."
+      ]
+    },
     {
       "id": "npm-node-primitive-values",
       "profiles": ["node-javascript"],

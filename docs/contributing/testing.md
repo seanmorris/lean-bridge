@@ -193,6 +193,7 @@ Choose the command for the package boundary you changed. These commands run from
 | --- | --- |
 | `npm run test:consumer:native` | Python, Rust, C, and C++ archives. |
 | `npm run test:consumer:managed` | NuGet, Maven for Java and Kotlin, and RubyGems. |
+| `npm run test:consumer:perl` | CPAN distributions, all four Perl ABIs and both XS install paths. |
 | `npm run test:consumer:node` | Alpha and the authored `onboarding-small` package in Node JavaScript and TypeScript, including the documentation fixtures. |
 | `npm run test:consumer:browser` | Alpha's browser npm package. |
 | `npm run test:consumer:php-native` | Native PHP extension, runtime, and Composer sources. |
@@ -208,6 +209,14 @@ For changes spanning native PHP and both PHP-Wasm profiles, run `npm run test:ph
 The WIT/WASI job extracts its archive into a clean consumer, runs the checked-in shell example, and independently validates the component. That example prints `42` and `73` on separate lines. The job measures whole-process invocation cost separately from the tutorial.
 
 Keep the command output and reports with the change. See the [native consumer evidence](../evidence/native-consumer-acceptance.md), [managed acceptance evidence](../evidence/managed-consumer-acceptance.md), [PHP release gate](../evidence/php-release-gate.md), and [WIT/WASI acceptance record](../evidence/wasi-consumer-acceptance.md) for the recorded checks.
+
+### Perl packages
+
+Build only the pinned Lean compiler with `bash scripts/bootstrap-toolchains.sh --lean-only`, then run `npm run test:consumer:perl` on x86-64 Linux with glibc 2.38 or newer. The suite builds checksummed Perl 5.36.3 and 5.38.2, with and without interpreter threads, and installs generated packages through both prebuilt and XS-only paths. It records archive identities and warmed benchmarks in `build/consumer-ci/perl/`, plus the aggregate performance observation in `build/consumer-ci/performance/perl.json`.
+
+For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` lowers only the test package's declared floor. Do not publish those development packages as the production profile. `LEAN_BRIDGE_KEEP_PERL_TEST=1` preserves a suite's task-local build directory for inspection; otherwise it is removed after the run.
+
+The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
 
 ## Release tooling checks
 

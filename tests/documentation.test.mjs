@@ -111,7 +111,7 @@ test("versioned consumer support contract is closed and honest", async () => {
   assert.equal(schema.$defs.consumer.additionalProperties, false);
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "supported").map(item => item.id),
-    ["node-javascript", "node-typescript", "browser-javascript", "php-native", "php-wasm", "dotnet", "jvm", "ruby", "python", "rust", "c", "cpp", "wit-wasi"],
+    ["node-javascript", "node-typescript", "browser-javascript", "php-native", "php-wasm", "dotnet", "jvm", "ruby", "perl", "python", "rust", "c", "cpp", "wit-wasi"],
   );
   assert.deepEqual(
     contract.consumers.filter(item => item.state === "partial").map(item => item.id),
@@ -284,9 +284,10 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [workflow, packageDocument] = await Promise.all([
+  const [workflow, packageDocument, perlWorkflow] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
+    , readFile(".github/workflows/perl-consumer.yml", "utf8")
   ]);
   assert.match(workflow, /^\s*push:\s*$/m);
   assert.match(workflow, /^\s*pull_request:\s*$/m);
@@ -310,16 +311,25 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
   assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 7);
+  assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
+  assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
+  assert.match(perlWorkflow, /node-version: "22"/);
+  assert.match(perlWorkflow, /npm ci --ignore-scripts/);
+  assert.match(perlWorkflow, /bootstrap-toolchains\.sh --lean-only/);
+  assert.match(perlWorkflow, /npm run test:consumer:perl/);
+  assert.match(perlWorkflow, /nix run \.#perl-build-engine/);
+  assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);
+  const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
   for(const consumer of contract.consumers)
 {
-    assert.match(workflow, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    assert.match(consumerWorkflows, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
     if(["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id))
 {
       assert.match(workflow, /--performance "build\/consumer-ci\/performance\/\$consumer\.json"/);
 } else
 {
-      assert.match(workflow, new RegExp(`--performance [^\\n]*${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));
+      assert.match(consumerWorkflows, new RegExp(`--performance [^\\n]*${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));
 }
 }
 });

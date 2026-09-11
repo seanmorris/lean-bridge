@@ -37,7 +37,7 @@ test("every consumer table is generated and includes all 48 source forms exactly
 		assert.equal(table.split("\n").filter(line => line.startsWith("| ")).length, document.shapes.length + 2);
 		for(const shape of document.shapes) assert.ok(row(source, shape.lean), `${filename}: ${shape.id}`);
 		assert.ok(source.indexOf("### Type conversions") < source.indexOf("## Start from a raw Lean package"));
-		assert.match(source, /### (?:Alpha example API|Scalar package example)/u);
+		assert.match(source, /### (?:Alpha example API|Scalar package example|Workshop example API)/u);
 		assert.equal(replaceTypeSection(source, renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md"))), source);
 	}
 });

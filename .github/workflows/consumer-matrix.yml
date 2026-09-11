@@ -378,6 +378,10 @@ jobs:
           LEAN_BRIDGE_BUILD_BACKEND: docker
         run: npm run test:consumer:docker-ci
 
+  perl-consumer:
+    name: Perl
+    uses: ./.github/workflows/perl-consumer.yml
+
   support-summary:
     name: Publish consumer support summary
     if: always()
@@ -388,6 +392,7 @@ jobs:
       - php-consumers
       - native-consumers
       - managed-consumers
+      - perl-consumer
       - wasi-consumer
       - docker-engine
     runs-on: ubuntu-24.04
@@ -406,7 +411,7 @@ jobs:
           pattern: consumer-results-*-${{ github.sha }}
           path: build/consumer-ci/results
           merge-multiple: true
-      - name: Validate all thirteen targets and publish the table
+      - name: Validate all fourteen targets and publish the table
         run: node scripts/consumer-ci.mjs summary --results build/consumer-ci/results --output build/consumer-ci/report.json
       - name: Upload the combined support report
         if: always()

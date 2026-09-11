@@ -58,6 +58,7 @@ The [documentation ownership map](../site/README.md#claim-ownership) identifies 
 | C# / .NET consumers | [C# / .NET](consume/dotnet.md) |
 | Java and Kotlin consumers | [Java](consume/java.md), [Kotlin](consume/kotlin.md) |
 | Ruby consumers | [Ruby](consume/ruby.md) |
+| Perl consumers | [Perl](consume/perl.md) |
 | PHP consumers | [Native PHP](consume/php-native.md), [PHP-Wasm](consume/php-wasm.md) |
 | Component Model consumers | [WIT / WASI](consume/wit-wasi.md) |
 | Platform requirements | [Runtime and package reference](consumers.md) |
@@ -72,6 +73,7 @@ Guides describe commands that a user can execute with produced package archives.
 - [NuGet](publish/nuget.md) for C# and .NET packages.
 - [Maven repositories](publish/maven.md) for Java and Kotlin packages.
 - [RubyGems](publish/rubygems.md) for Ruby gems.
+- [CPAN](publish/cpan.md) for Perl distributions and their XS compatibility matrix.
 - [Composer](publish/composer.md) for native PHP distribution.
 - [Archives](publish/archives.md) for C, C++, and WIT/WASI.
 - [Signed Nix packages](publish/nix.md) for binary-cache publication and trusted substitution.

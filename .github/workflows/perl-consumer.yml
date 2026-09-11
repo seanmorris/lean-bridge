@@ -1,0 +1,95 @@
+name: Perl native packages
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nix-engine:
+    name: Pinned Nix Perl engine and installed consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - uses: cachix/install-nix-action@v31
+      - name: Build the ordinary project with the pinned engine
+        run: nix run .#perl-build-engine -- --project tests/fixtures/perl/ordinary --output build/perl-nix
+      - name: Install the prepared archives with the pinned Perl
+        run: |
+          nix shell --inputs-from . nixpkgs#perl nixpkgs#gnumake --command bash -eu -c '
+            node scripts/test-perl-package-consumer.mjs \
+              --archive build/perl-nix/archives/LeanBridge-Runtime-0.001.tar.gz \
+              --prefix build/perl-nix-installed --mode prebuilt-only
+            node scripts/test-perl-package-consumer.mjs \
+              --archive build/perl-nix/archives/LeanBridge-Workshop-0.001.tar.gz \
+              --prefix build/perl-nix-installed --mode prebuilt-only
+            export PERL5LIB="$PWD/build/perl-nix-installed/lib/perl5"
+            perl tests/fixtures/perl/consumer.t
+            perl tests/fixtures/documentation/consumers/perl/consumer.pl
+          '
+
+  perl:
+    name: Perl XS compatibility and installed execution
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore checksummed Perl toolchains
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Test both install paths on all four Perl configurations
+        id: consumer
+        continue-on-error: true
+        run: npm run test:consumer:perl
+      - name: Record Perl consumer observation
+        if: always()
+        run: |
+          node scripts/consumer-ci.mjs record --consumer perl \
+            --test-result "${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}" \
+            --package-installation "${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}" \
+            --real-lean-execution "${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}" \
+            --performance build/consumer-ci/performance/perl.json \
+            --output build/consumer-ci/results/perl.json
+      - name: Upload consumer observation
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-perl-${{ github.sha }}
+          path: build/consumer-ci/results/perl.json
+          if-no-files-found: error
+          overwrite: true
+      - name: Upload warmed benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-benchmarks-${{ github.sha }}
+          path: |
+            build/consumer-ci/perl/**/benchmark.json
+            build/consumer-ci/perl/**/acceptance.json
+          if-no-files-found: warn
+          overwrite: true
+      - name: Enforce installed Perl acceptance
+        if: steps.consumer.outcome != 'success'
+        run: exit 1

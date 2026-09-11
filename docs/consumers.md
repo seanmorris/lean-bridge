@@ -14,6 +14,7 @@ The [versioned support contract](consumer-support.v1.json) records each runtime 
 | .NET | `supported` | .NET 8 on x86-64 Linux with glibc 2.38 or newer through the generated LibraryImport transport and NuGet package | [C# / .NET](consume/dotnet.md) |
 | JVM | `supported` | JDK 22 on x86-64 Linux with glibc 2.38 or newer through finalized FFM and a Maven package | [java](consume/java.md), [kotlin](consume/kotlin.md) |
 | Ruby | `supported` | MRI Ruby 3.3 on x86-64 Linux with glibc 2.38 or newer through Fiddle and a RubyGem without a native extension build | [ruby](consume/ruby.md) |
+| Perl | `supported` | Perl 5.36.3 and 5.38.2, threaded and nonthreaded, on x86-64 Linux with glibc 2.38 or newer through generated XS and hybrid CPAN distributions | [Perl](consume/perl.md) |
 | Python | `supported` | Python 3.11 or newer on x86-64 Linux with glibc 2.38 or newer through the generated wheel and native runtime adapter | [python](consume/python.md) |
 | Rust | `supported` | Rust 2021 crate on x86-64 Linux with glibc 2.38 or newer and the packaged native runtime adapter | [rust](consume/rust.md) |
 | C | `supported` | C11 package on x86-64 Linux with glibc 2.38 or newer, CMake, and pkg-config discovery | [c](consume/c.md) |
@@ -49,6 +50,10 @@ The [JavaScript and TypeScript guide](javascript-typescript.md) includes a compl
 ## .NET, JVM, and Ruby
 
 [C# / .NET](consume/dotnet.md), [Java](consume/java.md), [Kotlin](consume/kotlin.md), and [Ruby](consume/ruby.md) each have their own installed-package guide. Java and Kotlin consume the same generated Maven artifact through JDK 22's FFM API.
+
+## Perl
+
+[Perl](consume/perl.md) covers prepared CPAN packages, automatic runtime loading, exact integers, copied records and arrays, resources, callbacks, and XS-only fallback installation.
 
 ## WIT and WASI
 

@@ -19,6 +19,7 @@ Get the package for your language and platform from its publisher, either throug
 | Java | Maven JAR and POM | [Java](consume/java.md) |
 | Kotlin | The same Maven JAR and POM as Java | [Kotlin](consume/kotlin.md) |
 | Ruby | RubyGem | [Ruby](consume/ruby.md) |
+| Perl | CPAN distribution with native Lean and generated XS | [Perl](consume/perl.md) |
 | Native PHP | Compiled extension and Composer library | [Native PHP](consume/php-native.md) |
 | PHP-Wasm | npm package for the PHP-Wasm host | [PHP-Wasm](consume/php-wasm.md) |
 | WIT / WASI | Component and host archive | [WIT / WASI](consume/wit-wasi.md) |
@@ -43,7 +44,7 @@ If you received `.lean` files and a Lake project, prepare a host-language packag
 2. [Analyze, build, and create local archives](publish/local-handoff.md#prepare-the-lean-project) from the source project's root. The local dry run checks two builds without uploading a package.
 3. Verify the resulting handoff and follow the prepared-release installation for its target language.
 
-The documented ordinary Lake-project workflow produces npm archives. The Alpha builds for Python, Rust, C, C++, managed runtimes, PHP, and WIT/WASI use target-specific inputs and compiled bundles from this repository. A raw Lake project alone does not supply those bundles or their target API metadata. Each language page links its Alpha build path separately.
+Ordinary Lake projects can produce npm archives or [native Perl distributions](publish/cpan.md). Perl uses freshly checked Lean interfaces for its native ABI. The Alpha builds for Python, Rust, C, C++, managed runtimes, PHP, and WIT/WASI use target-specific inputs and compiled bundles from this repository. A raw Lake project alone does not supply those bundles or their target API metadata. Each language page links its build path separately.
 
 ### Start with the tutorial package
 

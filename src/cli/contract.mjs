@@ -149,6 +149,7 @@ Build and publish options:
   --no-cache            Alias for --cache off
   --cache-directory <path> Select an explicit cache directory
   --output <path>       Local build, gate, or publication output
+  --target cpan         Build native Perl packages using lean-bridge.native.json
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run

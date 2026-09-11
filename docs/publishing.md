@@ -14,6 +14,7 @@ Build the package for its destination, check it in a clean consumer, and upload 
 | C# / .NET | [NuGet](publish/nuget.md) | `.nupkg`; operator-run feed upload with registry-signature handling. |
 | Java and Kotlin | [Maven repositories](publish/maven.md) | JAR and POM; private repository deployment, plus the additional requirements for Maven Central. |
 | Ruby | [RubyGems](publish/rubygems.md) | `.gem`; operator-run gem upload. |
+| Perl | [CPAN](publish/cpan.md) | Native runtime and component `.tar.gz` distributions; operator-run PAUSE upload. |
 | Native PHP | [Composer](publish/composer.md) | Composer sources and the matching native extension/runtime distribution. |
 | PHP-Wasm | [npm, PHP-Wasm profile](publish/npm.md#publish-the-php-wasm-profile) | Separately built npm archive for one loading profile. |
 | C, C++, WIT / WASI | [Archive distribution](publish/archives.md) | Original `.tar.gz` files on an approved artifact host or release page. |

@@ -4,10 +4,11 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.2.0 covers 48 source forms and 16 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.3.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |
+| [Perl](../consume/perl.md#type-conversions) | Native Perl XS; Linux x86-64; one process-wide Lean runtime | 64-bit Lean target |
 | [Node JavaScript](../javascript-typescript.md#type-conversions) | Node ESM | 32-bit Lean target |
 | [TypeScript](../javascript-typescript.md#type-conversions) | Strict TypeScript over Node ESM | 32-bit Lean target |
 | [Browser](../javascript-typescript.md#type-conversions) | Browser main thread | 32-bit Lean target |

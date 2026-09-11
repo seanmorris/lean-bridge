@@ -25,6 +25,7 @@ The current implementation gives package authors:
 | .NET | `supported` | .NET 8 restores the NuGet package and uses generated `LibraryImport` bindings. |
 | JVM | `supported` | JDK 22 resolves the Maven package and uses the finalized Foreign Function and Memory API. |
 | Ruby | `supported` | MRI Ruby 3.3 installs the RubyGem and calls Lean through `Fiddle` without building an extension. |
+| Perl | `supported` | Perl 5.36.3 and 5.38.2 install native CPAN distributions with generated XS, automatic shared-runtime loading, and XS-only fallback builds. |
 | Python | `supported` | The x86-64 Linux wheel for glibc 2.38 or newer loads the packaged native component through its generated adapter. |
 | Rust | `supported` | The crate uses the packaged native component through its generated runtime adapter. |
 | C | `supported` | The C11 package links the generated API to the shared native Lean component. |

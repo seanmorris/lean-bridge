@@ -72,6 +72,10 @@ if [[ "$actual_lean_commit" != "$LEAN_COMMIT" ]]; then
   exit 1
 fi
 
+if [[ "${1:-}" == "--lean-only" ]]; then
+  exit 0
+fi
+
 if [[ ! -d "$LEAN_SOURCE_DIR/.git" ]]; then
   git clone --filter=blob:none --no-checkout "$LEAN_SOURCE_URL" "$LEAN_SOURCE_DIR"
 fi

@@ -48,7 +48,7 @@ const observationFixture = () => {
 test("the versioned inventory classifies every profile, IR alternative and required source shape", async () => {
 	await assertJsonSchema("type-surface", document);
 	assert.equal(validateTypeSurface(document, contracts), true);
-	assert.equal(document.profiles.length, 16);
+	assert.equal(document.profiles.length, 17);
 	assert.equal(document.shapes.length, 48);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "jvm").map(profile => profile.id), ["java", "kotlin"]);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "browser-javascript").map(profile => profile.id),
@@ -62,6 +62,23 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 		assert.ok(cell.owner > 0 && cell.bounds && cell.ownership && cell.absence && cell.failure && cell.platform);
 		assert.deepEqual(Object.keys(cell.stages), document.stages);
 	}
+});
+
+test("Perl installed evidence stays scoped to ordinary-source types and audited positions", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "perl");
+	const state = (shape, position, sourcePath = "ordinary-source") => cells.find(cell => cell.shape === shape
+		&& cell.position === position && cell.path === sourcePath).stages.installedExecution.state;
+	for(const scalar of document.irFacets.primitive)
+		for(const position of document.families.primitive.positions)
+			assert.equal(state(scalar, position), "passed", `${scalar}/${position}`);
+	assert.equal(state("record", "field"), "limited");
+	assert.equal(state("array", "callback-result"), "limited");
+	assert.equal(state("resource", "result"), "passed");
+	assert.equal(state("resource", "field"), "unreviewed");
+	assert.equal(state("callback", "parameter"), "passed");
+	assert.equal(state("closure", "result"), "passed");
+	assert.equal(state("nat", "parameter", "reviewed-ir"), "unreviewed");
+	assert.equal(state("task", "signature"), "unreviewed");
 });
 
 for(const [name, change] of [

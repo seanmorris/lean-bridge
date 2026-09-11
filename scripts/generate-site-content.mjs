@@ -29,7 +29,7 @@ const demoPages = new Map([
 ]);
 const languages = [
 	'sh', 'js', 'ts', 'tsx', 'html', 'json', 'lean', 'toml', 'php', 'python'
-	, 'rust', 'c', 'cpp', 'csharp', 'java', 'kotlin', 'ruby'
+	, 'rust', 'c', 'cpp', 'csharp', 'java', 'kotlin', 'ruby', 'perl'
 	, 'xml', 'cmake', 'wit', 'nix', 'ini'
 ];
 
