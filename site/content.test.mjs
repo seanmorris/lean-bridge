@@ -15,6 +15,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import manifest from '../demos/manifest.json' with { type: 'json' };
 import contributingCompatibility from '../tests/fixtures/documentation/contributing-compatibility.json' with { type: 'json' };
 import { demos, docPages, prerenderPaths } from './registry.mjs';
+import routes from './app/routes.ts';
 import {
 	compileDocumentationPage, generateSiteContent
 	, rewriteDocumentationLink, validateDocumentationAnchors
@@ -39,9 +40,23 @@ test('registry preserves all artifacts and routes every demo through React', () 
 	assert.equal(new Set(prerenderPaths).size, prerenderPaths.length);
 	assert.equal(new Set(docPages.map(entry => entry.id)).size, docPages.length);
 	assert.equal(prerenderPaths.length, docPages.length + demos.length + 3);
-	assert.equal(docPages.filter(entry => entry.source).length, 68);
+	assert.equal(docPages.filter(entry => entry.source).length, 70);
 	assert.equal(new Set(docPages.filter(entry => entry.source)
 		.map(entry => entry.source)).size, docPages.length);
+});
+
+test('every indexed guide has an explicit React route and its matching content module', async () => {
+	const guides = routes.filter(entry => entry.file.startsWith('routes/guides/'));
+	assert.deepEqual(guides.map(entry => `/${entry.path}/`).sort(),
+		docPages.map(entry => entry.route).sort(), 'Guide links must not fall through to the not-found route');
+	for(const entry of docPages)
+	{
+		const route = guides.find(guide => `/${guide.path}/` === entry.route);
+		const source = await readFile(path.join(root, 'site/app', route.file), 'utf8');
+		assert.ok(source.includes(`import Content from "../../../../build/site-content/${entry.id}.mjs";`),
+			`${entry.route}: load the indexed guide instead of another page`);
+		assert.match(source, /<Documentation Content=\{Content\}\s*\/>/u, entry.route);
+	}
 });
 
 test('source-relative links preserve route fragments and deployment prefixes', () => {
