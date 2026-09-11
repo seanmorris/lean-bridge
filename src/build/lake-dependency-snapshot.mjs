@@ -249,6 +249,143 @@ const rejectOverrides = async (root, lakeDir) => {
 };
 
 /**
+ * Validate portable snapshot metadata without consulting the original workspace.
+ * This checks structure, not authenticity. Readers must supply a trusted digest.
+ *
+ * @param document - Detached snapshot document.
+ * @param options - Optional resource limits.
+ * @param options.limits - Positive package, file and byte limits.
+ */
+export const validateLakeDependencySnapshotDocument = (document, { limits = {} } = {}) => {
+	const bound = policy(limits);
+	const digest = value => typeof value === "string" && /^[0-9a-f]{64}$(?![\s\S])/.test(value);
+	closed(document, ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"], ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"], "snapshot");
+	if(![1, 2].includes(document.schemaVersion) || document.kind !== "lean-bridge-lake-dependency-snapshot"
+		|| typeof document.toolchain !== "string" || !/^leanprover\/lean4:v[0-9]+\.[0-9]+\.[0-9]+$(?![\s\S])/.test(document.toolchain)
+		|| !Array.isArray(document.packages) || document.packages.length > bound.packages)
+		fail("invalid-lake-snapshot", "Snapshot version, toolchain or package set is invalid");
+	let count = 0, size = 0;
+	const checkFiles = files => {
+		if(!Array.isArray(files)) fail("invalid-lake-snapshot", "Snapshot files must be an array");
+		let previous = "";
+		const paths = new Set();
+		for(const file of files)
+		{
+			closed(file, ["path", "bytes", "sha256", "mode"], ["path", "bytes", "sha256", "mode"], "snapshot file");
+			if(!safePath(file.path) || ignored(file.path) || file.path.split("/").length > 128 || file.path <= previous
+				|| !Number.isSafeInteger(file.bytes) || file.bytes < 0 || !digest(file.sha256) || ![0o644, 0o755].includes(file.mode))
+				fail("invalid-lake-snapshot", "Snapshot file paths and identities must be unique, sorted and portable");
+			for(let parent = dirname(file.path); parent !== "."; parent = dirname(parent))
+				if(paths.has(parent)) fail("invalid-lake-snapshot", "Snapshot file cannot also be a directory");
+			previous = file.path;
+			paths.add(file.path);
+			count += 1; size += file.bytes;
+			if(file.bytes > bound.fileBytes || count > bound.files || size > bound.totalBytes)
+				fail("lake-snapshot-limit", "Snapshot exceeds the aggregate file or byte limit");
+		}
+		return paths;
+	};
+	const root = checkFiles(document.rootInputs);
+	if(!root.has("lake-manifest.json") || !root.has("lean-toolchain") || (document.schemaVersion === 1 && root.size !== 2))
+		fail("invalid-lake-snapshot", "Snapshot must include the root lock and toolchain");
+	let previous = "";
+	for(const pkg of document.packages)
+	{
+		const keys = ["name", "scope", "inherited", "directory", "packageRoot", "configFile", "manifestFile", "source", "files", "treeSha256"];
+		closed(pkg, keys, keys, "snapshot package");
+		const sourceKeys = pkg.source?.type === "path" ? ["type", "dir"] : ["type", "url", "rev", "inputRev", "subDir"];
+		closed(pkg.source, sourceKeys, sourceKeys, "snapshot package source");
+		validateEntry({ ...pkg.source, name: pkg.name, scope: pkg.scope, inherited: pkg.inherited, configFile: pkg.configFile, manifestFile: pkg.manifestFile });
+		if(pkg.name <= previous || pkg.directory !== `packages/${pkg.name}` || typeof pkg.scope !== "string"
+			|| pkg.packageRoot !== (pkg.source.type === "git" ? pkg.source.subDir ?? "" : "")
+			|| (pkg.manifestFile !== null && !safePath(pkg.manifestFile)))
+			fail("invalid-lake-snapshot", "Snapshot package roots and identities must be unique, sorted and portable");
+		previous = pkg.name;
+		const paths = checkFiles(pkg.files);
+		if(resolveConfig(paths, pkg.packageRoot, pkg.configFile) !== pkg.configFile
+			|| (pkg.manifestFile !== null && !paths.has([pkg.packageRoot, pkg.manifestFile].filter(Boolean).join("/")))
+			|| !digest(pkg.treeSha256) || pkg.treeSha256 !== sha256(canonicalJson(pkg.files)))
+			fail("invalid-lake-snapshot", "Snapshot package configuration or tree identity is invalid");
+	}
+	return true;
+};
+
+/**
+ * Load a transported snapshot against the digest authorized by its build plan.
+ * No Git checkout, host compiler, original path or network access is required.
+ *
+ * @param options - Detached directory and independently expected identity.
+ * @param options.snapshotRoot - Transported snapshot directory.
+ * @param options.expectedSha256 - Required digest from the verified build inputs.
+ * @param options.signal - Optional cancellation signal.
+ * @param options.limits - Optional positive resource limits.
+ */
+export const readLakeDependencySnapshot = async ({ snapshotRoot, expectedSha256, signal, limits = {} }) => {
+	if(typeof expectedSha256 !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(expectedSha256))
+		fail("invalid-lake-snapshot", "Loading requires an independently expected snapshot digest");
+	const bound = policy(limits);
+	const root = resolve(snapshotRoot);
+	if(await realpath(root) !== root) fail("unsafe-lake-source", "Snapshot directories cannot be symlinked");
+	const marker = await readRegular(join(root, manifestName), Math.max(65536, bound.totalBytes), signal);
+	if(marker.mode !== 0o644 || sha256(marker.bytes) !== expectedSha256)
+		fail("lake-snapshot-drift", "Snapshot manifest differs from the authorized identity");
+	const document = parse(marker.bytes);
+	validateLakeDependencySnapshotDocument(document, { limits: bound });
+	if(!marker.bytes.equals(Buffer.from(canonicalJson(document)))) fail("invalid-lake-snapshot", "Snapshot manifest must use canonical JSON");
+	const files = await inventory(root, { ...bound, files: bound.files + 1
+		, fileBytes: Math.max(bound.fileBytes, marker.bytes.length)
+		, totalBytes: bound.totalBytes + marker.bytes.length }, signal, false);
+	if(files.get(manifestName)?.mode !== marker.mode || !files.get(manifestName)?.bytes.equals(marker.bytes)) fail("lake-snapshot-drift", "Snapshot manifest changed while loading");
+	files.delete(manifestName);
+	const expected = document.rootInputs.map(file => ({ ...file, path: `root/${file.path}` }))
+		.concat(document.packages.flatMap(pkg => pkg.files.map(file => ({ ...file, path: `${pkg.directory}/${file.path}` }))))
+		.sort((a, b) => compare(a.path, b.path));
+	if(!same(describe(files), expected)) fail("lake-snapshot-drift", "Snapshot files differ from the authorized identity");
+	if(files.get("root/lean-toolchain").bytes.toString("utf8").trim() !== document.toolchain)
+		fail("lake-toolchain-drift", "Snapshot toolchain differs from its captured source");
+	// Match the transport metadata to the captured lock, without following local
+	// paths or fetching Git. The original capture verified pins and Git objects.
+	const lock = parse(files.get("root/lake-manifest.json").bytes);
+	if(!Array.isArray(lock.packages) || lock.packages.length !== document.packages.length)
+		fail("invalid-lake-snapshot", "Snapshot package set differs from its captured lock");
+	const names = new Set();
+	for(const entry of lock.packages)
+	{
+		validateEntry(entry);
+		const pkg = document.packages.find(item => item.name === entry.name);
+		const source = entry.type === "path" ? { type: "path", dir: entry.dir }
+			: { type: "git", url: entry.url, rev: entry.rev, inputRev: entry.inputRev ?? null, subDir: entry.subDir ?? null };
+		const configFile = pkg && resolveConfig(new Set(pkg.files.map(file => file.path)), pkg.packageRoot, entry.configFile ?? "lakefile");
+		if(!pkg || names.has(entry.name) || !same(pkg.source, source) || pkg.scope !== (entry.scope ?? "")
+			|| pkg.inherited !== entry.inherited || pkg.configFile !== configFile || pkg.manifestFile !== (entry.manifestFile === undefined ? "lake-manifest.json" : entry.manifestFile))
+			fail("invalid-lake-snapshot", "Snapshot package identity differs from its captured lock");
+		names.add(entry.name);
+	}
+	const snapshot = Object.freeze({ document: frozen(document), sha256: expectedSha256 });
+	captured.set(snapshot, { files, limits: bound, roots: [root] });
+	return snapshot;
+};
+
+/**
+ * Verify that a clean relocated project contains the captured root inputs.
+ * Dependency locations are deliberately not followed by this check.
+ *
+ * @param options - Complete capture and relocated root.
+ * @param options.snapshot - Opaque complete snapshot prepared or read by this process.
+ * @param options.projectRoot - Independent root checkout to compare.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const verifyLakeSnapshotProject = async ({ snapshot, projectRoot, signal }) => {
+	const state = captured.get(snapshot);
+	if(!state || snapshot.document.schemaVersion !== 2) fail("invalid-lake-snapshot", "Project verification requires a complete prepared snapshot");
+	const root = await realpath(projectRoot);
+	const files = await inventory(root, state.limits, signal);
+	if(!same(describe(files), snapshot.document.rootInputs))
+		fail("lake-source-drift", "Independent project files differ from the captured root inputs");
+	return true;
+};
+
+/**
  * Capture the flat package set recorded by Lake, including inherited entries.
  * This inventories inputs only; it does not authorize types or resolve imports.
  *

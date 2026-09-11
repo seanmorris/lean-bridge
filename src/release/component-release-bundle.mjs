@@ -8,6 +8,7 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFil
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readLakeDependencySnapshot, writeLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
 
 /**
  * Reports component release bundle failures with stable machine-readable codes and structured diagnostic context.
@@ -164,6 +165,13 @@ export const buildComponentReleaseBundle = async ({
 	try
 	{
 		const artifactName = linked.manifest.artifact.path.split("/").at(-1);
+		if(componentPlan.document.schemaVersion === 2)
+		{
+			const snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputs, "lake"), expectedSha256: componentPlan.document.source.lakeSnapshotSha256 });
+			if(sha256(canonicalJson(compiled.manifest.lakeDependencies?.snapshot)) !== snapshot.sha256)
+				fail("component-release-source-drift", "Compiled Lake snapshot differs from the authorized source closure");
+			await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "lake") });
+		}
 		await copy(staging, `artifacts/${artifactName}`, join(side, linked.manifest.artifact.path));
 		await write(staging, "binding/binding-ir.json", canonicalJson(analysis.bindingIr.document));
 		await write(staging, "binding/private-abi.json", canonicalJson(compilerAdapters.plan.privateAbi));
@@ -209,7 +217,7 @@ export const buildComponentReleaseBundle = async ({
 							: path === "metadata/provenance.json" ? "provenance"
 								: path.startsWith("metadata/") ? "build-evidence"
 									: path.startsWith("locks/") ? "plan"
-										: path.startsWith("source/") ? "source"
+										: path.startsWith("source/") || path.startsWith("lake/") ? "source"
 											: path.startsWith("generated/") ? "generated-source"
 												: "documentation";
 		const files = [];

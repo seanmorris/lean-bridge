@@ -18,6 +18,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { buildCanonicalProject, processBuildRunner } from "../build/canonical-build.mjs";
+import { prepareLakeDependencySnapshot, verifyLakeSnapshotProject } from "../build/lake-dependency-snapshot.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { buildComponentNpmPackages } from "./component-npm-package.mjs";
@@ -38,7 +39,8 @@ const fail = (code, message, options = {}) => {
 	throw new ReproducibilityGateError(code, message, options);
 };
 
-const capture = (runner, request) => runner.capture({ timeoutMs: 30 * 60 * 1000, ...request });
+const capture = (runner, request) => runner.capture({ timeoutMs: 30 * 60 * 1000, ...request
+	, ...(request.command === "git" ? { args: ["--no-optional-locks", ...request.args] } : {}) });
 
 const outputAbsent = async ({ projectRoot, outputRoot }) => {
 	const project = resolve(projectRoot);
@@ -124,6 +126,16 @@ export const prepareCleanComponentSources = async ({
 		// Falling back to the portable local repository path is intentional.
 	}
 	const roots = [];
+	let lakeSnapshot;
+	try
+	{
+		await stat(join(project, "lake-manifest.json"));
+		lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true });
+	} catch(error)
+	{
+		// Only the root lock may be absent. Missing locked inputs must fail.
+		if(error.code !== "ENOENT" || error.path !== join(project, "lake-manifest.json")) throw error;
+	}
 	for(const name of ["a", "b"])
 	{
 		const checkout = join(scratchRoot, `source-${name}`);
@@ -144,10 +156,12 @@ export const prepareCleanComponentSources = async ({
 			, cwd: cloneProject
 		})).stdout.trim();
 		if(cloneStatus !== "") fail("unclean-source-clone", `Independent source clone ${name.toUpperCase()} is not clean`);
+		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: cloneProject });
 		roots.push(cloneProject);
 	}
 	return Object.freeze({
 		roots: Object.freeze(roots)
+		, ...(lakeSnapshot ? { lakeSnapshot } : {})
 		, source: Object.freeze({
 			repository: publicRepositoryIdentity(repository)
 			, projectPath: projectPath === "" ? "." : portable(projectPath)
@@ -294,6 +308,7 @@ export const runComponentReproducibilityGate = async ({
 				, targets
 				, cache
 				, signal
+				, ...(prepared.lakeSnapshot ? { lakeSnapshot: prepared.lakeSnapshot } : {})
 			});
 			const packages = await packageComponent({
 				bundleRoot: join(buildRoot, "bundle")
@@ -304,6 +319,11 @@ export const runComponentReproducibilityGate = async ({
 			const inventory = await combinedInventory({ buildRoot, packageRoot });
 			built.push({ name, buildRoot, packageRoot, result, packages, receipt, inventory, durationMs: Math.max(0, now() - started) });
 			onProgress?.({ phase: `build-${name.toLowerCase()}`, state: "completed", message: `Clean component ${name} built`, current: index + 1, total: 2 });
+		}
+		if(prepared.lakeSnapshot)
+		{
+			const current = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, signal });
+			if(current.sha256 !== prepared.lakeSnapshot.sha256) fail("lake-source-drift", "Locked dependencies changed during release reproduction");
 		}
 		const [left, right] = built;
 		const comparison = compareReleaseInventories(left.inventory, right.inventory);

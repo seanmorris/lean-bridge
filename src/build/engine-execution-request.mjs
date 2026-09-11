@@ -8,6 +8,7 @@ import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/p
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { validateComponentBuildPlan } from "./component-plan.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 
@@ -166,7 +167,7 @@ export const identifyComponentInputClosure = async inputRoot => {
 	});
 };
 
-const authorizedBundleFiles = ({ componentPlan, compilationPlan }) => Object.freeze([
+const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot }) => Object.freeze([
 	"README.md"
 	, compilationPlan.document.outputs.sideModule
 	, "binding/binding-ir.json"
@@ -185,6 +186,9 @@ const authorizedBundleFiles = ({ componentPlan, compilationPlan }) => Object.fre
 	, "metadata/sbom.json"
 	, "metadata/side-module-audit.json"
 	, ...componentPlan.document.source.inputs.map(input => `source/${input.path}`)
+	, ...(lakeSnapshot ? ["lake/lake-dependency-snapshot.json"
+		, ...lakeSnapshot.document.rootInputs.map(input => `lake/root/${input.path}`)
+		, ...lakeSnapshot.document.packages.flatMap(pkg => pkg.files.map(input => `lake/${pkg.directory}/${input.path}`))] : [])
 ].sort());
 
 /**
@@ -229,6 +233,10 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 	validateComponentBuildPlan(componentPlan.document);
 	validateComponentCompilationPlan(compilationPlan.document);
 	if(componentPlan.sha256 !== compilationPlan.document.componentPlanSha256) fail("engine-request-plan-drift", "Component and compilation plans do not share one identity");
+	if(componentPlan.document.source.lakeSnapshotSha256 !== compilationPlan.document.source.lakeSnapshotSha256)
+		fail("engine-request-plan-drift", "Component and compilation plans identify different locked sources");
+	const lakeSnapshot = componentPlan.document.schemaVersion === 2
+		? await readLakeDependencySnapshot({ snapshotRoot: join(resolve(inputRoot), "lake"), expectedSha256: componentPlan.document.source.lakeSnapshotSha256 }) : null;
 	const [engine, input] = await Promise.all([
 		identifyBuildEngine(engineRoot)
 		, identifyComponentInputClosure(inputRoot)
@@ -249,7 +257,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 			kind: "component-neutral-release-bundle"
 			, bundleDirectory: "bundle"
 			, executionReport: "engine-execution-report.json"
-			, authorizedFiles: authorizedBundleFiles({ componentPlan, compilationPlan })
+			, authorizedFiles: authorizedBundleFiles({ componentPlan, compilationPlan, lakeSnapshot })
 		})
 		, cache: Object.freeze({ policy: cachePolicy })
 		, targets: Object.freeze([...targets].sort())

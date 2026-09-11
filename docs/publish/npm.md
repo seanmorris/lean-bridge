@@ -2,6 +2,24 @@
 
 An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and upload its exact npm archive. Consumers install the component; npm resolves its shared runtime automatically.
 
+## Build with locked Lake dependencies
+
+Keep the project's reviewed `lake-manifest.json` and exact `lean-toolchain` in source control. Populate its dependency cache during normal Lean development before invoking the bridge. Git entries must identify full commits, and cached checkouts must match those pins without modified or untracked source files. Local path dependencies must be relative and available when you start the build.
+
+Build the selected public API with the usual command:
+
+```sh
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-build
+```
+
+The CLI captures the root project and locked dependency files without running Lean. It verifies cached Git objects and hashes local contents, then passes the snapshot into the selected Nix or Docker engine. The engine resolves imports through the pinned Lake loader and Lean import parser, compiles fresh interfaces, and links the dependency code into one component Wasm. It neither fetches packages nor updates your lock. Planning requires Node and Git; compilation uses the engine's Lean installation.
+
+The build bundle includes captured sources under `bundle/lake/`. Its component and compilation plans record `source.lakeSnapshotSha256`; `locks/lean-target-c-manifest.json` records the snapshot, resolved order, compiler identity, and fresh interface hashes. Changed dependencies during the build reject its output. Installed JavaScript consumers need only the prepared component and its runtime package, without Lake or dependency checkouts.
+
+`publish --dry-run` supplies the verified dependency snapshot to both independent clean root checkouts. It checks each checkout against the captured root files and rechecks the original dependencies before authorizing the candidate. Keep the local packages and cached Git checkouts available throughout that command. Root files must match the committed revision; local dependencies are identified by their captured contents.
+
+This path supports pure-Lean dependency imports, including transitive packages and dependency libraries with custom source directories. It rejects missing pins, source drift, symlinks, package overrides, ambiguous modules, custom native targets, precompiled modules, and extra compiler/linker flags. Native/generated inputs and custom root `srcDir` layouts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md).
+
 ## Publish an ordinary component
 
 Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Declare its license in `package.json` and include `LICENSE` in the committed source.

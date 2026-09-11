@@ -165,9 +165,14 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	const componentPackageJson = JSON.parse(generated["package.json"]);
 	const sbom = JSON.parse(await readFile(join(bundle.root, "metadata/sbom.json"), "utf8"));
 	for(const notice of sbom.notices) await copy(join(bundle.root, notice.path), join(componentPackage, basename(notice.path)));
+	const dependencyNotices = bundle.manifest.files.filter(file => file.role === "source" && file.path.startsWith("lake/packages/")
+		&& /^(?:LICENSE|NOTICE|COPYING)(?:\..+)?$/i.test(basename(file.path)));
+	for(const notice of dependencyNotices)
+		await copy(join(bundle.root, notice.path), join(componentPackage, "notices/lake", notice.path.slice("lake/packages/".length)));
 	const componentExports = componentPackageJson.exports?.["."] ?? {};
 	await writeFile(join(componentPackage, "package.json"), json({
 		...componentPackageJson
+		, ...(dependencyNotices.length ? { files: [...new Set([...componentPackageJson.files, "notices"])] } : {})
 		, name: packageIdentity.name
 		, version: packageIdentity.version
 		, license: sbom.license

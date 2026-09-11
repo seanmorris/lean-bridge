@@ -170,8 +170,8 @@
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"docs/evidence/lake-native-workspace-20260911.md","sha256":"4885f50ba7468b223063454aef0377c0df1dc6810d541e45004bdbb887a43820"},
         {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"4197479a28711e03e9dfd438f76600730100c005abb3a9e84142da49233bb3d8"},
-        {"path":"src/build/lake-workspace.mjs","sha256":"55a096dd581cc7f5f61be55172c0bf34651c5029927438f56c5fe25946e3c47c"},
-        {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"565421250f25f4169415593da83bc5a551ec7df51ddb86d372d3546841aa999b"},
+        {"path":"src/build/lake-workspace.mjs","sha256":"96d8c28ceccf30ff36158f35197d136b90592303055f7cbaf2ce2dec8dcdb40b"},
+        {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"9bbf3a9b86537fb19d8a64eb620a9fe9fc477f3a5e982d9f571b3963557a374a"},
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
         {"path":"tests/lake-workspace.test.mjs","sha256":"3580d21abfd489f8005eeb7db42473094948abff12ed311da2f8d04fc1bf689d"},
         {"path":"tests/helpers/lake-workspace.mjs","sha256":"70956fc369830bb332c5807048adc7ac12bc0bc6bba07e351a2cdc68104b132b"},
@@ -328,11 +328,11 @@
       "kind": "inspection",
       "revision": "445502a10f0ee7478c40e1d0ee8cbd29e09e0cbc",
       "command": "Inspect the source analyzer, scalar guard, generated declarations, compiled adapters and npm package builder; node --test tests/lean-project-analyzer.test.mjs.",
-      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm package-settings follow-up preserves these guards and reruns analyzer and installed scalar tests. Package naming does not add type support. Analysis is source scanning, not the unfinished elaborator cutover.",
+      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"src/analyze/lean-project.mjs","sha256":"26c377ff704f383383eea606b552dd9fe080a01431c474a8a92a0c888e10f0e4"},
-        {"path":"src/build/component-plan.mjs","sha256":"57c408b4191faf4f20baa6933f513eeba0bc0b2452c0c770a8dd2afa865c042f"},
+        {"path":"src/build/component-plan.mjs","sha256":"874671f67e5b886f88f2895d7bc6c0b586e3d2c7da86fdf6d44200e4ffa8585e"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},
@@ -340,7 +340,7 @@
         {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
         {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
         {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
-        {"path":"src/release/component-npm-package.mjs","sha256":"9a9e29220be23ca23b2ca42de645976d3460df04ed1df65bdbfb897939559a9f"}
+        {"path":"src/release/component-npm-package.mjs","sha256":"017090c5d7e82b73036ae46dee9976e74cb78bcf69514dbe579012d04e134685"}
       ],
       "artifacts": []
     },

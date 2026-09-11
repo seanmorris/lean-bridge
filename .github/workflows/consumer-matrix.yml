@@ -65,6 +65,14 @@ jobs:
         run: npm run test:consumer:node
       - name: Prepare the standalone CLI archive with its prebuilt runtime
         run: npm run build:cli-package -- --output build/cli-package --runtime build/consumer-ci-runtime/lazy
+      - name: Compile locked dependencies in the pinned engine and install relocated npm releases offline
+        env:
+          LEAN_BRIDGE_LAKE_WASM_TEST: "1"
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          nix build .#component-build-engine --out-link build/locked-lake-engine
+          node --test tests/lake-wasm.test.mjs
       - name: Build and consume a Lean project through the tarball-installed CLI
         run: npm run acceptance:cli-package -- --candidate build/cli-package --output build/cli-package-acceptance --backend nix
       - name: Install the disposable npm registry

@@ -8,6 +8,7 @@ import { mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/p
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { validateLockedLakeResolution } from "./lake-workspace.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 
@@ -69,13 +70,49 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 	const path = join(targetC, "lean-target-c-manifest.json");
 	const bytes = await readFile(path);
 	const manifest = JSON.parse(bytes);
-	if(manifest?.schemaVersion !== 1 || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.target !== "wasm32-unknown-emscripten-c" || manifest.sourceReadOnly !== true) fail("target-c-manifest-drift", "Target C manifest does not match the component compilation plan");
-	if(!Array.isArray(manifest.modules) || JSON.stringify(manifest.modules.map(module => module.module)) !== JSON.stringify(compilationPlan.document.source.compileOrder)) fail("target-c-manifest-drift", "Target C modules do not match the planned compile order");
+	const locked = compilationPlan.document.schemaVersion === 2;
+	if(manifest?.schemaVersion !== (locked ? 2 : 1) || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.target !== "wasm32-unknown-emscripten-c" || manifest.sourceReadOnly !== true) fail("target-c-manifest-drift", "Target C manifest does not match the component compilation plan");
+	let order = compilationPlan.document.source.compileOrder;
+	const sources = new Map(compilationPlan.document.source.modules.map(module => [module.module, module.sha256]));
+	sources.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
+	if(locked)
+	{
+		const closed = (value, fields) => {
+			if(!value || typeof value !== "object" || canonicalJson(Object.keys(value).sort()) !== canonicalJson([...fields].sort()))
+				fail("invalid-target-c-manifest", "Locked target C manifest fields must be closed");
+		};
+		closed(manifest, ["schemaVersion", "component", "compilationPlanSha256", "compiler", "target", "modules", "sourceReadOnly", "lakeDependencies"]);
+		closed(manifest.compiler, ["version", "commit"]);
+		closed(manifest.lakeDependencies, ["snapshot", "resolution", "resolutionSha256"]);
+		const { snapshot, resolution, resolutionSha256 } = manifest.lakeDependencies;
+		validateLockedLakeResolution({ snapshot: { document: snapshot, sha256: compilationPlan.document.source.lakeSnapshotSha256 }, resolution, modules: compilationPlan.document.source.requestedModules });
+		if(sha256(canonicalJson(resolution)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit
+			|| manifest.compiler.version !== resolution.leanVersion || resolution.leanCommit !== compilationPlan.document.runtime.leanCommit)
+			fail("target-c-manifest-drift", "Target C compiler and locked resolution identities differ");
+		order = [...resolution.modules.map(module => module.module), compilationPlan.document.compilerAdapters.module];
+		for(const module of resolution.modules)
+		{
+			if(module.module === compilationPlan.document.compilerAdapters.module) fail("invalid-target-c-manifest", "Source shadows the generated adapter");
+			sources.set(module.module, module.source.sha256);
+		}
+		if(!Array.isArray(manifest.modules)) fail("invalid-target-c-manifest", "Target C modules must be an array");
+		for(const module of manifest.modules) closed(module, ["module", "sourceSha256", "targetC", "targetCSha256", "olean", "oleanSha256"]);
+	}
+	if(!Array.isArray(manifest.modules) || JSON.stringify(manifest.modules.map(module => module.module)) !== JSON.stringify(order)) fail("target-c-manifest-drift", "Target C modules do not match the resolved compile order");
 	for(const module of manifest.modules)
 	{
 		if(typeof module.targetC !== "string" || module.targetC.startsWith("/") || module.targetC.split("/").includes("..") || !/^[0-9a-f]{64}$/.test(module.targetCSha256)) fail("invalid-target-c-manifest", `Invalid target C record for ${module.module}`);
 		const source = await readFile(join(targetC, module.targetC));
 		if(sha256(source) !== module.targetCSha256) fail("target-c-drift", `Target C changed before linking: ${module.module}`);
+		if(locked)
+		{
+			const stem = module.module.replaceAll(".", "/");
+			if(module.targetC !== `c/${stem}.c` || module.olean !== `olean/${stem}.olean` || module.sourceSha256 !== sources.get(module.module)
+				|| typeof module.oleanSha256 !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(module.oleanSha256))
+				fail("invalid-target-c-manifest", "Target C module paths or source identities differ from the resolved closure");
+			if(sha256(await readFile(join(targetC, module.olean))) !== module.oleanSha256)
+				fail("target-c-drift", `Fresh Lean interface changed before linking: ${module.module}`);
+		}
 	}
 	return Object.freeze({ manifest, sha256: sha256(bytes) });
 };

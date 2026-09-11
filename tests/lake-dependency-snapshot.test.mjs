@@ -11,7 +11,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 import { deflateSync, inflateSync } from "node:zlib";
-import { prepareLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
+import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, validateLakeDependencySnapshotDocument, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
@@ -123,6 +123,67 @@ test("relocated locks and cached Git produce identical offline snapshots", async
 	const right = await write(context, second, "right");
 	assert.deepEqual((await inputState(left.output)).map(({ path, mode, sha256: digest }) => ({ path, mode, digest }))
 		, (await inputState(right.output)).map(({ path, mode, sha256: digest }) => ({ path, mode, digest })));
+});
+
+for(const includeProject of [false, true]) test(`detached snapshot v${includeProject ? 2 : 1} reloads without original sources or Git`, async t => {
+	const context = await fixture(t, { withGit: true });
+	const expected = await context.capture({ includeProject });
+	const { output } = await write(context, expected);
+	await rm(join(context.directory, "workspace"), { recursive: true });
+	const before = await inputState(output);
+	const snapshot = await readLakeDependencySnapshot({ snapshotRoot: output, expectedSha256: expected.sha256 });
+	assert.deepEqual(snapshot, expected);
+	assert.throws(() => { snapshot.document.packages[0].directory = "escape"; }, TypeError);
+	await verifyLakeDependencySnapshot({ snapshot, snapshotRoot: output });
+	await write(context, snapshot, "reloaded");
+	assert.deepEqual(await inputState(output), before);
+	await assert.rejects(() => readLakeDependencySnapshot({ snapshotRoot: output }), { code: "invalid-lake-snapshot" });
+	await assert.rejects(() => readLakeDependencySnapshot({ snapshotRoot: output, expectedSha256: "0".repeat(64) }), { code: "lake-snapshot-drift" });
+	await assert.rejects(() => readLakeDependencySnapshot({ snapshotRoot: output, expectedSha256: expected.sha256, limits: { files: 2 } }), { code: "lake-snapshot-limit" });
+});
+
+for(const [name, change, code] of [
+	["source bytes", output => save(output, "packages/Local/Local.lean", "changed"), "lake-snapshot-drift"]
+	, ["extra source", output => save(output, "packages/Local/Extra.lean", "extra"), "lake-snapshot-drift"]
+	, ["excluded extra file", output => save(output, "packages/Local/.env", "extra"), "lake-snapshot-drift"]
+	, ["missing source", output => rm(join(output, "root/lean-toolchain")), "lake-snapshot-drift"]
+	, ["executable mode", output => chmod(join(output, "packages/Local/Local.lean"), 0o755), "lake-snapshot-drift"]
+	, ["symlink", async output => { await rm(join(output, "packages/Local/Local.lean")); await symlink("lakefile.toml", join(output, "packages/Local/Local.lean")); }, "unsafe-lake-source"]
+	, ["marker", output => save(output, "lake-dependency-snapshot.json", "{}"), "lake-snapshot-drift"]
+]) test(`detached snapshot rejects ${name}`, async t => {
+	const context = await fixture(t);
+	const snapshot = await context.capture({ includeProject: true });
+	const { output } = await write(context, snapshot);
+	await change(output);
+	await assert.rejects(() => readLakeDependencySnapshot({ snapshotRoot: output, expectedSha256: snapshot.sha256 }), { code });
+});
+
+test("detached metadata rejects malformed, ambiguous and lock-inconsistent inputs even with a matching supplied digest", async t => {
+	const context = await fixture(t, { withGit: true });
+	const snapshot = await context.capture({ includeProject: true });
+	for(const change of [
+		value => { value.extra = true; }
+		, value => { value.packages[0].source.extra = true; }
+		, value => { value.rootInputs.reverse(); }
+		, value => { value.packages[0].directory = "../escape"; }
+		, value => { value.packages[0].files[0].path = "../escape"; }
+		, value => { value.packages[0].files[0].mode = 644; }
+		, value => { value.packages[0].files[0].bytes = -1; }
+		, value => { value.packages[0].files[0].sha256 = "x"; }
+		, value => { value.packages[0].treeSha256 = "0".repeat(64); }
+		, value => { value.packages[1].source.rev = "main"; }
+		, value => { value.packages.push(value.packages[0]); }
+	]) {
+		const document = structuredClone(snapshot.document);
+		change(document);
+		assert.throws(() => validateLakeDependencySnapshotDocument(document));
+	}
+	const { output } = await write(context, snapshot);
+	const document = structuredClone(snapshot.document);
+	document.packages[0].source.dir = "../different";
+	const marker = canonicalJson(document);
+	await save(output, "lake-dependency-snapshot.json", marker);
+	await assert.rejects(() => readLakeDependencySnapshot({ snapshotRoot: output, expectedSha256: sha256(marker) }), { code: "invalid-lake-snapshot" });
 });
 
 test("complete project snapshots bind root inputs without changing the dependency-only contract", async t => {

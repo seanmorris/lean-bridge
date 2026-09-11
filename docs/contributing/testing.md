@@ -75,6 +75,29 @@ node scripts/build-wasi-package.mjs \
 
 The projection directory must be absent or empty. It contains `lean-bridge-alpha-wasi-0.0.0.tar.gz`, including the component, Wasmtime host, native Lean libraries, and WIT declarations. Follow the [WIT/WASI guide](../consume/wit-wasi.md) to extract and run it. The [acceptance record](../evidence/wasi-consumer-acceptance.md) identifies the tested Wasmtime and wasm-tools versions.
 
+## Locked Lake dependency builds
+
+The Node-only input tests need Git but no Lean compiler:
+
+```sh
+node --test tests/lake-dependency-snapshot.test.mjs tests/lake-component-input.test.mjs
+```
+
+Run the relocated npm acceptance through the pinned Nix engine and its shared runtime:
+
+```sh
+nix build .#component-build-engine --out-link build/locked-lake-engine
+nix build .#universal-core-artifacts --out-link build/locked-lake-runtime
+LEAN_BRIDGE_LAKE_WASM_TEST=1 \
+LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine \
+LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/locked-lake-runtime/lazy \
+node --test tests/lake-wasm.test.mjs
+```
+
+This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. The consumer CI workflow runs these cases too.
+
+With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, source identity, and fresh interface files. The [acceptance record](../evidence/lake-wasm-workspace-20260911.md) lists the tested scope and remaining dependency work.
+
 ## Standalone CLI package
 
 Check the reviewed source allowlist and the tarball-installed executable:

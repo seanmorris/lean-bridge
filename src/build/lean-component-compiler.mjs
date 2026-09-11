@@ -12,6 +12,8 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
+import { readLakeDependencySnapshot, verifyLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -97,7 +99,7 @@ export const compileLeanComponentSources = async ({
 	const inputs = resolve(inputRoot);
 	const output = resolve(outputRoot);
 	await assertAbsent(output);
-	const lean = compilerCommand({ engineRoot, environment });
+	let lean = compilerCommand({ engineRoot, environment });
 	const compilerEnvironment = {
 		...environment,
 		ELAN_HOME: environment.ELAN_HOME ?? join(resolve(engineRoot), ".toolchains/elan")
@@ -118,12 +120,34 @@ export const compileLeanComponentSources = async ({
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-target-c-"));
 	const sourceByModule = new Map(compilationPlan.document.source.modules.map(module => [module.module, module]));
 	const inputIdentities = new Map();
+	let lake = null, snapshot = null;
 	try
 	{
-		const leanRoot = join(staging, "lean-root");
-		for(const module of compilationPlan.document.source.modules)
+		if(compilationPlan.document.schemaVersion === 2)
 		{
-			const path = join(inputs, "source", module.path);
+			snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputs, "lake"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 });
+			const prefix = await runner.capture({ command: lean, args: ["--print-prefix"], cwd: inputs, env: compilerEnvironment, timeoutMs: 15000 });
+			lake = await resolveLockedLakeWorkspace({ snapshot, modules: compilationPlan.document.source.requestedModules, leanPrefix: prefix.stdout.trim() });
+			if(lake.document.leanCommit !== identity.commit || lake.document.leanVersion !== identity.version)
+				fail("lean-compiler-drift", "Lake resolver differs from the selected component compiler");
+			lean = join(prefix.stdout.trim(), "bin/lean");
+			compilerEnvironment.LEAN_SYSROOT = prefix.stdout.trim();
+			for(const module of lake.document.modules)
+			{
+				if(module.module === compilationPlan.document.compilerAdapters.module) fail("lean-component-input-drift", "Source module shadows the generated adapter");
+				sourceByModule.set(module.module, { module: module.module, path: `${module.module.replaceAll(".", "/")}.lean`, bytes: module.source.bytes, sha256: module.source.sha256 });
+			}
+			const capturedRoot = new Map(snapshot.document.rootInputs.map(file => [file.path, file]));
+			for(const module of compilationPlan.document.source.modules)
+				if(capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes)
+					fail("lean-component-input-drift", "Planned root modules differ from the locked snapshot");
+		}
+		const sourceOrder = lake ? lake.document.modules.map(module => module.module) : compilationPlan.document.source.compileOrder.slice(0, -1);
+		const leanRoot = join(staging, "lean-root");
+		for(const name of sourceOrder)
+		{
+			const module = sourceByModule.get(name);
+			const path = lake ? join(lake.sourceRoot, module.path) : join(inputs, "source", module.path);
 			const bytes = await readChecked(path, module, `Lean source module ${module.module}`);
 			const compilePath = join(leanRoot, module.path);
 			await mkdir(dirname(compilePath), { recursive: true });
@@ -134,6 +158,8 @@ export const compileLeanComponentSources = async ({
 		const generatedBytes = await readChecked(generatedPath, { sha256: compilationPlan.document.compilerAdapters.leanSourceSha256 }, "generated Lean compiler adapter");
 		const adapterPlan = JSON.parse(await readChecked(join(inputs, "generated/compiler-adapters.json"), { sha256: compilationPlan.document.compilerAdapters.planSha256 }, "compiler adapter plan"));
 		validateCompilerAdapterPlan(adapterPlan);
+		if(lake && canonicalJson([...adapterPlan.imports].sort()) !== canonicalJson(compilationPlan.document.source.requestedModules))
+			fail("lean-component-input-drift", "Generated adapter imports differ from the selected root modules");
 		const generatedSource = join(leanRoot, `${compilationPlan.document.compilerAdapters.module}.lean`);
 		await writeFile(generatedSource, generatedBytes, { mode: 0o444 });
 		inputIdentities.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
@@ -142,7 +168,7 @@ export const compileLeanComponentSources = async ({
 			LEAN_PATH: join(staging, "olean")
 		};
 		const records = [];
-		for(const module of compilationPlan.document.source.compileOrder)
+		for(const module of [...sourceOrder, compilationPlan.document.compilerAdapters.module])
 		{
 			const generated = module === compilationPlan.document.compilerAdapters.module;
 			const source = generated ? generatedSource : join(leanRoot, sourceByModule.get(module).path);
@@ -175,15 +201,22 @@ export const compileLeanComponentSources = async ({
 		}
 		for(const module of compilationPlan.document.source.modules) await readChecked(join(inputs, "source", module.path), module, `Lean source module ${module.module}`);
 		await readChecked(generatedPath, { sha256: compilationPlan.document.compilerAdapters.leanSourceSha256 }, "generated Lean compiler adapter");
+		await readChecked(join(inputs, "generated/compiler-adapters.json"), { sha256: compilationPlan.document.compilerAdapters.planSha256 }, "compiler adapter plan");
+		if(lake)
+		{
+			await verifyLakeDependencySnapshot({ snapshot, snapshotRoot: join(inputs, "lake") });
+			await readChecked(lean, { sha256: lake.document.leanCompilerSha256 }, "Lean compiler");
+		}
 		await rm(leanRoot, { recursive: true, force: true });
 		const manifest = Object.freeze({
-			schemaVersion: 1
+			schemaVersion: lake ? 2 : 1
 			, component: compilationPlan.document.component.id
 			, compilationPlanSha256: compilationPlan.sha256
 			, compiler: identity
 			, target: "wasm32-unknown-emscripten-c"
 			, modules: Object.freeze(records)
 			, sourceReadOnly: true
+			, ...(lake ? { lakeDependencies: { snapshot: snapshot.document, resolution: lake.document, resolutionSha256: lake.sha256 } } : {})
 		});
 		await writeFile(join(staging, "lean-target-c-manifest.json"), canonicalJson(manifest));
 		await rename(staging, output);
@@ -192,5 +225,9 @@ export const compileLeanComponentSources = async ({
 	{
 		await rm(staging, { recursive: true, force: true });
 		throw error;
+	}
+	finally
+	{
+		await lake?.dispose();
 	}
 };

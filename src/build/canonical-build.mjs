@@ -19,10 +19,12 @@ import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { ComponentBuildPlanError, prepareComponentBuildPlan } from "./component-plan.mjs";
+import { ComponentBuildPlanError, createComponentBuildPlan, prepareComponentBuildPlan } from "./component-plan.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { generateCompilerAdapters } from "./compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
+import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
 import { writeEngineExecutionRequest } from "./engine-execution-request.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
@@ -618,6 +620,7 @@ const buildPlainComponentProject = async ({
 	, engine
 	, output
 	, componentPlan
+	, lakeSnapshot
 	, selection
 	, runner
 	, environment
@@ -641,7 +644,7 @@ const buildPlainComponentProject = async ({
 		const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
 		const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
 		const inputRoot = join(work, "component");
-		await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
+		await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters, lakeSnapshot });
 		const requestPath = join(work, "request", "engine-execution-request.json");
 		const request = await writeEngineExecutionRequest({
 			output: requestPath
@@ -682,6 +685,13 @@ const buildPlainComponentProject = async ({
 		await cp(checked.bundleRoot, join(finalStaging, "bundle"), { recursive: true, dereference: true, preserveTimestamps: true });
 		await cp(join(executionRoot, request.document.output.executionReport), join(finalStaging, "engine-execution-report.json"));
 		await cp(requestPath, join(finalStaging, "engine-execution-request.json"));
+		if(componentPlan.document.schemaVersion === 2)
+		{
+			if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: root, signal });
+			const snapshot = lakeSnapshot ?? await captureLockedLakeProject({ projectRoot: root, inputs: analysis.inputs, signal });
+			if(snapshot?.sha256 !== componentPlan.document.source.lakeSnapshotSha256)
+				fail("lake-source-drift", "Locked project inputs changed during the component build");
+		}
 		onProgress?.({ phase: "validate", state: "completed", message: "Component and provenance identities validated" });
 		await rename(finalStaging, output);
 		return Object.freeze({
@@ -729,6 +739,7 @@ const buildPlainComponentProject = async ({
  * @param root0.cache - Cache settings propagated to the isolated build while preserving the requested cache policy.
  * @param root0.signal - Abort signal used to cancel the operation.
  * @param root0.onProgress - Observer invoked when progress occurs.
+ * @param root0.lakeSnapshot - Optional immutable capture authorized by the local reproducibility gate.
  */
 export const buildCanonicalProject = async ({
 	projectRoot
@@ -740,6 +751,7 @@ export const buildCanonicalProject = async ({
 	, cache = { policy: "use", directory: null }
 	, signal = undefined
 	, onProgress = undefined
+	, lakeSnapshot = undefined
 } = {}) => {
 	const root = resolve(projectRoot ?? process.cwd());
 	const engine = resolve(engineRoot);
@@ -773,7 +785,15 @@ export const buildCanonicalProject = async ({
 	let componentPlan;
 	try
 	{
-		componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal });
+		if(root === engine)
+		{
+			// The repository's universal fixture has its own package projections.
+			// Its Lean component name is not an ordinary-component npm coordinate.
+			const analysis = await analyzeLeanProject(root, { signal, targets });
+			const graph = JSON.parse(await readFile(join(engine, "poc/lean-link-spike/graph-lock.json"), "utf8"));
+			componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
+		}
+		else componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
 	} catch(error)
 	{
 		if(!(error instanceof ComponentBuildPlanError)) throw error;
@@ -790,7 +810,8 @@ export const buildCanonicalProject = async ({
 	if(root !== engine)
 	{
 		return buildPlainComponentProject({
-			root, engine, output, componentPlan, selection, runner: selectedRunner
+			root, engine, output, componentPlan, lakeSnapshot
+			, selection, runner: selectedRunner
 			, environment, targets, cache: normalizedCache, signal, onProgress
 		});
 	}

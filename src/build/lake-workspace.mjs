@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { prepareLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { prepareLakeDependencySnapshot, validateLakeDependencySnapshotDocument, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 
 const resolverSource = fileURLToPath(new URL("ResolveLakeWorkspace.lean", import.meta.url));
@@ -85,9 +85,47 @@ const validateResolution = (value, snapshot, selected) => {
 		if(!module.path.startsWith(`${prefix}/`)) fail("invalid-lake-resolution", "Lake module source escaped its owning package");
 		known.add(module.module);
 	}
-	if(selected.some(module => !known.has(module))) fail("invalid-lake-resolution", "Lake omitted a selected module");
+	if(selected.some(module => !value.modules.find(item => item.module === module)?.path.startsWith("root/")))
+		fail("invalid-lake-resolution", "Lake omitted a selected root module");
+	if(value.externalImports.some(module => known.has(module))) fail("invalid-lake-resolution", "Source and compiler-library module identities overlap");
+	const reachable = new Set();
+	const visit = module => {
+		if(reachable.has(module) || !known.has(module)) return;
+		reachable.add(module);
+		value.modules.find(item => item.module === module).imports.forEach(visit);
+	};
+	selected.forEach(visit);
+	if(reachable.size !== known.size) fail("invalid-lake-resolution", "Lake included source modules outside the selected import closure");
 	return { ...value, modules: value.modules.map(module => ({ ...module, source: files.get(module.path) }))
 		, externalImports: [...value.externalImports].sort() };
+};
+
+/**
+ * Check recorded compiler resolution against its complete source snapshot.
+ *
+ * @param options - Captured metadata and selected root modules.
+ * @param options.snapshot - Snapshot document and digest authorized by the build.
+ * @param options.resolution - Recorded compiler resolution document.
+ * @param options.modules - Selected root module names.
+ */
+export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) => {
+	validateLakeDependencySnapshotDocument(snapshot.document);
+	if(snapshot.document.schemaVersion !== 2 || sha256(canonicalJson(snapshot.document)) !== snapshot.sha256)
+		fail("invalid-lake-resolution", "Resolution requires a complete snapshot matching the authorized digest");
+	const fields = ["schemaVersion", "resolver", "leanVersion", "leanCommit"
+		, "packages", "modules", "externalImports", "snapshotSha256"
+		, "resolverSha256", "leanCompilerSha256", "lakeLibrarySha256"];
+	closed(resolution, fields, "recorded Lake resolution");
+	const { snapshotSha256, resolverSha256, leanCompilerSha256, lakeLibrarySha256, ...raw } = resolution;
+	if(snapshotSha256 !== snapshot.sha256 || [resolverSha256, leanCompilerSha256, lakeLibrarySha256].some(value => typeof value !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(value)))
+		fail("invalid-lake-resolution", "Recorded resolution has invalid input identities");
+	if(!Array.isArray(raw.modules)) fail("invalid-lake-resolution", "Recorded modules must be an array");
+	const expected = validateResolution({ ...raw, modules: raw.modules.map(module => {
+		closed(module, ["module", "path", "package", "imports", "source"], "recorded Lake module");
+		return { module: module.module, path: module.path, package: module.package, imports: module.imports };
+	}) }, snapshot, modules);
+	if(canonicalJson(expected) !== canonicalJson(raw)) fail("invalid-lake-resolution", "Recorded resolution source identities differ from the captured files");
+	return true;
 };
 
 /**
