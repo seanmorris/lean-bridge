@@ -14,7 +14,7 @@ import {
 	readAnalysisPolicy,
 } from "../analyze/policy.mjs";
 
-const commands = new Set(["analyze", "build", "publish"]);
+const commands = new Set(["analyze", "build", "publish", "verify"]);
 const formats = new Set(["human", "json"]);
 const statuses = new Set(["ok", "blocked", "needs-input", "failed", "cancelled"]);
 const severities = new Set(["info", "warning", "error"]);
@@ -99,23 +99,31 @@ const exactKeys = (value, keys, label, code = "invalid-cli-result") => {
 };
 
 const commonCommands = commands;
+const authorCommands = new Set(["analyze", "build", "publish"]);
 const buildCommands = new Set(["build", "publish"]);
 const analyzeCommands = new Set(["analyze"]);
+const verifyCommands = new Set(["verify"]);
 const optionDefinitions = Object.freeze({
-	"--project": Object.freeze({ name: "project", value: true, commands: commonCommands })
-	, "--config": Object.freeze({ name: "config", value: true, commands: commonCommands })
+	"--project": Object.freeze({ name: "project", value: true, commands: authorCommands })
+	, "--config": Object.freeze({ name: "config", value: true, commands: authorCommands })
 	, "--format": Object.freeze({ name: "format", value: true, commands: commonCommands })
 	, "--json": Object.freeze({ name: "json", value: false, commands: commonCommands })
-	, "--interactive": Object.freeze({ name: "interactive", value: false, commands: commonCommands })
-	, "--target": Object.freeze({ name: "targets", value: true, repeatable: true, commands: commonCommands })
+	, "--interactive": Object.freeze({ name: "interactive", value: false, commands: authorCommands })
+	, "--target": Object.freeze({ name: "targets", value: true, repeatable: true, commands: authorCommands })
 	, "--progress": Object.freeze({ name: "progress", value: true, commands: commonCommands })
 	, "--help": Object.freeze({ name: "help", value: false, commands: commonCommands })
 	, "--cache": Object.freeze({ name: "cachePolicy", value: true, commands: buildCommands })
 	, "--no-cache": Object.freeze({ name: "noCache", value: false, commands: buildCommands })
 	, "--cache-directory": Object.freeze({ name: "cacheDirectory", value: true, commands: buildCommands })
-	, "--output": Object.freeze({ name: "output", value: true, commands: commonCommands })
+	, "--output": Object.freeze({ name: "output", value: true, commands: authorCommands })
 	, "--check": Object.freeze({ name: "check", value: false, commands: analyzeCommands })
-	, "--policy": Object.freeze({ name: "policy", value: true, commands: analyzeCommands })
+	, "--policy": Object.freeze({ name: "policy", value: true, commands: new Set(["analyze", "verify"]) })
+	, "--receipt": Object.freeze({ name: "receipt", value: true, commands: verifyCommands })
+	, "--artifacts": Object.freeze({ name: "artifacts", value: true, commands: verifyCommands })
+	, "--archive": Object.freeze({ name: "archive", value: true, commands: verifyCommands })
+	, "--policy-sha256": Object.freeze({ name: "policySha256", value: true, commands: verifyCommands })
+	, "--subject": Object.freeze({ name: "subject", value: true, commands: verifyCommands })
+	, "--coordinate": Object.freeze({ name: "coordinate", value: true, commands: verifyCommands })
 	, "--bundle": Object.freeze({ name: "bundle", value: true, commands: new Set(["publish"]) })
 	, "--authorization": Object.freeze({ name: "authorization", value: true, commands: new Set(["publish"]) })
 	, "--manifest": Object.freeze({ name: "manifest", value: true, commands: new Set(["publish"]) })
@@ -128,16 +136,19 @@ Commands:
   analyze              Inspect a Lean project without changing it
   build                Build the canonical artifact set
   publish              Verify and publish configured package projections
+  verify               Check a local npm handoff or authenticate a signed archive
 
 Common options:
-  --project <path>      Lean project root, defaults to configuration, environment, then cwd
-  --config <path>       CLI configuration, defaults to LEAN_BRIDGE_CONFIG or lean-bridge.cli.json
-  --target <name>       Select a target; repeat for more than one, defaults to all applicable targets
   --format human|json  Final result format, defaults to human
   --json                Alias for --format json
   --progress <mode>     Progress mode: auto, none, plain, or json
-  --interactive         Permit prompts for unresolved adapter hints
   --help                Show command help
+
+Author options (analyze, build, publish):
+  --project <path>      Lean project root, defaults to configuration, environment, then cwd
+  --config <path>       CLI configuration, defaults to LEAN_BRIDGE_CONFIG or lean-bridge.cli.json
+  --target <name>       Select a target; repeat for more than one, defaults to all applicable targets
+  --interactive         Permit prompts for unresolved adapter hints
 
 Analyze options:
   --output <directory>  Atomically write the analysis, Binding IR, and policy report
@@ -149,11 +160,23 @@ Build and publish options:
   --no-cache            Alias for --cache off
   --cache-directory <path> Select an explicit cache directory
   --output <path>       Local build, gate, or publication output
-  --target cpan         Build native Perl packages using lean-bridge.native.json
+  --target cpan         Build native Perl packages using lean-bridge.exports.json
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run
   --dry-run             Build twice, compare, authorize, and plan without registry writes
+
+Verify options (no project or build tools required):
+  --receipt <path>      Required local npm receipt or signed release receipt
+  --artifacts <dir>     Local npm archives; defaults to the receipt's directory
+
+Signed verification requires all five options below and the receipt's .sha256 sidecar:
+  --archive <path>      Downloaded archive with its original filename
+  --policy <path>       Public signer policy
+  --policy-sha256 <hash> Policy SHA-256 from a separate trusted source
+  --subject <path>      Expected signed release-relative archive path
+  --coordinate <name>   Expected ecosystem package coordinate
+  Do not combine signed verification with --artifacts.
 
 Exit codes:
   0                     Command succeeded
@@ -253,6 +276,65 @@ const sourceOf = (cliValue, environmentValue, configValue) =>
 			: configValue !== null && configValue !== undefined ? "config" : "default";
 
 /**
+ * Resolve verification inputs without reading project configuration or build settings.
+ *
+ * @param parsed - Parsed flags for the verify command.
+ * @param cwd - Base directory for explicit filesystem paths.
+ * @param environment - Only output format and progress settings apply.
+ * @param stderrIsTTY - Whether automatic progress should be visible.
+ */
+const verificationRequest = (parsed, cwd, environment, stderrIsTTY) => {
+	if(parsed.help) return Object.freeze({ kind: "help", command: "verify", format: "human" });
+	const environmentFormat = environmentValue(environment, "LEAN_BRIDGE_FORMAT");
+	const format = parsed.format ?? environmentFormat ?? "human";
+	if(!formats.has(format)) fail("invalid-output-format", `unsupported output format ${format}`);
+	const environmentProgress = environmentValue(environment, "LEAN_BRIDGE_PROGRESS");
+	const requestedProgress = parsed.progress ?? environmentProgress ?? "auto";
+	if(!progressModes.has(requestedProgress)) fail("invalid-progress-mode", `unsupported progress mode ${requestedProgress}`);
+	const progress = requestedProgress === "auto" ? (format === "human" && stderrIsTTY ? "plain" : "none") : requestedProgress;
+	if(!parsed.receipt) fail("missing-verification-option", "verify requires --receipt");
+	const signedOptions = ["--archive", "--policy", "--policy-sha256", "--subject", "--coordinate"];
+	const signed = signedOptions.some(flag => parsed[optionDefinitions[flag].name] !== null);
+	if(signed && parsed.artifacts !== null) fail("mixed-verification-options", "--artifacts cannot be combined with signed verification options");
+	if(signed)
+	{
+		for(const flag of signedOptions)
+			if(!parsed[optionDefinitions[flag].name]) fail("missing-verification-option", `signed verification requires ${flag}`);
+		if(!/^[0-9a-f]{64}$/.test(parsed.policySha256)) fail("invalid-verification-policy-hash", "--policy-sha256 must be a SHA-256 identity from a trusted source");
+	}
+	if(parsed.artifacts === "") fail("missing-option-value", "--artifacts requires a nonempty path");
+	const verification = signed ? {
+		verificationType: "signed-archive"
+		, receiptPath: resolve(cwd, parsed.receipt)
+		, archivePath: resolve(cwd, parsed.archive)
+		, policyPath: resolve(cwd, parsed.policy)
+		, trustedPolicySha256: parsed.policySha256
+		, subjectPath: parsed.subject
+		, coordinate: parsed.coordinate
+	} : {
+		verificationType: "local-npm"
+		, receiptPath: resolve(cwd, parsed.receipt)
+		, artifactRoot: parsed.artifacts === null ? null : resolve(cwd, parsed.artifacts)
+	};
+	return Object.freeze({
+		kind: "command", command: "verify", mode: "execute", project: null
+		, format, progress, interactive: false
+		, configuration: Object.freeze({
+			path: null
+			, sources: Object.freeze({
+				project: "default", targets: "default"
+				, cachePolicy: "default", cacheDirectory: "default"
+				, format: sourceOf(parsed.format, environmentFormat, null)
+				, progress: sourceOf(parsed.progress, environmentProgress, null)
+			})
+		})
+		, selection: Object.freeze({ allTargets: true, targets: Object.freeze([]) })
+		, cache: Object.freeze({ policy: "off", directory: null })
+		, verification: Object.freeze(verification)
+	});
+};
+
+/**
  * Parses CLI arguments and validates the resulting closed representation before returning it to the machine-readable CLI contract.
  *
  * @param argv - Command-line tokens to parse, excluding the runtime executable and script path.
@@ -295,6 +377,12 @@ export const parseCliArguments = (argv, {
 		, authorization: null
 		, manifest: null
 		, dryRun: false
+		, receipt: null
+		, artifacts: null
+		, archive: null
+		, policySha256: null
+		, subject: null
+		, coordinate: null
 	};
 	const seen = new Set();
 	for(let index = 1; index < argv.length; index += 1)
@@ -319,6 +407,7 @@ export const parseCliArguments = (argv, {
 	if(seen.has("json") && seen.has("format")) fail("duplicate-option", "choose either --json or --format");
 	if(seen.has("noCache") && seen.has("cachePolicy")) fail("duplicate-option", "choose either --no-cache or --cache");
 	if(parsed.json) parsed.format = "json";
+	if(command === "verify") return verificationRequest(parsed, resolve(cwd), environment, stderrIsTTY);
 
 	const configuredPathValue = parsed.config ?? environmentValue(environment, "LEAN_BRIDGE_CONFIG");
 	const implicitPath = join(resolve(cwd), "lean-bridge.cli.json");
@@ -484,7 +573,10 @@ export const validateCliResult = result => {
 	if(!statuses.has(result.status)) fail("invalid-cli-result", `unknown result status ${result.status}`);
 	const expectedExit = result.command === null ? cliExitCodes.usage : exitCodeForStatus(result.status);
 	if(result.exitCode !== expectedExit) fail("invalid-cli-result", `exit code ${result.exitCode} contradicts status ${result.status}`);
-	if(typeof result.project !== "string" || result.project === "") fail("invalid-cli-result", "result project must be a path");
+	if(result.command === "verify")
+	{
+		if(result.project !== null) fail("invalid-cli-result", "verification has no Lean project");
+	} else if(typeof result.project !== "string" || result.project === "") fail("invalid-cli-result", "result project must be a path");
 	if(typeof result.interactive !== "boolean") fail("invalid-cli-result", "result interactive flag must be boolean");
 	exactKeys(result.configuration, ["path", "sources"], "configuration");
 	if(result.configuration.path !== null && typeof result.configuration.path !== "string") fail("invalid-cli-result", "configuration path must be a string or null");

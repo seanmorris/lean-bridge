@@ -14,8 +14,8 @@ Inventory 0.3.0 covers 48 source forms and 17 consumer profiles. The language ta
 | [Browser](../javascript-typescript.md#type-conversions) | Browser main thread | 32-bit Lean target |
 | [React](../javascript-typescript.md#type-conversions) | React lifecycle on the browser main thread | 32-bit Lean target |
 | [Worker](../javascript-typescript.md#type-conversions) | Dedicated browser worker | 32-bit Lean target |
-| [Native PHP](../consume/php-native.md#type-conversions) | Native Zend extension; PHP_INT_SIZE = 8 | 64-bit Lean target |
-| [PHP-Wasm](../consume/php-wasm.md#type-conversions) | Node-hosted PHP-Wasm; PHP_INT_SIZE = 4; lazy and startup adapters | 32-bit Lean target |
+| [Native PHP](../php.md#type-conversions) | Native Zend extension; PHP_INT_SIZE = 8 | 64-bit Lean target |
+| [PHP-Wasm](../php.md#type-conversions) | Node-hosted PHP-Wasm; PHP_INT_SIZE = 4; lazy and startup adapters | 32-bit Lean target |
 | [C#](../consume/dotnet.md#type-conversions) | C# over LibraryImport | 64-bit Lean target |
 | [Java](../consume/java.md#type-conversions) | Java over finalized FFM | 64-bit Lean target |
 | [Kotlin](../consume/kotlin.md#type-conversions) | Kotlin calling the generated Java API | 64-bit Lean target |

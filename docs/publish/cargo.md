@@ -1,4 +1,6 @@
-# Publish Rust crates
+# Build and publish Rust packages
+
+This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
 
 Lean Bridge creates a deterministic `.crate` for direct installation. Cargo's publishing command creates another archive from a source directory before uploading it. It has no option that uploads an existing `.crate` unchanged. A Cargo CLI publication therefore needs its own reviewed archive and verification record. [cargo publish](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
 
@@ -94,7 +96,7 @@ cargo publish --locked --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 
 This command packages again, so the post-upload byte check remains required. Do not use `--no-verify` or `--allow-dirty` to hide a packaging failure. A successful upload is a manual registry result, not a Lean Bridge signed transaction receipt.
 
-For crates.io, first complete package ownership and [production review](production-release.md), including the applicable publisher integration. Supply the authorized production token as `CARGO_REGISTRY_TOKEN`, select the production registry, and repeat the package, consumer, and archive-approval steps in a new review directory for that registry before the write:
+For crates.io, first complete package ownership and [production review](../publishing.md#build-and-approve-the-same-artifacts), including the applicable publisher integration. Supply the authorized production token as `CARGO_REGISTRY_TOKEN`, select the production registry, and repeat the package, consumer, and archive-approval steps in a new review directory for that registry before the write:
 
 ```sh
 export LEAN_BRIDGE_CARGO_REGISTRY=crates-io
@@ -140,4 +142,8 @@ A Cargo publishing timeout may happen while the client waits for the index after
 
 The release owner may approve yanking a broken version after arranging a corrective release. Yanking changes dependency selection; it does not erase downloads or remove the version from existing lockfiles. [cargo yank](https://doc.rust-lang.org/cargo/commands/cargo-yank.html).
 
-Keep any universal candidate record separate from this repackaged release. [Sandbox release](sandbox-release.md) and [Publishing](../publishing.md) describe the signed transaction integration needed for the original exact-archive workflow.
+Keep any universal candidate record separate from this repackaged release. [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and [Publishing](../publishing.md) describe the signed transaction integration needed for the original exact-archive workflow.
+
+### Publish Rust crates
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

@@ -9,18 +9,22 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { docPages } from "../site/registry.mjs";
 
-test("Contributing owns six canonical guides and keeps the established audience order", () => {
+test("Contributing owns bridge maintenance under the two-workflow navigation", () => {
 	assert.deepEqual([...new Set(docPages.map(page => page.group))],
-		["Start", "Author", "Consume", "Publish", "Contributing", "Concepts", "Reference"]);
+		["Start", "Build and publish", "Use a package", "Concepts", "Reference", "Contributing"]);
 	assert.deepEqual(docPages.filter(page => page.group === "Contributing").map(page => [page.route, page.source]), [
 		["/docs/contributing/", "CONTRIBUTING.md"]
 		, ["/docs/contributing/documentation/", "site/README.md"]
 		, ["/docs/contributing/demos/", "demos/README.md"]
 		, ["/docs/contributing/testing/", "docs/contributing/testing.md"]
 		, ["/docs/contributing/release-pipeline/", "src/release/README.md"]
+		, ["/docs/contributing/author-toolchain/", "docs/contributing/author-toolchain.md"]
+		, ["/docs/contributing/cross-language-authoring/", "docs/architecture/cross-language-authoring.md"]
+		, ["/docs/contributing/sandbox-release/", "docs/contributing/sandbox-release.md"]
+		, ["/docs/contributing/production-release/", "docs/contributing/production-release.md"]
 		, ["/docs/contributing/github-pages/", "docs/contributing/github-pages.md"]
 	]);
-	assert.equal(docPages.filter(page => !page.legacy).length, 62);
+	assert.equal(docPages.filter(page => !page.legacy).length, 66);
 	assert.ok(docPages.filter(page => page.group === "Contributing").every(page => !page.legacy));
 });
 
@@ -58,14 +62,14 @@ test("maintainer builds and acceptance checks have one contributor destination",
 test("Publishing retains operational checks and links contributor-owned policy and deployment", async () => {
 	const [overview, sandbox, production, pipeline] = await Promise.all([
 		"docs/publishing.md"
-		, "docs/publish/sandbox-release.md"
-		, "docs/publish/production-release.md"
+		, "docs/contributing/sandbox-release.md"
+		, "docs/contributing/production-release.md"
 		, "src/release/README.md"
 	].map(file => readFile(file, "utf8")));
 	assert.ok(overview.includes("contributing/github-pages.md"));
 	assert.ok(overview.includes("publish/nix.md"), "Signed Nix packages remain in Publishing");
 	assert.ok(sandbox.includes("npm run release:rehearse"));
-	assert.ok(sandbox.includes("contributing/testing.md#release-tooling-checks"));
+	assert.ok(sandbox.includes("testing.md#release-tooling-checks"));
 	assert.doesNotMatch(sandbox, /npm run test:release-/u);
 	for(const command of ["deployment:check", "verify:release-authorization", "verify:release-receipt"])
 		assert.ok(production.includes(`npm run ${command}`), command);
@@ -73,7 +77,7 @@ test("Publishing retains operational checks and links contributor-owned policy a
 	for(const role of ["release owner", "runtime owner", "security owner"])
 		assert.ok(pipeline.toLowerCase().includes(role), role);
 	assert.ok(pipeline.includes("createCliHandlers"));
-	for(const page of docPages.filter(page => page.group === "Publish" && !page.legacy))
+	for(const page of docPages.filter(page => page.group === "Build and publish" && !page.legacy))
 	{
 		assert.doesNotMatch(await readFile(page.source, "utf8"), /npm run test:(?:consumer:|php-release)/u,
 			`${page.id}: repository-wide fixture checks link to Contributing`);
@@ -93,7 +97,7 @@ test("release documentation distinguishes author publication from universal proj
 
 test("contributor acceptance documents checkout setup and the current exact-integer results", async () => {
 	const testing = await readFile("docs/contributing/testing.md", "utf8");
-	assert.ok(testing.includes("../lean/setup.md#install-the-local-cli"));
+	assert.ok(testing.includes("author-toolchain.md#install-the-local-cli"));
 	assert.match(testing, /numeric-boundary-diagnostic\.json` records successful addition/);
 	assert.match(testing, /above `2\^4096`/);
 	assert.doesNotMatch(testing, /records the current runtime failure/);

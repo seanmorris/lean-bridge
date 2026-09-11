@@ -90,6 +90,10 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/analyze/export-configuration.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/analyze/output.mjs",
 			"classification": "strict-migration-backlog"
 		},
@@ -143,6 +147,14 @@
 		},
 		{
 			"path": "src/backends/managed/package-audit.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/native/runtime-broker.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/backends/perl/generate.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
@@ -258,6 +270,10 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/build/cpan-projection.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
 			"path": "src/build/component-scalar-adapters.mjs",
 			"classification": "strict-migration-backlog"
 		},
@@ -275,6 +291,26 @@
 		},
 		{
 			"path": "src/build/lean-component-compiler.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/native-artifacts.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/native-component.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/native-model.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/native-project.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/build/perl-xs.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
@@ -303,6 +339,10 @@
 		},
 		{
 			"path": "src/cli/run.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/cli/verify.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
@@ -411,6 +451,18 @@
 		},
 		{
 			"path": "src/release/core-artifact-set.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/cpan-install-trace.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/cpan-install.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/release/cpan-package.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{

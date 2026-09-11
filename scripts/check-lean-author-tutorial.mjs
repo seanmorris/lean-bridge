@@ -89,10 +89,16 @@ try
 	const receiptPath = join(packageRoot, "component-package-receipt.json");
 	const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 	const verified = await verifyComponentPackageReceipt({ receiptPath });
+	const checkedHandoff = JSON.parse((await run("Verify the handoff through the CLI", process.execPath,
+		[join(engine, "scripts/lean-bridge.mjs"), "verify", "--receipt", receiptPath, "--json"], scratch)).stdout);
+	assert.deepEqual(checkedHandoff.result, { ...verified, verificationType: "local-npm", authenticated: false });
 	await run("Run the copied standalone receipt verifier", process.execPath, [join(packageRoot, "verify-component-package-receipt.mjs"), "--receipt", receiptPath], scratch);
 	await mkdir(consumer);
 	await run("Initialize a separate consumer", "npm", ["init", "-y"], consumer);
 	await run("Install the exact local archives", "npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", join(packageRoot, receipt.runtime.archive), join(packageRoot, receipt.package.archive)], consumer);
+	await cp(join(repository, "tests/fixtures/documentation/lean-author-consumer/index.mjs"), join(consumer, "index.mjs"));
+	const example = await run("Run the documented JavaScript file", process.execPath, ["index.mjs"], consumer);
+	assert.equal(example.stdout, "123n\ntrue\nfalse\n");
 	const invocationSource = [
 		'import * as component from "onboarding-small";'
 		, 'const { add, isEmpty } = component;'

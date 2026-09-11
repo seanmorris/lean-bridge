@@ -10,7 +10,7 @@ Use a C++20 compiler, CMake 3.20 or newer, and tar on Linux x86-64 with glibc 2.
 
 Request `lean-bridge-alpha-0.0.0-cpp.tar.gz` and the authentication files in [Use a prepared release](receive-package.md). Authenticate the archive before extraction.
 
-### Create the project
+## Create the project
 
 Put the archive in your project directory and extract it:
 
@@ -31,7 +31,7 @@ add_executable(consumer main.cpp)
 target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 ```
 
-### Call Lean
+## Call Lean
 
 Save this file as `main.cpp`:
 
@@ -83,6 +83,8 @@ Expected output:
 ```text
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -159,7 +161,7 @@ These are the prepared Alpha package's public types in `lean_bridge::alpha`. The
 
 Its generated `lean_alpha.hpp` defines the available API.
 
-### Types, errors, and cleanup
+## Types, errors, and cleanup
 
 `Payload` owns its `std::string` and `std::vector` fields. `round_trip` toggles `enabled`, increments `count`, and preserves the other values. Alpha adds two to the host callback result, giving 44 in the example. Scalar values use `std::uint32_t`.
 
@@ -167,7 +169,7 @@ Its generated `lean_alpha.hpp` defines the available API.
 
 Native status failures raise `lean_bridge::alpha::Error`, which exposes `status()` and `code()`. Calls on closed wrappers raise `std::runtime_error`. The callback adapter catches a C++ exception and rethrows it after control returns from Lean; do not throw across the underlying C ABI yourself.
 
-### Troubleshooting
+## Troubleshooting
 
 - If CMake cannot find the package, pass the extracted root through `CMAKE_PREFIX_PATH`.
 - If compilation reports deleted copy operations, move the wrapper or pass it by reference instead of copying it.
@@ -176,14 +178,12 @@ Native status failures raise `lean_bridge::alpha::Error`, which exposes `status(
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and C++ projection](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) to produce `lean-bridge-alpha-0.0.0-cpp.tar.gz`. Return to the [prepared release steps](#use-a-prepared-release) with that archive.
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the C++ build-and-publish guide](../publish/cpp.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Package authors and acceptance
 
-Contributors can [build the Alpha examples](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See [native consumer evidence](../evidence/native-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Distribute C, C++, and WASI archives](../publish/archives.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/cpp.md).

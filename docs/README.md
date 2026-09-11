@@ -1,97 +1,74 @@
 # Documentation map
 
-Build a Lean component, call it from an application, or prepare it for a release. Each guide names its example package and links to the commands, source files, and verification records it needs.
+Follow the workflow for the package you are building or the application you are writing.
 
 ## Choose your starting point
 
 | Your task | Start here | Result |
 | --- | --- | --- |
-| I write Lean | [Package a Lean library](lean-author-guide.md) | A checked source project, a component bundle, and two local npm archives. |
-| I build applications | [Use a Lean package](consume.md) | Prepared-release installation and executable examples for every supported language and runtime. |
-| I ship libraries | [Publish a Lean package](publishing.md) | Ecosystem-specific packaging, registry uploads, verification, and release records. |
-| I contribute to Lean Bridge | [Contributing](../CONTRIBUTING.md) | Repository development, documentation, demos, tests, and site deployment. |
-
-Follow [toolchain setup](lean/setup.md) to install a prepared CLI before the author tutorial. An application consuming generated archives does not need the author toolchain.
+| Create or adapt a Lean library and distribute it | [Build and publish a Lean package](lean-author-guide.md) | Checked source, a supported application API, and installable downstream packages. |
+| Use a published package in an application | [Use a published Lean package](consume.md) | Installation with your language's tools, an executable example, and integration guidance. |
 
 ## Follow one complete example
 
-For a package you have already received, start with [prepared-release consumption](consume.md#use-a-prepared-release). The language guides install it directly and show the generated API in an application.
+Authors can [create the tutorial library](lean/first-component.md) or [adapt an existing library](lean/existing-package.md), then choose the [target language and package format](publishing.md). The npm tutorial checks an addition theorem, builds the component, and verifies its local package archives.
 
-The author tutorial starts from Lean source for `add` and `isEmpty`, then adds an addition theorem. Lean checks the theorem; analysis records which functions can be exported and which theorem relationships it found. The build produces a component, and a reproducibility dry run produces the runtime and component archives.
-
-Follow [Build your first component](lean/first-component.md), then [JavaScript and TypeScript](javascript-typescript.md). That guide covers Node, browser JavaScript, React, and workers using the same package. Native and managed guides use prepared Alpha releases documented in the [consumer overview](consume.md).
-
-## Understand the demos
-
-- [Understand and adopt a verified core](concepts/index.md) connects change checks, audit evidence, reusable APIs, integration tests, and adoption decisions.
-- [Dijkstra on a delivery graph](concepts/dijkstra.md) and [Flood fill with keys and permissions](concepts/flood-fill.md) include executable graph examples.
-- [From proof to browser result](concepts/lean-to-wasm.md) traces the sweep-and-prune guarantee through Lean, compilation, and the browser adapter.
-- [Read the benchmarks](concepts/benchmarks.md) explains warmup, medians, p95, histograms, and the JavaScript comparison.
-- [Use a demo's local API](demo-api.md) calls a compiled box solver without the webpage.
-- [Run the algorithm collection](../demos/index.html) to change inputs and inspect the results.
-
-## Look up a contract
-
-- [CLI reference](reference/cli.md) includes generated help, parser defaults, result fields, and exit codes.
-- [Generated package API](reference/package-api.md) shows the actual declarations for the tutorial and scalar fixtures.
-- [Types and values](reference/types.md) explains integers, floating point, Unicode, copied bytes, and supported signatures.
-- [Algorithm APIs and proofs](reference/algorithms.md) links all twelve adapters to their selected theorems and source-checked receipts.
-
-For application lifetimes, read [Combine Lean packages](concepts/shared-runtime.md) and [Ownership and cleanup](concepts/ownership.md). These guides separate automatic package initialization from the explicit cleanup needed by resource APIs.
-
-## Claim ownership
-
-The [documentation ownership map](../site/README.md#claim-ownership) identifies where contributors update project summaries, architecture requirements, support states, and executed evidence.
+Application developers start with a completed release. The [JavaScript and TypeScript guide](javascript-typescript.md) covers Node, browsers, React, and workers. The [consumer overview](consume.md) links every supported language and identifies the example packages.
 
 ## User guides
 
-| Audience | Guide |
-|---|---|
-| Lean package authors | [Lean author guide](lean-author-guide.md) |
-| Package recipients | [Use a prepared release](consume/receive-package.md) |
-| JavaScript, TypeScript, browser, React, and workers | [JavaScript and TypeScript](javascript-typescript.md) |
-| Library publishers | [Publishing guide](publishing.md) |
-| Repository, documentation, and demo contributors | [Contributing](../CONTRIBUTING.md) |
-| Python consumers | [Python](consume/python.md) |
-| Rust consumers | [Rust](consume/rust.md) |
-| C and C++ consumers | [C](consume/c.md), [C++](consume/cpp.md) |
-| C# / .NET consumers | [C# / .NET](consume/dotnet.md) |
-| Java and Kotlin consumers | [Java](consume/java.md), [Kotlin](consume/kotlin.md) |
-| Ruby consumers | [Ruby](consume/ruby.md) |
-| Perl consumers | [Perl](consume/perl.md) |
-| PHP consumers | [Native PHP](consume/php-native.md), [PHP-Wasm](consume/php-wasm.md) |
-| Component Model consumers | [WIT / WASI](consume/wit-wasi.md) |
-| Platform requirements | [Runtime and package reference](consumers.md) |
+| Application language | Installation and use | Build and publish |
+| --- | --- | --- |
+| JavaScript, TypeScript, browser, React, workers | [JavaScript and TypeScript](javascript-typescript.md) | [npm](publish/npm.md) |
+| Python | [Python](consume/python.md) | [PyPI](publish/pypi.md) |
+| Rust | [Rust](consume/rust.md) | [Cargo](publish/cargo.md) |
+| C | [C](consume/c.md) | [C packages](publish/c.md) |
+| C++ | [C++](consume/cpp.md) | [C++ packages](publish/cpp.md) |
+| C# / .NET | [C# / .NET](consume/dotnet.md) | [NuGet](publish/nuget.md) |
+| Java and Kotlin | [Java](consume/java.md), [Kotlin](consume/kotlin.md) | [Maven](publish/maven.md) |
+| Ruby | [Ruby](consume/ruby.md) | [RubyGems](publish/rubygems.md) |
+| Perl | [Perl](consume/perl.md) | [CPAN](publish/cpan.md) |
+| PHP | [PHP, native and Wasm](php.md) | [Composer and npm](publish/php.md) |
+| WIT / WASI | [WIT / WASI](consume/wit-wasi.md) | [WIT / WASI packages](publish/wit-wasi.md) |
 
-Guides describe commands that a user can execute with produced package archives. They state prerequisites, imports, calls, cleanup, receipt verification, and current blockers. A generated API preview does not become a supported workflow until the versioned support record and clean-consumer evidence agree.
+[Use a prepared release](consume/receive-package.md) covers archive verification and signed Nix cache consumption. The [runtime reference](consumers.md) lists tested platform requirements.
 
 ## Publish by ecosystem
 
-- [npm](publish/npm.md) for JavaScript, TypeScript, and PHP-Wasm packages.
-- [PyPI](publish/pypi.md) for Python wheels and source distributions.
-- [Cargo](publish/cargo.md) for Rust crates.
-- [NuGet](publish/nuget.md) for C# and .NET packages.
-- [Maven repositories](publish/maven.md) for Java and Kotlin packages.
-- [RubyGems](publish/rubygems.md) for Ruby gems.
-- [CPAN](publish/cpan.md) for Perl distributions and their XS compatibility matrix.
-- [Composer](publish/composer.md) for native PHP distribution.
-- [Archives](publish/archives.md) for C, C++, and WIT/WASI.
-- [Signed Nix packages](publish/nix.md) for binary-cache publication and trusted substitution.
+Publishing is part of the author workflow. The language guides above retain package-manager setup, package creation, credentials, uploads, verification, and recovery. [Choose targets and package formats](publishing.md) explains their build inputs and available delivery paths.
 
-The [publishing overview](publishing.md) separates package creation, operator-run uploads, and signed release transactions. Each ecosystem guide names its current integration requirements.
+Use [archive distribution](publish/archives.md) for approved tarballs and [signed Nix publication](publish/nix.md) for binary caches.
 
-## Architecture and evidence
+## Understand the demos
 
-The [architecture index](architecture/README.md) covers durable interoperability, safety, reproducibility, and ownership rules. Architecture decision records explain why the project selected a boundary and what alternatives it rejected.
+- [Understand and adopt a verified core](concepts/index.md) connects change checks, evidence, reusable APIs, and integration.
+- [Dijkstra on a delivery graph](concepts/dijkstra.md) and [Flood fill with keys and permissions](concepts/flood-fill.md) include executable examples.
+- [From proof to browser result](concepts/lean-to-wasm.md) follows a guarantee through compilation.
+- [Read the benchmarks](concepts/benchmarks.md) explains the measurements.
+- [Use a demo's local API](demo-api.md) calls a compiled solver without its webpage.
+- [Run the algorithm collection](../demos/index.html) to change inputs and inspect results.
 
-The [React gallery and documentation-site plan](architecture/react-documentation-site-plan.md) describes the planned public site for Lean authors, downstream consumers, and publishers. It reuses the canonical guides above and keeps migration work separate from executed evidence.
+## Look up a contract
 
-The [evidence index](evidence/README.md) links executed commands, observations, measurements, and acceptance records. Contributors should follow the [evidence-writing guidance](../site/README.md#style-and-references) when recording a new result.
+- [CLI reference](reference/cli.md): commands, configuration, results, and exit codes.
+- [Generated package API](reference/package-api.md): declarations emitted for the tutorial packages.
+- [Types and values](reference/types.md): conversion rules and position-specific coverage.
+- [Algorithm APIs and proofs](reference/algorithms.md): adapters, theorems, and source-checked receipts.
+
+Read [Combine Lean packages](concepts/shared-runtime.md) and [Ownership and cleanup](concepts/ownership.md) when integrating resource APIs.
 
 ## Contributor workflow
 
-Follow the [contributor workflow](../CONTRIBUTING.md#contributor-workflow) to update implementation, contracts, evidence, and documentation together. The contributor landing page also links the source, script, and test indexes.
+[Contributing](../CONTRIBUTING.md) covers implementation, documentation, tests, demos, Lean Bridge releases, and site deployment. These procedures maintain the bridge itself.
+
+## Claim ownership
+
+The [documentation ownership map](../site/README.md#claim-ownership) identifies the sources for requirements, support states, and executed evidence.
+
+## Architecture and evidence
+
+The [architecture index](architecture/README.md) records interoperability and safety decisions. The [evidence index](evidence/README.md) records executed commands and acceptance results. Historical plans and evidence retain their original scope.
 
 ## Style and references
 
-The [style and reference guidance](../site/README.md#style-and-references) covers evidence, portable source links, public API examples, and documentation checks.
+Follow the [writing and reference guidance](../site/README.md#style-and-references) when changing documentation.

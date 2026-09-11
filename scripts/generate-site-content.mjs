@@ -373,7 +373,7 @@ export async function generateSiteContent(options = {})
 	].join('\n'));
 	await writeFile(path.join(output, 'metadata.d.mts'), [
 		'export interface Heading { depth: number; id: string; text: string; }'
-		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; legacy?: boolean; consumerIds?: string[]; searchAliases?: string[]; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
+		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; navTitle?: string; section?: string; legacy?: boolean; consumerIds?: string[]; searchAliases?: string[]; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
 		, 'export const pages: Record<string, Page>;'
 	].join('\n'));
 	await writeFile(path.join(output, 'index.d.mts'), [

@@ -129,6 +129,11 @@ try
 	const receiptPath = join(packages, "component-package-receipt.json");
 	const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 	assert.doesNotMatch(await readFile(join(gate, "evidence/reproducibility.json"), "utf8"), /FAKE_REMOTE_SECRET|FAKE_QUERY_SECRET/);
+	const checkedHandoff = JSON.parse((await run("Verify the generated handoff through the installed CLI", executable,
+		["verify", "--receipt", receiptPath, "--json"], consumer)).stdout);
+	assert.equal(checkedHandoff.result.verified, true);
+	assert.equal(checkedHandoff.result.authenticated, false);
+	assert.equal(checkedHandoff.project, null);
 	await run("Verify the generated handoff with its copied verifier", process.execPath, [join(packages, "verify-component-package-receipt.mjs"), "--receipt", receiptPath], consumer);
 	if(registry)
 	{

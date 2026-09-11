@@ -54,7 +54,7 @@ The canonical input boundary requires the manifest file to equal its canonical n
 | [`nuget-package.mjs`](nuget-package.mjs), [`maven-package.mjs`](maven-package.mjs), [`rubygems-package.mjs`](rubygems-package.mjs) | .NET, JVM, and Ruby registry layouts. |
 | [`wasi-package.mjs`](wasi-package.mjs) | WIT, component, native host source, and WASI consumer metadata. |
 
-PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They take PHP package manifests and compiler inputs, rather than the universal bundle's `--bundle` input. Neither PHP package is a target in the universal publication manifest. [Composer distribution](../../docs/publish/composer.md) covers native PHP; [npm publication](../../docs/publish/npm.md#publish-the-php-wasm-profile) covers PHP-Wasm.
+PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They take PHP package manifests and compiler inputs, rather than the universal bundle's `--bundle` input. Neither PHP package is a target in the universal publication manifest. [Composer distribution](../../docs/publish/php.md#native-php-with-composer) covers native PHP; [npm publication](../../docs/publish/php.md#publish-the-php-wasm-profile) covers PHP-Wasm.
 
 ### Reproducibility and independent confirmation
 
@@ -103,7 +103,7 @@ The current profile requires the release owner, runtime owner, and security owne
 
 The responsible reviewers must inspect that evidence and record their decisions through the project's review process. The deployment evaluator checks profile state and approval records; it does not perform the external reviews. Editing `status` or inserting names does not supply approval.
 
-The [production release procedure](../../docs/publish/production-release.md#inspect-the-approval-state) gives the approval-state check and the commands for candidate and receipt verification. Approval applies to the reviewed candidate and profile revision. Rebuilds or target changes require renewed review.
+The [production release procedure](../../docs/contributing/production-release.md#inspect-the-approval-state) gives the approval-state check and the commands for candidate and receipt verification. Approval applies to the reviewed candidate and profile revision. Rebuilds or target changes require renewed review.
 
 ## Publisher signer integration
 
@@ -125,7 +125,7 @@ The signer provider exposes `kind`, `keyId`, and `sign(bytes)`. Its `keyId` must
 
 The handler verifies the manifest and candidate, checks the deployment profile when configured, and preflights required credential names before signing the publication statement. It verifies that signature before invoking the transaction publisher. The transaction preflights every target before its first write and accesses credentials through the scoped boundary. The handler uses the same policy and signer to create the completion receipt only after the transaction reports `complete`.
 
-Follow [sandbox publisher configuration](../../docs/publish/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Universal production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/publish/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
+Follow [sandbox publisher configuration](../../docs/contributing/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Universal production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/contributing/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
 
 ## Adding an ecosystem package
 

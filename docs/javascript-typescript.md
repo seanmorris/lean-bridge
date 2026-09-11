@@ -8,7 +8,7 @@ Use Node 22.22 or newer for all commands below, including the Vite 8.2.1 example
 
 Choose a setup: [JavaScript on Node](#javascript), [TypeScript on Node](#typescript), [plain browser JavaScript](#use-the-package-in-a-browser), or [React](#react). The React example also includes [browser workers](#browser-workers).
 
-### Install from a registry
+## Install from a registry
 
 If the publisher has released the component and its runtime dependency to your configured registry, install only the component. Run this from your application directory, replacing the example coordinate with the publisher's package name and exact version:
 
@@ -21,7 +21,7 @@ npm resolves the declared runtime dependency. Keep the application's lockfile. U
 
 For a release supplied as local archives, use the next two steps instead. Both archives go through one installation command; loading the runtime remains automatic.
 
-### Install a local archive release
+## Install a local archive release
 
 Use this option when the publisher supplies package files instead of a registry coordinate.
 
@@ -42,7 +42,7 @@ npm install --ignore-scripts --no-audit --no-fund \
 
 Installing both archives together satisfies the component's runtime dependency. `--ignore-scripts` disables installation lifecycle scripts. In the browser and React setups, npm also installs the development dependencies declared by that setup's `package.json`.
 
-### JavaScript
+## JavaScript
 
 Create a Node.js application:
 
@@ -85,7 +85,7 @@ The import initializes the runtime and loads the component before the module bod
 
 Both functions return copied primitives, so no disposal step is required. Imports in one JavaScript realm share the runtime module.
 
-### TypeScript
+## TypeScript
 
 Create a separate Node.js application and install the compiler:
 
@@ -160,6 +160,8 @@ void wrongResult;
 ```
 
 Run `npx tsc --project tsconfig.json` again, but do not execute `dist/typecheck.js`. If the generated declarations start accepting one of these invalid calls, TypeScript reports an unused `@ts-expect-error` directive.
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -274,7 +276,7 @@ export function addInput(leftText: string, rightText: string): bigint
 
 Invalid text throws `RangeError` before invoking Lean. The sum has no fixed-width integer bound; the runtime's copy limit still applies. The React and worker example applies the same text checks in its shared `lean.ts` helper. Use `sum.toString()` for display or JSON.
 
-### Use the package in a browser
+## Use the package in a browser
 
 Create a separate application directory:
 
@@ -374,7 +376,7 @@ npm run preview
 
 Deploy the whole `dist` directory, including its generated binary assets. Set Vite's `base` to the deployed prefix, including a GitHub project Pages prefix when applicable. The server should return `.wasm` files as `application/wasm`. Load the page through HTTP, not a `file:` URL.
 
-### React
+## React
 
 The checked-in React application includes editable inputs, mount/unmount controls, loading and error states, and a module-worker example. It pins React, Vite, and TypeScript.
 
@@ -442,7 +444,7 @@ export default defineConfig({
 
 Use the shared [build and deployment steps](#build-and-serve-browser-assets). This fixture's build also type-checks the main-thread and worker programs separately.
 
-### Browser workers
+## Browser workers
 
 The React application's Start worker button sends its current inputs to `lean-worker.ts`. A module worker runs calls on its own JavaScript thread and loads its own runtime. It shares neither component objects nor runtime memory with the page.
 
@@ -514,7 +516,7 @@ Termination stops that worker without waiting for its current computation and di
 
 The runnable fixture creates a new worker for each submitted input, so a retired worker cannot publish a result for newer input. For a long-lived worker handling overlapping requests, include a request ID and match replies before applying them. Terminate the worker when its application owner finishes.
 
-### Diagnose an install or call failure
+## Diagnose an install or call failure
 
 | Symptom | Action |
 | --- | --- |
@@ -537,26 +539,12 @@ The local archive recipe supplies the runtime tarball alongside the component be
 
 ## Start from a raw Lean package
 
-A Lake project must be compiled and packaged before these applications can import it. Complete [author setup](lean/setup.md), check the project's [export shapes](lean/export-decisions.md), and commit the source you intend to build. The setup selects the matching Lean toolchain, isolated builder, and shared runtime.
-
-Run these commands from the Lean project's root, using new output directories:
-
-```sh
-lean-bridge analyze --project . --check --output build/analysis
-lean-bridge build --project . --target npm --output build/lean-bridge-release
-lean-bridge publish --project . --target npm --dry-run \
-  --output build/lean-bridge-dry-run
-export LEAN_BRIDGE_RELEASE="$PWD/build/lean-bridge-dry-run/release/packages/npm"
-```
-
-The dry run produces the component and runtime archives, receipt, and verifier without publishing them. Follow [Verify the handoff](#verify-the-handoff), then return to the application setup above. [Share a local package](publish/local-handoff.md) explains the build outputs and reproducibility checks.
-
-To build the exact `add` and `isEmpty` package used in these examples, follow [Build your first component](lean/first-component.md). For another Lean package, use its generated import name, declarations, and runtime requirements.
+Follow [the JavaScript and TypeScript build-and-publish guide](publish/npm.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](lean/existing-package.md).
 
 ### Check the author's exact package
 
-Contributors can run the [JavaScript and browser acceptance checks](contributing/testing.md#javascript-and-browser-acceptance) against the author's original archives. Those checks exercise the applications above without rebuilding the component or publishing it.
+Repository checks live in [Contributing](contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to npm](publish/npm.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](publish/npm.md).

@@ -8,6 +8,7 @@ import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { diagnostic, prompt } from "./contract.mjs";
+import { verificationHandler } from "./verify.mjs";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { AnalysisOutputError, writeAnalysisOutput } from "../analyze/output.mjs";
 import { evaluateAnalysisPolicy } from "../analyze/policy.mjs";
@@ -178,7 +179,8 @@ export const createCliHandlers = ({
 	, authorizePublish = authorizePublication
 	, createReceipt = writeReleaseReceipt
 } = {}) => Object.freeze({
-	analyze: async (request, { signal, emitProgress } = {}) => {
+	verify: verificationHandler
+	, analyze: async (request, { signal, emitProgress } = {}) => {
 		emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
 		signal?.throwIfAborted();
 		const report = await analyze(request.project, { signal, targets: request.selection.targets });

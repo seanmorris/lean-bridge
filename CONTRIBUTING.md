@@ -10,6 +10,8 @@ Contributors maintain Lean Bridge's implementation, documentation, demos, and re
 | Change an algorithm demo, proof receipt, or benchmark | [Develop and verify demos](demos/README.md) |
 | Build example archives or run contributor acceptance | [Build example packages and run checks](docs/contributing/testing.md) |
 | Extend package projections or release machinery | [Release tooling and package extensions](src/release/README.md) |
+| Build the CLI and runtime from a checkout | [Author toolchain development](docs/contributing/author-toolchain.md) |
+| Rehearse or approve a Lean Bridge release | [Sandbox rehearsal](docs/contributing/sandbox-release.md), [production release](docs/contributing/production-release.md) |
 | Deploy this repository's guides and workbenches | [Publish the documentation and demos](docs/contributing/github-pages.md) |
 
 ## Before changing code

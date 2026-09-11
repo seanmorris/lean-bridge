@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Selections"],
+  "exports": ["First.bump"],
+  "targets": {
+    "cpan": { "module": "LeanBridge::Selected", "version": "0.007" }
+  }
+}

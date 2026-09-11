@@ -10,7 +10,7 @@ Use MRI Ruby 3.3 and RubyGems on x86-64 Linux with glibc 2.38 or newer. Check `r
 
 This guide uses `lean_bridge_alpha-0.0.0.gem`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate that archive. No RubyGems.org publication is assumed.
 
-### Install the gem
+## Install the gem
 
 From an empty application directory, install the authenticated archive into a local gem home:
 
@@ -93,6 +93,8 @@ Callback: 44
 Callable: 42
 Errors and cleanup: passed
 ```
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -177,7 +179,7 @@ Alpha's `round_trip` flips `enabled` and increments `count`, preserving the othe
 
 Call `close` on each `Box` and `OwnedTransform`. The `ensure` block releases resources if any assertion or callback throws, including when creation of the second resource fails. Repeated close is harmless. `closed?` reports the state, and operations after close raise `DisposedResourceError`. Do not rely on the garbage collector for timely cleanup.
 
-### Errors and troubleshooting
+## Errors and troubleshooting
 
 - Invalid argument types raise `TypeError`. Integers outside the unsigned range raise `RangeError`.
 - Ruby exceptions raised by a callback propagate as the original exception. The example handles an `ArgumentError`.
@@ -187,16 +189,12 @@ Call `close` on each `Box` and `OwnedTransform`. The `ensure` block releases res
 
 ## Start from a raw Lean package
 
-For Alpha, [build the managed Ruby package](../contributing/testing.md#managed-packages) to produce `lean_bridge_alpha-0.0.0.gem`. Use the resulting archive with [Install the gem](#install-the-gem).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Ruby build-and-publish guide](../publish/rubygems.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Related workflows and acceptance
 
-Alpha's Ruby surface uses the [managed target profile](../architecture/adr/23-managed-runtime-target-profiles.md).
-
-Contributors can [build the managed examples](../contributing/testing.md#managed-packages) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See the [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to RubyGems](../publish/rubygems.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/rubygems.md).

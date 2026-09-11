@@ -61,13 +61,13 @@ try
 	{
 		await languageSearch.goto(docs.href);
 		await hydrated(languageSearch);
-		for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "Composer", "Nix"])
+		for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "CPAN", "Composer", "Nix"])
 		{
 			await languageSearch.locator("#doc-search").fill(name);
 			const first = languageSearch.locator(".search-results a").first();
 			await first.waitFor();
 			assert.equal(new URL(await first.getAttribute("href"), base).href,
-				new URL(`docs/publish/${name.toLowerCase()}/`, base).href, `${name}: publishing guide ranks first`);
+				new URL(`docs/publish/${name === "Composer" ? "php" : name.toLowerCase()}/`, base).href, `${name}: publishing guide ranks first`);
 		}
 		for(const [query, slug] of [
 			...["JavaScript", "JS", "TypeScript", "TS", "Browser", "React", "worker", "Workers"].map(query => [query, "javascript-typescript"])
@@ -75,6 +75,10 @@ try
 			, ["C", "c"]
 			, ["C++", "cpp"]
 			, ["C#/.NET", "dotnet"]
+			, ["Perl", "perl"]
+			, ["PHP", "php"]
+			, ["Native PHP", "php"]
+			, ["PHP-Wasm", "php"]
 			, ["Python", "python"]
 		]){
 			await languageSearch.locator("#doc-search").fill(query);
@@ -82,9 +86,12 @@ try
 			const expected = new URL(`docs/consume/${slug}/`, base);
 			await first.waitFor();
 			assert.equal(new URL(await first.getAttribute("href"), base).href, expected.href, `${query}: the named guide ranks first`);
+			assert.equal(await first.locator("small").innerText(), "Use a package");
 		}
 		await languageSearch.locator(".search-results a").first().click();
 		await languageSearch.waitForURL(new URL("docs/consume/python/", base).href);
+		// The URL can change before the destination route mounts its search input.
+		await languageSearch.getByRole("heading", { name: "Use a Lean package from Python", exact: true }).waitFor();
 		assert.equal(await languageSearch.locator("#doc-search").inputValue(), "", "Choosing a guide clears the query");
 		for(const [query, destination] of [
 			['CLI', 'reference/cli/']
@@ -135,7 +142,7 @@ try
 		await page.keyboard.press("Enter");
 		await disclosure.locator('a[href$="/docs/lean/"]').click();
 		await page.waitForURL(new URL("docs/lean/", base).href);
-		await page.waitForFunction(() => globalThis.document.querySelector("main h1")?.textContent === "Package a Lean library"
+		await page.waitForFunction(() => globalThis.document.querySelector("main h1")?.textContent === "Build and publish a Lean package"
 			&& globalThis.document.activeElement === globalThis.document.querySelector("main h1"));
 		await page.waitForFunction(() => !globalThis.document.querySelector(".doc-navigation").open);
 		assert.equal(await page.locator("main h1").evaluate(element => element === globalThis.document.activeElement), true);
@@ -164,7 +171,7 @@ try
 		assert.equal(await noScript.locator(".docs-sidebar nav a").first().isVisible(), false);
 		await noScript.locator(".doc-navigation summary").click();
 		await noScript.locator('.docs-sidebar a[href$="/docs/lean/"]').click();
-		assert.equal(await noScript.locator("main h1").innerText(), "Package a Lean library");
+		assert.equal(await noScript.locator("main h1").innerText(), "Build and publish a Lean package");
 	}
 	finally
 	{ await noScript.close(); }

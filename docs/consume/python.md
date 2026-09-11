@@ -10,7 +10,7 @@ Use Python 3.11 or newer on Linux x86-64 with glibc 2.38 or newer, with pip and 
 
 Obtain `lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl` from the publisher's release channel. [Use a prepared release](receive-package.md) covers handoff authentication separately.
 
-### Install the wheel
+## Install the wheel
 
 Put the original release wheel in your project directory, then install it in an isolated environment:
 
@@ -22,7 +22,7 @@ python3 -m venv .venv
 
 pip checks the wheel's platform tag and Python requirement. The installed package loads its bundled native libraries when imported.
 
-### Call Lean
+## Call Lean
 
 Save this file as `main.py`:
 
@@ -69,6 +69,8 @@ Expected output:
 ```text
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -143,7 +145,7 @@ This table describes the prepared Alpha wheel used above. Names such as `Payload
 | `UInt32 → UInt32` callback | `Callable[[int], int]` | Synchronous Python callable; arguments and results obey the `UInt32` range. |
 | Returned Lean closure | `Transform` | Callable object returned by `make_adder`; use `with` or `close()`. |
 
-### Types, errors, and cleanup
+## Types, errors, and cleanup
 
 `Payload` is a frozen dataclass. It copies bytes and sequence inputs into `bytes` and `tuple`. Alpha uses unsigned 32-bit integers, so pass integers from 0 through 4,294,967,295. Generated validation rejects out-of-range inputs before calling Lean.
 
@@ -151,7 +153,7 @@ Alpha's `round_trip` toggles `enabled`, increments `count`, and preserves the la
 
 Use `with` for `Box` and the `Transform` returned by `make_adder`. Both release their Lean resources when the block exits, including on exceptions. `close()` is idempotent; a closed `Box` raises `DisposedResourceError` on reuse. Ordinary copied `Payload` values need no cleanup.
 
-### Troubleshooting
+## Troubleshooting
 
 - If `venv` is missing, install your distribution's Python venv package before creating the environment.
 - If pip rejects the wheel's platform, use a supported Linux environment. Updating pip cannot provide a missing glibc version.
@@ -172,14 +174,12 @@ The preflight checks the selected interpreter, glibc, architecture, Python versi
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and Python projection](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) to produce the wheel used above. Return to [prepared release installation](#use-a-prepared-release) with that wheel and its preflight script.
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Python build-and-publish guide](../publish/pypi.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Package authors and acceptance
 
-Contributors can [build the Alpha examples](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See [native consumer evidence](../evidence/native-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to PyPI](../publish/pypi.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/pypi.md).

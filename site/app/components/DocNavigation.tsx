@@ -7,9 +7,7 @@
 import { useEffect, useRef } from "react";
 import type { MouseEvent } from "react";
 import { NavLink } from "react-router";
-import { docPages } from "../../registry.mjs";
-
-const groups = [...new Set(docPages.map(page => page.group))];
+import { docPages, documentationGroups } from "../../registry.mjs";
 
 /** Native details leave every guide available before hydration and without JavaScript. */
 export const DocNavigation = () => {
@@ -42,9 +40,13 @@ export const DocNavigation = () => {
 	};
 	return <details className="doc-navigation" ref={disclosure} open>
 		<summary>Browse guides</summary>
-		<nav aria-label="Guides" onClick={navigate}>{groups.map(group => <section key={group}>
-			<h2>{group}</h2>{docPages.filter(page => page.group === group && !page.legacy).map(page =>
-				<NavLink end key={page.route} to={page.route}>{page.title}</NavLink>)}
-		</section>)}</nav>
+		<nav aria-label="Guides" onClick={navigate}>{documentationGroups.map(group => {
+			const pages = docPages.filter(page => page.group === group && !page.legacy);
+			const sections = [...new Set(pages.map(page => page.section))];
+			return <section key={group}><h2>{group}</h2>{sections.map(section => <div key={section ?? "guides"}>
+				{section && <h3>{section}</h3>}{pages.filter(page => page.section === section).map(page =>
+					<NavLink end key={page.route} to={page.route}>{page.navTitle ?? page.title}</NavLink>)}
+			</div>)}</section>;
+		})}</nav>
 	</details>;
 };

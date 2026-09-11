@@ -16,6 +16,7 @@ const documents = [
 	"docs/lean-author-guide.md", "docs/lean/setup.md"
 	, "docs/lean/first-component.md", "docs/lean/proofs-and-assurance.md"
 	, "docs/lean/export-decisions.md", "docs/lean/diagnostics.md"
+	, "docs/lean/existing-package.md"
 ];
 const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/gm)]
 	.map(match => ({ language: match[1], source: match[2] }));
@@ -39,7 +40,8 @@ test("author setup starts with a prepared CLI and keeps checkout-only runtime wo
 	assert.match(commands, /npm install --prefix "\$LEAN_BRIDGE_WORK\/cli" --offline --ignore-scripts --no-audit --no-fund "\$LEAN_BRIDGE_CLI_ARCHIVE"/);
 	assert.match(commands, /export PATH="\$LEAN_BRIDGE_WORK\/cli\/node_modules\/\.bin:\$PATH"/);
 	assert.doesNotMatch(commands, /LEAN_BRIDGE_CHECKOUT|LEAN_BRIDGE_RUNTIME_ROOT|npm run bootstrap/);
-	assert.match(checkout, /export LEAN_BRIDGE_RUNTIME_ROOT=/);
+	assert.doesNotMatch(checkout, /^```/m);
+	assert.match(await readFile("docs/contributing/author-toolchain.md", "utf8"), /export LEAN_BRIDGE_RUNTIME_ROOT=/);
 	assert.match(hub, /prepared CLI archive/);
 	assert.match(tutorial, /only the checkout-based setup needs `LEAN_BRIDGE_RUNTIME_ROOT`/);
 	assert.ok(publishing.includes("../lean/setup.md#install-a-prepared-cli"));
@@ -55,6 +57,35 @@ test("the first component's copyable files exactly match the author fixture", as
 	assert.equal(blocks.find(block => block.language === "text").source, await readFile(`${fixture}/lean-toolchain`, "utf8"));
 	const proof = fences(await readFile("docs/lean/proofs-and-assurance.md", "utf8")).find(block => block.language === "lean").source;
 	assert.ok((await readFile(`${fixture}/OnboardingSmall.lean`, "utf8")).includes(proof.trimEnd()));
+});
+
+test("shared author selections and the CPAN example match executable configurations", async () => {
+	const source = await readFile("docs/lean/existing-package.md", "utf8");
+	for(const file of ["docs/lean/existing-package.md", "docs/publish/cpan.md", "docs/lean/diagnostics.md", "docs/architecture/cross-language-authoring.md"])
+		assert.doesNotMatch(await readFile(file, "utf8"), /lean-bridge\.native\.json|migrate-the-perl-only-configuration|migration instructions/);
+	const selected = JSON.parse(fences(source).find(block => block.language === "json").source);
+	const fixtureSelection = JSON.parse(await readFile("tests/fixtures/export-selection/lean-bridge.exports.json", "utf8"));
+	assert.deepEqual(selected, { schemaVersion: fixtureSelection.schemaVersion, modules: fixtureSelection.modules, exports: fixtureSelection.exports });
+	const cpan = await readFile("docs/publish/cpan.md", "utf8");
+	assert.deepEqual(JSON.parse(fences(cpan).find(block => block.language === "json").source),
+		JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.exports.json", "utf8")));
+});
+
+test("the installed-package example uses npm and a runnable JavaScript file", async () => {
+	const content = await readFile("docs/lean/first-component.md", "utf8");
+	const section = content.split("## Call the installed package\n")[1];
+	const blocks = fences(section);
+	assert.equal(blocks.find(block => block.language === "js").source,
+		await readFile("tests/fixtures/documentation/lean-author-consumer/index.mjs", "utf8"));
+	const commands = blocks.filter(block => block.language === "sh").map(block => block.source).join("\n");
+	assert.doesNotMatch(commands, /--input-type|\bnode\s+-e\b|execFileSync/);
+	assert.match(commands, /require\(process\.env\.LEAN_BRIDGE_RECEIPT\)\.runtime\.archive/);
+	assert.match(commands, /require\(process\.env\.LEAN_BRIDGE_RECEIPT\)\.package\.archive/);
+	assert.match(commands, /^npm install --ignore-scripts --no-audit --no-fund \\$/m);
+	assert.match(commands, /"\$LEAN_BRIDGE_PACKAGE_DIR\/\$LEAN_BRIDGE_RUNTIME_FILE"/);
+	assert.match(commands, /"\$LEAN_BRIDGE_PACKAGE_DIR\/\$LEAN_BRIDGE_COMPONENT_FILE"/);
+	assert.match(commands, /^node index\.mjs$/m);
+	assert.equal(blocks.find(block => block.language === "text").source, "123n\ntrue\nfalse\n");
 });
 
 test("the author example exports two functions and records its theorem without promoting assurance", async () => {

@@ -10,7 +10,7 @@ Use x86-64 Linux with glibc 2.38 or newer. The archive includes the Wasmtime 42 
 
 Install `wasm-tools` only if you want to run the optional binary validation command. The [acceptance record](../evidence/wasi-consumer-acceptance.md) identifies the tested Wasmtime and wasm-tools versions.
 
-### Obtain and extract the package
+## Obtain and extract the package
 
 Request `lean-bridge-alpha-wasi-0.0.0.tar.gz` and [authenticate its release identity](receive-package.md) before extraction. Use an absolute archive path and a new application directory:
 
@@ -34,7 +34,7 @@ lean-bridge-alpha-wasi-0.0.0/
   share/lean-bridge-alpha/
 ```
 
-### Run the component
+## Run the component
 
 Save this as `run.sh` beside the extracted package:
 
@@ -62,6 +62,8 @@ Expected output:
 ```
 
 The first invocation discovers its component relative to the executable and supplies the default input `42`. The second provides the component path and input `73`. The command-line sample accepts an unsigned 32-bit input; validate application input before passing it to this host because its command-line parser does not reject every malformed or out-of-range value.
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -163,14 +165,12 @@ wasm-tools validate --features component-model \
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and WIT/WASI package](../contributing/testing.md#wasi-package), including its Component Model adapter and Wasmtime host. Use the resulting archive with [Obtain and extract the package](#obtain-and-extract-the-package). A standalone WIT declaration or Lean source file does not supply that executable host.
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the WIT / WASI build-and-publish guide](../publish/wit-wasi.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Acceptance checks
 
-Contributors run this shell example through the [installed consumer checks](../contributing/testing.md#consumer-acceptance). The [WIT/WASI acceptance record](../evidence/wasi-consumer-acceptance.md) describes the component-to-native call and packaged library checks.
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Distribute C, C++, and WASI archives](../publish/archives.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/wit-wasi.md).

@@ -7,6 +7,7 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } fr
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
@@ -147,6 +148,7 @@ const callbackDefault = nativeCallbackDefault;
  * @param root0.leanPrefix - Pinned Lean installation containing the compiler and matching headers.
  * @param root0.moduleName - Public LeanBridge Perl package name.
  * @param root0.modules - Selected local Lean modules.
+ * @param root0.configurationSha256 - Optional expected shared configuration identity.
  * @param root0.exports - Exact public declaration names, or discovery when empty.
  * @param root0.resources - Lean types explicitly assigned identity-bearing representation.
  * @param root0.arities - Explicit argument counts for exports returning closures.
@@ -159,9 +161,10 @@ export const buildNativeComponent = async ({ projectRoot
 	, leanPrefix
 	, moduleName
 	, modules
-	, exports = []
-	, resources = []
-	, arities = {}
+	, exports
+	, resources
+	, arities
+	, configurationSha256
 	, cc = "cc"
 	, signal }) => {
 	const output = resolve(outputRoot), project = resolve(projectRoot), runtime = resolve(runtimeRoot);
@@ -169,7 +172,22 @@ export const buildNativeComponent = async ({ projectRoot
 	const staging = await mkdtemp(join(dirname(output), ".native-component-"));
 	try
 	{
+		const record = await readExportConfiguration(project, { signal });
+		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
+		const config = record.configuration;
+		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities"], targetFields: ["module", "version"] });
+		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
+			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
+				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
+		if(moduleName !== undefined && config.targets?.cpan?.module !== undefined && moduleName !== config.targets.cpan.module)
+			throw new Error("Native moduleName override conflicts with targets.cpan.module");
+		modules ??= config.modules;
+		exports ??= config.exports ?? [];
+		resources ??= config.resources ?? [];
+		arities ??= config.arities ?? {};
+		moduleName ??= config.targets?.cpan?.module;
 		const analysis = await analyzeLeanProject(project, { signal });
+		assertExportConfigurationSnapshot(record, analysis.inputs);
 		const lean = join(resolve(leanPrefix), "bin/lean");
 		const probe = await run(lean, ["--version"], { signal });
 		const leanVersion = probe.stdout.match(/version ([^,]+),/)?.[1];
@@ -217,7 +235,7 @@ export const buildNativeComponent = async ({ projectRoot
 		const discovered = analysis.declarations.filter(item => ["def", "opaque"].includes(item.kind)
       && selectedModules.includes(item.path.replace(/\.lean$/, "").replaceAll("/", "."))
       && !/^(?:private|protected)\s/.test(item.signature)).map(item => item.name);
-		if(!exports.length && !discovered.length) throw new Error("No public definitions discovered; select exports explicitly in lean-bridge.native.json");
+		if(!exports.length && !discovered.length) throw new Error("No public definitions discovered; select exports explicitly in lean-bridge.exports.json");
 		const request = { modules: compileOrder.map(item => item.module), exports: exports.length ? exports : discovered, resources, arities: Object.entries(arities) };
 		await save(join(staging, "request.json"), json(request));
 		const extracted = await run(lean, ["--run", join(engineRoot, "src/analyze/NativeExports.lean"), join(staging, "request.json")], { env, signal });
@@ -225,6 +243,7 @@ export const buildNativeComponent = async ({ projectRoot
 		const sourceIdentity = { leanVersion
 			, leanCommit: pinnedNativeLean
 			, sourceTreeSha256: analysis.sourceTreeSha256
+			, exportConfigurationSha256: record.sha256
 			, extractorSha256: sha256(await readFile(join(engineRoot, "src/analyze/NativeExports.lean")))
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };

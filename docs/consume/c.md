@@ -10,7 +10,7 @@ Use a C11 compiler, CMake 3.20 or newer, and tar on Linux x86-64 with glibc 2.38
 
 Request `lean-bridge-alpha-0.0.0-c.tar.gz` and the authentication files in [Use a prepared release](receive-package.md). Authenticate the archive before extracting it.
 
-### Create the project
+## Create the project
 
 Put the archive in your project directory and extract it:
 
@@ -31,7 +31,7 @@ add_executable(consumer main.c)
 target_link_libraries(consumer PRIVATE LeanBridge::Alpha)
 ```
 
-### Call Lean
+## Call Lean
 
 Save this file as `main.c`. The shared cleanup path releases partially constructed state if any call fails.
 
@@ -121,6 +121,8 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Values and cleanup
+
 ### Type conversions
 
 Profiles: C. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -196,7 +198,7 @@ These names come from the prepared Alpha package's `lean_alpha.h`. Fallible func
 
 Input buffers may borrow application storage for the call. Returned buffers carry package-provided cleanup; use their generated `clear` functions, not `free`.
 
-### Types, errors, and cleanup
+## Types, errors, and cleanup
 
 Alpha's scalar values use `uint32_t`. Strings, bytes, and arrays pair a pointer with an explicit length; a string need not be null-terminated. `round_trip` returns copied buffers, toggles `enabled`, and increments `count`. Alpha adds two to the host callback result, giving 44 in the example.
 
@@ -204,7 +206,7 @@ Check each status before reading an output. Error messages carry `message_length
 
 Call `lean_alpha_payload_clear` on returned payloads. The input's borrowed stack buffers need no clear call. Dispose `Box` and returned callables with their pointer-to-pointer functions; disposal clears the owning pointer. The pointer returned by `identity` is borrowed from the original box. Never dispose it separately or use it after the owner is released.
 
-### Troubleshooting
+## Troubleshooting
 
 - If CMake cannot find `LeanBridgeAlpha`, pass the extracted package root through `CMAKE_PREFIX_PATH`, not the archive filename or its parent.
 - Link the `LeanBridge::Alpha` target so the consumer receives the generated include paths and required libraries.
@@ -212,14 +214,12 @@ Call `lean_alpha_payload_clear` on returned payloads. The input's borrowed stack
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and C projection](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) to produce `lean-bridge-alpha-0.0.0-c.tar.gz`. The application then links the packaged component through the [CMake project above](#create-the-project).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the C build-and-publish guide](../publish/c.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Package authors and acceptance
 
-Contributors can [build the Alpha examples](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See [native consumer evidence](../evidence/native-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Distribute C, C++, and WASI archives](../publish/archives.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/c.md).

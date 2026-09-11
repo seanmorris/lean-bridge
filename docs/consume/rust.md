@@ -10,7 +10,7 @@ Use Cargo, a Rust compiler supporting edition 2021, and tar on Linux x86-64 with
 
 Request `lean_bridge_alpha-0.0.0.crate` and the authentication files in [Use a prepared release](receive-package.md). Authenticate the archive before extracting it.
 
-### Create the project
+## Create the project
 
 In an empty project directory, place the archive and run:
 
@@ -33,7 +33,7 @@ lean_bridge_alpha = { path = "vendor/lean_bridge_alpha-0.0.0" }
 
 The local path dependency installs the exact archive you authenticated. This recipe does not require a crates.io publication or network access during the build.
 
-### Call Lean
+## Call Lean
 
 Save this file as `src/main.rs`:
 
@@ -79,6 +79,8 @@ Expected output:
 ```text
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -155,7 +157,7 @@ These are the public types in the prepared Alpha crate. Fallible calls return `R
 
 The current Rust generator rejects arbitrary-precision `Nat` and `Int` rather than narrowing them to machine integers.
 
-### Types, errors, and cleanup
+## Types, errors, and cleanup
 
 Alpha uses `u32` for its unsigned 32-bit values. `Payload` owns its `String`, `Vec<u8>`, and `Vec<u32>` fields. `round_trip` toggles the boolean, increments the count, and preserves the other fields.
 
@@ -173,14 +175,12 @@ The current crate locates its shared libraries using its build-time `CARGO_MANIF
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and Cargo projection](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) to produce `lean_bridge_alpha-0.0.0.crate`. Extract that completed archive and use the [prepared release steps](#use-a-prepared-release) above.
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Rust build-and-publish guide](../publish/cargo.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Package authors and acceptance
 
-Contributors can [build the Alpha examples](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See [native consumer evidence](../evidence/native-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish Rust crates](../publish/cargo.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/cargo.md).

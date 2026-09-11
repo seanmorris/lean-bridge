@@ -1,4 +1,6 @@
-# Publish Python wheels to PyPI
+# Build and publish Python packages
+
+This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
 
 Upload the generated platform wheel with Twine, then download and verify that same file before running the Python consumer. Twine uploads existing distribution files without rebuilding them. This guide uses TestPyPI for the operator-authorized registry exercise. [Twine documentation](https://twine.readthedocs.io/en/stable/).
 
@@ -31,7 +33,7 @@ npm run verify:release-authorization -- \
 
 The universal `pypi` target records both the wheel and sdist. Review their coordinates, paths, and hashes. A complete transaction for that target would publish both approved files. The wheel-only TestPyPI exercise below produces a separate manual sandbox record.
 
-The stock CLI has no PyPI registry adapter. A successful package build or dry run does not supply one. Twine does not create Lean Bridge's signed publication attestation, transaction record, or completion receipt. Project production releases still require the [shared approvals and reviewed integration](production-release.md).
+The stock CLI has no PyPI registry adapter. A successful package build or dry run does not supply one. Twine does not create Lean Bridge's signed publication attestation, transaction record, or completion receipt. Project production releases still require the [shared approvals and reviewed integration](../publishing.md#build-and-approve-the-same-artifacts).
 
 ## Check the wheel locally
 
@@ -66,7 +68,7 @@ The explicit upload URL keeps the exercise on TestPyPI. Avoid `--skip-existing`:
 
 ## Publish to PyPI
 
-Complete [production review](production-release.md) for the exact coordinates, files, credentials, and publisher implementation. Establish ownership of the project on PyPI separately from TestPyPI. Have the secret provider replace `TWINE_PASSWORD` with the authorized PyPI token; TestPyPI tokens do not authenticate to PyPI.
+Complete [production review](../publishing.md#build-and-approve-the-same-artifacts) for the exact coordinates, files, credentials, and publisher implementation. Establish ownership of the project on PyPI separately from TestPyPI. Have the secret provider replace `TWINE_PASSWORD` with the authorized PyPI token; TestPyPI tokens do not authenticate to PyPI.
 
 The operator-approved upload uses PyPI's production endpoint:
 
@@ -104,4 +106,8 @@ If a reviewed integration produced a signed Lean Bridge receipt, give consumers 
 
 After a timeout, inspect the exact TestPyPI release and compare its downloadable files before retrying. Retry only missing approved files; stop on a hash mismatch. An accepted filename cannot be reused for replacement bytes, even after deletion. Publish a corrected version through a new review instead. [PyPI filename reuse policy](https://pypi.org/help/#file-name-reuse).
 
-Keep a manual sandbox record distinct from a completed multi-file universal transaction. [Sandbox release](sandbox-release.md) and [Publishing](../publishing.md) explain the records required for the shared release flow.
+Keep a manual sandbox record distinct from a completed multi-file universal transaction. [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and [Publishing](../publishing.md) explain the records required for the shared release flow.
+
+### Publish Python wheels to PyPI
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

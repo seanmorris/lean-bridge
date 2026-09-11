@@ -1,4 +1,6 @@
-# Publish a NuGet package
+# Build and publish C# / .NET packages
+
+This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
 
 Build the NuGet projection, test the installed C# API, and upload the approved `.nupkg` to a feed controlled by your organization. Use a sandbox feed and sandbox credentials for the first external run.
 
@@ -51,7 +53,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/nuget-candidate/publish-manifest.json
 ```
 
-Use the printed archive path, coordinate, and SHA-256. This check establishes candidate consistency; the [production review](production-release.md) supplies required approvals and signer authority. Retain the [sandbox evidence](sandbox-release.md) before requesting production access.
+Use the printed archive path, coordinate, and SHA-256. This check establishes candidate consistency; the [production review](../publishing.md#build-and-approve-the-same-artifacts) supplies required approvals and signer authority. Retain the [sandbox evidence](../contributing/sandbox-release.md#rehearse-a-registry-release) before requesting production access.
 
 The installed CLI has only the npm transaction adapter. The NuGet command below does not create a Lean Bridge signed completion receipt. A reviewed release integration must bind the actual feed, authority, and archive identity; a manifest naming the public NuGet endpoint does not authorize a different private feed.
 
@@ -115,3 +117,7 @@ If an integrated publisher has supplied a signed release receipt, also perform t
 After a timeout or conflict, fetch the existing coordinate and compare its bytes before deciding whether to retry. Identical bytes need no second upload. A different archive at the same coordinate requires investigation and an approved new version.
 
 For nuget.org, unlisting hides a version from ordinary discovery but exact-version downloads remain available; routine permanent deletion is unavailable. Private feeds have their own retention policies. Follow the release owner's recovery decision rather than deleting evidence or overwriting the version. [NuGet deletion and unlisting policy](https://learn.microsoft.com/en-us/nuget/nuget-org/policies/deleting-packages)
+
+### Publish a NuGet package
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

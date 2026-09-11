@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 
@@ -150,9 +151,13 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [] }) =>
  * @param root0.signal - Abort signal used to cancel the operation.
  */
 export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targets = [], analyze = analyzeLeanProject, signal = undefined }) => {
+	const record = await readExportConfiguration(projectRoot, { signal });
+	for(const target of targets.length ? targets : ["npm"])
+		assertExportConfigurationCapabilities(record.configuration, { target });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)
 	]);
+	assertExportConfigurationSnapshot(record, analysis.inputs);
 	return createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
 };

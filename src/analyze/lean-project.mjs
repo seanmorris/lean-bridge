@@ -11,6 +11,7 @@ import { basename, join, relative, resolve } from "node:path";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentSignatureProblem } from "../abi/component-scalars.mjs";
+import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations } from "./export-configuration.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -37,6 +38,7 @@ const relevantProjectFiles = new Set([
 	, "lean-toolchain"
 	, "package-lock.json"
 	, "package.json"
+	, exportConfigurationFile
 ]);
 
 /**
@@ -523,6 +525,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		if(error.code === "ENOENT") fail("project-absent", `Lean project does not exist: ${root}`);
 		throw error;
 	}
+	const configurationRecord = await readExportConfiguration(root, { signal });
+	const configuration = configurationRecord.configuration;
 	const relevant = files.filter(path =>
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
@@ -537,6 +541,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		inputs.push({ path: relative(root, absolute).replaceAll("\\", "/"), bytes: bytes.length, sha256: sha256(bytes) });
 	}
 	inputs.sort((left, right) => left.path.localeCompare(right.path));
+	assertExportConfigurationSnapshot(configurationRecord, inputs);
 	const treeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
 	const [facts, environment] = await Promise.all([packageFacts(root), compiledEnvironment(root, { signal })]);
 	signal?.throwIfAborted();
@@ -551,13 +556,19 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		imports.push(...scanned.imports.map(module => ({ module, source: input.path })));
 	}
 	declarations.sort((left, right) => left.fullName.localeCompare(right.fullName) || left.path.localeCompare(right.path));
+	const selectedDeclarations = selectExportDeclarations(configuration, declarations,
+		inputs.filter(input => input.path.endsWith(".lean") && input.path !== "lakefile.lean")
+			.map(input => input.path.replace(/\.lean$/, "").replaceAll("/", ".")));
+	for(const name of configuration.exports ?? [])
+		if(!selectedDeclarations.some(item => item.fullName === name && exportableDeclarationKinds.has(item.kind)))
+			fail("invalid-export-declaration", `${name} is not a callable export; theorems and type declarations are not host functions`);
 	const theorems = declarations.filter(item => item.kind === "theorem");
 	const diagnostics = [];
 	const adapterHints = [];
 	const candidates = [];
 	const preliminaryShapes = new Map();
 	const projectedNameCounts = new Map();
-	for(const declaration of declarations.filter(item => exportableDeclarationKinds.has(item.kind)))
+	for(const declaration of selectedDeclarations.filter(item => exportableDeclarationKinds.has(item.kind)))
 	{
 		const shape = functionShape(declaration);
 		preliminaryShapes.set(declaration.fullName, shape);
@@ -569,7 +580,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
       && !shape.blocker
 		) projectedNameCounts.set(declaration.name, (projectedNameCounts.get(declaration.name) ?? 0) + 1);
 	}
-	for(const declaration of declarations)
+	for(const declaration of selectedDeclarations)
 	{
 		signal?.throwIfAborted();
 		if(!exportableDeclarationKinds.has(declaration.kind)) continue;
@@ -642,6 +653,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	}
 
 	const existingPaths = inputs.filter(input => input.path.endsWith(".binding-ir.json"));
+	if(existingPaths.length && ["modules", "exports", "resources", "arities"].some(key => configuration[key] !== undefined))
+		fail("export-configuration-reviewed-ir", "Shared source selection cannot yet override a reviewed Binding IR; keep export decisions in the reviewed document until the elaborated pipeline supports this combination");
 	let bindingIr = null;
 	if(existingPaths.length === 1)
 	{

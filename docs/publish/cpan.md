@@ -1,15 +1,14 @@
-# Publish Perl packages to CPAN
+# Build and publish Perl packages
 
 Prepare a `LeanBridge::Runtime` distribution and one generated distribution per Lean component. Each component declares the runtime dependency and checks its exact native identity when loaded.
 
 ## Build an ordinary Lean project
 
-Use the pinned [author toolchain](../lean/setup.md). Add `lean-bridge.native.json` at the Lean project root:
+Use the native Perl row in [author setup](../lean/setup.md): Node 22, Lean 4.32.2, a C compiler, and the selected Perl interpreters. This path does not use the npm Wasm runtime. Add the shared `lean-bridge.exports.json` at the Lean project root:
 
 ```json
 {
   "schemaVersion": 1,
-  "module": "LeanBridge::Workshop",
   "modules": ["Workshop"],
   "resources": ["Workshop.Counter"],
   "arities": {
@@ -17,11 +16,18 @@ Use the pinned [author toolchain](../lean/setup.md). Add `lean-bridge.native.jso
     "Workshop.keepCallback": 1,
     "Workshop.newRunner": 1
   },
-  "cpanVersion": "0.001"
+  "targets": {
+    "cpan": {
+      "module": "LeanBridge::Workshop",
+      "version": "0.001"
+    }
+  }
 }
 ```
 
 This example names declarations from the Workshop acceptance project. Replace them with your own. `resources` selects heap-identity types instead of copied records. `arities` distinguishes a function returning a closure from a function taking more arguments. An optional `exports` array selects exact public declarations; otherwise public definitions in the selected modules are discovered and checked. Unsupported exports fail before packaging.
+
+Module and export selection belong to the [shared author configuration](../lean/existing-package.md#configure-exports). Only the package name and CPAN version belong under `targets.cpan`.
 
 Build on x86-64 Linux with glibc 2.38 or newer:
 
@@ -68,3 +74,13 @@ This backend creates archives; `lean-bridge publish` does not currently upload t
 After PAUSE confirms indexing, download each archive from the exact author path reported by PAUSE. Compare its SHA-256 digest with the reviewed receipt, then install in a clean local Perl library using `cpanm`. Confirm that the component's dependency resolves to the intended runtime and run the documented application.
 
 If a CPAN client finds no compatible prebuilt XS, it may compile the supplied XS using the consumer's Perl development environment. It may not replace or rebuild the Lean runtime or component library. A failed hash or runtime check is a release problem, not a reason to bypass verification.
+
+## Recover an interrupted publication
+
+Check PAUSE's upload and indexing reports before retrying. Download an existing archive and compare it with the reviewed digest. If the bytes arrived but indexing failed, resolve namespace permissions with the responsible owner; rebuilding does not fix permission failures.
+
+Do not replace different bytes under the same release version. Correct the source or metadata, choose a new version, rebuild, and repeat the installed checks. Keep runtime and component versions independent, preserve the original records, and verify that consumers resolve the intended runtime before announcing the release.
+
+### Publish Perl packages to CPAN
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

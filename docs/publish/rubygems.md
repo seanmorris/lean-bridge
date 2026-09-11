@@ -1,4 +1,6 @@
-# Publish a RubyGem
+# Build and publish Ruby packages
+
+This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
 
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
@@ -52,7 +54,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/rubygems-candidate/publish-manifest.json
 ```
 
-Use the reviewed archive path, name, version, and hash. Retain the [sandbox record](sandbox-release.md) and complete the [production approvals](production-release.md) for the chosen host.
+Use the reviewed archive path, name, version, and hash. Retain the [sandbox record](../contributing/sandbox-release.md#rehearse-a-registry-release) and complete the [production approvals](../publishing.md#build-and-approve-the-same-artifacts) for the chosen host.
 
 The installed CLI has only the npm transaction adapter. `gem push` does not create a Lean Bridge signed completion receipt. A reviewed integration must bind the actual host and authority; a universal manifest naming RubyGems.org does not authorize a different private host.
 
@@ -126,3 +128,7 @@ If the release owner authorizes removal, `gem yank` removes the selected version
 Use a new reviewed version for corrected content; do not use yanking to replace the archive under an existing release identity.
 
 Keep the failed upload records, original archive, and recovery decision. Do not grant a publishing token yank rights merely to make retries easier.
+
+### Publish a RubyGem
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

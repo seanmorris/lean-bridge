@@ -72,11 +72,14 @@ Run \`lean-bridge --help\` after installation. Authors need Node 22, Git, and Ni
 
 \`lean-bridge build --project . --target npm --output build/component\` compiles its supported exports.
 
-This candidate is \`${config.name}@${config.version}\`. ${runtimeIncluded ? "It includes the prebuilt runtime needed to prepare local component archives." : "It does not include runtime binaries. This source-only candidate supports packaging checks; it is not a complete author release."}
+\`lean-bridge verify --receipt /path/to/component-package-receipt.json\` checks both local npm archives. Signed archives additionally require the trusted policy, policy hash, archive path, signed subject and expected coordinate listed by \`lean-bridge verify --help\`. Verification requires only Node and the supplied files, without a project or build tools.
+
+This candidate is \`${config.name}@${config.version}\`. ${runtimeIncluded ? "It includes the prebuilt runtime needed to prepare local component archives." : "It does not include runtime binaries. This runtime-free candidate supports receipt verification and packaging checks; it is not a complete author release."}
 
 ## Documentation
 
 - [Author guide](https://seanmorris.github.io/lean-bridge/docs/lean/)
+- [Verify a prepared release](https://seanmorris.github.io/lean-bridge/docs/consume/receive-package/)
 - [Repository and issue tracker](https://github.com/seanmorris/lean-bridge)
 
 ## Release status

@@ -218,7 +218,10 @@
               }
             },
             "resultType": { "type": "string", "minLength": 1 },
-            "result": { "$ref": "#/$defs/typeRef" }
+            "result": { "$ref": "#/$defs/typeRef" },
+            "resultMode": { "enum": ["value", "promise"] },
+            "effects": { "type": "array", "uniqueItems": true, "items": { "enum": ["async", "fails", "host-call"] } },
+            "leanEffect": { "enum": [null, "IO", "EIO", "Task"] }
           }
         }
       ]

@@ -4,7 +4,7 @@ Give the recipient both npm archives, the component receipt, and its verifier. T
 
 ## Prepare the Lean project
 
-Complete the [Lean author guide](../lean-author-guide.md) first. You need the installed checkout CLI, a working Nix or Docker build backend, the matching shared runtime, and an ordinary Lake project with supported exports.
+Complete the [Lean author guide](../lean-author-guide.md) first. Use the prepared CLI, a working Nix or Docker build backend, and an ordinary Lake project with supported npm exports. The prepared CLI supplies its shared runtime automatically; manual runtime setup belongs to the [checkout workflow](../contributing/author-toolchain.md).
 
 Run these commands from your Lean project's root. Each output directory must be new. Choose another name when repeating a run; keep previous evidence until you no longer need it.
 
@@ -36,24 +36,24 @@ The output also contains:
 | `evidence/reproducibility.json` | The source revision and two-build comparison |
 | `publish-manifest.json` and `publish-manifest.sha256` | The local component package plan and its hash |
 | `release/packages/npm/component-package-receipt.json` | The two archive identities and their relationship |
-| `release/packages/npm/verify-component-package-receipt.mjs` | Recipient-side verification without the Lean compiler |
+| `release/packages/npm/verify-component-package-receipt.mjs` | Portable Node verifier for recipients without the CLI |
 
 This version-two `publish-manifest.json` has `kind: lean-bridge-component-publish-plan`. The registry executor accepts it when its publication settings match your CLI configuration. For registry publication, configure the destination and public signing policy before the dry run using the [npm publishing guide](npm.md#publish-an-ordinary-component). The local archive handoff itself needs no registry credentials.
 
 ## Verify before sending
 
-Keep the receipt, verifier, and archives together with their generated names and relative paths. Run a verifier only from the author or release channel you trust. Verify that package directory before copying it:
+Keep the receipt, verifier, and archives together with their generated names and relative paths. Verify that package directory with the installed CLI before copying it:
 
 ```sh
-node build/lean-bridge-dry-run/release/packages/npm/verify-component-package-receipt.mjs \
+lean-bridge verify \
   --receipt build/lean-bridge-dry-run/release/packages/npm/component-package-receipt.json
 ```
 
 The verifier reports `verified: true` with the component identity and runtime version. Send the complete `release/packages/npm/` directory through your team's approved artifact channel. Include the source revision and reproducibility report when the recipient needs to audit the build.
 
-The recipient runs the copied verifier again after transfer, then installs both archives using the [JavaScript and TypeScript guide](../javascript-typescript.md). They need Node and the supported target environment, but do not need Lean to verify the receipt or call the installed package.
+The recipient runs `lean-bridge verify` again after transfer, then installs both archives using the [JavaScript and TypeScript guide](../javascript-typescript.md). [Verify a local receipt](../consume/receive-package.md#verify-the-local-npm-receipt) includes the copied-script fallback for recipients without a CLI. Verification needs only Node and the handoff files; calling the installed package also needs the supported target environment.
 
-The unsigned component receipt detects a changed archive relative to the supplied receipt. Agree on the sender and transfer channel separately. For an independently trusted publisher identity, use the [signed release workflow](production-release.md#verify-the-completed-release).
+The unsigned component receipt detects a changed archive relative to the supplied receipt. Agree on the sender and transfer channel separately. For an independently trusted publisher identity, use the [ordinary npm publication](npm.md#publish-an-ordinary-component).
 
 ## Resolve failures without replacing evidence
 

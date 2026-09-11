@@ -34,10 +34,25 @@ const humanResult = response => {
 	const targets = response.selection.allTargets ? "all applicable targets" : response.selection.targets.join(", ");
 	const lines = [
 		`Lean Bridge ${response.command}: ${response.status}`
-		, `project: ${response.project}`
-		, `targets: ${targets}`
-		, `cache: ${response.cache.policy}${response.cache.directory === null ? "" : ` at ${response.cache.directory}`}`
 	];
+	if(response.command === "verify")
+	{
+		if(response.result)
+		{
+			const result = response.result;
+			lines.push(`verified: ${result.verified}`);
+			if(result.authenticated) lines.push(
+				"verification: signed archive authenticated against the trusted signer policy"
+				, `coordinate: ${result.coordinate}`, `subject: ${result.subjectPath}`
+				, `archive: ${result.filename}`, `sha256: ${result.sha256}`
+				, `signer policy: ${result.signerPolicySha256}`
+			);
+			else lines.push("verification: local npm archive consistency (unsigned receipt)"
+				, `component: ${result.component}`, `runtime: ${result.runtime}`);
+			lines.push(`receipt sha256: ${result.receiptSha256}`);
+		}
+	} else lines.push(`project: ${response.project}`, `targets: ${targets}`
+		, `cache: ${response.cache.policy}${response.cache.directory === null ? "" : ` at ${response.cache.directory}`}`);
 	for(const item of response.diagnostics)
 	{
 		lines.push(`${item.severity}: ${item.code}: ${item.message}`);

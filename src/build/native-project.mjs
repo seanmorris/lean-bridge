@@ -1,0 +1,73 @@
+/**
+ * Build shared native inputs once before invoking host-package projections.
+ *
+ * @file
+ */
+import { mkdir, mkdtemp, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { buildNativeComponent, buildNativeSharedRuntime } from "./native-component.mjs";
+import { projectCpanPackages } from "./cpan-projection.mjs";
+import { canonicalJson } from "../capsule/node.mjs";
+import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { processBuildRunner } from "./process-runner.mjs";
+import { CanonicalBuildError } from "./build-error.mjs";
+
+/**
+ * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
+ *
+ * @param root0 - Named inputs for this native build or packaging operation.
+ * @param root0.projectRoot - Ordinary Lean project root to compile without modifying source.
+ * @param root0.outputRoot - New output directory; existing output must not be overwritten.
+ * @param root0.environment - Explicit environment passed to build subprocesses.
+ * @param root0.targets - Native package targets supported by the installed projections.
+ * @param root0.signal - Optional cancellation signal for child build processes.
+ * @param root0.onProgress - Optional callback receiving build progress messages.
+ */
+export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress })
+{
+	if(!Array.isArray(targets) || targets.length !== 1 || targets[0] !== "cpan")
+		throw new CanonicalBuildError("unsupported-native-targets", "The ordinary native project builder currently implements only the cpan target");
+	const record = await readExportConfiguration(projectRoot, { signal });
+	const config = record.configuration;
+	assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities"], targetFields: ["module", "version"] });
+	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-perl"));
+	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "Perl output cannot replace the source project");
+	try
+	{ await readdir(output); throw new Error(`output already exists: ${output}`); }
+	catch(error)
+	{ if(error.code !== "ENOENT") throw error; }
+	await mkdir(dirname(output), { recursive: true });
+	const working = await mkdtemp(join(dirname(output), ".native-project-"));
+	try
+	{
+		const leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim();
+		const runtimeRoot = join(working, "native/runtime"), nativeRoot = join(working, "native/component");
+		onProgress?.({ phase: "build", state: "info", message: "Compiling checked native Lean exports" });
+		await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix });
+		const built = await buildNativeComponent({ projectRoot: project
+			, outputRoot: nativeRoot
+			, runtimeRoot
+			, leanPrefix
+			, configurationSha256: record.sha256
+			, signal });
+		const projection = await projectCpanPackages({
+			working, runtimeRoot, nativeRoot, leanPrefix
+			, settings: config.targets?.cpan
+			, environment, signal, onProgress });
+		const manifest = { schemaVersion: 1
+			, profile: "native-library-v1"
+			, ...projection
+			, component: built.model.component
+			, nativeRuntimeIdentity: built.receipt.runtimeIdentity
+			, bindingIrSha256: built.model.bindingIrSha256
+			, configurationSha256: record.sha256 };
+		await writeFile(join(working, "native-release.json"), canonicalJson(manifest));
+		await rename(working, output);
+		return { schemaVersion: 1, project, output, targets: ["cpan"], ...manifest };
+	} catch(error)
+	{
+		await rm(working, { recursive: true, force: true });
+		if(error instanceof CanonicalBuildError) throw error;
+		throw new CanonicalBuildError(error.code ?? "native-project-build-failed", error.message, { details: error.details });
+	}
+}

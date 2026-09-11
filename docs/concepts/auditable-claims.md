@@ -31,7 +31,7 @@ The browser checker is an independent way to inspect the source. Normal algorith
 
 A demo proof receipt records source hashes and required declarations after its proof build. The site identity records delivered file hashes and a repository revision. A signed package-release receipt additionally binds a publication decision to archive identities and a signer policy.
 
-Matching a hash answers “are these the same bytes?” A trusted signature answers a separate question about who authorized those bytes. The [release workflow](../publish/production-release.md) describes the latter check.
+Matching a hash answers “are these the same bytes?” A trusted signature answers a separate question about who authorized those bytes. The [release workflow](../contributing/production-release.md#review-a-production-release) describes the latter check.
 
 Ordinary-project analysis records discovered theorem relationships as `unverified`. A successful source analysis does not upgrade them to a demo's artifact-bound proof audit. See [the author assurance record](../lean/proofs-and-assurance.md).
 

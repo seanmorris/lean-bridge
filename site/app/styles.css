@@ -39,6 +39,7 @@ code { overflow-wrap: anywhere; }
 .three-up > a:hover { background: rgba(114,216,255,.035); }
 .three-up p { color: var(--muted); }
 .three-up .text-link { margin-top: auto; }
+.workflow-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .card-number { color: var(--cyan); font: 600 .78rem/1.4 ui-monospace, monospace; margin-bottom: 26px; }
 .explainer-points { background: none; border: 0; }
 .explainer-points > * { padding: 8px 24px; }
@@ -68,6 +69,8 @@ code { overflow-wrap: anywhere; }
 .docs-sidebar, .doc-outline { position: sticky; top: 63px; align-self: start; max-height: calc(100dvh - 63px); overflow-y: auto; padding: 28px 0; scrollbar-width: thin; }
 .docs-sidebar { padding-right: 20px; border-right: 1px solid var(--line); }
 .docs-sidebar h2, .doc-outline h2 { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 26px 0 10px; }
+.docs-sidebar nav h3 { font-size: .8rem; letter-spacing: 0; line-height: 1.4; color: var(--ink); margin: 18px 9px 6px; }
+.search-results small { display: block; color: var(--muted); }
 .docs-sidebar nav a { display: block; font-size: .875rem; line-height: 1.45; padding: 7px 9px; border-left: 2px solid transparent; text-decoration: none; color: var(--muted); }
 .docs-sidebar nav a[aria-current] { color: var(--mint); border-color: var(--mint); background: rgba(173,247,182,.045); }
 .docs-sidebar nav a:hover { color: var(--ink); }

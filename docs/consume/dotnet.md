@@ -10,7 +10,7 @@ Use the .NET 8 SDK on x86-64 Linux with glibc 2.38 or newer. Check your machine 
 
 This example consumes `LeanBridge.Alpha.0.0.0.nupkg`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate the archive. Put it in a local directory and set `LEAN_BRIDGE_NUGET` to that directory's absolute path. No public NuGet feed is assumed.
 
-### Create the application
+## Create the application
 
 Create an empty directory and save these two files inside it.
 
@@ -85,7 +85,7 @@ catch (DisposedResourceException) { }
 Console.WriteLine("Errors and cleanup: passed");
 ```
 
-### Restore and run
+## Restore and run
 
 Set the path to your authenticated package directory, then run these commands from the application directory:
 
@@ -105,6 +105,8 @@ Callback: 44
 Callable: 42
 Errors and cleanup: passed
 ```
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -189,7 +191,7 @@ Alpha's `RoundTrip` flips `Enabled` and increments `Count`, preserving the label
 
 `Box` and `OwnedTransform` implement `IDisposable`. Use `using` so exceptions also release them. `Box.Identity()` returns the same managed wrapper. Repeated disposal is harmless; subsequent calls raise `DisposedResourceException`. The example closes both resources early to check that behavior.
 
-### Errors and troubleshooting
+## Errors and troubleshooting
 
 - An exception thrown by your callback propagates back as the original .NET exception. The example handles `InvalidOperationException`.
 - Other reported Lean/native failures raise `LeanBridgeException` or its generated subclasses. Catch the specific failure your application can handle.
@@ -199,16 +201,12 @@ Alpha's `RoundTrip` flips `Enabled` and increments `Count`, preserving the label
 
 ## Start from a raw Lean package
 
-For Alpha, [build the managed NuGet package](../contributing/testing.md#managed-packages) to produce `LeanBridge.Alpha.0.0.0.nupkg`. Put the completed archive in the local package directory used by the [restore command above](#restore-and-run).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the C# / .NET build-and-publish guide](../publish/nuget.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Author, publish, and verify
 
-Alpha's managed bindings use the [managed target profile](../architecture/adr/23-managed-runtime-target-profiles.md). The [publishing guide](../publishing.md) covers package handoffs.
-
-Contributors can [build the managed examples](../contributing/testing.md#managed-packages) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See the [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
+Continue in the [build-and-publish workflow](../publish/nuget.md). Maintainers run the [installed consumer checks](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to NuGet](../publish/nuget.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/nuget.md).

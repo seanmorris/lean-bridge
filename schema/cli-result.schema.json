@@ -25,7 +25,7 @@
     "schemaVersion": { "const": 2 },
     "command": {
       "oneOf": [
-        { "enum": ["analyze", "build", "publish"] },
+        { "enum": ["analyze", "build", "publish", "verify"] },
         { "type": "null" }
       ]
     },
@@ -37,7 +37,7 @@
     },
     "status": { "enum": ["ok", "blocked", "needs-input", "failed", "cancelled"] },
     "exitCode": { "enum": [0, 1, 2, 64, 130] },
-    "project": { "type": "string", "minLength": 1 },
+    "project": { "type": ["string", "null"], "minLength": 1 },
     "interactive": { "type": "boolean" },
     "configuration": {
       "type": "object",
@@ -113,6 +113,13 @@
       "items": { "type": "string", "minLength": 1 }
     }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "command": { "const": "verify" } } },
+      "then": { "properties": { "project": { "type": "null" } } },
+      "else": { "properties": { "project": { "type": "string", "minLength": 1 } } }
+    }
+  ],
   "$defs": {
     "configurationSource": { "enum": ["cli", "environment", "config", "default"] },
     "diagnostic": {
@@ -152,7 +159,7 @@
         "schemaVersion": { "const": 1 },
         "type": { "const": "progress" },
         "sequence": { "type": "integer", "minimum": 1 },
-        "command": { "enum": ["analyze", "build", "publish"] },
+        "command": { "enum": ["analyze", "build", "publish", "verify"] },
         "phase": { "type": "string", "minLength": 1 },
         "state": { "enum": ["started", "completed", "blocked", "failed", "cancelled", "info"] },
         "message": { "type": "string", "minLength": 1 },

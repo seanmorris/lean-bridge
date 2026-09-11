@@ -10,7 +10,7 @@ Use 64-bit Perl on x86-64 Linux with glibc 2.38 or newer. The tested ABI matrix 
 
 The installer matches Perl's API and `Config` fingerprint, including threading, integer sizes, floating-point representation, and binary compatibility options. It does not assume that matching version strings imply compatible binaries.
 
-### Install the release
+## Install the release
 
 A published component declares `LeanBridge::Runtime` as a dependency. Your CPAN client installs it automatically:
 
@@ -38,7 +38,7 @@ export PERL5LIB="$PWD/.perl5/lib/perl5"
 
 Corrupt artifacts and incompatible runtime identities are errors in every mode. They do not trigger fallback compilation.
 
-### Call Lean
+## Call Lean
 
 The Workshop example comes from an ordinary Lean project. Save this as `consumer.pl`:
 
@@ -67,6 +67,8 @@ die $error unless $ok;
 ```
 
 Run `perl consumer.pl`. Expected output is `42`, `42`, `42`, then `41`, each on its own line. Imports and calls use the generated public API only.
+
+## Values and cleanup
 
 ### Type conversions
 
@@ -141,7 +143,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 Fixed-width signed and unsigned integers use Perl's 64-bit integer representation, never an intermediate floating-point value. `Float32` rounds to binary32; `Float` uses binary64. NaN classification, infinities and signed zero are supported; NaN payload bits are not preserved as a contract.
 
-### Ownership and failures
+## Ownership and failures
 
 Arrays and finite acyclic records are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
 
@@ -155,12 +157,6 @@ Use `perl -MLeanBridge::Workshop -e 'print LeanBridge::Workshop::add(19,23), "\n
 
 ## Start from a raw Lean package
 
-The upstream author needs Lean 4.32.2, Node.js 22, a C compiler, and the Perl interpreters whose prebuilt ABIs they want to include. Downstream users do not need those Lean build tools. Follow [toolchain setup](../lean/setup.md) and the [CPAN publishing guide](../publish/cpan.md).
+Follow [the Perl build-and-publish guide](../publish/cpan.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
-Use `lean-bridge build --project /path/to/project --target cpan --output /path/to/new-release`. A `lean-bridge.native.json` file selects module names, exports, identity resources, and the explicit arity of functions returning closures. The build checks freshly elaborated Lean interfaces and compiler representations before generating XS. It does not require an Alpha-shaped library or a handwritten C adapter.
-
-The current native builder compiles local source modules and uses the pinned Lean standard libraries. External Lake package dependencies need the broader native dependency workflow. Open generics, dependent signatures, recursive copied types, asynchronous operations and retained host callbacks are not supported by this profile.
-
-The current source target handles local modules and the pinned Lean standard library. External Lake dependencies, generic or dependent exports, recursive copied structures, and arbitrary reviewed IR without native compiler metadata require further work. Unsupported shapes stop the build with a diagnostic.
-
-Repository maintainers can run the [Perl acceptance matrix](../contributing/testing.md#perl-packages), including package failure cases and warmed benchmarks.
+Maintainers can run the [installed consumer checks](../contributing/testing.md#consumer-acceptance).

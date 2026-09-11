@@ -10,7 +10,7 @@ Use JDK 22 and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -vers
 
 This example uses `org.leanbridge:lean-alpha:0.0.0`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate its Maven release. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`. Keep the repository's POM and JAR together. No Maven Central publication is assumed.
 
-### Resolve the package
+## Resolve the package
 
 Run these commands from an empty application directory. Maven downloads its pinned dependency plugin, then resolves Alpha from the local release into an application-local cache:
 
@@ -118,6 +118,8 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+## Values and cleanup
+
 ### Type conversions
 
 Profiles: Java. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -193,7 +195,7 @@ These mappings describe the prepared Alpha JAR's `org.leanbridge.alpha` API.
 
 Invalid unsigned values raise `IllegalArgumentException`. Its `long` mapping is specifically for `UInt32`, not arbitrary Lean integers.
 
-### Types, callbacks, and cleanup
+## Types, callbacks, and cleanup
 
 The JVM API represents Lean `UInt32` as a `long` in the range `0..0xffff_ffffL`. It rejects negative or larger input values with `IllegalArgumentException`. Java bytes are signed, so use `(byte)255` to supply the byte `0xff`. `Payload` copies input arrays and returns copies from its array accessors.
 
@@ -201,7 +203,7 @@ Alpha's `roundTrip` flips the Boolean and increments the count while preserving 
 
 `Box` and `OwnedTransform` implement `AutoCloseable`. Use try-with-resources so an exception still releases both. Repeated `close()` is harmless; a later operation raises `DisposedResourceException`. `Box.identity()` returns the original wrapper.
 
-### Errors and troubleshooting
+## Errors and troubleshooting
 
 - Callback failures raise `CallbackThrewException`; `getCause()` retains the original Java exception. The example verifies that cause.
 - Other reported Lean/native failures raise `LeanBridgeException` or its generated subclasses.
@@ -212,16 +214,12 @@ Alpha's `roundTrip` flips the Boolean and increments the count while preserving 
 
 ## Start from a raw Lean package
 
-For Alpha, [build the managed Maven package](../contributing/testing.md#managed-packages) to produce the release repository containing its JAR and POM. Set `LEAN_BRIDGE_MAVEN_RELEASE` to that output and follow [Resolve the package](#resolve-the-package).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Java build-and-publish guide](../publish/maven.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Related workflows and acceptance
 
-The same JAR has a separate [Kotlin guide](kotlin.md). Alpha's JVM surface uses the [managed target profile](../architecture/adr/23-managed-runtime-target-profiles.md).
-
-Contributors can [build the managed examples](../contributing/testing.md#managed-packages) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See the [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to Maven repositories](../publish/maven.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/maven.md).

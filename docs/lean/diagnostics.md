@@ -1,4 +1,4 @@
-# Diagnose an author command
+# Troubleshooting
 
 Keep the command, diagnostic code, and build log when a workflow fails. Fix the named input or tool before retrying with a fresh output directory.
 
@@ -17,7 +17,7 @@ This emits one machine-readable result. Use `--json --progress json` when retain
 | 0 | The command succeeded. |
 | 1 | The command ran and failed. |
 | 2 | A capability or required decision blocked the command. |
-| 64 | Syntax or configuration was invalid. |
+| 64 | CLI syntax or CLI configuration was invalid. |
 | 130 | The command was cancelled. |
 
 A first interrupt cancels the active process and returns 130.
@@ -26,6 +26,11 @@ A first interrupt cancels the active process and returns 130.
 
 | Diagnostic | Cause | Next action |
 | --- | --- | --- |
+| `invalid-export-configuration` | Shared configuration has an invalid version, field, selection, or package setting. | Check `lean-bridge.exports.json` against [the author configuration](existing-package.md#configure-exports). |
+| `unknown-export-module` or `unknown-export-declaration` | A configured name is missing or outside the selected modules. | Use exact module names and fully qualified declarations; review the module selection. |
+| `unsupported-export-configuration` | The selected backend does not implement a configured choice. | Check the target guide. Do not discard required ownership or type constraints to bypass the error. |
+| `export-configuration-reviewed-ir` | Shared source selectors are combined with reviewed Binding IR decisions. | Keep the reviewed document's decisions together until the shared elaborated pipeline supports this combination. |
+| `export-configuration-drift` | Configuration changed during analysis. | Keep the selected input revision stable and rerun analysis. |
 | `component-adapter-hints-required` | The public boundary needs a decision. | Read the JSON analysis and [resolve its adapter questions](export-decisions.md#resolve-required-decisions). |
 | `analysis-output-exists` or `build-output-exists` | The chosen output path already exists. | Choose an absent path. The CLI never merges an existing output. |
 | `source-not-git` | The dry-run project is outside Git. | Initialize Git and commit the project inputs. |

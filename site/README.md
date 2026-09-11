@@ -2,7 +2,7 @@
 
 This directory owns the React presentation layer. Lean algorithms, C bridges, runtime APIs, proof sources, and benchmarks remain in `demos/`.
 
-The site renders the documentation and all twelve algorithm workbenches. Author, consumer, publisher, contributor, and concept guides share searchable Markdown, grouped navigation, and previous/next links. Building this site does not publish an algorithm package.
+The site renders the documentation and all twelve algorithm workbenches. Build-and-publish and consumer guides share searchable Markdown, grouped navigation, and previous/next links. Concepts, reference material, and Contributing support those two workflows. Building this site does not publish an algorithm package.
 
 ## Develop
 
@@ -63,7 +63,7 @@ Run `npm run test:docs` before committing. The documentation test checks local l
 
 ## Content and ownership
 
-- `site/reference/` contains the reviewed templates for generated CLI, npm API, type, and algorithm reference pages. The same command generates each consumer guide's `Type conversions` section from `docs/type-surface.v1.json`, including both PHP transports and separate Java/Kotlin profiles. Run `npm run docs:reference:write` after changing a template or its source contract. `npm run docs:reference` compares the generated Markdown without writing; site generation runs this check automatically.
+- `site/reference/` contains the reviewed templates for generated CLI, npm API, type, and algorithm reference pages. The same command generates each consumer guide's `Type conversions` section from `docs/type-surface.v1.json`, including both PHP transports in one guide and separate Java/Kotlin profiles. Run `npm run docs:reference:write` after changing a template or its source contract. `npm run docs:reference` compares the generated Markdown without writing; site generation runs this check automatically.
 - `scripts/generate-type-docs.mjs` owns only the `Type conversions` section, ending at the next guide heading. Installation commands, runnable snippets, Alpha's worked API and raw-source workflows remain hand-maintained. Edit audited observations and conversion notes in the inventory instead of changing a generated table. New claims require evidence for their exact profile, source path and position.
 - The reference generator uses actual CLI help and result schemas, emitted TypeScript declarations, the scalar capability list, and each algorithm's adapter exports and proof receipt. It rejects selected theorems missing from a receipt and Lean sources whose hashes differ. The downstream support table remains owned by `docs/consumer-support.v1.json` and its existing checked guide.
 - Concept examples for Dijkstra, flood fill, and prepared ownership execute against the maintained compiled adapters in `npm run test:docs`. The [prepared-package reference check](../docs/contributing/testing.md#reference-package-examples) also runs the documented imports from installed archives in Node and three browser engines.

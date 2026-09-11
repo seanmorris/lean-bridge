@@ -24,6 +24,7 @@ const consumerEcosystems = Object.freeze({
 	, dotnet: ["nuget"]
 	, jvm: ["maven"]
 	, ruby: ["rubygems"]
+	, perl: ["cpan"]
 	, python: ["pypi"]
 	, rust: ["cargo"]
 	, c: ["c"]

@@ -10,7 +10,7 @@ Use JDK 22, the Kotlin JVM command-line compiler and runner, and Maven on x86-64
 
 Follow [Use a prepared release](receive-package.md) for the authenticated Alpha Maven release, `org.leanbridge:lean-alpha:0.0.0`. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute directory containing its `repository/` directory. No Gradle project or registry publication is required for this example.
 
-### Resolve the JAR
+## Resolve the JAR
 
 Run these commands in an empty application directory:
 
@@ -102,6 +102,8 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+## Values and cleanup
+
 ### Type conversions
 
 Profiles: Kotlin. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -187,7 +189,7 @@ Kotlin lambdas satisfy the generated synchronous transform interface. `withCallb
 
 Both `Box` and `OwnedTransform` implement `AutoCloseable`. Kotlin's `use` releases them even when the body throws. The explicit closes in the example verify idempotent cleanup and rejection of later calls. `box.identity() === box` checks wrapper identity.
 
-### Errors and troubleshooting
+## Errors and troubleshooting
 
 - Invalid unsigned values raise `IllegalArgumentException` at the Java API boundary.
 - A callback exception becomes `CallbackThrewException`; its `cause` retains the original Kotlin exception. Closed resources raise `DisposedResourceException`.
@@ -198,16 +200,12 @@ Both `Box` and `OwnedTransform` implement `AutoCloseable`. Kotlin's `use` releas
 
 ## Start from a raw Lean package
 
-For Alpha, [build the managed Maven package](../contributing/testing.md#managed-packages). Kotlin consumes the same JAR and POM as Java; use that completed release with [Resolve the JAR](#resolve-the-jar).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Kotlin build-and-publish guide](../publish/maven.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Related workflows and acceptance
 
-The [Java guide](java.md) documents the shared Maven coordinates. Alpha uses the [managed target profile](../architecture/adr/23-managed-runtime-target-profiles.md).
-
-Contributors can [build the managed examples](../contributing/testing.md#managed-packages) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See the [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to Maven repositories](../publish/maven.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/maven.md).

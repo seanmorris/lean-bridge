@@ -36,6 +36,8 @@ Every command returns a structured result before the process adapter chooses an 
 
 Progress output describes active stages but is not part of artifact identity. Machine-readable files, manifests, and receipts come from the relevant domain modules. A consumer should verify those records instead of parsing terminal prose.
 
+`lean-bridge verify` uses [the verification handler](verify.mjs) without loading author handlers or publication adapters. It accepts local npm receipts and signed archive handoffs through their existing validators. Parsing bypasses project configuration; only output format and progress environment settings apply. Verification results have no project, distinguish unsigned consistency from authenticated archives, and preserve the CLI's result envelope and exit codes.
+
 Prompts are explicit contract events. Commands intended for clean CI execution expose non-interactive inputs and do not infer confirmation from an attached terminal. Cancellation propagates through the handler boundary so interrupted work does not report success.
 
 ## Adding or changing a command

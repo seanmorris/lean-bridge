@@ -59,7 +59,7 @@ nix --extra-experimental-features 'nix-command flakes' \
 export LEAN_ALPHA_PHP_PACKAGE=$(readlink -f build/consumer-php-native)
 ```
 
-The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../consume/php-native.md) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
+The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../php.md#native-php) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
 
 ## WASI package
 
@@ -135,7 +135,7 @@ The runner removes its registry storage and successful consumer scratch director
 
 ## Author acceptance
 
-Complete the [checkout-based author setup](../lean/setup.md#install-the-local-cli) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`. To check a prepared CLI archive without a checkout or runtime override, use the [standalone CLI acceptance runner](#standalone-cli-package) instead.
+Complete the [checkout-based author setup](author-toolchain.md#install-the-local-cli) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`. To check a prepared CLI archive without a checkout or runtime override, use the [standalone CLI acceptance runner](#standalone-cli-package) instead.
 
 Run the [author tutorial runner](../../scripts/check-lean-author-tutorial.mjs) with a fresh output directory:
 
@@ -231,4 +231,4 @@ node --test tests/npm-registry-adapter.test.mjs
 npm run test:release-receipt
 ```
 
-These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release. Use the [sandbox publishing guide](../publish/sandbox-release.md) for an authorized registry transaction.
+These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release. Use the [sandbox publishing guide](sandbox-release.md#rehearse-a-registry-release) for an authorized registry transaction.

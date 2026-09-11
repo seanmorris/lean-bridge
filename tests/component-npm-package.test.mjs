@@ -6,9 +6,9 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 
@@ -40,8 +40,7 @@ const list = async root => {
 	return files.sort();
 };
 
-const buildBundle = async scratch => {
-	const projectRoot = "tests/fixtures/onboarding/small";
+const buildBundle = async (scratch, projectRoot = "tests/fixtures/onboarding/small") => {
 	const analysis = await analyzeLeanProject(projectRoot);
 	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), targets: ["npm"] });
 	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
@@ -58,6 +57,32 @@ const buildBundle = async scratch => {
 	await buildComponentReleaseBundle({ projectRoot, inputRoot, targetCRoot, sideRoot, outputRoot, analysis, componentPlan, compilerAdapters, compilationPlan, compiled, linked, audited, componentArtifact });
 	return outputRoot;
 };
+
+test("shared export selection reaches the exact installed npm public API", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-selected-npm-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const projectRoot = join(scratch, "source");
+	await cp("tests/fixtures/onboarding/small", projectRoot, { recursive: true });
+	await writeFile(join(projectRoot, "lean-bridge.exports.json"), JSON.stringify({
+		schemaVersion: 1, exports: ["OnboardingSmall.add"]
+	}));
+	const bundleRoot = await buildBundle(scratch, projectRoot);
+	const prepared = await buildComponentNpmPackages({ bundleRoot
+		, runtimeRoot: "build/lean-link-spike/lazy"
+		, outputRoot: join(scratch, "packages") });
+	const consumer = join(scratch, "consumer");
+	await mkdir(consumer);
+	await execute("npm", ["init", "-y"], { cwd: consumer });
+	await execute("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"
+		, prepared.runtimeArchive, prepared.componentArchive], { cwd: consumer });
+	await writeFile(join(consumer, "index.mjs"), [
+		'import * as library from "onboarding-small";'
+		, 'console.log(library.add(100n, 23n).toString());'
+		, 'console.log(Object.hasOwn(library, "isEmpty"));'
+	].join("\n"));
+	assert.equal((await execute(process.execPath, ["index.mjs"], { cwd: consumer })).stdout, "123\nfalse\n");
+	await verifyComponentPackageReceipt({ receiptPath: join(prepared.output, "component-package-receipt.json") });
+});
 
 test("an external Lean component installs as native callables over one shared runtime package", async () => {
   const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-component-npm-"));
@@ -100,6 +125,9 @@ test("an external Lean component installs as native callables over one shared ru
       , 'process.stdout.write(JSON.stringify({ add: String(add(100n, 23n)), empty: isEmpty(""), nonempty: isEmpty("web") }));'
     ].join("\n")], { cwd: consumer });
     assert.deepEqual(JSON.parse(invocation.stdout), { add: "123", empty: true, nonempty: false });
+		await copyFile("tests/fixtures/documentation/lean-author-consumer/index.mjs", join(consumer, "index.mjs"));
+		const example = await execute(process.execPath, ["index.mjs"], { cwd: consumer });
+		assert.equal(example.stdout, "123n\ntrue\nfalse\n");
     const receipt = await verifyComponentPackageReceipt({ receiptPath: join(first.output, "component-package-receipt.json") });
     assert.deepEqual(receipt, {
       verified: true
@@ -115,6 +143,11 @@ test("an external Lean component installs as native callables over one shared ru
       , "--receipt", join(first.output, "component-package-receipt.json")
     ], { cwd: consumer })).stdout);
     assert.deepEqual(portable, receipt);
+		const throughCli = JSON.parse((await execute(process.execPath, [
+			resolve("scripts/lean-bridge.mjs"), "verify"
+			, "--receipt", join(first.output, "component-package-receipt.json"), "--json"
+		], { cwd: consumer })).stdout);
+		assert.deepEqual(throughCli.result, { ...receipt, verificationType: "local-npm", authenticated: false });
 
     const schema = JSON.parse(await readFile("schema/component-package-receipt.schema.json", "utf8"));
     assert.equal(schema.additionalProperties, false);

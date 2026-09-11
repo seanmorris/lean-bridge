@@ -12,7 +12,7 @@ import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.
 export const typeGuideProfiles = Object.freeze({
 	"docs/javascript-typescript.md": ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"]
 	, "docs/php.md": ["php-native", "php-wasm"]
-	, ...Object.fromEntries(["php-native", "php-wasm", "dotnet", "java", "kotlin", "ruby", "perl", "python", "rust", "c", "cpp", "wit-wasi"]
+	, ...Object.fromEntries(["dotnet", "java", "kotlin", "ruby", "perl", "python", "rust", "c", "cpp", "wit-wasi"]
 		.map(profile => [`docs/consume/${profile}.md`, [profile]]))
 });
 
@@ -175,7 +175,7 @@ export async function renderTypeDocuments({ root })
 	}
 	const { document } = inventory;
 	const profileRows = document.profiles.map(profile => {
-		const guide = Object.entries(typeGuideProfiles).find(([filename, profiles]) => filename !== "docs/php.md" && profiles.includes(profile.id))[0];
+		const guide = Object.entries(typeGuideProfiles).find(([, profiles]) => profiles.includes(profile.id))[0];
 		const relative = path.posix.relative("docs/reference", guide);
 		return [`[${names[profile.id]}](${relative}#type-conversions)`, profile.context, profile.wordBits === null ? "Not audited" : `${profile.wordBits}-bit Lean target`];
 	});

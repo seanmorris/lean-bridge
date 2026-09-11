@@ -1,4 +1,4 @@
-# Publish npm packages
+# Build and publish JavaScript and TypeScript packages
 
 An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and upload its exact npm archive. Consumers install the component; npm resolves its shared runtime automatically.
 
@@ -118,7 +118,7 @@ npm run verify:release-authorization -- \
 
 Select the coordinate, archive path, and SHA-256 from that candidate's manifest. The executor accepts both the universal version-one manifest and the ordinary component's version-two manifest.
 
-The ordinary component flow above supplies signing through CLI configuration. Universal repository releases retain the reviewed integration in [Sandbox release](sandbox-release.md) and its project production-approval policy. The manual npm commands below do not create `registry-transaction.json` or a signed `release-receipt.json`.
+The ordinary component flow above supplies signing through CLI configuration. Universal repository releases retain the reviewed integration in [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and its project production-approval policy. The manual npm commands below do not create `registry-transaction.json` or a signed `release-receipt.json`.
 
 ## Upload to your sandbox
 
@@ -150,7 +150,7 @@ npm publish "$LEAN_BRIDGE_NPM_ARCHIVE" --ignore-scripts \
   --registry "$LEAN_BRIDGE_NPM_REGISTRY" --tag sandbox
 ```
 
-The explicit tag avoids moving `latest`. Apply the access level required by the registry and reviewed package policy. [Production review](production-release.md) still governs project releases.
+The explicit tag avoids moving `latest`. Apply the access level required by the registry and reviewed package policy. [Production review](../publishing.md#build-and-approve-the-same-artifacts) still governs project releases.
 
 ## Publish to the public npm registry
 
@@ -193,7 +193,7 @@ sha256sum "$LEAN_BRIDGE_NPM_ARCHIVE" "$LEAN_BRIDGE_NPM_DOWNLOADED"
 In a fresh application directory, install the exact coordinate with `npm install --ignore-scripts --registry "$LEAN_BRIDGE_NPM_REGISTRY" "$LEAN_BRIDGE_NPM_COORDINATE"`. Select the consumer check for the package you published:
 
 - For the ordinary `onboarding-small` component, npm installs its exact runtime dependency automatically. Run the [JavaScript and TypeScript example](../javascript-typescript.md).
-- For `php-wasm-lean-alpha`, run the [PHP-Wasm example](../consume/php-wasm.md) with the selected loading profile.
+- For `php-wasm-lean-alpha`, run the [PHP-Wasm example](../php.md#php-wasm) with the selected loading profile.
 - For the universal `@lean-bridge/alpha` fixture, run this `Box` check from the clean installation directory. It prints `42` and releases the resource:
 
 ```sh
@@ -213,24 +213,14 @@ Use the actual package name and exports for a renamed component. If the integrat
 
 ## Publish the PHP-Wasm profile
 
-PHP-Wasm produces an npm package separately from the universal `npm` target. With the PHP sources and Emscripten environment prepared as in its [consumer and package guide](../consume/php-wasm.md), build and pack one profile:
-
-```sh
-node scripts/build-php-wasm-package.mjs \
-  --manifest poc/lean-link-spike/bindings/php-wasm.package.json \
-  --php-source build/php-wasm-sdk/php8.4-src \
-  --emsdk .toolchains/emsdk-php-wasm --output build/publish-php-wasm
-mkdir build/publish-php-wasm-archives
-npm pack ./build/publish-php-wasm --ignore-scripts \
-  --pack-destination build/publish-php-wasm-archives
-```
-
-Use new output directories. The manifest's `graphLock.profile` selects lazy or startup loading. Both fixture profiles currently use `php-wasm-lean-alpha@0.0.0`; they cannot be uploaded as different bytes under that same coordinate. Select one profile, or regenerate distinct reviewed package identities before packaging. Contributors can check both profiles with the [PHP release regression checks](../contributing/testing.md#consumer-acceptance).
-
-Freeze the resulting `.tgz`, record its profile and hash, then use the sandbox upload and download checks above. There is no universal `--target php-wasm`, and the universal `npm` target identifies `@lean-bridge/alpha`, not this package.
+Follow [Build and publish PHP packages](php.md#php-wasm-with-npm) for PHP-Wasm's package inputs, profile selection, npm archive preparation, and consumer verification.
 
 ## Recover a failed upload
 
 After an uncertain response, inspect and download the coordinate before retrying. Matching bytes establish that the upload arrived; different bytes require an incident review or a new version. npm does not permit reusing a published name/version pair. An approved corrective release can deprecate a bad version, but deprecation does not replace its bytes. [npm version immutability](https://docs.npmjs.com/cli/v11/commands/npm-publish/), [npm deprecate](https://docs.npmjs.com/cli/v11/commands/npm-deprecate/).
 
-For a signed Lean Bridge transaction, preserve the manifest and transaction record and follow [transaction recovery](production-release.md#recover-an-interrupted-release). Return to [Publishing](../publishing.md) for the shared approval and handoff flow.
+For a signed Lean Bridge transaction, preserve the manifest and transaction record and follow [transaction recovery](../contributing/production-release.md#recover-an-interrupted-release). Return to [Publishing](../publishing.md) for the shared approval and handoff flow.
+
+### Publish npm packages
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

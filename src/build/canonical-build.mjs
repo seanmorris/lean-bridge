@@ -30,7 +30,7 @@ import { validateComponentReleaseBundleManifest } from "../release/component-rel
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { buildPerlProject } from "./perl-project.mjs";
+import { buildNativeProject } from "./native-project.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
 
@@ -751,7 +751,7 @@ export const buildCanonicalProject = async ({
 	if(targets.includes("cpan") || targets.includes("perl"))
 	{
 		if(targets.length !== 1) fail("invalid-package-targets", "Build the native CPAN target separately from WebAssembly targets");
-		return buildPerlProject({ projectRoot: root, outputRoot, environment, signal, onProgress });
+		return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: ["cpan"], signal, onProgress });
 	}
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{

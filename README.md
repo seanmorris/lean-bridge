@@ -74,7 +74,7 @@ console.assert(add(100n, 23n) === 123n);
 console.assert(isEmpty("") === true);
 ```
 
-The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives, checks generated declarations, and runs the same package in Node, browser JavaScript, React, and workers. [Use a prepared release](docs/consume/receive-package.md) covers receipt verification. The [PHP chooser](docs/php.md) links to separate native PHP and PHP-Wasm guides.
+The [JavaScript and TypeScript guide](docs/javascript-typescript.md) installs both archives, checks generated declarations, and runs the same package in Node, browser JavaScript, React, and workers. [Use a prepared release](docs/consume/receive-package.md) covers receipt verification. The [PHP guide](docs/php.md) covers native PHP and PHP-Wasm installation on one page.
 
 ## Type conversions
 
@@ -145,12 +145,13 @@ npm run demos:verify
 
 The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
 
-The [React documentation site](site/README.md) includes author, consumer, publisher, and contributor guides and all twelve algorithm workbenches. Each demo retains its original runtime and proof URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
+The [React documentation site](site/README.md) organizes package creation and publication in one author workflow, with a separate consumer workflow and supporting contributor guides and all twelve algorithm workbenches. Each demo retains its original runtime and proof URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
 
 ## Documentation
 
 - [Documentation map](docs/README.md)
-- [Lean package author guide](docs/lean-author-guide.md)
+- [Build and publish a Lean package](docs/lean-author-guide.md)
+- [Use a published Lean package](docs/consume.md)
 - [JavaScript and TypeScript, including browser, React, and workers](docs/javascript-typescript.md)
 - [PHP consumer guide](docs/php.md)
 - [C# / .NET](docs/consume/dotnet.md), [Java](docs/consume/java.md), [Kotlin](docs/consume/kotlin.md), and [Ruby](docs/consume/ruby.md)
@@ -162,4 +163,4 @@ The [React documentation site](site/README.md) includes author, consumer, publis
 - [Evidence index](docs/evidence/README.md)
 - [Contributing](CONTRIBUTING.md)
 
-This repository is an architecture-testing proof of concept. Its documented consumer workflows install local package archives, not a public registry release. The CLI includes an npm registry adapter; production writes require an approved deployment profile, credentials, a signer policy, and explicit opt-in. Follow the [production release guide](docs/publish/production-release.md) for those checks or [rehearse a release](docs/publish/sandbox-release.md) against a sandbox.
+This repository is an architecture-testing proof of concept. Its documented consumer workflows install local package archives, not a public registry release. The CLI includes an npm registry adapter. Ordinary package authors use their own registry and signing configuration. Lean Bridge's universal project releases additionally require its deployment-profile approvals and explicit production opt-in. Follow the [production release guide](docs/contributing/production-release.md#review-a-production-release) for those checks or [rehearse a release](docs/contributing/sandbox-release.md#rehearse-a-registry-release) against a sandbox.

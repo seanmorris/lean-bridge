@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import test from "node:test";
-import { validateNativeConfiguration } from "../src/build/perl-project.mjs";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { createNativeModel, validateNativeType, generateNativeLeanAdapters, nativeCallbackDefault } from "../src/build/native-model.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { validateNativeElf } from "../src/build/native-artifacts.mjs";
@@ -27,15 +27,15 @@ const fixture = () => createNativeModel({
 	, sourceIdentity: { leanVersion: "4.32.2", modules: [{ module: "Sample", source: { sha256: "a".repeat(64) } }] }
 });
 
-test("native source configuration is closed and selects ordinary declarations", async () => {
-  const config = JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.native.json"));
-  assert.equal(validateNativeConfiguration(config), config);
-  await assertJsonSchema("lean-native-configuration", config);
+test("shared source configuration selects native declarations and CPAN metadata", async () => {
+  const config = JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.exports.json"));
+  assert.equal(validateExportConfiguration(config), config);
+  await assertJsonSchema("lean-export-configuration", config);
   for(const invalid of [{ ...config, wasmMemory: 32 }
     , { ...config, schemaVersion: 2 }
     , { ...config, exports: ["bad;system"] }
     , { ...config, arities: { "Workshop.add": -1 } }
-    , { ...config, cpanVersion: "1.2.3" }]) assert.throws(() => validateNativeConfiguration(invalid));
+    , { ...config, targets: { cpan: { version: "1.2.3" } } }]) assert.throws(() => validateExportConfiguration(invalid));
 });
 
 test("Perl requires compiler-checked representations and does not guess from semantic IR", () => {

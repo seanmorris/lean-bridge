@@ -49,7 +49,7 @@ test("the PHP overview includes both transports and their actual integer limit",
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
 	assert.match(row(source, "Except ε α"), /Generation rejected/u);
-	const wasm = await readFile("docs/consume/php-wasm.md", "utf8");
+	const wasm = source;
 	assert.match(row(wasm, "Int64"), /32-bit int does not provide this full range/u);
 });
 

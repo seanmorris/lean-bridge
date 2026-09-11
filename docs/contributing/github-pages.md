@@ -96,6 +96,6 @@ For a first deployment, record that no previous live artifact exists. A locally 
 
 ## Keep website and package authority separate
 
-The Pages workflow publishes documentation and runnable examples. It does not execute the npm publisher, obtain `NPM_TOKEN`, or satisfy the [production package-release approvals](../publish/production-release.md).
+The Pages workflow publishes documentation and runnable examples. It does not execute the npm publisher, obtain `NPM_TOKEN`, or satisfy the [production package-release approvals](production-release.md#review-a-production-release).
 
 Changes to routes and Markdown require a site rebuild. Changes to Lean sources require the proof-checking demo build before assembly. The assembler checks the copied source hashes against each demo's proof receipt and rejects a mismatch.

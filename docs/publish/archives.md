@@ -2,42 +2,13 @@
 
 Distribute the generated C, C++, and WIT/WASI tarballs through an artifact server or GitHub Release. Their universal publication targets are `c`, `cpp`, and `wit-wasi`, with operation `retain`. Lean Bridge keeps the archives and their identities; it does not upload them to a C package registry, OCI registry, or GitHub Release.
 
-External distribution is a separate operator action after the [release review](production-release.md). The commands below show that action without replacing the registry transaction or issuing a new Lean Bridge receipt.
+External distribution is a separate operator action after the [release review](../publishing.md#build-and-approve-the-same-artifacts). The commands below show that action without replacing the registry transaction or issuing a new Lean Bridge receipt.
 
 ## Prepare the package archives
 
-From a Lean Bridge checkout, build the pinned universal Alpha bundle and select the required packages:
+Follow the [C](c.md), [C++](cpp.md), or [WIT / WASI](wit-wasi.md) target guide to produce and check its archive. These guides identify the real package builders and their required compiled inputs.
 
-```sh
-nix --extra-experimental-features 'nix-command flakes' \
-  build .#universal-release-bundle --out-link build/publish-universal-bundle
-node scripts/build-c-family-package.mjs --ecosystem c \
-  --bundle build/publish-universal-bundle --output build/publish-c
-node scripts/build-c-family-package.mjs --ecosystem cpp \
-  --bundle build/publish-universal-bundle --output build/publish-cpp
-node scripts/build-wasi-package.mjs \
-  --bundle build/publish-universal-bundle --output build/publish-wasi
-```
-
-Use new output directories. Each builder verifies its canonical input and copies the package's approved artifacts. A bundle missing the native component or the WIT/WASI adapter cannot produce those packages.
-
-| Target | Alpha archive | What the consumer receives |
-| --- | --- | --- |
-| `c` | `lean-bridge-alpha-0.0.0-c.tar.gz` | C11 headers, native libraries, CMake and pkg-config metadata |
-| `cpp` | `lean-bridge-alpha-0.0.0-cpp.tar.gz` | C++20 wrappers, C binding, native libraries, CMake metadata |
-| `wit-wasi` | `lean-bridge-alpha-wasi-0.0.0.tar.gz` | WIT declarations, Component Model adapter, Wasmtime host, native libraries |
-
-The package version comes from the canonical bundle. Choose release names and coordinates you own before producing the candidate. Keep generated filenames and archive bytes unchanged after approval.
-
-Check the archives with the [C](../consume/c.md), [C++](../consume/cpp.md), and [WIT/WASI](../consume/wit-wasi.md) consumer examples. Repository-wide [native and WASI acceptance checks](../contributing/testing.md#consumer-acceptance) belong to Contributing. For a universal reproducibility candidate selecting only retained archives, use:
-
-```sh
-node scripts/lean-bridge.mjs publish --project . --dry-run \
-  --target c --target cpp --target wit-wasi \
-  --output build/release-native-archives
-```
-
-That command produces the candidate, authorization, and universal manifest. It does not publish a GitHub Release. Completing a signed retention transaction still requires the reviewed signer and handler integration described in the [sandbox guide](sandbox-release.md#configure-the-publisher-integration).
+The shared upload steps below use the reviewed C, C++, and WASI example filenames. Set the archive variables to the exact files in your approved release. A missing target package is a build prerequisite; this distribution procedure does not compile Lean.
 
 ## Freeze the handoff
 
@@ -80,7 +51,7 @@ gh release upload "$LEAN_ALPHA_RELEASE_TAG" \
   --repo "$LEAN_ALPHA_RELEASE_REPO"
 ```
 
-If the approved handoff includes an existing signed receipt, upload its matching `release-receipt.json`, `publication-signer-policy.json`, and `verify-release-archive.mjs` as additional assets before publishing. Upload reviewed checksum and platform documentation as well. Use one copy of shared receipt files when all archives belong to the same transaction.
+If the approved handoff includes an existing signed receipt, upload its matching `release-receipt.json`, `release-receipt.sha256`, `publication-signer-policy.json`, and the offline fallback `verify-release-archive.mjs` as additional assets before publishing. Recipients use [the CLI's signed archive verification](../consume/receive-package.md#authenticate-a-signed-archive). Upload reviewed checksum and platform documentation as well. Use one copy of shared receipt files when all archives belong to the same transaction.
 
 Do not use `--clobber`: that option deletes an existing asset before replacing it. A filename collision needs inspection of the existing release and its bytes. [GitHub asset upload](https://cli.github.com/manual/gh_release_upload).
 

@@ -1,6 +1,6 @@
-# Use a Lean package
+# Use a published Lean package
 
-Install a prepared release and call its generated API from your application. The language guides start with the completed package; building from Lean source is a [separate workflow below](#start-from-a-raw-lean-package).
+Install the package for your language, import its generated API, and call it from your application. Start with the publisher's completed release; you do not need Lean or Lake.
 
 ## Use a prepared release
 
@@ -20,11 +20,10 @@ Get the package for your language and platform from its publisher, either throug
 | Kotlin | The same Maven JAR and POM as Java | [Kotlin](consume/kotlin.md) |
 | Ruby | RubyGem | [Ruby](consume/ruby.md) |
 | Perl | CPAN distribution with native Lean and generated XS | [Perl](consume/perl.md) |
-| Native PHP | Compiled extension and Composer library | [Native PHP](consume/php-native.md) |
-| PHP-Wasm | npm package for the PHP-Wasm host | [PHP-Wasm](consume/php-wasm.md) |
+| PHP, native or Wasm | Native extension with Composer library, or a PHP-Wasm npm package | [PHP](php.md) |
 | WIT / WASI | Component and host archive | [WIT / WASI](consume/wit-wasi.md) |
 
-The JavaScript examples install `onboarding-small@1.0.0`, which exports `add` and `isEmpty`. Native, managed, PHP, and WIT/WASI examples install the Alpha interoperability package in their language's format. Each guide names the exact archive and API it uses; the examples do not assume a public registry release.
+The JavaScript examples install `onboarding-small@1.0.0`, which exports `add` and `isEmpty`. Perl uses the Workshop package. The other native, managed, PHP, and WIT/WASI examples install the Alpha interoperability package in their language's format. Each guide names the exact archive and API it uses; the examples do not assume a public registry release.
 
 The [runtime and package reference](consumers.md) lists the tested platform for every supported consumer. [PHP](php.md) compares its two runtime options. The [demo API guide](demo-api.md) covers the algorithm demos' local APIs separately.
 
@@ -34,22 +33,16 @@ The [runtime and package reference](consumers.md) lists the tested platform for 
 
 JavaScript packages declare their runtime dependency, and their imports load it automatically. A local npm handoff includes the runtime archive alongside the component so the install can resolve both without a registry copy.
 
-Consumers need their application toolchain and the platform named by the package. They do not need Lean or Lake. Nix users can receive the flake's outputs from a [signed binary cache](publish/nix.md), with a trusted cache key and substitution checks.
+Consumers need their application toolchain and the platform named by the package. They do not need Lean or Lake. Nix users can receive the flake's outputs from a [signed binary cache](consume/receive-package.md#install-from-a-signed-nix-cache), with a trusted cache key and substitution checks.
 
 ## Start from a raw Lean package
 
-If you received `.lean` files and a Lake project, prepare a host-language package before installing it in your application:
-
-1. Complete [author setup](lean/setup.md) and check the [supported exports](lean/export-decisions.md).
-2. [Analyze, build, and create local archives](publish/local-handoff.md#prepare-the-lean-project) from the source project's root. The local dry run checks two builds without uploading a package.
-3. Verify the resulting handoff and follow the prepared-release installation for its target language.
-
-Ordinary Lake projects can produce npm archives or [native Perl distributions](publish/cpan.md). Perl uses freshly checked Lean interfaces for its native ABI. The Alpha builds for Python, Rust, C, C++, managed runtimes, PHP, and WIT/WASI use target-specific inputs and compiled bundles from this repository. A raw Lake project alone does not supply those bundles or their target API metadata. Each language page links its build path separately.
+Follow [Adapt an existing library](lean/existing-package.md) to prepare an installable package, then return to the language guide above.
 
 ### Start with the tutorial package
 
-[Build your first component](lean/first-component.md) gives the exact Lean source and build steps for `onboarding-small`. Once its archives exist, use the [JavaScript and TypeScript guide](javascript-typescript.md) for Node, browsers, React, and workers.
+The [author tutorial](lean/first-component.md) builds the example package from source.
 
 ### Produce or publish a package
 
-[Package a Lean library](lean-author-guide.md) covers source preparation. [Share a local package](publish/local-handoff.md) prepares an archive handoff; [Publish a Lean package](publishing.md) covers ecosystem releases and their authorization.
+Use the [build-and-publish workflow](lean-author-guide.md), including its [target-language and package-manager guides](publishing.md).

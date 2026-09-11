@@ -1,4 +1,6 @@
-# Publish a Maven package
+# Build and publish Java and Kotlin packages
+
+This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
 
 Deploy the reviewed JAR and POM to an organization-controlled Maven repository. Java and Kotlin consumers use the same artifact.
 
@@ -57,7 +59,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/maven-candidate/publish-manifest.json
 ```
 
-Retain both the JAR and POM hashes. Complete the [sandbox record](sandbox-release.md) and [production approval process](production-release.md) for the actual destination.
+Retain both the JAR and POM hashes. Complete the [sandbox record](../contributing/sandbox-release.md#rehearse-a-registry-release) and [production approval process](../publishing.md#build-and-approve-the-same-artifacts) for the actual destination.
 
 The installed CLI supplies only the npm transaction adapter. A Maven deploy command does not produce a Lean Bridge signed completion receipt. The reviewed integration must authorize the chosen repository and credentials; the manifest's default Maven Central destination does not authorize a private repository.
 
@@ -170,3 +172,7 @@ If a reviewed publisher integration supplies a signed release receipt, apply [re
 A JAR upload can succeed before the POM or metadata upload fails. Inspect the repository's exact coordinate and compare each existing file before retrying. Keep partial-deployment logs and the original candidate.
 
 If any published file differs, stop and involve the repository and release owners. Use an approved new version for corrected content. A repository's overwrite or deletion capability is not authority to replace an immutable reviewed release.
+
+### Publish a Maven package
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

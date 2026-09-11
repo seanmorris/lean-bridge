@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { buildPerlProject } from "../src/build/perl-project.mjs";
+import { buildNativeProject } from "../src/build/native-project.mjs";
 const flags = new Map();
 for(let i = 2; i < process.argv.length; i += 2)
 {
@@ -11,6 +11,6 @@ for(let i = 2; i < process.argv.length; i += 2)
 	flags.set(process.argv[i], process.argv[i + 1]);
 }
 if(!flags.has("--project") || !flags.has("--output")) throw new Error("project and output are required");
-console.log(JSON.stringify(await buildPerlProject({ projectRoot: flags.get("--project")
+console.log(JSON.stringify(await buildNativeProject({ projectRoot: flags.get("--project")
 	, outputRoot: flags.get("--output")
 	, onProgress: event => process.stderr.write(`${event.message}\n`) })));

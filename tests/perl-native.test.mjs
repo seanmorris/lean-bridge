@@ -8,6 +8,8 @@ import { chmod, copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile }
 import { join } from "node:path";
 import test from "node:test";
 import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
+import { buildNativeProject } from "../src/build/native-project.mjs";
+import { readExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-package.mjs";
 import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
@@ -23,6 +25,42 @@ const perl = process.env.LEAN_BRIDGE_TEST_PERL ?? "/usr/bin/perl";
 const floor = process.env.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR ?? "2.38";
 const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
 const errorText = error => `${error.message}\n${JSON.stringify(error.details ?? {})}`;
+
+test("shared configuration drives a compiled and installed native package", { skip: !enabled, timeout: 600_000 }, async t => {
+	await mkdir("build", { recursive: true });
+	const working = await mkdtemp(join(root, "build/.shared-native-test-"));
+	t.after(() => rm(working, { recursive: true, force: true }));
+	const projectRoot = join(root, "tests/fixtures/export-selection");
+	const before = await readExportConfiguration(projectRoot);
+	const output = join(working, "release");
+	let result;
+	try
+	{
+		result = await buildNativeProject({
+			projectRoot, outputRoot: output, targets: ["cpan"]
+			, environment: { ...process.env
+				, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix
+				, LEAN_BRIDGE_PERLS: JSON.stringify([perl]) } });
+	} catch(error)
+	{
+		throw new Error(errorText(error), { cause: error });
+	}
+	assert.equal(result.configurationSha256, before.sha256);
+	assert.equal(result.packages[1].archive, "LeanBridge-Selected-0.007.tar.gz");
+	const manifest = JSON.parse(await readFile(join(output, "packages/component/lean-bridge-package.json"), "utf8"));
+	assert.equal(manifest.module, "LeanBridge::Selected");
+	assert.equal(manifest.version, "0.007");
+	const model = JSON.parse(await readFile(join(output, "native/component/model.json"), "utf8"));
+	assert.deepEqual(model.exports.map(item => item.name), ["First.bump"]);
+	const prefix = join(working, "installed");
+	for(const entry of result.packages)
+		await installCpanArchive({ archive: join(output, "archives", entry.archive)
+			, workingRoot: working, prefix, perl, mode: "prebuilt-only" });
+	const consumer = await run(perl, ["-MLeanBridge::Selected", "-e", "print LeanBridge::Selected::bump(41)"], working,
+		{ ...process.env, PERL5LIB: join(prefix, "lib/perl5") });
+	assert.equal(consumer.stdout, "42");
+	assert.deepEqual(await readExportConfiguration(projectRoot), before);
+});
 
 test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", { skip: !enabled, timeout: 600_000 }, async t => {
   await mkdir("build", { recursive: true });

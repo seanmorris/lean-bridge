@@ -1,0 +1,575 @@
+[
+  {
+    "route": "/docs/",
+    "headings": [
+      "choose-your-starting-point",
+      "follow-one-complete-example",
+      "understand-the-demos",
+      "look-up-a-contract",
+      "claim-ownership",
+      "user-guides",
+      "publish-by-ecosystem",
+      "architecture-and-evidence",
+      "contributor-workflow",
+      "style-and-references"
+    ]
+  },
+  {
+    "route": "/docs/lean/",
+    "headings": [
+      "prerequisites",
+      "create-a-plain-lake-project",
+      "analyze-build-and-perform-a-dry-run",
+      "current-export-rules",
+      "adapter-questions",
+      "exit-codes",
+      "common-failures"
+    ]
+  },
+  {
+    "route": "/docs/lean/setup/",
+    "headings": [
+      "install-a-prepared-cli",
+      "select-the-build-backend",
+      "check-lean-locally",
+      "install-the-local-cli",
+      "prepare-the-shared-runtime-with-nix",
+      "prepare-the-shared-runtime-with-docker",
+      "use-the-checkouts-lean-compiler",
+      "confirm-the-runtime-files"
+    ]
+  },
+  {
+    "route": "/docs/lean/first-component/",
+    "headings": [
+      "create-the-project-files",
+      "check-and-commit-the-source",
+      "analyze-the-public-functions",
+      "build-the-component",
+      "create-and-verify-local-archives",
+      "call-the-installed-package"
+    ]
+  },
+  {
+    "route": "/docs/lean/proofs-and-assurance/",
+    "headings": [
+      "check-the-theorem",
+      "read-the-relationship-record",
+      "keep-exports-separate-from-proofs",
+      "test-a-failing-proof"
+    ]
+  },
+  {
+    "route": "/docs/lean/export-decisions/",
+    "headings": [
+      "start-with-the-runnable-npm-shapes",
+      "types-understood-by-source-analysis",
+      "declarations-the-analyzer-skips",
+      "resolve-required-decisions"
+    ]
+  },
+  {
+    "route": "/docs/lean/diagnostics/",
+    "headings": [
+      "get-a-structured-result",
+      "exit-codes",
+      "match-the-diagnostic",
+      "a-proof-command-failed",
+      "docker-reports-repository-ownership",
+      "a-receipt-does-not-verify"
+    ]
+  },
+  {
+    "route": "/docs/consume/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/javascript-typescript/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/receive-package/",
+    "headings": [
+      "check-the-release-files",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/demo-api/",
+    "headings": [
+      "prepare-the-files",
+      "pack-and-interpret-the-input",
+      "own-the-prepared-solve",
+      "choose-the-integration-path"
+    ]
+  },
+  {
+    "route": "/docs/consume/php/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/python/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/rust/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/c/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/cpp/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/dotnet/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/java/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/kotlin/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/ruby/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/perl/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/wit-wasi/",
+    "headings": [
+      "use-a-prepared-release",
+      "start-from-a-raw-lean-package"
+    ]
+  },
+  {
+    "route": "/docs/consume/runtimes/",
+    "headings": [
+      "tested-profiles",
+      "authenticate-a-release-archive",
+      "browser-javascript",
+      "python",
+      "rust",
+      "c",
+      "c-1",
+      "net-jvm-and-ruby",
+      "perl",
+      "wit-and-wasi",
+      "promotion-rule"
+    ]
+  },
+  {
+    "route": "/docs/publish/",
+    "headings": [
+      "choose-the-package-ecosystem",
+      "build-and-approve-the-same-artifacts",
+      "choose-the-delivery-path",
+      "know-which-record-you-have",
+      "current-publication-prerequisites"
+    ]
+  },
+  {
+    "route": "/docs/publish/local-handoff/",
+    "headings": [
+      "prepare-the-lean-project",
+      "reproduce-the-package",
+      "verify-before-sending",
+      "resolve-failures-without-replacing-evidence"
+    ]
+  },
+  {
+    "route": "/docs/publish/npm/",
+    "headings": [
+      "publish-an-ordinary-component",
+      "other-package-and-operator-flows",
+      "choose-the-package-and-its-owner",
+      "prepare-and-verify-the-candidate",
+      "upload-to-your-sandbox",
+      "publish-to-the-public-npm-registry",
+      "download-and-verify-the-result",
+      "publish-the-php-wasm-profile",
+      "recover-a-failed-upload"
+    ]
+  },
+  {
+    "route": "/docs/publish/pypi/",
+    "headings": [
+      "choose-the-package-name-and-platform",
+      "build-and-verify-the-candidate",
+      "check-the-wheel-locally",
+      "upload-to-testpypi",
+      "publish-to-pypi",
+      "download-compare-and-install",
+      "recover-a-failed-or-partial-upload"
+    ]
+  },
+  {
+    "route": "/docs/publish/cargo/",
+    "headings": [
+      "package-identity-and-publisher-prerequisites",
+      "build-and-verify-the-lean-bridge-archive",
+      "prepare-a-separate-cargo-publisher-source",
+      "package-test-and-approve-cargos-output",
+      "upload-to-the-sandbox-or-cratesio",
+      "verify-the-published-crate-and-consumer",
+      "recover-an-interrupted-release"
+    ]
+  },
+  {
+    "route": "/docs/publish/nuget/",
+    "headings": [
+      "build-and-inspect-the-package",
+      "choose-an-owned-identity",
+      "review-the-candidate",
+      "authenticate-and-upload",
+      "verify-the-published-package",
+      "recover-without-overwriting-a-release"
+    ]
+  },
+  {
+    "route": "/docs/publish/maven/",
+    "headings": [
+      "build-the-repository-layout",
+      "choose-coordinates-your-organization-owns",
+      "produce-and-review-the-candidate",
+      "configure-repository-credentials",
+      "upload-the-exact-jar-and-pom",
+      "publish-to-maven-central",
+      "verify-through-a-clean-consumer-cache",
+      "recover-an-interrupted-deployment"
+    ]
+  },
+  {
+    "route": "/docs/publish/rubygems/",
+    "headings": [
+      "build-the-gem",
+      "establish-ownership-and-version",
+      "freeze-and-verify-the-candidate",
+      "authenticate-and-push",
+      "download-compare-and-install",
+      "recover-a-failed-or-incorrect-release"
+    ]
+  },
+  {
+    "route": "/docs/publish/cpan/",
+    "headings": [
+      "build-an-ordinary-lean-project",
+      "verify-the-release-candidate",
+      "publish-to-cpan",
+      "download-and-consume-the-published-bytes"
+    ]
+  },
+  {
+    "route": "/docs/publish/archives/",
+    "headings": [
+      "prepare-the-package-archives",
+      "freeze-the-handoff",
+      "publish-a-github-release",
+      "use-an-artifact-server-instead",
+      "verify-the-consumer-handoff",
+      "recover-an-interrupted-upload"
+    ]
+  },
+  {
+    "route": "/docs/publish/nix/",
+    "headings": [
+      "choose-a-declared-output",
+      "build-and-record-the-candidate",
+      "create-and-protect-the-signing-key",
+      "sign-the-closure-and-publish-a-file-cache",
+      "configure-consumer-trust",
+      "verify-without-installing-then-test-a-clean-fetch",
+      "consume-the-pinned-flake-revision",
+      "rotate-keys-and-recover-publication",
+      "what-the-signature-establishes"
+    ]
+  },
+  {
+    "route": "/docs/contributing/",
+    "headings": [
+      "choose-a-contribution",
+      "before-changing-code",
+      "contributor-workflow",
+      "documentation-changes",
+      "run-checks"
+    ]
+  },
+  {
+    "route": "/docs/contributing/documentation/",
+    "headings": [
+      "develop",
+      "build-and-check",
+      "static-publication",
+      "claim-ownership",
+      "style-and-references",
+      "content-and-ownership"
+    ]
+  },
+  {
+    "route": "/docs/contributing/demos/",
+    "headings": [
+      "prepare-the-checkout",
+      "reproduce-a-demo",
+      "run-regression-checks",
+      "check-proof-receipts",
+      "check-the-browser-pages"
+    ]
+  },
+  {
+    "route": "/docs/contributing/testing/",
+    "headings": [
+      "build-the-example-artifacts-as-a-maintainer",
+      "managed-packages",
+      "native-php-package",
+      "wasi-package",
+      "standalone-cli-package",
+      "reference-package-examples",
+      "local-registry-rehearsal",
+      "author-acceptance",
+      "javascript-and-browser-acceptance",
+      "consumer-acceptance",
+      "release-tooling-checks"
+    ]
+  },
+  {
+    "route": "/docs/contributing/release-pipeline/",
+    "headings": [
+      "architecture-position",
+      "module-groups",
+      "release-invariants",
+      "project-release-approval-policy",
+      "publisher-signer-integration",
+      "adding-an-ecosystem-package",
+      "verification-and-evidence"
+    ]
+  },
+  {
+    "route": "/docs/contributing/github-pages/",
+    "headings": [
+      "build-for-the-deployment-path",
+      "preview-the-exact-artifact",
+      "run-the-browser-checks",
+      "preserve-the-checked-artifact",
+      "review-the-deployment-workflow",
+      "retain-a-rollback",
+      "keep-website-and-package-authority-separate"
+    ]
+  },
+  {
+    "route": "/docs/concepts/",
+    "headings": [
+      "choose-a-question",
+      "try-a-small-problem",
+      "pick-an-implementation-path"
+    ]
+  },
+  {
+    "route": "/docs/concepts/change-risk/",
+    "headings": [
+      "a-small-example",
+      "change-the-implementation",
+      "choose-a-useful-theorem",
+      "use-tests-alongside-the-proof"
+    ]
+  },
+  {
+    "route": "/docs/concepts/auditable-claims/",
+    "headings": [
+      "follow-one-claim",
+      "read-the-proof-in-either-checker",
+      "separate-three-records",
+      "record-a-review"
+    ]
+  },
+  {
+    "route": "/docs/concepts/reusable-cores/",
+    "headings": [
+      "keep-the-model-explicit",
+      "store-a-sparse-graph",
+      "keep-domain-objects-outside-the-core",
+      "choose-another-core"
+    ]
+  },
+  {
+    "route": "/docs/concepts/trust-boundaries/",
+    "headings": [
+      "pair-the-guarantee-with-an-integration-check",
+      "validate-before-converting",
+      "keep-the-result-attached-to-its-input",
+      "review-the-delivered-artifact"
+    ]
+  },
+  {
+    "route": "/docs/concepts/shared-runtime/",
+    "headings": [
+      "let-the-package-own-initialization",
+      "share-a-compatible-runtime-instance",
+      "know-when-there-are-separate-heaps",
+      "package-and-operate-it"
+    ]
+  },
+  {
+    "route": "/docs/concepts/ownership/",
+    "headings": [
+      "three-lifetimes",
+      "release-a-prepared-solver",
+      "handle-navigation-during-preparation",
+      "keep-mutable-state-separate-from-snapshots"
+    ]
+  },
+  {
+    "route": "/docs/concepts/adoption/",
+    "headings": [
+      "choose-a-bounded-pilot",
+      "check-the-distribution-path",
+      "measure-the-whole-feature",
+      "define-acceptance-before-replacing-the-call",
+      "record-the-decision"
+    ]
+  },
+  {
+    "route": "/docs/concepts/dijkstra/",
+    "headings": [
+      "describe-four-locations",
+      "call-the-compiled-core",
+      "what-the-proof-establishes",
+      "model-the-application-correctly",
+      "verify-and-continue"
+    ]
+  },
+  {
+    "route": "/docs/concepts/flood-fill/",
+    "headings": [
+      "follow-a-five-location-chain",
+      "run-both-questions",
+      "what-the-proof-establishes",
+      "interpret-the-room-editor",
+      "verify-and-continue"
+    ]
+  },
+  {
+    "route": "/docs/concepts/lean-to-wasm/",
+    "headings": [
+      "start-with-the-named-behavior",
+      "follow-the-build",
+      "reproduce-this-demo",
+      "know-which-record-you-are-reading",
+      "use-the-core-elsewhere"
+    ]
+  },
+  {
+    "route": "/docs/concepts/benchmarks/",
+    "headings": [
+      "read-the-four-numbers",
+      "what-the-samples-measure",
+      "compare-equivalent-work",
+      "run-a-useful-comparison"
+    ]
+  },
+  {
+    "route": "/docs/reference/cli/",
+    "headings": [
+      "commands-and-options",
+      "defaults-and-configuration",
+      "json-results-and-progress",
+      "exit-codes",
+      "verify-and-continue"
+    ]
+  },
+  {
+    "route": "/docs/reference/package-api/",
+    "headings": [
+      "the-author-tutorial-package",
+      "primitive-call-coverage",
+      "values-errors-and-cleanup",
+      "sources-and-verification"
+    ]
+  },
+  {
+    "route": "/docs/reference/types/",
+    "headings": [
+      "full-type-surface",
+      "generated-host-types",
+      "exact-integers",
+      "floating-point-text-and-bytes",
+      "collections-and-resource-profiles",
+      "verify-and-continue"
+    ]
+  },
+  {
+    "route": "/docs/reference/algorithms/",
+    "headings": [
+      "choose-an-algorithm",
+      "call-an-adapter",
+      "lean-dijkstra",
+      "lean-flood-fill",
+      "lean-union-find",
+      "lean-topological-sort",
+      "lean-aho-corasick",
+      "lean-lru-cache",
+      "lean-a-star",
+      "lean-tarjan",
+      "lean-token-bucket",
+      "lean-dinic",
+      "lean-myers",
+      "lean-sweep-and-prune",
+      "interpret-the-evidence"
+    ]
+  },
+  {
+    "route": "/status/",
+    "headings": [
+      "lean-project-intake",
+      "build-and-artifact-identity",
+      "generated-runtime-behavior",
+      "package-projections",
+      "release-controls",
+      "performance-evidence",
+      "remaining-product-work"
+    ]
+  }
+]
