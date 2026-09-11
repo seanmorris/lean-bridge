@@ -18,7 +18,7 @@ The build bundle includes captured sources under `bundle/lake/`. Its component a
 
 `publish --dry-run` supplies the verified dependency snapshot to both independent clean root checkouts. It checks each checkout against the captured root files and rechecks the original dependencies before authorizing the candidate. Keep the local packages and cached Git checkouts available throughout that command. Root files must match the committed revision; local dependencies are identified by their captured contents.
 
-This path supports pure-Lean dependency imports, including transitive packages and dependency libraries with custom source directories. It rejects missing pins, source drift, symlinks, package overrides, ambiguous modules, custom native targets, precompiled modules, and extra compiler/linker flags. Native/generated inputs and custom root `srcDir` layouts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md).
+This path supports pure-Lean dependency imports, including transitive packages and custom source directories in root and dependency libraries. Use explicit [module selection](../lean/existing-package.md#select-modules-in-a-custom-source-directory) for a custom root layout. It rejects missing pins, source drift, symlinks, package overrides, ambiguous modules, custom native targets, precompiled modules, and extra compiler/linker flags. Native/generated prerequisites still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md).
 
 ## Publish an ordinary component
 

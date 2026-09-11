@@ -23,7 +23,7 @@ import { runComponentReproducibilityGate } from "../src/release/component-reprod
 import { verifyPublishManifest } from "../src/release/publish-manifest.mjs";
 import { buildComponentNpmPackages } from "../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
-import { lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -48,8 +48,9 @@ const prepare = async (projectRoot, directory) => {
 	return { inputRoot, requestPath, request, componentPlan, compilationPlan };
 };
 
-for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies compile offline into identical relocated npm releases`, { skip: !enabled }, async t => {
+for(const layout of ["default", "custom"]) for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies with ${layout} root layout compile offline into identical relocated npm releases`, { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t, variant);
+	const rootPath = layout === "custom" ? await customLakeRoot(context) : `${context.names.root}.lean`;
 	const relocated = join(context.directory, "relocated");
 	await cp(context.workspace, relocated, { recursive: true });
 	const roots = [context.root, join(relocated, "project")];
@@ -75,6 +76,7 @@ for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies
 		await assertJsonSchema("lean-target-c-manifest", manifest);
 		assert.deepEqual(manifest.modules.map(module => module.module), [context.names.remote, context.names.local, context.names.root, input.compilationPlan.document.compilerAdapters.module]);
 		assert.equal(manifest.lakeDependencies.resolution.snapshotSha256, input.componentPlan.document.source.lakeSnapshotSha256);
+		assert.equal(manifest.lakeDependencies.resolution.modules.at(-1).path, `root/${rootPath}`);
 		assert.ok(result.request.document.output.authorizedFiles.includes(`lake/packages/${context.names.remote}/lib/${context.names.remote}.lean`));
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(context.directory, `npm-${index}`) });
 		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
@@ -96,7 +98,7 @@ for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies
 	assert.deepEqual(JSON.parse(installed.stdout), variant === "shop" ? [6, 90, 4] : [6, 132, 3]);
 	await saveLakeFile(prepared[0].inputRoot, `lake/packages/${context.names.local}/${context.names.local}.lean`, "changed");
 	await assert.rejects(() => runEngine(prepared[0], join(context.directory, "tampered-engine")), /input closure differs/);
-	t.diagnostic(JSON.stringify({ variant
+	t.diagnostic(JSON.stringify({ variant, layout
 		, snapshotSha256: prepared[0].componentPlan.document.source.lakeSnapshotSha256
 		, targetCManifestSha256: sha256(canonicalJson(outputs[0].manifest))
 		, componentArchiveSha256: sha256(await readFile(release.componentArchive)) }));
@@ -131,8 +133,32 @@ test("locked WASM linking rejects tampered source, resolution, order and fresh i
 	await assert.rejects(() => compileLeanComponentSources({ ...input, engineRoot, outputRoot: join(context.directory, "stale-compile") }), { code: "lake-snapshot-drift" });
 });
 
+test("the compiler and linker reject a planned root path that differs from Lake ownership", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "decoy/Shop.lean", "-- A captured file that Lake does not own as Shop.\n");
+	// Export-only selection keeps the unused decoy in the captured inventory.
+	// Altering the plan to select that file must fail in both compiler and linker.
+	await saveLakeFile(context.root, "lean-bridge.exports.json", JSON.stringify({ schemaVersion: 1, exports: ["Shop.quote"] }));
+	const input = await prepare(context.root, join(context.directory, "build"));
+	const document = structuredClone(input.compilationPlan.document);
+	document.source.modules = [{ ...input.componentPlan.document.source.inputs.find(file => file.path === "decoy/Shop.lean"), module: "Shop" }];
+	document.source.requestedModules = ["Shop"];
+	const compilationPlan = { document, sha256: sha256(canonicalJson(document)) };
+	await assert.rejects(() => compileLeanComponentSources({ ...input, compilationPlan, engineRoot, outputRoot: join(context.directory, "wrong-source") }), { code: "lean-component-input-drift" });
+	const targetCRoot = join(context.directory, "target-c");
+	const compiled = await compileLeanComponentSources({ ...input, engineRoot, outputRoot: targetCRoot });
+	await saveLakeFile(targetCRoot, "lean-target-c-manifest.json", canonicalJson({ ...compiled.manifest, compilationPlanSha256: compilationPlan.sha256 }));
+	await assert.rejects(() => linkComponentSideModule({ ...input
+		, compilationPlan
+		, targetCRoot
+		, engineRoot
+		, outputRoot: join(context.directory, "wrong-link")
+		, runner: { capture: async () => assert.fail("Wrong root source reached emcc") } }), { code: "target-c-manifest-drift" });
+});
+
 for(const drift of [false, true]) test(`locked release dry run ${drift ? "rejects dependency drift" : "reproduces both clean clones and verifies publication evidence"}`, { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
+	await customLakeRoot(context);
 	await saveLakeFile(context.local, "NOTICE", "Catalog dependency notice\n");
 	await saveLakeFile(context.root, ".gitignore", ".lake/\n");
 	await saveLakeFile(context.root, "package.json", JSON.stringify({ license: "MIT" }));

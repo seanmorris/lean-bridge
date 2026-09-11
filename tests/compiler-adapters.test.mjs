@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
-import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
+import { createComponentBuildPlan, prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { CompilerAdapterError, generateCompilerAdapters, validateCompilerAdapterPlan, writeCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 
 const generate = async projectRoot => {
@@ -58,7 +58,8 @@ test("ordinary IO exports are blocked before compilation", async () => {
 
 test("existing hand-authored Binding IR cannot silently enter the inferred adapter generator", async () => {
   const analysis = await analyzeLeanProject(process.cwd());
-  const componentPlan = await prepareComponentBuildPlan({ projectRoot: process.cwd(), engineRoot: process.cwd() });
+  const runtime = JSON.parse(await readFile("poc/lean-link-spike/graph-lock.json", "utf8")).runtime;
+  const componentPlan = createComponentBuildPlan({ analysis, runtime });
   assert.throws(
     () => generateCompilerAdapters({ analysis, componentPlan }),
     error => error instanceof CompilerAdapterError && error.code === "compiler-adapter-ir-origin",

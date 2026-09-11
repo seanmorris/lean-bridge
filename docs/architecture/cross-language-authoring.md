@@ -40,7 +40,9 @@ The native/CPAN builder now uses a version-2 snapshot that also captures the roo
 
 The npm/WASM engine now accepts transported snapshots against the digest in its build plan. Planning requires Node and Git, without a host Lean compiler. The engine uses the same Lake resolver, compiles the captured dependency closure, and binds its resolved order and fresh interface hashes into the target-C manifest. The linker checks that evidence before invoking Emscripten. Bundles retain the captured source closure. Two unrelated projects produce identical npm archives from relocated inputs and run through installed JavaScript APIs after their original source paths become unavailable. The publication dry run transfers the snapshot into both clean root checkouts and rejects dependency drift before authorizing the candidate. See the [npm dependency milestone evidence](../evidence/lake-wasm-workspace-20260911.md).
 
-Task 1239 remains open for declared native/generated input closure, root custom source layouts, and other Lake build customizations. Custom native targets and additional compiler/linker options currently fail explicitly. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
+Root package and library `srcDir` layouts now work with explicit module selection. Host planning records a unique provisional source path for each selected module; Lake must confirm that exact ownership during compilation. Both package formats, nested modules, relocated installed npm/CPAN packages, and publication dry runs have [custom-layout acceptance evidence](../evidence/lake-root-layouts-20260911.md).
+
+Task 1239 remains open for declared native/generated input closure and other Lake build customizations. Custom native targets and additional compiler/linker options currently fail explicitly. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
 
 ## Package and consumer requirements
 

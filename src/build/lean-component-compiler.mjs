@@ -139,7 +139,8 @@ export const compileLeanComponentSources = async ({
 			}
 			const capturedRoot = new Map(snapshot.document.rootInputs.map(file => [file.path, file]));
 			for(const module of compilationPlan.document.source.modules)
-				if(capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes)
+				if(capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes
+					|| lake.document.modules.find(item => item.module === module.module)?.path !== `root/${module.path}`)
 					fail("lean-component-input-drift", "Planned root modules differ from the locked snapshot");
 		}
 		const sourceOrder = lake ? lake.document.modules.map(module => module.module) : compilationPlan.document.source.compileOrder.slice(0, -1);

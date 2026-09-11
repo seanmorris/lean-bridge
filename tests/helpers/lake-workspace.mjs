@@ -4,7 +4,7 @@
  * @file
  */
 import { execFile } from "node:child_process";
-import { lstat, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { promisify } from "node:util";
@@ -85,6 +85,28 @@ export const lakeWorkspaceFixture = async (t, variant = "shop") => {
 	const lock = () => saveLakeFile(root, "lake-manifest.json", JSON.stringify(manifest));
 	await lock();
 	return { directory, workspace, root, local, cached, names, manifest, lock };
+};
+
+/**
+ * Move a fixture's selected module into a custom Lake source layout.
+ *
+ * @param context - Isolated fixture to update before capture.
+ */
+export const customLakeRoot = async context => {
+	const { root, names } = context;
+	const sourceDirectory = names.root === "Shop" ? "lean-src" : "source tree/lib";
+	await mkdir(join(root, sourceDirectory), { recursive: true });
+	await rename(join(root, `${names.root}.lean`), join(root, sourceDirectory, `${names.root}.lean`));
+	if(names.root === "Shop")
+		await saveLakeFile(root, "lakefile.toml", `${await readFile(join(root, "lakefile.toml"), "utf8")}srcDir = "${sourceDirectory}"\n`);
+	else
+	{
+		await rm(join(root, "lakefile.toml"));
+		await saveLakeFile(root, "lakefile.lean", `import Lake\nopen Lake DSL\npackage telemetry where\n  version := v!"1.0.0"\n  srcDir := "source tree"\nrequire Metrics from "../local"\nlean_lib Telemetry where\n  srcDir := "lib"\n`);
+	}
+	// Captured, but outside the selected Lake library and its import closure.
+	await saveLakeFile(root, "other-source/Unused.lean", "import DeliberatelyAbsent\n");
+	return `${sourceDirectory}/${names.root}.lean`;
 };
 
 /**

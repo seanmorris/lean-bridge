@@ -161,7 +161,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. The locked Lake follow-up reruns all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and adds 34 dependency workspace checks as unprivileged nobody. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. Source hashes include the tested native dependency integration; no new type/profile support or publication is claimed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake and custom root layout follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 35 dependency workspace checks as unprivileged nobody. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. Source hashes include the tested native dependency integration; no new type/profile support or publication is claimed.",
       "files": [
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
@@ -169,13 +169,14 @@
         },
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"docs/evidence/lake-native-workspace-20260911.md","sha256":"4885f50ba7468b223063454aef0377c0df1dc6810d541e45004bdbb887a43820"},
+        {"path":"docs/evidence/lake-root-layouts-20260911.md","sha256":"bb833e36fa01709fae6b787f7b7eb449d6369bd27539a55f7e26ee971f6eabcb"},
         {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"4197479a28711e03e9dfd438f76600730100c005abb3a9e84142da49233bb3d8"},
         {"path":"src/build/lake-workspace.mjs","sha256":"96d8c28ceccf30ff36158f35197d136b90592303055f7cbaf2ce2dec8dcdb40b"},
         {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"9bbf3a9b86537fb19d8a64eb620a9fe9fc477f3a5e982d9f571b3963557a374a"},
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
-        {"path":"tests/lake-workspace.test.mjs","sha256":"3580d21abfd489f8005eeb7db42473094948abff12ed311da2f8d04fc1bf689d"},
-        {"path":"tests/helpers/lake-workspace.mjs","sha256":"70956fc369830bb332c5807048adc7ac12bc0bc6bba07e351a2cdc68104b132b"},
-        {"path":"src/analyze/export-configuration.mjs","sha256":"4307d7cdc4e6f9d657c2f3dc56974582a2f5d8269e7147263cce3ce35f67a1b6"},
+        {"path":"tests/lake-workspace.test.mjs","sha256":"1723641c8e930733f168bfb25218ac61e0dfeae5cc3a3080e5df1bfcf9c9b009"},
+        {"path":"tests/helpers/lake-workspace.mjs","sha256":"7dbe44135f5afb4aec6bc39cd2bd8d4fa137fe0423f1ccf2c337f1a61dc0c1ac"},
+        {"path":"src/analyze/export-configuration.mjs","sha256":"56eed41ab97ec746b8d71579f57b1668ff66be9b0fb3fea37480a16e7c0f4d34"},
         {"path":"schema/lean-export-configuration.schema.json","sha256":"c09d5015f37d1ff50a0b04838a1a39d236cd5fbc431237d9008ef867ccab94af"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
@@ -189,7 +190,7 @@
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "391678c252a4daf3635afece349076ea52baf46a419c96d8e41286834bb48303"
+          "sha256": "e1c8f65f7daa1e838a3d9ae35cee3ee693321a0ddb68c35cd2897de762d2cff9"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -331,7 +332,7 @@
       "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
-        {"path":"src/analyze/lean-project.mjs","sha256":"26c377ff704f383383eea606b552dd9fe080a01431c474a8a92a0c888e10f0e4"},
+        {"path":"src/analyze/lean-project.mjs","sha256":"17e2f503b13e0f18b4448bff7b1f8dd5b0483706300f56bfff41093c50b64ee8"},
         {"path":"src/build/component-plan.mjs","sha256":"874671f67e5b886f88f2895d7bc6c0b586e3d2c7da86fdf6d44200e4ffa8585e"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"},

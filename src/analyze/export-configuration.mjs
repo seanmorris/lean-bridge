@@ -196,17 +196,42 @@ export const assertExportConfigurationCapabilities = (configuration, {
 };
 
 /**
+ * Locate provisional root sources without evaluating Lake on the planning host.
+ * Explicit module names may have a custom source-directory prefix in locked
+ * projects. The compiler must confirm each name/path pair using Lake ownership.
+ *
+ * @param configuration - Validated shared selection.
+ * @param inputs - Captured root input inventory.
+ */
+export const selectSourceModules = (configuration, inputs) => {
+	const sources = inputs.filter(input => input.path.endsWith(".lean") && input.path !== "lakefile.lean");
+	if(!configuration.modules) return sources.map(input => ({ ...input, module: input.path.replace(/\.lean$/, "").replaceAll("/", ".") }));
+	const locked = inputs.some(input => input.path === "lake-manifest.json");
+	const selected = configuration.modules.map(module => {
+		const suffix = `${module.replaceAll(".", "/")}.lean`;
+		const candidates = sources.filter(input => input.path === suffix || (locked && input.path.endsWith(`/${suffix}`)));
+		if(candidates.length === 0) fail("unknown-export-module", `Selected module ${module} was not found in the source project`);
+		if(candidates.length !== 1) fail("ambiguous-export-module", `Selected module ${module} matches multiple source files: ${candidates.map(input => input.path).join(", ")}`);
+		return { ...candidates[0], module };
+	});
+	if(new Set(selected.map(input => input.path)).size !== selected.length)
+		fail("ambiguous-export-module", "Selected module names refer to the same source file");
+	return selected;
+};
+
+/**
  * Select declarations while rejecting misspelled names and conflicting module limits.
  *
  * @param configuration - Validated shared selection.
  * @param declarations - Source discoveries with fullName and path fields.
- * @param modules - All discovered local source module names.
+ * @param modules - Provisional root module names and source paths.
  */
 export const selectExportDeclarations = (configuration, declarations, modules) => {
 	for(const name of configuration.modules ?? [])
-		if(!modules.includes(name)) fail("unknown-export-module", `Selected module ${name} was not found in the source project`);
+		if(!modules.some(module => module.module === name)) fail("unknown-export-module", `Selected module ${name} was not found in the source project`);
+	const paths = new Set(modules.map(module => module.path));
 	const selected = declarations.filter(item => !configuration.modules
-		|| configuration.modules.includes(item.path.replace(/\.lean$/, "").replaceAll("/", ".")));
+		|| paths.has(item.path));
 	for(const name of configuration.exports ?? [])
 		if(!selected.some(item => item.fullName === name))
 			fail("unknown-export-declaration", `Selected export ${name} was not found in the selected modules`);

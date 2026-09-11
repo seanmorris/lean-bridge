@@ -16,7 +16,7 @@ import { prepareComponentBuildPlan, validateComponentBuildPlan } from "../src/bu
 import { prepareComponentCompilationPlan, validateComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import { createEngineExecutionRequest } from "../src/build/engine-execution-request.mjs";
 import { readLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
-import { lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { prepareCleanComponentSources } from "../src/release/component-reproducibility-gate.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
@@ -74,6 +74,36 @@ test("dependency-only edits invalidate component plans and reject stale staging"
 	assert.notEqual(before.componentPlan.sha256, after.componentPlan.sha256);
 	assert.notEqual(before.compilationPlan.sha256, after.compilationPlan.sha256);
 	await assert.rejects(() => writeComponentCompilationInputs({ ...before, outputRoot: join(context.directory, "stale") }), { code: "lake-source-drift" });
+});
+
+for(const variant of ["shop", "telemetry"]) test(`compiler-free ${variant} planning preserves custom source paths and explicit module names`, async t => {
+	const context = await lakeWorkspaceFixture(t, variant);
+	const path = await customLakeRoot(context);
+	const before = await lakeInputState(context.workspace);
+	const prepared = await prepare(context.root);
+	assert.deepEqual(prepared.compilationPlan.document.source.modules.map(item => [item.module, item.path]), [[context.names.root, path]]);
+	assert.deepEqual(prepared.compilerAdapters.plan.imports, [context.names.root]);
+	await assertJsonSchema("project-analysis", prepared.analysis);
+	await assertJsonSchema("component-compilation-plan", prepared.compilationPlan.document);
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+	await cp(context.workspace, join(context.directory, "relocated"), { recursive: true });
+	const moved = await prepare(join(context.directory, "relocated/project"));
+	assert.equal(moved.compilationPlan.sha256, prepared.compilationPlan.sha256);
+	await saveLakeFile(context.root, `${context.names.root}.lean`, await readFile(join(context.root, path)));
+	await assert.rejects(() => prepare(context.root), { code: "ambiguous-export-module" });
+});
+
+test("locked module hints require exact path-component suffixes and reject conflicting names", async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "nested/Shop/Api.lean", "namespace Shop\ndef quote (value : UInt32) : UInt32 := value\nend Shop\n");
+	await saveLakeFile(context.root, "lean-bridge.exports.json", JSON.stringify({ schemaVersion: 1, modules: ["Shop.Api"], exports: ["Shop.quote"] }));
+	const prepared = await prepare(context.root);
+	assert.deepEqual(prepared.compilationPlan.document.source.modules.map(item => [item.module, item.path]), [["Shop.Api", "nested/Shop/Api.lean"]]);
+	for(const modules of [["Api", "Shop.Api"], ["hop.Api"]])
+	{
+		await saveLakeFile(context.root, "lean-bridge.exports.json", JSON.stringify({ schemaVersion: 1, modules }));
+		await assert.rejects(() => prepare(context.root), { code: modules.length === 2 ? "ambiguous-export-module" : "unknown-export-module" });
+	}
 });
 
 test("locked plan validators and schemas reject unbound resolution claims", async t => {

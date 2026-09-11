@@ -237,6 +237,7 @@
         "declaration": { "type": "string", "minLength": 1 },
         "kind": { "enum": ["def", "opaque", "abbrev"] },
         "path": { "type": "string", "minLength": 1 },
+        "sourceModule": { "type": "string", "minLength": 1 },
         "line": { "type": "integer", "minimum": 1 },
         "documentation": { "type": ["string", "null"] },
         "externSymbol": { "type": ["string", "null"] },

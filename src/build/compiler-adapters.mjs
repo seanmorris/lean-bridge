@@ -172,7 +172,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
     const item = Object.freeze({
       bindingId: declaration.id
       , sourceDeclaration
-      , sourceModule: sourceModule(candidate.path)
+      , sourceModule: candidate.sourceModule ?? sourceModule(candidate.path)
       , wrapper: wrapperIdentifier(declaration.id)
       , symbol: exportSymbol(analysis.bindingIr.document.component.id, declaration.id)
       , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type) })))

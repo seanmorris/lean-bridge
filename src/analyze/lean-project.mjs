@@ -11,7 +11,7 @@ import { basename, join, relative, resolve } from "node:path";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentSignatureProblem } from "../abi/component-scalars.mjs";
-import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations } from "./export-configuration.mjs";
+import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations, selectSourceModules } from "./export-configuration.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -556,9 +556,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		imports.push(...scanned.imports.map(module => ({ module, source: input.path })));
 	}
 	declarations.sort((left, right) => left.fullName.localeCompare(right.fullName) || left.path.localeCompare(right.path));
-	const selectedDeclarations = selectExportDeclarations(configuration, declarations,
-		inputs.filter(input => input.path.endsWith(".lean") && input.path !== "lakefile.lean")
-			.map(input => input.path.replace(/\.lean$/, "").replaceAll("/", ".")));
+	const sourceModules = selectSourceModules(configuration, inputs);
+	const selectedDeclarations = selectExportDeclarations(configuration, declarations, sourceModules);
 	for(const name of configuration.exports ?? [])
 		if(!selectedDeclarations.some(item => item.fullName === name && exportableDeclarationKinds.has(item.kind)))
 			fail("invalid-export-declaration", `${name} is not a callable export; theorems and type declarations are not host functions`);
@@ -637,6 +636,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 			declaration: declaration.fullName
 			, kind: declaration.kind
 			, path: declaration.path
+			, sourceModule: sourceModules.find(module => module.path === declaration.path)?.module ?? declaration.path.replace(/\.lean$/, "").replaceAll("/", ".")
 			, line: declaration.line
 			, documentation: declaration.documentation
 			, externSymbol: declaration.externSymbol

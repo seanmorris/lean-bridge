@@ -7,7 +7,7 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } fr
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
-import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
@@ -196,8 +196,9 @@ export const buildNativeComponent = async ({ projectRoot
 		if(!probe.stdout.includes(pinnedNativeLean) || analysis.project.toolchain !== `leanprover/lean4:v${leanVersion}`) throw new Error("native source/compiler/runtime toolchain mismatch");
 		const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 		if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
-		const sources = analysis.inputs.filter(input => input.path.endsWith(".lean") && input.path !== "lakefile.lean");
-		let sourceByModule = new Map(sources.map(input => [input.path.replace(/\.lean$/, "").replaceAll("/", "."), input]));
+		const sources = selectSourceModules({ ...config, modules }, analysis.inputs);
+		let sourceByModule = new Map(selectSourceModules({}, analysis.inputs).map(({ module, ...input }) => [module, input]));
+		for(const { module, ...input } of sources) sourceByModule.set(module, input);
 		const selectedModules = modules ?? [...sourceByModule.keys()];
 		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !sourceByModule.has(name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
@@ -209,6 +210,9 @@ export const buildNativeComponent = async ({ projectRoot
 			lakeWorkspace = await resolveLockedLakeWorkspace({ snapshot: lakeSnapshot, modules: selectedModules, leanPrefix, signal });
 			if(lakeWorkspace.document.leanCommit !== pinnedNativeLean) throw new Error("native Lake resolver/compiler identity mismatch");
 			lakeModules = new Map(lakeWorkspace.document.modules.map(module => [module.module, module]));
+			for(const name of selectedModules)
+				if(lakeModules.get(name)?.path !== `root/${sourceByModule.get(name).path}`)
+					throw new Error(`Lake module source differs from the selected root source: ${name}`);
 			sourceByModule = new Map(lakeWorkspace.document.modules.map(module => [module.module, { ...module.source, path: module.path }]));
 		}
 		const sourcePathFor = (name, input) => lakeWorkspace ? `${name.replaceAll(".", "/")}.lean` : input.path;

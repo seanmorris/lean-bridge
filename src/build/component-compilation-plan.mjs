@@ -104,13 +104,15 @@ export const validateComponentCompilationPlan = plan => {
 		if(!validModule(module.module) || moduleNames.has(module.module)) fail("invalid-component-compilation-plan", "source module names must be unique Lean names");
 		moduleNames.add(module.module);
 		safePath(module.path, "source module path");
-		if(!module.path.endsWith(".lean") || moduleFromPath(module.path) !== module.module || !Number.isSafeInteger(module.bytes) || module.bytes < 0 || !validHash(module.sha256)) fail("invalid-component-compilation-plan", `source module ${module.module} identity is invalid`);
+		const suffix = `${module.module.replaceAll(".", "/")}.lean`;
+		if(!module.path.endsWith(".lean") || (locked ? module.path !== suffix && !module.path.endsWith(`/${suffix}`) : moduleFromPath(module.path) !== module.module) || !Number.isSafeInteger(module.bytes) || module.bytes < 0 || !validHash(module.sha256)) fail("invalid-component-compilation-plan", `source module ${module.module} identity is invalid`);
 		if(!locked && (!Array.isArray(module.imports) || !Array.isArray(module.localDependencies) || module.imports.some(imported => !validModule(imported)) || module.localDependencies.some(imported => !validModule(imported)))) fail("invalid-component-compilation-plan", `source module ${module.module} imports are invalid`);
 	}
 	if(locked)
 	{
 		if(!validHash(plan.source.lakeSnapshotSha256) || !Array.isArray(plan.source.requestedModules) || !plan.source.requestedModules.length
 			|| new Set(plan.source.requestedModules).size !== plan.source.requestedModules.length
+			|| plan.source.requestedModules.length !== moduleNames.size || new Set(plan.source.modules.map(module => module.path)).size !== moduleNames.size
 			|| plan.source.requestedModules.some(module => !moduleNames.has(module)) || moduleNames.has(plan.compilerAdapters.module))
 			fail("invalid-component-compilation-plan", "Locked compilation requires a snapshot identity and unique selected root modules");
 	}
@@ -147,13 +149,17 @@ export const createComponentCompilationPlan = ({ analysis, componentPlan, compil
 	if(componentPlan.sha256 !== compilerAdapters.plan.componentPlanSha256) fail("component-compilation-plan-drift", "component and compiler adapter plan identities differ");
 	const inputByPath = new Map(componentPlan.document.source.inputs.map(input => [input.path, input]));
 	const locked = componentPlan.document.schemaVersion === 2;
-	const leanInputs = componentPlan.document.source.inputs.filter(input => input.path.endsWith(".lean") && (!locked || input.path !== "lakefile.lean"));
-	const moduleNames = new Set(leanInputs.map(input => moduleFromPath(input.path)));
+	const leanInputs = locked ? compilerAdapters.plan.imports.map(module => {
+		const paths = new Set(compilerAdapters.plan.exports.filter(item => item.sourceModule === module).map(item => analysis.exportCandidates.find(candidate => candidate.declaration === item.sourceDeclaration)?.path));
+		if(paths.size !== 1 || !inputByPath.has([...paths][0])) fail("compiler-adapter-import-missing", `Selected module has no unique root source: ${module}`);
+		return { ...inputByPath.get([...paths][0]), module };
+	}) : componentPlan.document.source.inputs.filter(input => input.path.endsWith(".lean")).map(input => ({ ...input, module: moduleFromPath(input.path) }));
+	const moduleNames = new Set(leanInputs.map(input => input.module));
 	const externalImports = new Set();
 	const modules = leanInputs.map(input => {
     const source = sourceFiles[input.path];
     if(typeof source !== "string" || Buffer.byteLength(source) !== input.bytes || sha256(source) !== input.sha256) fail("component-source-drift", `Source input changed before compilation: ${input.path}`);
-    if(locked) return Object.freeze({ module: moduleFromPath(input.path), path: input.path, bytes: input.bytes, sha256: input.sha256 });
+    if(locked) return Object.freeze({ module: input.module, path: input.path, bytes: input.bytes, sha256: input.sha256 });
     const imports = [...new Set(importsFromSource(source))].sort();
     const localDependencies = imports.filter(imported => moduleNames.has(imported));
     for(const imported of imports) if(!moduleNames.has(imported)) externalImports.add(imported);

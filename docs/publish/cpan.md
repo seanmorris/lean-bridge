@@ -51,7 +51,7 @@ Keep the reviewed `lake-manifest.json` beside `lean-toolchain`. Supply each loca
 
 For a project with a lock, the native builder captures the root project and every locked dependency, including inherited entries. It stages those inputs privately, evaluates the captured Lake configuration, and uses Lean's import parser to resolve module ownership and compilation order. It compiles imported dependency modules from source before extracting the selected public API from fresh interfaces. Existing `.lake` build caches do not supply compiled interfaces.
 
-Both `lakefile.toml` and `lakefile.lean` work. Dependencies may use custom source directories; a Git subdirectory package can use sibling source files inside its captured checkout. Select root modules whose names match their project-relative file paths, as in the configuration above. Dependency toolchains must match Lean 4.32.2.
+Both `lakefile.toml` and `lakefile.lean` work. Root and dependency libraries may use custom source directories; a Git subdirectory package can use sibling source files inside its captured checkout. Select actual Lean module names in the shared configuration, as described under [custom source directories](../lean/existing-package.md#select-modules-in-a-custom-source-directory). Dependency toolchains must match Lean 4.32.2.
 
 This build path currently supports pure-Lean dependencies. It rejects missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, custom native targets, precompiled modules, and extra compiler/linker flags. Generated sources, external native libraries, custom Lake build behavior, and root modules laid out under a custom `srcDir` need further builder support.
 

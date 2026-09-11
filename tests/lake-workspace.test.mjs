@@ -15,7 +15,7 @@ import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WORKSPACE_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -59,6 +59,21 @@ test("Lake evaluates captured Lean configurations as well as TOML", { skip: !ena
 	await saveLakeFile(context.root, "lakefile.lean", 'import Lake\nopen Lake DSL\npackage shop where\n  version := v!"1.0.0"\nrequire Catalog from "../local"\nlean_lib Shop\n');
 	const result = await resolve(t, await capture(context.root), [context.names.root]);
 	assert.equal(result.document.packages.find(pkg => pkg.name === "shop").configFile, "root/lakefile.lean");
+});
+
+test("Lake resolves nested root modules and same-package imports from a custom library directory", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await customLakeRoot(context);
+	await saveLakeFile(context.root, "lean-src/Shop/Api.lean", "import Shop.Internal\nnamespace Shop\ndef quote (value : UInt32) : UInt32 := Shop.helper value\nend Shop\n");
+	await saveLakeFile(context.root, "lean-src/Shop/Internal.lean", "import Catalog\ndef Shop.helper (value : UInt32) : UInt32 := Catalog.quote value + 1\n");
+	await saveLakeFile(context.root, "lean-bridge.exports.json", JSON.stringify({ schemaVersion: 1, modules: ["Shop.Api"], exports: ["Shop.quote"] }));
+	const result = await resolve(t, await capture(context.root), ["Shop.Api"]);
+	assert.deepEqual(result.document.modules.map(module => [module.module, module.path]), [
+		["Units", "packages/Units/lib/Units.lean"]
+		, ["Catalog", "packages/Catalog/Catalog.lean"]
+		, ["Shop.Internal", "root/lean-src/Shop/Internal.lean"]
+		, ["Shop.Api", "root/lean-src/Shop/Api.lean"]
+	]);
 });
 
 test("Lake resolves pinned Git subdirectory packages from the complete captured checkout", { skip: !enabled }, async t => {
@@ -181,6 +196,7 @@ test("locked native builds relocate identically and run through installed Perl p
 		, perl, mode: "prebuilt-only" });
 	for(const context of [first, await lakeWorkspaceFixture(t, "telemetry")])
 		await t.test(context.names.root, async () => {
+			const rootPath = await customLakeRoot(context);
 			const before = await lakeInputState(context.workspace);
 			await cp(context.workspace, join(context.directory, "relocated"), { recursive: true });
 			const outputs = [];
@@ -205,6 +221,7 @@ test("locked native builds relocate identically and run through installed Perl p
 			const dependencies = sourceIdentity.lakeDependencies;
 			assert.equal(dependencies.snapshotSha256, sha256(canonicalJson(dependencies.snapshot)));
 			assert.equal(dependencies.resolutionSha256, sha256(canonicalJson(dependencies.resolution)));
+			assert.equal(dependencies.resolution.modules.at(-1).path, `root/${rootPath}`);
 			assert.deepEqual(sourceIdentity.modules.map(item => item.module), [context.names.remote, context.names.local, context.names.root]);
 			assert.ok(sourceIdentity.modules.every(item => /^[0-9a-f]{64}$/.test(item.interface.sha256)));
 			assert.deepEqual(built.model.exports.map(item => item.name), [`${context.names.root}.${context.names.operation}`]);

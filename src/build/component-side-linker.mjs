@@ -86,6 +86,12 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 		closed(manifest.lakeDependencies, ["snapshot", "resolution", "resolutionSha256"]);
 		const { snapshot, resolution, resolutionSha256 } = manifest.lakeDependencies;
 		validateLockedLakeResolution({ snapshot: { document: snapshot, sha256: compilationPlan.document.source.lakeSnapshotSha256 }, resolution, modules: compilationPlan.document.source.requestedModules });
+		for(const selected of compilationPlan.document.source.modules)
+		{
+			const actual = resolution.modules.find(module => module.module === selected.module);
+			if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes)
+				fail("target-c-manifest-drift", "Lake resolution differs from the selected root source");
+		}
 		if(sha256(canonicalJson(resolution)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit
 			|| manifest.compiler.version !== resolution.leanVersion || resolution.leanCommit !== compilationPlan.document.runtime.leanCommit)
 			fail("target-c-manifest-drift", "Target C compiler and locked resolution identities differ");
