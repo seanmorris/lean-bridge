@@ -18,6 +18,8 @@ import { createVerificationHandler, verificationHandler } from "../src/cli/verif
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { createLocalHandoff } from "./helpers/component-receipt-fixture.mjs";
 import { createSignedHandoff, sha256 } from "./helpers/release-receipt-fixture.mjs";
+import { validateComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
+import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const execute = promisify(execFile);
 const entrypoint = resolve("scripts/lean-bridge.mjs");
@@ -33,6 +35,26 @@ const hostileEnvironment = {
 	, LEAN_BRIDGE_NPM_REGISTRY_MODE: "sandbox"
 	, LEAN_BRIDGE_NPM_REGISTRY_URL: "not-a-registry-url"
 };
+
+test("versioned local receipts preserve component identity while naming an independent npm package", async t => {
+	const local = await createLocalHandoff(t);
+	const renamed = { ...local.receipt, schemaVersion: 2, package: { ...local.receipt.package, package: "@example/_library@2.3.4-beta.1" } };
+	assert.equal(validateComponentPackageReceipt(renamed), true);
+	await assertJsonSchema("component-package-receipt-v2", renamed);
+	assert.throws(() => validateComponentPackageReceipt({ ...renamed, schemaVersion: 1 }), /does not name the component/);
+	for(const coordinate of ["library", "1.2.3", "@example/lib@latest", "@example/lib@1.2.3+build.1", "@lean-bridge/runtime@1.0.0"])
+		assert.throws(() => validateComponentPackageReceipt({ ...renamed, package: { ...renamed.package, package: coordinate } }), TypeError);
+	assert.throws(() => validateComponentPackageReceipt({ ...renamed, runtime: { ...renamed.runtime, package: "impostor@1.0.0" } }), /runtime must name/);
+	for(const archive of ["../outside.tgz", "..\\outside.tgz", "/outside.tgz", "archive.tgz\n", "archive\0.tgz"])
+		assert.throws(() => validateComponentPackageReceipt({ ...renamed, package: { ...renamed.package, archive } }), /archive path/);
+	await writeFile(local.receiptPath, canonicalJson(renamed));
+	const result = await invoke(["--receipt", local.receiptPath]);
+	assert.equal(result.exitCode, 0);
+	assert.equal(result.response.result.component, "sample@1.0.0");
+	assert.equal(result.response.result.package, "@example/_library@2.3.4-beta.1");
+	const portable = JSON.parse((await execute(process.execPath, [local.verifierPath, "--receipt", local.receiptPath])).stdout);
+	assert.equal(portable.package, result.response.result.package);
+});
 
 test("verify parsing ignores project configuration and limits environment overrides to presentation", async t => {
 	const local = await createLocalHandoff(t);
@@ -241,22 +263,32 @@ test("an offline-installed runtime-free CLI verifies both handoffs with only Nod
 	await symlink(process.execPath, join(bin, "node"));
 	await writeFile(join(working, "lean-bridge.cli.json"), "not valid JSON");
 	const local = await createLocalHandoff(t);
+	const renamed = await createLocalHandoff(t);
+	renamed.receipt.schemaVersion = 2;
+	renamed.receipt.package.package = "@example/_library@2.3.4-beta.1";
+	await writeFile(renamed.receiptPath, canonicalJson(renamed.receipt));
 	const signed = await createSignedHandoff(t);
-	for(const script of [local.verifierPath, join(signed.directory, "verify-release-archive.mjs")])
+	for(const script of [local.verifierPath, renamed.verifierPath, join(signed.directory, "verify-release-archive.mjs")])
 		await writeFile(script, 'throw new Error("Do not execute code from the handoff");\n');
 	const inputPaths = [
 		local.receiptPath, local.runtimePath, local.archivePath, local.verifierPath
+		, renamed.receiptPath, renamed.runtimePath, renamed.archivePath
+		, renamed.verifierPath
 		, signed.receiptPath, signed.archivePath, signed.policyPath
 		, join(signed.directory, "release-receipt.sha256")
 	];
 	const before = await Promise.all(inputPaths.map(path => readFile(path)));
+	const verificationCases = [
+		[["--receipt", local.receiptPath], false]
+		, [["--receipt", renamed.receiptPath], false], [signed.args, true]
+	];
 	await chmod(working, 0o555);
 	try
 	{
 		for(const extra of [{}, { LEAN_BRIDGE_CONFIG: undefined }])
 		{
 			const options = { cwd: working, env: { ...hostileEnvironment, ...extra, PATH: bin, LANG: "C.UTF-8" } };
-			for(const [args, authenticated] of [[["--receipt", local.receiptPath], false], [signed.args, true]])
+			for(const [args, authenticated] of verificationCases)
 			{
 				const result = JSON.parse((await execute(executable, ["verify", ...args, "--json"], options)).stdout);
 				assert.equal(result.status, "ok");

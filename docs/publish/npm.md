@@ -4,9 +4,31 @@ An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and up
 
 ## Publish an ordinary component
 
-Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Choose a package name and version you own in `lakefile.toml`, declare its license in `package.json`, and include `LICENSE` in the committed source.
+Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Declare its license in `package.json` and include `LICENSE` in the committed source.
 
 The runtime is published centrally by Lean Bridge. Your publisher checks that its exact dependency coordinate and tarball hash already exist in the selected registry. It does not upload the runtime under your credentials. A missing or different runtime blocks publication before the component upload.
+
+### Choose the npm name and version
+
+Set the npm coordinate in `lean-bridge.exports.json` at the Lean project root. Use a name or scope you own:
+
+```json
+{
+  "schemaVersion": 1,
+  "targets": {
+    "npm": {
+      "name": "@your-org/your-component",
+      "version": "0.1.0"
+    }
+  }
+}
+```
+
+Merge `targets` into your existing file if you already [configure exports](../lean/existing-package.md#configure-exports). Either setting is optional; omitted values use the component's name and version. Declaring `targets.npm` does not select a build target; use `--target npm`.
+
+Names must be lowercase npm names of at most 214 characters, including the scope. Unscoped names must start with a letter or digit. Use an exact version such as `0.1.0` or `0.1.0-beta.1`. Ranges and tags are not versions. Lean Bridge rejects `+build` metadata because npm removes it when publishing. The component cannot use the reserved runtime name. [npm package name and version rules](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#name).
+
+These settings change the generated npm package while preserving the Lean library's identity in proof and build metadata. Package assembly reads them from the sealed build bundle. The receipt records both identities; use `lean-bridge verify` to check its archives. Publication checks the coordinate against the bundled settings before signing. Commit changed settings and create a new candidate instead of editing a prepared archive.
 
 ### Configure signing
 

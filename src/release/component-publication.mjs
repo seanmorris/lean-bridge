@@ -8,7 +8,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { componentNpmIdentity, parseNpmPackageCoordinate, verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { assertExportConfigurationCapabilities, exportConfigurationFile } from "../analyze/export-configuration.mjs";
 import { validateComponentReleaseBundleManifest } from "./component-release-bundle.mjs";
 import { collectReleaseInventory, hashReleaseInventory } from "./reproducibility.mjs";
 import { publicRepositoryIdentity } from "./source-identity.mjs";
@@ -66,6 +67,11 @@ const evidenceFor = async root => {
 	if(bundleSource.toString() !== canonicalJson(bundle) || sha256(bundleSource) !== receipt.componentBundleSha256
 		|| bundle.identitySha256 !== receipt.componentIdentitySha256 || bundle.bindingIrSemanticSha256 !== receipt.bindingIrSha256) fail("Bundle identities differ from the package receipt");
 	equal(bundle.component, receipt.component, "Bundle and package name different components");
+	const configBytes = inventory.get(`bundle/source/${exportConfigurationFile}`)?.bytes;
+	const configuration = configBytes ? JSON.parse(configBytes) : { schemaVersion: 1 };
+	assertExportConfigurationCapabilities(configuration, { target: "npm", targetFields: ["name", "version"] });
+	equal(receipt.package.package, componentNpmIdentity(bundle.component, configuration.targets?.npm).coordinate,
+		"npm package coordinate differs from the bundled author configuration");
 	equal(bundle.files.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })).sort((left, right) => left.path.localeCompare(right.path)),
 		artifacts.filter(item => item.path.startsWith("bundle/") && item.path !== "bundle/component-release-bundle.json")
 			.map(({ path, bytes, sha256 }) => ({ path: path.slice("bundle/".length), bytes, sha256 })),
@@ -122,8 +128,8 @@ const manifestFor = ({ authorization, receipt, receiptPath, createdAt }, options
 		order: 1
 		, candidateId: authorization.candidate.id
 		, ecosystem: "npm"
-		, name: receipt.component.name
-		, version: receipt.component.version
+		, name: parseNpmPackageCoordinate(receipt.package.package).name
+		, version: parseNpmPackageCoordinate(receipt.package.package).version
 		, target: "javascript"
 		, operation: "publish"
 		, destination: { kind: "registry", endpoint: publication.registry, tag: publication.tag, access: publication.access, authMode: publication.authMode }

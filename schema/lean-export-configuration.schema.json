@@ -14,7 +14,26 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "npm": {"$ref": "#/$defs/package"},
+        "npm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string", "maxLength": 214,
+              "pattern": "^(?:[a-z0-9][a-z0-9._-]*|@[a-z0-9._-]+/[a-z0-9._-]+)$(?![\\s\\S])",
+              "not": {"anyOf": [
+                {"enum": ["node_modules", "favicon.ico", "@lean-bridge/runtime"]},
+                {"pattern": "^@\\.{1,2}/|/\\.{1,2}$"}
+              ]}
+            },
+            "version": {
+              "type": "string", "maxLength": 256,
+              "description": "Exact npm version. Build metadata is rejected because npm strips it when publishing.",
+              "not": {"pattern": "\\+"},
+              "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$(?![\\s\\S])"
+            }
+          }
+        },
         "pypi": {"$ref": "#/$defs/package"},
         "cargo": {"$ref": "#/$defs/package"},
         "c": {"$ref": "#/$defs/package"},

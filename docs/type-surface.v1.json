@@ -161,16 +161,18 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration cutover: ordinary Workshop, Other and selected-export projects on all four pinned Perl ABIs. Each ABI passes the 183-check installed suite and source rejection tests. Eight production-floor installations pass 173 Workshop checks and the documentation example. Source hashes pin this working-tree refresh; no new type support or publication is claimed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. The npm package-settings follow-up reruns all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite. Native compiler, XS, runtime and CPAN implementations remain unchanged. Source hashes include this configuration-only follow-up; no new type support or publication is claimed.",
       "files": [
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
         },
-        {"path":"src/analyze/export-configuration.mjs","sha256":"418c17a365ca146a42391d537bb00c139d3bdd032306abaa1c83cb889a0628f7"},
-        {"path":"schema/lean-export-configuration.schema.json","sha256":"8613c762417fc95fdc20be4e82f0e1f9f9bcf9b0cb8bb6636ec4461a01525ef9"},
+        {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
+        {"path":"src/analyze/export-configuration.mjs","sha256":"4307d7cdc4e6f9d657c2f3dc56974582a2f5d8269e7147263cce3ce35f67a1b6"},
+        {"path":"schema/lean-export-configuration.schema.json","sha256":"c09d5015f37d1ff50a0b04838a1a39d236cd5fbc431237d9008ef867ccab94af"},
+        {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
-        {"path":"tests/export-configuration.test.mjs","sha256":"f8a34c2bfbc0de273fc3c749ca6d9240331c6e94482465e1a6ae711b6b97af37"},
+        {"path":"tests/export-configuration.test.mjs","sha256":"ae26a3059c3c86dadac8da0d4239c00caa5c09d70315df765d8e17cd321b88ce"},
         {"path":"tests/fixtures/perl/ordinary/lean-bridge.exports.json","sha256":"2fe018e046eed132796a61fd0b32b7169796ffbd19c2f77b88b5c6339aeee684"},
         {"path":"scripts/prepare-perl-platform-packages.mjs","sha256":"b9c1b9d66d6852d952b830e51d553760034236f7807e298f2bdfe0ef704b8519"},
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
@@ -319,17 +321,19 @@
       "kind": "inspection",
       "revision": "445502a10f0ee7478c40e1d0ee8cbd29e09e0cbc",
       "command": "Inspect the source analyzer, scalar guard, generated declarations, compiled adapters and npm package builder; node --test tests/lean-project-analyzer.test.mjs.",
-      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. Analysis is source scanning, not the unfinished elaborator cutover.",
+      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm package-settings follow-up preserves these guards and reruns analyzer and installed scalar tests. Package naming does not add type support. Analysis is source scanning, not the unfinished elaborator cutover.",
       "files": [
+        {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"src/analyze/lean-project.mjs","sha256":"26c377ff704f383383eea606b552dd9fe080a01431c474a8a92a0c888e10f0e4"},
-        {"path":"src/build/component-plan.mjs","sha256":"7bdcad6fe1d9d5e0996de231be610db71ca9cf8621890f81123bd38dcfc67b2b"},
+        {"path":"src/build/component-plan.mjs","sha256":"57c408b4191faf4f20baa6933f513eeba0bc0b2452c0c770a8dd2afa865c042f"},
+        {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},
         {"path":"src/backends/javascript/generate.mjs","sha256":"96054f9a60b536af64462c6a4173a161202b1032dc92c7e41ff70bbdb4462bdf"},
         {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
         {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
         {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
-        {"path":"src/release/component-npm-package.mjs","sha256":"f61e3d60a5989cf3a2f3ba2a08ac3d32f61eec061596a5c6b841afb75067e6c8"}
+        {"path":"src/release/component-npm-package.mjs","sha256":"9a9e29220be23ca23b2ca42de645976d3460df04ed1df65bdbfb897939559a9f"}
       ],
       "artifacts": []
     },

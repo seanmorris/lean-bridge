@@ -24,7 +24,7 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 
 `lean-bridge.exports.json` holds language-neutral author intent. Module and export selection apply before host-language projection. Package-specific names and versions belong under canonical target keys. Machine paths and credentials stay outside source configuration.
 
-The first implementation supplies `modules`, `exports`, `resources`, `arities`, and target metadata validation. Source analysis and builds hash the configuration. npm implements module/export selection; CPAN also implements resources, closure arities, and its module/version settings. Other configured target settings fail when their projection does not implement them. Specialization, checked-constructor, ownership, and effect decisions remain part of the dependent type-family work.
+The first implementation supplies `modules`, `exports`, `resources`, `arities`, and target metadata validation. Source analysis and builds hash the configuration. npm implements module/export selection and package name/version settings; CPAN also implements resources, closure arities, and its module/version settings. npm packaging and publication use the sealed settings while preserving the compiled Lean identity. Other configured target settings fail when their projection does not implement them. Specialization, checked-constructor, ownership, and effect decisions remain part of the dependent type-family work.
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 

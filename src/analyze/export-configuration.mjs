@@ -6,6 +6,7 @@
 import { lstat, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -78,6 +79,19 @@ export const validateExportConfiguration = configuration => {
 		for(const [target, settings] of Object.entries(configuration.targets))
 		{
 			closed(settings, target === "cpan" ? ["module", "version"] : ["name", "version"], `targets.${target}`);
+			if(target === "npm")
+			{
+				try
+				{
+					for(const value of Object.values(settings))
+						if(typeof value !== "string") throw new TypeError("npm settings must be strings");
+					componentNpmIdentity({ name: "lean-bridge-package", version: "0.0.0" }, settings);
+				} catch(error)
+				{
+					fail("invalid-export-configuration", `targets.npm: ${error.message}`);
+				}
+				continue;
+			}
 			for(const [field, value] of Object.entries(settings))
 			{
 				if(typeof value !== "string" || !/^[A-Za-z0-9@][A-Za-z0-9_@./:+-]*$/.test(value))

@@ -10,6 +10,8 @@ import { dirname, resolve } from "node:path";
 import test from "node:test";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
+import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -20,6 +22,18 @@ const documents = [
 ];
 const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/gm)]
 	.map(match => ({ language: match[1], source: match[2] }));
+
+test("the npm author guide uses validated shared settings without renaming the Lean component", async () => {
+	const source = await readFile("docs/publish/npm.md", "utf8");
+	const settings = JSON.parse(fences(source.split("### Choose the npm name and version\n")[1]).find(block => block.language === "json").source);
+	validateExportConfiguration(settings);
+	assert.deepEqual(componentNpmIdentity({ name: "onboarding-small", version: "1.0.0" }, settings.targets.npm), {
+		name: "@your-org/your-component", version: "0.1.0"
+		, coordinate: "@your-org/your-component@0.1.0"
+	});
+	assert.match(source, /package assembly reads them from the sealed build bundle/i);
+	assert.match(source, /receipt records both identities; use `lean-bridge verify`/);
+});
 
 test("author setup starts with a prepared CLI and keeps checkout-only runtime work separate", async () => {
 	const [setup, hub, tutorial, diagnostics, publishing, manifest] = await Promise.all([

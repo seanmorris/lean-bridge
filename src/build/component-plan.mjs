@@ -11,6 +11,7 @@ import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 
 /**
  * Reports component build plan failures with stable machine-readable codes and structured diagnostic context.
@@ -152,12 +153,15 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [] }) =>
  */
 export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targets = [], analyze = analyzeLeanProject, signal = undefined }) => {
 	const record = await readExportConfiguration(projectRoot, { signal });
-	for(const target of targets.length ? targets : ["npm"])
-		assertExportConfigurationCapabilities(record.configuration, { target });
+	const selected = (targets.length ? targets : ["npm"]).map(target => target === "javascript" ? "npm" : target);
+	for(const target of selected)
+		assertExportConfigurationCapabilities(record.configuration, { target, targetFields: target === "npm" ? ["name", "version"] : [] });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)
 	]);
 	assertExportConfigurationSnapshot(record, analysis.inputs);
-	return createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
+	const plan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
+	if(selected.includes("npm")) componentNpmIdentity(plan.document.component, record.configuration.targets?.npm);
+	return plan;
 };

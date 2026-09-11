@@ -14,6 +14,7 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { buildNativeProject } from "../src/build/native-project.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { componentNpmIdentity, parseNpmPackageCoordinate } from "../src/release/component-package-receipt.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const fixture = resolve("tests/fixtures/export-selection");
@@ -38,6 +39,9 @@ test("shared export configuration and schema accept the same structural choices"
 		, { schemaVersion: 1, resources: [], arities: {} }
 		, { schemaVersion: 1, exports: ["Library.callback"], arities: { "Library.callback": 1 }, resources: ["Library.Counter"] }
 		, { schemaVersion: 1, targets }
+		, ...["@example/tools", "@example/_tools", "@example/.tools", "a..b"].map(name => ({
+			schemaVersion: 1, targets: { npm: { name, version: "2.3.4-beta.1" } }
+		}))
 	];
 	for(const value of examples)
 	{
@@ -58,13 +62,44 @@ test("shared export configuration and schema accept the same structural choices"
 		, { schemaVersion: 1, targets: { unknown: {} } }
 		, { schemaVersion: 1, targets: { npm: { registryToken: "secret" } } }
 		, { schemaVersion: 1, targets: { cpan: { module: "LeanBridge::Bad;code" } } }
-		, { schemaVersion: 1, targets: { cpan: { version: "1.2.3" } } }];
+		, { schemaVersion: 1, targets: { cpan: { version: "1.2.3" } } }
+		, ...["UPPER", "_private", ".private", "--option", "../escape"
+			, "@scope/../escape"
+			, "@scope/..", "@../name", "a b", "a%20b", "name\n"
+			, "@lean-bridge/runtime", "node_modules", "favicon.ico"
+			, "x".repeat(215), null]
+			.map(name => ({ schemaVersion: 1, targets: { npm: { name } } }))
+		, ...["latest", "^1.2.3", "1.2", "01.2.3", "1.2.3-01", "1.2.3-beta..1", "1.2.3+", "1.2.3+build.007", "1.2.3\n", "v1.2.3", null]
+			.map(version => ({ schemaVersion: 1, targets: { npm: { version } } }))];
 	for(const value of invalid)
 	{
 		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
 		await assert.rejects(() => assertJsonSchema("lean-export-configuration", value));
 	}
 	assert.throws(() => validateExportConfiguration({ schemaVersion: 1, exports: ["run"], arities: { other: 1 } }), /selected export/);
+});
+
+test("npm projection settings keep the Lean identity and validate exact coordinates", async t => {
+	const component = { name: "lean-library", version: "1.0.0", id: "lean-library@1.0.0" };
+	assert.deepEqual(componentNpmIdentity(component), { name: "lean-library", version: "1.0.0", coordinate: component.id });
+	assert.equal(componentNpmIdentity(component, { name: "@scope/library" }).coordinate, "@scope/library@1.0.0");
+	assert.equal(componentNpmIdentity(component, { version: "2.0.0" }).coordinate, "lean-library@2.0.0");
+	assert.deepEqual(parseNpmPackageCoordinate("@scope/_library@2.3.4-beta.1"), {
+		name: "@scope/_library", version: "2.3.4-beta.1"
+		, coordinate: "@scope/_library@2.3.4-beta.1"
+	});
+	for(const coordinate of ["1.0.0", "library", "library@latest", "@scope/library", "@scope/library@", "library@9007199254740992.0.0"])
+		assert.throws(() => parseNpmPackageCoordinate(coordinate), TypeError);
+	assert.equal(component.id, "lean-library@1.0.0");
+	const directory = await workspace(t);
+	const original = await analyzeLeanProject(directory);
+	await configure(directory, { schemaVersion: 1, exports: ["First.bump"], targets: { npm: { name: "@scope/_library", version: "2.3.4-beta.1" } } });
+	for(const targets of [[], ["npm"], ["javascript"]])
+	{
+		const plan = await prepareComponentBuildPlan({ projectRoot: directory, engineRoot: process.cwd(), targets });
+		assert.deepEqual(plan.document.component, original.bindingIr.document.component);
+		assert.notEqual(plan.document.source.treeSha256, original.sourceTreeSha256);
+	}
 });
 
 test("absent configuration preserves defaults without creating a file", async t => {
@@ -170,7 +205,7 @@ test("missing modules, exports, non-callables and conflicting selections fail", 
 
 test("configured changes cannot be silently ignored by a compiler or reviewed IR", async t => {
 	const directory = await workspace(t);
-	for(const settings of [{ resources: ["Library.Counter"] }, { arities: { "First.bump": 0 } }, { targets: { npm: { name: "ignored-name" } } }])
+	for(const settings of [{ resources: ["Library.Counter"] }, { arities: { "First.bump": 0 } }])
 	{
 		await configure(directory, { schemaVersion: 1, exports: ["First.bump"], ...settings });
 		await assert.rejects(() => prepareComponentBuildPlan({ projectRoot: directory, engineRoot: process.cwd(), targets: ["npm"] }), { code: "unsupported-export-configuration" });

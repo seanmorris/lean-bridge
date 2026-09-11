@@ -38,7 +38,11 @@ Replace those names with your library's module and fully qualified declarations.
 
 Analysis and ordinary builds read the same selection and include the configuration in the source identity. `resources` and `arities` currently feed the native compiler. Target-specific package settings live under `targets`, using package target names such as `npm`, `pypi`, `cargo`, or `cpan`. A backend rejects a configured setting it does not implement; declaring a target does not select it for a build.
 
-The current npm builder accepts shared module/export selection. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+The npm builder accepts shared module/export selection, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+
+### Choose an npm package name
+
+Use [npm package settings](../publish/npm.md#choose-the-npm-name-and-version) to publish under a name or scope you own without renaming the Lean library. Omitted settings use the component's name and version. The build seals those choices with the source; changing them requires a new candidate.
 
 ### Configure native Perl exports
 
