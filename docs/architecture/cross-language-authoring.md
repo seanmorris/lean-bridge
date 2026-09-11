@@ -30,6 +30,14 @@ Perl uses the [shared configuration](../lean/existing-package.md#configure-expor
 
 The current source scanner is still provisional. Tasks 1107 and 1108 make fresh elaboration the shared semantic authority. The current native compiler already checks fresh interfaces and emitted C representations. Configuration support alone does not complete that cutover or enable additional source targets.
 
+## Locked dependency snapshot milestone
+
+Task 1239 now has an offline input snapshotter for the flat package list in `lake-manifest.json`, including inherited entries. It verifies cached Git files against full pinned commits and hashes local package files, native sources, and data. Snapshot identities survive relocation. Capture leaves projects and locks unchanged; writing uses the captured bytes in a new staging directory outside the input projects.
+
+The [snapshot contract](../../schema/lake-dependency-snapshot.schema.json) records the root lock, selected toolchain, package sources, executable modes, and file hashes. The snapshotter rejects changed Git inputs, symlinks, submodules, missing declared files, package overrides, and mismatched toolchains. It neither fetches dependencies nor runs Lake configuration, Git filters, or package hooks.
+
+This module is not connected to the build commands yet. It captures the package list already recorded by Lake; fresh Lake resolution must still establish complete imports and declared native inputs outside package roots. Tasks 1239, 1107, and 1108 also retain isolated compilation, compiler/interface identity binding, and relocated offline rebuild acceptance. The snapshot alone does not authorize export signatures or add a supported type/profile cell.
+
 ## Package and consumer requirements
 
 Generate packages for npm, PyPI, Cargo, C/C++, NuGet, Maven, RubyGems, CPAN, native PHP, PHP-Wasm, and WIT/WASI. Nix remains a delivery channel. Use native publishing tools and signed binary-cache recipes; do not add registry-upload adapters as part of this plan.

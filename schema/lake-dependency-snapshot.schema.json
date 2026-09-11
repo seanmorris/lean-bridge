@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/lake-dependency-snapshot.schema.json",
+  "title": "Captured Lake dependency inputs",
+  "description": "Root lock and toolchain identities plus the flat package set recorded by Lake. This inventory does not authorize declarations or prove import closure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-lake-dependency-snapshot" },
+    "toolchain": { "type": "string", "pattern": "^leanprover/lean4:v[0-9]+\\.[0-9]+\\.[0-9]+$(?![\\s\\S])" },
+    "rootInputs": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/file" }
+    },
+    "packages": { "type": "array", "items": { "$ref": "#/$defs/package" } }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$(?![\\s\\S])" },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*[\\\\:\\x00-\\x1f\\x7f])(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))[^/]+(?:/[^/]+)*$(?![\\s\\S])"
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256", "mode"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "mode": { "enum": [420, 493] }
+      }
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "dir"],
+          "properties": {
+            "type": { "const": "path" },
+            "dir": { "type": "string", "minLength": 1, "pattern": "^(?!/)[^\\\\:\\x00-\\x1f\\x7f]+$(?![\\s\\S])" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "url", "rev", "inputRev", "subDir"],
+          "properties": {
+            "type": { "const": "git" },
+            "url": { "type": "string", "minLength": 1 },
+            "rev": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$(?![\\s\\S])" },
+            "inputRev": { "type": ["string", "null"], "minLength": 1 },
+            "subDir": { "anyOf": [{ "$ref": "#/$defs/path" }, { "type": "null" }] }
+          }
+        }
+      ]
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "scope", "inherited", "directory", "packageRoot", "configFile", "manifestFile", "source", "files", "treeSha256"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*$(?![\\s\\S])" },
+        "scope": { "type": "string", "pattern": "^[^\\x00-\\x1f\\x7f]*$(?![\\s\\S])" },
+        "inherited": { "type": "boolean" },
+        "directory": { "type": "string", "pattern": "^packages/[A-Za-z0-9_][A-Za-z0-9_.-]*$(?![\\s\\S])" },
+        "packageRoot": { "anyOf": [{ "$ref": "#/$defs/path" }, { "const": "" }] },
+        "configFile": { "$ref": "#/$defs/path" },
+        "manifestFile": { "anyOf": [{ "$ref": "#/$defs/path" }, { "type": "null" }] },
+        "source": { "$ref": "#/$defs/source" },
+        "files": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
+        "treeSha256": { "$ref": "#/$defs/digest" }
+      }
+    }
+  }
+}

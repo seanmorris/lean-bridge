@@ -36,6 +36,7 @@ const profileManifest = Object.freeze({
 		, "independent-verifier"
 		, "javascript-coverage"
 		, "javascript-generator"
+		, "lake-dependency-snapshot"
 		, "lean-project-analyzer"
 		, "lean-author-documentation"
 		, "onboarding-acceptance"
