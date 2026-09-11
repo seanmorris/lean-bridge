@@ -80,7 +80,7 @@ The projection directory must be absent or empty. It contains `lean-bridge-alpha
 The Node-only input tests need Git but no Lean compiler:
 
 ```sh
-node --test tests/lake-dependency-snapshot.test.mjs tests/lake-component-input.test.mjs
+node --test tests/lake-dependency-snapshot.test.mjs tests/lake-component-input.test.mjs tests/lake-native-inputs.test.mjs
 ```
 
 Run the relocated npm acceptance through the pinned Nix engine and its shared runtime:
@@ -94,9 +94,9 @@ LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/locked-lake-runtime/lazy \
 node --test tests/lake-wasm.test.mjs
 ```
 
-This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. The consumer CI workflow runs these cases too.
+This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. The cases cover custom source layouts and declared C inputs with captured headers. The consumer CI workflow runs these cases too.
 
-With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, source identity, and fresh interface files. The [acceptance record](../evidence/lake-wasm-workspace-20260911.md) lists the tested scope and remaining dependency work.
+With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, C headers, source identity, and fresh interface files, plus unreviewed foreign-call rejection. The [C-input acceptance record](../evidence/lake-c-inputs-20260911.md) lists the tested scope and remaining dependency work.
 
 ## Standalone CLI package
 

@@ -30,6 +30,7 @@ structure Traversal where
   done : NameSet := {}
   records : Array Json := #[]
   external : NameSet := {}
+  hasNative : Bool := false
 
 def fail {α : Type} (message : String) : IO α :=
   throw <| IO.userError message
@@ -46,13 +47,37 @@ def relativeInput (request : Request) (path : FilePath) : IO String := do
 
 def checkLeanConfig (label : String) (config : LeanConfig) : IO Unit := do
   unless config.plugins.isEmpty && config.dynlibs.isEmpty &&
-      config.moreLinkObjs.isEmpty && config.moreLinkLibs.isEmpty &&
+      config.moreLinkLibs.isEmpty &&
       config.moreLinkArgs.isEmpty && config.weakLinkArgs.isEmpty &&
       config.moreLeancArgs.isEmpty && config.weakLeancArgs.isEmpty &&
       config.moreLeanArgs.isEmpty && config.weakLeanArgs.isEmpty &&
       config.leanOptions.isEmpty && config.buildType == .release &&
       config.backend != .llvm do
     fail s!"Unsupported Lake native targets or compiler options in {label}"
+
+def nativeInput (request : Request) (ws : Workspace) (consumer : Package)
+    (target : Target FilePath) : IO Json := do
+  let .packageTarget package targetName := target.key
+    | fail s!"Unsupported Lake native input key: {target}"
+  let some owner := if package.isAnonymous then some consumer
+      else ws.packages.find? fun pkg => pkg.baseName == package || pkg.keyName == package
+    | fail s!"Missing Lake native input package: {package}"
+  unless owner.keyName == consumer.keyName ||
+      consumer.depPkgs.any (·.keyName == owner.keyName) do
+    fail s!"Lake native input package is not a declared dependency: {package}"
+  let some input := owner.findConfigTarget? InputFile.configKind targetName
+    | fail s!"Lake native inputs require an input_file target: {owner.baseName}/{targetName}"
+  let path ← relativeInput request (InputFile.path input)
+  let directory ← if owner.isRoot then pure "root" else do
+    let some captured := request.packages.find? (·.name == owner.baseName.toString)
+      | fail s!"Uncaptured native input package: {owner.baseName}"
+    pure captured.directory
+  unless path.startsWith (directory ++ "/") do
+    fail s!"Lake native input escaped its owning package: {path}"
+  unless path.endsWith ".c" do
+    fail s!"Lake native inputs require C source, not a prebuilt object or library: {path}"
+  return Json.mkObj [("package", toJson owner.baseName.toString),
+    ("target", toJson targetName.toString), ("path", toJson path)]
 
 partial def visit (request : Request) (ws : Workspace) (name : Name)
     : StateT Traversal IO Unit := do
@@ -78,6 +103,7 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
     fail s!"Ambiguous Lake library ownership: {name}"
   let path ← relativeInput request mod.leanFile
   let source ← IO.FS.readFile mod.leanFile
+  let native ← (mod.lib.moreLinkObjs.mapM (nativeInput request ws mod.pkg) : IO (Array Json))
   let (imports, _, messages) ← Lean.Elab.parseImports source (some path)
   if messages.hasErrors then fail s!"Invalid import header in {path}"
   modify fun state => { state with visiting := state.visiting.insert name }
@@ -85,10 +111,12 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   modify fun state => { state with
     visiting := state.visiting.erase name
     done := state.done.insert name
-    records := state.records.push <| Json.mkObj [
+    records := state.records.push <| Json.mkObj ([
       ("module", toJson name.toString), ("path", toJson path),
       ("package", toJson mod.pkg.baseName.toString),
-      ("imports", toJson <| imports.map (·.module.toString))] }
+      ("imports", toJson <| imports.map (·.module.toString))] ++
+      (if native.isEmpty then [] else [("nativeInputs", toJson native)]))
+    hasNative := state.hasNative || !native.isEmpty }
 
 def resolve (request : Request) : IO Json := do
   let some lean ← findLeanInstall? | fail "Selected Lean installation is unavailable"
@@ -138,7 +166,8 @@ def resolve (request : Request) : IO Json := do
         !pkg.config.bootstrap do
       fail s!"Unsupported Lake package build prerequisites: {pkg.baseName}"
     for target in pkg.targetDecls do
-      unless target.kind == LeanLib.configKind || target.kind == LeanExe.configKind do
+      unless target.kind == LeanLib.configKind || target.kind == LeanExe.configKind ||
+          target.kind == InputFile.configKind do
         fail s!"Unsupported Lake build target: {pkg.baseName}/{target.name}"
     for lib in pkg.leanLibs do
       checkLeanConfig s!"{pkg.baseName}/{lib.name}" lib.config.toLeanConfig
@@ -147,6 +176,9 @@ def resolve (request : Request) : IO Json := do
           (lib.config.nativeFacets false).map (·.name) == #[Module.oFacet] &&
           (lib.config.nativeFacets true).map (·.name) == #[Module.oExportFacet] do
         fail s!"Unsupported Lake library build prerequisites: {pkg.baseName}/{lib.name}"
+      -- Validate every declared input before compilation. Do not execute targets.
+      for input in lib.moreLinkObjs do
+        let _ ← nativeInput request ws pkg input
     packages := packages.push <| Json.mkObj [
       ("name", toJson pkg.baseName.toString), ("configFile", toJson config),
       ("dependencies", toJson <| pkg.depConfigs.map (·.name.toString))]
@@ -156,7 +188,7 @@ def resolve (request : Request) : IO Json := do
       fail s!"Selected module does not belong to the root Lake package: {name}"
   let (_, state) ← (request.modules.forM fun name => visit request ws name.toName).run {}
   return Json.mkObj [
-    ("schemaVersion", toJson (1 : Nat)), ("resolver", toJson "lean-lake-locked"),
+    ("schemaVersion", toJson (if state.hasNative then 2 else 1 : Nat)), ("resolver", toJson "lean-lake-locked"),
     ("leanVersion", toJson Lean.versionString), ("leanCommit", toJson Lean.githash),
     ("packages", toJson packages), ("modules", toJson state.records),
     ("externalImports", toJson <| state.external.toArray.map Name.toString)]

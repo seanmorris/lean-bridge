@@ -11,6 +11,7 @@
     "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
     "targetCManifestSha256": { "$ref": "#/$defs/sha256" },
     "linker": { "$ref": "#/$defs/tool" },
+    "nativeCompilation": { "$ref": "lake-native-compilation.schema.json" },
     "profile": { "const": "side-module-2" },
     "artifact": { "$ref": "#/$defs/artifact" },
     "linkMap": { "$ref": "#/$defs/hashedPath" },

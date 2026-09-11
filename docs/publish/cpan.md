@@ -53,7 +53,9 @@ For a project with a lock, the native builder captures the root project and ever
 
 Both `lakefile.toml` and `lakefile.lean` work. Root and dependency libraries may use custom source directories; a Git subdirectory package can use sibling source files inside its captured checkout. Select actual Lean module names in the shared configuration, as described under [custom source directories](../lean/existing-package.md#select-modules-in-a-custom-source-directory). Dependency toolchains must match Lean 4.32.2.
 
-This build path currently supports pure-Lean dependencies. It rejects missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, custom native targets, precompiled modules, and extra compiler/linker flags. Generated sources, external native libraries, custom Lake build behavior, and root modules laid out under a custom `srcDir` need further builder support.
+This build path supports Lean dependencies and [declared C inputs](../lean/existing-package.md#declare-c-link-inputs). Each selected C file compiles once for `native-library-v1` and is reused across the package's XS variants. `native-component.json` records its compiler, include closure, and object hashes under `nativeCompilation`. See the [C-input acceptance record](../evidence/lake-c-inputs-20260911.md).
+
+Missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, custom build targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Custom generators and reviewed foreign-function contracts still need builder support.
 
 `native/component/native-component.json` records the dependency snapshot and Lake resolution under `sourceIdentity.lakeDependencies`. Their hashes bind the locks, source files, compiler, resolver, and Lake library to the component model; `sourceIdentity.modules` records each freshly compiled interface hash. A dependency edit during compilation rejects the output. Review these identities when comparing relocated builds.
 

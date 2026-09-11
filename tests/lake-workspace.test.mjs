@@ -8,14 +8,16 @@ import { chmod, cp, readFile, rename, rm } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
-import { captureLockedLakeProject, resolveLockedLakeWorkspace } from "../src/build/lake-workspace.mjs";
+import { captureLockedLakeProject, resolveLockedLakeWorkspace, validateLockedLakeResolution } from "../src/build/lake-workspace.mjs";
 import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
 import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-package.mjs";
 import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { compileLakeNativeInputs } from "../src/build/lake-native-inputs.mjs";
+import { writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
+import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WORKSPACE_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -121,6 +123,41 @@ test("Lake rejects native build targets without running their bodies", { skip: !
 	await assert.rejects(() => readFile(join(context.root, "hook-ran")), { code: "ENOENT" });
 });
 
+test("Lake authenticates declared C inputs and rejects undeclared, prebuilt and escaped targets", { skip: !enabled }, async t => {
+	for(const variant of ["valid", "missing-target", "missing-file", "prebuilt", "escaped", "facet"])
+		await t.test(variant, async t => {
+			const context = await lakeWorkspaceFixture(t);
+			const path = variant === "prebuilt" ? "native.a" : "native.c";
+			await saveLakeFile(context.root, "native.c", "int input(void) { return 1; }\n");
+			await saveLakeFile(context.root, "native.a", "prebuilt\n");
+			if(variant === "escaped") await saveLakeFile(context.local, "native.c", "int input(void) { return 1; }\n");
+			const declarationPath = variant === "escaped" ? "../packages/Catalog/native.c" : variant === "missing-file" ? "absent.c" : path;
+			const target = variant === "missing-target" ? "absent" : variant === "facet" ? "native:default" : "native";
+			await saveLakeFile(context.root, "lakefile.toml", `name = "shop"\n[[require]]\nname = "Catalog"\npath = "../local"\n[[input_file]]\nname = "native"\npath = "${declarationPath}"\n[[lean_lib]]\nname = "Shop"\nmoreLinkObjs = ["${target}"]\n`);
+			const snapshot = await capture(context.root);
+			if(variant !== "valid")
+			{
+				await assert.rejects(() => resolve(t, snapshot, ["Shop"]), /input_file target|does not exist|no such file|prebuilt object|owning package|native input key/);
+				return;
+			}
+			const { document } = await resolve(t, snapshot, ["Shop"]);
+			assert.equal(document.schemaVersion, 2);
+			assert.equal(document.modules.at(-1).nativeInputs[0].path, "root/native.c");
+			assert.equal(validateLockedLakeResolution({ snapshot, resolution: document, modules: ["Shop"] }), true);
+			for(const change of [
+				value => { value.modules.at(-1).nativeInputs[0].source.sha256 = "0".repeat(64); }
+				, value => { value.modules.at(-1).nativeInputs[0].package = "Catalog"; }
+				, value => { value.modules.at(-1).nativeInputs[0].path = "root/native.a"; }
+				, value => { value.modules.at(-1).nativeInputs = []; }
+				, value => { value.schemaVersion = 1; }
+			]) {
+				const resolution = structuredClone(document);
+				change(resolution);
+				assert.throws(() => validateLockedLakeResolution({ snapshot, resolution, modules: ["Shop"] }), { code: "invalid-lake-resolution" });
+			}
+		});
+});
+
 test("Lake rejects incomplete, stale and unsupported build inputs", { skip: !enabled }, async t => {
 	const cases = [
 		["missing transitive pin", async context => { context.manifest.packages.pop(); await context.lock(); }, /not in manifest/]
@@ -197,6 +234,7 @@ test("locked native builds relocate identically and run through installed Perl p
 	for(const context of [first, await lakeWorkspaceFixture(t, "telemetry")])
 		await t.test(context.names.root, async () => {
 			const rootPath = await customLakeRoot(context);
+			await nativeLakeInput(context);
 			const before = await lakeInputState(context.workspace);
 			await cp(context.workspace, join(context.directory, "relocated"), { recursive: true });
 			const outputs = [];
@@ -222,6 +260,8 @@ test("locked native builds relocate identically and run through installed Perl p
 			assert.equal(dependencies.snapshotSha256, sha256(canonicalJson(dependencies.snapshot)));
 			assert.equal(dependencies.resolutionSha256, sha256(canonicalJson(dependencies.resolution)));
 			assert.equal(dependencies.resolution.modules.at(-1).path, `root/${rootPath}`);
+			assert.equal(built.receipt.nativeCompilation.objects.length, 1);
+			assert.ok(built.receipt.nativeCompilation.objects[0].inputs.some(input => input.path === `snapshot/packages/${context.names.remote}/native code/factor.h`));
 			assert.deepEqual(sourceIdentity.modules.map(item => item.module), [context.names.remote, context.names.local, context.names.root]);
 			assert.ok(sourceIdentity.modules.every(item => /^[0-9a-f]{64}$/.test(item.interface.sha256)));
 			assert.deepEqual(built.model.exports.map(item => item.name), [`${context.names.root}.${context.names.operation}`]);
@@ -249,6 +289,14 @@ test("locked native builds relocate identically and run through installed Perl p
 		await assert.rejects(() => buildNativeComponent({ projectRoot: context.root, outputRoot, runtimeRoot, leanPrefix, cc: wrapper }), /Lake dependency sources changed during compilation/);
 		await assert.rejects(() => readFile(join(outputRoot, "native-component.json")), { code: "ENOENT" });
 	});
+	await t.test("declared C inputs do not authorize unreviewed foreign implementations", async t => {
+		const context = await lakeWorkspaceFixture(t);
+		await nativeLakeInput(context, true);
+		const outputRoot = join(context.directory, "rejected-foreign");
+		await assert.rejects(() => buildNativeComponent({ projectRoot: context.root, outputRoot, runtimeRoot, leanPrefix }),
+			error => /reviewed unsafe, partial or foreign implementation contract/.test(errorText(error)));
+		await assert.rejects(() => readFile(join(outputRoot, "native-component.json")), { code: "ENOENT" });
+	});
 });
 
 test("Lake resolves read-only author source files without creating their build caches", { skip: !enabled }, async t => {
@@ -258,4 +306,65 @@ test("Lake resolves read-only author source files without creating their build c
 	const before = await lakeInputState(context.workspace);
 	await resolve(t, await capture(context.root), [context.names.root]);
 	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
+
+test("C include closure checks run before compilation and detect later input/object drift", { skip: !enabled }, async t => {
+	for(const variant of ["success", "outside-header", "header-drift", "extra-header", "object-drift", "compiler-drift", "environment", "date-macro"])
+		await t.test(variant, async t => {
+			const context = await lakeWorkspaceFixture(t);
+			const header = variant === "outside-header" ? join(context.directory, "outside.h") : "local header.h";
+			await saveLakeFile(context.directory, "outside.h", "#define FACTOR 17\n");
+			await saveLakeFile(context.root, "native/local header.h", "#define FACTOR 7\n");
+			await saveLakeFile(context.root, "native/main.c", variant === "date-macro" ? 'const char *build_date = __DATE__;\n' : `#include "${header}"\n#include <stdint.h>\nuint32_t call(uint32_t x) { return FACTOR * x; }\n`);
+			const snapshot = await capture(context.root);
+			const snapshotRoot = join(context.directory, "captured");
+			await writeLakeDependencySnapshot({ snapshot, outputRoot: snapshotRoot });
+			const input = { path: "root/native/main.c", source: snapshot.document.rootInputs.find(file => file.path === "native/main.c") };
+			const compiler = variant === "compiler-drift" ? join(context.directory, "cc-wrapper") : "cc";
+			if(variant === "compiler-drift")
+			{
+				await saveLakeFile(context.directory, "cc-wrapper", '#!/bin/sh\nexec cc "$@"\n');
+				await chmod(compiler, 0o755);
+			}
+			let compiles = 0;
+			const runner = { capture: async options => {
+				if(variant === "environment")
+					for(const key of ["CPATH", "C_INCLUDE_PATH", "CFLAGS", "CCC_OVERRIDE_OPTIONS"]) assert.equal(Object.hasOwn(options.env, key), false);
+				if(options.args.includes("-c"))
+				{
+					compiles++;
+					if(variant === "header-drift") await saveLakeFile(snapshotRoot, "root/native/local header.h", "#define FACTOR 8\n");
+				}
+				const result = await processBuildRunner.capture(options);
+				if(variant === "compiler-drift" && options.args.includes("-c")) await saveLakeFile(context.directory, "cc-wrapper", "changed compiler\n");
+				return result;
+			} };
+			if(variant === "extra-header") await saveLakeFile(snapshotRoot, "root/native/extra.h", "unrecorded");
+			const run = () => compileLakeNativeInputs({ snapshot, snapshotRoot
+				, inputs: [input], outputRoot: join(context.directory, "objects")
+				, compiler, profile: "native-library-v1", runner
+				, environment: { ...process.env, ...(variant === "environment" ? { CPATH: "/unrecorded", C_INCLUDE_PATH: "/unrecorded", CFLAGS: "-DFACTOR=99", CCC_OVERRIDE_OPTIONS: "+-DFACTOR=99" } : {}) } });
+			if(["outside-header", "header-drift", "extra-header", "compiler-drift", "date-macro"].includes(variant))
+			{
+				await assert.rejects(run, error => /outside its captured|changed during compilation|captured input|snapshot|date-time/i.test(errorText(error)));
+				if(variant === "outside-header" || variant === "extra-header") assert.equal(compiles, 0);
+				await assert.rejects(() => readFile(join(context.directory, "objects/0.o")), { code: "ENOENT" });
+				return;
+			}
+			const result = await run();
+			assert.ok(result.document.objects[0].inputs.some(file => file.path === "snapshot/root/native/local header.h"));
+			assert.equal(JSON.stringify(result.document).includes(context.directory), false);
+			if(variant === "object-drift")
+			{
+				await saveLakeFile(context.directory, "objects/0.o", "changed object");
+				await assert.rejects(result.verify, { code: "lake-source-drift" });
+			}
+			else
+			{
+				await saveLakeFile(context.directory, "driver.c", '#include <stdint.h>\n#include <stdio.h>\nextern uint32_t call(uint32_t);\nint main(void) { printf("%u", call(6)); }\n');
+				await processBuildRunner.capture({ command: "cc", args: [join(context.directory, "driver.c"), ...result.objects, "-o", join(context.directory, "driver")] });
+				assert.equal((await processBuildRunner.capture({ command: join(context.directory, "driver"), args: [] })).stdout, "42");
+				await result.verify();
+			}
+		});
 });

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:lake-native-compilation:v1",
+  "title": "Captured Lake C compilation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "profile", "compiler", "flags", "snapshotSha256", "objects"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profile": { "enum": ["native-library-v1", "side-module-2"] },
+    "compiler": {
+      "type": "object", "additionalProperties": false,
+      "required": ["bytes", "sha256", "version"],
+      "properties": {
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/hash" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "flags": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+    "snapshotSha256": { "$ref": "#/$defs/hash" },
+    "objects": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source", "sourceSha256", "object", "bytes", "sha256", "inputs"],
+        "properties": {
+          "source": { "type": "string", "pattern": "^(root|packages/[^/]+)/.+\\.c$" },
+          "sourceSha256": { "$ref": "#/$defs/hash" },
+          "object": { "type": "string", "pattern": "^[0-9]+\\.o$" },
+          "bytes": { "type": "integer", "minimum": 1 },
+          "sha256": { "$ref": "#/$defs/hash" },
+          "inputs": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["path", "bytes", "sha256"],
+              "properties": {
+                "path": { "type": "string", "pattern": "^(snapshot|runtime-[0-9]+|system-[0-9]+)/.+$" },
+                "bytes": { "type": "integer", "minimum": 0 },
+                "sha256": { "$ref": "#/$defs/hash" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": { "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
+  "allOf": [{
+    "if": { "properties": { "profile": { "const": "native-library-v1" } } },
+    "then": { "properties": { "flags": { "const": ["-O2", "-g0", "-fPIC", "-Werror=date-time"] } } },
+    "else": { "properties": { "flags": { "const": ["-O2", "-g0", "-fPIC", "-Werror=date-time", "-fwasm-exceptions", "-flto", "-ffp-contract=off"] } } }
+  }]
+}

@@ -161,7 +161,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake and custom root layout follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 35 dependency workspace checks as unprivileged nobody. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. Source hashes include the tested native dependency integration; no new type/profile support or publication is claimed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. Source hashes include the tested native dependency integration; no new type/profile support or publication is claimed.",
       "files": [
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
@@ -170,12 +170,15 @@
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"docs/evidence/lake-native-workspace-20260911.md","sha256":"4885f50ba7468b223063454aef0377c0df1dc6810d541e45004bdbb887a43820"},
         {"path":"docs/evidence/lake-root-layouts-20260911.md","sha256":"bb833e36fa01709fae6b787f7b7eb449d6369bd27539a55f7e26ee971f6eabcb"},
-        {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"4197479a28711e03e9dfd438f76600730100c005abb3a9e84142da49233bb3d8"},
-        {"path":"src/build/lake-workspace.mjs","sha256":"96d8c28ceccf30ff36158f35197d136b90592303055f7cbaf2ce2dec8dcdb40b"},
+        {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"70a9d1cfcfffd649c1014cac83f0c58ca6f48af27fcb54a3c13d2f886aa0a972"},
+        {"path":"src/build/lake-workspace.mjs","sha256":"ba491be9c3957b4a227314f78511e6f9df06772c10547d107f8950ef531ed61d"},
+        {"path":"src/build/lake-native-inputs.mjs","sha256":"b8dd4dc94ff68fa6eb5e83bf88f3b081b75c354ac5f652ddf15b1eacfce22803"},
+        {"path":"schema/lake-native-compilation.schema.json","sha256":"70afee4832fb53e9e1f86e5c039facca589e2ebeafcceb5a49e9ca00403df068"},
+        {"path":"tests/lake-native-inputs.test.mjs","sha256":"6bce9873a51e0b292d9af8ef7b4750cd7d4bec9fc6e73bdbf5d97f438b64b2bf"},
         {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"9bbf3a9b86537fb19d8a64eb620a9fe9fc477f3a5e982d9f571b3963557a374a"},
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
-        {"path":"tests/lake-workspace.test.mjs","sha256":"1723641c8e930733f168bfb25218ac61e0dfeae5cc3a3080e5df1bfcf9c9b009"},
-        {"path":"tests/helpers/lake-workspace.mjs","sha256":"7dbe44135f5afb4aec6bc39cd2bd8d4fa137fe0423f1ccf2c337f1a61dc0c1ac"},
+        {"path":"tests/lake-workspace.test.mjs","sha256":"e483fe6c346d81d030b2ab99da0c3c272ed035f559f23959c7da00e02853b2ba"},
+        {"path":"tests/helpers/lake-workspace.mjs","sha256":"346cefe7361c68ad2b2553725977cc2ef92024823fd561ec31c3ec828e0af8c7"},
         {"path":"src/analyze/export-configuration.mjs","sha256":"56eed41ab97ec746b8d71579f57b1668ff66be9b0fb3fea37480a16e7c0f4d34"},
         {"path":"schema/lean-export-configuration.schema.json","sha256":"c09d5015f37d1ff50a0b04838a1a39d236cd5fbc431237d9008ef867ccab94af"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
@@ -186,11 +189,11 @@
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "509998b60f8b9048c3bb482784f8f9e381527f56373d9551daa5feb5577525bb"
+          "sha256": "964ac5bc72415e2722269276fc94b78a90fd44453675f8e2c6b44aeb03dc6204"
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "e1c8f65f7daa1e838a3d9ae35cee3ee693321a0ddb68c35cd2897de762d2cff9"
+          "sha256": "97f40cc52c686bb63293a849e7a4545f8ffc414c790f1424b54847de6b568be3"
         },
         {
           "path": "src/build/native-model.mjs",

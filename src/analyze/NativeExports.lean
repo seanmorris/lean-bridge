@@ -155,12 +155,23 @@ def extract (request : Request) : MetaM Json := do
 end LeanBridge.NativeExports
 
 unsafe def main (args : List String) : IO UInt32 := do
-  let [path] := args | throw (IO.userError "expected native export request JSON path")
+  let (path, safetyOnly) ← match args with
+    | [path] => pure (path, false)
+    | ["--check-bodies", path] => pure (path, true)
+    | _ => throw (IO.userError "expected native export request JSON path")
   let json ← IO.ofExcept <| Json.parse (← IO.FS.readFile path)
   let request ← IO.ofExcept <| fromJson? (α := LeanBridge.NativeExports.Request) json
   initSearchPath (← findSysroot)
   let env ← importModules (request.modules.map fun name => { module := name.toName }) {} 0
-  let (metadata, _, _) ← (LeanBridge.NativeExports.extract request).toIO
+  let operation := if safetyOnly then do
+      if request.exports.isEmpty then throwError "no exports supplied for implementation checking"
+      for name in request.exports do
+        let _ ← LeanBridge.NativeExports.checkBody request name.toName
+        if (← collectAxioms name.toName).contains ``sorryAx then
+          throwError "export {name} depends on sorry"
+      pure <| Json.mkObj [("checked", toJson request.exports)]
+    else LeanBridge.NativeExports.extract request
+  let (metadata, _, _) ← operation.toIO
     { fileName := "<native-exports>", fileMap := default } { env }
   IO.println metadata.compress
   return 0

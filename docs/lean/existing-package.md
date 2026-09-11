@@ -6,7 +6,7 @@ Start with a Lake project that already builds. Choose the functions an applicati
 
 Keep the library's source and proof history. Work on a branch, inspect `lean-toolchain`, and use the compiler selected by the project to run its existing build and tests. The current bridge builders require Lean 4.32.2; a library pinned to another version needs a checked migration before packaging.
 
-Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Both [npm/WASM](../publish/npm.md#build-with-locked-lake-dependencies) and [native/CPAN](../publish/cpan.md#build-with-locked-lake-dependencies) builds accept locked pure-Lean dependencies, including relative local packages and cached Git checkouts at full commit pins. Native libraries and generated sources remain part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages).
+Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Both [npm/WASM](../publish/npm.md#build-with-locked-lake-dependencies) and [native/CPAN](../publish/cpan.md#build-with-locked-lake-dependencies) builds accept locked Lean dependencies, including relative local packages and cached Git checkouts at full commit pins. They also compile [declared C inputs](#declare-c-link-inputs). Custom generators, prebuilt native libraries, and reviewed foreign-function contracts remain part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages).
 
 ## Choose the application API
 
@@ -45,6 +45,26 @@ The npm builder accepts shared module/export selection, `targets.npm.name`, and 
 For a locked project with a custom Lake `srcDir`, put the Lean module name in `modules`. For example, a library with `srcDir = "lean-src"` and `lean-src/Shop/Api.lean` selects `"Shop.Api"`, not `"lean-src.Shop.Api"`. Package and library source directories can be combined, and directory names may contain spaces or hyphens. Keep source files inside the captured project.
 
 Planning locates a unique file ending in the selected module's path without evaluating Lake. Multiple matching files are an error. During compilation, Lake must resolve that name to the exact selected file; a different owner or path stops the build. Other root files remain captured, but only the selected modules and their actual import closure compile. The [custom-layout acceptance tests](../evidence/lake-root-layouts-20260911.md) cover npm and CPAN builds.
+
+### Declare C link inputs
+
+In a locked project, declare a C translation unit as a Lake `input_file` and reference it from the owning library's `moreLinkObjs`. For example, these entries in `lakefile.toml` associate `native/support.c` with `MyLibrary`:
+
+```toml
+[[input_file]]
+name = "bridge_support"
+path = "native/support.c"
+
+[[lean_lib]]
+name = "MyLibrary"
+moreLinkObjs = ["bridge_support"]
+```
+
+Use your existing library entry rather than adding a second one with the same name. Keep the C file and its project headers inside the captured package. A library can also reference an input owned by a direct declared dependency. The Lake resolver reads the input declaration without executing a custom build target.
+
+The builder compiles each selected C file once per native or WASM profile. It asks the selected compiler for every included file, checks captured source hashes, and records the compiler, header, and object identities. It rechecks those inputs after compilation and linking. System and Lean headers must belong to the selected toolchain or runtime.
+
+This supports captured C source files, not `.o` files, static archives, `extern_lib` targets, or custom generators. Extra compiler and linker flags remain unsupported. Selected Lean calls to `@[extern]` or `@[implemented_by]` functions still fail the implementation-contract check; declaring a C input does not approve a foreign implementation. The [C-input acceptance record](../evidence/lake-c-inputs-20260911.md) separates compilation evidence from foreign-call support.
 
 ### Choose an npm package name
 

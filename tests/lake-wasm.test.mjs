@@ -23,7 +23,7 @@ import { runComponentReproducibilityGate } from "../src/release/component-reprod
 import { verifyPublishManifest } from "../src/release/publish-manifest.mjs";
 import { buildComponentNpmPackages } from "../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
-import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -48,9 +48,10 @@ const prepare = async (projectRoot, directory) => {
 	return { inputRoot, requestPath, request, componentPlan, compilationPlan };
 };
 
-for(const layout of ["default", "custom"]) for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies with ${layout} root layout compile offline into identical relocated npm releases`, { skip: !enabled }, async t => {
+for(const layout of ["default", "custom", "native-input"]) for(const variant of ["shop", "telemetry"]) test(`locked ${variant} dependencies with ${layout} root layout compile offline into identical relocated npm releases`, { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t, variant);
 	const rootPath = layout === "custom" ? await customLakeRoot(context) : `${context.names.root}.lean`;
+	if(layout === "native-input") await nativeLakeInput(context);
 	const relocated = join(context.directory, "relocated");
 	await cp(context.workspace, relocated, { recursive: true });
 	const roots = [context.root, join(relocated, "project")];
@@ -74,15 +75,26 @@ for(const layout of ["default", "custom"]) for(const variant of ["shop", "teleme
 		const bundleRoot = join(outputRoot, "bundle");
 		const manifest = JSON.parse(await readFile(join(bundleRoot, "locks/lean-target-c-manifest.json"), "utf8"));
 		await assertJsonSchema("lean-target-c-manifest", manifest);
+		let nativeEvidence = null;
+		if(layout === "native-input")
+		{
+			const link = JSON.parse(await readFile(join(bundleRoot, "locks/side-module-link-manifest.json"), "utf8"));
+			await assertJsonSchema("side-module-link-manifest", link);
+			assert.equal(link.nativeCompilation.objects.length, 1);
+			assert.ok(link.nativeCompilation.objects[0].inputs.some(input => input.path === `snapshot/packages/${context.names.remote}/native code/factor.h`));
+			assert.equal(JSON.stringify(link.nativeCompilation).includes(context.directory), false);
+			nativeEvidence = link.nativeCompilation;
+		}
 		assert.deepEqual(manifest.modules.map(module => module.module), [context.names.remote, context.names.local, context.names.root, input.compilationPlan.document.compilerAdapters.module]);
 		assert.equal(manifest.lakeDependencies.resolution.snapshotSha256, input.componentPlan.document.source.lakeSnapshotSha256);
 		assert.equal(manifest.lakeDependencies.resolution.modules.at(-1).path, `root/${rootPath}`);
 		assert.ok(result.request.document.output.authorizedFiles.includes(`lake/packages/${context.names.remote}/lib/${context.names.remote}.lean`));
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(context.directory, `npm-${index}`) });
 		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
-		outputs.push({ manifest, release, report: result.report });
+		outputs.push({ manifest, release, report: result.report, nativeEvidence });
 	}
 	assert.deepEqual(outputs[0].manifest, outputs[1].manifest);
+	assert.deepEqual(outputs[0].nativeEvidence, outputs[1].nativeEvidence);
 	assert.deepEqual(outputs[0].report, outputs[1].report);
 	assert.deepEqual(outputs[0].release.report, outputs[1].release.report);
 	assert.deepEqual(await readFile(outputs[0].release.componentArchive), await readFile(outputs[1].release.componentArchive));
@@ -106,6 +118,7 @@ for(const layout of ["default", "custom"]) for(const variant of ["shop", "teleme
 
 test("locked WASM linking rejects tampered source, resolution, order and fresh interfaces before invoking emcc", { skip: !enabled || Boolean(externalEngine) }, async t => {
 	const context = await lakeWorkspaceFixture(t);
+	await nativeLakeInput(context);
 	const input = await prepare(context.root, join(context.directory, "build"));
 	const targetCRoot = join(context.directory, "target-c");
 	const compiled = await compileLeanComponentSources({ ...input, engineRoot, outputRoot: targetCRoot });
@@ -127,10 +140,28 @@ test("locked WASM linking rejects tampered source, resolution, order and fresh i
 			error => ["invalid-lake-resolution", "target-c-manifest-drift", "invalid-target-c-manifest", "target-c-drift"].includes(error.code));
 	}
 	await writeFile(manifestPath, canonicalJson(compiled.manifest));
+	const header = `native/packages/${context.names.remote}/native code/factor.h`;
+	const headerBytes = await readFile(join(targetCRoot, header));
+	await saveLakeFile(targetCRoot, header, "changed captured header");
+	await assert.rejects(() => linkComponentSideModule({ ...input, targetCRoot, engineRoot, outputRoot: join(context.directory, "header-drift"), runner }), { code: "lake-snapshot-drift" });
+	await saveLakeFile(targetCRoot, header, headerBytes);
 	await saveLakeFile(targetCRoot, compiled.manifest.modules[0].olean, "stale interface");
 	await assert.rejects(() => linkComponentSideModule({ ...input, targetCRoot, engineRoot, outputRoot: join(context.directory, "stale-link"), runner }), { code: "target-c-drift" });
 	await saveLakeFile(input.inputRoot, "lake/packages/Catalog/Catalog.lean", "changed");
 	await assert.rejects(() => compileLeanComponentSources({ ...input, engineRoot, outputRoot: join(context.directory, "stale-compile") }), { code: "lake-snapshot-drift" });
+});
+
+test("WASM C inputs cannot bypass the fresh foreign-implementation gate", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await nativeLakeInput(context, true);
+	const input = await prepare(context.root, join(context.directory, "build"));
+	const outputRoot = join(context.directory, "rejected-foreign");
+	await assert.rejects(() => compileLeanComponentSources({ ...input, engineRoot, outputRoot }), error => {
+		assert.equal(error.code, "unreviewed-native-implementation");
+		assert.match(JSON.stringify(error.details), /reviewed unsafe, partial or foreign implementation contract/);
+		return true;
+	});
+	await assert.rejects(() => readFile(join(outputRoot, "lean-target-c-manifest.json")), { code: "ENOENT" });
 });
 
 test("the compiler and linker reject a planned root path that differs from Lake ownership", { skip: !enabled || Boolean(externalEngine) }, async t => {
@@ -159,6 +190,7 @@ test("the compiler and linker reject a planned root path that differs from Lake 
 for(const drift of [false, true]) test(`locked release dry run ${drift ? "rejects dependency drift" : "reproduces both clean clones and verifies publication evidence"}`, { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await customLakeRoot(context);
+	await nativeLakeInput(context);
 	await saveLakeFile(context.local, "NOTICE", "Catalog dependency notice\n");
 	await saveLakeFile(context.root, ".gitignore", ".lake/\n");
 	await saveLakeFile(context.root, "package.json", JSON.stringify({ license: "MIT" }));

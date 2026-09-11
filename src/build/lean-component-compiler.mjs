@@ -12,8 +12,9 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
-import { readLakeDependencySnapshot, verifyLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { readLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
+import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -142,6 +143,8 @@ export const compileLeanComponentSources = async ({
 				if(capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes
 					|| lake.document.modules.find(item => item.module === module.module)?.path !== `root/${module.path}`)
 					fail("lean-component-input-drift", "Planned root modules differ from the locked snapshot");
+			if(lakeNativeInputs(lake.document).length)
+				await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "native") });
 		}
 		const sourceOrder = lake ? lake.document.modules.map(module => module.module) : compilationPlan.document.source.compileOrder.slice(0, -1);
 		const leanRoot = join(staging, "lean-root");
@@ -199,6 +202,21 @@ export const compileLeanComponentSources = async ({
 				, olean: `olean/${module.replaceAll(".", "/")}.olean`
 				, oleanSha256: sha256(oleanBytes)
 			}));
+		}
+		if(lake && lakeNativeInputs(lake.document).length)
+		{
+			// Adding C inputs must not bypass the existing foreign/unsafe body gate.
+			const checker = join(resolve(engineRoot), "src/analyze/NativeExports.lean");
+			const request = join(staging, "native-body-request.json");
+			await writeFile(request, canonicalJson({ modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] }));
+			try
+			{
+				await runner.capture({ command: lean, args: ["--run", checker, "--check-bodies", request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
+			} catch(error)
+			{
+				fail("unreviewed-native-implementation", "Native C inputs do not authorize foreign or unsafe Lean implementations", { cause: error.message, compilerDetails: error.details ?? null });
+			}
+			await rm(request);
 		}
 		for(const module of compilationPlan.document.source.modules) await readChecked(join(inputs, "source", module.path), module, `Lean source module ${module.module}`);
 		await readChecked(generatedPath, { sha256: compilationPlan.document.compilerAdapters.leanSourceSha256 }, "generated Lean compiler adapter");

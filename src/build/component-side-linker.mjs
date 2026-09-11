@@ -9,6 +9,8 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateLockedLakeResolution } from "./lake-workspace.mjs";
+import { readLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 
@@ -120,7 +122,9 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 				fail("target-c-drift", `Fresh Lean interface changed before linking: ${module.module}`);
 		}
 	}
-	return Object.freeze({ manifest, sha256: sha256(bytes) });
+	const nativeInputs = locked ? lakeNativeInputs(manifest.lakeDependencies.resolution) : [];
+	const nativeSnapshot = nativeInputs.length ? await readLakeDependencySnapshot({ snapshotRoot: join(targetC, "native"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 }) : null;
+	return Object.freeze({ manifest, sha256: sha256(bytes), nativeInputs, nativeSnapshot });
 };
 
 const internalInitializerName = component => `lean_bridge_internal_initialize_${sha256(component).slice(0, 16)}`;
@@ -207,6 +211,12 @@ export const linkComponentSideModule = async ({
 		await writeFile(shimPath, shim);
 		const exports = [...compilationPlan.document.compilerAdapters.directSymbols, compilationPlan.document.compilerAdapters.initializer, internalInitializer].sort();
 		const cInputs = targetManifest.manifest.modules.map(module => join(targetC, module.targetC));
+		const nativeCompilation = targetManifest.nativeInputs.length ? await compileLakeNativeInputs({ snapshot: targetManifest.nativeSnapshot
+			, snapshotRoot: join(targetC, "native")
+			, inputs: targetManifest.nativeInputs
+			, outputRoot: join(staging, "native-objects")
+			, compiler: emcc, profile: "side-module-2"
+			, includeRoots: includes, runner, environment }) : null;
 		const flags = [
 			"-O2", "-fwasm-exceptions", "-flto", "-fPIC", "-ffp-contract=off"
 			, `-I${join(resolve(engineRoot), "poc/lean-link-spike")}`
@@ -224,12 +234,14 @@ export const linkComponentSideModule = async ({
 		];
 		try
 		{
-			await runner.capture({ command: emcc, args: [...cInputs, shimPath, ...flags], cwd: staging, env: environment, timeoutMs: 10 * 60 * 1000 });
+			await runner.capture({ command: emcc, args: [...cInputs, ...(nativeCompilation?.objects ?? []), shimPath, ...flags], cwd: staging, env: environment, timeoutMs: 10 * 60 * 1000 });
 		} catch(error)
 		{
 			fail("component-side-link-failed", "Emscripten failed to link the component side module", { cause: error.message, linkerDetails: error.details ?? null });
 		}
 		const [wasm, rawMap] = await Promise.all([readFile(sideModulePath), readFile(linkMapPath, "utf8")]);
+		await nativeCompilation?.verify();
+		if(nativeCompilation) await rm(join(staging, "native-objects"), { recursive: true });
 		const normalizedMap = normalizeMap({ map: rawMap, replacements: [[staging, "/workspace/output"], [targetC, "/workspace/target-c"], [runtime, "/workspace/runtime"], [resolve(engineRoot), "/workspace/engine"]] });
 		await writeFile(linkMapPath, normalizedMap);
 		const manifest = Object.freeze({
@@ -238,6 +250,7 @@ export const linkComponentSideModule = async ({
 			, compilationPlanSha256: compilationPlan.sha256
 			, targetCManifestSha256: targetManifest.sha256
 			, linker: identity
+			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
 			, profile: "side-module-2"
 			, artifact: Object.freeze({ path: compilationPlan.document.outputs.sideModule, bytes: wasm.length, sha256: sha256(wasm) })
 			, linkMap: Object.freeze({ path: compilationPlan.document.outputs.linkMap, sha256: sha256(normalizedMap) })

@@ -110,6 +110,29 @@ export const customLakeRoot = async context => {
 };
 
 /**
+ * Add a Lake-declared C input, optionally referenced by a foreign Lean function.
+ *
+ * @param context - Offline fixture whose lock is updated to its new test commit.
+ * @param foreign - Whether to select the deliberately unreviewed foreign call.
+ */
+export const nativeLakeInput = async (context, foreign = false) => {
+	const { cached, local, names, manifest } = context;
+	await saveLakeFile(cached, "lakefile.toml", `name = "${names.remote}"\nversion = "1.0.0"\n[[input_file]]\nname = "conversion"\npath = "native code/conversion.c"\n[[lean_lib]]\nname = "${names.remote}"\nsrcDir = "lib"\nmoreLinkObjs = ["conversion"]\n`);
+	if(foreign) await saveLakeFile(cached, `lib/${names.remote}.lean`, `@[extern "fixture_convert"]\nopaque ${names.remote}.convert (value : UInt32) : UInt32\n`);
+	await saveLakeFile(cached, "native code/conversion.c", '#include "factor.h"\n#include <stdint.h>\nuint32_t fixture_convert(uint32_t value) { return value * FIXTURE_FACTOR; }\n');
+	await saveLakeFile(cached, "native code/factor.h", `#define FIXTURE_FACTOR ${names.root === "Shop" ? 2 : 3}\n`);
+	await lakeGit(cached, "add", ".");
+	await lakeGit(cached, "commit", "--quiet", "-m", "Captured native input");
+	const old = manifest.packages[1].rev;
+	const rev = await lakeGit(cached, "rev-parse", "HEAD");
+	manifest.packages[1].rev = rev;
+	manifest.packages[1].inputRev = rev;
+	await saveLakeFile(local, "lakefile.toml", (await readFile(join(local, "lakefile.toml"), "utf8")).replaceAll(old, rev));
+	await saveLakeFile(local, "lake-manifest.json", (await readFile(join(local, "lake-manifest.json"), "utf8")).replaceAll(old, rev));
+	await context.lock();
+};
+
+/**
  * Inventory file contents and modification metadata, including original Git data.
  *
  * @param root - Directory to inspect without modifying it.

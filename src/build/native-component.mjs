@@ -14,6 +14,7 @@ import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallb
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { captureLockedLakeProject, resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
+import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 export const pinnedNativeLean = "f3b06c705e6c85f5314019d5d3baab0fec5b580c";
@@ -297,6 +298,14 @@ export const buildNativeComponent = async ({ projectRoot
 		}
 		await save(join(staging, "c/callbacks.c"), callbacks);
 		const objects = [];
+		const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.document) : [];
+		const nativeCompilation = nativeInputs.length ? await compileLakeNativeInputs({ snapshot: lakeSnapshot
+			, snapshotRoot: lakeWorkspace.snapshotRoot, inputs: nativeInputs
+			, outputRoot: join(staging, "native-objects")
+			, compiler: cc, profile: "native-library-v1"
+			, includeRoots: [join(leanPrefix, "include"), join(runtime, "include")]
+			, signal }) : null;
+		if(nativeCompilation) objects.push(...nativeCompilation.objects);
 		for(const [index, path] of [...compileOrder.map(item => item.c), generatedC, join(staging, "c/callbacks.c")].entries())
 		{
 			const object = join(staging, `c/${index}.o`); objects.push(object);
@@ -329,16 +338,18 @@ export const buildNativeComponent = async ({ projectRoot
 			, library
 			, nativeLibrary: await fileIdentity(join(staging, library))
 			, compiler: (await run(cc, ["--version"])).stdout.split("\n")[0]
+			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
 			, exports: model.exports.map(item => ({ declaration: item.name, symbol: item.symbol })) };
 		for(const input of analysis.inputs) if(sha256(await readFile(join(project, input.path))) !== input.sha256) throw new Error(`native source changed during compilation: ${input.path}`);
 		if(lakeSnapshot && (await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal }))?.sha256 !== lakeSnapshot.sha256)
 			throw new Error("native Lake dependency sources changed during compilation");
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
+		await nativeCompilation?.verify();
 		await save(join(staging, "metadata.json"), json(metadata)); await save(join(staging, "model.json"), json(model));
 		await save(join(staging, "binding-ir.json"), json(model.bindingIr)); await save(join(staging, "native-component.json"), json(receipt));
 		await save(join(staging, "generated.lean"), adapters.leanSource);
-		for(const path of ["source", "olean", "c", "request.json"]) await rm(join(staging, path), { recursive: true, force: true });
+		for(const path of ["source", "olean", "c", "native-objects", "request.json"]) await rm(join(staging, path), { recursive: true, force: true });
 		const files = {};
 		for(const path of await nativeArtifactPaths(staging)) files[path] = await fileIdentity(join(staging, path));
 		await save(join(staging, "artifacts.json"), json({ schemaVersion: 1, profile: "native-library-v1", files }));

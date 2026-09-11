@@ -46,7 +46,7 @@ export const captureLockedLakeProject = async ({ projectRoot, inputs, signal }) 
 
 const validateResolution = (value, snapshot, selected) => {
 	closed(value, ["schemaVersion", "resolver", "leanVersion", "leanCommit", "packages", "modules", "externalImports"], "Lake resolution");
-	if(value.schemaVersion !== 1 || value.resolver !== "lean-lake-locked" || typeof value.leanVersion !== "string"
+	if(![1, 2].includes(value.schemaVersion) || value.resolver !== "lean-lake-locked" || typeof value.leanVersion !== "string"
 		|| !/^[0-9a-f]{40}$/.test(value.leanCommit) || snapshot.document.toolchain !== `leanprover/lean4:v${value.leanVersion}`)
 		fail("lake-toolchain-drift", "Lake resolver and captured project toolchains differ");
 	const files = records(snapshot);
@@ -76,15 +76,30 @@ const validateResolution = (value, snapshot, selected) => {
 	if(!Array.isArray(value.modules) || value.modules.length === 0) fail("invalid-lake-resolution", "Lake resolved no source modules");
 	for(const module of value.modules)
 	{
-		closed(module, ["module", "path", "package", "imports"], "Lake module");
+		closed(module, ["module", "path", "package", "imports", ...(value.schemaVersion === 2 && Object.hasOwn(module, "nativeInputs") ? ["nativeInputs"] : [])], "Lake module");
 		if(!name(module.module) || known.has(module.module) || !files.has(module.path) || !module.path.endsWith(".lean") || !packages.has(module.package)
 			|| !Array.isArray(module.imports) || module.imports.some(item => !known.has(item) && !value.externalImports.includes(item)))
 			fail("invalid-lake-resolution", "Lake module ownership or dependency order is invalid");
 		const owner = snapshot.document.packages.find(pkg => pkg.name === module.package);
 		const prefix = owner ? owner.directory : "root";
 		if(!module.path.startsWith(`${prefix}/`)) fail("invalid-lake-resolution", "Lake module source escaped its owning package");
+		if(Object.hasOwn(module, "nativeInputs"))
+		{
+			if(!Array.isArray(module.nativeInputs) || !module.nativeInputs.length) fail("invalid-lake-resolution", "Native inputs must be non-empty when declared");
+			for(const input of module.nativeInputs)
+			{
+				closed(input, ["package", "target", "path"], "Lake native input");
+				const inputOwner = snapshot.document.packages.find(pkg => pkg.name === input.package);
+				if(!packages.has(input.package) || typeof input.target !== "string" || !input.target.length || !files.has(input.path) || !input.path.endsWith(".c")
+					|| !input.path.startsWith(`${inputOwner ? inputOwner.directory : "root"}/`)
+					|| (input.package !== module.package && !packages.get(module.package).dependencies.includes(input.package)))
+					fail("invalid-lake-resolution", "Native input is not a captured C source owned by a declared package");
+			}
+		}
 		known.add(module.module);
 	}
+	if((value.schemaVersion === 2) !== value.modules.some(module => Object.hasOwn(module, "nativeInputs")))
+		fail("invalid-lake-resolution", "Lake native input version disagrees with its declarations");
 	if(selected.some(module => !value.modules.find(item => item.module === module)?.path.startsWith("root/")))
 		fail("invalid-lake-resolution", "Lake omitted a selected root module");
 	if(value.externalImports.some(module => known.has(module))) fail("invalid-lake-resolution", "Source and compiler-library module identities overlap");
@@ -96,8 +111,9 @@ const validateResolution = (value, snapshot, selected) => {
 	};
 	selected.forEach(visit);
 	if(reachable.size !== known.size) fail("invalid-lake-resolution", "Lake included source modules outside the selected import closure");
-	return { ...value, modules: value.modules.map(module => ({ ...module, source: files.get(module.path) }))
-		, externalImports: [...value.externalImports].sort() };
+	return { ...value, modules: value.modules.map(module => ({ ...module, source: files.get(module.path)
+		, ...(module.nativeInputs ? { nativeInputs: module.nativeInputs.map(input => ({ ...input, source: files.get(input.path) })) } : {}) }))
+	, externalImports: [...value.externalImports].sort() };
 };
 
 /**
@@ -121,8 +137,15 @@ export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) 
 		fail("invalid-lake-resolution", "Recorded resolution has invalid input identities");
 	if(!Array.isArray(raw.modules)) fail("invalid-lake-resolution", "Recorded modules must be an array");
 	const expected = validateResolution({ ...raw, modules: raw.modules.map(module => {
-		closed(module, ["module", "path", "package", "imports", "source"], "recorded Lake module");
-		return { module: module.module, path: module.path, package: module.package, imports: module.imports };
+		closed(module, ["module", "path", "package", "imports", "source", ...(Object.hasOwn(module, "nativeInputs") ? ["nativeInputs"] : [])], "recorded Lake module");
+		const native = module.nativeInputs;
+		if(native !== undefined && !Array.isArray(native)) fail("invalid-lake-resolution", "Native inputs must be an array");
+		return { module: module.module
+			, path: module.path, package: module.package, imports: module.imports
+			, ...(native ? { nativeInputs: native.map(input => {
+				closed(input, ["package", "target", "path", "source"], "recorded native input");
+				return { package: input.package, target: input.target, path: input.path };
+			}) } : {}) };
 	}) }, snapshot, modules);
 	if(canonicalJson(expected) !== canonicalJson(raw)) fail("invalid-lake-resolution", "Recorded resolution source identities differ from the captured files");
 	return true;
@@ -182,7 +205,8 @@ export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix
 		}
 		const document = { ...resolved, snapshotSha256: snapshot.sha256
 			, resolverSha256, leanCompilerSha256, lakeLibrarySha256 };
-		return { sourceRoot, document, sha256: sha256(canonicalJson(document))
+		return { sourceRoot, snapshotRoot: workspace, document
+			, sha256: sha256(canonicalJson(document))
 			, dispose: () => rm(working, { recursive: true, force: true }) };
 	} catch(error)
 	{

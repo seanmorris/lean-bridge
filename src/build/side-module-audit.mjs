@@ -9,6 +9,7 @@ import { join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
+import { validateLakeNativeCompilation } from "./lake-native-inputs.mjs";
 
 /**
  * Reports side module audit failures with stable machine-readable codes and structured diagnostic context.
@@ -79,7 +80,8 @@ const same = (actual, expected, code, message) => {
 };
 
 const validateLinkManifest = ({ manifest, compilationPlan }) => {
-	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies"], "side-module link manifest");
+	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies", ...(Object.hasOwn(manifest, "nativeCompilation") ? ["nativeCompilation"] : [])], "side-module link manifest");
+	if(Object.hasOwn(manifest, "nativeCompilation")) validateLakeNativeCompilation(manifest.nativeCompilation, { snapshotSha256: compilationPlan.document.source.lakeSnapshotSha256, profile: "side-module-2" });
 	if(manifest.schemaVersion !== 1 || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.profile !== "side-module-2") fail("side-module-plan-drift", "Side-module link manifest does not match the component compilation plan");
 	exactKeys(manifest.exports, ["directSymbols", "initializer", "internalInitializer"], "side-module exports");
 	same(manifest.exports.directSymbols, compilationPlan.document.compilerAdapters.directSymbols, "side-module-symbol-drift", "Side-module direct symbols differ from the compiler adapters");

@@ -42,7 +42,9 @@ The npm/WASM engine now accepts transported snapshots against the digest in its 
 
 Root package and library `srcDir` layouts now work with explicit module selection. Host planning records a unique provisional source path for each selected module; Lake must confirm that exact ownership during compilation. Both package formats, nested modules, relocated installed npm/CPAN packages, and publication dry runs have [custom-layout acceptance evidence](../evidence/lake-root-layouts-20260911.md).
 
-Task 1239 remains open for declared native/generated input closure and other Lake build customizations. Custom native targets and additional compiler/linker options currently fail explicitly. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
+Lake `input_file` C sources referenced by `moreLinkObjs` now compile for native and WASM profiles. Resolution binds each input to its owning package and captured source. The compiler reports its complete include closure, including system headers; the builder checks source, header, compiler, and object identities before releasing output. Relocated npm/CPAN builds and their installed consumers have [C-input acceptance evidence](../evidence/lake-c-inputs-20260911.md). The existing implementation checker still rejects unreviewed foreign calls.
+
+Task 1239 remains open for declared generators and other Lake build prerequisites. Custom targets, prebuilt native libraries, and additional compiler/linker options currently fail explicitly. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
 
 ## Package and consumer requirements
 
