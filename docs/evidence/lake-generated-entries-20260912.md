@@ -62,6 +62,14 @@ The existing Perl suite passes on 5.36.3 and 5.38.2, each threaded and nonthread
 
 Four audited source hashes were refreshed after these checks. The type inventory remains at 6,562 cells, 2,193 observed cells, 116 installed-tested cells and 32,230 required stage gaps. No coverage cell changed status.
 
+## CI permission regression
+
+[Core run 34723571344](https://github.com/seanmorris/lean-bridge/actions/runs/34723571344) failed two tampering tests on `23ba193`. The fixture writer tried to overwrite mode-0444 intent and request records. Local root execution allowed those writes; the unprivileged CI runner rejected them with `EACCES` before reaching the validation assertions.
+
+Both failures reproduced with `runuser -u nobody -- node --test tests/lake-entry-modules.test.mjs`. The test-only helper now asserts the original read-only mode, temporarily grants its owner write permission, writes the forged bytes and restores mode 0444 before validation. All eight tests pass as `nobody` after that change. Production file permissions and validation remain unchanged.
+
+A broader unprivileged run found the same setup error in the legacy engine's source-drift test. That fixture now restores read-only mode before validation too. All 22 entry, engine-request and Lake-input tests pass as `nobody`. The full core check passes lint, checked JavaScript and all 525 contract tests in the normal local environment.
+
 ## Scope
 
 npm retains its pure primitive signature profile, and CPAN retains its existing native capability checks. This change does not promote type-surface cells. `analyze` does not generate missing source files. VO1107/1108 still own the general authoritative extractor/analyzer cutover and its broader stale-interface contract. Arbitrary hooks, unreviewed foreign implementations and prebuilt native libraries remain unsupported.

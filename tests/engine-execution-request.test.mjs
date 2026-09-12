@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import test from "node:test";
@@ -143,7 +143,10 @@ test("the engine rejects source drift before compilation", async () => {
     const prepared = await prepare({ projectRoot: "tests/fixtures/onboarding/small", scratch });
     const requestPath = join(scratch, "request.json");
     await writeEngineExecutionRequest({ output: requestPath, engineRoot: process.cwd(), ...prepared, targets: ["npm"] });
-    await writeFile(join(prepared.inputRoot, "source/OnboardingSmall.lean"), "def changed := true\n");
+    const sourcePath = join(prepared.inputRoot, "source/OnboardingSmall.lean");
+    await chmod(sourcePath, 0o644);
+    await writeFile(sourcePath, "def changed := true\n");
+    await chmod(sourcePath, 0o444);
     await assert.rejects(
       readVerifiedEngineExecutionRequest({ requestPath, engineRoot: process.cwd(), inputRoot: prepared.inputRoot }),
       error => error instanceof EngineExecutionRequestError && error.code === "component-input-identity-drift",

@@ -8,7 +8,7 @@ import test from "node:test";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
-import { lstat, mkdir, open, readFile, readdir, rm, symlink } from "node:fs/promises";
+import { chmod, lstat, mkdir, open, readFile, readdir, rm, symlink } from "node:fs/promises";
 import { analyzeLeanProject, inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "../src/build/lake-entry-modules.mjs";
 import { generatedLakeEntryFixture } from "./helpers/lake-generator.mjs";
@@ -24,6 +24,23 @@ import { createComponentBuildPlan, prepareComponentBuildPlan } from "../src/buil
 import { createComponentCompilationPlan, prepareComponentCompilationPlan, validateComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+
+/**
+ * Tamper with an owned read-only fixture, restoring its mode before validation.
+ *
+ * @param root - Isolated fixture directory.
+ * @param path - Relative record filename.
+ * @param bytes - Forged record contents.
+ */
+const tamperReadOnlyRecord = async (root, path, bytes) => {
+	const target = join(root, path);
+	assert.equal((await lstat(target)).mode & 0o777, 0o444);
+	await chmod(target, 0o644);
+	try
+	{ await saveLakeFile(root, path, bytes); }
+	finally
+	{ await chmod(target, 0o444); }
+};
 
 test("public generator outputs can be selected without executing Lean or assigning types", async t => {
 	const context = await generatedLakeEntryFixture(t);
@@ -95,7 +112,7 @@ test("generated source intent survives detached staging and rejects recomputed f
 		, value => { value.bindingIr = {}; }
 	]) {
 		const document = structuredClone(intent.document); change(document);
-		await saveLakeFile(inputRoot, "lake-entry-intent.json", canonicalJson(document));
+		await tamperReadOnlyRecord(inputRoot, "lake-entry-intent.json", canonicalJson(document));
 		await assert.rejects(() => readLakeEntryIntent({ inputRoot, expectedSha256: sha256(canonicalJson(document)) }));
 	}
 	assert.deepEqual(await lakeInputState(context.workspace), before);
@@ -157,9 +174,9 @@ test("entry engine rejects forged output authority and source changes before com
 		, runner: { capture: () => assert.fail("Invalid source intent reached the compiler") } });
 	const forged = structuredClone(request.document);
 	forged.output.authorizedFiles.push("metadata/host-types.json");
-	await saveLakeFile(context.directory, "request.json", canonicalJson(forged));
+	await tamperReadOnlyRecord(context.directory, "request.json", canonicalJson(forged));
 	await assert.rejects(execute, /differs from the requested component or output inventory/);
-	await saveLakeFile(context.directory, "request.json", canonicalJson(request.document));
+	await tamperReadOnlyRecord(context.directory, "request.json", canonicalJson(request.document));
 	await saveLakeFile(inputRoot, "lake/root/data/value.txt", "999\n");
 	await assert.rejects(execute, { code: "lake-snapshot-drift" });
 	await assert.rejects(() => lstat(outputRoot), { code: "ENOENT" });
