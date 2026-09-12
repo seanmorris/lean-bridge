@@ -20,7 +20,8 @@ import { homedir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ComponentBuildPlanError, createComponentBuildPlan, prepareComponentBuildPlan } from "./component-plan.mjs";
-import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { generateCompilerAdapters } from "./compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
@@ -33,6 +34,8 @@ import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
+import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
+import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
 
@@ -612,6 +615,14 @@ const readComponentEngineOutput = async ({ executionRoot, request }) => {
     || report.authorizedOutputsOnly !== true
     || report.runtimeBinaryIncluded !== false
 	) fail("component-engine-output-invalid", "Component execution report does not match the requested component bundle");
+	if(request.document.schemaVersion === 2)
+	{
+		for(const [name, expected] of [["component-build-plan", report.componentPlanSha256], ["component-compilation-plan", report.compilationPlanSha256]])
+			if(sha256(await readFile(join(bundleRoot, `locks/${name}.json`))) !== expected) fail("component-engine-output-invalid", "Compiler-owned plans differ from the execution report");
+		const plan = JSON.parse(await readFile(join(bundleRoot, "locks/component-build-plan.json"), "utf8"));
+		if(plan.component.id !== request.document.component.id || plan.source.treeSha256 !== request.document.component.sourceTreeSha256 || plan.bindingIr.origin !== "lean-elaborated")
+			fail("component-engine-output-invalid", "Compiler-owned component differs from the requested source intent");
+	}
 	return Object.freeze({ bundleRoot, manifest: Object.freeze(manifest), manifestSha256, report: Object.freeze(report) });
 };
 
@@ -620,6 +631,7 @@ const buildPlainComponentProject = async ({
 	, engine
 	, output
 	, componentPlan
+	, entryIntent
 	, lakeSnapshot
 	, selection
 	, runner
@@ -640,11 +652,16 @@ const buildPlainComponentProject = async ({
 	try
 	{
 		onProgress?.({ phase: "prepare", state: "started", message: "Preparing the verified component input" });
-		const analysis = await analyzeLeanProject(root, { signal, targets });
-		const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
-		const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+		let analysis, compilationPlan;
 		const inputRoot = join(work, "component");
-		await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters, lakeSnapshot });
+		if(entryIntent) await writeLakeEntryInputs({ intent: entryIntent, outputRoot: inputRoot, signal });
+		else
+		{
+			analysis = await analyzeLeanProject(root, { signal, targets });
+			const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+			compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+			await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters, lakeSnapshot });
+		}
 		const requestPath = join(work, "request", "engine-execution-request.json");
 		const request = await writeEngineExecutionRequest({
 			output: requestPath
@@ -652,6 +669,7 @@ const buildPlainComponentProject = async ({
 			, inputRoot
 			, componentPlan
 			, compilationPlan
+			, entryIntent
 			, cachePolicy: cache.policy
 			, targets
 		});
@@ -685,7 +703,14 @@ const buildPlainComponentProject = async ({
 		await cp(checked.bundleRoot, join(finalStaging, "bundle"), { recursive: true, dereference: true, preserveTimestamps: true });
 		await cp(join(executionRoot, request.document.output.executionReport), join(finalStaging, "engine-execution-report.json"));
 		await cp(requestPath, join(finalStaging, "engine-execution-request.json"));
-		if(componentPlan.document.schemaVersion === 2)
+		if(entryIntent)
+		{
+			await verifyLakeSnapshotProject({ snapshot: entryIntent.lakeSnapshot, projectRoot: root, signal });
+			const snapshot = lakeSnapshot ?? await captureLockedLakeProject({ projectRoot: root, inputs: entryIntent.document.source.inputs, signal });
+			if(snapshot?.sha256 !== entryIntent.lakeSnapshot.sha256)
+				fail("lake-source-drift", "Locked project inputs changed during the component build");
+		}
+		else if(componentPlan.document.schemaVersion === 2)
 		{
 			if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: root, signal });
 			const snapshot = lakeSnapshot ?? await captureLockedLakeProject({ projectRoot: root, inputs: analysis.inputs, signal });
@@ -710,8 +735,8 @@ const buildPlainComponentProject = async ({
 			, cache
 			, engineIdentitySha256: request.document.engine.identitySha256
 			, executionRequestSha256: request.sha256
-			, componentPlanSha256: componentPlan.sha256
-			, compilationPlanSha256: compilationPlan.sha256
+			, componentPlanSha256: checked.report.componentPlanSha256
+			, compilationPlanSha256: checked.report.compilationPlanSha256
 			, sourceReadOnly: true
 			, componentBinariesRebuiltByProjection: false
 		});
@@ -782,7 +807,7 @@ export const buildCanonicalProject = async ({
 		? runner
 		: Object.freeze({ capture: request => runner.capture({ ...request, signal }) });
 	signal?.throwIfAborted();
-	let componentPlan;
+	let componentPlan, entryIntent;
 	try
 	{
 		if(root === engine)
@@ -793,7 +818,17 @@ export const buildCanonicalProject = async ({
 			const graph = JSON.parse(await readFile(join(engine, "poc/lean-link-spike/graph-lock.json"), "utf8"));
 			componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
 		}
-		else componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
+		else
+		{
+			const record = await readExportConfiguration(root, { signal });
+			if(record.configuration.generators?.length)
+			{
+				const inventory = await inspectLeanProject(root, { signal });
+				if(selectLakeEntryModules(record.configuration, inventory.inputs).some(entry => entry.origin.kind === "generated"))
+					entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
+			}
+			if(!entryIntent) componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
+		}
 	} catch(error)
 	{
 		if(!(error instanceof ComponentBuildPlanError)) throw error;
@@ -810,7 +845,7 @@ export const buildCanonicalProject = async ({
 	if(root !== engine)
 	{
 		return buildPlainComponentProject({
-			root, engine, output, componentPlan, lakeSnapshot
+			root, engine, output, componentPlan, entryIntent, lakeSnapshot
 			, selection, runner: selectedRunner
 			, environment, targets, cache: normalizedCache, signal, onProgress
 		});

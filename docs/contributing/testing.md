@@ -82,6 +82,7 @@ The Node-only input tests need Git but no Lean compiler:
 ```sh
 node --test tests/lake-dependency-snapshot.test.mjs tests/lake-component-input.test.mjs tests/lake-native-inputs.test.mjs
 node --test tests/lake-generator-contract.test.mjs
+node --test tests/lake-entry-modules.test.mjs
 ```
 
 Run the relocated npm acceptance through the pinned Nix engine and its shared runtime:
@@ -123,6 +124,8 @@ LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST=1 \
 ```
 
 These checks compare relocated npm and CPAN archives, invoke generated-value APIs after installation, verify publication dry runs, and reject changed handoffs before linking. Use `--test-name-pattern='generated native'` for the Perl-only cases. The Node consumer CI job uses the pinned Nix engine for the npm and publication cases; direct local compiler/linker rejection tests require the local toolchains.
+
+Both captured APIs importing generated code and generated public entry modules have Shop and Telemetry fixtures. The entry fixtures use a type alias and inferred return type. Source-only tests reject forged intent, host metadata, symlinks and oversized inputs without running Lean. Compiled checks reject admitted generated exports and changed metadata between elaboration and target compilation. Use `--test-name-pattern='generated entry'` for the npm entry cases. The [generated-entry record](../evidence/lake-generated-entries-20260912.md) lists their evidence.
 
 These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The consumer workflows run them after installing the required tools. See the [generated-package acceptance record](../evidence/lake-generated-packages-20260912.md).
 

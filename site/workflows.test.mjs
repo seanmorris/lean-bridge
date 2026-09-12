@@ -39,7 +39,12 @@ test("source intake describes new and existing libraries without widening target
 	const exports = await readFile("docs/lean/export-decisions.md", "utf8");
 	assert.match(exports, /Ordinary npm components reject/);
 	assert.match(exports, /## Native Perl exports/);
-	assert.match(exports, /External Lake dependencies/);
+	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
+	assert.match(exports, /Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work/);
+	const existing = await readFile("docs/lean/existing-package.md", "utf8");
+	assert.match(existing, /### Generate the public entry module/);
+	assert.match(existing, /`analyze` inspects captured source; it does not run generators/);
+	assert.match(existing, /metadata\/lake-entry-exports\.json/);
 	const targets = await readFile("docs/publishing.md", "utf8");
 	assert.match(targets, /npm and CPAN now read the same/);
 	assert.match(targets, /does not require Lean Bridge's internal deployment-profile approvals/);

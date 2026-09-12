@@ -7,6 +7,7 @@ namespace LeanBridge.NativeExports
 
 structure Request where
   modules : Array String
+  exportModules : Option (Array String) := none
   exports : Array String := #[]
   resources : Array String := #[]
   arities : Array (String × Nat) := #[]
@@ -120,11 +121,14 @@ partial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) :
 
 def extract (request : Request) : MetaM Json := do
   let env ← getEnv
+  let exportModules := request.exportModules.getD request.modules
+  if exportModules.isEmpty || exportModules.any (!request.modules.contains ·) then
+    throwError "export modules must be a nonempty subset of the compiled closure"
   let mut names := request.exports.map String.toName
   if names.isEmpty then
     for (name, info) in env.constants.toList do
       if let some index := env.getModuleIdxFor? name then
-        if request.modules.contains env.header.moduleNames[index.toNat]!.toString &&
+        if exportModules.contains env.header.moduleNames[index.toNat]!.toString &&
             !isPrivateName name && !(isProtected env name) then
           if let .defnInfo _ := info then
             if (← getProjectionFnInfo? name).isNone && !name.isInternal && !isAuxRecursor env name then
@@ -143,7 +147,7 @@ def extract (request : Request) : MetaM Json := do
     | _ => throwError "{name} is not an executable definition"
     let some moduleIndex := env.getModuleIdxFor? name | throwError "missing module for {name}"
     let module := env.header.moduleNames[moduleIndex.toNat]!.toString
-    if !request.modules.contains module then throwError "export outside selected modules: {name}"
+    if !exportModules.contains module then throwError "export outside selected modules: {name}"
     let arity := request.arities.find? (·.1 == name.toString) |>.map (·.2) |>.getD 1024
     let (parameters, result) ← signature request info.type arity
     declarations := declarations.push (obj [("name", str name.toString), ("module", str module),

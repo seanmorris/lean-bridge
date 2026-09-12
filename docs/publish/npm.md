@@ -22,6 +22,8 @@ This path supports Lean dependency imports, including transitive packages and cu
 
 Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The engine runs selected pure tools and compiles their Lean/C/header outputs. `bundle/generated/lake-generated-sources.json` retains their bytes and receipts; the target-C and link manifests bind its digest. The publication dry run reproduces generation in both isolated builds. Installed npm users do not need Lean or generator tooling.
 
+A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). The host request then carries original source and module intent, without inferred signatures. Inside the engine, Lean supplies the API from fresh interfaces before adapter generation. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm's supported API remains pure functions with primitive arguments and results.
+
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
 ## Publish an ordinary component

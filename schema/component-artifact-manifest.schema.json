@@ -44,7 +44,7 @@
     },
     "bindingIr": {
       "type": "object", "additionalProperties": false, "required": ["schemaVersion", "origin", "semanticSha256", "declarations"],
-      "properties": { "schemaVersion": { "type": "integer", "minimum": 1 }, "origin": { "enum": ["statically-inferred", "existing-validated"] }, "semanticSha256": { "$ref": "#/$defs/sha256" }, "declarations": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } }
+      "properties": { "schemaVersion": { "type": "integer", "minimum": 1 }, "origin": { "enum": ["statically-inferred", "existing-validated", "lean-elaborated"] }, "semanticSha256": { "$ref": "#/$defs/sha256" }, "declarations": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } }
     },
     "compilerAdapters": {
       "type": "object", "additionalProperties": false, "required": ["planSha256", "leanSourceSha256", "privateAbiSha256", "directSymbols"],

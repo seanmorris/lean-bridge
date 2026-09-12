@@ -11,7 +11,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { readLakeGeneratorRecipes } from "./lake-generator-prerequisites.mjs";
 import { validateComponentBuildPlan } from "./component-plan.mjs";
-import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
+import { componentArtifactPaths, validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
+import { readLakeEntryIntent } from "./lake-entry-intent.mjs";
 
 /**
  * Reports engine execution request failures with stable machine-readable codes and structured diagnostic context.
@@ -168,9 +169,9 @@ export const identifyComponentInputClosure = async inputRoot => {
 	});
 };
 
-const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot, generators }) => Object.freeze([
+const authorizedBundleFiles = ({ sourceInputs, sideModule, lakeSnapshot, generators, elaborated }) => Object.freeze([
 	"README.md"
-	, compilationPlan.document.outputs.sideModule
+	, sideModule
 	, "binding/binding-ir.json"
 	, "binding/private-abi.json"
 	, "component-release-bundle.json"
@@ -181,13 +182,14 @@ const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot, g
 	, "locks/lean-target-c-manifest.json"
 	, "locks/side-module-link-manifest.json"
 	, ...(generators ? ["generated/lake-generated-sources.json"] : [])
+	, ...(elaborated ? ["metadata/lake-entry-exports.json"] : [])
 	, "metadata/assurance.json"
 	, "metadata/component-artifact-manifest.json"
 	, "metadata/provenance.json"
 	, "metadata/runtime-requirement.json"
 	, "metadata/sbom.json"
 	, "metadata/side-module-audit.json"
-	, ...componentPlan.document.source.inputs.map(input => `source/${input.path}`)
+	, ...sourceInputs.map(input => `source/${input.path}`)
 	, ...(lakeSnapshot ? ["lake/lake-dependency-snapshot.json"
 		, ...lakeSnapshot.document.rootInputs.map(input => `lake/root/${input.path}`)
 		, ...lakeSnapshot.document.packages.flatMap(pkg => pkg.files.map(input => `lake/${pkg.directory}/${input.path}`))] : [])
@@ -200,13 +202,14 @@ const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot, g
  */
 export const validateEngineExecutionRequest = request => {
 	exactKeys(request, ["schemaVersion", "kind", "engine", "component", "source", "output", "cache", "targets", "policies"], "engine execution request");
-	if(request.schemaVersion !== 1 || request.kind !== "lean-bridge-engine-execution") fail("invalid-engine-execution-request", "Engine execution request version or kind is unsupported");
+	if(![1, 2].includes(request.schemaVersion) || request.kind !== "lean-bridge-engine-execution") fail("invalid-engine-execution-request", "Engine execution request version or kind is unsupported");
 	exactKeys(request.engine, ["identitySha256", "fileCount"], "engine");
 	hash(request.engine.identitySha256, "engine identity");
 	if(!Number.isSafeInteger(request.engine.fileCount) || request.engine.fileCount < 1) fail("invalid-engine-execution-request", "Engine file count must be positive");
-	exactKeys(request.component, ["id", "componentPlanSha256", "compilationPlanSha256", "sourceTreeSha256", "inputClosureSha256"], "component");
+	const planFields = request.schemaVersion === 2 ? ["sourceIntentSha256"] : ["componentPlanSha256", "compilationPlanSha256"];
+	exactKeys(request.component, ["id", ...planFields, "sourceTreeSha256", "inputClosureSha256"], "component");
 	if(typeof request.component.id !== "string" || request.component.id === "") fail("invalid-engine-execution-request", "Component id is required");
-	for(const key of ["componentPlanSha256", "compilationPlanSha256", "sourceTreeSha256", "inputClosureSha256"]) hash(request.component[key], `component ${key}`);
+	for(const key of [...planFields, "sourceTreeSha256", "inputClosureSha256"]) hash(request.component[key], `component ${key}`);
 	exactKeys(request.source, ["kind", "mount", "readOnly"], "source");
 	if(request.source.kind !== "closed-component-input" || request.source.mount !== "component" || request.source.readOnly !== true) fail("invalid-engine-execution-request", "Component source must be one closed read-only input mount");
 	exactKeys(request.output, ["kind", "bundleDirectory", "executionReport", "authorizedFiles"], "output");
@@ -230,8 +233,33 @@ export const validateEngineExecutionRequest = request => {
  * @param root0.compilationPlan - Validated compilation plan binding authorized inputs, outputs, toolchain, and runtime profile.
  * @param root0.cachePolicy - Closed policy selecting reuse, refresh, or complete cache bypass.
  * @param root0.targets - Closed target identifiers selected for planning, building, or reproducibility comparison.
+ * @param root0.entryIntent - Optional source-only request for generated public modules.
  */
-export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, componentPlan, compilationPlan, cachePolicy = "use", targets = [] }) => {
+export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, componentPlan, compilationPlan, entryIntent, cachePolicy = "use", targets = [] }) => {
+	if(entryIntent)
+	{
+		if(componentPlan || compilationPlan || targets.some(target => !["npm", "javascript"].includes(target))) fail("invalid-engine-execution-request", "Generated source intent cannot carry host-authored signatures or unsupported targets");
+		const checked = await readLakeEntryIntent({ inputRoot, expectedSha256: entryIntent.sha256 });
+		if(canonicalJson(checked.document) !== canonicalJson(entryIntent.document)) fail("invalid-engine-execution-request", "Generated source intent changed before execution");
+		const [engine, input] = await Promise.all([identifyBuildEngine(engineRoot), identifyComponentInputClosure(inputRoot)]);
+		const document = Object.freeze({ schemaVersion: 2
+			, kind: "lean-bridge-engine-execution"
+			, engine: { identitySha256: engine.identitySha256, fileCount: engine.fileCount }
+			, component: { id: checked.document.component.id
+				, sourceIntentSha256: checked.sha256
+				, sourceTreeSha256: checked.document.source.treeSha256
+				, inputClosureSha256: input.identitySha256 }
+			, source: { kind: "closed-component-input", mount: "component", readOnly: true }
+			, output: { kind: "component-neutral-release-bundle"
+				, bundleDirectory: "bundle"
+				, executionReport: "engine-execution-report.json"
+				, authorizedFiles: authorizedBundleFiles({ sourceInputs: checked.document.source.inputs, sideModule: componentArtifactPaths(checked.document.component).sideModule, lakeSnapshot: checked.lakeSnapshot, generators: true, elaborated: true }) }
+			, cache: { policy: cachePolicy }
+			, targets: [...targets].sort()
+			, policies: { backendNeutral: true, sameRequestBytes: true, sourceReadOnly: true, compileOnce: true, sharedRuntime: true, copyAuthorizedOutputsOnly: true } });
+		validateEngineExecutionRequest(document);
+		return Object.freeze({ document, sha256: sha256(canonicalJson(document)), engine, input });
+	}
 	validateComponentBuildPlan(componentPlan.document);
 	validateComponentCompilationPlan(compilationPlan.document);
 	if(componentPlan.sha256 !== compilationPlan.document.componentPlanSha256) fail("engine-request-plan-drift", "Component and compilation plans do not share one identity");
@@ -260,7 +288,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 			kind: "component-neutral-release-bundle"
 			, bundleDirectory: "bundle"
 			, executionReport: "engine-execution-report.json"
-			, authorizedFiles: authorizedBundleFiles({ componentPlan, compilationPlan, lakeSnapshot, generators })
+			, authorizedFiles: authorizedBundleFiles({ sourceInputs: componentPlan.document.source.inputs, sideModule: compilationPlan.document.outputs.sideModule, lakeSnapshot, generators, elaborated: compilationPlan.document.schemaVersion === 3 })
 		})
 		, cache: Object.freeze({ policy: cachePolicy })
 		, targets: Object.freeze([...targets].sort())
@@ -321,6 +349,7 @@ export const readVerifiedEngineExecutionRequest = async ({ requestPath, engineRo
 		fail("invalid-engine-execution-request-json", "Engine execution request is not valid JSON", { cause: error.message });
 	}
 	validateEngineExecutionRequest(document);
+	if(document.schemaVersion === 2) await readLakeEntryIntent({ inputRoot, expectedSha256: document.component.sourceIntentSha256 });
 	const [engine, input] = await Promise.all([
 		identifyBuildEngine(engineRoot)
 		, identifyComponentInputClosure(inputRoot)

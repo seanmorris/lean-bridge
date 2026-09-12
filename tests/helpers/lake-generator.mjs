@@ -111,3 +111,25 @@ def TableGenerator.generate (inputs : Array (String × String)) (_args : Array S
 	context.snapshot = await prepareLakeDependencySnapshot({ projectRoot: context.root, includeProject: true });
 	return { ...context, tool };
 };
+
+/**
+ * Generate the public module itself, with a compiler-inferred result and type alias.
+ *
+ * @param t - Test context responsible for cleanup.
+ * @param variant - Independent source tree and generated value.
+ */
+export const generatedLakeEntryFixture = async (t, variant = "shop") => {
+	const context = await generatedLakeWorkspaceFixture(t, variant);
+	const { root, names } = context;
+	await rm(join(root, `${names.root}.lean`));
+	context.configuration.generators[0].outputs[0].path = `generated/${names.root}.lean`;
+	context.lakefile = context.lakefile.replace(`lean_lib ${names.root} where`, `lean_lib ${names.root} where\n  srcDir := "generated"`);
+	await saveLakeFile(root, "Extra.lean", "abbrev Extra.Amount := UInt32\ndef Extra.adjust (value : Extra.Amount) := value + 3\n");
+	context.tool = context.tool.replace("import Extra\\ndef Generated.value : UInt32 := Extra.adjust {value}\\n",
+		`import Extra\\nimport ${names.local}\\ndef ${names.root}.${names.operation} (value : Extra.Amount) := ${names.local}.${names.operation} value + Extra.adjust {value}\\n`);
+	await saveLakeFile(root, "tools/TableGenerator.lean", context.tool);
+	await saveLakeFile(root, "lean-bridge.exports.json", JSON.stringify(context.configuration));
+	await saveLakeFile(root, "lakefile.lean", context.lakefile);
+	context.snapshot = await prepareLakeDependencySnapshot({ projectRoot: root, includeProject: true });
+	return context;
+};

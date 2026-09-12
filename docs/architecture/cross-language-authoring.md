@@ -50,7 +50,9 @@ The [generated-workspace milestone](../evidence/lake-generated-workspace-2026091
 
 Ordinary npm and CPAN builds now consume those generated sources. The bounded `lake-generated-sources.json` handoff carries exact output text and separate receipts through compilation, linking, bundle inventories and package archives. Its reader verifies captured recipes and source origins before restoring files. The [generated-package acceptance record](../evidence/lake-generated-packages-20260912.md) covers installed public APIs, relocation, transport tampering and publication dry runs.
 
-Public entry modules must still be captured. Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
+Generated public entry modules now use compiler-free root intent, checked against declared root-owned recipes and Lake's actual module ownership. npm uses a source-only engine request, obtains primitive signatures from fresh Lean metadata inside the engine, and checks them again during target compilation. CPAN selects its public roots from the freshly compiled closure. The [generated-entry milestone](../evidence/lake-generated-entries-20260912.md) records the source-intent and elaboration contracts separately from the original capture.
+
+Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 still own the general extractor/analyzer cutover: `analyze` remains source-only, and captured-source npm builds retain their existing planner. The generated-entry path reuses the native extractor for the existing primitive npm profile. No type/profile cells advance from this dependency work.
 
 ## Package and consumer requirements
 

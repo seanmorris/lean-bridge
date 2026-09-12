@@ -159,7 +159,7 @@ const renderLeanSource = ({ imports, exports, module }) => {
  * @param root0.componentPlan - Validated component plan defining exports, targets, and generated adapter requirements.
  */
 export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
-	if(analysis.bindingIr?.origin !== "statically-inferred") fail("compiler-adapter-ir-origin", "Generated compiler adapters require statically inferred Binding IR");
+	if(!["statically-inferred", "lean-elaborated"].includes(analysis.bindingIr?.origin)) fail("compiler-adapter-ir-origin", "Generated compiler adapters require source or freshly elaborated Binding IR");
 	if(componentPlan?.document?.bindingIr?.semanticSha256 !== analysis.bindingIr.semanticSha256) fail("compiler-adapter-plan-drift", "Component plan and Binding IR identities differ");
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
 	const exports = analysis.bindingIr.document.declarations.map(declaration => {

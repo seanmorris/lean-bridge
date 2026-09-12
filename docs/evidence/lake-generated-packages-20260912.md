@@ -2,6 +2,8 @@
 
 This VO1239 milestone connects the [verified generated workspace](lake-generated-workspace-20260912.md) to ordinary npm/WASM and native/CPAN builds.
 
+This record covers captured public modules importing generated code. The subsequent [generated-entry milestone](lake-generated-entries-20260912.md) adds public modules that are themselves generator outputs.
+
 ## Build and transport
 
 Both builders use `resolveLakeBuildWorkspace`. Projects without generator recipes keep the captured-source path. Projects with recipes select the required pure tools, generate their declared outputs, and resolve the completed Lean import closure. Selected public entry modules must still be captured files.

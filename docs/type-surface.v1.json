@@ -189,11 +189,11 @@
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "bbf455d5a6c713ea3589e9f556c3234791e2da364759120d93e12c45d39f80db"
+          "sha256": "9bee6c4f6c7cd9f61314df6ea6b7249b1e9ba7d5eed833a47775792e17169cfd"
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "6d90f2fb28d89b285d13c86844f947248819cb659514c9091df0a40a37970d6e"
+          "sha256": "28dfed86307255652ab9a644d96b5202ce430703d5dfcfd91d3e35d82d389e3e"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -335,8 +335,8 @@
       "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
-        {"path":"src/analyze/lean-project.mjs","sha256":"17e2f503b13e0f18b4448bff7b1f8dd5b0483706300f56bfff41093c50b64ee8"},
-        {"path":"src/build/component-plan.mjs","sha256":"223ef17e96f6da8743f9e54efaaec9d78afea5130abba8853b8a041c1f35fc7e"},
+        {"path":"src/analyze/lean-project.mjs","sha256":"17f74b315f6b521611297d65dcd7e5b7ab21fe33a5ea16c809805ed1572cf5c5"},
+        {"path":"src/build/component-plan.mjs","sha256":"6cafab81e5db2379c4097f4b631b11e3cd1654b3bea1b91f8d5749858c81aef9"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},

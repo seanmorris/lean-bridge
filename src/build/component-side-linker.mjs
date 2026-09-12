@@ -73,7 +73,7 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 	const path = join(targetC, "lean-target-c-manifest.json");
 	const bytes = await readFile(path);
 	const manifest = JSON.parse(bytes);
-	const locked = compilationPlan.document.schemaVersion === 2;
+	const locked = compilationPlan.document.schemaVersion >= 2;
 	const generated = locked && manifest?.schemaVersion === 3;
 	if(manifest?.schemaVersion !== (generated ? 3 : locked ? 2 : 1) || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.target !== "wasm32-unknown-emscripten-c" || manifest.sourceReadOnly !== true) fail("target-c-manifest-drift", "Target C manifest does not match the component compilation plan");
 	let generatedContext, nativeSnapshot, resolution;
@@ -102,6 +102,8 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 					, expectedSha256: manifest.lakeDependencies.generatedSourcesSha256 });
 				if(canonicalJson(snapshot) !== canonicalJson(nativeSnapshot.document) || canonicalJson(recorded) !== canonicalJson(generatedContext.document.resolution)
 					|| resolutionSha256 !== generatedContext.document.resolutionSha256) fail("target-c-manifest-drift", "Generated handoff differs from the compiled resolution");
+				if(compilationPlan.document.schemaVersion === 3 && generatedContext.sha256 !== compilationPlan.document.source.generatedSourcesSha256)
+					fail("target-c-manifest-drift", "Generated public roots differ from the elaborated source identity");
 				resolution = recorded.result.resolution;
 			}
 			else
@@ -112,7 +114,8 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 			for(const selected of compilationPlan.document.source.modules)
 			{
 				const actual = resolution.modules.find(module => module.module === selected.module);
-				if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes)
+				if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes
+					|| (selected.origin && canonicalJson(selected.origin) !== canonicalJson(actual.source.origin)))
 					fail("target-c-manifest-drift", "Lake resolution differs from the selected root source");
 			}
 			if(sha256(canonicalJson(recorded)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit

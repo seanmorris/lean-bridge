@@ -75,7 +75,8 @@ export const validateComponentBuildPlan = plan => {
 	}
 	exactKeys(plan.bindingIr, ["schemaVersion", "origin", "semanticSha256", "declarations"], "Binding IR");
 	if(!Number.isSafeInteger(plan.bindingIr.schemaVersion) || plan.bindingIr.schemaVersion < 1) fail("invalid-component-build-plan", "Binding IR version must be positive");
-	if(!new Set(["statically-inferred", "existing-validated"]).has(plan.bindingIr.origin)) fail("invalid-component-build-plan", "Binding IR origin is unsupported");
+	if(!new Set(["statically-inferred", "existing-validated", "lean-elaborated"]).has(plan.bindingIr.origin)) fail("invalid-component-build-plan", "Binding IR origin is unsupported");
+	if(plan.bindingIr.origin === "lean-elaborated" && plan.schemaVersion !== 2) fail("invalid-component-build-plan", "Elaborated entry plans require locked sources");
 	hash(plan.bindingIr.semanticSha256);
 	if(!Array.isArray(plan.bindingIr.declarations) || plan.bindingIr.declarations.length === 0 || plan.bindingIr.declarations.some(item => typeof item !== "string" || item === ""))
 	{
@@ -111,7 +112,7 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [], lake
 	if(analysis.bindingIr === null) fail("component-binding-ir-required", "Build requires a complete Binding IR", { hints: analysis.adapterHints.map(item => item.id) });
 	const requiredHints = analysis.adapterHints.filter(item => item.required);
 	if(requiredHints.length > 0) fail("component-adapter-hints-required", "Build requires decisions for unresolved adapter hints", { hints: requiredHints.map(item => item.id) });
-	if(analysis.bindingIr.origin === "statically-inferred") for(const declaration of analysis.bindingIr.document.declarations) assertComponentSignature(declaration);
+	if(analysis.bindingIr.origin !== "existing-validated") for(const declaration of analysis.bindingIr.document.declarations) assertComponentSignature(declaration);
 	const document = Object.freeze({
 		schemaVersion: lakeSnapshotSha256 === undefined ? 1 : 2
 		, component: Object.freeze({ ...analysis.bindingIr.document.component })

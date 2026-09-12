@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Captured Lake text-generator recipes",
-  "description": "Package-relative author intent for the internal prerequisite runner. Normal CLI package builds still reject nonempty generators.",
+  "description": "Package-relative recipes for selected Lake prerequisites in ordinary npm/WASM and native/CPAN builds. The build engine runs the closed Lean text-generator profile, never an author-supplied shell command.",
   "type": "array",
   "maxItems": 128,
   "items": {"$ref": "#/$defs/recipe"},

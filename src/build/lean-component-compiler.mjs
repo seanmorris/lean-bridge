@@ -15,6 +15,7 @@ import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
 import { readLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -124,7 +125,7 @@ export const compileLeanComponentSources = async ({
 	let lake = null, snapshot = null;
 	try
 	{
-		if(compilationPlan.document.schemaVersion === 2)
+		if(compilationPlan.document.schemaVersion >= 2)
 		{
 			snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputs, "lake"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 });
 			const prefix = await runner.capture({ command: lean, args: ["--print-prefix"], cwd: inputs, env: compilerEnvironment, timeoutMs: 15000 });
@@ -140,9 +141,15 @@ export const compileLeanComponentSources = async ({
 			}
 			const capturedRoot = new Map(snapshot.document.rootInputs.map(file => [file.path, file]));
 			for(const module of compilationPlan.document.source.modules)
-				if(capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes
-					|| lake.resolution.modules.find(item => item.module === module.module)?.path !== `root/${module.path}`)
+			{
+				const actual = lake.resolution.modules.find(item => item.module === module.module);
+				if((module.origin?.kind !== "generated" && (capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes))
+					|| actual?.path !== `root/${module.path}` || actual.source.sha256 !== module.sha256 || actual.source.bytes !== module.bytes
+					|| (module.origin && canonicalJson(module.origin) !== canonicalJson(actual.source.origin)))
 					fail("lean-component-input-drift", "Planned root modules differ from the locked snapshot");
+			}
+			if(compilationPlan.document.schemaVersion === 3 && lake.generatedSources?.sha256 !== compilationPlan.document.source.generatedSourcesSha256)
+				fail("lean-component-input-drift", "Generated public sources changed after elaboration");
 			if(lakeNativeInputs(lake.resolution).length || lake.generatedSources)
 				await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "native") });
 			if(lake.generatedSources) await writeFile(join(staging, "lake-generated-sources.json"), canonicalJson(lake.generatedSources.document), { mode: 0o444 });
@@ -209,17 +216,36 @@ export const compileLeanComponentSources = async ({
 			// Adding C inputs must not bypass the existing foreign/unsafe body gate.
 			const checker = join(resolve(engineRoot), "src/analyze/NativeExports.lean");
 			const request = join(staging, "native-body-request.json");
-			await writeFile(request, canonicalJson({ modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] }));
+			const elaborated = compilationPlan.document.schemaVersion === 3;
+			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
+			const exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [] }
+				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
+			await writeFile(request, canonicalJson(exportRequest));
 			try
 			{
-				await runner.capture({ command: lean, args: ["--run", checker, "--check-bodies", request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
+				const checked = await runner.capture({ command: lean, args: ["--run", checker, ...(elaborated ? [] : ["--check-bodies"]), request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
+				if(elaborated)
+				{
+					const actual = { schemaVersion: 1
+						, kind: "lean-bridge-lake-entry-elaboration"
+						, snapshotSha256: snapshot.sha256
+						, generatedSourcesSha256: lake.generatedSources.sha256
+						, leanCompilerSha256: lake.document.leanCompilerSha256
+						, extractorSha256: sha256(await readFile(checker))
+						, request: exportRequest
+						, interfaces: records.slice(0, -1).map(({ module, sourceSha256, oleanSha256 }) => ({ module, sourceSha256, oleanSha256 }))
+						, metadata: JSON.parse(checked.stdout) };
+					const expected = await readChecked(join(inputs, "generated/lake-entry-exports.json"), { sha256: compilationPlan.document.source.elaborationSha256 }, "elaborated public API");
+					if(expected.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
+				}
 			} catch(error)
 			{
+				if(error instanceof LeanComponentCompilerError) throw error;
 				fail("unreviewed-native-implementation", "Native C inputs do not authorize foreign or unsafe Lean implementations", { cause: error.message, compilerDetails: error.details ?? null });
 			}
 			await rm(request);
 		}
-		for(const module of compilationPlan.document.source.modules) await readChecked(join(inputs, "source", module.path), module, `Lean source module ${module.module}`);
+		for(const module of compilationPlan.document.source.modules.filter(module => module.origin?.kind !== "generated")) await readChecked(join(inputs, "source", module.path), module, `Lean source module ${module.module}`);
 		await readChecked(generatedPath, { sha256: compilationPlan.document.compilerAdapters.leanSourceSha256 }, "generated Lean compiler adapter");
 		await readChecked(join(inputs, "generated/compiler-adapters.json"), { sha256: compilationPlan.document.compilerAdapters.planSha256 }, "compiler adapter plan");
 		if(lake)

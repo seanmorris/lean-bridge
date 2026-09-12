@@ -16,7 +16,7 @@ import { resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
  *
  * @param options - Complete capture, selected root modules and pinned compiler.
  * @param options.snapshot - Authenticated original source capture.
- * @param options.modules - Selected captured public modules.
+ * @param options.modules - Selected captured or declared generated public modules.
  * @param options.leanPrefix - Selected Lean installation.
  * @param options.signal - Optional cancellation signal.
  */

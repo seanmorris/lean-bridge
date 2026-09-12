@@ -302,6 +302,13 @@
 			"classification": "strict-migration-backlog"
 		},
 		{
+			"path": "src/build/lake-entry-modules.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{ "path": "src/build/lake-entry-elaboration.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/lake-entry-engine.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/lake-entry-intent.mjs", "classification": "strict-migration-backlog" },
+		{
 			"path": "src/build/lake-generated-workspace.mjs",
 			"classification": "strict-migration-backlog"
 		},

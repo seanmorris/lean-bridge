@@ -4,10 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { chmod, cp, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
+import { analyzeLeanProject, inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
@@ -26,10 +26,12 @@ import { runComponentReproducibilityGate } from "../src/release/component-reprod
 import { verifyPublishManifest } from "../src/release/publish-manifest.mjs";
 import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-package.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
-import { generatedLakeWorkspaceFixture as fixture } from "./helpers/lake-generator.mjs";
+import { generatedLakeWorkspaceFixture as fixture, generatedLakeEntryFixture } from "./helpers/lake-generator.mjs";
 import { lakeGit, lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { selectLakeEntryModules } from "../src/build/lake-entry-modules.mjs";
+import { prepareLakeEntryIntent, writeLakeEntryInputs } from "../src/build/lake-entry-intent.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST === "1";
 const engineRoot = process.cwd();
@@ -47,6 +49,17 @@ const runEngine = async (input, outputRoot) => {
 	return { report: JSON.parse(await readFile(join(outputRoot, "engine-execution-report.json"), "utf8")) };
 };
 const prepare = async (projectRoot, directory) => {
+	const inventory = await inspectLeanProject(projectRoot);
+	if(selectLakeEntryModules(inventory.configurationRecord.configuration, inventory.inputs).some(entry => entry.origin.kind === "generated"))
+	{
+		const entryIntent = await prepareLakeEntryIntent({ projectRoot });
+		await assertJsonSchema("lake-entry-intent", entryIntent.document);
+		const inputRoot = join(directory, "inputs"), requestPath = join(directory, "request.json");
+		await writeLakeEntryInputs({ intent: entryIntent, outputRoot: inputRoot });
+		const request = await writeEngineExecutionRequest({ output: requestPath, engineRoot, inputRoot, entryIntent, targets: ["npm"], cachePolicy: "off" });
+		await assertJsonSchema("engine-execution-request", request.document);
+		return { inputRoot, requestPath, request, entryIntent };
+	}
 	const analysis = await analyzeLeanProject(projectRoot);
 	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot, targets: ["npm"] });
 	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
@@ -57,7 +70,7 @@ const prepare = async (projectRoot, directory) => {
 	return { inputRoot, requestPath, request, componentPlan, compilationPlan };
 };
 
-test("generated native Lean/C packages relocate identically and run through installed CPAN APIs", { skip: !enabled, timeout: 1200000 }, async t => {
+const nativeAcceptance = (profile, fixture) => test(`generated native ${profile} packages relocate identically and run through installed CPAN APIs`, { skip: !enabled, timeout: 1200000 }, async t => {
 	const first = await fixture(t), nativeRuntime = join(first.directory, "runtime");
 	await buildNativeSharedRuntime({ outputRoot: nativeRuntime, leanPrefix });
 	const runtimePackage = join(first.directory, "runtime-package");
@@ -82,7 +95,12 @@ test("generated native Lean/C packages relocate identically and run through inst
 				await assertJsonSchema("lake-native-compilation", built.receipt.nativeCompilation);
 				assert.equal(built.receipt.sourceIdentity.lakeDependencies.generatedSourcesSha256, sha256(canonicalJson(handoff)));
 				assert.equal(built.receipt.nativeCompilation.overlaySha256, handoff.overlaySha256);
-				assert.equal(handoff.resolution.result.resolution.modules[1].source.origin.kind, "generated");
+				assert.ok(handoff.resolution.result.resolution.modules.some(module => module.source.origin.kind === "generated"));
+				if(profile === "public entry")
+				{
+					assert.equal(handoff.resolution.result.resolution.modules.find(module => module.module === context.names.root).source.origin.kind, "generated");
+					assert.equal(built.receipt.sourceIdentity.request.exportModules[0], context.names.root);
+				}
 				assert.ok(built.receipt.nativeCompilation.objects[0].inputs.some(file => file.path.endsWith("/root/native/generated.h")));
 				assert.equal(canonicalJson(built.receipt).includes(context.directory), false);
 				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot: nativeRuntime, componentRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
@@ -105,9 +123,12 @@ test("generated native Lean/C packages relocate identically and run through inst
 			t.diagnostic(canonicalJson({ package: context.names.root, archiveSha256: sha256(await readFile(builds[0].archive.path)), value: result.stdout }));
 		});
 });
+nativeAcceptance("Lean/C", fixture);
+nativeAcceptance("public entry", generatedLakeEntryFixture);
 
-for(const variant of ["shop", "telemetry"]) test(`generated ${variant} compiles from detached captures into identical installed npm releases`, { skip: !enabled, timeout: 1200000 }, async t => {
-	const context = await fixture(t, variant), relocated = join(context.directory, "relocated");
+for(const [profile, makeFixture] of [["imports", fixture], ["entry", generatedLakeEntryFixture]])
+for(const variant of ["shop", "telemetry"]) test(`generated ${profile} ${variant} compiles from detached captures into identical installed npm releases`, { skip: !enabled, timeout: 1200000 }, async t => {
+	const context = await makeFixture(t, variant), relocated = join(context.directory, "relocated");
 	await cp(context.workspace, relocated, { recursive: true });
 	const inputs = [];
 	for(const [index, projectRoot] of [context.root, join(relocated, "project")].entries()) inputs.push(await prepare(projectRoot, join(context.directory, `build-${index}`)));
@@ -133,9 +154,21 @@ for(const variant of ["shop", "telemetry"]) test(`generated ${variant} compiles 
 		assert.equal(manifest.lakeDependencies.generatedSourcesSha256, sha256(canonicalJson(handoff)));
 		assert.equal(link.generatedSourcesSha256, manifest.lakeDependencies.generatedSourcesSha256);
 		assert.equal(link.nativeCompilation.overlaySha256, handoff.overlaySha256);
-		assert.deepEqual(manifest.modules.slice(0, -1).map(module => module.module), ["Extra", "Generated", context.names.remote, context.names.local, context.names.root]);
+		assert.deepEqual(manifest.modules.slice(0, -1).map(module => module.module), ["Extra", ...(profile === "entry" ? [] : ["Generated"]), context.names.remote, context.names.local, context.names.root]);
 		assert.equal(canonicalJson(handoff).includes(context.directory), false);
-		assert.deepEqual(handoff.outputs.map(file => file.path), ["root/generated/Generated.lean", "root/native/generated.c", "root/native/generated.h"]);
+		assert.deepEqual(handoff.outputs.map(file => file.path), [`root/generated/${profile === "entry" ? context.names.root : "Generated"}.lean`, "root/native/generated.c", "root/native/generated.h"]);
+		if(profile === "entry")
+		{
+			const component = JSON.parse(await readFile(join(bundleRoot, "locks/component-build-plan.json"), "utf8"));
+			const compilation = JSON.parse(await readFile(join(bundleRoot, "locks/component-compilation-plan.json"), "utf8"));
+			const evidence = await readFile(join(bundleRoot, "metadata/lake-entry-exports.json"));
+			await assertJsonSchema("lake-entry-elaboration", JSON.parse(evidence));
+			assert.equal(component.bindingIr.origin, "lean-elaborated");
+			assert.equal(compilation.schemaVersion, 3);
+			assert.equal(compilation.source.elaborationSha256, sha256(evidence));
+			await assertJsonSchema("component-build-plan", component);
+			await assertJsonSchema("component-compilation-plan", compilation);
+		}
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(context.directory, `npm-${index}`) });
 		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
 		releases.push({ ...release, report: built.report, manifest, handoff, link });
@@ -154,6 +187,27 @@ for(const variant of ["shop", "telemetry"]) test(`generated ${variant} compiles 
 	assert.deepEqual(await lakeInputState(join(context.directory, "detached")), before);
 	assert.deepEqual(await lakeInputState(join(context.directory, "detached-other")), otherBefore);
 	t.diagnostic(canonicalJson({ variant, handoffSha256: sha256(canonicalJson(releases[0].handoff)), archiveSha256: sha256(await readFile(releases[0].componentArchive)) }));
+	if(profile === "entry" && variant === "shop")
+		await t.test("canonical build rejects a local dependency changed after engine execution", async () => {
+			const projectRoot = join(context.directory, "detached/project"), outputRoot = join(context.directory, "changed-author-input");
+			const runner = { capture: async request => {
+				assert.equal(request.command, "nix");
+				if(request.args[0] === "--version") return { stdout: "nix (Nix) 2.24.11\n", stderr: "", code: 0 };
+				assert.ok(request.args.includes("run"));
+				const value = flag => request.args[request.args.indexOf(flag) + 1];
+				const requested = JSON.parse(await readFile(value("--request"), "utf8"));
+				assert.deepEqual(requested, inputs[0].request.document);
+				// Replay the exact output already compiled above to isolate the host's post-build check.
+				await cp(join(context.directory, "engine-0"), value("--output"), { recursive: true });
+				await saveLakeFile(join(context.directory, "detached/local"), `${context.names.local}.lean`, "-- changed during build\n");
+				return { stdout: "", stderr: "", code: 0 };
+			} };
+			await assert.rejects(() => buildCanonicalProject({ projectRoot
+				, outputRoot, engineRoot, targets: ["npm"], runner
+				, cache: { policy: "off" }
+				, environment: { LEAN_BRIDGE_BUILD_BACKEND: "nix" } }), { code: "lake-source-drift" });
+			await assert.rejects(() => readFile(join(outputRoot, "engine-execution-report.json")), { code: "ENOENT" });
+		});
 });
 
 test("generated WASM handoffs reject altered bytes, receipts and origins before invoking emcc", { skip: !enabled || Boolean(externalEngine), timeout: 600000 }, async t => {
@@ -189,8 +243,9 @@ test("generated WASM handoffs reject altered bytes, receipts and origins before 
 	await assert.rejects(() => linkComponentSideModule({ ...input, engineRoot, targetCRoot, outputRoot: join(context.directory, "invalid-source"), runner }), { code: "lake-snapshot-drift" });
 });
 
-for(const drift of [false, true]) test(`generated npm publication dry run ${drift ? "rejects changed generator input" : "reproduces committed source and verifies its release"}`, { skip: !enabled, timeout: 1200000 }, async t => {
-	const context = await fixture(t);
+for(const [profile, makeFixture] of [["imports", fixture], ["entry", generatedLakeEntryFixture]])
+for(const drift of [false, true]) test(`generated ${profile} npm publication dry run ${drift ? "rejects changed generator input" : "reproduces committed source and verifies its release"}`, { skip: !enabled, timeout: 1200000 }, async t => {
+	const context = await makeFixture(t);
 	await saveLakeFile(context.root, ".gitignore", ".lake/\n");
 	await saveLakeFile(context.root, "package.json", JSON.stringify({ name: "shop", version: "1.0.0", license: "MIT" }));
 	await saveLakeFile(context.root, "LICENSE", await readFile("LICENSE"));
@@ -248,4 +303,41 @@ test("generated Lean without linked C still rejects foreign implementations", { 
 	});
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	await assert.rejects(() => readFile(join(outputRoot, "lean-target-c-manifest.json")), { code: "ENOENT" });
+});
+
+test("generated entry metadata must match the fresh target compilation before linking", { skip: !enabled || Boolean(externalEngine), timeout: 600000 }, async t => {
+	const context = await generatedLakeEntryFixture(t), input = await prepare(context.root, join(context.directory, "build"));
+	const before = await lakeInputState(input.inputRoot), outputRoot = join(context.directory, "changed-metadata");
+	let altered = false;
+	const runner = { capture: async request => {
+		assert.equal(request.command.endsWith("emcc"), false, "Altered metadata reached the linker");
+		const result = await processBuildRunner.capture(request);
+		if(request.args[0] === "--run" && request.args[1].endsWith("NativeExports.lean"))
+		{
+			const metadata = JSON.parse(result.stdout);
+			metadata.declarations[0].result.name = "bool";
+			altered = true;
+			return { ...result, stdout: canonicalJson(metadata) };
+		}
+		return result;
+	} };
+	await assert.rejects(() => executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner }), { code: "lean-entry-elaboration-drift" });
+	assert.equal(altered, true);
+	assert.deepEqual(await lakeInputState(input.inputRoot), before);
+	assert.equal((await readdir(context.directory)).some(name => name === "changed-metadata" || name.startsWith(".lean-bridge-entry-engine-")), false);
+});
+
+test("generated entry modules cannot introduce admitted implementations", { skip: !enabled || Boolean(externalEngine), timeout: 600000 }, async t => {
+	const context = await generatedLakeEntryFixture(t);
+	const text = "def Shop.quote (_value : UInt32) : UInt32 := by sorry\n";
+	await saveLakeFile(context.root, "tools/TableGenerator.lean", `def TableGenerator.generate (_inputs : Array (String × String)) (_args : Array String)
+    : Except String (Array (String × String)) :=
+  .ok #[("lean", ${JSON.stringify(text)}), ("header", ""), ("native", "")]
+`);
+	const input = await prepare(context.root, join(context.directory, "build")), before = await lakeInputState(context.workspace);
+	const outputRoot = join(context.directory, "admitted-output");
+	const runner = { capture: () => assert.fail("Admitted generated API reached target compilation") };
+	await assert.rejects(() => executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner }), error => /depends on sorry/.test(JSON.stringify(error.details)));
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+	assert.equal((await readdir(context.directory)).some(name => name === "admitted-output" || name.startsWith(".lean-bridge-entry-engine-")), false);
 });

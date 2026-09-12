@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:lake-entry-elaboration:v1",
+  "title": "Fresh Lean metadata for generated npm entry modules",
+  "description": "Engine-owned primitive export metadata bound to the original capture, generated handoff, compiler, extractor, request and fresh interfaces. Compilation checks it again before linking.",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "snapshotSha256", "generatedSourcesSha256", "leanCompilerSha256", "extractorSha256", "request", "interfaces", "metadata"],
+  "properties": {
+    "schemaVersion": {"const": 1}, "kind": {"const": "lean-bridge-lake-entry-elaboration"},
+    "snapshotSha256": {"$ref": "#/$defs/sha256"}, "generatedSourcesSha256": {"$ref": "#/$defs/sha256"},
+    "leanCompilerSha256": {"$ref": "#/$defs/sha256"}, "extractorSha256": {"$ref": "#/$defs/sha256"},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["modules", "exportModules", "exports", "resources", "arities"],
+      "properties": {
+        "modules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/name"}},
+        "exportModules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/name"}},
+        "exports": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/name"}},
+        "resources": {"const": []}, "arities": {"const": []}
+      }
+    },
+    "interfaces": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["module", "sourceSha256", "oleanSha256"],
+        "properties": {"module": {"$ref": "#/$defs/name"}, "sourceSha256": {"$ref": "#/$defs/sha256"}, "oleanSha256": {"$ref": "#/$defs/sha256"}}
+      }
+    },
+    "metadata": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "kind", "declarations"],
+      "properties": {
+        "schemaVersion": {"const": 1}, "kind": {"const": "lean-bridge-native-elaborated-exports"},
+        "declarations": {"type": "array", "minItems": 1, "maxItems": 1024, "items": {"$ref": "#/$defs/declaration"}}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "name": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"},
+    "primitive": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "name", "lean", "abi"],
+      "properties": {
+        "kind": {"const": "primitive"},
+        "name": {"enum": ["unit", "bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "nat", "int", "float32", "float64", "string", "bytes"]},
+        "lean": {"$ref": "#/$defs/name"},
+        "abi": {
+          "type": "object", "additionalProperties": false, "required": ["cType", "box", "unbox", "heap"],
+          "properties": {
+            "cType": {"enum": ["uint8_t", "uint16_t", "uint32_t", "uint64_t", "float", "double", "lean_object*"]},
+            "box": {"type": "string", "pattern": "^lean_box(?:_uint32|_uint64|_float32|_float)?$(?![\\s\\S])"},
+            "unbox": {"type": "string", "pattern": "^lean_unbox(?:_uint32|_uint64|_float32|_float)?$(?![\\s\\S])"},
+            "heap": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "declaration": {
+      "type": "object", "additionalProperties": false, "required": ["name", "module", "parameters", "result"],
+      "properties": {
+        "name": {"$ref": "#/$defs/name"}, "module": {"$ref": "#/$defs/name"}, "result": {"$ref": "#/$defs/primitive"},
+        "parameters": {
+          "type": "array", "maxItems": 32,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["name", "type"],
+            "properties": {"name": {"type": "string", "minLength": 1}, "type": {"$ref": "#/$defs/primitive"}}
+          }
+        }
+      }
+    }
+  }
+}

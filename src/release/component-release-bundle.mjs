@@ -192,6 +192,13 @@ export const buildComponentReleaseBundle = async ({
 		}
 		await copy(staging, `artifacts/${artifactName}`, join(side, linked.manifest.artifact.path));
 		await write(staging, "binding/binding-ir.json", canonicalJson(analysis.bindingIr.document));
+		if(compilationPlan.document.schemaVersion === 3)
+		{
+			const bytes = await readFile(join(inputs, "generated/lake-entry-exports.json"));
+			if(sha256(bytes) !== compilationPlan.document.source.elaborationSha256 || bytes.toString() !== canonicalJson(analysis.elaboration))
+				fail("component-release-source-drift", "Elaborated export evidence differs from the compiled API");
+			await write(staging, "metadata/lake-entry-exports.json", bytes);
+		}
 		await write(staging, "binding/private-abi.json", canonicalJson(compilerAdapters.plan.privateAbi));
 		await write(staging, "metadata/assurance.json", canonicalJson({ schemaVersion: 1, component: analysis.bindingIr.document.component.id, bindingIrSemanticSha256: analysis.bindingIr.semanticSha256, claims: analysis.bindingIr.document.assurance }));
 		const runtimeRequirement = Object.freeze({ schemaVersion: 1, kind: "lean-bridge-shared-runtime-requirement", artifactIncluded: false, ...componentPlan.document.runtime, requiredImports: Object.freeze(["memory", "__indirect_function_table"]) });

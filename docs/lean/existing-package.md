@@ -20,6 +20,8 @@ lean-bridge analyze --project /path/to/library --json --progress none
 
 Read `proposedExports`, diagnostics, and required adapter questions. A required question is a build blocker, not an automatically applied source edit. Keep unsupported public declarations out of the selected component or supply a reviewed supported boundary. The analyzer does not generate an adapter from a prose answer.
 
+`analyze` inspects captured source; it does not run generators. If your [public entry module is generated](#generate-the-public-entry-module), use `build` to generate it and obtain its exports from fresh Lean interfaces inside the build engine.
+
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 
 ## Configure exports
@@ -115,7 +117,7 @@ lean_lib MyLibrary where
   needs := #[.packageTarget .anonymous `table]
 ```
 
-Lean Bridge invokes the checked `TableGenerator.generate` function, not the custom target's build body. The placeholder target above supplies its name; retain your normal generation body if you also use the target with `lake build`. Keep a captured `MyLibrary.lean` as the public entry module:
+Lean Bridge invokes the checked `TableGenerator.generate` function, not the custom target's build body. The placeholder target above supplies its name; retain your normal generation body if you also use the target with `lake build`. This example uses a captured `MyLibrary.lean` to expose the generated value:
 
 ```lean
 import Generated
@@ -126,9 +128,35 @@ end MyLibrary
 
 Create and review the project's `lake-manifest.json` during normal Lake development, then use the usual npm or CPAN build command. The builder selects the required recipes, runs them in private staging, re-resolves generated imports, and compiles the resulting application. Unused recipes do not execute. A dependency-owned recipe must belong to the current package or a direct declared dependency. Generated C files still need an `input_file` and a `moreLinkObjs` reference; merely listing a C output does not select it for linking.
 
-Recipes cannot supply shell commands, environment overrides, prebuilt interfaces, or arbitrary compiler flags. Tools must have captured modules and pure checked implementations. Generated imports cannot introduce another generator after selection. Public entry modules must already exist in the captured project. The generated-source JSON handoff is limited to 64 MiB; each output is also limited to 8 MiB, and each generator to 16 MiB total output.
+Recipes cannot supply shell commands, environment overrides, prebuilt interfaces, or arbitrary compiler flags. Tools must have captured modules and pure checked implementations. Generated imports cannot introduce another generator after selection. The generated-source JSON handoff is limited to 64 MiB; each output is also limited to 8 MiB, and each generator to 16 MiB total output.
 
 The build records output bytes, generator receipts, source origins, and compiler identities separately from the original snapshot. npm bundles and CPAN distributions retain `lake-generated-sources.json`. Consumers install and call compiled code without running the generator. See the [installed-package acceptance record](../evidence/lake-generated-packages-20260912.md).
+
+### Generate the public entry module
+
+The generator can produce the selected API module itself. Keep `modules: ["MyLibrary"]` and `exports: ["MyLibrary.value"]` in the configuration above, but change the recipe's output path to `generated/MyLibrary.lean`. Emit its public declaration directly:
+
+```lean
+def TableGenerator.generate (inputs : Array (String × String))
+    (_args : Array String) : Except String (Array (String × String)) := do
+  let some (_, raw) := inputs[0]? | .error "missing value"
+  let value := raw.trimAscii.toString
+  .ok #[("lean", s!"def MyLibrary.value : UInt32 := {value}\n")]
+```
+
+Keep the package, target, and tool library from the previous example. Replace its two application libraries with:
+
+```lean
+lean_lib MyLibrary where
+  srcDir := "generated"
+  needs := #[.packageTarget .anonymous `table]
+```
+
+Do not supply a captured `MyLibrary.lean` or `generated/MyLibrary.lean` alongside this recipe. The selected module must have one source candidate and one root-owned producer. Lake confirms that the generated path belongs to the selected library. Captured and generated entry modules can share one `modules` selection.
+
+Run the usual npm or CPAN build command. Omit `exports` if every public function in the selected modules should be exported. npm's host planner records only the original capture and module intent. The engine generates source, compiles fresh interfaces, and asks Lean for the declarations and their types before creating adapters. Type aliases and inferred result types resolve through Lean. npm retains its pure primitive signature profile; CPAN retains its native signature checks.
+
+The npm bundle includes `metadata/lake-entry-exports.json`. Its compilation plan binds that record's hash and the generated-source handoff. Target compilation checks the metadata against fresh interfaces again before linking. The original source snapshot remains unchanged. A supplied Binding IR cannot replace the generated API's compiler metadata. See the [generated-entry acceptance record](../evidence/lake-generated-entries-20260912.md).
 
 ### Choose an npm package name
 

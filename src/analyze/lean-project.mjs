@@ -507,13 +507,13 @@ const proposedIr = ({ facts, exports, theorems }) => {
 };
 
 /**
- * Inventories a Lean project, correlates source declarations with compiled exports, and emits diagnostics plus a proposed Binding IR.
+ * Inventory original source and package facts without selecting declarations or assigning types.
  *
  * @param projectRoot - Lean project root inspected without modifying its source or build outputs.
  * @param root0 - Optional controls for the project scan.
  * @param root0.signal - Abort signal checked throughout filesystem and environment analysis.
  */
-export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {}) => {
+export const inspectLeanProject = async (projectRoot, { signal = undefined } = {}) => {
 	const root = resolve(projectRoot);
 	signal?.throwIfAborted();
 	let files;
@@ -526,7 +526,6 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		throw error;
 	}
 	const configurationRecord = await readExportConfiguration(root, { signal });
-	const configuration = configurationRecord.configuration;
 	const relevant = files.filter(path =>
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
@@ -542,8 +541,23 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	}
 	inputs.sort((left, right) => left.path.localeCompare(right.path));
 	assertExportConfigurationSnapshot(configurationRecord, inputs);
-	const treeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
-	const [facts, environment] = await Promise.all([packageFacts(root), compiledEnvironment(root, { signal })]);
+	const sourceTreeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
+	return { inputs, sourceTreeSha256, project: await packageFacts(root), configurationRecord };
+};
+
+/**
+ * Analyze captured source declarations without executing a project or its generators.
+ *
+ * @param projectRoot - Ordinary Lean project directory.
+ * @param options - Optional cancellation settings.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {}) => {
+	const root = resolve(projectRoot);
+	const inspected = await inspectLeanProject(root, { signal });
+	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
+	const configuration = configurationRecord.configuration;
+	const environment = await compiledEnvironment(root, { signal });
 	signal?.throwIfAborted();
 	const compiledDeclarations = new Set(environment.modules.flatMap(module => module.declarations));
 	const declarations = [];

@@ -6,7 +6,7 @@
 import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -15,6 +15,7 @@ import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mj
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
+import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -190,7 +191,10 @@ export const buildNativeComponent = async ({ projectRoot
 		resources ??= config.resources ?? [];
 		arities ??= config.arities ?? {};
 		moduleName ??= config.targets?.cpan?.module;
-		const analysis = await analyzeLeanProject(project, { signal });
+		const inventory = await inspectLeanProject(project, { signal });
+		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
+		const generatedEntries = entries.some(entry => entry.origin.kind === "generated");
+		const analysis = generatedEntries ? inventory : await analyzeLeanProject(project, { signal });
 		assertExportConfigurationSnapshot(record, analysis.inputs);
 		const lean = join(resolve(leanPrefix), "bin/lean");
 		const probe = await run(lean, ["--version"], { signal });
@@ -198,11 +202,11 @@ export const buildNativeComponent = async ({ projectRoot
 		if(!probe.stdout.includes(pinnedNativeLean) || analysis.project.toolchain !== `leanprover/lean4:v${leanVersion}`) throw new Error("native source/compiler/runtime toolchain mismatch");
 		const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 		if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
-		const sources = selectSourceModules({ ...config, modules }, analysis.inputs);
+		const sources = entries.filter(entry => entry.origin.kind === "captured").map(({ module, path, bytes, sha256 }) => ({ module, path, bytes, sha256 }));
 		let sourceByModule = new Map(selectSourceModules({}, analysis.inputs).map(({ module, ...input }) => [module, input]));
 		for(const { module, ...input } of sources) sourceByModule.set(module, input);
 		const selectedModules = modules ?? [...sourceByModule.keys()];
-		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !sourceByModule.has(name))) throw new Error("native module selection is invalid");
+		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !entries.some(entry => entry.module === name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
 		const lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
@@ -213,9 +217,7 @@ export const buildNativeComponent = async ({ projectRoot
 			lakeWorkspace = await resolveLakeBuildWorkspace({ snapshot: lakeSnapshot, modules: selectedModules, leanPrefix, signal });
 			if(lakeWorkspace.resolution.leanCommit !== pinnedNativeLean) throw new Error("native Lake resolver/compiler identity mismatch");
 			lakeModules = new Map(lakeWorkspace.resolution.modules.map(module => [module.module, module]));
-			for(const name of selectedModules)
-				if(lakeModules.get(name)?.path !== `root/${sourceByModule.get(name).path}`)
-					throw new Error(`Lake module source differs from the selected root source: ${name}`);
+			verifyLakeEntryModules(entries, lakeWorkspace.resolution);
 			sourceByModule = new Map(lakeWorkspace.resolution.modules.map(module => [module.module, { ...module.source, path: module.path }]));
 		}
 		const sourcePathFor = (name, input) => lakeWorkspace ? `${name.replaceAll(".", "/")}.lean` : input.path;
@@ -262,11 +264,14 @@ export const buildNativeComponent = async ({ projectRoot
 		for(const name of selectedModules) await compile(name);
 		// Declaration discovery is provisional. The extractor resolves these names in
 		// fresh interfaces and rejects any unsupported, private, unsafe or stale shape.
-		const discovered = analysis.declarations.filter(item => ["def", "opaque"].includes(item.kind)
+		const discovered = (analysis.declarations ?? []).filter(item => ["def", "opaque"].includes(item.kind)
       && selectedModules.includes(item.path.replace(/\.lean$/, "").replaceAll("/", "."))
       && !/^(?:private|protected)\s/.test(item.signature)).map(item => item.name);
-		if(!exports.length && !discovered.length) throw new Error("No public definitions discovered; select exports explicitly in lean-bridge.exports.json");
-		const request = { modules: compileOrder.map(item => item.module), exports: exports.length ? exports : discovered, resources, arities: Object.entries(arities) };
+		if(!generatedEntries && !exports.length && !discovered.length) throw new Error("No public definitions discovered; select exports explicitly in lean-bridge.exports.json");
+		const request = { modules: compileOrder.map(item => item.module)
+			, exports: exports.length ? exports : discovered, resources
+			, arities: Object.entries(arities)
+			, ...(generatedEntries ? { exportModules: selectedModules } : {}) };
 		await save(join(staging, "request.json"), json(request));
 		const extracted = await run(lean, ["--run", join(engineRoot, "src/analyze/NativeExports.lean"), join(staging, "request.json")], { env, signal });
 		const metadata = JSON.parse(extracted.stdout);

@@ -59,13 +59,13 @@ Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowin
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
-Analysis, compilation, packaging, and loading check the same ordinary-component capability contract.
+Analysis, compilation, packaging, and loading check the same ordinary-component capability contract. For [generated entry modules](existing-package.md#generate-the-public-entry-module), Lean resolves aliases and inferred types inside the build engine before the primitive adapter is generated.
 
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures.
 
-Shared export configuration selects modules, optional exact exports, resources, and closure arities. Local modules and the pinned Lean standard library are supported. External Lake dependencies, open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work. Unsupported native shapes fail before packaging.
+Shared export configuration selects modules, optional exact exports, resources, and closure arities. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work. Unsupported native shapes fail before packaging.
 
 Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. npm's source scanner and primitive frame are not the native ABI description.
 

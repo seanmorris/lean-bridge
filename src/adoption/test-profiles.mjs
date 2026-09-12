@@ -38,6 +38,7 @@ const profileManifest = Object.freeze({
 		, "javascript-generator"
 		, "lake-dependency-snapshot"
 		, "lake-component-input"
+		, "lake-entry-modules"
 		, "lake-generator-contract"
 		, "lake-native-inputs"
 		, "lean-project-analyzer"
