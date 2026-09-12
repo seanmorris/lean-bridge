@@ -79,7 +79,7 @@ lean_lib ${names.root} where
   needs := #[.packageTarget .anonymous \`table]
 `;
 	await saveLakeFile(root, "lakefile.lean", lakefile);
-	await saveLakeFile(root, `${names.root}.lean`, `import Generated\nimport ${names.local}\ndef ${names.root}.${names.operation} (value : UInt32) : UInt32 := ${names.local}.${names.operation} value + Generated.value\n`);
+	await saveLakeFile(root, `${names.root}.lean`, `import Generated\nimport ${names.local}\nnamespace ${names.root}\ndef ${names.operation} (value : UInt32) : UInt32 := ${names.local}.${names.operation} value + Generated.value\nend ${names.root}\n`);
 	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: root, includeProject: true });
 	return { ...context, recipe, configuration, lakefile, snapshot };
 };

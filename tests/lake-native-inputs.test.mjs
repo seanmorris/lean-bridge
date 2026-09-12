@@ -40,6 +40,11 @@ test("C compilation metadata binds profile, compiler, objects, and the include c
 	const expected = { snapshotSha256, profile: "native-library-v1" };
 	validateLakeNativeCompilation(example(), expected);
 	await assertJsonSchema("lake-native-compilation", example());
+	const generated = { ...example(), schemaVersion: 2, overlaySha256: "3".repeat(64) };
+	assert.equal(validateLakeNativeCompilation(generated, { ...expected, overlaySha256: generated.overlaySha256 }), true);
+	await assertJsonSchema("lake-native-compilation", generated);
+	assert.throws(() => validateLakeNativeCompilation(generated, expected), /fields must be closed/);
+	assert.throws(() => validateLakeNativeCompilation(generated, { ...expected, overlaySha256: "4".repeat(64) }), /authorized build/);
 	for(const change of [
 		value => { value.profile = "side-module-2"; }
 		, value => { value.snapshotSha256 = "3".repeat(64); }

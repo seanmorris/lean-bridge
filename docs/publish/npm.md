@@ -20,7 +20,9 @@ The build bundle includes captured sources under `bundle/lake/`. Its component a
 
 This path supports Lean dependency imports, including transitive packages and custom source directories in root and dependency libraries. Use explicit [module selection](../lean/existing-package.md#select-modules-in-a-custom-source-directory) for a custom root layout. [Declared C inputs](../lean/existing-package.md#declare-c-link-inputs) compile with the WASM profile; `locks/side-module-link-manifest.json` records their compiler, include closure, and object hashes under `nativeCompilation`.
 
-Missing pins, source drift, symlinks, package overrides, ambiguous modules, custom build targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Custom generators and reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md) and [C-input acceptance](../evidence/lake-c-inputs-20260911.md).
+Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The engine runs selected pure tools and compiles their Lean/C/header outputs. `bundle/generated/lake-generated-sources.json` retains their bytes and receipts; the target-C and link manifests bind its digest. The publication dry run reproduces generation in both isolated builds. Installed npm users do not need Lean or generator tooling.
+
+Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
 ## Publish an ordinary component
 

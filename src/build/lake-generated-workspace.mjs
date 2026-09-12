@@ -42,6 +42,11 @@ const overlayDocument = (snapshot, prerequisites, expectedPrerequisitesSha256) =
 	, outputs: outputFiles(prerequisites)
 });
 const identity = content => ({ bytes: Buffer.byteLength(content), sha256: sha256(content), mode: 0o644 });
+const sourceContexts = new WeakMap();
+const artifactLimit = 64 * 1024 * 1024;
+const workspaceFiles = (snapshot, overlay) => [...capturedFiles(snapshot)
+	, ...overlay.outputs
+	, { path: "lake-dependency-snapshot.json", ...identity(canonicalJson(snapshot.document)) }];
 
 // Read no more than the authorized size plus one byte, even during concurrent growth.
 const readVerified = async (path, expected, signal) => {
@@ -304,14 +309,127 @@ export const resolveGeneratedLakeWorkspace = async ({ snapshot, modules, prerequ
 			await verifyTools();
 		};
 		await verify();
-		return Object.freeze({ sourceRoot, workspaceRoot: overlay.workspaceRoot
+		const context = Object.freeze({ sourceRoot
+			, workspaceRoot: overlay.workspaceRoot
 			, overlay: overlay.document, catalog: overlay.catalog
 			, document, sha256: hash, verify
 			, dispose: async () => { await rm(working, { recursive: true, force: true }); await overlay.dispose(); } });
+		sourceContexts.set(context, { snapshot, overlay: overlay.document
+			, verify: overlay.verify
+			, prerequisites: overlay.prerequisites, catalog: overlay.catalog, modules });
+		return context;
 	} catch(error)
 	{
 		if(working) await rm(working, { recursive: true, force: true });
 		await overlay.dispose();
 		throw error;
 	}
+};
+
+/**
+ * Read authenticated captured/generated identities for a C compilation context.
+ * Plain objects cannot supply additional authorized sources.
+ *
+ * @param context - Workspace produced by resolution or the artifact reader.
+ * @param snapshot - Independently authorized original capture.
+ */
+export const verifiedGeneratedLakeSources = async (context, snapshot) => {
+	const state = sourceContexts.get(context);
+	if(!state || state.snapshot.sha256 !== snapshot.sha256) fail("Generated sources require an authenticated workspace context");
+	await state.verify();
+	return { root: context.workspaceRoot
+		, files: sourceIdentities(state.snapshot, state.overlay)
+		, overlaySha256: sha256(canonicalJson(state.overlay)), verify: state.verify };
+};
+
+/**
+ * Serialize generated UTF-8 sources and their separate receipts for build handoff.
+ * One bounded file keeps the engine's output inventory known before Lake runs.
+ *
+ * @param context - Fresh resolved generated workspace.
+ */
+export const createLakeGeneratedSources = async context => {
+	const state = sourceContexts.get(context);
+	if(!state || context.document.kind !== "lean-bridge-generated-lake-resolution") fail("Source handoff requires fresh generated resolution");
+	await state.verify();
+	const outputs = [];
+	for(const file of state.overlay.outputs)
+	{
+		const bytes = await readVerified(join(context.workspaceRoot, file.path), file);
+		outputs.push({ path: file.path, text: new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes) });
+	}
+	const document = frozen({ schemaVersion: 1
+		, kind: "lean-bridge-lake-generated-sources"
+		, snapshotSha256: state.snapshot.sha256, requestedModules: state.modules
+		, prerequisites: state.prerequisites
+		, prerequisitesSha256: context.document.prerequisitesSha256
+		, overlay: state.overlay, overlaySha256: context.document.overlaySha256
+		, resolution: context.document, resolutionSha256: context.sha256, outputs });
+	const bytes = canonicalJson(document);
+	if(Buffer.byteLength(bytes) > artifactLimit) fail("Generated source handoff exceeds 64 MiB");
+	await state.verify();
+	return Object.freeze({ document, sha256: sha256(bytes) });
+};
+
+/**
+ * Restore a digest-bound source handoff without executing a generator again.
+ * Recipes come from the original verified capture, never the handoff itself.
+ *
+ * @param options - Original capture, requested modules and externally retained digest.
+ * @param options.snapshot - Authenticated original source capture.
+ * @param options.snapshotRoot - Exact materialization of that capture.
+ * @param options.modules - Independently selected public root modules.
+ * @param options.artifactPath - Generated-source JSON handoff.
+ * @param options.expectedSha256 - Handoff digest recorded by the producing compiler.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const readLakeGeneratedSources = async ({ snapshot, snapshotRoot, modules, artifactPath, expectedSha256, signal }) => {
+	if(!digest(expectedSha256)) fail("Generated sources require an expected handoff identity");
+	const path = resolve(artifactPath), stat = await lstat(path);
+	if(stat.size > artifactLimit) fail("Generated source handoff exceeds 64 MiB");
+	const bytes = await readVerified(path, { bytes: stat.size, sha256: expectedSha256, mode: 0o644 }, signal);
+	const document = frozen(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)));
+	closed(document, ["schemaVersion", "kind", "snapshotSha256", "requestedModules", "prerequisites", "prerequisitesSha256", "overlay", "overlaySha256", "resolution", "resolutionSha256", "outputs"]);
+	if(document.schemaVersion !== 1 || document.kind !== "lean-bridge-lake-generated-sources" || document.snapshotSha256 !== snapshot.sha256
+		|| !Array.isArray(modules) || !same(document.requestedModules, [...modules].sort()) || canonicalJson(document) !== bytes.toString("utf8")) fail("Generated source handoff differs from the authorized build");
+	const catalog = await readLakeGeneratorRecipes({ snapshot, snapshotRoot, signal });
+	validateGeneratedLakeResolution(document.resolution, { snapshot, modules
+		, catalog, prerequisites: document.prerequisites
+		, expectedPrerequisitesSha256: document.prerequisitesSha256
+		, overlay: document.overlay
+		, expectedOverlaySha256: document.overlaySha256
+		, expectedSha256: document.resolutionSha256 });
+	if(!Array.isArray(document.outputs) || document.outputs.length !== document.overlay.outputs.length) fail("Generated handoff output inventory differs from its receipts");
+	for(const [index, output] of document.outputs.entries())
+	{
+		closed(output, ["path", "text"]);
+		const expected = document.overlay.outputs[index];
+		if(output.path !== expected.path || typeof output.text !== "string" || !output.text.isWellFormed()
+			|| Buffer.byteLength(output.text) !== expected.bytes || sha256(output.text) !== expected.sha256) fail("Generated handoff output differs from its receipt");
+	}
+	const working = await mkdtemp(join(tmpdir(), `lean-bridge-generated-handoff-${process.pid}-`));
+	try
+	{
+		const workspaceRoot = join(working, "workspace");
+		await writeLakeDependencySnapshot({ snapshot, outputRoot: workspaceRoot, signal });
+		for(const output of document.outputs)
+		{
+			await mkdir(dirname(join(workspaceRoot, output.path)), { recursive: true });
+			await writeFile(join(workspaceRoot, output.path), output.text, { flag: "wx", mode: 0o444, signal });
+		}
+		const files = workspaceFiles(snapshot, document.overlay);
+		for(const file of files) await chmod(join(workspaceRoot, file.path), file.mode === 0o755 ? 0o555 : 0o444);
+		const verify = async () => {
+			await readVerified(path, { bytes: bytes.length, sha256: expectedSha256, mode: 0o644 }, signal);
+			await verifyLakeDependencySnapshot({ snapshot, snapshotRoot, signal });
+			await verifyFiles(workspaceRoot, files, signal);
+		};
+		await verify();
+		const context = Object.freeze({ workspaceRoot, document
+			, sha256: expectedSha256, verify
+			, dispose: () => rm(working, { recursive: true, force: true }) });
+		sourceContexts.set(context, { snapshot, overlay: document.overlay, verify });
+		return context;
+	} catch(error)
+	{ await rm(working, { recursive: true, force: true }); throw error; }
 };

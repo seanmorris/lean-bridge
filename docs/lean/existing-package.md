@@ -6,7 +6,7 @@ Start with a Lake project that already builds. Choose the functions an applicati
 
 Keep the library's source and proof history. Work on a branch, inspect `lean-toolchain`, and use the compiler selected by the project to run its existing build and tests. The current bridge builders require Lean 4.32.2; a library pinned to another version needs a checked migration before packaging.
 
-Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Both [npm/WASM](../publish/npm.md#build-with-locked-lake-dependencies) and [native/CPAN](../publish/cpan.md#build-with-locked-lake-dependencies) builds accept locked Lean dependencies, including relative local packages and cached Git checkouts at full commit pins. They also compile [declared C inputs](#declare-c-link-inputs). Custom generators, prebuilt native libraries, and reviewed foreign-function contracts remain part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages).
+Review the library's public declarations, imported modules, and dependency versions. The [target guide](../publishing.md#choose-the-package-ecosystem) identifies the build input each backend currently accepts. Both [npm/WASM](../publish/npm.md#build-with-locked-lake-dependencies) and [native/CPAN](../publish/cpan.md#build-with-locked-lake-dependencies) builds accept locked Lean dependencies, including relative local packages and cached Git checkouts at full commit pins. They also compile [declared C inputs](#declare-c-link-inputs) and [generated Lean/C sources](#generate-lean-and-c-sources). Prebuilt native libraries and reviewed foreign-function contracts remain part of the [cross-language authoring work](../architecture/cross-language-authoring.md#stages).
 
 ## Choose the application API
 
@@ -38,7 +38,7 @@ Replace those names with your library's module and fully qualified declarations.
 
 Analysis and ordinary builds read the same selection and include the configuration in the source identity. `resources` and `arities` currently feed the native compiler. Target-specific package settings live under `targets`, using package target names such as `npm`, `pypi`, `cargo`, or `cpan`. A backend rejects a configured setting it does not implement; declaring a target does not select it for a build.
 
-The npm builder accepts shared module/export selection, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+The npm builder accepts shared module/export selection, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
 
 ### Select modules in a custom source directory
 
@@ -64,7 +64,71 @@ Use your existing library entry rather than adding a second one with the same na
 
 The builder compiles each selected C file once per native or WASM profile. It asks the selected compiler for every included file, checks captured source hashes, and records the compiler, header, and object identities. It rechecks those inputs after compilation and linking. System and Lean headers must belong to the selected toolchain or runtime.
 
-This supports captured C source files, not `.o` files, static archives, `extern_lib` targets, or custom generators. Extra compiler and linker flags remain unsupported. Selected Lean calls to `@[extern]` or `@[implemented_by]` functions still fail the implementation-contract check; declaring a C input does not approve a foreign implementation. The [C-input acceptance record](../evidence/lake-c-inputs-20260911.md) separates compilation evidence from foreign-call support.
+C source files may be captured inputs or outputs of a [declared text generator](#generate-lean-and-c-sources). `.o` files, static archives, `extern_lib` targets, and extra compiler/linker flags remain unsupported. Selected Lean calls to `@[extern]` or `@[implemented_by]` functions still fail the implementation-contract check; declaring a C input does not approve a foreign implementation. The [C-input acceptance record](../evidence/lake-c-inputs-20260911.md) separates compilation evidence from foreign-call support.
+
+### Generate Lean and C sources
+
+For locked npm and CPAN builds, declare a pure Lean text generator in `lean-bridge.exports.json`. Keep the generator's modules and input files in the captured package. List each output explicitly, using package-relative `.lean`, `.c`, or `.h` paths that do not already exist in the captured source tree:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["MyLibrary"],
+  "exports": ["MyLibrary.value"],
+  "generators": [{
+    "name": "table",
+    "profile": "lean-text-v1",
+    "module": "TableGenerator",
+    "declaration": "TableGenerator.generate",
+    "inputs": [{ "name": "value", "path": "data/value.txt" }],
+    "arguments": [],
+    "outputs": [{ "name": "lean", "path": "generated/Generated.lean" }]
+  }]
+}
+```
+
+Define `tools/TableGenerator.lean` with this function signature. The input array contains the declared names and UTF-8 file contents; the second array contains the literal arguments. Return one named text value for each declared output:
+
+```lean
+def TableGenerator.generate (inputs : Array (String × String))
+    (_args : Array String) : Except String (Array (String × String)) := do
+  let some (_, raw) := inputs[0]? | .error "missing value"
+  let value := raw.trimAscii.toString
+  .ok #[("lean", s!"def Generated.value : UInt32 := {value}\n")]
+```
+
+For this example, put `17` in `data/value.txt`. Associate the recipe with a Lake target and select it from the application library's `needs`. These entries in `lakefile.lean` use a separate tool library so the generator does not depend on its own output:
+
+```lean
+import Lake
+open Lake DSL
+package example
+
+target table _pkg : Unit := do
+  pure (Job.pure ())
+
+lean_lib TableGenerator where
+  srcDir := "tools"
+lean_lib Generated where
+  srcDir := "generated"
+lean_lib MyLibrary where
+  needs := #[.packageTarget .anonymous `table]
+```
+
+Lean Bridge invokes the checked `TableGenerator.generate` function, not the custom target's build body. The placeholder target above supplies its name; retain your normal generation body if you also use the target with `lake build`. Keep a captured `MyLibrary.lean` as the public entry module:
+
+```lean
+import Generated
+namespace MyLibrary
+def value : UInt32 := Generated.value
+end MyLibrary
+```
+
+Create and review the project's `lake-manifest.json` during normal Lake development, then use the usual npm or CPAN build command. The builder selects the required recipes, runs them in private staging, re-resolves generated imports, and compiles the resulting application. Unused recipes do not execute. A dependency-owned recipe must belong to the current package or a direct declared dependency. Generated C files still need an `input_file` and a `moreLinkObjs` reference; merely listing a C output does not select it for linking.
+
+Recipes cannot supply shell commands, environment overrides, prebuilt interfaces, or arbitrary compiler flags. Tools must have captured modules and pure checked implementations. Generated imports cannot introduce another generator after selection. Public entry modules must already exist in the captured project. The generated-source JSON handoff is limited to 64 MiB; each output is also limited to 8 MiB, and each generator to 16 MiB total output.
+
+The build records output bytes, generator receipts, source origins, and compiler identities separately from the original snapshot. npm bundles and CPAN distributions retain `lake-generated-sources.json`. Consumers install and call compiled code without running the generator. See the [installed-package acceptance record](../evidence/lake-generated-packages-20260912.md).
 
 ### Choose an npm package name
 

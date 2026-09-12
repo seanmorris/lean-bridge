@@ -172,9 +172,9 @@
         {"path":"docs/evidence/lake-root-layouts-20260911.md","sha256":"bb833e36fa01709fae6b787f7b7eb449d6369bd27539a55f7e26ee971f6eabcb"},
         {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"ae8517c289706f3b54e41b0fae4c5656a13e57c5a794894b552e0674fa8d033e"},
         {"path":"src/build/lake-workspace.mjs","sha256":"f61b7f1a3347101ee93f9a123068452e490084324e7ded61305ef6a95424b6db"},
-        {"path":"src/build/lake-native-inputs.mjs","sha256":"b8dd4dc94ff68fa6eb5e83bf88f3b081b75c354ac5f652ddf15b1eacfce22803"},
-        {"path":"schema/lake-native-compilation.schema.json","sha256":"70afee4832fb53e9e1f86e5c039facca589e2ebeafcceb5a49e9ca00403df068"},
-        {"path":"tests/lake-native-inputs.test.mjs","sha256":"6bce9873a51e0b292d9af8ef7b4750cd7d4bec9fc6e73bdbf5d97f438b64b2bf"},
+        {"path":"src/build/lake-native-inputs.mjs","sha256":"df340bad41100929c05ccf6357b68ef8a981b2404cdf0d6653c5641efc7791e0"},
+        {"path":"schema/lake-native-compilation.schema.json","sha256":"606a0b9add5c7250a677c3d801cde7435d65a16bba4ac2f8e34ca8d35822f954"},
+        {"path":"tests/lake-native-inputs.test.mjs","sha256":"452b38eefa3d64a4bcc9f809ae8404a1154c5e2a992a76d30843869eecaac599"},
         {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"9bbf3a9b86537fb19d8a64eb620a9fe9fc477f3a5e982d9f571b3963557a374a"},
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
         {"path":"tests/lake-workspace.test.mjs","sha256":"7c186b2d6c7944d89ff62feee1085703272d14322a7f26d554f5e83aaff6fb2d"},
@@ -193,7 +193,7 @@
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "97f40cc52c686bb63293a849e7a4545f8ffc414c790f1424b54847de6b568be3"
+          "sha256": "6d90f2fb28d89b285d13c86844f947248819cb659514c9091df0a40a37970d6e"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -205,7 +205,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "dc6e2e737662745e1801c8066bb4c8523ff30508e7d6492cd20b84d490e8bfe8"
+          "sha256": "ef73ade2adcc8c9732cf9bf10a8228abc7c590b40dac2d089d09eacf4fe68138"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -241,7 +241,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "dcaa60ac3f3217ee3bbc7d32eea200ba81dd94d8b687d4f867038d7d315f18db"
+          "sha256": "392bca0f29a9214bfec9a73beb34fdb81949b38bef2256632af3126bd2e1fcfb"
         },
         {
           "path": "src/release/cpan-install-trace.mjs",
@@ -336,7 +336,7 @@
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"src/analyze/lean-project.mjs","sha256":"17e2f503b13e0f18b4448bff7b1f8dd5b0483706300f56bfff41093c50b64ee8"},
-        {"path":"src/build/component-plan.mjs","sha256":"874671f67e5b886f88f2895d7bc6c0b586e3d2c7da86fdf6d44200e4ffa8585e"},
+        {"path":"src/build/component-plan.mjs","sha256":"223ef17e96f6da8743f9e54efaaec9d78afea5130abba8853b8a041c1f35fc7e"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"5a7df49e3399f3f7bc9377015aa81e2545eaeeab047ac2f44ce3d6caee94298f"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},
@@ -344,7 +344,7 @@
         {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
         {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
         {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
-        {"path":"src/release/component-npm-package.mjs","sha256":"017090c5d7e82b73036ae46dee9976e74cb78bcf69514dbe579012d04e134685"}
+        {"path":"src/release/component-npm-package.mjs","sha256":"4fd921ec86796ede20af288a64ae74e602deac8a0295cdd0fe857dd41fb42fec"}
       ],
       "artifacts": []
     },

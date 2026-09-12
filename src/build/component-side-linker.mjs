@@ -10,6 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateLockedLakeResolution } from "./lake-workspace.mjs";
 import { readLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { readLakeGeneratedSources } from "./lake-generated-workspace.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
@@ -73,58 +74,80 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 	const bytes = await readFile(path);
 	const manifest = JSON.parse(bytes);
 	const locked = compilationPlan.document.schemaVersion === 2;
-	if(manifest?.schemaVersion !== (locked ? 2 : 1) || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.target !== "wasm32-unknown-emscripten-c" || manifest.sourceReadOnly !== true) fail("target-c-manifest-drift", "Target C manifest does not match the component compilation plan");
-	let order = compilationPlan.document.source.compileOrder;
-	const sources = new Map(compilationPlan.document.source.modules.map(module => [module.module, module.sha256]));
-	sources.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
-	if(locked)
+	const generated = locked && manifest?.schemaVersion === 3;
+	if(manifest?.schemaVersion !== (generated ? 3 : locked ? 2 : 1) || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.target !== "wasm32-unknown-emscripten-c" || manifest.sourceReadOnly !== true) fail("target-c-manifest-drift", "Target C manifest does not match the component compilation plan");
+	let generatedContext, nativeSnapshot, resolution;
+	try
 	{
-		const closed = (value, fields) => {
-			if(!value || typeof value !== "object" || canonicalJson(Object.keys(value).sort()) !== canonicalJson([...fields].sort()))
-				fail("invalid-target-c-manifest", "Locked target C manifest fields must be closed");
-		};
-		closed(manifest, ["schemaVersion", "component", "compilationPlanSha256", "compiler", "target", "modules", "sourceReadOnly", "lakeDependencies"]);
-		closed(manifest.compiler, ["version", "commit"]);
-		closed(manifest.lakeDependencies, ["snapshot", "resolution", "resolutionSha256"]);
-		const { snapshot, resolution, resolutionSha256 } = manifest.lakeDependencies;
-		validateLockedLakeResolution({ snapshot: { document: snapshot, sha256: compilationPlan.document.source.lakeSnapshotSha256 }, resolution, modules: compilationPlan.document.source.requestedModules });
-		for(const selected of compilationPlan.document.source.modules)
-		{
-			const actual = resolution.modules.find(module => module.module === selected.module);
-			if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes)
-				fail("target-c-manifest-drift", "Lake resolution differs from the selected root source");
-		}
-		if(sha256(canonicalJson(resolution)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit
-			|| manifest.compiler.version !== resolution.leanVersion || resolution.leanCommit !== compilationPlan.document.runtime.leanCommit)
-			fail("target-c-manifest-drift", "Target C compiler and locked resolution identities differ");
-		order = [...resolution.modules.map(module => module.module), compilationPlan.document.compilerAdapters.module];
-		for(const module of resolution.modules)
-		{
-			if(module.module === compilationPlan.document.compilerAdapters.module) fail("invalid-target-c-manifest", "Source shadows the generated adapter");
-			sources.set(module.module, module.source.sha256);
-		}
-		if(!Array.isArray(manifest.modules)) fail("invalid-target-c-manifest", "Target C modules must be an array");
-		for(const module of manifest.modules) closed(module, ["module", "sourceSha256", "targetC", "targetCSha256", "olean", "oleanSha256"]);
-	}
-	if(!Array.isArray(manifest.modules) || JSON.stringify(manifest.modules.map(module => module.module)) !== JSON.stringify(order)) fail("target-c-manifest-drift", "Target C modules do not match the resolved compile order");
-	for(const module of manifest.modules)
-	{
-		if(typeof module.targetC !== "string" || module.targetC.startsWith("/") || module.targetC.split("/").includes("..") || !/^[0-9a-f]{64}$/.test(module.targetCSha256)) fail("invalid-target-c-manifest", `Invalid target C record for ${module.module}`);
-		const source = await readFile(join(targetC, module.targetC));
-		if(sha256(source) !== module.targetCSha256) fail("target-c-drift", `Target C changed before linking: ${module.module}`);
+		let order = compilationPlan.document.source.compileOrder;
+		const sources = new Map(compilationPlan.document.source.modules.map(module => [module.module, module.sha256]));
+		sources.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
 		if(locked)
 		{
-			const stem = module.module.replaceAll(".", "/");
-			if(module.targetC !== `c/${stem}.c` || module.olean !== `olean/${stem}.olean` || module.sourceSha256 !== sources.get(module.module)
-				|| typeof module.oleanSha256 !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(module.oleanSha256))
-				fail("invalid-target-c-manifest", "Target C module paths or source identities differ from the resolved closure");
-			if(sha256(await readFile(join(targetC, module.olean))) !== module.oleanSha256)
-				fail("target-c-drift", `Fresh Lean interface changed before linking: ${module.module}`);
+			const closed = (value, fields) => {
+				if(!value || typeof value !== "object" || canonicalJson(Object.keys(value).sort()) !== canonicalJson([...fields].sort()))
+					fail("invalid-target-c-manifest", "Locked target C manifest fields must be closed");
+			};
+			closed(manifest, ["schemaVersion", "component", "compilationPlanSha256", "compiler", "target", "modules", "sourceReadOnly", "lakeDependencies"]);
+			closed(manifest.compiler, ["version", "commit"]);
+			closed(manifest.lakeDependencies, ["snapshot", "resolution", "resolutionSha256", ...(generated ? ["generatedSourcesSha256"] : [])]);
+			const { snapshot, resolution: recorded, resolutionSha256 } = manifest.lakeDependencies;
+			if(generated)
+			{
+				nativeSnapshot = await readLakeDependencySnapshot({ snapshotRoot: join(targetC, "native"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 });
+				generatedContext = await readLakeGeneratedSources({ snapshot: nativeSnapshot
+					, snapshotRoot: join(targetC, "native")
+					, modules: compilationPlan.document.source.requestedModules
+					, artifactPath: join(targetC, "lake-generated-sources.json")
+					, expectedSha256: manifest.lakeDependencies.generatedSourcesSha256 });
+				if(canonicalJson(snapshot) !== canonicalJson(nativeSnapshot.document) || canonicalJson(recorded) !== canonicalJson(generatedContext.document.resolution)
+					|| resolutionSha256 !== generatedContext.document.resolutionSha256) fail("target-c-manifest-drift", "Generated handoff differs from the compiled resolution");
+				resolution = recorded.result.resolution;
+			}
+			else
+			{
+				validateLockedLakeResolution({ snapshot: { document: snapshot, sha256: compilationPlan.document.source.lakeSnapshotSha256 }, resolution: recorded, modules: compilationPlan.document.source.requestedModules });
+				resolution = recorded;
+			}
+			for(const selected of compilationPlan.document.source.modules)
+			{
+				const actual = resolution.modules.find(module => module.module === selected.module);
+				if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes)
+					fail("target-c-manifest-drift", "Lake resolution differs from the selected root source");
+			}
+			if(sha256(canonicalJson(recorded)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit
+				|| manifest.compiler.version !== resolution.leanVersion || resolution.leanCommit !== compilationPlan.document.runtime.leanCommit)
+				fail("target-c-manifest-drift", "Target C compiler and locked resolution identities differ");
+			order = [...resolution.modules.map(module => module.module), compilationPlan.document.compilerAdapters.module];
+			for(const module of resolution.modules)
+			{
+				if(module.module === compilationPlan.document.compilerAdapters.module) fail("invalid-target-c-manifest", "Source shadows the generated adapter");
+				sources.set(module.module, module.source.sha256);
+			}
+			if(!Array.isArray(manifest.modules)) fail("invalid-target-c-manifest", "Target C modules must be an array");
+			for(const module of manifest.modules) closed(module, ["module", "sourceSha256", "targetC", "targetCSha256", "olean", "oleanSha256"]);
 		}
-	}
-	const nativeInputs = locked ? lakeNativeInputs(manifest.lakeDependencies.resolution) : [];
-	const nativeSnapshot = nativeInputs.length ? await readLakeDependencySnapshot({ snapshotRoot: join(targetC, "native"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 }) : null;
-	return Object.freeze({ manifest, sha256: sha256(bytes), nativeInputs, nativeSnapshot });
+		if(!Array.isArray(manifest.modules) || JSON.stringify(manifest.modules.map(module => module.module)) !== JSON.stringify(order)) fail("target-c-manifest-drift", "Target C modules do not match the resolved compile order");
+		for(const module of manifest.modules)
+		{
+			if(typeof module.targetC !== "string" || module.targetC.startsWith("/") || module.targetC.split("/").includes("..") || !/^[0-9a-f]{64}$/.test(module.targetCSha256)) fail("invalid-target-c-manifest", `Invalid target C record for ${module.module}`);
+			const source = await readFile(join(targetC, module.targetC));
+			if(sha256(source) !== module.targetCSha256) fail("target-c-drift", `Target C changed before linking: ${module.module}`);
+			if(locked)
+			{
+				const stem = module.module.replaceAll(".", "/");
+				if(module.targetC !== `c/${stem}.c` || module.olean !== `olean/${stem}.olean` || module.sourceSha256 !== sources.get(module.module)
+					|| typeof module.oleanSha256 !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(module.oleanSha256))
+					fail("invalid-target-c-manifest", "Target C module paths or source identities differ from the resolved closure");
+				if(sha256(await readFile(join(targetC, module.olean))) !== module.oleanSha256)
+					fail("target-c-drift", `Fresh Lean interface changed before linking: ${module.module}`);
+			}
+		}
+		const nativeInputs = locked ? lakeNativeInputs(resolution) : [];
+		if(nativeInputs.length && !nativeSnapshot) nativeSnapshot = await readLakeDependencySnapshot({ snapshotRoot: join(targetC, "native"), expectedSha256: compilationPlan.document.source.lakeSnapshotSha256 });
+		return Object.freeze({ manifest, sha256: sha256(bytes), nativeInputs, nativeSnapshot, generated: generatedContext });
+	} catch(error)
+	{ await generatedContext?.dispose(); throw error; }
 };
 
 const internalInitializerName = component => `lean_bridge_internal_initialize_${sha256(component).slice(0, 16)}`;
@@ -173,97 +196,104 @@ export const linkComponentSideModule = async ({
 	const output = resolve(outputRoot);
 	await assertAbsent(output);
 	const targetManifest = await verifyTargetCManifest({ targetC, compilationPlan });
-	const emcc = linkerCommand({ engineRoot, environment });
-	let identity;
 	try
 	{
-		const probe = await runner.capture({ command: emcc, args: ["--version"], cwd: targetC, env: environment, timeoutMs: 15_000 });
-		identity = linkerIdentity(probe.stdout || probe.stderr);
-	} catch(error)
-	{
-		if(error instanceof ComponentSideLinkerError) throw error;
-		fail("emscripten-linker-unavailable", "The pinned Emscripten linker is unavailable", { cause: error.message, command: emcc });
-	}
-	const runtime = resolve(runtimeRoot({ engineRoot, compilationPlan, environment }));
-	const includes = [join(runtime, "cmake/include"), join(runtime, "source/src/include")];
-	for(const path of includes)
-	{
+		const emcc = linkerCommand({ engineRoot, environment });
+		let identity;
 		try
 		{
-			await stat(join(path, "lean/lean.h"));
+			const probe = await runner.capture({ command: emcc, args: ["--version"], cwd: targetC, env: environment, timeoutMs: 15_000 });
+			identity = linkerIdentity(probe.stdout || probe.stderr);
 		} catch(error)
 		{
-			fail("shared-runtime-headers-unavailable", "The shared runtime header closure is unavailable", { path, cause: error.message });
+			if(error instanceof ComponentSideLinkerError) throw error;
+			fail("emscripten-linker-unavailable", "The pinned Emscripten linker is unavailable", { cause: error.message, command: emcc });
 		}
-	}
-	await mkdir(dirname(output), { recursive: true });
-	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-side-module-"));
-	try
-	{
-		const internalInitializer = internalInitializerName(compilationPlan.document.component.id);
-		const shim = initializationShim({ initializer: compilationPlan.document.compilerAdapters.initializer, internalInitializer });
-		const shimPath = join(staging, "generated/component-initializer.c");
-		const sideModulePath = join(staging, compilationPlan.document.outputs.sideModule);
-		const linkMapPath = join(staging, compilationPlan.document.outputs.linkMap);
-		await mkdir(dirname(shimPath), { recursive: true });
-		await mkdir(dirname(sideModulePath), { recursive: true });
-		await mkdir(dirname(linkMapPath), { recursive: true });
-		await writeFile(shimPath, shim);
-		const exports = [...compilationPlan.document.compilerAdapters.directSymbols, compilationPlan.document.compilerAdapters.initializer, internalInitializer].sort();
-		const cInputs = targetManifest.manifest.modules.map(module => join(targetC, module.targetC));
-		const nativeCompilation = targetManifest.nativeInputs.length ? await compileLakeNativeInputs({ snapshot: targetManifest.nativeSnapshot
-			, snapshotRoot: join(targetC, "native")
-			, inputs: targetManifest.nativeInputs
-			, outputRoot: join(staging, "native-objects")
-			, compiler: emcc, profile: "side-module-2"
-			, includeRoots: includes, runner, environment }) : null;
-		const flags = [
-			"-O2", "-fwasm-exceptions", "-flto", "-fPIC", "-ffp-contract=off"
-			, `-I${join(resolve(engineRoot), "poc/lean-link-spike")}`
-			, `-ffile-prefix-map=${targetC}=/workspace/target-c`
-			, `-fdebug-prefix-map=${targetC}=/workspace/target-c`
-			, `-fmacro-prefix-map=${targetC}=/workspace/target-c`
-			, `-ffile-prefix-map=${runtime}=/workspace/runtime`
-			, `-fdebug-prefix-map=${runtime}=/workspace/runtime`
-			, `-fmacro-prefix-map=${runtime}=/workspace/runtime`
-			, ...includes.map(path => `-I${path}`)
-			, "-sSIDE_MODULE=2", "-Wl,--no-entry"
-			, ...exports.map(symbol => `-Wl,--export=${symbol}`)
-			, `-Wl,-Map=${linkMapPath}`
-			, "-o", sideModulePath
-		];
+		const runtime = resolve(runtimeRoot({ engineRoot, compilationPlan, environment }));
+		const includes = [join(runtime, "cmake/include"), join(runtime, "source/src/include")];
+		for(const path of includes)
+		{
+			try
+			{
+				await stat(join(path, "lean/lean.h"));
+			} catch(error)
+			{
+				fail("shared-runtime-headers-unavailable", "The shared runtime header closure is unavailable", { path, cause: error.message });
+			}
+		}
+		await mkdir(dirname(output), { recursive: true });
+		const staging = await mkdtemp(join(dirname(output), ".lean-bridge-side-module-"));
 		try
 		{
-			await runner.capture({ command: emcc, args: [...cInputs, ...(nativeCompilation?.objects ?? []), shimPath, ...flags], cwd: staging, env: environment, timeoutMs: 10 * 60 * 1000 });
+			const internalInitializer = internalInitializerName(compilationPlan.document.component.id);
+			const shim = initializationShim({ initializer: compilationPlan.document.compilerAdapters.initializer, internalInitializer });
+			const shimPath = join(staging, "generated/component-initializer.c");
+			const sideModulePath = join(staging, compilationPlan.document.outputs.sideModule);
+			const linkMapPath = join(staging, compilationPlan.document.outputs.linkMap);
+			await mkdir(dirname(shimPath), { recursive: true });
+			await mkdir(dirname(sideModulePath), { recursive: true });
+			await mkdir(dirname(linkMapPath), { recursive: true });
+			await writeFile(shimPath, shim);
+			const exports = [...compilationPlan.document.compilerAdapters.directSymbols, compilationPlan.document.compilerAdapters.initializer, internalInitializer].sort();
+			const cInputs = targetManifest.manifest.modules.map(module => join(targetC, module.targetC));
+			const nativeCompilation = targetManifest.nativeInputs.length ? await compileLakeNativeInputs({ snapshot: targetManifest.nativeSnapshot
+				, snapshotRoot: join(targetC, "native")
+				, generated: targetManifest.generated
+				, inputs: targetManifest.nativeInputs
+				, outputRoot: join(staging, "native-objects")
+				, compiler: emcc, profile: "side-module-2"
+				, includeRoots: includes, runner, environment }) : null;
+			const flags = [
+				"-O2", "-fwasm-exceptions", "-flto", "-fPIC", "-ffp-contract=off"
+				, `-I${join(resolve(engineRoot), "poc/lean-link-spike")}`
+				, `-ffile-prefix-map=${targetC}=/workspace/target-c`
+				, `-fdebug-prefix-map=${targetC}=/workspace/target-c`
+				, `-fmacro-prefix-map=${targetC}=/workspace/target-c`
+				, `-ffile-prefix-map=${runtime}=/workspace/runtime`
+				, `-fdebug-prefix-map=${runtime}=/workspace/runtime`
+				, `-fmacro-prefix-map=${runtime}=/workspace/runtime`
+				, ...includes.map(path => `-I${path}`)
+				, "-sSIDE_MODULE=2", "-Wl,--no-entry"
+				, ...exports.map(symbol => `-Wl,--export=${symbol}`)
+				, `-Wl,-Map=${linkMapPath}`
+				, "-o", sideModulePath
+			];
+			try
+			{
+				await runner.capture({ command: emcc, args: [...cInputs, ...(nativeCompilation?.objects ?? []), shimPath, ...flags], cwd: staging, env: environment, timeoutMs: 10 * 60 * 1000 });
+			} catch(error)
+			{
+				fail("component-side-link-failed", "Emscripten failed to link the component side module", { cause: error.message, linkerDetails: error.details ?? null });
+			}
+			const [wasm, rawMap] = await Promise.all([readFile(sideModulePath), readFile(linkMapPath, "utf8")]);
+			await nativeCompilation?.verify();
+			await targetManifest.generated?.verify();
+			if(nativeCompilation) await rm(join(staging, "native-objects"), { recursive: true });
+			const normalizedMap = normalizeMap({ map: rawMap, replacements: [[staging, "/workspace/output"], [targetC, "/workspace/target-c"], [runtime, "/workspace/runtime"], [resolve(engineRoot), "/workspace/engine"]] });
+			await writeFile(linkMapPath, normalizedMap);
+			const manifest = Object.freeze({
+				schemaVersion: 1
+				, component: compilationPlan.document.component.id
+				, compilationPlanSha256: compilationPlan.sha256
+				, targetCManifestSha256: targetManifest.sha256
+				, ...(targetManifest.generated ? { generatedSourcesSha256: targetManifest.generated.sha256, overlaySha256: targetManifest.generated.document.overlaySha256 } : {})
+				, linker: identity
+				, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
+				, profile: "side-module-2"
+				, artifact: Object.freeze({ path: compilationPlan.document.outputs.sideModule, bytes: wasm.length, sha256: sha256(wasm) })
+				, linkMap: Object.freeze({ path: compilationPlan.document.outputs.linkMap, sha256: sha256(normalizedMap) })
+				, generatedInitializer: Object.freeze({ path: "generated/component-initializer.c", sha256: sha256(shim), symbol: internalInitializer })
+				, exports: Object.freeze({ directSymbols: compilationPlan.document.compilerAdapters.directSymbols, initializer: compilationPlan.document.compilerAdapters.initializer, internalInitializer })
+				, policies: Object.freeze({ linksRuntime: false, importsSharedMemory: true, importsSharedTable: true, publicGenericDispatch: false })
+			});
+			await writeFile(join(staging, "side-module-link-manifest.json"), canonicalJson(manifest));
+			await rename(staging, output);
+			return Object.freeze({ output, manifest, manifestSha256: sha256(canonicalJson(manifest)) });
 		} catch(error)
 		{
-			fail("component-side-link-failed", "Emscripten failed to link the component side module", { cause: error.message, linkerDetails: error.details ?? null });
+			await rm(staging, { recursive: true, force: true });
+			throw error;
 		}
-		const [wasm, rawMap] = await Promise.all([readFile(sideModulePath), readFile(linkMapPath, "utf8")]);
-		await nativeCompilation?.verify();
-		if(nativeCompilation) await rm(join(staging, "native-objects"), { recursive: true });
-		const normalizedMap = normalizeMap({ map: rawMap, replacements: [[staging, "/workspace/output"], [targetC, "/workspace/target-c"], [runtime, "/workspace/runtime"], [resolve(engineRoot), "/workspace/engine"]] });
-		await writeFile(linkMapPath, normalizedMap);
-		const manifest = Object.freeze({
-			schemaVersion: 1
-			, component: compilationPlan.document.component.id
-			, compilationPlanSha256: compilationPlan.sha256
-			, targetCManifestSha256: targetManifest.sha256
-			, linker: identity
-			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
-			, profile: "side-module-2"
-			, artifact: Object.freeze({ path: compilationPlan.document.outputs.sideModule, bytes: wasm.length, sha256: sha256(wasm) })
-			, linkMap: Object.freeze({ path: compilationPlan.document.outputs.linkMap, sha256: sha256(normalizedMap) })
-			, generatedInitializer: Object.freeze({ path: "generated/component-initializer.c", sha256: sha256(shim), symbol: internalInitializer })
-			, exports: Object.freeze({ directSymbols: compilationPlan.document.compilerAdapters.directSymbols, initializer: compilationPlan.document.compilerAdapters.initializer, internalInitializer })
-			, policies: Object.freeze({ linksRuntime: false, importsSharedMemory: true, importsSharedTable: true, publicGenericDispatch: false })
-		});
-		await writeFile(join(staging, "side-module-link-manifest.json"), canonicalJson(manifest));
-		await rename(staging, output);
-		return Object.freeze({ output, manifest, manifestSha256: sha256(canonicalJson(manifest)) });
-	} catch(error)
-	{
-		await rm(staging, { recursive: true, force: true });
-		throw error;
-	}
+	} finally
+	{ await targetManifest.generated?.dispose(); }
 };

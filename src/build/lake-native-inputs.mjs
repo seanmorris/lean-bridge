@@ -8,6 +8,7 @@ import { constants } from "node:fs";
 import { delimiter, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { verifyLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { verifiedGeneratedLakeSources } from "./lake-generated-workspace.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 
 const fail = (message, code = "lake-native-input-invalid") => { throw Object.assign(new Error(message), { code }); };
@@ -25,16 +26,19 @@ const flagsFor = profile => ["-O2", "-g0", "-fPIC", "-Werror=date-time"
  * @param expected - Required snapshot and profile identities.
  * @param expected.snapshotSha256 - Authorized Lake snapshot digest.
  * @param expected.profile - Required native or WebAssembly profile.
+ * @param expected.overlaySha256 - Authorized generated workspace identity, when present.
  */
-export const validateLakeNativeCompilation = (document, { snapshotSha256, profile }) => {
+export const validateLakeNativeCompilation = (document, { snapshotSha256, profile, overlaySha256 }) => {
 	const closed = (value, fields) => {
 		if(!value || typeof value !== "object" || Array.isArray(value) || !same(Object.keys(value).sort(), [...fields].sort())) fail("C compilation fields must be closed");
 	};
 	const hash = value => typeof value === "string" && /^[0-9a-f]{64}$(?![\s\S])/.test(value);
 	const path = value => typeof value === "string" && !value.includes("\\") && ![...value].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127) && !value.split("/").some(part => !part || part === "." || part === "..");
 	const file = value => Number.isSafeInteger(value.bytes) && value.bytes >= 0 && hash(value.sha256);
-	closed(document, ["schemaVersion", "profile", "compiler", "flags", "snapshotSha256", "objects"]);
-	if(document.schemaVersion !== 1 || !["native-library-v1", "side-module-2"].includes(profile) || document.profile !== profile
+	const generated = overlaySha256 !== undefined;
+	closed(document, ["schemaVersion", "profile", "compiler", "flags", "snapshotSha256", "objects", ...(generated ? ["overlaySha256"] : [])]);
+	if(document.schemaVersion !== (generated ? 2 : 1) || (generated && (!hash(overlaySha256) || document.overlaySha256 !== overlaySha256))
+		|| !["native-library-v1", "side-module-2"].includes(profile) || document.profile !== profile
 		|| !hash(snapshotSha256) || document.snapshotSha256 !== snapshotSha256 || !same(document.flags, flagsFor(profile))) fail("C compilation profile or snapshot differs from the authorized build");
 	closed(document.compiler, ["bytes", "sha256", "version"]);
 	if(!file(document.compiler) || document.compiler.bytes < 1 || typeof document.compiler.version !== "string" || !document.compiler.version.length) fail("Invalid C compiler identity");
@@ -124,6 +128,7 @@ const executable = async (command, environment) => {
  * @param options - Selected profile, captured sources and controlled build tools.
  * @param options.snapshot - Authenticated complete Lake capture.
  * @param options.snapshotRoot - Private materialization of that capture.
+ * @param options.generated - Optional authenticated generated workspace.
  * @param options.inputs - Lake-declared, validated C input records.
  * @param options.outputRoot - New private directory for native object files.
  * @param options.compiler - Selected cc or emcc command.
@@ -136,6 +141,7 @@ const executable = async (command, environment) => {
 export const compileLakeNativeInputs = async ({
 	snapshot
 	, snapshotRoot
+	, generated
 	, inputs
 	, outputRoot
 	, compiler
@@ -147,9 +153,11 @@ export const compileLakeNativeInputs = async ({
 }) => {
 	if(!["native-library-v1", "side-module-2"].includes(profile) || !Array.isArray(inputs) || !inputs.length) fail("Native input compilation requires a selected profile and C inputs");
 	await verifyLakeDependencySnapshot({ snapshot, snapshotRoot, signal });
-	const root = await realpath(snapshotRoot), output = resolve(outputRoot);
-	if(inside(root, output)) fail("Native build output must be outside the captured source tree");
-	const files = new Map([
+	const generatedSources = generated ? await verifiedGeneratedLakeSources(generated, snapshot) : null;
+	const capturedRoot = await realpath(snapshotRoot);
+	const root = generatedSources?.root ?? capturedRoot, output = resolve(outputRoot);
+	if(inside(root, output) || inside(capturedRoot, output)) fail("Native build output must be outside the captured and generated source trees");
+	const files = generatedSources?.files ?? new Map([
 		...snapshot.document.rootInputs.map(file => [`root/${file.path}`, file])
 		, ...snapshot.document.packages.flatMap(pkg => pkg.files.map(file => [`${pkg.directory}/${file.path}`, file]))
 	]);
@@ -216,17 +224,19 @@ export const compileLakeNativeInputs = async ({
 			await rm(depfile);
 		}
 		const verify = async () => {
-			await verifyLakeDependencySnapshot({ snapshot, snapshotRoot: root, signal });
+			await verifyLakeDependencySnapshot({ snapshot, snapshotRoot, signal });
+			await generatedSources?.verify();
 			if(!same(compilerIdentity, await identity(tool))) fail("Native-input compiler changed during compilation", "lake-source-drift");
 			for(const [path, expected] of checkedFiles)
 				if(!same(expected, await identity(path))) fail("Native object or include changed before release", "lake-source-drift");
 		};
 		await verify();
-		const document = { schemaVersion: 1
+		const document = { schemaVersion: generated ? 2 : 1
 			, profile
 			, compiler: { ...compilerIdentity, version }
+			, ...(generated ? { overlaySha256: generatedSources.overlaySha256 } : {})
 			, flags, snapshotSha256: snapshot.sha256, objects: records };
-		validateLakeNativeCompilation(document, { snapshotSha256: snapshot.sha256, profile });
+		validateLakeNativeCompilation(document, { snapshotSha256: snapshot.sha256, profile, overlaySha256: generatedSources?.overlaySha256 });
 		return { objects, document, sha256: sha256(canonicalJson(document)), verify };
 	} catch(error)
 	{

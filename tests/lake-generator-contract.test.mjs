@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { chmod, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, rm, symlink, truncate, writeFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateGeneratorConfiguration } from "../src/analyze/generator-configuration.mjs";
 import { assertExportConfigurationCapabilities, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
@@ -13,19 +13,23 @@ import { join } from "node:path";
 import { prepareLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { prepareLakeGeneratorPrerequisites, readLakeGeneratorRecipes, validateLakeGeneratorSelection } from "../src/build/lake-generator-prerequisites.mjs";
 import { runLakeGenerator, validateLakeGeneratorDefinition, validateLakeGeneratorResult, verifyLakeGeneratorCompiler } from "../src/build/lake-generators.mjs";
-import { prepareGeneratedLakeWorkspace, validateGeneratedLakeWorkspace } from "../src/build/lake-generated-workspace.mjs";
+import { prepareGeneratedLakeWorkspace, readLakeGeneratedSources, validateGeneratedLakeWorkspace, verifiedGeneratedLakeSources } from "../src/build/lake-generated-workspace.mjs";
 import { validateLakeModuleClosure } from "../src/build/lake-workspace.mjs";
+import { compileLakeNativeInputs } from "../src/build/lake-native-inputs.mjs";
 import { lakeGeneratorFixture as fixture, lakeGeneratorPrerequisiteFixture } from "./helpers/lake-generator.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
-test("package-relative generator recipes are closed and normal package builds remain gated", async t => {
+test("package-relative generator recipes require an explicit backend capability", async t => {
 	const { configuration, recipe } = await lakeGeneratorPrerequisiteFixture(t);
 	assert.equal(validateGeneratorConfiguration(configuration.generators), true);
 	assert.equal(validateExportConfiguration(configuration), configuration);
 	await assertJsonSchema("lean-export-configuration", configuration);
 	for(const target of ["npm", "cpan"])
+	{
 		assert.throws(() => assertExportConfigurationCapabilities(configuration, { target }), { code: "unsupported-export-configuration" });
+		assert.doesNotThrow(() => assertExportConfigurationCapabilities(configuration, { target, fields: ["modules", "exports", "generators"], targetFields: target === "cpan" ? ["module", "version"] : [] }));
+	}
 	for(const change of [
 		recipe => { recipe.profile = "shell"; }
 		, recipe => { recipe.command = "sh"; }
@@ -154,7 +158,9 @@ test("invalid captured text fails before any compiler invocation", async t => {
 });
 
 test("generated staging requires the handoff digest and preserves an exact source-only workspace", async t => {
-	const { snapshot } = await fixture(t);
+	const { directory, root } = await fixture(t);
+	await saveLakeFile(root, "native/source.c", "unsigned captured_value(void) { return 1; }\n");
+	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: root, includeProject: true });
 	// Synthetic no-generator evidence exercises metadata/staging, not Lake execution.
 	const document = { schemaVersion: 1
 		, kind: "lean-bridge-lake-generator-prerequisites"
@@ -192,6 +198,58 @@ test("generated staging requires the handoff digest and preserves an exact sourc
 		, packages: document.selection.packages, externalImports: ["Init"]
 		, modules: [{ module: "Shop", path: "root/Shop.lean", package: "shop", imports: ["Init"] }] };
 	assert.equal(validateLakeModuleClosure(resolution, snapshot, ["Shop"]).modules.length, 1);
+	// Metadata-only transport test. No generator or compiler was executed here.
+	const captured = snapshot.document.rootInputs.find(file => file.path === "Shop.lean");
+	const annotated = { ...resolution, modules: [{ ...resolution.modules[0], source: { ...captured, path: "root/Shop.lean", origin: { kind: "captured", snapshotSha256: snapshot.sha256 } } }] };
+	const resolved = { schemaVersion: 1
+		, kind: "lean-bridge-generated-lake-resolution"
+		, snapshotSha256: snapshot.sha256, overlaySha256: result.sha256
+		, prerequisitesSha256: prerequisites.sha256
+		, resolverSha256: document.resolverSha256
+		, leanCompilerSha256: document.leanCompilerSha256
+		, lakeLibrarySha256: document.lakeLibrarySha256
+		, result: { schemaVersion: 1, resolver: "lean-lake-generated", generators: [], resolution: annotated } };
+	const artifact = { schemaVersion: 1, kind: "lean-bridge-lake-generated-sources"
+		, snapshotSha256: snapshot.sha256, requestedModules: ["Shop"]
+		, prerequisites: document, prerequisitesSha256: prerequisites.sha256
+		, overlay: result.document, overlaySha256: result.sha256
+		, resolution: resolved
+		, resolutionSha256: sha256(canonicalJson(resolved)), outputs: [] };
+	const snapshotRoot = join(directory, "handoff-capture"), artifactPath = join(directory, "sources.json");
+	await writeLakeDependencySnapshot({ snapshot, outputRoot: snapshotRoot });
+	await writeFile(artifactPath, canonicalJson(artifact));
+	await assertJsonSchema("lake-generated-sources", artifact);
+	const handoffArgs = { snapshot, snapshotRoot, modules: ["Shop"], artifactPath, expectedSha256: sha256(canonicalJson(artifact)) };
+	const restored = await readLakeGeneratedSources(handoffArgs);
+	t.after(restored.dispose);
+	const verified = await verifiedGeneratedLakeSources(restored, snapshot);
+	assert.equal(verified.files.get("root/Shop.lean").origin.kind, "captured");
+	for(const sourceRoot of [snapshotRoot, restored.workspaceRoot])
+		await assert.rejects(() => compileLakeNativeInputs({ snapshot, snapshotRoot
+			, generated: restored
+			, inputs: [{ path: "root/native/source.c", source: verified.files.get("root/native/source.c") }]
+			, outputRoot: join(sourceRoot, "objects"), compiler: "/not-installed"
+			, profile: "native-library-v1" }), /outside the captured and generated source trees/);
+	await assert.rejects(() => verifiedGeneratedLakeSources({ ...restored }, snapshot), /authenticated workspace/);
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, expectedSha256: undefined }), /expected handoff identity/);
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, expectedSha256: "0".repeat(64) }), /Source bytes or mode/);
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, modules: ["Extra"] }), /authorized build/);
+	await mkdir(join(restored.workspaceRoot, "unexpected"));
+	await assert.rejects(restored.verify, /Unexpected or symlinked/);
+	await rm(join(restored.workspaceRoot, "unexpected"), { recursive: true });
+	await restored.verify();
+	await writeFile(artifactPath, `${canonicalJson(artifact)}\n`);
+	await assert.rejects(restored.verify, /identity or file type/);
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, expectedSha256: sha256(`${canonicalJson(artifact)}\n`) }), /authorized build/);
+	await truncate(artifactPath, 64 * 1024 * 1024 + 1);
+	await assert.rejects(() => readLakeGeneratedSources(handoffArgs), /exceeds 64 MiB/);
+	await writeFile(artifactPath, canonicalJson(artifact));
+	await chmod(artifactPath, 0o755);
+	await assert.rejects(() => readLakeGeneratedSources(handoffArgs), /Source bytes or mode/);
+	await chmod(artifactPath, 0o644);
+	await symlink(artifactPath, join(directory, "linked-sources.json"));
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, artifactPath: join(directory, "linked-sources.json") }), /identity or file type/);
+	await assert.rejects(() => readLakeGeneratedSources({ ...handoffArgs, signal: AbortSignal.abort(new Error("cancelled handoff")) }), /cancelled handoff/);
 	resolution.externalImports.push("Unused");
 	assert.throws(() => validateLakeModuleClosure(resolution, snapshot, ["Shop"]), /compiler-library modules outside/);
 });

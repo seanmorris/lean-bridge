@@ -92,6 +92,13 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
 		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "artifacts.json"])
       await copy(join(componentRoot, path), join(directory, path));
+		const generatedDigest = receipt.sourceIdentity?.lakeDependencies?.generatedSourcesSha256;
+		if(generatedDigest !== undefined)
+		{
+			const bytes = await readFile(join(componentRoot, "lake-generated-sources.json"));
+			if(sha256(bytes) !== generatedDigest) throw new Error("native generated source handoff differs from compilation");
+			await save(join(directory, "lake-generated-sources.json"), bytes);
+		}
 	} else
 	{
 		await copy(join(templates, "Runtime.xs"), join(directory, "Runtime.xs"));

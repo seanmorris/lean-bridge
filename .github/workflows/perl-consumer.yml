@@ -82,6 +82,10 @@ jobs:
         with:
           path: .toolchains/perl
           key: perl-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Install relocated packages with generated Lean and C values
+        env:
+          LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST: "1"
+        run: node --test --test-name-pattern='generated native' tests/lake-generated-packages.test.mjs
       - name: Test both install paths on all four Perl configurations
         id: consumer
         continue-on-error: true

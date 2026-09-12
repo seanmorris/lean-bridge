@@ -10,6 +10,8 @@
     "component": { "type": "string", "minLength": 1 },
     "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
     "targetCManifestSha256": { "$ref": "#/$defs/sha256" },
+    "generatedSourcesSha256": { "$ref": "#/$defs/sha256" },
+    "overlaySha256": { "$ref": "#/$defs/sha256" },
     "linker": { "$ref": "#/$defs/tool" },
     "nativeCompilation": { "$ref": "lake-native-compilation.schema.json" },
     "profile": { "const": "side-module-2" },
@@ -47,6 +49,7 @@
       }
     }
   },
+  "dependentRequired": { "generatedSourcesSha256": ["overlaySha256"], "overlaySha256": ["generatedSourcesSha256"] },
   "$defs": {
     "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "tool": {

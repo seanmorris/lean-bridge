@@ -9,6 +9,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readLakeDependencySnapshot, writeLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
+import { readLakeGeneratedSources } from "../build/lake-generated-workspace.mjs";
 
 /**
  * Reports component release bundle failures with stable machine-readable codes and structured diagnostic context.
@@ -171,6 +172,23 @@ export const buildComponentReleaseBundle = async ({
 			if(sha256(canonicalJson(compiled.manifest.lakeDependencies?.snapshot)) !== snapshot.sha256)
 				fail("component-release-source-drift", "Compiled Lake snapshot differs from the authorized source closure");
 			await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "lake") });
+			if(compiled.manifest.schemaVersion === 3)
+			{
+				const generated = await readLakeGeneratedSources({ snapshot
+					, snapshotRoot: join(inputs, "lake")
+					, modules: compilationPlan.document.source.requestedModules
+					, artifactPath: join(targetC, "lake-generated-sources.json")
+					, expectedSha256: compiled.manifest.lakeDependencies.generatedSourcesSha256 });
+				try
+				{
+					if(linked.manifest.generatedSourcesSha256 !== generated.sha256 || linked.manifest.overlaySha256 !== generated.document.overlaySha256
+						|| canonicalJson(compiled.manifest.lakeDependencies.resolution) !== canonicalJson(generated.document.resolution))
+						fail("component-release-source-drift", "Generated sources differ between compilation and linking");
+					await write(staging, "generated/lake-generated-sources.json", canonicalJson(generated.document));
+					await generated.verify();
+				} finally
+				{ await generated.dispose(); }
+			}
 		}
 		await copy(staging, `artifacts/${artifactName}`, join(side, linked.manifest.artifact.path));
 		await write(staging, "binding/binding-ir.json", canonicalJson(analysis.bindingIr.document));

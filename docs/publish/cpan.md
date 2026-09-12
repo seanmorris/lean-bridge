@@ -55,7 +55,9 @@ Both `lakefile.toml` and `lakefile.lean` work. Root and dependency libraries may
 
 This build path supports Lean dependencies and [declared C inputs](../lean/existing-package.md#declare-c-link-inputs). Each selected C file compiles once for `native-library-v1` and is reused across the package's XS variants. `native-component.json` records its compiler, include closure, and object hashes under `nativeCompilation`. See the [C-input acceptance record](../evidence/lake-c-inputs-20260911.md).
 
-Missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, custom build targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Custom generators and reviewed foreign-function contracts still need builder support.
+Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The native builder runs selected pure tools and compiles their Lean/C/header outputs once before projecting XS variants. `native/component/lake-generated-sources.json` records their bytes and receipts, and the CPAN archive includes the same file. Installed Perl users do not run Lean, Lake, or the generator. See the [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
+
+Missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support.
 
 `native/component/native-component.json` records the dependency snapshot and Lake resolution under `sourceIdentity.lakeDependencies`. Their hashes bind the locks, source files, compiler, resolver, and Lake library to the component model; `sourceIdentity.modules` records each freshly compiled interface hash. A dependency edit during compilation rejects the output. Review these identities when comparing relocated builds.
 

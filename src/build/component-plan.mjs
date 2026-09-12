@@ -161,7 +161,7 @@ export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targe
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const selected = (targets.length ? targets : ["npm"]).map(target => target === "javascript" ? "npm" : target);
 	for(const target of selected)
-		assertExportConfigurationCapabilities(record.configuration, { target, targetFields: target === "npm" ? ["name", "version"] : [] });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["modules", "exports", "generators"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)
@@ -169,6 +169,7 @@ export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targe
 	assertExportConfigurationSnapshot(record, analysis.inputs);
 	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot, signal });
 	else lakeSnapshot = await captureLockedLakeProject({ projectRoot: resolve(projectRoot), inputs: analysis.inputs, signal });
+	if(record.configuration.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
 	const plan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets, lakeSnapshotSha256: lakeSnapshot?.sha256 });
 	if(selected.includes("npm")) componentNpmIdentity(plan.document.component, record.configuration.targets?.npm);
 	return lakeSnapshot ? Object.freeze({ ...plan, lakeSnapshot }) : plan;

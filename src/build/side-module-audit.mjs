@@ -80,8 +80,10 @@ const same = (actual, expected, code, message) => {
 };
 
 const validateLinkManifest = ({ manifest, compilationPlan }) => {
-	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies", ...(Object.hasOwn(manifest, "nativeCompilation") ? ["nativeCompilation"] : [])], "side-module link manifest");
-	if(Object.hasOwn(manifest, "nativeCompilation")) validateLakeNativeCompilation(manifest.nativeCompilation, { snapshotSha256: compilationPlan.document.source.lakeSnapshotSha256, profile: "side-module-2" });
+	const generated = Object.hasOwn(manifest, "generatedSourcesSha256");
+	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies", ...(Object.hasOwn(manifest, "nativeCompilation") ? ["nativeCompilation"] : []), ...(generated ? ["generatedSourcesSha256", "overlaySha256"] : [])], "side-module link manifest");
+	if(generated && (compilationPlan.document.schemaVersion !== 2 || [manifest.generatedSourcesSha256, manifest.overlaySha256].some(value => typeof value !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(value)))) fail("side-module-plan-drift", "Generated link evidence requires locked sources and valid identities");
+	if(Object.hasOwn(manifest, "nativeCompilation")) validateLakeNativeCompilation(manifest.nativeCompilation, { snapshotSha256: compilationPlan.document.source.lakeSnapshotSha256, profile: "side-module-2", overlaySha256: manifest.overlaySha256 });
 	if(manifest.schemaVersion !== 1 || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.profile !== "side-module-2") fail("side-module-plan-drift", "Side-module link manifest does not match the component compilation plan");
 	exactKeys(manifest.exports, ["directSymbols", "initializer", "internalInitializer"], "side-module exports");
 	same(manifest.exports.directSymbols, compilationPlan.document.compilerAdapters.directSymbols, "side-module-symbol-drift", "Side-module direct symbols differ from the compiler adapters");

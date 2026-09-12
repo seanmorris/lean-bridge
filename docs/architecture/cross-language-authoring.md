@@ -48,7 +48,9 @@ The internal `lean-text-v1` generator runner compiles captured tool modules and 
 
 The [generated-workspace milestone](../evidence/lake-generated-workspace-20260912.md) stages those outputs beside the captured sources without changing the original snapshot identity. A second Lake pass resolves generated imports and binds every module and C input to its captured or generated origin. New prerequisites introduced by generated imports fail. Separate receipts retain the generator and output identities.
 
-Normal CLI builds still reject generator configuration. Task 1239 remains open for generated-output integration through native/WASM compilation, linking and package receipts, followed by relocated installed acceptance. Prebuilt native libraries and additional compiler/linker options also remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
+Ordinary npm and CPAN builds now consume those generated sources. The bounded `lake-generated-sources.json` handoff carries exact output text and separate receipts through compilation, linking, bundle inventories and package archives. Its reader verifies captured recipes and source origins before restoring files. The [generated-package acceptance record](../evidence/lake-generated-packages-20260912.md) covers installed public APIs, relocation, transport tampering and publication dry runs.
+
+Public entry modules must still be captured. Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 retain the shared authoritative export extractor and stale-interface gates. No type/profile cells advance from this dependency work.
 
 ## Package and consumer requirements
 

@@ -9,6 +9,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { readLakeGeneratorRecipes } from "./lake-generator-prerequisites.mjs";
 import { validateComponentBuildPlan } from "./component-plan.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 
@@ -167,7 +168,7 @@ export const identifyComponentInputClosure = async inputRoot => {
 	});
 };
 
-const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot }) => Object.freeze([
+const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot, generators }) => Object.freeze([
 	"README.md"
 	, compilationPlan.document.outputs.sideModule
 	, "binding/binding-ir.json"
@@ -179,6 +180,7 @@ const authorizedBundleFiles = ({ componentPlan, compilationPlan, lakeSnapshot })
 	, "locks/component-compilation-plan.json"
 	, "locks/lean-target-c-manifest.json"
 	, "locks/side-module-link-manifest.json"
+	, ...(generators ? ["generated/lake-generated-sources.json"] : [])
 	, "metadata/assurance.json"
 	, "metadata/component-artifact-manifest.json"
 	, "metadata/provenance.json"
@@ -237,6 +239,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 		fail("engine-request-plan-drift", "Component and compilation plans identify different locked sources");
 	const lakeSnapshot = componentPlan.document.schemaVersion === 2
 		? await readLakeDependencySnapshot({ snapshotRoot: join(resolve(inputRoot), "lake"), expectedSha256: componentPlan.document.source.lakeSnapshotSha256 }) : null;
+	const generators = lakeSnapshot && (await readLakeGeneratorRecipes({ snapshot: lakeSnapshot, snapshotRoot: join(resolve(inputRoot), "lake") })).recipes.length > 0;
 	const [engine, input] = await Promise.all([
 		identifyBuildEngine(engineRoot)
 		, identifyComponentInputClosure(inputRoot)
@@ -257,7 +260,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 			kind: "component-neutral-release-bundle"
 			, bundleDirectory: "bundle"
 			, executionReport: "engine-execution-report.json"
-			, authorizedFiles: authorizedBundleFiles({ componentPlan, compilationPlan, lakeSnapshot })
+			, authorizedFiles: authorizedBundleFiles({ componentPlan, compilationPlan, lakeSnapshot, generators })
 		})
 		, cache: Object.freeze({ policy: cachePolicy })
 		, targets: Object.freeze([...targets].sort())

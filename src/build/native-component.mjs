@@ -13,7 +13,8 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
-import { captureLockedLakeProject, resolveLockedLakeWorkspace } from "./lake-workspace.mjs";
+import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -178,7 +179,7 @@ export const buildNativeComponent = async ({ projectRoot
 		const record = await readExportConfiguration(project, { signal });
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
-		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities"], targetFields: ["module", "version"] });
+		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "generators"], targetFields: ["module", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
@@ -205,16 +206,17 @@ export const buildNativeComponent = async ({ projectRoot
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
 		const lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
+		if(config.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
 		let lakeModules;
 		if(lakeSnapshot)
 		{
-			lakeWorkspace = await resolveLockedLakeWorkspace({ snapshot: lakeSnapshot, modules: selectedModules, leanPrefix, signal });
-			if(lakeWorkspace.document.leanCommit !== pinnedNativeLean) throw new Error("native Lake resolver/compiler identity mismatch");
-			lakeModules = new Map(lakeWorkspace.document.modules.map(module => [module.module, module]));
+			lakeWorkspace = await resolveLakeBuildWorkspace({ snapshot: lakeSnapshot, modules: selectedModules, leanPrefix, signal });
+			if(lakeWorkspace.resolution.leanCommit !== pinnedNativeLean) throw new Error("native Lake resolver/compiler identity mismatch");
+			lakeModules = new Map(lakeWorkspace.resolution.modules.map(module => [module.module, module]));
 			for(const name of selectedModules)
 				if(lakeModules.get(name)?.path !== `root/${sourceByModule.get(name).path}`)
 					throw new Error(`Lake module source differs from the selected root source: ${name}`);
-			sourceByModule = new Map(lakeWorkspace.document.modules.map(module => [module.module, { ...module.source, path: module.path }]));
+			sourceByModule = new Map(lakeWorkspace.resolution.modules.map(module => [module.module, { ...module.source, path: module.path }]));
 		}
 		const sourcePathFor = (name, input) => lakeWorkspace ? `${name.replaceAll(".", "/")}.lean` : input.path;
 		const originalSource = (name, input) => lakeWorkspace
@@ -275,9 +277,7 @@ export const buildNativeComponent = async ({ projectRoot
 			, extractorSha256: sha256(await readFile(join(engineRoot, "src/analyze/NativeExports.lean")))
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };
-		if(lakeWorkspace) sourceIdentity.lakeDependencies = { snapshot: lakeSnapshot.document
-			, snapshotSha256: lakeSnapshot.sha256, resolution: lakeWorkspace.document
-			, resolutionSha256: lakeWorkspace.sha256 };
+		if(lakeWorkspace) sourceIdentity.lakeDependencies = { ...lakeWorkspace.evidence, snapshotSha256: lakeSnapshot.sha256 };
 		const model = createNativeModel({ metadata
 			, component: { id: `${analysis.project.name}@${analysis.project.version}`, name: analysis.project.name, version: analysis.project.version }
 			, moduleName: moduleName ?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}`
@@ -298,9 +298,10 @@ export const buildNativeComponent = async ({ projectRoot
 		}
 		await save(join(staging, "c/callbacks.c"), callbacks);
 		const objects = [];
-		const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.document) : [];
+		const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.resolution) : [];
 		const nativeCompilation = nativeInputs.length ? await compileLakeNativeInputs({ snapshot: lakeSnapshot
 			, snapshotRoot: lakeWorkspace.snapshotRoot, inputs: nativeInputs
+			, generated: lakeWorkspace.generated
 			, outputRoot: join(staging, "native-objects")
 			, compiler: cc, profile: "native-library-v1"
 			, includeRoots: [join(leanPrefix, "include"), join(runtime, "include")]
@@ -346,6 +347,8 @@ export const buildNativeComponent = async ({ projectRoot
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
 		await nativeCompilation?.verify();
+		await lakeWorkspace?.verify();
+		if(lakeWorkspace?.generatedSources) await save(join(staging, "lake-generated-sources.json"), json(lakeWorkspace.generatedSources.document));
 		await save(join(staging, "metadata.json"), json(metadata)); await save(join(staging, "model.json"), json(model));
 		await save(join(staging, "binding-ir.json"), json(model.bindingIr)); await save(join(staging, "native-component.json"), json(receipt));
 		await save(join(staging, "generated.lean"), adapters.leanSource);

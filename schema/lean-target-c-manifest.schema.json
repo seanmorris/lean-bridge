@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "component", "compilationPlanSha256", "compiler", "target", "modules", "sourceReadOnly"],
   "properties": {
-    "schemaVersion": { "enum": [1, 2] },
+    "schemaVersion": { "enum": [1, 2, 3] },
     "component": { "type": "string", "minLength": 1 },
     "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
     "compiler": {
@@ -24,7 +24,8 @@
       "required": ["snapshot", "resolution", "resolutionSha256"],
       "properties": {
         "snapshot": { "$ref": "lake-dependency-snapshot.schema.json" },
-        "resolution": { "$ref": "#/$defs/resolution" },
+        "resolution": { "oneOf": [{ "$ref": "#/$defs/resolution" }, { "$ref": "lake-generated-resolution.schema.json" }] },
+        "generatedSourcesSha256": { "$ref": "#/$defs/sha256" },
         "resolutionSha256": { "$ref": "#/$defs/sha256" }
       }
     }
@@ -112,12 +113,17 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "schemaVersion": { "const": 2 } } },
+      "if": { "properties": { "schemaVersion": { "enum": [2, 3] } } },
       "then": {
         "required": ["lakeDependencies"],
         "properties": { "lakeDependencies": { "properties": { "snapshot": { "properties": { "schemaVersion": { "const": 2 } } } } } }
       },
       "else": { "not": { "required": ["lakeDependencies"] } }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "const": 3 } } },
+      "then": { "properties": { "lakeDependencies": { "required": ["generatedSourcesSha256"], "properties": { "resolution": { "$ref": "lake-generated-resolution.schema.json" } } } } },
+      "else": { "properties": { "lakeDependencies": { "not": { "required": ["generatedSourcesSha256"] }, "properties": { "resolution": { "$ref": "#/$defs/resolution" } } } } }
     }
   ]
 }

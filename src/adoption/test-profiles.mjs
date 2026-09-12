@@ -96,6 +96,7 @@ const profileManifest = Object.freeze({
 	])
 	, native: Object.freeze([
 		"c-family-package"
+		, "lake-generated-packages"
 		, "lake-generated-workspace"
 		, "lake-generators"
 		, "lake-generator-prerequisites"
