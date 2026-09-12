@@ -53,6 +53,8 @@ These local checks do not execute Nix. The pushed CI jobs remain the acceptance 
 
 The earlier push's core and complete performance workflows passed. Its other Perl job ended after the runner received a shutdown signal during the locked-workspace suite. That cancellation is separate from the two packaging errors above.
 
+The follow-up run on `0e77730` reached XS compilation, confirming that runtime template rendering succeeded. It then failed because the pinned Perl headers include `crypt.h`, while the shell application's compiler search path omitted libxcrypt's development output. The Perl engine now sets `NIX_CFLAGS_COMPILE` to the pinned libxcrypt include directory through `lib.getDev`. A contract checks that this input reaches the wrapper before the engine starts. Local engine and Perl contracts pass 14 checks; actual Nix compilation requires the next CI run.
+
 ## Acceptance results
 
 The compiled prerequisite suite passes all 20 checks as the unprivileged `nobody` user. Root runs pass both relocated generator cases, dependency-owned selection, unused-library selection, and the 15 rejection cases. Each relocated pair produces identical receipts and output bytes; separate Lean and C consumers return `17` for Shop and `29` for Telemetry. Original source inventories retain their contents, modes, timestamps, and Git metadata. Changed generated output fails verification, and repeated disposal succeeds. No selection or generator staging directories remain after the tests.

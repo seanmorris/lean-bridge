@@ -129,3 +129,10 @@ test("the Nix Perl source boundary includes the complete import and template clo
   for(const template of ["Build.pm", "Platform.pm", "Runtime.pm", "Runtime.xs", "runtime.h"]) assert.ok(paths.has(resolve("src/backends/perl", template)));
   for(const template of ["src/analyze/NativeExports.lean", "src/build/ResolveLakeWorkspace.lean"]) assert.ok(paths.has(resolve(template)));
 });
+
+test("the pinned Perl engine exposes libxcrypt development headers to the Nix compiler wrapper", async () => {
+	const source = await readFile("flake.nix", "utf8");
+	const engine = source.slice(source.indexOf("perl-build-engine = pkgs.writeShellApplication"), source.indexOf("component-build-engine = pkgs.writeShellApplication"));
+	assert.match(engine, /export NIX_CFLAGS_COMPILE='-isystem \$\{pkgs\.lib\.getDev pkgs\.libxcrypt\}\/include'/);
+	assert.ok(engine.indexOf("export NIX_CFLAGS_COMPILE=") < engine.indexOf("/scripts/run-perl-engine.mjs"));
+});

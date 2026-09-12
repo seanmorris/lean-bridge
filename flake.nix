@@ -341,6 +341,7 @@
                 else builtins.elem relative perlEngineSourceBoundary.includedFiles;
             }; in ''
               export LEAN_BRIDGE_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export NIX_CFLAGS_COMPILE='-isystem ${pkgs.lib.getDev pkgs.libxcrypt}/include'
               '${pkgs.nodejs_22}/bin/node' '${perlSource}/scripts/run-perl-engine.mjs' "$@"
             '';
             meta.platforms = [ "x86_64-linux" ];
