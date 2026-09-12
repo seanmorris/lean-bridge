@@ -28,6 +28,19 @@ const prepare = async projectRoot => {
 	return { projectRoot, analysis, componentPlan, compilerAdapters, compilationPlan };
 };
 
+test("Lake fixture Git disables automatic maintenance without changing repository configuration", async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await lakeGit(context.cached, "config", "maintenance.auto", "true");
+	await lakeGit(context.cached, "config", "gc.auto", "1");
+	assert.equal(await lakeGit(context.cached, "config", "--local", "--get", "maintenance.auto"), "true");
+	assert.equal(await lakeGit(context.cached, "config", "--local", "--get", "gc.auto"), "1");
+	assert.equal(await lakeGit(context.cached, "config", "--get", "maintenance.auto"), "false");
+	assert.equal(await lakeGit(context.cached, "config", "--get", "gc.auto"), "0");
+	const before = await lakeInputState(context.workspace);
+	await prepare(context.root);
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
+
 test("locked WASM input plans bind dependencies without requiring a host Lean compiler", async t => {
 	const context = await lakeWorkspaceFixture(t);
 	const before = await lakeInputState(context.workspace);

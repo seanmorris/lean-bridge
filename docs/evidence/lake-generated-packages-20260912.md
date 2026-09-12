@@ -58,6 +58,12 @@ The core gate passes lint, checked JavaScript and 516 contracts. Site tests pass
 
 The preceding commit, `1d14830`, completed [core CI](https://github.com/seanmorris/lean-bridge/actions/runs/34712475125), [downstream CI](https://github.com/seanmorris/lean-bridge/actions/runs/34712475251), and [performance CI](https://github.com/seanmorris/lean-bridge/actions/runs/34712475148) successfully. These results belong to that preceding revision; the new integration requires its own CI run.
 
+### CI fixture follow-up
+
+Commit `55e0a4c` passed downstream and performance CI. Core passed 515 of 516 contracts. The failing read-only check recorded `.git/objects/maintenance.lock` before planning, then found it absent afterward, with changed object-directory timestamps. Git 2.55.0 ran on that worker; the local Git is 2.39.5. The fixture helper had allowed automatic maintenance after creating commits.
+
+Both Lake Git fixture helpers now pass command-scoped `maintenance.auto=false` and `gc.auto=0`. They do not change the author's Git configuration, exclude lock files from inspection, or relax timestamp checks. A regression enables both settings in the fixture's local config, verifies that fixture commands override them without changing the stored values, and repeats the complete read-only planning comparison. This regression fails before the fix and passes afterward. All 68 snapshot/planning checks and the final 517-contract core gate pass locally. The recorded helper hash was refreshed without changing type support.
+
 ## Scope
 
 The npm and CPAN capability gates accept the closed `lean-text-v1` profile. Other targets do not gain ordinary generator support from this change. Public entry-module generation, arbitrary hooks, prebuilt native libraries and foreign implementation contracts remain separate work. VO1238 owns foreign implementation contracts; VO1107/1108 own authoritative export extraction and stale-interface cutover. This milestone does not promote type-surface cells.

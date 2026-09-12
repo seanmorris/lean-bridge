@@ -28,7 +28,8 @@ export const saveLakeFile = async (root, path, bytes) => {
  * @param root - Fixture checkout.
  * @param args - Git arguments.
  */
-export const lakeGit = async (root, ...args) => (await execute("git", ["-C", root, ...args], {
+// Fixture writes must finish before the source-read-only inventory starts.
+export const lakeGit = async (root, ...args) => (await execute("git", ["-c", "maintenance.auto=false", "-c", "gc.auto=0", "-C", root, ...args], {
 	env: { PATH: process.env.PATH, GIT_CONFIG_NOSYSTEM: "1"
 		, GIT_CONFIG_GLOBAL: "/dev/null"
 		, GIT_AUTHOR_NAME: "Workspace fixture"

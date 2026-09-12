@@ -21,7 +21,7 @@ const save = async (root, path, bytes) => {
 	await mkdir(dirname(join(root, path)), { recursive: true });
 	await writeFile(join(root, path), bytes);
 };
-const git = async (root, ...args) => (await execute("git", ["-C", root, ...args], {
+const git = async (root, ...args) => (await execute("git", ["-c", "maintenance.auto=false", "-c", "gc.auto=0", "-C", root, ...args], {
 	env: { PATH: process.env.PATH, GIT_CONFIG_NOSYSTEM: "1"
 		, GIT_CONFIG_GLOBAL: "/dev/null"
 		, GIT_AUTHOR_NAME: "Snapshot fixture", GIT_COMMITTER_NAME: "Snapshot fixture"
