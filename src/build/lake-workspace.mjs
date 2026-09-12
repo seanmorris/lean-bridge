@@ -44,12 +44,20 @@ export const captureLockedLakeProject = async ({ projectRoot, inputs, signal }) 
 	return snapshot;
 };
 
-const validateResolution = (value, snapshot, selected) => {
+/**
+ * Check Lake's module closure against independently verified source identities.
+ * Generated-workspace callers supply an explicit capture/output identity map.
+ *
+ * @param value - Raw Lake resolution, without host annotations.
+ * @param snapshot - Original complete source capture.
+ * @param selected - Selected root module names.
+ * @param files - Verified qualified paths and their source identities.
+ */
+export const validateLakeModuleClosure = (value, snapshot, selected, files = records(snapshot)) => {
 	closed(value, ["schemaVersion", "resolver", "leanVersion", "leanCommit", "packages", "modules", "externalImports"], "Lake resolution");
 	if(![1, 2].includes(value.schemaVersion) || value.resolver !== "lean-lake-locked" || typeof value.leanVersion !== "string"
 		|| !/^[0-9a-f]{40}$/.test(value.leanCommit) || snapshot.document.toolchain !== `leanprover/lean4:v${value.leanVersion}`)
 		fail("lake-toolchain-drift", "Lake resolver and captured project toolchains differ");
-	const files = records(snapshot);
 	if(!Array.isArray(value.packages) || value.packages.length !== snapshot.document.packages.length + 1)
 		fail("invalid-lake-resolution", "Lake package set differs from the captured lock");
 	const packages = new Map();
@@ -103,6 +111,9 @@ const validateResolution = (value, snapshot, selected) => {
 	if(selected.some(module => !value.modules.find(item => item.module === module)?.path.startsWith("root/")))
 		fail("invalid-lake-resolution", "Lake omitted a selected root module");
 	if(value.externalImports.some(module => known.has(module))) fail("invalid-lake-resolution", "Source and compiler-library module identities overlap");
+	const external = new Set(value.modules.flatMap(module => module.imports).filter(module => !known.has(module)));
+	if(canonicalJson([...external].sort()) !== canonicalJson([...value.externalImports].sort()))
+		fail("invalid-lake-resolution", "Lake included compiler-library modules outside the selected import closure");
 	const reachable = new Set();
 	const visit = module => {
 		if(reachable.has(module) || !known.has(module)) return;
@@ -136,7 +147,7 @@ export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) 
 	if(snapshotSha256 !== snapshot.sha256 || [resolverSha256, leanCompilerSha256, lakeLibrarySha256].some(value => typeof value !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(value)))
 		fail("invalid-lake-resolution", "Recorded resolution has invalid input identities");
 	if(!Array.isArray(raw.modules)) fail("invalid-lake-resolution", "Recorded modules must be an array");
-	const expected = validateResolution({ ...raw, modules: raw.modules.map(module => {
+	const expected = validateLakeModuleClosure({ ...raw, modules: raw.modules.map(module => {
 		closed(module, ["module", "path", "package", "imports", "source", ...(Object.hasOwn(module, "nativeInputs") ? ["nativeInputs"] : [])], "recorded Lake module");
 		const native = module.nativeInputs;
 		if(native !== undefined && !Array.isArray(native)) fail("invalid-lake-resolution", "Native inputs must be an array");
@@ -187,7 +198,7 @@ export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix
 		const result = await processBuildRunner.capture({ command: leanCompiler
 			, args: ["--plugin", lakeLibrary, "--run", resolverSource, join(working, "request.json")]
 			, cwd: workspace, env, signal, timeoutMs: 120000 });
-		const resolved = validateResolution(JSON.parse(result.stdout), snapshot, modules);
+		const resolved = validateLakeModuleClosure(JSON.parse(result.stdout), snapshot, modules);
 		if(sha256(await readFile(resolverSource)) !== resolverSha256) fail("lake-source-drift", "Lake resolver changed during resolution");
 		if(sha256(await readFile(leanCompiler)) !== leanCompilerSha256) fail("lake-source-drift", "Lean compiler changed during resolution");
 		if(sha256(await readFile(lakeLibrary)) !== lakeLibrarySha256) fail("lake-source-drift", "Lake compiler library changed during resolution");

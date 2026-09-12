@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verified generated Lake workspace",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "snapshotSha256", "prerequisitesSha256", "outputs"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "kind": {"const": "lean-bridge-generated-lake-workspace"},
+    "snapshotSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "prerequisitesSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "outputs": {
+      "type": "array", "maxItems": 16384,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "bytes", "sha256", "mode", "generator", "receiptSha256"],
+        "properties": {
+          "path": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "bytes": {"type": "integer", "minimum": 0, "maximum": 8388608},
+          "sha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+          "mode": {"const": 420},
+          "generator": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "receiptSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"}
+        }
+      }
+    }
+  }
+}

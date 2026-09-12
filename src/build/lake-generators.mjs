@@ -125,6 +125,21 @@ const libraryIdentity = async (root, signal) => {
 	return { files: files.length, bytes: files.reduce((total, file) => total + file.bytes, 0), sha256: sha256(canonicalJson(files)) };
 };
 
+/**
+ * Recheck a recorded generator compiler and its complete library closure.
+ *
+ * @param options - Selected installation and previously authorized identity.
+ * @param options.leanPrefix - Explicit compiler installation.
+ * @param options.compiler - Validated compiler identity from a generator receipt.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const verifyLakeGeneratorCompiler = async ({ leanPrefix, compiler, signal }) => {
+	const prefix = await realpath(leanPrefix), { version, ...expected } = compiler;
+	void version;
+	const actual = { ...await fileIdentity(join(prefix, "bin/lean"), signal), libraries: await libraryIdentity(join(prefix, "lib/lean"), signal) };
+	if(!same(actual, expected)) fail("Generator compiler or library closure changed", "lake-generator-drift");
+};
+
 const driver = definition => `${definition.modules.map(source => `import ${source.module}`).join("\n")}
 import Lean.Data.Json
 

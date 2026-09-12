@@ -83,3 +83,31 @@ lean_lib ${names.root} where
 	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: root, includeProject: true });
 	return { ...context, recipe, configuration, lakefile, snapshot };
 };
+
+/**
+ * Add imports visible only after generation and a generated C translation unit.
+ *
+ * @param t - Test context responsible for cleanup.
+ * @param variant - Independent package graph and data value.
+ */
+export const generatedLakeWorkspaceFixture = async (t, variant = "shop") => {
+	const context = await lakeGeneratorPrerequisiteFixture(t, variant);
+	context.configuration.generators[0].outputs.push({ name: "native", path: "native/generated.c" });
+	context.lakefile = context.lakefile.replace("lean_lib GeneratorSupport", 'input_file generatedC where\n  path := "native/generated.c"\nlean_lib Extra\nlean_lib GeneratorSupport')
+		.replace("  needs := #[.packageTarget .anonymous `table]", "  needs := #[.packageTarget .anonymous `table]\n  moreLinkObjs := #[{ key := .packageTarget .anonymous `generatedC }]");
+	await saveLakeFile(context.root, "Extra.lean", "def Extra.adjust (value : UInt32) : UInt32 := value + 3\n");
+	const tool = `import GeneratorSupport
+def TableGenerator.generate (inputs : Array (String × String)) (_args : Array String)
+    : Except String (Array (String × String)) := do
+  let some (_, raw) := inputs[0]? | .error "missing value"
+  let value := GeneratorSupport.clean raw
+  .ok #[("lean", s!"import Extra\\ndef Generated.value : UInt32 := Extra.adjust {value}\\n"),
+    ("header", s!"#define GENERATED_VALUE {value}\\n"),
+    ("native", "#include \\"generated.h\\"\\nunsigned generated_value(void) { return GENERATED_VALUE; }\\n")]
+`;
+	await saveLakeFile(context.root, "tools/TableGenerator.lean", tool);
+	await saveLakeFile(context.root, "lean-bridge.exports.json", JSON.stringify(context.configuration));
+	await saveLakeFile(context.root, "lakefile.lean", context.lakefile);
+	context.snapshot = await prepareLakeDependencySnapshot({ projectRoot: context.root, includeProject: true });
+	return { ...context, tool };
+};

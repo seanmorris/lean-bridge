@@ -41,7 +41,7 @@ structure Traversal where
   external : NameSet := {}
   hasNative : Bool := false
   generators : Array String := #[]
-  pendingGenerated : Array (Name × String) := #[]
+  pendingGenerated : Array (String × String) := #[]
 
 def fail {α : Type} (message : String) : IO α :=
   throw <| IO.userError message
@@ -73,6 +73,11 @@ def packageRoot (request : Request) (pkg : Package) : IO String := do
   return captured.directory ++ (if captured.packageRoot.isEmpty then "" else "/" ++ captured.packageRoot)
 
 def generatorKey (input : GeneratorInput) : String := input.packageRoot ++ "/" ++ input.name
+
+def declaredOutput (request : Request) (path : FilePath) : Option (String × String) := do
+  let relative ← path.normalize.toString.dropPrefix? (request.workspace ++ "/")
+  let generator ← request.generators.find? (·.outputs.contains relative.toString)
+  return (relative.toString, generatorKey generator)
 
 def generatorTarget (request : Request) (ws : Workspace) (consumer : Package)
     (key : PartialBuildKey) : IO String := do
@@ -109,7 +114,13 @@ def nativeInput (request : Request) (ws : Workspace) (consumer : Package)
     fail s!"Lake native input package is not a declared dependency: {package}"
   let some input := owner.findConfigTarget? InputFile.configKind targetName
     | fail s!"Lake native inputs require an input_file target: {owner.baseName}/{targetName}"
-  let path ← relativeInput request (InputFile.path input)
+  let file := InputFile.path input
+  let path ← if request.generatorPhase != "none" && request.generatorPhase != "tool" &&
+      !(← file.pathExists) then do
+    let some (path, _) := declaredOutput request file
+      | fail s!"Uncaptured native input has no generator recipe: {file}"
+    pure path
+  else relativeInput request file
   let directory ← if owner.isRoot then pure "root" else do
     let some captured := request.packages.find? (·.name == owner.baseName.toString)
       | fail s!"Uncaptured native input package: {owner.baseName}"
@@ -149,19 +160,25 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   for key in prerequisites do
     unless (← get).generators.contains key do
       modify fun state => { state with generators := state.generators.push key }
+  -- Native prerequisites also apply when the module itself is generated.
+  let native ← (mod.lib.moreLinkObjs.mapM (nativeInput request ws mod.pkg) : IO (Array Json))
+  for input in native do
+    let path ← IO.ofExcept <| input.getObjValAs? String "path"
+    if let some generator := request.generators.find? (·.outputs.contains path) then
+      modify fun state => { state with
+        pendingGenerated := state.pendingGenerated.push (path, generatorKey generator) }
   if request.generatorPhase == "plan" && !(← mod.leanFile.pathExists) then
-    let base := request.workspace ++ "/"
-    let some relative := mod.leanFile.normalize.toString.dropPrefix? base
-      | fail s!"Generated module escaped the workspace: {name}"
-    let some generator := request.generators.find? (·.outputs.contains relative.toString)
+    let some (_, key) := declaredOutput request mod.leanFile
       | fail s!"Uncaptured module has no generator recipe: {name}"
     modify fun state => { state with
       done := state.done.insert name
-      pendingGenerated := state.pendingGenerated.push (name, generatorKey generator) }
+      pendingGenerated := state.pendingGenerated.push (name.toString, key) }
     return
   let path ← relativeInput request mod.leanFile
+  if let some generator := request.generators.find? (·.outputs.contains path) then
+    modify fun state => { state with
+      pendingGenerated := state.pendingGenerated.push (path, generatorKey generator) }
   let source ← IO.FS.readFile mod.leanFile
-  let native ← (mod.lib.moreLinkObjs.mapM (nativeInput request ws mod.pkg) : IO (Array Json))
   let (imports, _, messages) ← Lean.Elab.parseImports source (some path)
   if messages.hasErrors then fail s!"Invalid import header in {path}"
   modify fun state => { state with visiting := state.visiting.insert name }
@@ -177,7 +194,7 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
     hasNative := state.hasNative || !native.isEmpty }
 
 def resolve (request : Request) : IO Json := do
-  unless #["none", "plan"].contains request.generatorPhase do
+  unless #["none", "plan", "generated"].contains request.generatorPhase do
     fail "Unknown generator resolution phase"
   let some lean ← findLeanInstall? | fail "Selected Lean installation is unavailable"
   let env : Lake.Env := {
@@ -256,10 +273,12 @@ def resolve (request : Request) : IO Json := do
     unless (ws.findModules name.toName).any (·.pkg.isRoot) do
       fail s!"Selected module does not belong to the root Lake package: {name}"
   let (_, state) ← (request.modules.forM fun name => visit request ws name.toName).run {}
+  for (path, key) in state.pendingGenerated do
+    unless state.generators.contains key do
+      fail s!"Generated module or native input requires a selected Lake prerequisite: {path}"
+    if request.generatorPhase == "generated" && !request.files.contains path then
+      fail s!"Generated input was not staged: {path}"
   if request.generatorPhase == "plan" then
-    for (name, key) in state.pendingGenerated do
-      unless state.generators.contains key do
-        fail s!"Generated module requires a selected Lake prerequisite: {name}"
     let mut generators := #[]
     for key in state.generators.qsort (· < ·) do
       let some input := request.generators.find? (fun input => generatorKey input == key)
@@ -278,11 +297,16 @@ def resolve (request : Request) : IO Json := do
       ("schemaVersion", toJson (1 : Nat)), ("resolver", toJson "lean-lake-generator-selection"),
       ("leanVersion", toJson Lean.versionString), ("leanCommit", toJson Lean.githash),
       ("packages", toJson packages), ("generators", toJson generators)]
-  return Json.mkObj [
+  let resolution := Json.mkObj [
     ("schemaVersion", toJson (if state.hasNative then 2 else 1 : Nat)), ("resolver", toJson "lean-lake-locked"),
     ("leanVersion", toJson Lean.versionString), ("leanCommit", toJson Lean.githash),
     ("packages", toJson packages), ("modules", toJson state.records),
     ("externalImports", toJson <| state.external.toArray.map Name.toString)]
+  if request.generatorPhase == "generated" then
+    return Json.mkObj [
+      ("schemaVersion", toJson (1 : Nat)), ("resolver", toJson "lean-lake-generated"),
+      ("generators", toJson <| state.generators.qsort (· < ·)), ("resolution", resolution)]
+  return resolution
 
 end LeanBridgeWorkspace
 

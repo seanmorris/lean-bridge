@@ -4,12 +4,13 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { access, chmod, cp, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { access, chmod, cp, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { prepareLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { prepareLakeGeneratorPrerequisites, readLakeGeneratorRecipes, validateLakeGeneratorSelection, validateLakeGeneratorPrerequisiteReceipt } from "../src/build/lake-generator-prerequisites.mjs";
+import { resolveGeneratedLakeWorkspace } from "../src/build/lake-generated-workspace.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { lakeGeneratorPrerequisiteFixture as fixture } from "./helpers/lake-generator.mjs";
@@ -184,6 +185,21 @@ lean_lib ${names.local} where
 	t.after(result.dispose);
 	assert.deepEqual(result.document.selection.generators.map(entry => [entry.key, entry.package]), [[`packages/${names.local}/table`, names.local]]);
 	assert.equal(await readFile(join(result.results[0].outputRoot, `packages/${names.local}/generated/Generated.lean`), "utf8"), "def Generated.value : UInt32 := 17\n");
+	const resolved = await resolveGeneratedLakeWorkspace({ snapshot
+		, modules: [names.root], prerequisites: result
+		, expectedPrerequisitesSha256: result.sha256, leanPrefix });
+	t.after(resolved.dispose);
+	const generated = resolved.document.result.resolution.modules.find(module => module.module === "Generated");
+	assert.equal(generated.path, `packages/${names.local}/generated/Generated.lean`);
+	assert.deepEqual(generated.source.origin, { kind: "generated", generator: `packages/${names.local}/table`, receiptSha256: result.results[0].sha256 });
+	await resolved.verify();
+	for(const pkg of ["root", `packages/${names.local}`])
+		await assert.rejects(access(join(resolved.workspaceRoot, pkg, ".lake")), { code: "ENOENT" });
+	const extra = join(resolved.workspaceRoot, `packages/${names.local}/.lake`);
+	await mkdir(extra);
+	await assert.rejects(resolved.verify, /Unexpected or symlinked generated workspace directory/);
+	await rm(extra, { recursive: true });
+	await resolved.verify();
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 

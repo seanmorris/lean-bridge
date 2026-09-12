@@ -5,12 +5,16 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
+import { chmod, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateGeneratorConfiguration } from "../src/analyze/generator-configuration.mjs";
 import { assertExportConfigurationCapabilities, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { join } from "node:path";
 import { prepareLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { prepareLakeGeneratorPrerequisites, readLakeGeneratorRecipes, validateLakeGeneratorSelection } from "../src/build/lake-generator-prerequisites.mjs";
-import { runLakeGenerator, validateLakeGeneratorDefinition, validateLakeGeneratorResult } from "../src/build/lake-generators.mjs";
+import { runLakeGenerator, validateLakeGeneratorDefinition, validateLakeGeneratorResult, verifyLakeGeneratorCompiler } from "../src/build/lake-generators.mjs";
+import { prepareGeneratedLakeWorkspace, validateGeneratedLakeWorkspace } from "../src/build/lake-generated-workspace.mjs";
+import { validateLakeModuleClosure } from "../src/build/lake-workspace.mjs";
 import { lakeGeneratorFixture as fixture, lakeGeneratorPrerequisiteFixture } from "./helpers/lake-generator.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
@@ -147,4 +151,74 @@ test("invalid captured text fails before any compiler invocation", async t => {
 		const runner = { capture: () => assert.fail("Invalid text must not reach a compiler") };
 		await assert.rejects(() => runLakeGenerator({ snapshot, definition: context.definition, leanPrefix: context.directory, runner }), /valid UTF-8 text/);
 	}
+});
+
+test("generated staging requires the handoff digest and preserves an exact source-only workspace", async t => {
+	const { snapshot } = await fixture(t);
+	// Synthetic no-generator evidence exercises metadata/staging, not Lake execution.
+	const document = { schemaVersion: 1
+		, kind: "lean-bridge-lake-generator-prerequisites"
+		, snapshotSha256: snapshot.sha256, requestedModules: ["Shop"]
+		, configurations: [], resolverSha256: "a".repeat(64)
+		, leanCompilerSha256: "b".repeat(64), lakeLibrarySha256: "c".repeat(64)
+		, generators: []
+		, selection: { schemaVersion: 1, resolver: "lean-lake-generator-selection"
+			, leanVersion: "4.32.2", leanCommit: "a".repeat(40), generators: []
+			, packages: [{ name: "shop", configFile: "root/lakefile.toml", dependencies: ["Catalog"] }, ...snapshot.document.packages.map(pkg => ({ name: pkg.name, configFile: `${pkg.directory}/${pkg.configFile}`, dependencies: [] }))] } };
+	const prerequisites = { document, sha256: sha256(canonicalJson(document)), results: [], verify: async () => {} };
+	const args = { snapshot, modules: ["Shop"], prerequisites };
+	await assert.rejects(() => prepareGeneratedLakeWorkspace(args), /expected identity/);
+	await assert.rejects(() => prepareGeneratedLakeWorkspace({ ...args, expectedPrerequisitesSha256: "0".repeat(64) }), /expected identity/);
+	const result = await prepareGeneratedLakeWorkspace({ ...args, expectedPrerequisitesSha256: prerequisites.sha256 });
+	t.after(result.dispose);
+	await assertJsonSchema("lake-generated-workspace", result.document);
+	assert.equal(validateGeneratedLakeWorkspace(result.document, { snapshot
+		, modules: args.modules, catalog: result.catalog, prerequisites: document
+		, expectedPrerequisitesSha256: prerequisites.sha256
+		, expectedSha256: result.sha256 }), true);
+	assert.deepEqual(result.document.outputs, []);
+	assert.equal(Object.isFrozen(result.document), true);
+	await result.verify();
+	const path = join(result.workspaceRoot, "root/Shop.lean"), original = await readFile(path);
+	await chmod(path, 0o644);
+	await writeFile(path, Buffer.alloc(original.length));
+	await assert.rejects(result.verify, /Source bytes or mode changed/);
+	await writeFile(path, original); await chmod(path, 0o444);
+	await result.verify();
+	await result.dispose(); await result.dispose();
+	const resolution = { schemaVersion: 1, resolver: "lean-lake-locked"
+		, leanVersion: document.selection.leanVersion
+		, leanCommit: document.selection.leanCommit
+		, packages: document.selection.packages, externalImports: ["Init"]
+		, modules: [{ module: "Shop", path: "root/Shop.lean", package: "shop", imports: ["Init"] }] };
+	assert.equal(validateLakeModuleClosure(resolution, snapshot, ["Shop"]).modules.length, 1);
+	resolution.externalImports.push("Unused");
+	assert.throws(() => validateLakeModuleClosure(resolution, snapshot, ["Shop"]), /compiler-library modules outside/);
+});
+
+test("compiler rechecking covers library contents, inventory and file types", async t => {
+	const context = await fixture(t), leanPrefix = join(context.directory, "compiler");
+	const binary = "compiler fixture", library = "library fixture";
+	await saveLakeFile(leanPrefix, "bin/lean", binary);
+	await chmod(join(leanPrefix, "bin/lean"), 0o755);
+	await saveLakeFile(leanPrefix, "lib/lean/Core.olean", library);
+	const files = [{ path: "Core.olean", bytes: Buffer.byteLength(library), sha256: sha256(library), mode: 0o644 }];
+	const compiler = { bytes: Buffer.byteLength(binary), sha256: sha256(binary)
+		, mode: 0o755, version: "synthetic metadata, no compiler execution"
+		, libraries: { files: 1, bytes: Buffer.byteLength(library), sha256: sha256(canonicalJson(files)) } };
+	const verify = () => verifyLakeGeneratorCompiler({ leanPrefix, compiler });
+	await verify();
+	await writeFile(join(leanPrefix, "lib/lean/Core.olean"), "changed library");
+	await assert.rejects(verify, { code: "lake-generator-drift" });
+	await writeFile(join(leanPrefix, "lib/lean/Core.olean"), library);
+	await writeFile(join(leanPrefix, "lib/lean/Extra.olean"), "");
+	await assert.rejects(verify, { code: "lake-generator-drift" });
+	await rm(join(leanPrefix, "lib/lean/Extra.olean"));
+	await writeFile(join(leanPrefix, "bin/lean"), "different compiler");
+	await assert.rejects(verify, { code: "lake-generator-drift" });
+	await writeFile(join(leanPrefix, "bin/lean"), binary);
+	await verify();
+	await rm(join(leanPrefix, "lib/lean/Core.olean"));
+	await symlink(join(leanPrefix, "bin/lean"), join(leanPrefix, "lib/lean/Core.olean"));
+	await assert.rejects(verify, /regular files without symlinks/);
 });

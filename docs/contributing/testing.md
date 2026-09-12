@@ -106,10 +106,15 @@ The internal generator runner needs the pinned Lean compiler, Git, and a C compi
 ```sh
 bash scripts/bootstrap-toolchains.sh --lean-only
 LEAN_BRIDGE_LAKE_GENERATOR_TEST=1 node --test --test-concurrency=1 \
-  tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs
+  tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs \
+  tests/lake-generated-workspace.test.mjs
 ```
 
-The tests compare relocated generator receipts, compile the resulting Lean source and C header, reject unreviewed implementations and changed staging files, and check cleanup after failure and cancellation. The prerequisite suite uses Lake to select declared recipes and resolve tool imports without invoking target bodies. It covers dependency-owned tools, unused targets, generation cycles, and receipt tampering. These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The native consumer workflow runs them after installing Lean. CLI builds still reject generated Lake prerequisites. The [prerequisite acceptance record](../evidence/lake-generator-prerequisites-20260912.md) tracks package-build integration.
+The tests compare relocated generator receipts, compile the resulting Lean source and C header, reject unreviewed implementations and changed staging files, and check cleanup after failure and cancellation. The prerequisite suite uses Lake to select declared recipes and resolve tool imports without invoking target bodies. It covers dependency-owned tools, unused targets, generation cycles, and receipt tampering.
+
+The generated-workspace suite stages those outputs separately from the original capture, asks Lake to resolve their imports, then compiles the complete application closure and generated C translation unit. It rejects changed output origins, additional prerequisites, import cycles, missing modules, symlinks, extra files and staging drift. Both relocation fixtures run after their original paths become unavailable. The [generated-workspace acceptance record](../evidence/lake-generated-workspace-20260912.md) describes the internal APIs and the remaining package-build integration.
+
+These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The native consumer workflow runs them after installing Lean. CLI builds still reject generated Lake prerequisites.
 
 ## Standalone CLI package
 

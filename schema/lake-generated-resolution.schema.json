@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lake resolution after verified source generation",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "snapshotSha256", "overlaySha256", "prerequisitesSha256", "resolverSha256", "leanCompilerSha256", "lakeLibrarySha256", "result"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "kind": {"const": "lean-bridge-generated-lake-resolution"},
+    "snapshotSha256": {"$ref": "#/$defs/digest"},
+    "overlaySha256": {"$ref": "#/$defs/digest"},
+    "prerequisitesSha256": {"$ref": "#/$defs/digest"},
+    "resolverSha256": {"$ref": "#/$defs/digest"},
+    "leanCompilerSha256": {"$ref": "#/$defs/digest"},
+    "lakeLibrarySha256": {"$ref": "#/$defs/digest"},
+    "result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "resolver", "generators", "resolution"],
+      "properties": {
+        "schemaVersion": {"const": 1},
+        "resolver": {"const": "lean-lake-generated"},
+        "generators": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "resolution": {
+          "type": "object", "additionalProperties": false,
+          "required": ["schemaVersion", "resolver", "leanVersion", "leanCommit", "packages", "modules", "externalImports"],
+          "properties": {
+            "schemaVersion": {"enum": [1, 2]},
+            "resolver": {"const": "lean-lake-locked"},
+            "leanVersion": {"type": "string", "minLength": 1},
+            "leanCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$(?![\\s\\S])"},
+            "packages": {"$ref": "lake-generator-selection.schema.json#/properties/packages"},
+            "externalImports": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/module"}},
+            "modules": {
+              "type": "array", "minItems": 1,
+              "items": {
+                "type": "object", "additionalProperties": false,
+                "required": ["module", "path", "package", "imports", "source"],
+                "properties": {
+                  "module": {"$ref": "#/$defs/module"},
+                  "path": {"$ref": "#/$defs/path"},
+                  "package": {"type": "string", "minLength": 1},
+                  "imports": {"type": "array", "items": {"$ref": "#/$defs/module"}},
+                  "source": {"$ref": "#/$defs/source"},
+                  "nativeInputs": {
+                    "type": "array", "minItems": 1,
+                    "items": {
+                      "type": "object", "additionalProperties": false,
+                      "required": ["package", "target", "path", "source"],
+                      "properties": {
+                        "package": {"type": "string", "minLength": 1},
+                        "target": {"type": "string", "minLength": 1},
+                        "path": {"type": "string", "pattern": "^(root|packages/[^/]+)/.+\\.c$(?![\\s\\S])"},
+                        "source": {"$ref": "#/$defs/source"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "allOf": [{
+            "if": {"properties": {"schemaVersion": {"const": 1}}},
+            "then": {"properties": {"modules": {"items": {"not": {"required": ["nativeInputs"]}}}}},
+            "else": {"properties": {"modules": {"contains": {"required": ["nativeInputs"]}}}}
+          }]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "path": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+    "module": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "bytes", "sha256", "mode", "origin"],
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "mode": {"enum": [420, 493]},
+        "origin": {
+          "oneOf": [
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["kind", "snapshotSha256"],
+              "properties": {"kind": {"const": "captured"}, "snapshotSha256": {"$ref": "#/$defs/digest"}}
+            },
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["kind", "generator", "receiptSha256"],
+              "properties": {
+                "kind": {"const": "generated"},
+                "generator": {"$ref": "#/$defs/path"},
+                "receiptSha256": {"$ref": "#/$defs/digest"}
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
