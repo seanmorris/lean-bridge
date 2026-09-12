@@ -53,7 +53,9 @@ These local checks do not execute Nix. The pushed CI jobs remain the acceptance 
 
 The earlier push's core and complete performance workflows passed. Its other Perl job ended after the runner received a shutdown signal during the locked-workspace suite. That cancellation is separate from the two packaging errors above.
 
-The follow-up run on `0e77730` reached XS compilation, confirming that runtime template rendering succeeded. It then failed because the pinned Perl headers include `crypt.h`, while the shell application's compiler search path omitted libxcrypt's development output. The Perl engine now sets `NIX_CFLAGS_COMPILE` to the pinned libxcrypt include directory through `lib.getDev`. A contract checks that this input reaches the wrapper before the engine starts. Local engine and Perl contracts pass 14 checks; actual Nix compilation requires the next CI run.
+The follow-up run on `0e77730` reached XS compilation, confirming that runtime template rendering succeeded. It then failed because the pinned Perl headers include `crypt.h`, while the shell application's compiler search path omitted libxcrypt's development output. The first header fix in `0bf95ff` set `NIX_CFLAGS_COMPILE`, but that setting was ineffective outside an initialized build shell: the [pinned wrapper](https://github.com/NixOS/nixpkgs/blob/b134951a4c9f3c995fd7be05f3243f8ecd65d798/pkgs/build-support/wrapper-common/utils.bash#L2) only collects flags for enabled build roles.
+
+The engine now sets `C_INCLUDE_PATH` directly to the pinned libxcrypt include directory through `lib.getDev`. A contract checks the shell entrypoint, and an executable Perl CBuilder regression removes Nix role variables, confirms that compilation fails without its private development header, then compiles successfully with the direct include path. All four native Perl groups pass locally, including 183 installed API checks; the test-source evidence hash was refreshed after this run. Actual Nix acceptance still requires the next CI run.
 
 ## Acceptance results
 

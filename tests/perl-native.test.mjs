@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { chmod, copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
 import test from "node:test";
 import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
 import { buildNativeProject } from "../src/build/native-project.mjs";
@@ -25,6 +26,20 @@ const perl = process.env.LEAN_BRIDGE_TEST_PERL ?? "/usr/bin/perl";
 const floor = process.env.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR ?? "2.38";
 const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
 const errorText = error => `${error.message}\n${JSON.stringify(error.details ?? {})}`;
+
+test("Perl CBuilder receives development headers without Nix build-role variables", { skip: !enabled }, async t => {
+	const working = await mkdtemp(join(tmpdir(), "lean-bridge-perl-headers-"));
+	t.after(() => rm(working, { recursive: true, force: true }));
+	const include = join(working, "development headers");
+	await mkdir(include);
+	await writeFile(join(include, "lean_bridge_header_probe.h"), "#define LEAN_BRIDGE_HEADER_VALUE 7\n");
+	await writeFile(join(working, "probe.c"), "#include <lean_bridge_header_probe.h>\nint probe(void) { return LEAN_BRIDGE_HEADER_VALUE; }\n");
+	const environment = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("NIX_") && !["CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH"].includes(key)));
+	const args = ["-MExtUtils::CBuilder", "-e", 'ExtUtils::CBuilder->new(quiet => 0)->compile(source => "probe.c", object_file => "probe.o");'];
+	await assert.rejects(() => run(perl, args, working, environment), error => /lean_bridge_header_probe\.h/.test(errorText(error)));
+	await run(perl, args, working, { ...environment, C_INCLUDE_PATH: include });
+	assert.ok((await readFile(join(working, "probe.o"))).length > 0);
+});
 
 test("shared configuration drives a compiled and installed native package", { skip: !enabled, timeout: 600_000 }, async t => {
 	await mkdir("build", { recursive: true });
