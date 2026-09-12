@@ -57,7 +57,22 @@ jobs:
       - name: Check locked Lake resolution and installed dependency packages
         env:
           LEAN_BRIDGE_LAKE_WORKSPACE_TEST: "1"
-        run: node --test tests/lake-workspace.test.mjs
+        run: |
+          node --input-type=module -e '
+            import { execFileSync } from "node:child_process";
+            const report = () => {
+              console.log(`Workspace resource sample: ${new Date().toISOString()}`);
+              for (const [command, args] of [["free", ["-m"]], ["ps", ["-eo", "pid,ppid,rss,comm", "--sort=-rss"]]]) {
+                const output = execFileSync(command, args, { encoding: "utf8" });
+                console.log(output.split("\n").slice(0, 9).join("\n"));
+              }
+            };
+            report();
+            setInterval(report, 15000);
+          ' &
+          monitor_pid=$!
+          trap 'kill "$monitor_pid" 2>/dev/null || true; wait "$monitor_pid" 2>/dev/null || true' EXIT
+          node --test tests/lake-workspace.test.mjs
       - name: Check captured Lean text generators and generated Lean/C consumers
         env:
           LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"
