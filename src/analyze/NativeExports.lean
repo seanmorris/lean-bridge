@@ -166,6 +166,17 @@ unsafe def main (args : List String) : IO UInt32 := do
   let operation := if safetyOnly then do
       if request.exports.isEmpty then throwError "no exports supplied for implementation checking"
       for name in request.exports do
+        let info ← getConstInfo name.toName
+        let some index := env.getModuleIdxFor? name.toName
+          | throwError "missing module for {name}"
+        if !request.modules.contains env.header.moduleNames[index.toNat]!.toString then
+          throwError "export outside selected modules: {name}"
+        if isPrivateName name.toName || isProtected env name.toName then
+          throwError "nonpublic export {name}"
+        if !info.levelParams.isEmpty then throwError "generic export {name} requires specialization"
+        match info with
+        | .defnInfo _ | .opaqueInfo _ => pure ()
+        | _ => throwError "{name} is not an executable definition"
         let _ ← LeanBridge.NativeExports.checkBody request name.toName
         if (← collectAxioms name.toName).contains ``sorryAx then
           throwError "export {name} depends on sorry"

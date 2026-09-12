@@ -38,6 +38,7 @@ const profileManifest = Object.freeze({
 		, "javascript-generator"
 		, "lake-dependency-snapshot"
 		, "lake-component-input"
+		, "lake-generator-contract"
 		, "lake-native-inputs"
 		, "lean-project-analyzer"
 		, "lean-author-documentation"
@@ -95,6 +96,7 @@ const profileManifest = Object.freeze({
 	])
 	, native: Object.freeze([
 		"c-family-package"
+		, "lake-generators"
 		, "lake-workspace"
 		, "c-generator"
 		, "cargo-package"

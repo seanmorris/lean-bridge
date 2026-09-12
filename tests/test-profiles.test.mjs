@@ -36,6 +36,8 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.contract.includes("tests/perl-contract.test.mjs"));
 	assert.ok(grouped.native.includes("tests/perl-native.test.mjs"));
 	assert.ok(grouped.native.includes("tests/lake-workspace.test.mjs"));
+	assert.ok(grouped.native.includes("tests/lake-generators.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/lake-generator-contract.test.mjs"));
 	assert.ok(grouped.component.includes("tests/release-rehearsal.test.mjs"));
 	assert.ok(grouped.component.includes("tests/internal/abi/js-pending-operations.test.mjs"));
 	assert.ok(grouped.consumer.includes("tests/consumer-node.test.mjs"));
