@@ -65,7 +65,9 @@ sub compile_xs {
     my $root = $INC{'LeanBridge/Runtime.pm'}; $root =~ s/\.pm\z//;
     push @include, "$root/include";
   }
-  my $builder = LeanBridgeBuild::Compiler->new(quiet => 0);
+  # CBuilder appends Config's optimize flags after extra_compiler_flags. A distro
+  # -g there would restore debug paths and make relocated archives differ.
+  my $builder = LeanBridgeBuild::Compiler->new(quiet => 0, config => { optimize => '-O2 -g0' });
   die "C compiler unavailable; install one or select a compatible prebuilt XS\n" unless $builder->have_compiler;
   $builder->{lean_bridge_commands} = [];
   my $flags = '-O2 -g0 -fvisibility=default';

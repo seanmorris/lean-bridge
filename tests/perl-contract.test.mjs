@@ -17,6 +17,8 @@ import { createDeterministicTarGzFromFiles } from "../src/release/deterministic-
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { auditGeneratedPublicSurface, generateNativeBindingPackages } from "../src/binding-ir/package-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { execFileSync } from "node:child_process";
+import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
 const scalar = { kind: "primitive", name: "uint32", lean: "UInt32", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
 const fixture = () => createNativeModel({
@@ -81,6 +83,20 @@ test("CPAN archive assembly uses verified byte snapshots", () => {
   assert.deepEqual(createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }), createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }));
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [...files, ...files], sourceDateEpoch: 1 }), /entry/);
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [{ ...files[0], path: "../escape" }], sourceDateEpoch: 1 }), /entry/);
+});
+
+test("binary archive assertions reject changed bytes without an unbounded text diff", () => {
+	assertArchiveBytesEqual(Buffer.from("same"), Buffer.from("same"));
+	assert.throws(() => assertArchiveBytesEqual(Buffer.from("left"), Buffer.from("right")), /Archive bytes differ:.*SHA-256/);
+	const result = execFileSync(process.execPath, ["--input-type=module", "-e"
+		, `
+		import { assertArchiveBytesEqual } from "./tests/helpers/archive-bytes.mjs";
+		try { assertArchiveBytesEqual(Buffer.alloc(32768, 1), Buffer.alloc(32768, 2)); }
+		catch (error) { console.log(error.message); process.exit(0); }
+		process.exit(1);
+	`], { encoding: "utf8", timeout: 3000, maxBuffer: 4096 });
+	assert.match(result, /^Archive bytes differ:/);
+	assert.ok(result.length < 256);
 });
 
 test("CPAN stages a versioned runtime from read-only Nix-style templates", async t => {

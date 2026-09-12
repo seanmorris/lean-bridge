@@ -93,7 +93,9 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
     assert.equal(built.model.exports.length, 50);
     const runtimePackage = join(packages, "runtime"), componentPackage = join(packages, "component");
     await stageCpanPackage({ outputRoot: runtimePackage, runtimeRoot, leanPrefix, glibcMinimumVersion: floor });
-    await compileCpanXsVariant({ packageRoot: runtimePackage, perl });
+    const runtimeVariant = await compileCpanXsVariant({ packageRoot: runtimePackage, perl });
+    const runtimeXsReceipt = JSON.parse(await readFile(join(runtimePackage, "prebuilt", runtimeVariant.abiKey, "receipt.json"), "utf8"));
+    assert.equal(runtimeXsReceipt.commands.find(command => command.includes("-c")).filter(flag => /^-g/.test(flag)).at(-1), "-g0");
     const runtimeArchive = await archiveCpanPackage({ packageRoot: runtimePackage, outputRoot: join(working, "archives") });
     const noCompiler = join(working, "no-compiler"); await mkdir(noCompiler);
     for(const name of ["cc", "c++", "gcc", "g++", "clang", "clang++", "x86_64-linux-gnu-gcc", "lean", "lake", "node"])
@@ -143,6 +145,7 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
 		assert.equal(installReceipt.operation, "generated-xs-only");
     assert.equal((await traceCpanInstall({ packageRoot: componentPackage, installRoot: installedRoot })).nativePayloadUnchanged, true);
     assert.ok(installReceipt.commands.length >= 2);
+    assert.equal(installReceipt.commands.find(command => command.includes("-c")).filter(flag => /^-g/.test(flag)).at(-1), "-g0");
     assert.equal(sha256(await readFile(join(installedRoot, "LeanBridge/Workshop/native", built.receipt.library))), built.receipt.nativeLibrary.sha256);
     const autoPackage = join(packages, "auto-component");
     await cp(componentPackage, autoPackage, { recursive: true });

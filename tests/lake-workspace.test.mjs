@@ -18,6 +18,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileLakeNativeInputs } from "../src/build/lake-native-inputs.mjs";
 import { writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WORKSPACE_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -250,11 +251,19 @@ test("locked native builds relocate identically and run through installed Perl p
 				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot, componentRoot: outputRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
 				await compileCpanXsVariant({ packageRoot, perl, environment: { ...process.env, PERL5LIB: buildRuntime.perl5lib } });
 				const archive = await archiveCpanPackage({ packageRoot, outputRoot: join(context.directory, `${label}-archives`) });
-				outputs.push({ built, archive });
+				outputs.push({ built, archive, packageRoot });
 			}
 			const [{ built, archive }, right] = outputs;
 			assert.deepEqual(right.built.receipt, built.receipt);
-			assert.deepEqual(await readFile(right.archive.path), await readFile(archive.path));
+			const leftManifest = JSON.parse(await readFile(join(outputs[0].packageRoot, "lean-bridge-package.json"), "utf8"));
+			for(const variant of leftManifest.prebuilt)
+			{
+				const path = `prebuilt/${variant.abiKey}/receipt.json`;
+				assert.deepEqual(JSON.parse(await readFile(join(right.packageRoot, path), "utf8")),
+					JSON.parse(await readFile(join(outputs[0].packageRoot, path), "utf8")));
+			}
+			assert.deepEqual(JSON.parse(await readFile(join(right.packageRoot, "lean-bridge-package.json"), "utf8")), leftManifest);
+			assertArchiveBytesEqual(await readFile(right.archive.path), await readFile(archive.path));
 			const { sourceIdentity } = built.receipt;
 			const dependencies = sourceIdentity.lakeDependencies;
 			assert.equal(dependencies.snapshotSha256, sha256(canonicalJson(dependencies.snapshot)));

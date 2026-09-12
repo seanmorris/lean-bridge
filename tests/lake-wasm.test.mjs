@@ -25,6 +25,7 @@ import { buildComponentNpmPackages } from "../src/release/component-npm-package.
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
 import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const execute = promisify(execFile);
@@ -97,7 +98,7 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 	assert.deepEqual(outputs[0].nativeEvidence, outputs[1].nativeEvidence);
 	assert.deepEqual(outputs[0].report, outputs[1].report);
 	assert.deepEqual(outputs[0].release.report, outputs[1].release.report);
-	assert.deepEqual(await readFile(outputs[0].release.componentArchive), await readFile(outputs[1].release.componentArchive));
+	assertArchiveBytesEqual(await readFile(outputs[0].release.componentArchive), await readFile(outputs[1].release.componentArchive));
 	assert.deepEqual(await lakeInputState(detached), authorBefore);
 	assert.deepEqual(await lakeInputState(moved), movedBefore);
 	const consumer = join(context.directory, "consumer");
