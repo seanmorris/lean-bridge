@@ -3,6 +3,8 @@
  *
  * @file
  */
+import { readFile, rm } from "node:fs/promises";
+import { join } from "node:path";
 import { prepareLakeDependencySnapshot } from "../../src/build/lake-dependency-snapshot.mjs";
 import { lakeWorkspaceFixture, saveLakeFile } from "./lake-workspace.mjs";
 
@@ -33,4 +35,51 @@ def TableGenerator.generate (inputs : Array (String × String)) (args : Array St
 		, outputs: [{ name: "lean", path: "root/generated/Generated.lean" }, { name: "header", path: "root/native/generated.h" }] };
 	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: context.root, includeProject: true });
 	return { ...context, definition, snapshot };
+};
+
+/**
+ * Declare a selected pure tool and an unrelated target whose body must not run.
+ *
+ * @param t - Test context responsible for cleanup.
+ * @param variant - Independent source tree and generated value.
+ */
+export const lakeGeneratorPrerequisiteFixture = async (t, variant = "shop") => {
+	const context = await lakeGeneratorFixture(t, variant);
+	const { root, names, definition } = context;
+	const recipe = { name: definition.name, profile: definition.profile
+		, module: "TableGenerator", declaration: definition.declaration
+		, inputs: definition.inputs.map(input => ({ ...input, path: input.path.slice(5) }))
+		, arguments: definition.arguments
+		, outputs: definition.outputs.map(output => ({ ...output, path: output.path.slice(5) })) };
+	const unused = { ...recipe, name: "unused", module: "UnusedGenerator"
+		, declaration: "UnusedGenerator.generate"
+		, outputs: [{ name: "lean", path: "generated/Unused.lean" }] };
+	const configuration = JSON.parse(await readFile(join(root, "lean-bridge.exports.json"), "utf8"));
+	configuration.generators = [recipe, unused];
+	await saveLakeFile(root, "lean-bridge.exports.json", JSON.stringify(configuration));
+	await rm(join(root, "lakefile.toml"));
+	const lakefile = `import Lake
+open Lake DSL
+package ${names.root.toLowerCase()} where
+  version := v!"1.0.0"
+require ${names.local} from "../local"
+target table pkg : Unit := do
+  IO.FS.writeFile (pkg.dir / "hook-ran") "selected hook ran"
+  pure (Job.pure ())
+target unused pkg : Unit := do
+  IO.FS.writeFile (pkg.dir / "unused-hook-ran") "unused hook ran"
+  pure (Job.pure ())
+lean_lib GeneratorSupport where
+  srcDir := "tools"
+lean_lib TableGenerator where
+  srcDir := "tools"
+lean_lib Generated where
+  srcDir := "generated"
+lean_lib ${names.root} where
+  needs := #[.packageTarget .anonymous \`table]
+`;
+	await saveLakeFile(root, "lakefile.lean", lakefile);
+	await saveLakeFile(root, `${names.root}.lean`, `import Generated\nimport ${names.local}\ndef ${names.root}.${names.operation} (value : UInt32) : UInt32 := ${names.local}.${names.operation} value + Generated.value\n`);
+	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: root, includeProject: true });
+	return { ...context, recipe, configuration, lakefile, snapshot };
 };

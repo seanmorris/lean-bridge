@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lake-selected captured generator tools",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "resolver", "leanVersion", "leanCommit", "packages", "generators"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "resolver": {"const": "lean-lake-generator-selection"},
+    "leanVersion": {"type": "string", "minLength": 1},
+    "leanCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$(?![\\s\\S])"},
+    "packages": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "configFile", "dependencies"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "configFile": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "generators": {
+      "type": "array", "maxItems": 128,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["key", "package", "module", "modules", "externalImports"],
+        "properties": {
+          "key": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "package": {"type": "string", "minLength": 1},
+          "module": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"},
+          "externalImports": {"$ref": "#/$defs/imports"},
+          "modules": {
+            "type": "array", "minItems": 1, "maxItems": 128,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["module", "path", "package", "imports"],
+              "properties": {
+                "module": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"},
+                "path": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+                "package": {"type": "string", "minLength": 1},
+                "imports": {"$ref": "#/$defs/imports"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "imports": {"type": "array", "items": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"}}
+  }
+}

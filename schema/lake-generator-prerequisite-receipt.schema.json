@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Captured Lake generator prerequisite receipt",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "snapshotSha256", "requestedModules", "configurations", "resolverSha256", "leanCompilerSha256", "lakeLibrarySha256", "selection", "generators"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "kind": {"const": "lean-bridge-lake-generator-prerequisites"},
+    "snapshotSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "requestedModules": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"}},
+    "configurations": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "source"],
+        "properties": {
+          "path": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "source": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/file"}
+        }
+      }
+    },
+    "resolverSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "leanCompilerSha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "lakeLibrarySha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
+    "selection": {"$ref": "lake-generator-selection.schema.json"},
+    "generators": {
+      "type": "array", "maxItems": 128,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["key", "receipt", "sha256"],
+        "properties": {
+          "key": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
+          "receipt": {"$ref": "lake-generator-receipt.schema.json"},
+          "sha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"}
+        }
+      }
+    }
+  }
+}

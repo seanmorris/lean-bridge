@@ -1,5 +1,15 @@
 {
   "schemaVersion": 1,
+  "identityFiles": [
+    "flake.lock",
+    "flake.nix",
+    "nix/component-engine-source-boundary.json",
+    "nix/core-source-boundary.json",
+    "nix/wasm-toolchain.nix",
+    "scripts/build-lean-runtime.sh",
+    "scripts/env.sh",
+    "scripts/lean-runtime-config.sh"
+  ],
   "includedFiles": [
     "poc/lean-link-spike/component_scalar.h",
     "poc/lean-link-spike/graph-lock.json",
@@ -7,6 +17,7 @@
     "src/abi/component-scalars.mjs",
     "src/analyze/lean-project.mjs",
     "src/analyze/export-configuration.mjs",
+    "src/analyze/generator-configuration.mjs",
     "src/binding-ir/canonical.mjs",
     "src/binding-ir/contract.mjs",
     "src/binding-ir/sha256.mjs",

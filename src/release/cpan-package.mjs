@@ -94,10 +94,9 @@ export const stageCpanPackage = async ({ outputRoot
       await copy(join(componentRoot, path), join(directory, path));
 	} else
 	{
-		for(const name of ["Runtime.xs", "Runtime.pm"])
-      await copy(join(templates, name), join(directory, name === "Runtime.pm" ? "lib/LeanBridge/Runtime.pm" : name));
+		await copy(join(templates, "Runtime.xs"), join(directory, "Runtime.xs"));
 		const runtimePm = join(directory, "lib/LeanBridge/Runtime.pm");
-		await save(runtimePm, (await readFile(runtimePm, "utf8")).replace("our $VERSION = '0.001';", `our $VERSION = '${version}';`));
+		await save(runtimePm, (await readFile(join(templates, "Runtime.pm"), "utf8")).replace("our $VERSION = '0.001';", `our $VERSION = '${version}';`));
 		await copy(join(runtimeRoot, "runtime.json"), join(directory, "lib/LeanBridge/Runtime/runtime.json"));
 		await save(join(directory, "lib/LeanBridge/Runtime/binding.json"), json(binding));
 		await save(join(directory, "lib/LeanBridge/Runtime/target.json"), json({ glibcMinimumVersion }));

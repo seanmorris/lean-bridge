@@ -106,12 +106,20 @@
             filter = path: type:
               let
                 relative = relativeSourcePath path;
+                files = componentEngineSourceBoundary.includedFiles
+                  ++ componentEngineSourceBoundary.identityFiles
+                  ++ coreSourceBoundary.includedFiles;
+                includedDirectory = pkgs.lib.any (directory: isWithin directory relative)
+                  coreSourceBoundary.includedDirectoryPrefixes;
+                parentDirectory = relative == "" || pkgs.lib.any
+                  (directory: pkgs.lib.hasPrefix "${relative}/" directory)
+                  coreSourceBoundary.includedDirectoryPrefixes;
                 parentFile = relative == "" || pkgs.lib.any
                   (file: pkgs.lib.hasPrefix "${relative}/" file)
-                  componentEngineSourceBoundary.includedFiles;
+                  files;
               in if type == "directory"
-                then parentFile
-                else builtins.elem relative componentEngineSourceBoundary.includedFiles;
+                then includedDirectory || parentDirectory || parentFile
+                else includedDirectory || builtins.elem relative files;
           };
           portablePackages = rec {
             capsule-graph = pkgs.stdenvNoCC.mkDerivation {

@@ -105,10 +105,11 @@ The internal generator runner needs the pinned Lean compiler, Git, and a C compi
 
 ```sh
 bash scripts/bootstrap-toolchains.sh --lean-only
-LEAN_BRIDGE_LAKE_GENERATOR_TEST=1 node --test tests/lake-generators.test.mjs
+LEAN_BRIDGE_LAKE_GENERATOR_TEST=1 node --test --test-concurrency=1 \
+  tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs
 ```
 
-The tests compare relocated generator receipts, compile the resulting Lean source and C header, reject unreviewed implementations and changed staging files, and check cleanup after failure and cancellation. They hash the selected compiler's complete `lib/lean` tree, so this suite takes several minutes. The native consumer workflow runs it after installing Lean. This is an internal runner test; CLI builds still reject generated Lake prerequisites. The [generator acceptance record](../evidence/lake-generators-20260912.md) tracks the remaining integration.
+The tests compare relocated generator receipts, compile the resulting Lean source and C header, reject unreviewed implementations and changed staging files, and check cleanup after failure and cancellation. The prerequisite suite uses Lake to select declared recipes and resolve tool imports without invoking target bodies. It covers dependency-owned tools, unused targets, generation cycles, and receipt tampering. These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The native consumer workflow runs them after installing Lean. CLI builds still reject generated Lake prerequisites. The [prerequisite acceptance record](../evidence/lake-generator-prerequisites-20260912.md) tracks package-build integration.
 
 ## Standalone CLI package
 

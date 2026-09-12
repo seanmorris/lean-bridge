@@ -10,6 +10,7 @@
     "exports": {"$ref": "#/$defs/selection"},
     "resources": {"$ref": "#/$defs/names"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
+    "generators": {"$ref": "lake-generator-configuration.schema.json"},
     "targets": {
       "type": "object",
       "additionalProperties": false,

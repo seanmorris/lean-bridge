@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import test from "node:test";
@@ -16,6 +16,8 @@ import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import {
 	createEngineExecutionRequest,
+	engineIdentityFiles,
+	identifyBuildEngine,
 	EngineExecutionRequestError,
 	readVerifiedEngineExecutionRequest,
 	validateEngineExecutionRequest,
@@ -65,6 +67,26 @@ test("the Nix component engine source boundary closes the executable module grap
   assert.match(await readFile("src/build/lake-workspace.mjs", "utf8"), /new URL\("ResolveLakeWorkspace\.lean", import\.meta\.url\)/);
   const executableFiles = boundary.includedFiles.filter(path => !dataFiles.includes(path)).sort();
   assert.deepEqual(await collectModuleClosure("scripts/run-component-engine.mjs"), executableFiles);
+});
+
+test("the filtered Nix engine retains every input needed to authenticate a host request", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-filtered-engine-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
+	const core = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
+	assert.deepEqual(boundary.identityFiles, [...engineIdentityFiles]);
+	for(const path of new Set([...boundary.includedFiles, ...boundary.identityFiles, ...core.includedFiles, ...core.includedDirectoryPrefixes]))
+	{
+		await mkdir(dirname(join(scratch, path)), { recursive: true });
+		await cp(path, join(scratch, path), { recursive: true });
+	}
+	assert.deepEqual(await identifyBuildEngine(scratch), await identifyBuildEngine(process.cwd()));
+	const source = await readFile("flake.nix", "utf8");
+	const filter = source.slice(source.indexOf("componentEngineSource = builtins.path"), source.indexOf("portablePackages = rec"));
+	assert.match(filter, /componentEngineSourceBoundary\.identityFiles/);
+	assert.match(filter, /coreSourceBoundary\.includedFiles/);
+	assert.match(filter, /coreSourceBoundary\.includedDirectoryPrefixes/);
+	assert.match(filter, /includedDirectory \|\| parentDirectory \|\| parentFile/);
 });
 
 test("one closed execution request names engine, component, source, output, cache, and targets", async () => {

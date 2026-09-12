@@ -177,7 +177,8 @@ export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix
 		const lakeLibrarySha256 = sha256(await readFile(lakeLibrary));
 		const request = { workspace
 			, packages: snapshot.document.packages.map(({ name, directory, packageRoot, configFile, manifestFile }) => ({ name, directory, packageRoot, configFile, manifestFile }))
-			, modules, files: [...records(snapshot).keys()] };
+			, modules, files: [...records(snapshot).keys()]
+			, generatorPhase: "none", generators: [] };
 		await writeFile(join(working, "request.json"), canonicalJson(request));
 		const env = { PATH: `${join(resolve(leanPrefix), "bin")}:${process.env.PATH}`
 			, LEAN_SYSROOT: resolve(leanPrefix), LANG: "C.UTF-8", LC_ALL: "C.UTF-8"

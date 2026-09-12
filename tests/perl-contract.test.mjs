@@ -4,8 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { resolve, dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { createNativeModel, validateNativeType, generateNativeLeanAdapters, nativeCallbackDefault } from "../src/build/native-model.mjs";
@@ -14,6 +16,7 @@ import { validateNativeElf } from "../src/build/native-artifacts.mjs";
 import { createDeterministicTarGzFromFiles } from "../src/release/deterministic-archive.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { auditGeneratedPublicSurface, generateNativeBindingPackages } from "../src/binding-ir/package-gate.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 
 const scalar = { kind: "primitive", name: "uint32", lean: "UInt32", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
 const fixture = () => createNativeModel({
@@ -78,6 +81,40 @@ test("CPAN archive assembly uses verified byte snapshots", () => {
   assert.deepEqual(createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }), createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }));
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [...files, ...files], sourceDateEpoch: 1 }), /entry/);
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [{ ...files[0], path: "../escape" }], sourceDateEpoch: 1 }), /entry/);
+});
+
+test("CPAN stages a versioned runtime from read-only Nix-style templates", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-readonly-cpan-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const source = join(scratch, "source"), runtimeRoot = join(scratch, "runtime");
+	const { includedFiles } = JSON.parse(await readFile("nix/perl-engine-source-boundary.json"));
+	for(const path of includedFiles)
+	{
+		const target = join(source, path);
+		await mkdir(dirname(target), { recursive: true });
+		await copyFile(path, target);
+		await chmod(target, 0o444);
+	}
+	const template = join(source, "src/backends/perl/Runtime.pm"), before = await readFile(template);
+	const elf = Buffer.alloc(64);
+	elf.set([0x7f, 69, 76, 70, 2, 1]); elf.writeUInt16LE(3, 16); elf.writeUInt16LE(62, 18);
+	const files = {};
+	for(const path of ["lib/libleanshared.so", "lib/liblean_bridge_native.so", "include/lean_bridge_native_runtime.h", "include/lean/lean.h"])
+	{
+		const bytes = path.endsWith(".so") ? elf : Buffer.from("/* fixture */\n");
+		await mkdir(dirname(join(runtimeRoot, path)), { recursive: true });
+		await writeFile(join(runtimeRoot, path), bytes);
+		files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+	}
+	await writeFile(join(runtimeRoot, "runtime.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", pointerBits: 64, leanCommit: "a".repeat(40), files }));
+	const { stageCpanPackage } = await import(pathToFileURL(join(source, "src/release/cpan-package.mjs")));
+	const outputRoot = join(scratch, "output");
+	await stageCpanPackage({ outputRoot, runtimeRoot, version: "0.009" });
+	const rendered = join(outputRoot, "lib/LeanBridge/Runtime.pm");
+	assert.match(await readFile(rendered, "utf8"), /our \$VERSION = '0\.009';/);
+	assert.ok((await stat(rendered)).mode & 0o200);
+	assert.deepEqual(await readFile(template), before);
+	assert.equal((await stat(template)).mode & 0o777, 0o444);
 });
 
 test("the Nix Perl source boundary includes the complete import and template closure", async () => {

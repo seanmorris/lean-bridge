@@ -7,6 +7,7 @@ import { lstat, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
+import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -54,8 +55,9 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
+	if(configuration.generators !== undefined) validateGeneratorConfiguration(configuration.generators);
 	for(const key of ["modules", "exports", "resources"])
 	{
 		if(configuration[key] === undefined) continue;

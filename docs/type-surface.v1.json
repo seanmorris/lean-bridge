@@ -170,8 +170,8 @@
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"docs/evidence/lake-native-workspace-20260911.md","sha256":"4885f50ba7468b223063454aef0377c0df1dc6810d541e45004bdbb887a43820"},
         {"path":"docs/evidence/lake-root-layouts-20260911.md","sha256":"bb833e36fa01709fae6b787f7b7eb449d6369bd27539a55f7e26ee971f6eabcb"},
-        {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"70a9d1cfcfffd649c1014cac83f0c58ca6f48af27fcb54a3c13d2f886aa0a972"},
-        {"path":"src/build/lake-workspace.mjs","sha256":"ba491be9c3957b4a227314f78511e6f9df06772c10547d107f8950ef531ed61d"},
+        {"path":"src/build/ResolveLakeWorkspace.lean","sha256":"809035ca1af5b3434c2be5346528e514fd21dbb24c1c0034afe9501e329a4d26"},
+        {"path":"src/build/lake-workspace.mjs","sha256":"f6e172e3e87443240558c825d4b05e5e92186d45b60f3297731a1c2689f4d535"},
         {"path":"src/build/lake-native-inputs.mjs","sha256":"b8dd4dc94ff68fa6eb5e83bf88f3b081b75c354ac5f652ddf15b1eacfce22803"},
         {"path":"schema/lake-native-compilation.schema.json","sha256":"70afee4832fb53e9e1f86e5c039facca589e2ebeafcceb5a49e9ca00403df068"},
         {"path":"tests/lake-native-inputs.test.mjs","sha256":"6bce9873a51e0b292d9af8ef7b4750cd7d4bec9fc6e73bdbf5d97f438b64b2bf"},
@@ -179,8 +179,8 @@
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
         {"path":"tests/lake-workspace.test.mjs","sha256":"e483fe6c346d81d030b2ab99da0c3c272ed035f559f23959c7da00e02853b2ba"},
         {"path":"tests/helpers/lake-workspace.mjs","sha256":"346cefe7361c68ad2b2553725977cc2ef92024823fd561ec31c3ec828e0af8c7"},
-        {"path":"src/analyze/export-configuration.mjs","sha256":"56eed41ab97ec746b8d71579f57b1668ff66be9b0fb3fea37480a16e7c0f4d34"},
-        {"path":"schema/lean-export-configuration.schema.json","sha256":"c09d5015f37d1ff50a0b04838a1a39d236cd5fbc431237d9008ef867ccab94af"},
+        {"path":"src/analyze/export-configuration.mjs","sha256":"9af412010ed3b589e7cc25c2cb0edaf817eaa396bfd2af2fee722dc92629f21f"},
+        {"path":"schema/lean-export-configuration.schema.json","sha256":"ec367ca0c1399b3e78a960cf16ad566f238d94c539f060e097f62e72101f0f52"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
         {"path":"tests/export-configuration.test.mjs","sha256":"ae26a3059c3c86dadac8da0d4239c00caa5c09d70315df765d8e17cd321b88ce"},
@@ -241,7 +241,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "bac3dd440580a52fd7c41105254e197b4e42fc2f8cd5fb285db349c18e8080e5"
+          "sha256": "dcaa60ac3f3217ee3bbc7d32eea200ba81dd94d8b687d4f867038d7d315f18db"
         },
         {
           "path": "src/release/cpan-install-trace.mjs",

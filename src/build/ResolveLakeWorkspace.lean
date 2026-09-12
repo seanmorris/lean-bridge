@@ -18,11 +18,20 @@ structure PackageInput where
   manifestFile : Option String
   deriving FromJson
 
+structure GeneratorInput where
+  packageRoot : String
+  name : String
+  module : String
+  outputs : Array String
+  deriving FromJson
+
 structure Request where
   workspace : String
   packages : Array PackageInput
   modules : Array String
   files : Array String
+  generatorPhase : String := "none"
+  generators : Array GeneratorInput := #[]
   deriving FromJson
 
 structure Traversal where
@@ -31,6 +40,8 @@ structure Traversal where
   records : Array Json := #[]
   external : NameSet := {}
   hasNative : Bool := false
+  generators : Array String := #[]
+  pendingGenerated : Array (Name × String) := #[]
 
 def fail {α : Type} (message : String) : IO α :=
   throw <| IO.userError message
@@ -54,6 +65,37 @@ def checkLeanConfig (label : String) (config : LeanConfig) : IO Unit := do
       config.leanOptions.isEmpty && config.buildType == .release &&
       config.backend != .llvm do
     fail s!"Unsupported Lake native targets or compiler options in {label}"
+
+def packageRoot (request : Request) (pkg : Package) : IO String := do
+  if pkg.isRoot then return "root"
+  let some captured := request.packages.find? (·.name == pkg.baseName.toString)
+    | fail s!"Uncaptured generator package: {pkg.baseName}"
+  return captured.directory ++ (if captured.packageRoot.isEmpty then "" else "/" ++ captured.packageRoot)
+
+def generatorKey (input : GeneratorInput) : String := input.packageRoot ++ "/" ++ input.name
+
+def generatorTarget (request : Request) (ws : Workspace) (consumer : Package)
+    (key : PartialBuildKey) : IO String := do
+  let .packageTarget package target := key
+    | fail s!"Generator prerequisites require an unfaceted package target: {key}"
+  let some owner := if package.isAnonymous then some consumer
+      else ws.packages.find? fun pkg => pkg.baseName == package || pkg.keyName == package
+    | fail s!"Missing generator package: {package}"
+  unless owner.keyName == consumer.keyName || consumer.depPkgs.any (·.keyName == owner.keyName) do
+    fail s!"Generator package is not a direct declared dependency: {package}"
+  let root ← packageRoot request owner
+  let some input := request.generators.find? fun input => input.packageRoot == root && input.name == target.toString
+    | fail s!"No captured generator recipe for {owner.baseName}/{target}"
+  unless (owner.findTargetConfig? target).isSome do
+    fail s!"Generator recipe requires a custom Lake target: {owner.baseName}/{target}"
+  return generatorKey input
+
+def libraryGenerators (request : Request) (ws : Workspace) (lib : LeanLib) : IO (Array String) := do
+  let keys := lib.pkg.config.extraDepTargets.map (fun name => PartialBuildKey.mk (.packageTarget .anonymous name)) ++
+    lib.config.extraDepTargets.map (fun name => PartialBuildKey.mk (.packageTarget .anonymous name)) ++ lib.config.needs
+  if request.generatorPhase == "none" && !keys.isEmpty then
+    fail s!"Unsupported Lake library build prerequisites: {lib.pkg.baseName}/{lib.name}"
+  keys.mapM (generatorTarget request ws lib.pkg)
 
 def nativeInput (request : Request) (ws : Workspace) (consumer : Package)
     (target : Target FilePath) : IO Json := do
@@ -101,6 +143,22 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   let some mod := candidates[0]? | fail s!"Missing Lake module: {name}"
   unless (mod.pkg.leanLibs.filter (·.config.isLocalModule name)).size == 1 do
     fail s!"Ambiguous Lake library ownership: {name}"
+  let prerequisites ← libraryGenerators request ws mod.lib
+  if request.generatorPhase == "tool" && (!prerequisites.isEmpty || !mod.lib.moreLinkObjs.isEmpty) then
+    fail s!"Generator tool depends on generation or native inputs: {name}"
+  for key in prerequisites do
+    unless (← get).generators.contains key do
+      modify fun state => { state with generators := state.generators.push key }
+  if request.generatorPhase == "plan" && !(← mod.leanFile.pathExists) then
+    let base := request.workspace ++ "/"
+    let some relative := mod.leanFile.normalize.toString.dropPrefix? base
+      | fail s!"Generated module escaped the workspace: {name}"
+    let some generator := request.generators.find? (·.outputs.contains relative.toString)
+      | fail s!"Uncaptured module has no generator recipe: {name}"
+    modify fun state => { state with
+      done := state.done.insert name
+      pendingGenerated := state.pendingGenerated.push (name, generatorKey generator) }
+    return
   let path ← relativeInput request mod.leanFile
   let source ← IO.FS.readFile mod.leanFile
   let native ← (mod.lib.moreLinkObjs.mapM (nativeInput request ws mod.pkg) : IO (Array Json))
@@ -119,6 +177,8 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
     hasNative := state.hasNative || !native.isEmpty }
 
 def resolve (request : Request) : IO Json := do
+  unless #["none", "plan"].contains request.generatorPhase do
+    fail "Unknown generator resolution phase"
   let some lean ← findLeanInstall? | fail "Selected Lean installation is unavailable"
   let env : Lake.Env := {
     lake := LakeInstall.ofLean lean, lean, elan? := none
@@ -162,16 +222,18 @@ def resolve (request : Request) : IO Json := do
   for pkg in ws.packages do
     let config ← relativeInput request pkg.configFile
     checkLeanConfig pkg.baseName.toString pkg.config.toLeanConfig
-    unless pkg.config.extraDepTargets.isEmpty && !pkg.config.precompileModules &&
+    unless (pkg.config.extraDepTargets.isEmpty || request.generatorPhase != "none") && !pkg.config.precompileModules &&
         !pkg.config.bootstrap do
       fail s!"Unsupported Lake package build prerequisites: {pkg.baseName}"
     for target in pkg.targetDecls do
+      let root ← packageRoot request pkg
       unless target.kind == LeanLib.configKind || target.kind == LeanExe.configKind ||
-          target.kind == InputFile.configKind do
+          target.kind == InputFile.configKind || (request.generatorPhase != "none" && target.kind.isAnonymous &&
+            request.generators.any (fun input => input.packageRoot == root && input.name == target.name.toString)) do
         fail s!"Unsupported Lake build target: {pkg.baseName}/{target.name}"
     for lib in pkg.leanLibs do
       checkLeanConfig s!"{pkg.baseName}/{lib.name}" lib.config.toLeanConfig
-      unless lib.config.needs.isEmpty && lib.config.extraDepTargets.isEmpty &&
+      unless ((lib.config.needs.isEmpty && lib.config.extraDepTargets.isEmpty) || request.generatorPhase != "none") &&
           !lib.config.precompileModules && !lib.config.allowImportAll &&
           (lib.config.nativeFacets false).map (·.name) == #[Module.oFacet] &&
           (lib.config.nativeFacets true).map (·.name) == #[Module.oExportFacet] do
@@ -179,14 +241,43 @@ def resolve (request : Request) : IO Json := do
       -- Validate every declared input before compilation. Do not execute targets.
       for input in lib.moreLinkObjs do
         let _ ← nativeInput request ws pkg input
+      if request.generatorPhase != "none" then
+        let _ ← libraryGenerators request ws lib
     packages := packages.push <| Json.mkObj [
       ("name", toJson pkg.baseName.toString), ("configFile", toJson config),
       ("dependencies", toJson <| pkg.depConfigs.map (·.name.toString))]
   Lean.searchPathRef.set env.leanSearchPath
+  for generator in request.generators do
+    let some owner ← ws.packages.findSomeM? fun pkg => do
+        return if (← packageRoot request pkg) == generator.packageRoot then some pkg else none
+      | fail s!"Generator recipe package is absent: {generator.packageRoot}"
+    let _ ← generatorTarget request ws owner (.packageTarget .anonymous generator.name.toName)
   for name in request.modules do
     unless (ws.findModules name.toName).any (·.pkg.isRoot) do
       fail s!"Selected module does not belong to the root Lake package: {name}"
   let (_, state) ← (request.modules.forM fun name => visit request ws name.toName).run {}
+  if request.generatorPhase == "plan" then
+    for (name, key) in state.pendingGenerated do
+      unless state.generators.contains key do
+        fail s!"Generated module requires a selected Lake prerequisite: {name}"
+    let mut generators := #[]
+    for key in state.generators.qsort (· < ·) do
+      let some input := request.generators.find? (fun input => generatorKey input == key)
+        | fail s!"Unresolved generator selection: {key}"
+      let candidates := ws.findModules input.module.toName
+      unless candidates.size == 1 do fail s!"Ambiguous or absent generator tool module: {input.module}"
+      let some mod := candidates[0]? | fail "Missing generator tool module"
+      unless (← packageRoot request mod.pkg) == input.packageRoot do
+        fail s!"Generator tool module belongs to another package: {input.module}"
+      let (_, tool) ← (visit { request with generatorPhase := "tool" } ws input.module.toName).run {}
+      generators := generators.push <| Json.mkObj [
+        ("key", toJson key), ("package", toJson mod.pkg.baseName.toString),
+        ("module", toJson input.module), ("modules", toJson tool.records),
+        ("externalImports", toJson <| tool.external.toArray.map Name.toString)]
+    return Json.mkObj [
+      ("schemaVersion", toJson (1 : Nat)), ("resolver", toJson "lean-lake-generator-selection"),
+      ("leanVersion", toJson Lean.versionString), ("leanCommit", toJson Lean.githash),
+      ("packages", toJson packages), ("generators", toJson generators)]
   return Json.mkObj [
     ("schemaVersion", toJson (if state.hasNative then 2 else 1 : Nat)), ("resolver", toJson "lean-lake-locked"),
     ("leanVersion", toJson Lean.versionString), ("leanCommit", toJson Lean.githash),

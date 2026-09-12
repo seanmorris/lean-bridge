@@ -61,7 +61,7 @@ jobs:
       - name: Check captured Lean text generators and generated Lean/C consumers
         env:
           LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"
-        run: node --test tests/lake-generators.test.mjs
+        run: node --test --test-concurrency=1 tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs
       - name: Restore checksummed Perl toolchains
         uses: actions/cache@v4
         with:
