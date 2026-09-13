@@ -15,10 +15,13 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { writeAnalysisOutput } from "../src/analyze/output.mjs";
 import { hashBindingIr, parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
-import { cliHandlers } from "../src/cli/commands.mjs";
+import { createCliHandlers } from "../src/cli/commands.mjs";
 import { runCli } from "../src/cli/run.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
+// These internal scanner/presentation tests inject their legacy analysis input.
+// compiler-analysis.test.mjs covers the public compiler-backed CLI contract.
+const cliHandlers = createCliHandlers({ analyze: analyzeLeanProject });
 
 const snapshot = async root => {
 	const names = (await readdir(root)).sort();

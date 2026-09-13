@@ -18,9 +18,11 @@ Inspect source declarations without rewriting the project:
 lean-bridge analyze --project /path/to/library --json --progress none
 ```
 
-Read `proposedExports`, diagnostics, and adapter questions as a source inventory. The report does not execute Lean and may miss aliases or inferred return types. Keep unsupported public declarations out of the selected component or supply a reviewed supported boundary. The analyzer does not generate an adapter from a prose answer.
+Read `proposedExports`, diagnostics, and adapter questions. The command uses the pinned Nix or Docker engine to compile fresh Lean interfaces, resolve aliases and inferred types, and extract the selected public API. Unsupported declarations retain their compiler types and source positions in the report. Resolve them with export selection or a supported Lean wrapper.
 
-For a locked Lake project, `build` obtains the selected API from fresh Lean interfaces inside the build engine. This applies to captured modules and [generated public entry modules](#generate-the-public-entry-module). The source-only report does not assign their build signatures or block supported aliases. `analyze` itself does not run generators.
+Analysis leaves the original checkout unchanged. A dependency-free Lake project needs no lockfile; dependencies and configured [generators](#generate-the-public-entry-module) require a reviewed `lake-manifest.json`. The engine runs declared generators against captured inputs before analyzing generated public modules. It does not build consumer adapters or packages.
+
+An explicit reviewed Binding IR takes a separate path: analysis validates that document without invoking Lean. Missing backends and compiler errors never fall back to source-scanned signatures.
 
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 
@@ -166,7 +168,7 @@ Use [npm package settings](../publish/npm.md#choose-the-npm-name-and-version) to
 
 ### Configure native Perl exports
 
-The [Perl target guide](../publish/cpan.md#build-an-ordinary-lean-project) contains a complete shared-configuration example. The native compiler checks freshly elaborated interfaces before generating XS. The source-only analysis report does not describe the native ABI.
+The [Perl target guide](../publish/cpan.md#build-an-ordinary-lean-project) contains a complete shared-configuration example. The native compiler checks freshly elaborated interfaces before generating XS. Public analysis currently projects the pure primitive profile; it does not yet project Perl's copied records, callbacks, resources, or configured closure arities.
 
 ## Choose downstream languages
 

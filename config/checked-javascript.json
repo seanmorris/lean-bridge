@@ -89,6 +89,9 @@
 			"path": "src/analyze/elaborated-metadata.mjs",
 			"classification": "strict-migration-backlog"
 		},
+		{ "path": "src/analyze/compiler-analysis.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/analyze/project-analysis.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/lean-analysis-engine.mjs", "classification": "strict-migration-backlog" },
 		{
 			"path": "src/analyze/project-elaborated.mjs",
 			"classification": "strict-migration-backlog"

@@ -83,7 +83,7 @@ export const readLakeGeneratorRecipes = async ({ snapshot, snapshotRoot, signal 
  */
 export const validateLakeGeneratorSelection = ({ snapshot, recipes, selection }) => {
 	validateLakeDependencySnapshotDocument(snapshot.document);
-	if(snapshot.document.schemaVersion !== 2 || sha256(canonicalJson(snapshot.document)) !== snapshot.sha256) fail("Generator selection requires a complete authenticated snapshot");
+	if(![2, 3].includes(snapshot.document.schemaVersion) || sha256(canonicalJson(snapshot.document)) !== snapshot.sha256) fail("Generator selection requires a complete authenticated snapshot");
 	closed(selection, ["schemaVersion", "resolver", "leanVersion", "leanCommit", "packages", "generators"]);
 	if(selection.schemaVersion !== 1 || selection.resolver !== "lean-lake-generator-selection" || snapshot.document.toolchain !== `leanprover/lean4:v${selection.leanVersion}`
 		|| typeof selection.leanCommit !== "string" || !/^[0-9a-f]{40}$(?![\s\S])/.test(selection.leanCommit)) fail("Generator selection compiler differs from the captured toolchain");

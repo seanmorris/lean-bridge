@@ -59,9 +59,9 @@ Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowin
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
-Compilation, packaging, and loading check the same ordinary-component capability contract. For locked Lake projects, Lean resolves aliases, notation, and inferred types inside the build engine before it generates the primitive adapter. This covers captured and [generated entry modules](existing-package.md#generate-the-public-entry-module). The source-only `analyze` report remains provisional.
+Compilation, packaging, and loading check the same ordinary-component capability contract. `analyze` resolves aliases, notation, and inferred types using fresh Lean interfaces in the pinned engine. Locked builds use the same metadata extractor for captured and [generated entry modules](existing-package.md#generate-the-public-entry-module).
 
-Locked builds report separate reasons for implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. A theorem reference in that report records a direct relationship in Lean's environment; it does not add a verified Binding IR assurance claim.
+Analysis reports separate reasons for implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
 ## Native Perl exports
 
@@ -73,20 +73,19 @@ Use the [Perl conversion table](../consume/perl.md#type-conversions) for positio
 
 ## Types understood by source analysis
 
-The source-only analyzer recognizes:
+The compiler-backed analyzer projects:
 
 - `Unit`, `Bool`, `UInt8`, `UInt16`, `UInt32`, and `UInt64`;
 - `Int8`, `Int16`, `Int32`, `Int64`, `Nat`, and `Int`;
-- `Float32`, `Float`, `String`, and `ByteArray`;
-- nested `Array T`, `Option T`, and `Except E T` with supported arguments.
+- `Float32`, `Float`, `String`, and `ByteArray`.
 
-Ordinary npm components reject `IO`, `Task`, collection types, records, callbacks, and resources before adapter compilation. Locked builds first compile source interfaces to check the actual Lean types. Recognizing a source type does not authorize publishing it. Richer reviewed Binding IR and universal-package backends remain separate from this pure primitive path.
+`IO`, `Task`, collections, records, callbacks, resources, and configured closure arities produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Reviewed Binding IR can describe richer APIs than source-only inference. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles; it does not imply that every inferred declaration runs through the ordinary-project npm path.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 
-The default public proposal excludes `private`, `protected`, `unsafe`, and `partial` definitions. An existing foreign declaration requires a reviewed boundary contract or exclusion. Duplicate unqualified host names require a naming decision.
+The default public proposal excludes private and protected declarations, theorems, and type declarations. Selected unsafe, partial, admitted, and unreviewed foreign implementations produce diagnostics. Duplicate unqualified host names require a naming decision.
 
 Doc comments become generated API descriptions. Missing documentation produces a warning; it does not supply a proof or change a function's implementation.
 

@@ -1,6 +1,6 @@
 # Elaborated export metadata
 
-The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Locked npm builds use this report for captured and generated public modules. The public `lean-bridge analyze` command remains source-only.
+The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Public `lean-bridge analyze` and locked npm builds use this report for captured and generated public modules.
 
 ## Compiler report
 
@@ -28,4 +28,14 @@ Report diagnostics distinguish `unsupported-meaning`, `extractor-failure` and `s
 
 `theoremReferences` lists theorems in the compiled project closure whose elaborated statement directly uses the declaration. A similar name, comment or string does not create a relationship. This list supplies navigation metadata; Binding IR assurance arrays remain empty. Artifact-bound theorem claims require separate verification and review.
 
-The [milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records relocation, diagnostics, interface drift and installed-package checks. VO1107 and VO1108 still own the compiler-backed CLI analysis cutover. Native CPAN retains its existing metadata profile; finite specialization and additional type-family projections remain staged work.
+## Public analysis operation
+
+`lean-bridge analyze` captures the original source and executes a version-3 engine request through the pinned Nix or Docker backend. The request accepts source intent and denies host-supplied semantic metadata or adapters. Its authorized output contains only `project-analysis.json` and an execution report binding the request, engine, source closure, backend and report hash.
+
+The [version-2 public report](../../schema/project-analysis.schema.json) embeds the complete elaboration record. The host validates its invocation identity, captured source hashes, selected roots, structural metadata and Binding IR projection before releasing it. It checks the original checkout and transported inputs again after execution. Temporary compiler files stay outside the author's tree.
+
+A dependency-free project without `lake-manifest.json` uses snapshot version 3, which binds the lockfile's absence. Lake rejects external dependencies until the author supplies a reviewed lock. Locked sources continue to use snapshot version 2. Configured generators execute from the captured locked inputs before extraction; analysis does not compile consumer adapters or link packages.
+
+Unsupported meaning returns a reviewable report and exit status 2. Extractor faults or stale metadata return failure, never a source-scanned fallback. An explicit reviewed Binding IR bypasses compilation and reports `existing-validated`, with no fresh compiler evidence. `requireCompiledExports` accepts only fresh compiler-backed exports.
+
+The [metadata milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records interface drift and installed-package checks. The [CLI cutover evidence](../evidence/compiler-analysis-20260913.md) covers engine-backed analysis, lock-absent capture, generated entries, relocation and failure cleanup. Native CPAN retains its existing metadata profile. VO1107 and VO1108 still include native shared projection, finite specialization and the unlocked build-planner cutover.

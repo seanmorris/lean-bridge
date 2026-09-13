@@ -120,6 +120,7 @@ const readPlans = async inputs => {
  * @param root0.backend - Backend identifier or implementation selected for generation, execution, or package projection.
  * @param root0.runner - Process runner used for isolated external commands.
  * @param root0.environment - Environment variables used to resolve tools and policy.
+ * @param root0.signal - Optional cancellation signal for compiler-only analysis.
  */
 export const executeComponentEngineRequest = async ({
 	requestPath
@@ -129,12 +130,18 @@ export const executeComponentEngineRequest = async ({
 	, backend = "direct-test"
 	, runner = undefined
 	, environment = process.env
+	, signal
 } = {}) => {
 	const inputs = resolve(inputRoot);
 	const output = resolve(outputRoot);
 	const engine = resolve(engineRoot);
 	await assertAbsent(output);
 	const verifiedRequest = await readVerifiedEngineExecutionRequest({ requestPath, engineRoot: engine, inputRoot: inputs });
+	if(verifiedRequest.document.schemaVersion === 3)
+	{
+		const { executeLeanAnalysisEngine } = await import("./lean-analysis-engine.mjs");
+		return executeLeanAnalysisEngine({ verifiedRequest, inputs, output, engine, backend, runner, environment, signal });
+	}
 	if(verifiedRequest.document.schemaVersion === 2)
 	{
 		const { executeLakeEntryComponent } = await import("./lake-entry-engine.mjs");

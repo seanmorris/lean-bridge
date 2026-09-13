@@ -260,7 +260,7 @@ export const validateLakeDependencySnapshotDocument = (document, { limits = {} }
 	const bound = policy(limits);
 	const digest = value => typeof value === "string" && /^[0-9a-f]{64}$(?![\s\S])/.test(value);
 	closed(document, ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"], ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"], "snapshot");
-	if(![1, 2].includes(document.schemaVersion) || document.kind !== "lean-bridge-lake-dependency-snapshot"
+	if(![1, 2, 3].includes(document.schemaVersion) || document.kind !== "lean-bridge-lake-dependency-snapshot"
 		|| typeof document.toolchain !== "string" || !/^leanprover\/lean4:v[0-9]+\.[0-9]+\.[0-9]+$(?![\s\S])/.test(document.toolchain)
 		|| !Array.isArray(document.packages) || document.packages.length > bound.packages)
 		fail("invalid-lake-snapshot", "Snapshot version, toolchain or package set is invalid");
@@ -286,8 +286,9 @@ export const validateLakeDependencySnapshotDocument = (document, { limits = {} }
 		return paths;
 	};
 	const root = checkFiles(document.rootInputs);
-	if(!root.has("lake-manifest.json") || !root.has("lean-toolchain") || (document.schemaVersion === 1 && root.size !== 2))
-		fail("invalid-lake-snapshot", "Snapshot must include the root lock and toolchain");
+	if(!root.has("lean-toolchain") || (document.schemaVersion === 1 && root.size !== 2)
+		|| (document.schemaVersion === 3 ? root.has("lake-manifest.json") || document.packages.length !== 0 : !root.has("lake-manifest.json")))
+		fail("invalid-lake-snapshot", "Snapshot must bind its toolchain and either a lock or explicit lock absence with no dependencies");
 	let previous = "";
 	for(const pkg of document.packages)
 	{
@@ -345,7 +346,7 @@ export const readLakeDependencySnapshot = async ({ snapshotRoot, expectedSha256,
 		fail("lake-toolchain-drift", "Snapshot toolchain differs from its captured source");
 	// Match the transport metadata to the captured lock, without following local
 	// paths or fetching Git. The original capture verified pins and Git objects.
-	const lock = parse(files.get("root/lake-manifest.json").bytes);
+	const lock = document.schemaVersion === 3 ? { packages: [] } : parse(files.get("root/lake-manifest.json").bytes);
 	if(!Array.isArray(lock.packages) || lock.packages.length !== document.packages.length)
 		fail("invalid-lake-snapshot", "Snapshot package set differs from its captured lock");
 	const names = new Set();
@@ -377,7 +378,7 @@ export const readLakeDependencySnapshot = async ({ snapshotRoot, expectedSha256,
  */
 export const verifyLakeSnapshotProject = async ({ snapshot, projectRoot, signal }) => {
 	const state = captured.get(snapshot);
-	if(!state || snapshot.document.schemaVersion !== 2) fail("invalid-lake-snapshot", "Project verification requires a complete prepared snapshot");
+	if(!state || ![2, 3].includes(snapshot.document.schemaVersion)) fail("invalid-lake-snapshot", "Project verification requires a complete prepared snapshot");
 	const root = await realpath(projectRoot);
 	const files = await inventory(root, state.limits, signal);
 	if(!same(describe(files), snapshot.document.rootInputs))
@@ -394,17 +395,19 @@ export const verifyLakeSnapshotProject = async ({ snapshot, projectRoot, signal 
  * @param options.signal - Optional cancellation signal.
  * @param options.limits - Optional positive package, file and byte limits.
  * @param options.includeProject - Capture root project files as well as dependency inputs.
+ * @param options.allowMissingLock - Permit a complete lock-absent analysis capture; Lake must confirm it has no dependencies.
  */
-export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limits = {}, includeProject = false }) => {
+export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limits = {}, includeProject = false, allowMissingLock = false }) => {
 	if(typeof includeProject !== "boolean") fail("invalid-lake-snapshot", "includeProject must be a boolean");
+	if(typeof allowMissingLock !== "boolean" || (allowMissingLock && !includeProject)) fail("invalid-lake-snapshot", "Lock-absent capture requires complete project inputs");
 	const bound = policy(limits);
 	const root = await realpath(projectRoot);
 	const lock = await optional(() => readRegular(join(root, "lake-manifest.json"), bound.fileBytes, signal));
-	if(!lock) fail("missing-lake-lock", "Create and review a Lake lock before capturing dependencies");
+	if(!lock && !allowMissingLock) fail("missing-lake-lock", "Create and review a Lake lock before capturing dependencies");
 	const toolchain = await readRegular(join(root, "lean-toolchain"), bound.fileBytes, signal);
 	const version = toolchain.bytes.toString("utf8").trim();
 	if(!/^leanprover\/lean4:v[0-9]+\.[0-9]+\.[0-9]+$(?![\s\S])/.test(version)) fail("unpinned-lake-toolchain", "Snapshot requires an exact Lean release toolchain");
-	const manifest = parse(lock.bytes);
+	const manifest = lock ? parse(lock.bytes) : { version: "1.2.0", packages: [] };
 	closed(manifest, ["version", "name", "lakeDir", "packagesDir", "packages", "fixedToolchain"], ["version", "packages"], "Lake manifest");
 	if(!["1.0.0", "1.1.0", "1.2.0"].includes(manifest.version) || !Array.isArray(manifest.packages)
 		|| manifest.packages.length > bound.packages) fail("invalid-lake-snapshot", "Lake manifest version or package count is unsupported");
@@ -417,7 +420,9 @@ export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limit
 	await rejectOverrides(root, lakeDir);
 	const rootFiles = includeProject ? await inventory(root, bound, signal)
 		: new Map([["lake-manifest.json", lock], ["lean-toolchain", toolchain]]);
-	for(const [path, expected] of [["lake-manifest.json", lock], ["lean-toolchain", toolchain]])
+	const rootChecks = [...(lock ? [["lake-manifest.json", lock]] : []), ["lean-toolchain", toolchain]];
+	if(!lock && rootFiles.has("lake-manifest.json")) fail("lake-source-drift", "A Lake lock appeared during capture");
+	for(const [path, expected] of rootChecks)
 		if(!rootFiles.get(path)?.bytes.equals(expected.bytes)) fail("lake-source-drift", "Root inputs changed before project capture");
 	const files = new Map([...rootFiles].map(([path, file]) => [`root/${path}`, file]));
 	checkAggregate(files, bound);
@@ -459,13 +464,13 @@ export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limit
 		if(!same(describe(await inventory(location, bound, signal)), records)) fail("lake-source-drift", "Dependency source changed during capture");
 		if(entry.type === "git") await gitTree(location, entry, bound, signal);
 	}
-	for(const [path, expected] of [["lake-manifest.json", lock], ["lean-toolchain", toolchain]])
+	for(const [path, expected] of rootChecks)
 		if(!same(describe(new Map([[path, await readRegular(join(root, path), bound.fileBytes, signal)]])), describe(new Map([[path, expected]]))))
 			fail("lake-source-drift", "Root lock or toolchain changed during capture");
 	await rejectOverrides(root, lakeDir);
 	if(includeProject && !same(describe(await inventory(root, bound, signal)), describe(rootFiles)))
 		fail("lake-source-drift", "Root project changed during capture");
-	const document = frozen({ schemaVersion: includeProject ? 2 : 1
+	const document = frozen({ schemaVersion: !lock ? 3 : includeProject ? 2 : 1
 		, kind: "lean-bridge-lake-dependency-snapshot", toolchain: version
 		, rootInputs: describe(rootFiles)
 		, packages: packages.sort((left, right) => compare(left.name, right.name)) });

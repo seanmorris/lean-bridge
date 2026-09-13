@@ -51,6 +51,8 @@ All 11 rich metadata checks pass as the unprivileged `nobody` user. The core pro
 
 ## Remaining work
 
+The [following CLI milestone](compiler-analysis-20260913.md) implements engine-backed analysis. The scope below records what remained at this metadata milestone.
+
 The public `lean-bridge analyze` command remains source-only. Unlocked npm projects retain their existing planner, and native CPAN retains its existing metadata profile. Engine-backed CLI analysis and a shared native projection remain under VO1107/1108. Finite specializations, broader adapters and the full installed corpus remain dependent work. Neither task closes with this milestone.
 
 No type/profile coverage state advances. Two existing type-inventory source hashes are refreshed for the extractor and analyzer contract test. The inventory remains at 6,562 cells, 2,193 observed cells, 116 installed-tested cells and 32,230 required stage gaps. The milestone changes metadata and its checked projection without adding runtime type support.

@@ -10,7 +10,7 @@ import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
-import { readLakeDependencySnapshot, verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
+import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-intent" }); };
@@ -63,21 +63,32 @@ const readIntent = async (inputRoot, signal) => {
  * @param options.projectRoot - Original project directory.
  * @param options.lakeSnapshot - Optional independently captured release source.
  * @param options.signal - Optional cancellation signal.
+ * @param options.purpose - Build intent or compiler-only analysis intent.
  */
-export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal }) => {
+export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal, purpose = "build" }) => {
+	if(!["build", "analysis"].includes(purpose)) fail("Unknown public entry intent purpose");
 	const inventory = await inspectLeanProject(projectRoot, { signal });
 	const configuration = inventory.configurationRecord.configuration;
-	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators"], targetFields: ["name", "version"] });
+	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators"], targetFields: ["name", "version"] });
+	else if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
+		fail("Compiler analysis requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
+	if(purpose === "analysis" && configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))
+		fail("Generator analysis requires a reviewed lake-manifest.json");
 	const modules = selectLakeEntryModules(configuration, inventory.inputs);
 	if(!modules.length) fail("Source-only intent requires a selected public entry module");
 	if(inventory.inputs.some(input => input.path.endsWith(".binding-ir.json"))) fail("Public entry signatures must come from fresh Lean metadata, not a supplied Binding IR");
 	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot, signal });
-	else lakeSnapshot = await captureLockedLakeProject({ projectRoot, inputs: inventory.inputs, signal });
+	else lakeSnapshot = purpose === "analysis"
+		? await prepareLakeDependencySnapshot({ projectRoot, includeProject: true, allowMissingLock: true, signal })
+		: await captureLockedLakeProject({ projectRoot, inputs: inventory.inputs, signal });
 	if(!lakeSnapshot) fail("Source-only intent requires a complete locked capture");
+	const files = new Map(lakeSnapshot.document.rootInputs.map(input => [input.path, input]));
+	if(inventory.inputs.some(input => files.get(input.path)?.sha256 !== input.sha256 || files.get(input.path)?.bytes !== input.bytes))
+		fail("Source inventory changed before capture");
 	const facts = inventory.project;
 	const id = `${facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project"}@${facts.version}`;
 	const document = freeze({ schemaVersion: 2
-		, kind: "lean-bridge-lake-entry-intent"
+		, kind: purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : "lean-bridge-lake-entry-intent"
 		, component: { id, name: facts.name, version: facts.version }
 		, source: { inputs: inventory.inputs, treeSha256: inventory.sourceTreeSha256
 			, toolchain: facts.toolchain, lakeSnapshotSha256: lakeSnapshot.sha256 }
@@ -116,14 +127,15 @@ export const writeLakeEntryInputs = async ({ intent, outputRoot, signal }) => {
  * @param options.inputRoot - Closed original source mount.
  * @param options.expectedSha256 - Intent digest retained in the engine request.
  * @param options.signal - Optional cancellation signal.
+ * @param options.purpose - Expected build or compiler-only analysis intent.
  */
-export const readLakeEntryIntent = async ({ inputRoot, expectedSha256, signal }) => {
+export const readLakeEntryIntent = async ({ inputRoot, expectedSha256, signal, purpose = "build" }) => {
 	const bytes = await readIntent(inputRoot, signal);
 	if(sha256(bytes) !== expectedSha256) fail("Public entry intent identity changed");
 	const document = JSON.parse(bytes.toString("utf8"));
-	if(document.schemaVersion !== 2 || document.kind !== "lean-bridge-lake-entry-intent") fail("Unsupported public entry intent");
+	if(document.schemaVersion !== 2 || document.kind !== (purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : "lean-bridge-lake-entry-intent")) fail("Unsupported public entry intent");
 	const snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputRoot, "lake"), expectedSha256: document.source?.lakeSnapshotSha256, signal });
-	const reconstructed = await prepareLakeEntryIntent({ projectRoot: join(inputRoot, "lake/root"), lakeSnapshot: snapshot, signal });
+	const reconstructed = await prepareLakeEntryIntent({ projectRoot: join(inputRoot, "lake/root"), lakeSnapshot: snapshot, signal, purpose });
 	if(bytes.toString() !== canonicalJson(reconstructed.document)) fail("Public entry intent differs from the captured project");
 	return reconstructed;
 };

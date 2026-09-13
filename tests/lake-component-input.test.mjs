@@ -96,7 +96,8 @@ for(const variant of ["shop", "telemetry"]) test(`compiler-free ${variant} plann
 	const prepared = await prepare(context.root);
 	assert.deepEqual(prepared.compilationPlan.document.source.modules.map(item => [item.module, item.path]), [[context.names.root, path]]);
 	assert.deepEqual(prepared.compilerAdapters.plan.imports, [context.names.root]);
-	await assertJsonSchema("project-analysis", prepared.analysis);
+	// Compiler-free build planning is internal and cannot masquerade as a public report.
+	await assert.rejects(() => assertJsonSchema("project-analysis", prepared.analysis));
 	await assertJsonSchema("component-compilation-plan", prepared.compilationPlan.document);
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	await cp(context.workspace, join(context.directory, "relocated"), { recursive: true });

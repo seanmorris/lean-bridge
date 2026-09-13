@@ -4,60 +4,330 @@
   "title": "Lean Bridge isolated engine execution request",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "kind", "engine", "component", "source", "output", "cache", "targets", "policies"],
+  "required": [
+    "schemaVersion",
+    "kind",
+    "engine",
+    "component",
+    "source",
+    "output",
+    "cache",
+    "targets",
+    "policies"
+  ],
   "properties": {
-    "schemaVersion": { "enum": [1, 2] },
-    "kind": { "const": "lean-bridge-engine-execution" },
+    "schemaVersion": {
+      "enum": [
+        1,
+        2,
+        3
+      ]
+    },
+    "kind": {
+      "const": "lean-bridge-engine-execution"
+    },
     "engine": {
-      "type": "object", "additionalProperties": false,
-      "required": ["identitySha256", "fileCount"],
-      "properties": { "identitySha256": { "$ref": "#/$defs/sha256" }, "fileCount": { "type": "integer", "minimum": 1 } }
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identitySha256",
+        "fileCount"
+      ],
+      "properties": {
+        "identitySha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fileCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
     },
     "component": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "sourceTreeSha256", "inputClosureSha256"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sourceTreeSha256",
+        "inputClosureSha256"
+      ],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "componentPlanSha256": { "$ref": "#/$defs/sha256" },
-        "compilationPlanSha256": { "$ref": "#/$defs/sha256" },
-        "sourceIntentSha256": { "$ref": "#/$defs/sha256" },
-        "sourceTreeSha256": { "$ref": "#/$defs/sha256" },
-        "inputClosureSha256": { "$ref": "#/$defs/sha256" }
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "componentPlanSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "compilationPlanSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sourceIntentSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sourceTreeSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "inputClosureSha256": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     },
     "source": {
-      "type": "object", "additionalProperties": false,
-      "required": ["kind", "mount", "readOnly"],
-      "properties": { "kind": { "const": "closed-component-input" }, "mount": { "const": "component" }, "readOnly": { "const": true } }
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "mount",
+        "readOnly"
+      ],
+      "properties": {
+        "kind": {
+          "const": "closed-component-input"
+        },
+        "mount": {
+          "const": "component"
+        },
+        "readOnly": {
+          "const": true
+        }
+      }
     },
     "output": {
-      "type": "object", "additionalProperties": false,
-      "required": ["kind", "bundleDirectory", "executionReport", "authorizedFiles"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "bundleDirectory",
+        "executionReport",
+        "authorizedFiles"
+      ],
       "properties": {
-        "kind": { "const": "component-neutral-release-bundle" },
-        "bundleDirectory": { "const": "bundle" },
-        "executionReport": { "const": "engine-execution-report.json" },
-        "authorizedFiles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        "kind": {
+          "enum": [
+            "component-neutral-release-bundle",
+            "compiler-owned-project-analysis"
+          ]
+        },
+        "bundleDirectory": {
+          "enum": [
+            "bundle",
+            "analysis"
+          ]
+        },
+        "executionReport": {
+          "const": "engine-execution-report.json"
+        },
+        "authorizedFiles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     },
     "cache": {
-      "type": "object", "additionalProperties": false,
-      "required": ["policy"], "properties": { "policy": { "enum": ["use", "refresh", "off"] } }
-    },
-    "targets": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-    "policies": {
-      "type": "object", "additionalProperties": false,
-      "required": ["backendNeutral", "sameRequestBytes", "sourceReadOnly", "compileOnce", "sharedRuntime", "copyAuthorizedOutputsOnly"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy"
+      ],
       "properties": {
-        "backendNeutral": { "const": true }, "sameRequestBytes": { "const": true }, "sourceReadOnly": { "const": true },
-        "compileOnce": { "const": true }, "sharedRuntime": { "const": true }, "copyAuthorizedOutputsOnly": { "const": true }
+        "policy": {
+          "enum": [
+            "use",
+            "refresh",
+            "off"
+          ]
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backendNeutral",
+        "sameRequestBytes",
+        "sourceReadOnly",
+        "copyAuthorizedOutputsOnly"
+      ],
+      "properties": {
+        "backendNeutral": {
+          "const": true
+        },
+        "sameRequestBytes": {
+          "const": true
+        },
+        "sourceReadOnly": {
+          "const": true
+        },
+        "compileOnce": {
+          "const": true
+        },
+        "sharedRuntime": {
+          "const": true
+        },
+        "copyAuthorizedOutputsOnly": {
+          "const": true
+        },
+        "compilerOwnedTypes": {
+          "const": true
+        },
+        "noAdapterCompilation": {
+          "const": true
+        }
       }
     }
   },
-  "$defs": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
-  "allOf": [{
-    "if": { "properties": { "schemaVersion": { "const": 2 } } },
-    "then": { "properties": { "component": { "required": ["sourceIntentSha256"], "not": { "anyOf": [{ "required": ["componentPlanSha256"] }, { "required": ["compilationPlanSha256"] }] } } } },
-    "else": { "properties": { "component": { "required": ["componentPlanSha256", "compilationPlanSha256"], "not": { "required": ["sourceIntentSha256"] } } } }
-  }]
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schemaVersion": {
+            "enum": [
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "component": {
+            "required": [
+              "sourceIntentSha256"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "componentPlanSha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "compilationPlanSha256"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "component": {
+            "required": [
+              "componentPlanSha256",
+              "compilationPlanSha256"
+            ],
+            "not": {
+              "required": [
+                "sourceIntentSha256"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schemaVersion": {
+            "const": 3
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "output": {
+            "properties": {
+              "kind": {
+                "const": "compiler-owned-project-analysis"
+              },
+              "bundleDirectory": {
+                "const": "analysis"
+              },
+              "authorizedFiles": {
+                "const": [
+                  "project-analysis.json"
+                ]
+              }
+            }
+          },
+          "policies": {
+            "required": [
+              "compilerOwnedTypes",
+              "noAdapterCompilation"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "compileOnce"
+                  ]
+                },
+                {
+                  "required": [
+                    "sharedRuntime"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "output": {
+            "properties": {
+              "kind": {
+                "const": "component-neutral-release-bundle"
+              },
+              "bundleDirectory": {
+                "const": "bundle"
+              }
+            }
+          },
+          "policies": {
+            "required": [
+              "compileOnce",
+              "sharedRuntime"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "compilerOwnedTypes"
+                  ]
+                },
+                {
+                  "required": [
+                    "noAdapterCompilation"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
 }

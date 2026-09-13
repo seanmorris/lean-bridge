@@ -28,32 +28,29 @@ The strict warning option rejects `sorry`. Default Lean compilation reports `sor
 
 ## Read the relationship record
 
-The analyzer finds a reference to `add` in the theorem statement. After analysis, select its record:
+The compiler-backed analyzer finds a direct reference to `add` in the elaborated theorem statement. After analysis, create `build/inspect-proof.mjs`:
 
-```sh
-node --input-type=module -e '
+```js
 import fs from "node:fs";
-const ir = JSON.parse(fs.readFileSync("build/analysis/binding-ir.json", "utf8"));
-const { subject, state, theorems } = ir.assurance.find(item => item.subject === "lean:OnboardingSmall.add");
-console.log(JSON.stringify({ subject, state, theorems }, null, 2));
-'
+const report = JSON.parse(fs.readFileSync("build/analysis/project-analysis.json", "utf8"));
+const { declaration, theoremCandidates } = report.exportCandidates.find(item => item.declaration === "OnboardingSmall.add");
+console.log(JSON.stringify({ declaration, theoremCandidates }, null, 2));
 ```
 
-Expected output:
+Run `node build/inspect-proof.mjs`. Expected output:
 
 ```json
 {
-  "subject": "lean:OnboardingSmall.add",
-  "state": "unverified",
-  "theorems": [
+  "declaration": "OnboardingSmall.add",
+  "theoremCandidates": [
     "OnboardingSmall.add_commutative"
   ]
 }
 ```
 
-The analyzer reads source. It does not execute the Lean checker or assess what a theorem guarantees. The package's `metadata/assurance.json` retains this record unchanged after compilation.
+Analysis compiles fresh interfaces and asks Lean for theorem references. Similar names, comments, and cached `.ilean` files cannot supply those relationships. Binding IR also preserves them in each declaration's `source.extensions["lean-lang.org/theorem-references"]`; its assurance arrays stay empty.
 
-The ordinary component build has no artifact-bound theorem audit that upgrades this relationship to `proved`. The strict command above checks the theorem; the package receipt checks the archive identities. Neither operation changes that metadata state.
+The strict command above checks the theorem and rejects admitted proofs. A package receipt checks archive identities. Artifact-bound assurance claims require a separate theorem audit. The existing unlocked build path retains its older `unverified` relationship records in `metadata/assurance.json`; analysis does not upgrade those records.
 
 ## Keep exports separate from proofs
 

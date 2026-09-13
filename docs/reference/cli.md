@@ -65,7 +65,9 @@ Exit codes:
   130                   Command was cancelled
 ```
 
-`analyze` reads the project without changing its Lean source. An explicit `--output` writes analysis files. `build` creates local artifacts. `publish --dry-run` performs release preparation and verification without registry uploads; it can still build artifacts and invoke configured authorization providers.
+`analyze` compiles fresh Lean interfaces in the pinned Nix or Docker engine without changing the source checkout. A dependency-free Lake project needs no lockfile; dependencies and generators require a reviewed lock. Missing backends or extraction faults never select a source-scanning fallback. Explicit reviewed Binding IR can be validated without a compiler.
+
+An explicit `--output` writes the version-2 analysis report, available Binding IR, and optional policy report. `requireCompiledExports` requires fresh compiler evidence. `build` creates local artifacts. `publish --dry-run` performs release preparation and verification without registry uploads; it can still build artifacts and invoke configured authorization providers.
 
 `verify --receipt <path>` checks a local npm handoff. Add `--artifacts <directory>` only when its two archives are stored outside the receipt's directory. Signed verification requires `--archive`, `--policy`, `--policy-sha256`, `--subject`, and `--coordinate` together, plus the receipt's matching `.sha256` sidecar. Do not combine those options with `--artifacts`. Unknown receipt types and failed authentication are errors; they never select a weaker check. See [Use a prepared release](../consume/receive-package.md) for both commands and Node-only CLI installation.
 

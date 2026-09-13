@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:lean-bridge:schema:lake-entry-elaboration:v3",
-  "title": "Fresh Lean metadata for locked npm entry modules",
+  "title": "Fresh Lean metadata for captured public entry modules",
   "description": "Compiler-owned metadata bound to captured sources, generated outputs, extractor, compiler and complete fresh interfaces. Target compilation reproduces this record before linking.",
   "type": "object",
   "additionalProperties": false,

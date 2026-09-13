@@ -33,6 +33,9 @@ A first interrupt cancels the active process and returns 130.
 | `export-configuration-drift` | Configuration changed during analysis. | Keep the selected input revision stable and rerun analysis. |
 | `component-adapter-hints-required` | The public boundary needs a decision. | Read the JSON analysis and [resolve its adapter questions](export-decisions.md#resolve-required-decisions). |
 | `analysis-output-exists` or `build-output-exists` | The chosen output path already exists. | Choose an absent path. The CLI never merges an existing output. |
+| `build-tools-unavailable`, `nix-unavailable`, or `docker-unavailable` | Compiler-backed analysis or building has no usable pinned backend. | Complete [backend setup](setup.md#select-the-build-backend). Analysis does not fall back to scanned signatures. |
+| `invalid-compiler-analysis` | Engine output, invocation identity, or source inputs changed. | Keep inputs stable and rerun. Preserve the diagnostic if it repeats. |
+| `analysis-configuration-unsupported` | Public analysis cannot project configured resources or closure arities yet. | Use the native target's build path or an explicit reviewed Binding IR for those APIs. |
 | `source-not-git` | The dry-run project is outside Git. | Initialize Git and commit the project inputs. |
 | `source-tree-dirty` | A project input differs from the candidate revision. | Run `git status --short`, review the changes, and commit the intended inputs. |
 | `lean-toolchain-drift` | The source requests a different Lean version from the builder. | Compare `lean-toolchain` with the pinned builder and runtime. |
@@ -40,7 +43,6 @@ A first interrupt cancels the active process and returns 130.
 | `lean-metadata-extractor-failed` | The compiler metadata process failed or returned malformed JSON. | Read the retained compiler error. Keep the source and pinned toolchain stable; report extractor faults with the failing command. |
 | `invalid-elaborated-metadata` | The compiler report has an invalid shape or differs from its measured invocation. | Rebuild from the intended source with a matching engine. Do not supply edited metadata as a replacement. |
 | `lean-entry-elaboration-drift` | Fresh target compilation differs from the metadata used to generate adapters. | Check for changed source, toolchain, extractor or interface files, then build in fresh staging. |
-| `docker-unavailable` or `nix-unavailable` | The selected isolated builder is unavailable. | Start Docker or install Nix, then repeat [setup](setup.md). |
 | `shared-runtime-package-unavailable` | The package step cannot find `main.mjs` and `main.wasm`. | Reinstall a [prepared CLI with its bundled runtime](setup.md#install-a-prepared-cli). Checkout users must complete the manual runtime build and set `LEAN_BRIDGE_RUNTIME_ROOT` to its `lazy` directory. |
 | `package-dependency-download-failed` | The isolated builder could not fetch a pinned input. | Check access to the named source and retry the same locked build. |
 | `package-build-failed` | The isolated build failed after analysis. | Retain the JSON diagnostic and build log; inspect the compiler error before changing the source. |

@@ -198,14 +198,21 @@ test("tarball installs work locally, globally, and through npm exec without the 
 		await chmod(consumer, 0o777);
 		const unprivileged = process.getuid?.() === 0 ? { uid: 65534, gid: 65534 } : {};
 		const options = { ...npmOptions, ...unprivileged };
-		const analysis = JSON.parse((await execute(executable, ["analyze", "--project", project, "--target", "npm", "--check", "--output", join(consumer, "analysis"), "--json"], options)).stdout);
-		assert.equal(analysis.status, "ok");
-		assert.equal(analysis.result.project.name, "onboarding-small");
+		await assert.rejects(execute(executable, ["analyze", "--project", project, "--target", "npm", "--check", "--output", join(consumer, "analysis"), "--json"], {
+			...options
+			, env: { ...environment, LEAN_BRIDGE_DOCKER: join(scratch, "absent-docker"), LEAN_BRIDGE_NIX: join(scratch, "absent-nix") }
+		}), error => error.code === 2 && JSON.parse(error.stdout).result === null && JSON.parse(error.stdout).diagnostics.some(item => item.code === "build-tools-unavailable"));
 		await assert.rejects(execute(executable, ["--unknown", "--json"], options), error => error.code === 64 && JSON.parse(error.stdout).status === "failed");
 		await assert.rejects(execute(executable, ["build", "--project", project, "--target", "npm", "--output", join(consumer, "build"), "--json"], {
 			...options
 			, env: { ...environment, LEAN_BRIDGE_DOCKER: join(scratch, "absent-docker"), LEAN_BRIDGE_NIX: join(scratch, "absent-nix") }
 		}), error => error.code === 2 && JSON.parse(error.stdout).diagnostics.some(item => item.code === "build-tools-unavailable"));
+		await cp("poc/lean-link-spike/bindings/alpha.binding-ir.json", join(project, "reviewed.binding-ir.json"));
+		const analysis = JSON.parse((await execute(executable, ["analyze", "--project", project, "--check", "--output", join(consumer, "analysis"), "--json"], options)).stdout);
+		assert.equal(analysis.status, "ok");
+		assert.equal(analysis.result.project.name, "onboarding-small");
+		assert.equal(analysis.result.bindingIr.origin, "existing-validated");
+		assert.equal(analysis.result.compiledEnvironment.status, "absent");
 		for(const file of candidate.report.files)
 			assert.equal(hash(await readFile(join(installed, file.path))), file.sha256, file.path);
 	} finally

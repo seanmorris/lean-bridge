@@ -2,12 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://lean-bridge.dev/schema/lake-dependency-snapshot.schema.json",
   "title": "Captured Lake dependency inputs",
-  "description": "Root lock and toolchain identities plus the flat package set recorded by Lake. Version 2 also captures root project files. This inventory does not authorize declarations or prove import closure.",
+  "description": "Root lock and toolchain identities plus the flat package set recorded by Lake. Version 2 captures root project files; version 3 binds lock absence for dependency-free analysis. This inventory does not authorize declarations or prove import closure.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "kind", "toolchain", "rootInputs", "packages"],
   "properties": {
-    "schemaVersion": { "enum": [1, 2] },
+    "schemaVersion": { "enum": [1, 2, 3] },
     "kind": { "const": "lean-bridge-lake-dependency-snapshot" },
     "toolchain": { "type": "string", "pattern": "^leanprover/lean4:v[0-9]+\\.[0-9]+\\.[0-9]+$(?![\\s\\S])" },
     "rootInputs": {
@@ -22,6 +22,13 @@
     {
       "if": { "properties": { "schemaVersion": { "const": 1 } } },
       "then": { "properties": { "rootInputs": { "maxItems": 2 } } }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "const": 3 } } },
+      "then": { "properties": {
+        "packages": { "maxItems": 0 },
+        "rootInputs": { "not": { "contains": { "properties": { "path": { "const": "lake-manifest.json" } }, "required": ["path"] } } }
+      } }
     }
   ],
   "$defs": {

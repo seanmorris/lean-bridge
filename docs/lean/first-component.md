@@ -94,20 +94,18 @@ lean-bridge analyze \
   --output build/analysis
 ```
 
-The command creates `project-analysis.json`, `binding-ir.json`, and `policy-report.json` inside `build/analysis`. It proposes `OnboardingSmall.add` and `OnboardingSmall.isEmpty` with no required adapter decisions.
+The command compiles fresh Lean interfaces in the pinned engine and creates `project-analysis.json`, `binding-ir.json`, and `policy-report.json` inside `build/analysis`. It proposes `OnboardingSmall.add` and `OnboardingSmall.isEmpty` with no required adapter decisions. This dependency-free project needs no Lake lockfile.
 
-Inspect the public names and theorem relationships:
+Create `build/inspect-analysis.mjs` to inspect the public names and theorem relationships:
 
-```sh
-node --input-type=module -e '
+```js
 import fs from "node:fs";
-const ir = JSON.parse(fs.readFileSync("build/analysis/binding-ir.json", "utf8"));
-console.log(ir.declarations.map(item => item.name));
-console.log(ir.assurance.map(({ subject, state, theorems }) => ({ subject, state, theorems })));
-'
+const report = JSON.parse(fs.readFileSync("build/analysis/project-analysis.json", "utf8"));
+console.log(report.proposedExports);
+console.log(report.exportCandidates.map(({ declaration, theoremCandidates }) => ({ declaration, theoremCandidates })));
 ```
 
-Both relationship states are `unverified`. The `add` record names `OnboardingSmall.add_commutative`; the `isEmpty` record has no theorem. Source analysis records references without checking their proofs.
+Run `node build/inspect-analysis.mjs`. The `add` candidate names `OnboardingSmall.add_commutative`; `isEmpty` has no theorem reference. Lean supplies those relationships from elaborated theorem statements. Analysis leaves Binding IR assurance arrays empty.
 
 ## Build the component
 

@@ -149,7 +149,16 @@ Check the reviewed source allowlist and the tarball-installed executable:
 npm run test:cli-package
 ```
 
-This checks deterministic archive bytes, excluded private files, executable permissions, local/global/npm-exec installation, and analysis from a read-only installation. It requires Node and npm, without Lean or a build backend.
+This checks deterministic archive bytes, excluded private files, executable permissions, local/global/npm-exec installation, reviewed-IR analysis from a read-only installation, and blocked source analysis when no backend is available. It requires Node and npm.
+
+Run the compiler-backed analysis suite with the pinned Lean toolchain:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_COMPILER_ANALYSIS_TEST=1 node --test tests/compiler-analysis.test.mjs
+```
+
+These checks use real Lean through an injected Nix-command transport. They cover fresh interfaces, unsupported declarations, locked dependency relocation, missing locks, source preservation, output tampering and cancellation. They do not claim to execute Nix locally.
 
 For the full author check, prepare the existing shared runtime, then package that runtime with the CLI into a new directory:
 

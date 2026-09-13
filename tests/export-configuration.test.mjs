@@ -160,7 +160,8 @@ test("configured source exports exclude unrelated collisions and unsupported sig
 	assert.ok(analysis.declarations.some(item => item.name === "Second.bump"), "discovery still reports unselected source declarations");
 	const record = await readExportConfiguration(fixture);
 	assert.equal(analysis.inputs.find(input => input.path === exportConfigurationFile).sha256, record.sourceSha256);
-	await assertJsonSchema("project-analysis", analysis);
+	// Internal source planning does not satisfy the compiler-backed public report.
+	await assert.rejects(() => assertJsonSchema("project-analysis", analysis));
 	const plan = await prepareComponentBuildPlan({ projectRoot: fixture, engineRoot: process.cwd(), targets: ["npm"] });
 	assert.deepEqual(plan.document.bindingIr.declarations, ["lean:First.bump"]);
 	assert.ok(plan.document.source.inputs.some(input => input.path === exportConfigurationFile));

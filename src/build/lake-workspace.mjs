@@ -137,7 +137,7 @@ export const validateLakeModuleClosure = (value, snapshot, selected, files = rec
  */
 export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) => {
 	validateLakeDependencySnapshotDocument(snapshot.document);
-	if(snapshot.document.schemaVersion !== 2 || sha256(canonicalJson(snapshot.document)) !== snapshot.sha256)
+	if(![2, 3].includes(snapshot.document.schemaVersion) || sha256(canonicalJson(snapshot.document)) !== snapshot.sha256)
 		fail("invalid-lake-resolution", "Resolution requires a complete snapshot matching the authorized digest");
 	const fields = ["schemaVersion", "resolver", "leanVersion", "leanCommit"
 		, "packages", "modules", "externalImports", "snapshotSha256"
@@ -172,7 +172,7 @@ export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) 
  * @param options.signal - Optional cancellation signal.
  */
 export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix, signal }) => {
-	if(snapshot?.document.schemaVersion !== 2 || !Array.isArray(modules) || !modules.length || modules.some(module => !name(module)))
+	if(![2, 3].includes(snapshot?.document.schemaVersion) || !Array.isArray(modules) || !modules.length || modules.some(module => !name(module)))
 		fail("invalid-lake-resolution", "Lake resolution requires a complete capture and selected modules");
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-lake-workspace-"));
 	try

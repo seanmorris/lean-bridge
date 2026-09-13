@@ -218,6 +218,10 @@ def resolve (request : Request) : IO Json := do
       reconfigure := true, updateDeps := false, updateToolchain := false }
     unless ws.manifestFile.normalize == (root / "lake-manifest.json").normalize do
       error "Custom root manifest paths are not supported by locked builds"
+    if !(← (root / "lake-manifest.json").pathExists) then
+      unless ws.root.depConfigs.isEmpty do
+        error "Create and review lake-manifest.json before analyzing external dependencies"
+      return ws
     let manifest ← Manifest.load (root / "lake-manifest.json")
     for dep in ws.root.depConfigs do
       if let some entry := manifest.packages.find? (·.name == dep.name) then

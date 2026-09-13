@@ -77,9 +77,11 @@ jobs:
         env:
           LEAN_BRIDGE_LAKE_WASM_TEST: "1"
           LEAN_BRIDGE_ELABORATED_METADATA_TEST: "1"
+          LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
         run: |
           node --test --test-name-pattern='captured entry metadata|captured APIs' tests/lake-wasm.test.mjs
           node --test tests/elaborated-metadata.test.mjs
+          node --test tests/compiler-analysis.test.mjs
       - name: Check captured Lean text generators and generated Lean/C consumers
         env:
           LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"

@@ -37,15 +37,15 @@ test("source intake describes new and existing libraries without widening target
 	for(const link of ["lean/first-component.md", "lean/existing-package.md", "publishing.md", "consume.md"])
 		assert.ok(hub.includes(`](${link}`), link);
 	const exports = await readFile("docs/lean/export-decisions.md", "utf8");
-	assert.match(exports, /Ordinary npm components reject/);
+	assert.match(exports, /produce unsupported diagnostics in this profile/);
 	assert.match(exports, /## Native Perl exports/);
 	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
 	assert.match(exports, /Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work/);
 	const existing = await readFile("docs/lean/existing-package.md", "utf8");
 	assert.match(existing, /### Generate the public entry module/);
-	assert.match(existing, /`analyze` itself does not run generators/);
-	assert.match(existing, /The report does not execute Lean and may miss aliases or inferred return types/);
-	assert.match(existing, /For a locked Lake project, `build` obtains the selected API from fresh Lean interfaces inside the build engine/);
+	assert.match(existing, /engine runs declared generators against captured inputs/);
+	assert.match(existing, /uses the pinned Nix or Docker engine to compile fresh Lean interfaces/);
+	assert.match(existing, /Missing backends and compiler errors never fall back to source-scanned signatures/);
 	assert.match(existing, /metadata\/lake-entry-exports\.json/);
 	const targets = await readFile("docs/publishing.md", "utf8");
 	assert.match(targets, /npm and CPAN now read the same/);

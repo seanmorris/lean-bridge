@@ -120,6 +120,11 @@ try
 	await run("Set a credential-bearing test remote", "git", ["remote", "add", "origin", "https://author:FAKE_REMOTE_SECRET@example.invalid/component.git?token=FAKE_QUERY_SECRET"], project);
 	const analyzed = JSON.parse((await cli("Analyze through the installed CLI", ["analyze", "--project", ".", "--target", "npm", "--check", "--output", "build/analysis"])).stdout);
 	assert.equal(analyzed.status, "ok");
+	assert.equal(analyzed.result.schemaVersion, 2);
+	assert.equal(analyzed.result.bindingIr.origin, "lean-elaborated");
+	assert.equal(analyzed.result.compiledEnvironment.status, "available");
+	assert.equal(analyzed.result.elaboration.metadata.kind, "lean-bridge-elaborated-exports");
+	assert.deepEqual(analyzed.result.bindingIr.document.assurance, []);
 	await cli("Compile through the installed pinned engine", ["build", "--project", ".", "--target", "npm", "--output", "build/component"]);
 	assert.equal((await run("Check author source remains clean", "git", ["status", "--porcelain=v1", "--untracked-files=all"], project)).stdout, "");
 	const gate = join(output, "gate");

@@ -3,55 +3,172 @@
   "$id": "urn:lean-bridge:schema:lake-entry-intent:v2",
   "title": "Locked Lake public module intent",
   "description": "Compiler-free original source identity and root module selection. This record carries no declarations, type claims or generated output bytes.",
-  "type": "object", "additionalProperties": false,
-  "required": ["schemaVersion", "kind", "component", "source", "modules"],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "component",
+    "source",
+    "modules"
+  ],
   "properties": {
-    "schemaVersion": {"const": 2},
-    "kind": {"const": "lean-bridge-lake-entry-intent"},
-    "component": {"$ref": "component-compilation-plan.schema.json#/$defs/component"},
+    "schemaVersion": {
+      "const": 2
+    },
+    "kind": {
+      "enum": [
+        "lean-bridge-lake-entry-intent",
+        "lean-bridge-lake-analysis-intent"
+      ]
+    },
+    "component": {
+      "$ref": "component-compilation-plan.schema.json#/$defs/component"
+    },
     "source": {
-      "type": "object", "additionalProperties": false,
-      "required": ["inputs", "treeSha256", "toolchain", "lakeSnapshotSha256"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputs",
+        "treeSha256",
+        "toolchain",
+        "lakeSnapshotSha256"
+      ],
       "properties": {
-        "inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/input"}},
-        "treeSha256": {"$ref": "#/$defs/sha256"},
-        "toolchain": {"type": "string", "minLength": 1},
-        "lakeSnapshotSha256": {"$ref": "#/$defs/sha256"}
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/input"
+          }
+        },
+        "treeSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "toolchain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lakeSnapshotSha256": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     },
     "modules": {
-      "type": "array", "minItems": 1,
-      "items": {"oneOf": [{"$ref": "#/$defs/captured"}, {"$ref": "#/$defs/generated"}]}
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/captured"
+          },
+          {
+            "$ref": "#/$defs/generated"
+          }
+        ]
+      }
     }
   },
   "$defs": {
-    "sha256": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"},
-    "path": {"$ref": "lake-dependency-snapshot.schema.json#/$defs/path"},
-    "module": {"$ref": "lake-generator-configuration.schema.json#/$defs/module"},
+    "sha256": {
+      "$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"
+    },
+    "path": {
+      "$ref": "lake-dependency-snapshot.schema.json#/$defs/path"
+    },
+    "module": {
+      "$ref": "lake-generator-configuration.schema.json#/$defs/module"
+    },
     "input": {
-      "type": "object", "additionalProperties": false,
-      "required": ["path", "bytes", "sha256"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
       "properties": {
-        "path": {"$ref": "#/$defs/path"}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     },
     "captured": {
-      "type": "object", "additionalProperties": false,
-      "required": ["module", "path", "bytes", "sha256", "origin"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module",
+        "path",
+        "bytes",
+        "sha256",
+        "origin"
+      ],
       "properties": {
-        "module": {"$ref": "#/$defs/module"}, "path": {"$ref": "#/$defs/path"},
-        "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"},
-        "origin": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"const": "captured"}}}
+        "module": {
+          "$ref": "#/$defs/module"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "origin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "captured"
+            }
+          }
+        }
       }
     },
     "generated": {
-      "type": "object", "additionalProperties": false,
-      "required": ["module", "path", "origin"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module",
+        "path",
+        "origin"
+      ],
       "properties": {
-        "module": {"$ref": "#/$defs/module"}, "path": {"$ref": "#/$defs/path"},
+        "module": {
+          "$ref": "#/$defs/module"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
         "origin": {
-          "type": "object", "additionalProperties": false, "required": ["kind", "generator"],
-          "properties": {"kind": {"const": "generated"}, "generator": {"type": "string", "pattern": "^root/[A-Za-z][A-Za-z0-9_.-]*$(?![\\s\\S])"}}
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "generator"
+          ],
+          "properties": {
+            "kind": {
+              "const": "generated"
+            },
+            "generator": {
+              "type": "string",
+              "pattern": "^root/[A-Za-z][A-Za-z0-9_.-]*$(?![\\s\\S])"
+            }
+          }
         }
       }
     }

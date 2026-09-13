@@ -49,7 +49,7 @@ The prepared CLI uses its bundled shared runtime automatically. Leave `LEAN_BRID
 
 ## Select the build backend
 
-For the npm component backend, choose Docker or Nix. Native Perl does not use this Wasm builder selection.
+Compiler-backed `analyze` and npm component builds use Docker or Nix. Native Perl's build command uses its separate native engine. Analysis needs no shared Wasm runtime.
 
 For Docker, start the daemon and select it:
 

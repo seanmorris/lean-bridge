@@ -102,7 +102,7 @@ test("the installed-package example uses npm and a runnable JavaScript file", as
 	assert.equal(blocks.find(block => block.language === "text").source, "123n\ntrue\nfalse\n");
 });
 
-test("the author example exports two functions and records its theorem without promoting assurance", async () => {
+test("the internal unlocked build retains unverified claims and the docs inspect compiler relationships separately", async () => {
 	const analysis = await analyzeLeanProject(fixture, { targets: ["npm"] });
 	assert.deepEqual(analysis.proposedExports, ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
 	assert.deepEqual(analysis.adapterHints.filter(item => item.required), []);
@@ -113,7 +113,9 @@ test("the author example exports two functions and records its theorem without p
 	assert.deepEqual(claims.find(item => item.subject === "lean:OnboardingSmall.isEmpty").theorems, []);
 	const source = await readFile("docs/lean/proofs-and-assurance.md", "utf8");
 	const documented = JSON.parse(fences(source).find(block => block.language === "json").source);
-	assert.deepEqual(documented, { subject: add.subject, state: add.state, theorems: add.theorems });
+	assert.deepEqual(documented, { declaration: "OnboardingSmall.add", theoremCandidates: add.theorems });
+	assert.match(source, /source\.extensions/);
+	assert.match(source, /assurance arrays stay empty/);
 	const generated = generateJavaScriptPackage(analysis.bindingIr.document);
 	assert.doesNotMatch(generated["index.d.ts"], /\bany\b|export.*add_commutative/);
 	assert.match(generated["index.d.ts"], /add\(left: bigint, right: bigint\): bigint/);

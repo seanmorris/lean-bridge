@@ -1,10 +1,12 @@
 # Lean project analysis
 
-This directory contains the source-only CLI analyzer and the compiler-owned metadata extractor used by locked npm builds. Neither requires bridge annotations in Lean source. The CLI analyzer remains provisional until its engine-backed cutover.
+This directory contains the compiler-backed CLI analyzer and the metadata extractor shared with locked npm builds. Neither requires bridge annotations in Lean source.
 
 ## Inputs
 
-The analyzer reads the selected project root, Lean files, `lakefile` metadata, `lean-toolchain`, `lake-manifest.json`, available `.ilean` metadata, and an optional analysis policy. It records file and policy identities so a later build can identify the reviewed input.
+The analyzer captures the selected project root, Lean sources, Lake configuration, pinned toolchain, locked dependencies, shared export configuration, and optional policy. Nix or Docker runs the pinned engine against those captured inputs. A new dependency-free Lake project needs no lockfile; dependency and generator resolution require a reviewed lock.
+
+Fresh Lean interfaces supply names, types, documentation, source positions, effects, and theorem references. Cached `.ilean` files and source-scanned signatures supply no semantic evidence. An explicit reviewed Binding IR bypasses compilation and is labeled `existing-validated`.
 
 ## Output
 
@@ -12,46 +14,48 @@ An analysis result contains:
 
 - discovered modules and documented public declarations;
 - a proposed Binding IR document when all required mappings are known;
-- theorem references as assurance candidates;
-- target eligibility and unsupported shapes;
+- compiler-owned theorem references without new assurance claims;
+- supported primitive projections and unsupported shapes;
 - adapter questions for ambiguous ownership, effects, names, or source types;
 - diagnostics, progress, next actions, and exit status; and
 - source, policy, and analysis identities.
 
-Analysis reads the project by default. It writes only when the caller selects an output directory. It does not edit Lean source, add annotations, compile a component, or choose a publication destination.
+Analysis leaves the author checkout unchanged. Compilation and configured generators run in temporary workspaces outside it. `--output` atomically writes the requested report, available Binding IR and optional policy report. Analysis does not compile consumer adapters, link a component, or choose a publication destination.
 
 ## Modules
 
 | Module | Responsibility |
 |---|---|
-| [`lean-project.mjs`](lean-project.mjs) | Discovers project files, parses supported declaration shapes, assembles diagnostics, and proposes Binding IR. |
+| [`compiler-analysis.mjs`](compiler-analysis.mjs) | Captures sources, invokes the pinned engine, verifies output identities and source stability, and cleans temporary workspaces. |
+| [`project-analysis.mjs`](project-analysis.mjs) | Builds and validates the version-2 public report from compiler metadata or reviewed Binding IR. |
+| [`lean-project.mjs`](lean-project.mjs) | Inventories project files. Its older source scanner remains internal to the unlocked build planner. |
 | [`NativeExports.lean`](NativeExports.lean) | Reads fresh Lean interfaces, checks selected implementations, and emits native metadata or the shared rich report. |
 | [`elaborated-metadata.mjs`](elaborated-metadata.mjs) | Hashes complete interfaces and validates the shared report against engine-owned invocation identities. |
 | [`project-elaborated.mjs`](project-elaborated.mjs) | Copies structural compiler types into Binding IR, retaining documentation and theorem references without adding assurance claims. |
 | [`policy.mjs`](policy.mjs) | Validates built-in or supplied policy, normalizes it, computes identity, and evaluates a result. |
-| [`output.mjs`](output.mjs) | Writes the human summary and machine-readable files to an explicitly selected output directory. |
+| [`output.mjs`](output.mjs) | Writes machine-readable files to an explicitly selected output directory. |
 
 ## Analysis sequence
 
 ```text
-project discovery
+read-only source capture
       |
       v
-declaration and metadata inspection
+pinned engine: fresh interfaces and metadata
       |
       v
-policy evaluation and adapter questions
+host verification and policy evaluation
       |
       v
 Binding IR proposal or actionable diagnostics
 ```
 
-This sequence describes the source-only CLI. Locked npm builds instead derive their Binding IR inside the engine from the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md). Extraction failure cannot fall back to scanned signatures. Native CPAN retains its existing compiler metadata profile.
+Public analysis and locked npm builds use the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md). Missing backends block analysis. Unsupported meaning returns diagnostics; extractor faults and stale metadata fail without a scanned-signature fallback. Native CPAN retains its existing compiler metadata profile. Public analysis currently projects pure primitive signatures, not its richer native shapes.
 
 The accepted Binding IR moves to [`../binding-ir`](../binding-ir/README.md). Component compilation begins under [`../build`](../build/README.md).
 
 ## Extending analysis
 
-A new Lean shape needs a source fixture, an explicit Binding IR mapping or adapter question, collision handling, deterministic output, and tests for incomplete documentation. Do not infer ownership or effects when the source and policy do not supply enough evidence.
+A new Lean shape needs a compiler fixture, a structural Binding IR mapping or explicit unsupported diagnostic, collision handling, deterministic output, and downstream execution tests. Do not derive types by parsing rendered expressions.
 
-Use `npm run test:analyze` for the focused suite. The fixture matrix is under [`../../tests/fixtures/onboarding`](../../tests/fixtures/onboarding/), and executable results are recorded in the [analysis evidence](../../docs/evidence/lean-project-analysis.md).
+Use `npm run test:analyze` for the focused contract suite. With the pinned Lean compiler, run `LEAN_BRIDGE_COMPILER_ANALYSIS_TEST=1 node --test tests/compiler-analysis.test.mjs` for real compiler checks through an injected engine transport. CI also exercises the pinned backend. The fixture matrix is under [`../../tests/fixtures/onboarding`](../../tests/fixtures/onboarding/).
