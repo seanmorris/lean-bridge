@@ -145,10 +145,10 @@ export const compileLeanComponentSources = async ({
 				const actual = lake.resolution.modules.find(item => item.module === module.module);
 				if((module.origin?.kind !== "generated" && (capturedRoot.get(module.path)?.sha256 !== module.sha256 || capturedRoot.get(module.path)?.bytes !== module.bytes))
 					|| actual?.path !== `root/${module.path}` || actual.source.sha256 !== module.sha256 || actual.source.bytes !== module.bytes
-					|| (module.origin && canonicalJson(module.origin) !== canonicalJson(actual.source.origin)))
+					|| (module.origin && canonicalJson(module.origin) !== canonicalJson(actual.source.origin ?? { kind: "captured", snapshotSha256: snapshot.sha256 })))
 					fail("lean-component-input-drift", "Planned root modules differ from the locked snapshot");
 			}
-			if(compilationPlan.document.schemaVersion === 3 && lake.generatedSources?.sha256 !== compilationPlan.document.source.generatedSourcesSha256)
+			if(compilationPlan.document.schemaVersion >= 3 && (lake.generatedSources?.sha256 ?? null) !== compilationPlan.document.source.generatedSourcesSha256)
 				fail("lean-component-input-drift", "Generated public sources changed after elaboration");
 			if(lakeNativeInputs(lake.resolution).length || lake.generatedSources)
 				await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "native") });
@@ -211,12 +211,12 @@ export const compileLeanComponentSources = async ({
 				, oleanSha256: sha256(oleanBytes)
 			}));
 		}
-		if(lake && (lakeNativeInputs(lake.resolution).length || lake.generatedSources))
+		if(lake && (compilationPlan.document.schemaVersion >= 3 || lakeNativeInputs(lake.resolution).length || lake.generatedSources))
 		{
 			// Adding C inputs must not bypass the existing foreign/unsafe body gate.
 			const checker = join(resolve(engineRoot), "src/analyze/NativeExports.lean");
 			const request = join(staging, "native-body-request.json");
-			const elaborated = compilationPlan.document.schemaVersion === 3;
+			const elaborated = compilationPlan.document.schemaVersion >= 3;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
 			const exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [] }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
@@ -226,10 +226,10 @@ export const compileLeanComponentSources = async ({
 				const checked = await runner.capture({ command: lean, args: ["--run", checker, ...(elaborated ? [] : ["--check-bodies"]), request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
 				if(elaborated)
 				{
-					const actual = { schemaVersion: 1
+					const actual = { schemaVersion: compilationPlan.document.schemaVersion === 3 ? 1 : 2
 						, kind: "lean-bridge-lake-entry-elaboration"
 						, snapshotSha256: snapshot.sha256
-						, generatedSourcesSha256: lake.generatedSources.sha256
+						, generatedSourcesSha256: lake.generatedSources?.sha256 ?? null
 						, leanCompilerSha256: lake.document.leanCompilerSha256
 						, extractorSha256: sha256(await readFile(checker))
 						, request: exportRequest

@@ -12,7 +12,7 @@ import { chmod, lstat, mkdir, open, readFile, readdir, rm, symlink } from "node:
 import { analyzeLeanProject, inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "../src/build/lake-entry-modules.mjs";
 import { generatedLakeEntryFixture } from "./helpers/lake-generator.mjs";
-import { lakeInputState, lakeWorkspaceFixture } from "./helpers/lake-workspace.mjs";
+import { elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture } from "./helpers/lake-workspace.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -61,6 +61,23 @@ test("public generator outputs can be selected without executing Lean or assigni
 	const configuration = structuredClone(context.configuration);
 	configuration.generators[1].outputs = [{ name: "lean", path: "other/Shop.lean" }];
 	assert.throws(() => selectLakeEntryModules(configuration, inspected.inputs), { code: "ambiguous-export-module" });
+});
+
+test("ordinary locked modules carry source-only intent without host type inference", async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await elaboratedLakeApi(context);
+	const before = await lakeInputState(context.workspace);
+	const intent = await prepareLakeEntryIntent({ projectRoot: context.root });
+	assert.equal(intent.document.schemaVersion, 2);
+	assert.equal(intent.document.modules[0].origin.kind, "captured");
+	await assertJsonSchema("lake-entry-intent", intent.document);
+	const inputRoot = join(context.directory, "inputs");
+	await writeLakeEntryInputs({ intent, outputRoot: inputRoot });
+	const request = await createEngineExecutionRequest({ engineRoot: process.cwd(), inputRoot, entryIntent: intent, targets: ["npm"] });
+	assert.equal(request.document.schemaVersion, 2);
+	assert.equal(request.document.output.authorizedFiles.includes("generated/lake-generated-sources.json"), false);
+	assert.ok(request.document.output.authorizedFiles.includes("metadata/lake-entry-exports.json"));
+	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
 test("resolved public roots must preserve the planned file and producing generator", () => {
@@ -228,10 +245,12 @@ test("elaborated entry lowering admits only selected unique pure primitive signa
 	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
 	assert.deepEqual(compilerAdapters.plan.imports, ["Shop"]);
 	const plan = createComponentCompilationPlan({ analysis, componentPlan, compilerAdapters, sourceFiles: {} });
+	assert.equal(plan.document.schemaVersion, 4);
 	assert.deepEqual(plan.document.source.requestedModules, ["Extra", "Shop"]);
 	await assertJsonSchema("component-compilation-plan", plan.document);
 	for(const change of [
 		value => { delete value.source.elaborationSha256; }
+		, value => { value.source.generatedSourcesSha256 = null; }
 		, value => { value.source.modules[0].origin.snapshotSha256 = "0".repeat(64); }
 		, value => { value.source.modules[1].origin.generator = "packages/Other/tool"; }
 		, value => { value.source.modules[1].origin.extra = "unbound"; }

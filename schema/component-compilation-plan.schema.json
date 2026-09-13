@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "component", "componentPlanSha256", "compilerAdapters", "source", "runtime", "target", "outputs", "policies"],
   "properties": {
-    "schemaVersion": { "enum": [1, 2, 3] },
+    "schemaVersion": { "enum": [1, 2, 3, 4] },
     "component": { "$ref": "#/$defs/component" },
     "componentPlanSha256": { "$ref": "#/$defs/sha256" },
     "compilerAdapters": {
@@ -32,7 +32,7 @@
         "compileOrder": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/module" } },
         "externalImports": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/module" } },
         "lakeSnapshotSha256": { "$ref": "#/$defs/sha256" },
-        "generatedSourcesSha256": { "$ref": "#/$defs/sha256" },
+        "generatedSourcesSha256": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }] },
         "elaborationSha256": { "$ref": "#/$defs/sha256" },
         "requestedModules": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/module" } }
       }
@@ -134,7 +134,7 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "schemaVersion": { "enum": [2, 3] } } },
+      "if": { "properties": { "schemaVersion": { "enum": [2, 3, 4] } } },
       "then": {
         "properties": {
           "source": {
@@ -155,12 +155,23 @@
       }
     },
     {
-      "if": { "properties": { "schemaVersion": { "const": 3 } } },
+      "if": { "properties": { "schemaVersion": { "enum": [3, 4] } } },
       "then": { "properties": { "source": {
         "required": ["generatedSourcesSha256", "elaborationSha256"],
-        "properties": { "modules": { "items": { "$ref": "#/$defs/elaboratedSourceModule" }, "contains": { "properties": { "origin": { "properties": { "kind": { "const": "generated" } } } } } } }
+        "properties": { "modules": { "items": { "$ref": "#/$defs/elaboratedSourceModule" } } }
       } } },
       "else": { "properties": { "source": { "not": { "anyOf": [{ "required": ["generatedSourcesSha256"] }, { "required": ["elaborationSha256"] }] }, "properties": { "modules": { "items": { "not": { "required": ["origin"] } } } } } } }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "const": 3 } } },
+      "then": { "properties": { "source": { "properties": {
+        "generatedSourcesSha256": { "$ref": "#/$defs/sha256" },
+        "modules": { "contains": { "properties": { "origin": { "properties": { "kind": { "const": "generated" } } } } } }
+      } } } }
+    },
+    {
+      "if": { "properties": { "source": { "properties": { "modules": { "contains": { "required": ["origin"], "properties": { "origin": { "properties": { "kind": { "const": "generated" } } } } } } } } } },
+      "then": { "properties": { "source": { "properties": { "generatedSourcesSha256": { "$ref": "#/$defs/sha256" } } } } }
     }
   ]
 }

@@ -1,5 +1,5 @@
 /**
- * Derive generated public APIs from fresh Lean interfaces inside the build engine.
+ * Derive public APIs from fresh Lean interfaces inside the build engine.
  *
  * @file
  */
@@ -34,7 +34,7 @@ export const createLakeEntryAnalysis = (inventory, entries, elaboration) => {
 		|| !metadata.declarations.length || metadata.declarations.length > 1024) fail("Unsupported or empty elaborated export set");
 	const primitive = type => {
 		closed(type, ["kind", "name", "lean", "abi"]);
-		if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Generated npm APIs currently require pure primitive signatures");
+		if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Elaborated npm APIs currently require pure primitive signatures");
 		return { kind: "primitive", name: type.name };
 	};
 	const selected = new Map(entries.map(entry => [entry.module, entry]));
@@ -86,25 +86,28 @@ export const createLakeEntryAnalysis = (inventory, entries, elaboration) => {
  * @param options - Verified source and selected compiler context.
  * @param options.inventory - Original project facts and input hashes.
  * @param options.entries - Captured/generated public module intent.
- * @param options.workspace - Authenticated resolved generated workspace retained by the caller.
+ * @param options.workspace - Authenticated resolved Lake workspace retained by the caller.
  * @param options.leanPrefix - Pinned Lean installation.
  * @param options.engineRoot - Installed bridge-owned extractor source.
  * @param options.signal - Optional cancellation signal.
  */
 export const elaborateLakeEntryModules = async ({ inventory, entries, workspace, leanPrefix, engineRoot, signal }) => {
-	const roots = verifyLakeEntryModules(entries, workspace.resolution);
-	if(!workspace.generatedSources || !roots.some(entry => entry.origin.kind === "generated")) fail("Generated entry elaboration requires an authenticated generated root");
+	const roots = verifyLakeEntryModules(entries, workspace.resolution).map(entry => entry.origin.kind === "captured"
+		? { ...entry, origin: { kind: "captured", snapshotSha256: workspace.evidence.resolution.snapshotSha256 } } : entry);
+	if(!roots.length) fail("Entry elaboration requires an authenticated public root");
 	const working = await mkdtemp(join(tmpdir(), `lean-bridge-entry-elaboration-${process.pid}-`));
 	const lean = join(leanPrefix, "bin/lean"), extractor = join(engineRoot, "src/analyze/NativeExports.lean");
 	const extractorSha256 = sha256(await readFile(extractor));
 	try
 	{
 		await workspace.verify();
+		if(sha256(await readFile(lean)) !== workspace.document.leanCompilerSha256) fail("Lean compiler changed after Lake resolution");
 		const env = { PATH: `${join(leanPrefix, "bin")}:${process.env.PATH}`, LEAN_SYSROOT: leanPrefix, LEAN_PATH: join(working, "olean"), LANG: "C.UTF-8", LC_ALL: "C.UTF-8" };
 		const interfaces = [];
 		for(const module of workspace.resolution.modules)
 		{
 			const relative = `${module.module.replaceAll(".", "/")}.lean`, source = join(workspace.sourceRoot, relative), output = join(working, "olean", relative.replace(/\.lean$/, ".olean"));
+			if(sha256(await readFile(source)) !== module.source.sha256) fail(`Source changed before elaboration: ${module.module}`);
 			await mkdir(dirname(output), { recursive: true });
 			await processBuildRunner.capture({ command: lean, args: ["-R", workspace.sourceRoot, "-o", output, source], cwd: workspace.sourceRoot, env, signal, timeoutMs: 120000 });
 			interfaces.push({ module: module.module, sourceSha256: module.source.sha256, oleanSha256: sha256(await readFile(output)) });
@@ -116,14 +119,19 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 		const requestPath = join(working, "request.json");
 		await writeFile(requestPath, canonicalJson(request), { flag: "wx", mode: 0o444 });
 		const extracted = await processBuildRunner.capture({ command: lean, args: ["--run", extractor, requestPath], cwd: working, env, signal, timeoutMs: 120000 });
-		const elaboration = { schemaVersion: 1
+		const elaboration = { schemaVersion: 2
 			, kind: "lean-bridge-lake-entry-elaboration"
 			, snapshotSha256: workspace.evidence.resolution.snapshotSha256
-			, generatedSourcesSha256: workspace.generatedSources.sha256
+			, generatedSourcesSha256: workspace.generatedSources?.sha256 ?? null
 			, leanCompilerSha256: workspace.document.leanCompilerSha256
 			, extractorSha256, request, interfaces
 			, metadata: JSON.parse(extracted.stdout) };
 		if(extractorSha256 !== sha256(await readFile(extractor))) fail("Export extractor changed during elaboration");
+		if(sha256(await readFile(lean)) !== workspace.document.leanCompilerSha256) fail("Lean compiler changed during elaboration");
+		for(const module of workspace.resolution.modules)
+			if(sha256(await readFile(join(workspace.sourceRoot, `${module.module.replaceAll(".", "/")}.lean`))) !== module.source.sha256) fail(`Source changed during elaboration: ${module.module}`);
+		for(const module of interfaces)
+			if(sha256(await readFile(join(working, "olean", `${module.module.replaceAll(".", "/")}.olean`))) !== module.oleanSha256) fail(`Interface changed during elaboration: ${module.module}`);
 		await workspace.verify();
 		return createLakeEntryAnalysis(inventory, roots, elaboration);
 	} finally

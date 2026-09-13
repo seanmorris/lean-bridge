@@ -73,6 +73,10 @@ jobs:
           monitor_pid=$!
           trap 'kill "$monitor_pid" 2>/dev/null || true; wait "$monitor_pid" 2>/dev/null || true' EXIT
           node --test tests/lake-workspace.test.mjs
+      - name: Reject unsupported and changed compiler-owned APIs before linking
+        env:
+          LEAN_BRIDGE_LAKE_WASM_TEST: "1"
+        run: node --test --test-name-pattern='captured entry metadata|captured APIs' tests/lake-wasm.test.mjs
       - name: Check captured Lean text generators and generated Lean/C consumers
         env:
           LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"

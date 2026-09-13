@@ -18,9 +18,9 @@ Inspect source declarations without rewriting the project:
 lean-bridge analyze --project /path/to/library --json --progress none
 ```
 
-Read `proposedExports`, diagnostics, and required adapter questions. A required question is a build blocker, not an automatically applied source edit. Keep unsupported public declarations out of the selected component or supply a reviewed supported boundary. The analyzer does not generate an adapter from a prose answer.
+Read `proposedExports`, diagnostics, and adapter questions as a source inventory. The report does not execute Lean and may miss aliases or inferred return types. Keep unsupported public declarations out of the selected component or supply a reviewed supported boundary. The analyzer does not generate an adapter from a prose answer.
 
-`analyze` inspects captured source; it does not run generators. If your [public entry module is generated](#generate-the-public-entry-module), use `build` to generate it and obtain its exports from fresh Lean interfaces inside the build engine.
+For a locked Lake project, `build` obtains the selected API from fresh Lean interfaces inside the build engine. This applies to captured modules and [generated public entry modules](#generate-the-public-entry-module). The source-only report does not assign their build signatures or block supported aliases. `analyze` itself does not run generators.
 
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 
@@ -39,6 +39,8 @@ Add optional `lean-bridge.exports.json` at the project root. This example select
 Replace those names with your library's module and fully qualified declarations. Omit `exports` to discover the public functions in the selected modules; omit `modules` to inspect all local modules. An empty selection, unknown name, or export outside the selected modules is an error. Unselected declarations remain visible in source discovery without contributing export collisions or adapter questions.
 
 Analysis and ordinary builds read the same selection and include the configuration in the source identity. `resources` and `arities` currently feed the native compiler. Target-specific package settings live under `targets`, using package target names such as `npm`, `pypi`, `cargo`, or `cpan`. A backend rejects a configured setting it does not implement; declaring a target does not select it for a build.
+
+Locked npm builds send source and module selection to the engine without host-authored types or adapters. Lean resolves notation, type aliases, and inferred return types. Automatic discovery excludes private and protected declarations, type aliases, projections, and compiler-generated helpers. Explicitly selected unsupported declarations fail. The resulting bundle records `metadata/lake-entry-exports.json`; target compilation must reproduce that metadata before linking. Native CPAN builds also discover declarations through fresh Lean interfaces.
 
 The npm builder accepts shared module/export selection, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
 

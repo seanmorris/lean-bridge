@@ -32,7 +32,7 @@ Strings accept Unicode scalar values and embedded NUL characters. Unpaired UTF-1
 
 ## Collections and resource profiles
 
-Ordinary components accept any number of primitive arguments and one primitive result. They reject collection, record, callback, resource, `IO`, and `Task` signatures before compilation. Do not infer support from a source-only analysis report.
+Ordinary components accept any number of primitive arguments and one primitive result. They reject collection, record, callback, resource, `IO`, and `Task` signatures before adapter compilation. Locked builds compile fresh source interfaces to resolve the actual types first. Do not infer support from a source-only analysis report.
 
 Reviewed package profiles can expose richer APIs. Read that release's generated declarations and the [runtime support reference](../consumers.md); the scalar table does not describe every consumer profile.
 

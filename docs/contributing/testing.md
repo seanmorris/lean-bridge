@@ -96,9 +96,9 @@ LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/locked-lake-runtime/lazy \
 node --test tests/lake-wasm.test.mjs
 ```
 
-This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. The cases cover custom source layouts and declared C inputs with captured headers. The consumer CI workflow runs these cases too.
+This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. Their automatically discovered exports use aliases, notation and inferred signatures. The cases cover custom source layouts and declared C inputs with captured headers. The consumer CI workflow runs these cases too.
 
-With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, C headers, source identity, and fresh interface files, plus unreviewed foreign-call rejection. The [C-input acceptance record](../evidence/lake-c-inputs-20260911.md) lists the tested scope and remaining dependency work.
+With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, C headers, source identity, and fresh interface files. Captured-entry cases reject changed metadata even without generators or C inputs. Unsupported implicit, instance, dependent, generic, IO, Task, unsafe, foreign and admitted exports must fail before target adapter compilation. The [ordinary-entry acceptance record](../evidence/lake-elaborated-entries-20260913.md) records this cutover.
 
 ### Captured text generators
 

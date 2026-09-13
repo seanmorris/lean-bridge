@@ -6,7 +6,7 @@
 import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
+import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -193,8 +193,7 @@ export const buildNativeComponent = async ({ projectRoot
 		moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
-		const generatedEntries = entries.some(entry => entry.origin.kind === "generated");
-		const analysis = generatedEntries ? inventory : await analyzeLeanProject(project, { signal });
+		const analysis = inventory;
 		assertExportConfigurationSnapshot(record, analysis.inputs);
 		const lean = join(resolve(leanPrefix), "bin/lean");
 		const probe = await run(lean, ["--version"], { signal });
@@ -262,16 +261,10 @@ export const buildNativeComponent = async ({ projectRoot
 			active.delete(name); compiled.add(name);
 		};
 		for(const name of selectedModules) await compile(name);
-		// Declaration discovery is provisional. The extractor resolves these names in
-		// fresh interfaces and rejects any unsupported, private, unsafe or stale shape.
-		const discovered = (analysis.declarations ?? []).filter(item => ["def", "opaque"].includes(item.kind)
-      && selectedModules.includes(item.path.replace(/\.lean$/, "").replaceAll("/", "."))
-      && !/^(?:private|protected)\s/.test(item.signature)).map(item => item.name);
-		if(!generatedEntries && !exports.length && !discovered.length) throw new Error("No public definitions discovered; select exports explicitly in lean-bridge.exports.json");
 		const request = { modules: compileOrder.map(item => item.module)
-			, exports: exports.length ? exports : discovered, resources
+			, exports, resources
 			, arities: Object.entries(arities)
-			, ...(generatedEntries ? { exportModules: selectedModules } : {}) };
+			, exportModules: selectedModules };
 		await save(join(staging, "request.json"), json(request));
 		const extracted = await run(lean, ["--run", join(engineRoot, "src/analyze/NativeExports.lean"), join(staging, "request.json")], { env, signal });
 		const metadata = JSON.parse(extracted.stdout);

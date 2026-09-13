@@ -164,7 +164,7 @@ for(const variant of ["shop", "telemetry"]) test(`generated ${profile} ${variant
 			const evidence = await readFile(join(bundleRoot, "metadata/lake-entry-exports.json"));
 			await assertJsonSchema("lake-entry-elaboration", JSON.parse(evidence));
 			assert.equal(component.bindingIr.origin, "lean-elaborated");
-			assert.equal(compilation.schemaVersion, 3);
+			assert.equal(compilation.schemaVersion, 4);
 			assert.equal(compilation.source.elaborationSha256, sha256(evidence));
 			await assertJsonSchema("component-build-plan", component);
 			await assertJsonSchema("component-compilation-plan", compilation);

@@ -96,6 +96,7 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (index : Nat := 0) : MetaM (Array Json × Json) := do
+  let e ← whnf e
   if index < limit then
     if let .forallE _ argument result binder := e then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
@@ -130,9 +131,14 @@ def extract (request : Request) : MetaM Json := do
       if let some index := env.getModuleIdxFor? name then
         if exportModules.contains env.header.moduleNames[index.toNat]!.toString &&
             !isPrivateName name && !(isProtected env name) then
-          if let .defnInfo _ := info then
-            if (← getProjectionFnInfo? name).isNone && !name.isInternal && !isAuxRecursor env name then
-              names := names.push name
+          if info matches .defnInfo _ | .opaqueInfo _ then
+            if (← getProjectionFnInfo? name).isNone &&
+                !(← isAutoDeclOrPrivate_Internal name) && !isAuxRecursor env name &&
+                !isNoConfusion env name then
+              -- A type alias is a declaration, but not a callable runtime export.
+              let runtimeValue ← forallTelescopeReducing info.type fun _ result =>
+                pure (!result.isSort)
+              if runtimeValue then names := names.push name
   names := names.qsort (fun a b => a.toString < b.toString)
   let mut declarations := #[]
   for name in names do

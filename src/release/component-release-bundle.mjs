@@ -192,7 +192,7 @@ export const buildComponentReleaseBundle = async ({
 		}
 		await copy(staging, `artifacts/${artifactName}`, join(side, linked.manifest.artifact.path));
 		await write(staging, "binding/binding-ir.json", canonicalJson(analysis.bindingIr.document));
-		if(compilationPlan.document.schemaVersion === 3)
+		if(compilationPlan.document.schemaVersion >= 3)
 		{
 			const bytes = await readFile(join(inputs, "generated/lake-entry-exports.json"));
 			if(sha256(bytes) !== compilationPlan.document.source.elaborationSha256 || bytes.toString() !== canonicalJson(analysis.elaboration))

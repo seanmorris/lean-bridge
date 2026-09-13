@@ -43,7 +43,9 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(exports, /Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work/);
 	const existing = await readFile("docs/lean/existing-package.md", "utf8");
 	assert.match(existing, /### Generate the public entry module/);
-	assert.match(existing, /`analyze` inspects captured source; it does not run generators/);
+	assert.match(existing, /`analyze` itself does not run generators/);
+	assert.match(existing, /The report does not execute Lean and may miss aliases or inferred return types/);
+	assert.match(existing, /For a locked Lake project, `build` obtains the selected API from fresh Lean interfaces inside the build engine/);
 	assert.match(existing, /metadata\/lake-entry-exports\.json/);
 	const targets = await readFile("docs/publishing.md", "utf8");
 	assert.match(targets, /npm and CPAN now read the same/);

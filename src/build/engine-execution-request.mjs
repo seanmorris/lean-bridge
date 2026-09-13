@@ -233,14 +233,15 @@ export const validateEngineExecutionRequest = request => {
  * @param root0.compilationPlan - Validated compilation plan binding authorized inputs, outputs, toolchain, and runtime profile.
  * @param root0.cachePolicy - Closed policy selecting reuse, refresh, or complete cache bypass.
  * @param root0.targets - Closed target identifiers selected for planning, building, or reproducibility comparison.
- * @param root0.entryIntent - Optional source-only request for generated public modules.
+ * @param root0.entryIntent - Optional source-only request for locked public modules.
  */
 export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, componentPlan, compilationPlan, entryIntent, cachePolicy = "use", targets = [] }) => {
 	if(entryIntent)
 	{
-		if(componentPlan || compilationPlan || targets.some(target => !["npm", "javascript"].includes(target))) fail("invalid-engine-execution-request", "Generated source intent cannot carry host-authored signatures or unsupported targets");
+		if(componentPlan || compilationPlan || targets.some(target => !["npm", "javascript"].includes(target))) fail("invalid-engine-execution-request", "Source-only intent cannot carry host-authored signatures or unsupported targets");
 		const checked = await readLakeEntryIntent({ inputRoot, expectedSha256: entryIntent.sha256 });
-		if(canonicalJson(checked.document) !== canonicalJson(entryIntent.document)) fail("invalid-engine-execution-request", "Generated source intent changed before execution");
+		if(canonicalJson(checked.document) !== canonicalJson(entryIntent.document)) fail("invalid-engine-execution-request", "Source-only intent changed before execution");
+		const generators = (await readLakeGeneratorRecipes({ snapshot: checked.lakeSnapshot, snapshotRoot: join(resolve(inputRoot), "lake") })).recipes.length > 0;
 		const [engine, input] = await Promise.all([identifyBuildEngine(engineRoot), identifyComponentInputClosure(inputRoot)]);
 		const document = Object.freeze({ schemaVersion: 2
 			, kind: "lean-bridge-engine-execution"
@@ -253,7 +254,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 			, output: { kind: "component-neutral-release-bundle"
 				, bundleDirectory: "bundle"
 				, executionReport: "engine-execution-report.json"
-				, authorizedFiles: authorizedBundleFiles({ sourceInputs: checked.document.source.inputs, sideModule: componentArtifactPaths(checked.document.component).sideModule, lakeSnapshot: checked.lakeSnapshot, generators: true, elaborated: true }) }
+				, authorizedFiles: authorizedBundleFiles({ sourceInputs: checked.document.source.inputs, sideModule: componentArtifactPaths(checked.document.component).sideModule, lakeSnapshot: checked.lakeSnapshot, generators, elaborated: true }) }
 			, cache: { policy: cachePolicy }
 			, targets: [...targets].sort()
 			, policies: { backendNeutral: true, sameRequestBytes: true, sourceReadOnly: true, compileOnce: true, sharedRuntime: true, copyAuthorizedOutputsOnly: true } });
@@ -288,7 +289,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 			kind: "component-neutral-release-bundle"
 			, bundleDirectory: "bundle"
 			, executionReport: "engine-execution-report.json"
-			, authorizedFiles: authorizedBundleFiles({ sourceInputs: componentPlan.document.source.inputs, sideModule: compilationPlan.document.outputs.sideModule, lakeSnapshot, generators, elaborated: compilationPlan.document.schemaVersion === 3 })
+			, authorizedFiles: authorizedBundleFiles({ sourceInputs: componentPlan.document.source.inputs, sideModule: compilationPlan.document.outputs.sideModule, lakeSnapshot, generators, elaborated: compilationPlan.document.schemaVersion >= 3 })
 		})
 		, cache: Object.freeze({ policy: cachePolicy })
 		, targets: Object.freeze([...targets].sort())

@@ -52,7 +52,9 @@ Ordinary npm and CPAN builds now consume those generated sources. The bounded `l
 
 Generated public entry modules now use compiler-free root intent, checked against declared root-owned recipes and Lake's actual module ownership. npm uses a source-only engine request, obtains primitive signatures from fresh Lean metadata inside the engine, and checks them again during target compilation. CPAN selects its public roots from the freshly compiled closure. The [generated-entry milestone](../evidence/lake-generated-entries-20260912.md) records the source-intent and elaboration contracts separately from the original capture.
 
-Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 still own the general extractor/analyzer cutover: `analyze` remains source-only, and captured-source npm builds retain their existing planner. The generated-entry path reuses the native extractor for the existing primitive npm profile. No type/profile cells advance from this dependency work.
+Captured public modules in locked npm projects now use the same compiler-owned path. Source intent carries no signatures; the engine discovers names and types before making the Binding IR or adapters, then checks fresh target interfaces again before linking. Native CPAN discovery also uses Lean instead of scanned declaration names. Alias, notation, inferred-result, relocation and rejected-signature cases are covered by the [ordinary-entry milestone](../evidence/lake-elaborated-entries-20260913.md).
+
+Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. Tasks 1107 and 1108 still own the rich shared metadata contract and general analyzer cutover: `analyze` remains source-only, and unlocked npm projects retain their existing planner. This milestone keeps the existing primitive npm and native CPAN profiles. It does not advance type/profile cells or complete the full extractor plan.
 
 ## Package and consumer requirements
 

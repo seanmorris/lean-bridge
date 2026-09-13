@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:lean-bridge:schema:lake-entry-intent:v1",
-  "title": "Generated Lake public module intent",
+  "$id": "urn:lean-bridge:schema:lake-entry-intent:v2",
+  "title": "Locked Lake public module intent",
   "description": "Compiler-free original source identity and root module selection. This record carries no declarations, type claims or generated output bytes.",
   "type": "object", "additionalProperties": false,
   "required": ["schemaVersion", "kind", "component", "source", "modules"],
   "properties": {
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "kind": {"const": "lean-bridge-lake-entry-intent"},
     "component": {"$ref": "component-compilation-plan.schema.json#/$defs/component"},
     "source": {
@@ -21,8 +21,7 @@
     },
     "modules": {
       "type": "array", "minItems": 1,
-      "items": {"oneOf": [{"$ref": "#/$defs/captured"}, {"$ref": "#/$defs/generated"}]},
-      "contains": {"$ref": "#/$defs/generated"}
+      "items": {"oneOf": [{"$ref": "#/$defs/captured"}, {"$ref": "#/$defs/generated"}]}
     }
   },
   "$defs": {

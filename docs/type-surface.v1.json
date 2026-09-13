@@ -161,7 +161,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. Source hashes include the tested native dependency integration; no new type/profile support or publication is claimed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication.",
       "files": [
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
@@ -177,8 +177,8 @@
         {"path":"tests/lake-native-inputs.test.mjs","sha256":"452b38eefa3d64a4bcc9f809ae8404a1154c5e2a992a76d30843869eecaac599"},
         {"path":"src/build/lake-dependency-snapshot.mjs","sha256":"9bbf3a9b86537fb19d8a64eb620a9fe9fc477f3a5e982d9f571b3963557a374a"},
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"01d0f6d3b9ba5ab95007550059959cd163a36eedfb87d9704e50de0bf4851767"},
-        {"path":"tests/lake-workspace.test.mjs","sha256":"7c186b2d6c7944d89ff62feee1085703272d14322a7f26d554f5e83aaff6fb2d"},
-        {"path":"tests/helpers/lake-workspace.mjs","sha256":"d9fdc6642da4b8a3e90a49e1333f2f1903a4099033d2cbd9bd0fe1096af0c9d7"},
+        {"path":"tests/lake-workspace.test.mjs","sha256":"b23bcb41c26a4a6426aa41cf86333abf75956c46e4294ae1a9911187e7bbafe6"},
+        {"path":"tests/helpers/lake-workspace.mjs","sha256":"6335d57f250ee95a4f2309d6259f525c040cce95acf611231f01bb4539b4336a"},
         {"path":"src/analyze/export-configuration.mjs","sha256":"9af412010ed3b589e7cc25c2cb0edaf817eaa396bfd2af2fee722dc92629f21f"},
         {"path":"schema/lean-export-configuration.schema.json","sha256":"ec367ca0c1399b3e78a960cf16ad566f238d94c539f060e097f62e72101f0f52"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
@@ -189,11 +189,11 @@
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9bee6c4f6c7cd9f61314df6ea6b7249b1e9ba7d5eed833a47775792e17169cfd"
+          "sha256": "a35e14609ea2fb902492fae9b195413716994d847c956060c83c5a0fbf561b7b"
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "28dfed86307255652ab9a644d96b5202ce430703d5dfcfd91d3e35d82d389e3e"
+          "sha256": "14c03bba63dc534b6c88be4aef78bf2095eb06f0b88b3ce34fa59e6aeaac941a"
         },
         {
           "path": "src/build/native-model.mjs",

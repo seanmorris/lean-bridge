@@ -92,8 +92,8 @@ export const componentArtifactPaths = component => {
  */
 export const validateComponentCompilationPlan = plan => {
 	exactKeys(plan, ["schemaVersion", "component", "componentPlanSha256", "compilerAdapters", "source", "runtime", "target", "outputs", "policies"], "component compilation plan");
-	if(![1, 2, 3].includes(plan.schemaVersion)) fail("invalid-component-compilation-plan", "Unsupported component compilation plan version");
-	const locked = plan.schemaVersion >= 2, elaborated = plan.schemaVersion === 3;
+	if(![1, 2, 3, 4].includes(plan.schemaVersion)) fail("invalid-component-compilation-plan", "Unsupported component compilation plan version");
+	const locked = plan.schemaVersion >= 2, elaborated = plan.schemaVersion >= 3;
 	exactKeys(plan.component, ["id", "name", "version"], "component");
 	for(const key of ["id", "name", "version"]) if(typeof plan.component[key] !== "string" || plan.component[key] === "") fail("invalid-component-compilation-plan", `component ${key} is required`);
 	if(!validHash(plan.componentPlanSha256)) fail("invalid-component-compilation-plan", "component plan identity must be a SHA-256 value");
@@ -105,7 +105,12 @@ export const validateComponentCompilationPlan = plan => {
 		fail("invalid-component-compilation-plan", "compiler adapters must expose unique direct symbols");
 	}
 	exactKeys(plan.source, ["treeSha256", "toolchain", "modules", ...(locked ? ["lakeSnapshotSha256", "requestedModules"] : ["compileOrder", "externalImports"]), ...(elaborated ? ["generatedSourcesSha256", "elaborationSha256"] : [])], "source");
-	if(elaborated && (!validHash(plan.source.generatedSourcesSha256) || !validHash(plan.source.elaborationSha256))) fail("invalid-component-compilation-plan", "Elaborated roots require generated source and metadata identities");
+	if(elaborated)
+	{
+		const generatedIdentity = plan.source.generatedSourcesSha256;
+		const validGenerated = validHash(generatedIdentity) || (plan.schemaVersion === 4 && generatedIdentity === null);
+		if(!validGenerated || !validHash(plan.source.elaborationSha256)) fail("invalid-component-compilation-plan", "Elaborated roots require authenticated source and metadata identities");
+	}
 	if(!validHash(plan.source.treeSha256) || typeof plan.source.toolchain !== "string" || plan.source.toolchain === "") fail("invalid-component-compilation-plan", "source identity is incomplete");
 	if(!Array.isArray(plan.source.modules) || plan.source.modules.length === 0) fail("invalid-component-compilation-plan", "source modules must not be empty");
 	const moduleNames = new Set();
@@ -124,6 +129,7 @@ export const validateComponentCompilationPlan = plan => {
 			{
 				exactKeys(origin, ["kind", "generator", "receiptSha256"], "generated origin");
 				if(!/^root\/[A-Za-z][A-Za-z0-9_.-]*$/.test(origin.generator) || !validHash(origin.receiptSha256)) fail("invalid-component-compilation-plan", "Generated root has an invalid producer");
+				if(!validHash(plan.source.generatedSourcesSha256)) fail("invalid-component-compilation-plan", "Generated roots require a generated source identity");
 			}
 			else fail("invalid-component-compilation-plan", "Unknown public module origin");
 		}
@@ -136,7 +142,7 @@ export const validateComponentCompilationPlan = plan => {
 	}
 	if(locked)
 	{
-		if(elaborated && !plan.source.modules.some(module => module.origin.kind === "generated")) fail("invalid-component-compilation-plan", "Elaborated entry plans require a generated root");
+		if(plan.schemaVersion === 3 && !plan.source.modules.some(module => module.origin.kind === "generated")) fail("invalid-component-compilation-plan", "Version 3 entry plans require a generated root");
 		if(!validHash(plan.source.lakeSnapshotSha256) || !Array.isArray(plan.source.requestedModules) || !plan.source.requestedModules.length
 			|| new Set(plan.source.requestedModules).size !== plan.source.requestedModules.length
 			|| plan.source.requestedModules.length !== moduleNames.size || new Set(plan.source.modules.map(module => module.path)).size !== moduleNames.size
@@ -198,7 +204,7 @@ export const createComponentCompilationPlan = ({ analysis, componentPlan, compil
 	if(inputByPath.size !== analysis.inputs.length || analysis.inputs.some(input => inputByPath.get(input.path)?.sha256 !== input.sha256)) fail("component-analysis-plan-drift", "Analysis inputs and component plan source closure differ");
 	const sourceOrder = locked ? null : topologicalOrder(modules);
 	const document = Object.freeze({
-		schemaVersion: elaborated ? 3 : locked ? 2 : 1
+		schemaVersion: elaborated ? 4 : locked ? 2 : 1
 		, component: Object.freeze({ ...componentPlan.document.component })
 		, componentPlanSha256: componentPlan.sha256
 		, compilerAdapters: Object.freeze({

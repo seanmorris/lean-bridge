@@ -111,6 +111,34 @@ export const customLakeRoot = async context => {
 };
 
 /**
+ * Use aliases, notation and inferred signatures that require Lean elaboration.
+ *
+ * @param context - Independent locked project fixture.
+ * @param path - Selected root module source path.
+ */
+export const elaboratedLakeApi = async (context, path = `${context.names.root}.lean`) => {
+	const { root, names } = context;
+	await saveLakeFile(root, path, `import ${names.local}
+namespace ${names.root}
+abbrev Word := UInt32
+abbrev Unary := Word → Word
+local notation "Count" => Word
+structure Unused where
+  value : Word
+private def offset : Word := 1
+/-
+def notAnExport (value : String) : String := value
+-/
+${names.root === "Shop" ? `def ${names.operation} (value : Count) :=` : `def ${names.operation} : Unary := fun value =>`}
+  ${names.local}.${names.operation} value + offset
+end ${names.root}
+`);
+	const configuration = JSON.parse(await readFile(join(root, "lean-bridge.exports.json"), "utf8"));
+	delete configuration.exports;
+	await saveLakeFile(root, "lean-bridge.exports.json", JSON.stringify(configuration));
+};
+
+/**
  * Add a Lake-declared C input, optionally referenced by a foreign Lean function.
  *
  * @param context - Offline fixture whose lock is updated to its new test commit.

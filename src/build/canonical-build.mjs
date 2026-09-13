@@ -21,7 +21,6 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ComponentBuildPlanError, createComponentBuildPlan, prepareComponentBuildPlan } from "./component-plan.mjs";
 import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { generateCompilerAdapters } from "./compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
@@ -34,7 +33,6 @@ import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
-import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
 import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
@@ -820,13 +818,10 @@ export const buildCanonicalProject = async ({
 		}
 		else
 		{
-			const record = await readExportConfiguration(root, { signal });
-			if(record.configuration.generators?.length)
-			{
-				const inventory = await inspectLeanProject(root, { signal });
-				if(selectLakeEntryModules(record.configuration, inventory.inputs).some(entry => entry.origin.kind === "generated"))
-					entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
-			}
+			const inventory = await inspectLeanProject(root, { signal });
+			if(inventory.inputs.some(input => input.path === "lake-manifest.json")
+				&& !inventory.inputs.some(input => input.path.endsWith(".binding-ir.json")))
+				entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
 			if(!entryIntent) componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
 		}
 	} catch(error)

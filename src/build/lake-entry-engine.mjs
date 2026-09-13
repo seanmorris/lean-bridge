@@ -1,5 +1,5 @@
 /**
- * Plan generated public APIs inside the isolated Lean build engine.
+ * Plan locked public APIs inside the isolated Lean build engine.
  *
  * @file
  */
@@ -51,7 +51,7 @@ export const executeLakeEntryComponent = async ({ verifiedRequest, inputs, outpu
 			, timeoutMs: 15000 });
 		const leanPrefix = prefix.stdout.trim();
 		workspace = await resolveLakeBuildWorkspace({ snapshot: intent.lakeSnapshot, modules: intent.document.modules.map(module => module.module), leanPrefix });
-		if(workspace.resolution.leanCommit !== graph.runtime.leanCommit) throw new Error("Generated entry compiler differs from the selected shared runtime");
+		if(workspace.resolution.leanCommit !== graph.runtime.leanCommit) throw new Error("Public entry compiler differs from the selected shared runtime");
 		const analysis = await elaborateLakeEntryModules({ inventory, entries: intent.document.modules, workspace, leanPrefix, engineRoot: engine });
 		const componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets: requested.targets, lakeSnapshotSha256: intent.lakeSnapshot.sha256 });
 		if(canonicalJson(componentPlan.document.component) !== canonicalJson(intent.document.component)) throw new Error("Elaborated component differs from the requested package identity");

@@ -59,7 +59,7 @@ Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowin
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
-Analysis, compilation, packaging, and loading check the same ordinary-component capability contract. For [generated entry modules](existing-package.md#generate-the-public-entry-module), Lean resolves aliases and inferred types inside the build engine before the primitive adapter is generated.
+Compilation, packaging, and loading check the same ordinary-component capability contract. For locked Lake projects, Lean resolves aliases, notation, and inferred types inside the build engine before it generates the primitive adapter. This covers captured and [generated entry modules](existing-package.md#generate-the-public-entry-module). The source-only `analyze` report remains provisional.
 
 ## Native Perl exports
 
@@ -67,7 +67,7 @@ The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarat
 
 Shared export configuration selects modules, optional exact exports, resources, and closure arities. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work. Unsupported native shapes fail before packaging.
 
-Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. npm's source scanner and primitive frame are not the native ABI description.
+Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. The compiler supplies native types and declaration selection; npm's primitive frame is a separate ABI.
 
 ## Types understood by source analysis
 
@@ -78,7 +78,7 @@ The source-only analyzer recognizes:
 - `Float32`, `Float`, `String`, and `ByteArray`;
 - nested `Array T`, `Option T`, and `Except E T` with supported arguments.
 
-Ordinary npm components reject `IO`, `Task`, collection types, records, callbacks, and resources before compilation. Recognizing a source type does not authorize publishing it. Richer reviewed Binding IR and universal-package backends remain separate from this pure primitive path.
+Ordinary npm components reject `IO`, `Task`, collection types, records, callbacks, and resources before adapter compilation. Locked builds first compile source interfaces to check the actual Lean types. Recognizing a source type does not authorize publishing it. Richer reviewed Binding IR and universal-package backends remain separate from this pure primitive path.
 
 Reviewed Binding IR can describe richer APIs than source-only inference. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles; it does not imply that every inferred declaration runs through the ordinary-project npm path.
 

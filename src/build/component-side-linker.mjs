@@ -102,7 +102,7 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 					, expectedSha256: manifest.lakeDependencies.generatedSourcesSha256 });
 				if(canonicalJson(snapshot) !== canonicalJson(nativeSnapshot.document) || canonicalJson(recorded) !== canonicalJson(generatedContext.document.resolution)
 					|| resolutionSha256 !== generatedContext.document.resolutionSha256) fail("target-c-manifest-drift", "Generated handoff differs from the compiled resolution");
-				if(compilationPlan.document.schemaVersion === 3 && generatedContext.sha256 !== compilationPlan.document.source.generatedSourcesSha256)
+				if(compilationPlan.document.schemaVersion >= 3 && generatedContext.sha256 !== compilationPlan.document.source.generatedSourcesSha256)
 					fail("target-c-manifest-drift", "Generated public roots differ from the elaborated source identity");
 				resolution = recorded.result.resolution;
 			}
@@ -115,7 +115,7 @@ const verifyTargetCManifest = async ({ targetC, compilationPlan }) => {
 			{
 				const actual = resolution.modules.find(module => module.module === selected.module);
 				if(actual?.path !== `root/${selected.path}` || actual.source.sha256 !== selected.sha256 || actual.source.bytes !== selected.bytes
-					|| (selected.origin && canonicalJson(selected.origin) !== canonicalJson(actual.source.origin)))
+					|| (selected.origin && canonicalJson(selected.origin) !== canonicalJson(actual.source.origin ?? { kind: "captured", snapshotSha256: compilationPlan.document.source.lakeSnapshotSha256 })))
 					fail("target-c-manifest-drift", "Lake resolution differs from the selected root source");
 			}
 			if(sha256(canonicalJson(recorded)) !== resolutionSha256 || manifest.compiler.commit !== resolution.leanCommit

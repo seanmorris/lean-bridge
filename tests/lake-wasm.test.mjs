@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { cp, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
@@ -23,7 +23,8 @@ import { runComponentReproducibilityGate } from "../src/release/component-reprod
 import { verifyPublishManifest } from "../src/release/publish-manifest.mjs";
 import { buildComponentNpmPackages } from "../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
-import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, elaboratedLakeApi, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { prepareLakeEntryIntent, writeLakeEntryInputs } from "../src/build/lake-entry-intent.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
@@ -38,7 +39,15 @@ const runEngine = async (input, outputRoot) => {
 		{ timeout: 120000, maxBuffer: 4 * 1024 * 1024 });
 	return { request: input.request, report: JSON.parse(await readFile(join(outputRoot, "engine-execution-report.json"), "utf8")) };
 };
-const prepare = async (projectRoot, directory) => {
+const prepare = async (projectRoot, directory, compilerOwned = false) => {
+	if(compilerOwned)
+	{
+		const entryIntent = await prepareLakeEntryIntent({ projectRoot });
+		const inputRoot = join(directory, "inputs"), requestPath = join(directory, "request.json");
+		await writeLakeEntryInputs({ intent: entryIntent, outputRoot: inputRoot });
+		const request = await writeEngineExecutionRequest({ output: requestPath, engineRoot, inputRoot, entryIntent, targets: ["npm"], cachePolicy: "off" });
+		return { inputRoot, requestPath, request, entryIntent };
+	}
 	const analysis = await analyzeLeanProject(projectRoot);
 	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot, targets: ["npm"] });
 	const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
@@ -53,11 +62,12 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 	const context = await lakeWorkspaceFixture(t, variant);
 	const rootPath = layout === "custom" ? await customLakeRoot(context) : `${context.names.root}.lean`;
 	if(layout === "native-input") await nativeLakeInput(context);
+	await elaboratedLakeApi(context, rootPath);
 	const relocated = join(context.directory, "relocated");
 	await cp(context.workspace, relocated, { recursive: true });
 	const roots = [context.root, join(relocated, "project")];
 	const prepared = [];
-	for(const [index, root] of roots.entries()) prepared.push(await prepare(root, join(context.directory, `build-${index}`)));
+	for(const [index, root] of roots.entries()) prepared.push(await prepare(root, join(context.directory, `build-${index}`), true));
 	assert.deepEqual(prepared[0].request.document, prepared[1].request.document);
 	const authorBefore = await lakeInputState(context.workspace);
 	const movedBefore = await lakeInputState(relocated);
@@ -75,6 +85,16 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 		assert.deepEqual(await lakeInputState(input.inputRoot), before);
 		const bundleRoot = join(outputRoot, "bundle");
 		const manifest = JSON.parse(await readFile(join(bundleRoot, "locks/lean-target-c-manifest.json"), "utf8"));
+		const component = JSON.parse(await readFile(join(bundleRoot, "locks/component-build-plan.json"), "utf8"));
+		const compilation = JSON.parse(await readFile(join(bundleRoot, "locks/component-compilation-plan.json"), "utf8"));
+		const elaboration = JSON.parse(await readFile(join(bundleRoot, "metadata/lake-entry-exports.json"), "utf8"));
+		await assertJsonSchema("lake-entry-elaboration", elaboration);
+		await assertJsonSchema("component-compilation-plan", compilation);
+		assert.equal(component.bindingIr.origin, "lean-elaborated");
+		assert.equal(compilation.schemaVersion, 4);
+		assert.equal(elaboration.generatedSourcesSha256, null);
+		assert.deepEqual(elaboration.request.exports, []);
+		assert.deepEqual(elaboration.metadata.declarations.map(item => item.name), [`${context.names.root}.${context.names.operation}`]);
 		await assertJsonSchema("lean-target-c-manifest", manifest);
 		let nativeEvidence = null;
 		if(layout === "native-input")
@@ -86,8 +106,8 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 			assert.equal(JSON.stringify(link.nativeCompilation).includes(context.directory), false);
 			nativeEvidence = link.nativeCompilation;
 		}
-		assert.deepEqual(manifest.modules.map(module => module.module), [context.names.remote, context.names.local, context.names.root, input.compilationPlan.document.compilerAdapters.module]);
-		assert.equal(manifest.lakeDependencies.resolution.snapshotSha256, input.componentPlan.document.source.lakeSnapshotSha256);
+		assert.deepEqual(manifest.modules.map(module => module.module), [context.names.remote, context.names.local, context.names.root, compilation.compilerAdapters.module]);
+		assert.equal(manifest.lakeDependencies.resolution.snapshotSha256, input.entryIntent.lakeSnapshot.sha256);
 		assert.equal(manifest.lakeDependencies.resolution.modules.at(-1).path, `root/${rootPath}`);
 		assert.ok(result.request.document.output.authorizedFiles.includes(`lake/packages/${context.names.remote}/lib/${context.names.remote}.lean`));
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(context.directory, `npm-${index}`) });
@@ -105,16 +125,72 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 	await mkdir(consumer);
 	await writeFile(join(consumer, "package.json"), JSON.stringify({ private: true, type: "module" }));
 	const release = outputs[0].release;
-	await execute("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", release.runtimeArchive, release.componentArchive], { cwd: consumer });
+	await execute("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(context.directory, "npm-cache"), release.runtimeArchive, release.componentArchive], { cwd: consumer });
 	await writeFile(join(consumer, "index.mjs"), `import {${context.names.operation} as call} from ${JSON.stringify(variant)};\nconsole.log(JSON.stringify([call(0),call(42),call(4294967295)]));\n`);
 	const installed = await execute(process.execPath, ["index.mjs"], { cwd: consumer });
 	assert.deepEqual(JSON.parse(installed.stdout), variant === "shop" ? [6, 90, 4] : [6, 132, 3]);
-	await saveLakeFile(prepared[0].inputRoot, `lake/packages/${context.names.local}/${context.names.local}.lean`, "changed");
-	await assert.rejects(() => runEngine(prepared[0], join(context.directory, "tampered-engine")), /input closure differs/);
+	const tamperPath = `lake/packages/${context.names.local}/${context.names.local}.lean`;
+	await chmod(join(prepared[0].inputRoot, tamperPath), 0o644);
+	try
+	{ await saveLakeFile(prepared[0].inputRoot, tamperPath, "changed"); }
+	finally
+	{ await chmod(join(prepared[0].inputRoot, tamperPath), 0o444); }
+	await assert.rejects(() => runEngine(prepared[0], join(context.directory, "tampered-engine")), /Snapshot files differ from the authorized identity/);
 	t.diagnostic(JSON.stringify({ variant, layout
-		, snapshotSha256: prepared[0].componentPlan.document.source.lakeSnapshotSha256
+		, snapshotSha256: prepared[0].entryIntent.lakeSnapshot.sha256
 		, targetCManifestSha256: sha256(canonicalJson(outputs[0].manifest))
 		, componentArchiveSha256: sha256(await readFile(release.componentArchive)) }));
+});
+
+test("captured entry metadata must match fresh target compilation even without generated or C inputs", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	const context = await lakeWorkspaceFixture(t), input = await prepare(context.root, join(context.directory, "build"), true);
+	const before = await lakeInputState(input.inputRoot), outputRoot = join(context.directory, "changed-metadata");
+	let altered = false;
+	const runner = { capture: async request => {
+		assert.equal(request.command.endsWith("emcc"), false, "Altered metadata reached the linker");
+		const result = await processBuildRunner.capture(request);
+		if(request.args[0] === "--run" && request.args[1].endsWith("NativeExports.lean"))
+		{
+			const metadata = JSON.parse(result.stdout);
+			metadata.declarations[0].result.name = "bool";
+			altered = true;
+			return { ...result, stdout: canonicalJson(metadata) };
+		}
+		return result;
+	} };
+	await assert.rejects(() => executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner }), { code: "lean-entry-elaboration-drift" });
+	assert.equal(altered, true);
+	assert.deepEqual(await lakeInputState(input.inputRoot), before);
+	await assert.rejects(() => readFile(join(outputRoot, "engine-execution-report.json")), { code: "ENOENT" });
+});
+
+test("captured APIs reject unsupported elaborated declarations before adapter compilation", { skip: !enabled || Boolean(externalEngine), timeout: 180000 }, async t => {
+	for(const [label, source, expected] of [
+		["implicit", "def Shop.quote {value : UInt32} : UInt32 := value", /dependent or implicit parameter/]
+		, ["instance", "def Shop.quote [Inhabited UInt32] (value : UInt32) : UInt32 := value", /dependent or implicit parameter/]
+		, ["dependent", "def Shop.quote (size : Nat) (_value : Fin size) : UInt32 := 0", /dependent or implicit parameter/]
+		, ["generic", "universe u\ndef Shop.quote {α : Type u} (value : α) : α := value", /requires specialization/]
+		, ["io", "def Shop.quote (value : UInt32) : IO UInt32 := pure value", /unsupported native export type|dependent or implicit callback/]
+		, ["task", "def Shop.quote (value : UInt32) : Task UInt32 := Task.pure value", /unsupported native export type/]
+		, ["admitted", "def Shop.quote (_value : UInt32) : UInt32 := by sorry", /depends on sorry/]
+		, ["foreign", '@[extern "unreviewed"] opaque Shop.quote (value : UInt32) : UInt32', /reviewed unsafe, partial or foreign implementation contract/]
+		, ["unsafe", "unsafe def Shop.quote (value : UInt32) : UInt32 := value", /unsafe or partial export/]
+		, ["missing", "def Shop.another (value : UInt32) : UInt32 := value", /Unknown constant/]
+	]) await t.test(label, async t => {
+		const context = await lakeWorkspaceFixture(t);
+		await saveLakeFile(context.root, "Shop.lean", `import Catalog\n${source}\n`);
+		const before = await lakeInputState(context.workspace);
+		const input = await prepare(context.root, join(context.directory, "build"), true);
+		const outputRoot = join(context.directory, "rejected");
+		const runner = { capture: () => assert.fail("Unsupported API reached target compilation") };
+		const rejected = executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner });
+		await assert.rejects(rejected, error => {
+			assert.match(`${error.message}\n${JSON.stringify(error.details)}`, expected);
+			return true;
+		});
+		assert.deepEqual(await lakeInputState(context.workspace), before);
+		await assert.rejects(() => readFile(join(outputRoot, "engine-execution-report.json")), { code: "ENOENT" });
+	});
 });
 
 test("locked WASM linking rejects tampered source, resolution, order and fresh interfaces before invoking emcc", { skip: !enabled || Boolean(externalEngine) }, async t => {

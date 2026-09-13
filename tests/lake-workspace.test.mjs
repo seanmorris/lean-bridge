@@ -17,7 +17,7 @@ import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileLakeNativeInputs } from "../src/build/lake-native-inputs.mjs";
 import { writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
-import { customLakeRoot, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { customLakeRoot, elaboratedLakeApi, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WORKSPACE_TEST === "1";
@@ -236,6 +236,7 @@ test("locked native builds relocate identically and run through installed Perl p
 		await t.test(context.names.root, async () => {
 			const rootPath = await customLakeRoot(context);
 			await nativeLakeInput(context);
+			await elaboratedLakeApi(context, rootPath);
 			const before = await lakeInputState(context.workspace);
 			await cp(context.workspace, join(context.directory, "relocated"), { recursive: true });
 			const outputs = [];
