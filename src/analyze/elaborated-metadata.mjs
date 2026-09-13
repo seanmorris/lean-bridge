@@ -6,6 +6,7 @@
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { validateNativeType } from "./native-types.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-elaborated-metadata" }); };
 const closed = (value, keys) => {
@@ -15,7 +16,7 @@ const closed = (value, keys) => {
 const text = value => typeof value === "string" && value.length > 0;
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const ordered = values => Array.isArray(values) && values.every(text) && same(values, [...new Set(values)].sort());
-const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "visibility", "specialization-required", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit"];
+const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit"];
 
 /**
  * Hash every interface artifact that Lean may import, including server/private data.
@@ -63,7 +64,9 @@ export const createMetadataRequest = (request, context) => ({ ...request, metada
  */
 export const validateElaboratedMetadata = (report, request) => {
 	closed(report, ["schemaVersion", "kind", "profile", "producer", "modules", "diagnostics"]);
-	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== "component-scalars-v1") fail("Unsupported elaborated metadata profile");
+	const profile = request.profile ?? "component-scalars-v1", native = profile === "native-library-v1";
+	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
+		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");
 	closed(report.producer, ["adapter", "adapterVersion", "tool", "toolVersion", "toolchain", "invocationIdentitySha256"]);
 	if(report.producer.adapter !== "lean-bridge-elaborator" || report.producer.adapterVersion !== 2 || report.producer.tool !== "Lean"
 		|| report.producer.toolchain !== request.metadata.toolchain || `leanprover/lean4:v${report.producer.toolVersion}` !== request.metadata.toolchain
@@ -114,16 +117,29 @@ export const validateElaboratedMetadata = (report, request) => {
 			else
 			{
 				closed(projection, ["status", "bindingShape", "parameters", "result"]);
-				if(projection.status !== "supported" || projection.bindingShape !== "pure-function" || !Array.isArray(projection.parameters)
-					|| projection.parameters.length > 32 || projection.parameters.length !== declaration.parameters.length
+				const arity = native ? new Map(request.arities).get(declaration.identity) ?? 1024 : 32;
+				if(projection.status !== "supported" || projection.bindingShape !== (native ? "native-function" : "pure-function") || !Array.isArray(projection.parameters)
+					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== (native ? Math.min(arity, declaration.parameters.length) : declaration.parameters.length)
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
+				const nativeType = type => {
+					validateNativeType(type);
+					const check = value => {
+						if(value.kind === "resource" && (!request.resources.includes(value.name) || !request.modules.includes(value.module))) fail("Native resource lacks its configured source identity");
+						if(value.kind === "array") check(value.element);
+						if(value.kind === "record") value.fields.forEach(field => check(field.type));
+						if(value.kind === "callback")
+						{ value.parameters.forEach(check); check(value.result); }
+					};
+					check(type);
+				};
+				const validateType = native ? nativeType : scalar;
 				projection.parameters.forEach((parameter, index) => {
 					closed(parameter, ["name", "type"]);
 					if(parameter.name !== declaration.parameters[index].name) fail("Runtime binder differs from the elaborated binder");
-					scalar(parameter.type);
+					validateType(parameter.type);
 				});
-				scalar(projection.result);
+				validateType(projection.result);
 			}
 		}
 	}

@@ -80,7 +80,7 @@ jobs:
           LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
         run: |
           node --test --test-name-pattern='captured entry metadata|captured APIs' tests/lake-wasm.test.mjs
-          node --test --test-name-pattern='unlocked builds reject' tests/unlocked-component.test.mjs
+          node --test --test-name-pattern='unlocked builds reject (new dependencies|target metadata)' tests/unlocked-component.test.mjs
           node --test tests/elaborated-metadata.test.mjs
           node --test tests/compiler-analysis.test.mjs
       - name: Check captured Lean text generators and generated Lean/C consumers

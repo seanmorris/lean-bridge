@@ -15,6 +15,8 @@ import { cliUsage, cliExitCodes, validateCliResult } from '../src/cli/contract.m
 import { componentScalarTypes } from '../src/abi/component-scalars.mjs';
 import { docPages, demos } from '../site/registry.mjs';
 import { typeGuideProfiles } from '../scripts/generate-type-docs.mjs';
+import { renderReferenceApiCapture } from '../scripts/capture-reference-apis.mjs';
+import { canonicalJson } from '../src/capsule/node.mjs';
 import {
 	adapterExports, algorithmReferences, generateReferenceDocs, packageReference, renderReferenceDocuments
 } from '../scripts/generate-reference-docs.mjs';
@@ -23,6 +25,17 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const text = relative => readFile(path.join(root, relative), 'utf8');
 const blocks = (markdown, language) => [...markdown.matchAll(new RegExp(`^\`\`\`${language}\\n([\\s\\S]*?)^\`\`\`\\s*$`, 'gmu'))]
 	.map(match => match[1].trim());
+
+test('compiler API captures ignore JSON member order and still detect changed source identities', async () => {
+	const capture = JSON.parse(await text('tests/fixtures/documentation/package-api/lean-author.json'));
+	const reordered = value => Array.isArray(value) ? value.map(reordered) : value && typeof value === 'object'
+		? Object.fromEntries(Object.entries(value).reverse().map(([key, item]) => [key, reordered(item)])) : value;
+	const analysis = { inputs: reordered(capture.inputs), bindingIr: { origin: 'lean-elaborated', document: reordered(capture.ir) }, adapterHints: [] };
+	assert.equal(renderReferenceApiCapture(analysis), canonicalJson(capture));
+	assert.equal(renderReferenceApiCapture(reordered(analysis)), canonicalJson(capture));
+	analysis.inputs[0].sha256 = '0'.repeat(64);
+	assert.notEqual(renderReferenceApiCapture(analysis), canonicalJson(capture));
+});
 
 test('generated references and consumer type sections match the current contracts exactly', async () => {
 	const documents = await generateReferenceDocs();

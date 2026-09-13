@@ -1,6 +1,6 @@
 # Elaborated export metadata
 
-The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Public `lean-bridge analyze` and ordinary npm builds use this report for captured and generated public modules, with or without a Lake lockfile. Explicit reviewed Binding IR retains its existing validation and build-profile gates.
+The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to Binding IR projection. Public `lean-bridge analyze`, ordinary npm builds and native CPAN builds use this report for captured and generated public modules. Explicit reviewed Binding IR retains its existing validation and build-profile gates.
 
 ## Compiler report
 
@@ -14,17 +14,23 @@ The `component-scalars-v1` profile supports pure functions with zero to 32 expli
 
 The effects field identifies a returned `IO`, `EIO`, `BaseIO`, `Task` or `ST` action, including aliases. An IO-typed parameter or an array of IO values does not make the function itself effectful. Those types still fail the primitive projection.
 
+The `native-library-v1` profile retains native CPAN's primitive values, finite copied records and arrays, configured resources, callbacks and returned closures. Its `native-function` projection includes the compiler-lowered C type and boxing operations in the [native type schema](../../schema/native-metadata-type.schema.json). Configured `arities` determine where an export's arguments end and its returned closure begins. Resource selection and its source module remain part of the invocation identity. Identity-bearing values inside copied containers require an ownership or retention policy and receive `unsupported-native-type`. Public `analyze` still uses the scalar profile; sharing the report does not expand its accepted types.
+
 ## Source and interface identity
 
 The engine hashes the source, compiler, extractor and complete interface set. Each interface identity covers the `.olean` file and any `.olean.private` and `.olean.server` sidecars, including their presence, sizes and bytes. Existing project `.ilean` files supply no metadata. Extraction does not enable package initializers.
 
-Producer identity binds the adapter version, actual Lean version, selected toolchain and measured invocation inputs. The report sorts modules, imports, declarations, effects, theorem references and diagnostics. The enclosing [version-3 elaboration record](../../schema/lake-entry-elaboration.schema.json) binds the source snapshot, optional generated-source handoff, request and report. Its identity is SHA-256 over canonical UTF-8 JSON.
+Producer identity binds the adapter version, actual Lean version, selected toolchain and measured invocation inputs. The report sorts modules, imports, declarations, effects, theorem references and diagnostics. For analysis and npm, the enclosing [version-3 elaboration record](../../schema/lake-entry-elaboration.schema.json) binds the source snapshot, optional generated-source handoff, request and report. Its identity is SHA-256 over canonical UTF-8 JSON.
 
-The engine validates the report against its own request and checks source, compiler, extractor and interface identities again after extraction. Target compilation must reproduce the complete record from fresh interfaces before linking. Changed bytes or sidecar presence stop the build. The bundle stores the record at `metadata/lake-entry-exports.json`.
+The engine validates the report against its own request and checks source, compiler, extractor and interface identities again after extraction. npm target compilation must reproduce the complete record from fresh interfaces before linking. Changed bytes or sidecar presence stop the build. The npm bundle stores the record at `metadata/lake-entry-exports.json`.
+
+Native compilation produces fresh interfaces and C together. The native receipt binds the report at `metadata.json`, source and complete interface identities, compiler, extractor, selection, generated adapters and library. The build rechecks its inputs after extraction, adapter compilation and linking. The C compiler compares generated prototypes against Lean's emitted definitions. CPAN staging reconstructs the native model from the retained report and rejects a mismatched model, metadata hash or source identity. It does not invoke Lean during package installation.
 
 ## Diagnostics and theorem references
 
 Report diagnostics distinguish `unsupported-meaning`, `extractor-failure` and `stale-metadata`. Unsupported declarations require an author decision. Extraction faults and stale metadata prevent Binding IR release. Failed extractor execution and malformed JSON produce `lean-metadata-extractor-failed`; target record mismatch produces `lean-entry-elaboration-drift`. These errors retain their compiler context and clean up owned staging.
+
+Native builds return `native-elaboration-unsupported` with the selected declarations' diagnostics and unsupported projections. Input changes during compilation return `native-elaboration-drift`. An unsupported helper outside the configured export set remains visible in metadata without preventing a supported selected API from building.
 
 `theoremReferences` lists theorems in the compiled project closure whose elaborated statement directly uses the declaration. A similar name, comment or string does not create a relationship. This list supplies navigation metadata; Binding IR assurance arrays remain empty. Artifact-bound theorem claims require separate verification and review.
 
@@ -38,4 +44,4 @@ A dependency-free project without `lake-manifest.json` uses snapshot version 3, 
 
 Unsupported meaning returns a reviewable report and exit status 2. Extractor faults or stale metadata return failure, never a source-scanned fallback. An explicit reviewed Binding IR bypasses compilation and reports `existing-validated`, with no fresh compiler evidence. `requireCompiledExports` accepts only fresh compiler-backed exports.
 
-The [metadata milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records interface drift and installed-package checks. The [CLI cutover evidence](../evidence/compiler-analysis-20260913.md) covers engine-backed analysis, lock-absent capture, generated entries, relocation and failure cleanup. The [npm cutover evidence](../evidence/unlocked-npm-compiler-20260913.md) covers compiler-owned builds and reproducible publication without a lockfile; external dependencies and configured generators still require a reviewed lock. Native CPAN retains its existing metadata profile. VO1107 and VO1108 still include native shared projection and finite specialization.
+The [metadata milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records interface drift and installed-package checks. The [CLI cutover evidence](../evidence/compiler-analysis-20260913.md) covers engine-backed analysis, lock-absent capture, generated entries, relocation and failure cleanup. The [npm cutover evidence](../evidence/unlocked-npm-compiler-20260913.md) covers compiler-owned builds and reproducible publication without a lockfile; external dependencies and configured generators still require a reviewed lock. The [native cutover evidence](../evidence/native-shared-metadata-20260913.md) covers the CPAN projection and its installed regressions. VO1107 and VO1108 remain open for finite specialization and the remaining parity checks.

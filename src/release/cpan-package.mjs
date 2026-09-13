@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
+import { createNativeModel } from "../build/native-model.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -81,8 +82,14 @@ export const stageCpanPackage = async ({ outputRoot
 		const receipt = JSON.parse(await readFile(join(componentRoot, "native-component.json"), "utf8"));
 		await verifyNativeFiles(componentRoot, JSON.parse(await readFile(join(componentRoot, "artifacts.json"), "utf8")).files);
 		if(sha256(canonicalJson(model)) !== receipt.modelSha256
+      || sha256(await readFile(join(componentRoot, "metadata.json"))) !== receipt.metadataSha256
+      || canonicalJson(model.sourceIdentity) !== canonicalJson(receipt.sourceIdentity)
       || sha256(await readFile(join(componentRoot, "component.h"))) !== receipt.headerSha256)
-      throw new Error("native component metadata or header identity differs from compilation");
+			throw new Error("native component metadata or header identity differs from compilation");
+		const reconstructed = createNativeModel({ metadata: JSON.parse(await readFile(join(componentRoot, "metadata.json"), "utf8"))
+			, component: model.component, moduleName: model.moduleName
+			, sourceIdentity: receipt.sourceIdentity });
+		if(canonicalJson(reconstructed) !== canonicalJson(model)) throw new Error("native model differs from shared compiler metadata");
 		if(!/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("invalid native component library path");
 		if(receipt.runtimeIdentity !== nativeRuntimeIdentity) throw new Error("component and runtime identities differ");
 		if(sha256(await readFile(join(componentRoot, receipt.library))) !== receipt.nativeLibrary.sha256) throw new Error("corrupt native component");

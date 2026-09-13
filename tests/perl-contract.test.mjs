@@ -19,17 +19,83 @@ import { auditGeneratedPublicSurface, generateNativeBindingPackages } from "../s
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { execFileSync } from "node:child_process";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
+import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import { projectNativeMetadata } from "../src/analyze/native-metadata.mjs";
+import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
+import { projectElaboratedMetadata } from "../src/analyze/project-elaborated.mjs";
 
 const scalar = { kind: "primitive", name: "uint32", lean: "UInt32", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
 const fixture = () => createNativeModel({
 	component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }
 	, moduleName: "LeanBridge::Sample"
-	, metadata: { schemaVersion: 1
-		, kind: "lean-bridge-native-elaborated-exports"
-		, declarations: [
-			{ name: "Sample.increment", module: "Sample", parameters: [{ name: "value", type: scalar }], result: scalar }]
+	, ...nativeMetadataFixture()
+});
+
+test("native projection retains compiler documentation and theorem references without granting assurance", async () => {
+	const input = nativeMetadataFixture(), model = fixture();
+	await assertJsonSchema("elaborated-export-metadata", input.metadata);
+	const declaration = model.bindingIr.declarations[0];
+	assert.equal(model.exports[0].parameters[0].name, "value");
+	assert.equal(declaration.parameters[0].name, "arg0");
+	assert.equal(declaration.documentation.summary, "Increment a word.");
+	assert.deepEqual(declaration.source.extensions["lean-lang.org/theorem-references"], ["Sample.increment_spec"]);
+	assert.equal(declaration.source.extensions["lean-lang.org/source-position"].startLine, 2);
+	assert.deepEqual(declaration.assurance, []);
+	assert.deepEqual(model.bindingIr.assurance, []);
+	input.metadata.modules[0].declarations[0].typeExpression = "Not a type or an ABI";
+	assert.deepEqual(projectNativeMetadata(input.metadata, input.sourceIdentity).declarations[0].result, scalar);
+	assert.throws(() => projectElaboratedMetadata({}, [], { request: input.sourceIdentity.request, metadata: input.metadata }), /scalar metadata profile/);
+	assert.throws(() => projectNativeMetadata({ schemaVersion: 1, kind: "lean-bridge-native-elaborated-exports", declarations: [] }, input.sourceIdentity), /metadata fields/);
+});
+
+test("native metadata rejects stale identities, unbound selection and unchecked representations", () => {
+	for(const change of [
+		value => { value.sourceIdentity.extractorSha256 = "0".repeat(64); }
+		, value => { value.sourceIdentity.leanCompilerSha256 = "0".repeat(64); }
+		, value => { value.sourceIdentity.modules[0].interface.interfaceSha256 = "0".repeat(64); }
+		, value => { value.sourceIdentity.modules[0].source.path = "../Sample.lean"; }
+		, value => { value.sourceIdentity.request.exports = []; }
+		, value => { value.sourceIdentity.request.arities = [["Sample.increment", 0]]; }
+		, value => { value.sourceIdentity.request.profile = "component-scalars-v1"; }
+		, value => { value.sourceIdentity.request.types = [scalar]; }
+		, value => { value.metadata.producer.invocationIdentitySha256 = "0".repeat(64); }
+		, value => { value.metadata.modules[0].sourceSha256 = "0".repeat(64); }
+		, value => { value.metadata.modules[0].declarations[0].projection.bindingShape = "pure-function"; }
+		, value => { value.metadata.modules[0].declarations[0].projection.result.abi.cType = "uint64_t"; }
+		, value => { value.metadata.modules[0].declarations[0].projection.parameters[0].name = "notTheBinder"; }
+		, value => { value.metadata.modules[0].declarations[0].parameters[0].binderInfo = "implicit"; }
+		, value => { value.metadata.modules[0].declarations[0].source = null; }
+		, value => { value.metadata.modules[0].declarations[0].selected = false; }
+	]) {
+		const input = nativeMetadataFixture(); change(input);
+		assert.throws(() => projectNativeMetadata(input.metadata, input.sourceIdentity));
 	}
-	, sourceIdentity: { leanVersion: "4.32.2", modules: [{ module: "Sample", source: { sha256: "a".repeat(64) } }] }
+});
+
+test("native arity and resources stay bound to configuration in the shared report", async () => {
+	const input = nativeMetadataFixture(), declaration = input.metadata.modules[0].declarations[0];
+	const rebind = changes => {
+		const { metadata: context, ...selection } = input.sourceIdentity.request;
+		input.sourceIdentity.request = createMetadataRequest({ ...selection, ...changes }, { toolchain: context.toolchain
+			, modules: context.modules
+			, leanCompilerSha256: input.sourceIdentity.leanCompilerSha256
+			, extractorSha256: input.sourceIdentity.extractorSha256 });
+		input.metadata.producer.invocationIdentitySha256 = input.sourceIdentity.request.metadata.invocationIdentitySha256;
+	};
+	const object = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	declaration.projection.result = { kind: "resource", name: "Sample.Counter", lean: "Sample.Counter", module: "Sample", abi: object };
+	assert.throws(() => projectNativeMetadata(input.metadata, input.sourceIdentity), /configured source identity/);
+	rebind({ resources: ["Sample.Counter"] });
+	assert.equal(projectNativeMetadata(input.metadata, input.sourceIdentity).declarations[0].result.kind, "resource");
+	await assertJsonSchema("elaborated-export-metadata", input.metadata);
+	declaration.projection.result = { kind: "array", element: declaration.projection.result, abi: object };
+	assert.throws(() => projectNativeMetadata(input.metadata, input.sourceIdentity), /ownership policy/);
+	declaration.projection.result = { kind: "callback", parameters: [scalar], result: scalar, abi: object };
+	declaration.parameters.push({ name: "extra", binderInfo: "explicit", typeExpression: "UInt32" });
+	assert.throws(() => projectNativeMetadata(input.metadata, input.sourceIdentity), /supported projection/);
+	rebind({ arities: [["Sample.increment", 1]] });
+	assert.equal(projectNativeMetadata(input.metadata, input.sourceIdentity).declarations[0].result.kind, "callback");
+	await assertJsonSchema("elaborated-export-metadata", input.metadata);
 });
 
 test("shared source configuration selects native declarations and CPAN metadata", async () => {

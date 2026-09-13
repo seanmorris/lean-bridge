@@ -4,9 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, readdir, rename, rm } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, readdir, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject, processBuildRunner } from "../src/build/canonical-build.mjs";
@@ -92,6 +92,49 @@ test("the public unlocked planner reaches the engine without assigning types or 
 	assert.equal(calls, 1);
 	assert.deepEqual(await lakeInputState(root), before);
 	assert.deepEqual(await readdir(directory), ["project"]);
+});
+
+test("in-project output keeps source capture outside the author checkout", async t => {
+	const { root } = await fixture(t);
+	const outputRoot = join(root, "build/release"), stopped = new Error("Reached isolated compiler");
+	let inputRoot;
+	await assert.rejects(() => build(root, outputRoot, transport({ execute: options => {
+		inputRoot = options.inputRoot;
+		assert.ok(relative(root, inputRoot).startsWith(".."));
+		throw stopped;
+	} })), error => error === stopped);
+	assert.ok(inputRoot);
+	assert.deepEqual(await readdir(join(root, "build")), []);
+});
+
+test("unwritable release directories do not leak external staging", { skip: process.getuid?.() === 0 || process.platform === "win32" }, async t => {
+	const { directory, root } = await fixture(t);
+	const scratch = join(directory, "scratch"), destination = join(directory, "readonly");
+	await mkdir(scratch); await mkdir(destination);
+	const previous = process.env.TMPDIR;
+	try
+	{
+		process.env.TMPDIR = scratch;
+		await chmod(destination, 0o555);
+		await assert.rejects(() => build(root, join(destination, "release")), { code: "EACCES" });
+		assert.deepEqual(await readdir(scratch), []);
+		assert.deepEqual(await readdir(destination), []);
+	}
+	finally
+	{
+		if(previous === undefined) delete process.env.TMPDIR;
+		else process.env.TMPDIR = previous;
+		await chmod(destination, 0o755);
+	}
+});
+
+test("unlocked in-project releases compile and preserve the source files", { skip: !enabled }, async t => {
+	const { root } = await fixture(t), before = await lakeInputState(root);
+	const outputRoot = join(root, "build/release");
+	await build(root, outputRoot);
+	assert.equal((await json(join(outputRoot, "bundle/locks/component-build-plan.json"))).bindingIr.origin, "lean-elaborated");
+	assert.deepEqual((await lakeInputState(root)).filter(item => item.path !== "build" && !item.path.startsWith("build/")), before);
+	assert.deepEqual(await readdir(join(root, "build")), ["release"]);
 });
 
 test("unlocked sources keep generator, configuration, and target capability gates", async t => {
@@ -223,7 +266,7 @@ test("unlocked builds reject new dependencies and unsupported APIs without a sca
 	});
 });
 
-test("unlocked builds reject source drift and target metadata drift", { skip: !enabled || Boolean(externalEngine) }, async t => {
+test("unlocked builds reject target metadata drift before linking", { skip: !enabled || Boolean(externalEngine) }, async t => {
 	const { directory, root } = await fixture(t);
 	let altered = false;
 	const compiler = { capture: async request => {
@@ -240,6 +283,11 @@ test("unlocked builds reject source drift and target metadata drift", { skip: !e
 	} };
 	await assert.rejects(() => build(root, join(directory, "metadata-drift"), transport({ compiler })), { code: "lean-entry-elaboration-drift" });
 	assert.equal(altered, true);
+	assert.deepEqual(await readdir(directory), ["project"]);
+});
+
+test("unlocked builds reject source drift after linking", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	const { directory, root } = await fixture(t);
 	await assert.rejects(() => build(root, join(directory, "source-drift"), transport({ after: () => saveLakeFile(root, "lake-manifest.json", '{"version":"1.2.0","packages":[]}') })), { code: "lake-source-drift" });
 	assert.deepEqual(await readdir(directory), ["project"]);
 });

@@ -19,6 +19,7 @@ structure MetadataContext where
   deriving FromJson
 
 structure Request where
+  profile : Option String := none
   modules : Array String
   exportModules : Option (Array String) := none
   exports : Array String := #[]
@@ -55,8 +56,13 @@ def abi (e : Expr) : MetaM Json := do
   return obj [("cType", str cType), ("box", str ("lean_box" ++ suffix)),
     ("unbox", str ("lean_unbox" ++ suffix)), ("heap", toJson (lowered == Compiler.LCNF.ImpureType.object))]
 
+def nativeIdentifier (name : String) : Bool :=
+  (name.splitOn ".").all fun part =>
+    !part.isEmpty && part.toList.head!.isAlpha && part.toList.head!.toNat < 128 &&
+      part.toList.all (fun c => c.toNat < 128 && (c.isAlphanum || c == '_'))
+
 partial def shape (request : Request) (e : Expr) (seen : List Name := [])
-    (depth : Nat := 0) : MetaM Json := do
+    (depth : Nat := 0) (copied : Bool := false) : MetaM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32"
   if e.hasFVar || e.hasLooseBVars || e.hasMVar then
     reject e "dependent or unresolved native type"
@@ -66,31 +72,41 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
     if request.resources.contains name.toString then
+      if copied then reject e "identity resources inside copied values require an ownership policy"
+      if !nativeIdentifier name.toString then reject e "unsupported native resource identifier"
       if !(← getEnv).contains name then reject e "unknown resource"
       let lowered ← abi e
       if (lowered.getObjValAs? Bool "heap").toOption != some true then
         reject e "resource has no stable heap identity; use a copied value"
       let some index := (← getEnv).getModuleIdxFor? name | reject e "resource module is unavailable"
+      if !request.modules.contains (← getEnv).header.moduleNames[index.toNat]!.toString then
+        reject e "resource module is outside the compiled source closure"
       return obj [("kind", str "resource"), ("name", str name.toString), ("lean", str name.toString),
         ("module", str (← getEnv).header.moduleNames[index.toNat]!.toString), ("abi", lowered)]
     if let some info := getStructureInfo? (← getEnv) name then
       if seen.contains name then reject e "recursive copied records require a reviewed representation"
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
+      if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
+        reject e "unsupported native record identifier"
       if induct.numParams != 0 || induct.numIndices != 0 || !info.parentInfo.isEmpty then
         reject e "generic, dependent and inherited records require a reviewed projection"
       let mut fields := #[]
       for field in info.fieldNames do
         let some projection := info.getProjFn? fields.size | reject e "missing record projection"
+        if !nativeIdentifier field.toString || (field.toString.splitOn ".").length != 1 ||
+            ["new", "DESTROY", "CLONE", "CLONE_SKIP"].contains field.toString ||
+            !nativeIdentifier projection.toString then reject e "invalid or reserved native record field"
         let projectionInfo ← getConstInfo projection
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shape request fieldType (name :: seen) (depth + 1))])
+          ("type", ← shape request fieldType (name :: seen) (depth + 1) true)])
       return obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1)), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isForall then
+    if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e
     let mut parameters := #[]
     repeat
@@ -105,7 +121,7 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
       ("result", ← shape request result seen (depth + 1)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shape request reduced seen (depth + 1)
+  if reduced != e then return ← shape request reduced seen (depth + 1) copied
   reject e "unsupported native export type"
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
@@ -133,48 +149,6 @@ partial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) :
     for dependency in value.getUsedConstants do
       seen ← checkBody request dependency seen
   return seen
-
-def extract (request : Request) : MetaM Json := do
-  let env ← getEnv
-  let exportModules := request.exportModules.getD request.modules
-  if exportModules.isEmpty || exportModules.any (!request.modules.contains ·) then
-    throwError "export modules must be a nonempty subset of the compiled closure"
-  let mut names := request.exports.map String.toName
-  if names.isEmpty then
-    for (name, info) in env.constants.toList do
-      if let some index := env.getModuleIdxFor? name then
-        if exportModules.contains env.header.moduleNames[index.toNat]!.toString &&
-            !isPrivateName name && !(isProtected env name) then
-          if info matches .defnInfo _ | .opaqueInfo _ then
-            if (← getProjectionFnInfo? name).isNone &&
-                !(← isAutoDeclOrPrivate_Internal name) && !isAuxRecursor env name &&
-                !isNoConfusion env name then
-              -- A type alias is a declaration, but not a callable runtime export.
-              let runtimeValue ← forallTelescopeReducing info.type fun _ result =>
-                pure (!result.isSort)
-              if runtimeValue then names := names.push name
-  names := names.qsort (fun a b => a.toString < b.toString)
-  let mut declarations := #[]
-  for name in names do
-    if isPrivateName name || isProtected env name then throwError "nonpublic export {name}"
-    let info ← getConstInfo name
-    if info.isUnsafe || info.isPartial then throwError "unsafe or partial export {name}"
-    let _ ← checkBody request name
-    if (← collectAxioms name).contains ``sorryAx then throwError "export {name} depends on sorry"
-    if !info.levelParams.isEmpty then throwError "generic export {name} requires specialization"
-    match info with
-    | .defnInfo _ | .opaqueInfo _ => pure ()
-    | _ => throwError "{name} is not an executable definition"
-    let some moduleIndex := env.getModuleIdxFor? name | throwError "missing module for {name}"
-    let module := env.header.moduleNames[moduleIndex.toNat]!.toString
-    if !exportModules.contains module then throwError "export outside selected modules: {name}"
-    let arity := request.arities.find? (·.1 == name.toString) |>.map (·.2) |>.getD 1024
-    let (parameters, result) ← signature request info.type arity
-    declarations := declarations.push (obj [("name", str name.toString), ("module", str module),
-      ("parameters", toJson parameters), ("result", result)])
-  if declarations.isEmpty then throwError "no executable native exports selected"
-  return obj [("schemaVersion", toJson (1 : Nat)),
-    ("kind", str "lean-bridge-native-elaborated-exports"), ("declarations", toJson declarations)]
 
 def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
@@ -209,7 +183,7 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
   let name ← ofExcept <| value.getObjValAs? String "name"
   return obj [("kind", str "primitive"), ("name", str name)]
 
-def describeSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) :=
+def describeScalarSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) :=
   forallTelescopeReducing info.type fun arguments result => do
     let mut parameters := #[]
     let mut runtimeParameters := #[]
@@ -241,6 +215,22 @@ def describeSignature (request : Request) (info : ConstantInfo) : MetaM (Array J
       ("bindingShape", str "pure-function"), ("parameters", toJson runtimeParameters),
       ("result", runtimeResult)])
 
+def describeSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) := do
+  let (parameters, resultText, scalarProjection) ← describeScalarSignature request info
+  if request.profile.getD "component-scalars-v1" != "native-library-v1" then return (parameters, resultText, scalarProjection)
+  let arity := request.arities.find? (·.1 == info.name.toString) |>.map (·.2) |>.getD 1024
+  try
+    let (nativeParameters, result) ← signature request info.type arity
+    let nativeParameters := nativeParameters.mapIdx fun index parameter =>
+      obj [("name", (parameters[index]?.bind fun value => (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
+        ("type", (parameter.getObjVal? "type").toOption.getD Json.null)]
+    return (parameters, resultText, obj [("status", str "supported"),
+      ("bindingShape", str "native-function"), ("parameters", toJson nativeParameters), ("result", result)])
+  catch error =>
+    let reason := (scalarProjection.getObjValAs? String "reason").toOption.getD "unsupported-native-type"
+    let reason := if ["implicit-parameter", "instance-parameter", "dependent-type"].contains reason then reason else "unsupported-native-type"
+    return (parameters, resultText, unsupported reason (← error.toMessageData.toString))
+
 def diagnostic (category code message moduleName : String) (name : Option String) : Json :=
   obj [("category", str category), ("code", str code), ("severity", str "error"),
     ("message", str message), ("module", str moduleName), ("declaration", toJson name)]
@@ -251,6 +241,9 @@ def diagnosticKey (value : Json) : String :=
 
 def extractMetadata (request : Request) : MetaM Json := do
   let some context := request.metadata | throwError "metadata context is required"
+  let profile := request.profile.getD "component-scalars-v1"
+  unless ["component-scalars-v1", "native-library-v1"].contains profile do
+    throwError "unsupported metadata profile"
   let env ← getEnv
   let selectedModules := request.exportModules.getD request.modules
   if selectedModules.isEmpty || selectedModules.any (!request.modules.contains ·) ||
@@ -331,7 +324,7 @@ def extractMetadata (request : Request) : MetaM Json := do
       diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" "missing-declaration"
         s!"Selected export is absent or outside selected modules: {name}" "" (some name)
   return obj [("schemaVersion", toJson (2 : Nat)), ("kind", str "lean-bridge-elaborated-exports"),
-    ("profile", str "component-scalars-v1"),
+    ("profile", str profile),
     ("producer", obj [("adapter", str "lean-bridge-elaborator"), ("adapterVersion", toJson (2 : Nat)),
       ("tool", str "Lean"), ("toolVersion", str Lean.versionString), ("toolchain", str context.toolchain),
       ("invocationIdentitySha256", str context.invocationIdentitySha256)]),
@@ -341,11 +334,10 @@ def extractMetadata (request : Request) : MetaM Json := do
 end LeanBridge.NativeExports
 
 unsafe def main (args : List String) : IO UInt32 := do
-  let (path, safetyOnly, metadata) ← match args with
-    | [path] => pure (path, false, false)
-    | ["--check-bodies", path] => pure (path, true, false)
-    | ["--metadata", path] => pure (path, false, true)
-    | _ => throw (IO.userError "expected native export request JSON path")
+  let (path, safetyOnly) ← match args with
+    | ["--check-bodies", path] => pure (path, true)
+    | ["--metadata", path] => pure (path, false)
+    | _ => throw (IO.userError "expected --metadata or --check-bodies and an export request JSON path")
   let json ← IO.ofExcept <| Json.parse (← IO.FS.readFile path)
   let request ← IO.ofExcept <| fromJson? (α := LeanBridge.NativeExports.Request) json
   initSearchPath (← findSysroot)
@@ -368,8 +360,7 @@ unsafe def main (args : List String) : IO UInt32 := do
         if (← collectAxioms name.toName).contains ``sorryAx then
           throwError "export {name} depends on sorry"
       pure <| Json.mkObj [("checked", toJson request.exports)]
-    else if metadata then LeanBridge.NativeExports.extractMetadata request
-    else LeanBridge.NativeExports.extract request
+    else LeanBridge.NativeExports.extractMetadata request
   let (metadata, _, _) ← operation.toIO
     { fileName := "<native-exports>", fileMap := default } { env }
   IO.println metadata.compress

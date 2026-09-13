@@ -220,6 +220,7 @@ export const compileLeanComponentSources = async ({
 			const elaborated = compilationPlan.document.schemaVersion >= 3;
 			const expectedBytes = elaborated ? await readChecked(join(inputs, "generated/lake-entry-exports.json"), { sha256: compilationPlan.document.source.elaborationSha256 }, "elaborated public API") : null;
 			const rich = elaborated && JSON.parse(expectedBytes.toString()).schemaVersion === 3;
+			if(elaborated && !rich) fail("lean-entry-elaboration-drift", "Target compilation requires the shared compiler metadata report");
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
 			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [] }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
@@ -239,17 +240,17 @@ export const compileLeanComponentSources = async ({
 			await writeFile(request, canonicalJson(exportRequest));
 			try
 			{
-				const checked = await runner.capture({ command: lean, args: ["--run", checker, ...(rich ? ["--metadata"] : elaborated ? [] : ["--check-bodies"]), request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
+				const checked = await runner.capture({ command: lean, args: ["--run", checker, rich ? "--metadata" : "--check-bodies", request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
 				if(elaborated)
 				{
-					const actual = { schemaVersion: rich ? 3 : compilationPlan.document.schemaVersion === 3 ? 1 : 2
+					const actual = { schemaVersion: 3
 						, kind: "lean-bridge-lake-entry-elaboration"
 						, snapshotSha256: snapshot.sha256
 						, generatedSourcesSha256: lake.generatedSources?.sha256 ?? null
 						, leanCompilerSha256: lake.document.leanCompilerSha256
 						, extractorSha256: sha256(await readFile(checker))
 						, request: exportRequest
-						, interfaces: rich ? interfaces : records.slice(0, -1).map(({ module, sourceSha256, oleanSha256 }) => ({ module, sourceSha256, oleanSha256 }))
+						, interfaces
 						, metadata: JSON.parse(checked.stdout) };
 					if(expectedBytes.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
 					if(rich) for(const record of interfaces)

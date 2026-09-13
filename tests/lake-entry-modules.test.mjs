@@ -227,25 +227,49 @@ test("legacy host-planned requests cannot relabel source inference as Lean elabo
 		, runner: { capture: () => assert.fail("Forged elaboration origin reached the compiler") } }), { code: "component-engine-analysis-drift" });
 });
 
-test("elaborated entry lowering admits only selected unique pure primitive signatures", async t => {
+test("entry lowering requires shared metadata and keeps selected generated roots", async t => {
 	const context = await generatedLakeEntryFixture(t), inventory = await inspectLeanProject(context.root);
 	const entries = [{ module: "Shop", path: "generated/Shop.lean", bytes: 1, sha256: "a".repeat(64), origin: { kind: "generated", generator: "root/table", receiptSha256: "b".repeat(64) } }];
-	const uint32 = { kind: "primitive", name: "uint32", lean: "UInt32", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
-	const elaboration = { metadata: { schemaVersion: 1, kind: "lean-bridge-native-elaborated-exports", declarations: [{ name: "Shop.quote", module: "Shop", parameters: [{ name: "arg0", type: uint32 }], result: uint32 }] } };
+	const uint32 = { kind: "primitive", name: "uint32" };
+	const request = { modules: ["Shop"], exportModules: ["Shop"]
+		, exports: ["Shop.quote"], resources: [], arities: []
+		, metadata: { toolchain: inventory.project.toolchain
+			, invocationIdentitySha256: "c".repeat(64)
+			, modules: [{ name: "Shop", sourcePath: entries[0].path, sourceSha256: entries[0].sha256, interfaceSha256: "d".repeat(64) }] } };
+	const elaboration = { request
+		, metadata: { schemaVersion: 2, kind: "lean-bridge-elaborated-exports"
+		, profile: "component-scalars-v1"
+		, producer: { adapter: "lean-bridge-elaborator", adapterVersion: 2
+			, tool: "Lean", toolVersion: inventory.project.toolVersion
+			, toolchain: inventory.project.toolchain
+			, invocationIdentitySha256: request.metadata.invocationIdentitySha256 }
+		, modules: [{ ...request.metadata.modules[0], directImports: ["Init"]
+			, declarations: [{
+			identity: "Shop.quote", kind: "definition"
+			, visibility: "public", selected: true
+			, source: { path: entries[0].path, startLine: 1, startColumn: 0, endLine: 1, endColumn: 50 }
+			, documentation: null, typeExpression: "UInt32 → UInt32"
+			, parameters: [{ name: "value", binderInfo: "explicit", typeExpression: "UInt32" }]
+			, resultExpression: "UInt32"
+			, effects: [], theoremReferences: []
+			, projection: { status: "supported", bindingShape: "pure-function", parameters: [{ name: "value", type: uint32 }], result: uint32 }
+			}]
+		}]
+		, diagnostics: [] } };
+	assert.throws(() => createLakeEntryAnalysis(inventory, entries, { metadata: { schemaVersion: 1, kind: "lean-bridge-native-elaborated-exports", declarations: [] } }), /scalar metadata profile/);
 	const analysis = createLakeEntryAnalysis(inventory, entries, elaboration);
 	assert.equal(analysis.bindingIr.origin, "lean-elaborated");
 	assert.equal(analysis.bindingIr.document.declarations[0].result.type.name, "uint32");
 	assert.deepEqual(analysis.bindingIr.document.assurance, []);
 	for(const change of [
-		value => { value.metadata.declarations[0].module = "Units"; }
-		, value => { value.metadata.declarations.push(value.metadata.declarations[0]); }
-		, value => { value.metadata.declarations[0].name = "Bad; code"; }
-		, value => { value.metadata.declarations[0].result = { kind: "array", element: uint32 }; }
-		, value => { value.metadata.declarations[0].result.name = "unknown"; }
-		, value => { value.metadata.declarations[0].body = "source fallback"; }
+		value => { value.metadata.modules[0].name = "Units"; }
+		, value => { value.metadata.modules[0].declarations.push(value.metadata.modules[0].declarations[0]); }
+		, value => { value.metadata.modules[0].declarations[0].projection.result = { kind: "array", element: uint32 }; }
+		, value => { value.metadata.modules[0].declarations[0].projection.result.name = "unknown"; }
+		, value => { value.metadata.modules[0].declarations[0].body = "source fallback"; }
 	]) {
 		const invalid = structuredClone(elaboration); change(invalid);
-		assert.throws(() => createLakeEntryAnalysis(inventory, entries, invalid), { code: "invalid-lake-entry-elaboration" });
+		assert.throws(() => createLakeEntryAnalysis(inventory, entries, invalid), { code: "invalid-elaborated-metadata" });
 	}
 	// Selected captured roots remain part of compilation even without public exports.
 	const snapshotSha256 = "c".repeat(64);

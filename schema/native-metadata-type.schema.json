@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.invalid/schema/native-metadata-type.schema.json",
+  "title": "Compiler-owned native-library-v1 type and representation",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "lean",
+        "abi"
+      ],
+      "properties": {
+        "kind": {
+          "const": "primitive"
+        },
+        "name": {
+          "enum": [
+            "unit",
+            "bool",
+            "uint8",
+            "uint16",
+            "uint32",
+            "uint64",
+            "int8",
+            "int16",
+            "int32",
+            "int64",
+            "nat",
+            "int",
+            "float32",
+            "float64",
+            "string",
+            "bytes"
+          ]
+        },
+        "lean": {
+          "type": "string",
+          "minLength": 1
+        },
+        "abi": {
+          "$ref": "#/$defs/abi"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "element",
+        "abi"
+      ],
+      "properties": {
+        "kind": {
+          "const": "array"
+        },
+        "element": {
+          "$ref": "#"
+        },
+        "abi": {
+          "$ref": "#/$defs/abi"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "lean",
+        "constructor",
+        "fields",
+        "abi"
+      ],
+      "properties": {
+        "kind": {
+          "const": "record"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "lean": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "constructor": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "projection",
+              "type"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+              },
+              "projection": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+              },
+              "type": {
+                "$ref": "#"
+              }
+            }
+          }
+        },
+        "abi": {
+          "$ref": "#/$defs/abi"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "lean",
+        "module",
+        "abi"
+      ],
+      "properties": {
+        "kind": {
+          "const": "resource"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "lean": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "module": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$"
+        },
+        "abi": {
+          "$ref": "#/$defs/abi"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "parameters",
+        "result",
+        "abi"
+      ],
+      "properties": {
+        "kind": {
+          "const": "callback"
+        },
+        "parameters": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#"
+          }
+        },
+        "result": {
+          "$ref": "#"
+        },
+        "abi": {
+          "$ref": "#/$defs/abi"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "abi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cType",
+        "box",
+        "unbox",
+        "heap"
+      ],
+      "properties": {
+        "cType": {
+          "enum": [
+            "lean_object*",
+            "uint8_t",
+            "uint16_t",
+            "uint32_t",
+            "uint64_t",
+            "float",
+            "double"
+          ]
+        },
+        "box": {
+          "type": "string",
+          "pattern": "^lean_box(?:_uint32|_uint64|_float32|_float)?$"
+        },
+        "unbox": {
+          "type": "string",
+          "pattern": "^lean_unbox(?:_uint32|_uint64|_float32|_float)?$"
+        },
+        "heap": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

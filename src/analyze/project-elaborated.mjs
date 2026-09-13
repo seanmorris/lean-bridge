@@ -17,6 +17,7 @@ import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
  */
 export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 	const { metadata, request } = elaboration;
+	if(metadata.profile !== "component-scalars-v1") throw new Error("Ordinary component projection requires the scalar metadata profile");
 	validateElaboratedMetadata(metadata, request);
 	const elaborationSha256 = sha256(canonicalJson(elaboration));
 	const all = metadata.modules.flatMap(module => module.declarations.map(declaration => ({ ...declaration, module: module.name })));

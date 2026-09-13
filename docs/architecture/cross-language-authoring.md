@@ -28,7 +28,7 @@ The first implementation supplies `modules`, `exports`, `resources`, `arities`, 
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis and ordinary npm builds use fresh elaboration as their semantic authority, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. The native compiler checks fresh interfaces and emitted C representations through its existing metadata profile. Tasks 1107 and 1108 still include native shared projection and finite specialization. Configuration support does not enable additional source targets.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. Native projections retain their compiler-checked C representations, resource selection and closure arities. Tasks 1107 and 1108 remain open for finite specialization and remaining parity checks. Configuration support does not enable additional source targets.
 
 ## Locked dependency milestones
 
@@ -56,7 +56,7 @@ Captured public modules in locked npm projects now use the same compiler-owned p
 
 Locked npm builds now use version 2 of the [rich compiler report](elaborated-export-metadata.md). It records elaborated binders, structural runtime types, documentation, UTF-16 source ranges, visibility, returned effects and direct theorem references. Binding IR uses the structural types. Interface identities include private/server sidecars, and target compilation must reproduce the complete report. The [rich metadata evidence](../evidence/elaborated-export-metadata-20260913.md) covers unsupported selections, namespace collisions, extractor faults and sidecar drift.
 
-Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. `analyze` now invokes the pinned engine for captured and generated sources; dependency-free projects need no lockfile. Unlocked npm builds retain their existing planner, and native CPAN retains its existing metadata profile. These milestones keep the current primitive npm and native CPAN types without advancing type/profile cells or completing the full extractor plan.
+Arbitrary hooks, prebuilt native libraries and additional compiler/linker options remain unsupported. Reviewed foreign-function contracts remain under task 1238. `analyze` invokes the pinned engine for captured and generated sources; dependency-free projects need no lockfile. Ordinary npm and native CPAN builds use the same compiler report with their separate scalar and native projections. These milestones keep the current primitive npm and native CPAN types without advancing type/profile cells or completing the full extractor plan.
 
 ## Package and consumer requirements
 

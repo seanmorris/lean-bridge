@@ -1,6 +1,6 @@
 # Lean project analysis
 
-This directory contains the compiler-backed CLI analyzer and the metadata extractor shared with locked npm builds. Neither requires bridge annotations in Lean source.
+This directory contains the compiler-backed CLI analyzer and the metadata extractor shared with npm and native CPAN builds. Neither requires bridge annotations in Lean source.
 
 ## Inputs
 
@@ -29,8 +29,10 @@ Analysis leaves the author checkout unchanged. Compilation and configured genera
 | [`compiler-analysis.mjs`](compiler-analysis.mjs) | Captures sources, invokes the pinned engine, verifies output identities and source stability, and cleans temporary workspaces. |
 | [`project-analysis.mjs`](project-analysis.mjs) | Builds and validates the version-2 public report from compiler metadata or reviewed Binding IR. |
 | [`lean-project.mjs`](lean-project.mjs) | Inventories project files and validates explicit reviewed Binding IR. The older source scanner remains in internal fixture tooling; ordinary CLI builds use fresh compiler metadata. |
-| [`NativeExports.lean`](NativeExports.lean) | Reads fresh Lean interfaces, checks selected implementations, and emits native metadata or the shared rich report. |
+| [`NativeExports.lean`](NativeExports.lean) | Reads fresh Lean interfaces, checks selected implementations, and emits the shared report with scalar or native projections. |
 | [`elaborated-metadata.mjs`](elaborated-metadata.mjs) | Hashes complete interfaces and validates the shared report against engine-owned invocation identities. |
+| [`native-types.mjs`](native-types.mjs) | Validates native structural types, compiler representations and copied-value restrictions. |
+| [`native-metadata.mjs`](native-metadata.mjs) | Binds the shared native report to retained compiler/source evidence and projects the selected API for CPAN. |
 | [`project-elaborated.mjs`](project-elaborated.mjs) | Copies structural compiler types into Binding IR, retaining documentation and theorem references without adding assurance claims. |
 | [`policy.mjs`](policy.mjs) | Validates built-in or supplied policy, normalizes it, computes identity, and evaluates a result. |
 | [`output.mjs`](output.mjs) | Writes machine-readable files to an explicitly selected output directory. |
@@ -50,7 +52,7 @@ host verification and policy evaluation
 Binding IR proposal or actionable diagnostics
 ```
 
-Public analysis and ordinary npm builds use the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md), including dependency-free projects without a Lake lockfile. Missing backends block analysis. Unsupported meaning returns diagnostics; extractor faults and stale metadata fail without a scanned-signature fallback. Native CPAN retains its existing compiler metadata profile. Public analysis currently projects pure primitive signatures, not its richer native shapes.
+Public analysis, ordinary npm builds and native CPAN use the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md), including dependency-free projects without a Lake lockfile. Missing backends block analysis. Unsupported meaning returns diagnostics; extractor faults and stale metadata fail without a scanned-signature fallback. CPAN retains its native ABI and richer type projection. Public analysis currently projects pure primitive signatures.
 
 The accepted Binding IR moves to [`../binding-ir`](../binding-ir/README.md). Component compilation begins under [`../build`](../build/README.md).
 

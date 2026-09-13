@@ -4,8 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { chmod, copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { chmod, copyFile, cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
 import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
@@ -15,9 +15,11 @@ import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-packag
 import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
-import { sha256 } from "../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { benchmarkPerl } from "../scripts/benchmark-perl.mjs";
 import { traceCpanInstall } from "../src/release/cpan-install-trace.mjs";
+import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PERL_NATIVE_TEST === "1";
 const root = process.cwd();
@@ -26,6 +28,123 @@ const perl = process.env.LEAN_BRIDGE_TEST_PERL ?? "/usr/bin/perl";
 const floor = process.env.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR ?? "2.38";
 const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
 const errorText = error => `${error.message}\n${JSON.stringify(error.details ?? {})}`;
+
+const metadataProject = async t => {
+	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-metadata-"));
+	t.after(() => rm(working, { recursive: true, force: true }));
+	const projectRoot = join(working, "project");
+	await saveLakeFile(projectRoot, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
+	await saveLakeFile(projectRoot, "lakefile.toml", 'name = "sample"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Sample"\n');
+	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Sample"], exports: ["Sample.increment"] }));
+	await saveLakeFile(projectRoot, "Sample.lean", `namespace Sample
+abbrev Word := UInt32
+abbrev Unary := Word → Word
+/-- 🙂 Keep the native alias. -/
+def increment : Unary := fun value => value + 1
+theorem increment_spec (value : Word) : increment value = value + 1 := rfl
+namespace Shadow
+def increment (value : Word) : Word := value
+theorem increment_spec (value : Word) : increment value = value := rfl
+end Shadow
+private def secret : Word := 7
+def unsupportedHelper : Array (Word → Word) := #[]
+end Sample
+`);
+	for(const path of await readdir(projectRoot)) await chmod(join(projectRoot, path), 0o444);
+	return { working, projectRoot, runtimeRoot: join(working, "runtime"), leanPrefix };
+};
+
+test("native shared metadata preserves checked aliases, docs and proof relationships across relocation", { skip: !enabled, timeout: 180_000 }, async t => {
+	const context = await metadataProject(t), before = await lakeInputState(context.projectRoot);
+	await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
+	const outputRoot = join(context.working, "native");
+	const first = await buildNativeComponent({ ...context, outputRoot });
+	const metadata = JSON.parse(await readFile(join(outputRoot, "metadata.json"), "utf8"));
+	await assertJsonSchema("elaborated-export-metadata", metadata);
+	assert.equal(metadata.profile, "native-library-v1");
+	const declarations = metadata.modules[0].declarations;
+	const item = declarations.find(item => item.identity === "Sample.increment");
+	assert.match(item.documentation, /🙂 Keep the native alias/);
+	assert.equal(item.source.startLine, 4);
+	assert.deepEqual(item.theoremReferences, ["Sample.increment_spec"]);
+	assert.equal(item.projection.parameters[0].type.abi.cType, "uint32_t");
+	assert.deepEqual(first.model.bindingIr.declarations[0].source.extensions["lean-lang.org/theorem-references"], ["Sample.increment_spec"]);
+	assert.deepEqual(first.model.bindingIr.declarations[0].assurance, []);
+	assert.equal(declarations.find(item => item.identity === "Sample.unsupportedHelper").projection.reason, "unsupported-native-type");
+	assert.ok(declarations.some(item => item.visibility === "private"));
+	assert.deepEqual(metadata.diagnostics, []);
+	const relocated = join(context.working, "relocated");
+	await cp(context.projectRoot, relocated, { recursive: true });
+	const second = await buildNativeComponent({ ...context, projectRoot: relocated, outputRoot: join(context.working, "second") });
+	assert.deepEqual(second.receipt, first.receipt);
+	assert.deepEqual(second.model, first.model);
+	assert.deepEqual(await lakeInputState(context.projectRoot), before);
+	const forged = structuredClone(metadata);
+	forged.modules[0].declarations.find(item => item.identity === "Sample.increment").documentation = "Unrelated metadata";
+	await writeFile(join(outputRoot, "metadata.json"), canonicalJson(forged));
+	const receipt = structuredClone(first.receipt);
+	receipt.metadataSha256 = sha256(canonicalJson(forged));
+	await writeFile(join(outputRoot, "native-component.json"), canonicalJson(receipt));
+	const artifacts = JSON.parse(await readFile(join(outputRoot, "artifacts.json"), "utf8"));
+	for(const path of ["metadata.json", "native-component.json"])
+	{
+		const bytes = await readFile(join(outputRoot, path));
+		artifacts.files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+	}
+	await writeFile(join(outputRoot, "artifacts.json"), canonicalJson(artifacts));
+	await assert.rejects(() => stageCpanPackage({ ...context, componentRoot: outputRoot, outputRoot: join(context.working, "package") }), /model differs from shared compiler metadata/);
+});
+
+test("native extraction rejects forged reports, interface drift and ABI disagreement without releasing output", { skip: !enabled, timeout: 300_000 }, async t => {
+	const context = await metadataProject(t), before = await lakeInputState(context.projectRoot);
+	await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
+	for(const mode of ["failure", "json", "identity", "source", "sidecar", "late-sidecar", "abi", "cancel"])
+		await t.test(mode, async () => {
+			let staging, invoked = false, linked = false;
+			const cancellation = new AbortController();
+			const runner = { capture: async request => {
+				if(request.args[0] === "-shared") linked = true;
+				if(request.args.includes("--metadata"))
+				{
+					invoked = true; staging = dirname(request.args.at(-1));
+					if(mode === "failure") throw new Error("Extractor execution failed");
+					if(mode === "json") return { stdout: "{incomplete", stderr: "", code: 0 };
+					if(mode === "cancel")
+					{
+						cancellation.abort(new Error("Cancelled native extraction"));
+						throw cancellation.signal.reason;
+					}
+					const result = await processBuildRunner.capture(request), metadata = JSON.parse(result.stdout);
+					if(mode === "identity") metadata.modules[0].interfaceSha256 = "0".repeat(64);
+					if(mode === "source") await writeFile(join(staging, "source/Sample.lean"), "-- altered after extraction\n");
+					if(mode === "sidecar") await writeFile(join(staging, "olean/Sample.olean.server"), "changed metadata");
+					if(mode === "abi")
+					{
+						const item = metadata.modules[0].declarations.find(item => item.identity === "Sample.increment");
+						item.projection.result.abi = { cType: "uint64_t", box: "lean_box_uint64", unbox: "lean_unbox_uint64", heap: false };
+					}
+					return { ...result, stdout: canonicalJson(metadata) };
+				}
+				const result = await processBuildRunner.capture(request);
+				if(mode === "late-sidecar" && request.args.includes(join(staging ?? "", "c/adapter.c")))
+					await writeFile(join(staging, "olean/Sample.olean.private"), "changed after adapter compilation");
+				return result;
+			} };
+			const outputRoot = join(context.working, mode);
+			await assert.rejects(() => buildNativeComponent({ ...context, outputRoot, runner, signal: cancellation.signal }), error => {
+				if(mode === "cancel") return /Cancelled native extraction/.test(errorText(error));
+				if(mode === "abi") return /conflicting types/.test(errorText(error));
+				const code = ["failure", "json"].includes(mode) ? "lean-metadata-extractor-failed"
+					: mode === "identity" ? "invalid-elaborated-metadata" : "native-elaboration-drift";
+				return error.code === code;
+			}, mode);
+			assert.equal(invoked, true);
+			assert.equal(linked, false);
+			await assert.rejects(() => lstat(staging), { code: "ENOENT" });
+			await assert.rejects(() => lstat(outputRoot), { code: "ENOENT" });
+			assert.deepEqual(await lakeInputState(context.projectRoot), before);
+		});
+});
 
 test("Perl CBuilder receives development headers without Nix build-role variables", { skip: !enabled }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-perl-headers-"));
@@ -220,9 +339,9 @@ test("fresh Lean metadata rejects unsupported or unreviewed exports before relea
 		for(const [name, pattern, resources] of [
 			["loop", /partial/, []]
 			, ["viaLoop", /partial/, []]
-			, ["admitted", /depends on sorry/, []]
+			, ["admitted", /admitted-implementation/, []]
 			, ["dependent", /dependent or implicit/, []]
-			, ["polymorphic", /generic export/, []]
+			, ["polymorphic", /specialization-required/, []]
 			, ["viaForeign", /foreign implementation contract/, []]
 			, ["echoTiny", /no stable heap identity/, ["Rejections.Tiny"]]
 		]) {

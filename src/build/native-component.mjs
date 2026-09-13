@@ -16,6 +16,7 @@ import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifac
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
+import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -158,6 +159,7 @@ const callbackDefault = nativeCallbackDefault;
  * @param root0.arities - Explicit argument counts for exports returning closures.
  * @param root0.cc - Upstream C compiler executable.
  * @param root0.signal - Optional cancellation signal for child build processes.
+ * @param root0.runner - Optional process runner for compiler and drift checks.
  */
 export const buildNativeComponent = async ({ projectRoot
 	, outputRoot
@@ -170,7 +172,9 @@ export const buildNativeComponent = async ({ projectRoot
 	, arities
 	, configurationSha256
 	, cc = "cc"
-	, signal }) => {
+	, signal
+	, runner = processBuildRunner }) => {
+	const run = (command, args, options = {}) => runner.capture({ command, args, cwd: engineRoot, ...options });
 	const output = resolve(outputRoot), project = resolve(projectRoot), runtime = resolve(runtimeRoot);
 	await absent(output); await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-native-component-"));
@@ -196,6 +200,8 @@ export const buildNativeComponent = async ({ projectRoot
 		const analysis = inventory;
 		assertExportConfigurationSnapshot(record, analysis.inputs);
 		const lean = join(resolve(leanPrefix), "bin/lean");
+		const extractor = join(engineRoot, "src/analyze/NativeExports.lean");
+		const leanCompilerSha256 = sha256(await readFile(lean)), extractorSha256 = sha256(await readFile(extractor));
 		const probe = await run(lean, ["--version"], { signal });
 		const leanVersion = probe.stdout.match(/version ([^,]+),/)?.[1];
 		if(!probe.stdout.includes(pinnedNativeLean) || analysis.project.toolchain !== `leanprover/lean4:v${leanVersion}`) throw new Error("native source/compiler/runtime toolchain mismatch");
@@ -257,22 +263,56 @@ export const buildNativeComponent = async ({ projectRoot
 			}
 			await save(sourcePath, sourceBytes); await mkdir(dirname(cPath), { recursive: true }); await mkdir(dirname(olean), { recursive: true });
 			await run(lean, ["-R", sourceRoot, "-o", olean, "-c", cPath, sourcePath], { cwd: sourceRoot, env, signal });
-			compileOrder.push({ module: name, source: input, interface: await fileIdentity(olean), c: cPath });
+			const compiledInterface = await identifyLeanInterface(olean, signal);
+			compileOrder.push({ module: name, source: input
+				, interface: { ...await fileIdentity(olean), interfaceSha256: compiledInterface.interfaceSha256 }
+				, c: cPath });
 			active.delete(name); compiled.add(name);
 		};
 		for(const name of selectedModules) await compile(name);
-		const request = { modules: compileOrder.map(item => item.module)
+		const selection = { profile: "native-library-v1"
+			, modules: compileOrder.map(item => item.module)
 			, exports, resources
 			, arities: Object.entries(arities)
 			, exportModules: selectedModules };
+		const request = createMetadataRequest(selection, { toolchain: analysis.project.toolchain
+			, leanCompilerSha256, extractorSha256
+			, modules: compileOrder.map(item => ({ name: item.module
+				, sourcePath: item.source.path
+				, sourceSha256: item.source.sha256
+				, interfaceSha256: item.interface.interfaceSha256 })) });
 		await save(join(staging, "request.json"), json(request));
-		const extracted = await run(lean, ["--run", join(engineRoot, "src/analyze/NativeExports.lean"), join(staging, "request.json")], { env, signal });
-		const metadata = JSON.parse(extracted.stdout);
+		const verifyElaborationInputs = async () => {
+			if(sha256(await readFile(lean)) !== leanCompilerSha256 || sha256(await readFile(extractor)) !== extractorSha256)
+				throw Object.assign(new Error("Native compiler or extractor changed during compilation"), { code: "native-elaboration-drift" });
+			for(const item of compileOrder)
+			{
+				const path = join(oleanRoot, `${item.module.replaceAll(".", "/")}.olean`);
+				const actual = await identifyLeanInterface(path, signal);
+				if(actual.oleanSha256 !== item.interface.sha256 || actual.interfaceSha256 !== item.interface.interfaceSha256
+					|| sha256(await readFile(join(sourceRoot, sourcePathFor(item.module, item.source)))) !== item.source.sha256)
+					throw Object.assign(new Error(`Native source or interface changed: ${item.module}`), { code: "native-elaboration-drift" });
+			}
+		};
+		await verifyElaborationInputs();
+		let metadata;
+		try
+		{
+			const extracted = await run(lean, ["--run", extractor, "--metadata", join(staging, "request.json")], { env, signal });
+			metadata = JSON.parse(extracted.stdout);
+		}
+		catch(error)
+		{
+			signal?.throwIfAborted();
+			throw Object.assign(new Error("Lean native metadata extraction failed"), { code: "lean-metadata-extractor-failed"
+				, details: { category: "extractor-failure", cause: error.message, compilerDetails: error.details ?? null } });
+		}
 		const sourceIdentity = { leanVersion
 			, leanCommit: pinnedNativeLean
+			, leanCompilerSha256
 			, sourceTreeSha256: analysis.sourceTreeSha256
 			, exportConfigurationSha256: record.sha256
-			, extractorSha256: sha256(await readFile(join(engineRoot, "src/analyze/NativeExports.lean")))
+			, extractorSha256
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };
 		if(lakeWorkspace) sourceIdentity.lakeDependencies = { ...lakeWorkspace.evidence, snapshotSha256: lakeSnapshot.sha256 };
@@ -280,9 +320,11 @@ export const buildNativeComponent = async ({ projectRoot
 			, component: { id: `${analysis.project.name}@${analysis.project.version}`, name: analysis.project.name, version: analysis.project.version }
 			, moduleName: moduleName ?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}`
 			, sourceIdentity });
+		await verifyElaborationInputs();
 		const adapters = generateNativeLeanAdapters(model), generated = join(sourceRoot, `${adapters.module}.lean`), generatedC = join(staging, "c/adapter.c");
 		await save(generated, adapters.leanSource);
 		await run(lean, ["-R", sourceRoot, "-c", generatedC, generated], { env, signal });
+		await verifyElaborationInputs();
 		await save(join(staging, "component.h"), adapters.header);
 		// The C compiler must compare every generated ABI declaration with Lean's
 		// actual emitted definition. An ABI mismatch is a build error, not a crash
@@ -311,6 +353,7 @@ export const buildNativeComponent = async ({ projectRoot
 			await run(cc, ["-O2", "-g0", "-fPIC", `-ffile-prefix-map=${staging}=/build/native-component`, "-I", join(leanPrefix, "include"), "-I", join(runtime, "include"), "-I", staging, "-c", path, "-o", object], { signal });
 		}
 		const library = `libcomponent_${sha256(model.component.id).slice(0, 20)}.so`;
+		await verifyElaborationInputs();
 		await run(cc, ["-shared"
 			, ...objects
 			, "-L"
@@ -339,13 +382,14 @@ export const buildNativeComponent = async ({ projectRoot
 			, compiler: (await run(cc, ["--version"])).stdout.split("\n")[0]
 			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
 			, exports: model.exports.map(item => ({ declaration: item.name, symbol: item.symbol })) };
-		for(const input of analysis.inputs) if(sha256(await readFile(join(project, input.path))) !== input.sha256) throw new Error(`native source changed during compilation: ${input.path}`);
+		if((await inspectLeanProject(project, { signal })).sourceTreeSha256 !== analysis.sourceTreeSha256) throw new Error("native source changed during compilation");
 		if(lakeSnapshot && (await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal }))?.sha256 !== lakeSnapshot.sha256)
 			throw new Error("native Lake dependency sources changed during compilation");
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
 		await nativeCompilation?.verify();
 		await lakeWorkspace?.verify();
+		await verifyElaborationInputs();
 		if(lakeWorkspace?.generatedSources) await save(join(staging, "lake-generated-sources.json"), json(lakeWorkspace.generatedSources.document));
 		await save(join(staging, "metadata.json"), json(metadata)); await save(join(staging, "model.json"), json(model));
 		await save(join(staging, "binding-ir.json"), json(model.bindingIr)); await save(join(staging, "native-component.json"), json(receipt));

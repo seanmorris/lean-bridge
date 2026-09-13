@@ -10,13 +10,14 @@ import {
 	mkdir,
 	mkdtemp,
 	readFile,
+	realpath,
 	rename,
 	rm,
 	stat,
 	writeFile,
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ComponentBuildPlanError, createComponentBuildPlan, prepareComponentBuildPlan } from "./component-plan.mjs";
@@ -641,14 +642,15 @@ const buildPlainComponentProject = async ({
 }) => {
 	await mkdir(dirname(output), { recursive: true });
 	const workParent = selection.backend === "docker"
-		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? dirname(output))
-		: dirname(output);
+		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? tmpdir())
+		: tmpdir();
 	await mkdir(workParent, { recursive: true });
-	const work = await mkdtemp(join(workParent, ".lean-bridge-component-work-"));
-	const finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
+	const work = await mkdtemp(join(await realpath(workParent), ".lean-bridge-component-work-"));
+	let finalStaging;
 	const isolatedStore = selection.backend === "nix" && cache.policy === "off" ? `${work}-nix-store` : null;
 	try
 	{
+		finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
 		onProgress?.({ phase: "prepare", state: "started", message: "Preparing the verified component input" });
 		let analysis, compilationPlan;
 		const inputRoot = join(work, "component");
@@ -740,7 +742,7 @@ const buildPlainComponentProject = async ({
 		});
 	} catch(error)
 	{
-		await rm(finalStaging, { recursive: true, force: true });
+		if(finalStaging) await rm(finalStaging, { recursive: true, force: true });
 		throw error;
 	} finally
 	{
