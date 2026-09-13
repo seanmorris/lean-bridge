@@ -50,7 +50,7 @@ Run `node build/inspect-proof.mjs`. Expected output:
 
 Analysis compiles fresh interfaces and asks Lean for theorem references. Similar names, comments, and cached `.ilean` files cannot supply those relationships. Binding IR also preserves them in each declaration's `source.extensions["lean-lang.org/theorem-references"]`; its assurance arrays stay empty.
 
-The strict command above checks the theorem and rejects admitted proofs. A package receipt checks archive identities. Artifact-bound assurance claims require a separate theorem audit. The existing unlocked build path retains its older `unverified` relationship records in `metadata/assurance.json`; analysis does not upgrade those records.
+The strict command above checks the theorem and rejects admitted proofs. A package receipt checks archive identities. Artifact-bound assurance claims require a separate theorem audit. The build records compiler-extracted theorem references in `metadata/lake-entry-exports.json` and leaves `metadata/assurance.json` claims empty.
 
 ## Keep exports separate from proofs
 

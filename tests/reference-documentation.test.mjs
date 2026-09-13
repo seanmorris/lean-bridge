@@ -65,7 +65,8 @@ test('package reference declarations come from the actual author and scalar gene
 	assert.deepEqual(blocks(markdown, 'ts'), expected.map(value => value.declarations.trim()));
 	const tutorial = expected[0].ir;
 	assert.deepEqual(tutorial.declarations.map(declaration => declaration.name), ['add', 'isEmpty']);
-	assert.equal(tutorial.assurance.find(record => record.subject === 'lean:OnboardingSmall.add').state, 'unverified');
+	assert.deepEqual(tutorial.assurance, []);
+	assert.deepEqual(tutorial.declarations[0].source.extensions['lean-lang.org/theorem-references'], ['OnboardingSmall.add_commutative']);
 	const scalarMarkdown = await text('docs/reference/types.md');
 	assert.deepEqual([...scalarMarkdown.matchAll(/^\| `([a-z0-9]+)` \|/gmu)].map(match => match[1]), componentScalarTypes);
 	assert.match(scalarMarkdown, /16 MiB/u);

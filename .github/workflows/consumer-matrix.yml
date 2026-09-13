@@ -65,7 +65,7 @@ jobs:
         run: npm run test:consumer:node
       - name: Prepare the standalone CLI archive with its prebuilt runtime
         run: npm run build:cli-package -- --output build/cli-package --runtime build/consumer-ci-runtime/lazy
-      - name: Compile locked dependencies in the pinned engine and install relocated npm releases offline
+      - name: Compile locked and dependency-free projects and install relocated npm releases offline
         env:
           LEAN_BRIDGE_LAKE_WASM_TEST: "1"
           LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST: "1"
@@ -74,7 +74,10 @@ jobs:
         run: |
           nix build .#component-build-engine --out-link build/locked-lake-engine
           node --test tests/lake-wasm.test.mjs
+          node --test tests/unlocked-component.test.mjs
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
+      - name: Check documentation API captures through compiler-backed public analysis
+        run: LEAN_BRIDGE_BUILD_BACKEND=nix node scripts/capture-reference-apis.mjs
       - name: Build and consume a Lean project through the tarball-installed CLI
         run: npm run acceptance:cli-package -- --candidate build/cli-package --output build/cli-package-acceptance --backend nix
       - name: Install the disposable npm registry

@@ -28,7 +28,7 @@ The first implementation supplies `modules`, `exports`, `resources`, `arities`, 
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis and locked npm builds now use fresh elaboration as their semantic authority. The native compiler checks fresh interfaces and emitted C representations through its existing metadata profile. Tasks 1107 and 1108 still include native shared projection, finite specialization and the unlocked npm build planner. Configuration support does not enable additional source targets.
+Public analysis and ordinary npm builds use fresh elaboration as their semantic authority, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. The native compiler checks fresh interfaces and emitted C representations through its existing metadata profile. Tasks 1107 and 1108 still include native shared projection and finite specialization. Configuration support does not enable additional source targets.
 
 ## Locked dependency milestones
 

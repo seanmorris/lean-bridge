@@ -17,7 +17,7 @@ const fail = (code, message) => { throw Object.assign(new Error(message), { code
 export const selectLakeEntryModules = (configuration, inputs) => {
 	validateExportConfiguration(configuration);
 	if(!configuration.modules || !configuration.generators?.length)
-		return selectSourceModules(configuration, inputs).map(input => ({ ...input, origin: { kind: "captured" } }));
+		return selectSourceModules(configuration, inputs, { lakeOwnership: true }).map(input => ({ ...input, origin: { kind: "captured" } }));
 	if(!inputs.some(input => input.path === "lake-manifest.json"))
 		fail("generated-entry-lock-required", "Generated entry modules require a captured lake-manifest.json");
 	const outputs = configuration.generators.flatMap(recipe => recipe.outputs.filter(output => output.path.endsWith(".lean"))

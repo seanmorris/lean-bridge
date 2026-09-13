@@ -33,7 +33,7 @@ A demo proof receipt records source hashes and required declarations after its p
 
 Matching a hash answers “are these the same bytes?” A trusted signature answers a separate question about who authorized those bytes. The [release workflow](../contributing/production-release.md#review-a-production-release) describes the latter check.
 
-Ordinary-project analysis records discovered theorem relationships as `unverified`. A successful source analysis does not upgrade them to a demo's artifact-bound proof audit. See [the author assurance record](../lean/proofs-and-assurance.md).
+Ordinary-project analysis and npm builds record compiler-extracted theorem references and leave assurance claims empty. A separate theorem audit supplies artifact-bound claims. See [the author assurance record](../lean/proofs-and-assurance.md).
 
 ## Record a review
 

@@ -126,6 +126,11 @@ try
 	assert.equal(analyzed.result.elaboration.metadata.kind, "lean-bridge-elaborated-exports");
 	assert.deepEqual(analyzed.result.bindingIr.document.assurance, []);
 	await cli("Compile through the installed pinned engine", ["build", "--project", ".", "--target", "npm", "--output", "build/component"]);
+	const componentRoot = join(project, "build/component/bundle");
+	const plan = JSON.parse(await readFile(join(componentRoot, "locks/component-build-plan.json"), "utf8"));
+	assert.equal(plan.bindingIr.origin, "lean-elaborated");
+	assert.equal(plan.source.inputs.some(input => input.path === "lake-manifest.json"), false);
+	assert.deepEqual(JSON.parse(await readFile(join(componentRoot, "metadata/assurance.json"), "utf8")).claims, []);
 	assert.equal((await run("Check author source remains clean", "git", ["status", "--porcelain=v1", "--untracked-files=all"], project)).stdout, "");
 	const gate = join(output, "gate");
 	const result = JSON.parse((await cli("Reproduce packages without a runtime path override", ["publish", "--project", ".", "--target", "npm", "--dry-run", "--output", gate])).stdout);

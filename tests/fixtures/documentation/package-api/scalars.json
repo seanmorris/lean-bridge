@@ -1,0 +1,1083 @@
+{
+  "schemaVersion": 1,
+  "inputs": [
+    {
+      "path": "lakefile.toml",
+      "bytes": 87,
+      "sha256": "d6da82f10aab4e5c134cd19a6b0a486f8d5ca4f816e7d3e6f138c7e683588c9a"
+    },
+    {
+      "path": "lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "OnboardingScalars.lean",
+      "bytes": 1594,
+      "sha256": "720a371113fdf93ac16a2e54dd37af0ccba7760013c9f18e8c85c1e33940b3eb"
+    },
+    {
+      "path": "package.json",
+      "bytes": 23,
+      "sha256": "5be4677ceb81c204673adec19eea9c96842d211ef954cda1b5b8f1fa0162d9f9"
+    }
+  ],
+  "ir": {
+    "schemaVersion": 3,
+    "component": {
+      "id": "onboarding-scalars@1.0.0",
+      "name": "onboarding-scalars",
+      "version": "1.0.0"
+    },
+    "producers": [
+      {
+        "id": "lean",
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "tool": "Lean",
+        "toolVersion": "4.32.2",
+        "extensions": {
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        }
+      }
+    ],
+    "types": [],
+    "declarations": [
+      {
+        "id": "lean:OnboardingScalars.add",
+        "name": "add",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.add",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Add arbitrary-precision natural numbers. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.add",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.answer",
+        "name": "answer",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.answer",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "A zero-argument function. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.answer",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.boolean",
+        "name": "boolean",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.boolean",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "bool"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve a boolean. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.boolean",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.bytes",
+        "name": "bytes",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.bytes",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "bytes"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Copy a byte array. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.bytes",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.f32",
+        "name": "f32",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.f32",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "float32"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "float32"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve an IEEE single-precision value. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.f32",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.f64",
+        "name": "f64",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.f64",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "float64"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "float64"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve an IEEE double-precision value. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.f64",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.i16",
+        "name": "i16",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.i16",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int16"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int16"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve Int16. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.i16",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.i32",
+        "name": "i32",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.i32",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int32"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int32"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve Int32. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.i32",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.i64",
+        "name": "i64",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.i64",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int64"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int64"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve Int64. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.i64",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.i8",
+        "name": "i8",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.i8",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int8"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int8"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve Int8. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.i8",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.integer",
+        "name": "integer",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.integer",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve arbitrary-precision signed integers. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.integer",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.mixed",
+        "name": "mixed",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.mixed",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          },
+          {
+            "name": "arg2",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          },
+          {
+            "name": "arg3",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Exercise mixed types and more than two arguments. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.mixed",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.negate",
+        "name": "negate",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.negate",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "int"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Negate arbitrary-precision integers. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.negate",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.text",
+        "name": "text",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.text",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve Unicode text, including embedded NUL. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.text",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.u16",
+        "name": "u16",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.u16",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "uint16"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "uint16"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve UInt16. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.u16",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.u32",
+        "name": "u32",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.u32",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "uint32"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve UInt32. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.u32",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.u64",
+        "name": "u64",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.u64",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "uint64"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "uint64"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve UInt64. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.u64",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.u8",
+        "name": "u8",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.u8",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "uint8"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "uint8"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve UInt8. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.u8",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.unit",
+        "name": "unit",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.unit",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve unit. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.unit",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "capabilities": [],
+    "assurance": [],
+    "documentation": {
+      "summary": "Compiler-checked exports for onboarding-scalars.",
+      "details": ""
+    }
+  }
+}

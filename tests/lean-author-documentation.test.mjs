@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
-import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
+import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
@@ -102,24 +102,23 @@ test("the installed-package example uses npm and a runnable JavaScript file", as
 	assert.equal(blocks.find(block => block.language === "text").source, "123n\ntrue\nfalse\n");
 });
 
-test("the internal unlocked build retains unverified claims and the docs inspect compiler relationships separately", async () => {
-	const analysis = await analyzeLeanProject(fixture, { targets: ["npm"] });
-	assert.deepEqual(analysis.proposedExports, ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
-	assert.deepEqual(analysis.adapterHints.filter(item => item.required), []);
-	const claims = analysis.bindingIr.document.assurance;
-	const add = claims.find(item => item.subject === "lean:OnboardingSmall.add");
-	assert.equal(add.state, "unverified");
-	assert.deepEqual(add.theorems, ["OnboardingSmall.add_commutative"]);
-	assert.deepEqual(claims.find(item => item.subject === "lean:OnboardingSmall.isEmpty").theorems, []);
+test("the documented compiler API keeps theorem references separate from assurance claims", async () => {
+	const { ir } = await packageReference(fixture);
+	assert.deepEqual(ir.declarations.map(item => item.id), ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
+	assert.deepEqual(ir.assurance, []);
+	assert.ok(ir.declarations.every(item => item.assurance.length === 0));
+	const add = ir.declarations.find(item => item.id === "lean:OnboardingSmall.add");
+	const theorems = add.source.extensions["lean-lang.org/theorem-references"];
+	assert.deepEqual(theorems, ["OnboardingSmall.add_commutative"]);
 	const source = await readFile("docs/lean/proofs-and-assurance.md", "utf8");
 	const documented = JSON.parse(fences(source).find(block => block.language === "json").source);
-	assert.deepEqual(documented, { declaration: "OnboardingSmall.add", theoremCandidates: add.theorems });
+	assert.deepEqual(documented, { declaration: "OnboardingSmall.add", theoremCandidates: theorems });
 	assert.match(source, /source\.extensions/);
 	assert.match(source, /assurance arrays stay empty/);
-	const generated = generateJavaScriptPackage(analysis.bindingIr.document);
+	const generated = generateJavaScriptPackage(ir);
 	assert.doesNotMatch(generated["index.d.ts"], /\bany\b|export.*add_commutative/);
-	assert.match(generated["index.d.ts"], /add\(left: bigint, right: bigint\): bigint/);
-	assert.match(generated["index.d.ts"], /isEmpty\(value: string\): boolean/);
+	assert.match(generated["index.d.ts"], /add\(arg0: bigint, arg1: bigint\): bigint/);
+	assert.match(generated["index.d.ts"], /isEmpty\(arg0: string\): boolean/);
 });
 
 test("author pages use portable local links, explicit dry runs, and public examples", async () => {

@@ -126,16 +126,7 @@ export const prepareCleanComponentSources = async ({
 		// Falling back to the portable local repository path is intentional.
 	}
 	const roots = [];
-	let lakeSnapshot;
-	try
-	{
-		await stat(join(project, "lake-manifest.json"));
-		lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true });
-	} catch(error)
-	{
-		// Only the root lock may be absent. Missing locked inputs must fail.
-		if(error.code !== "ENOENT" || error.path !== join(project, "lake-manifest.json")) throw error;
-	}
+	const lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, allowMissingLock: true });
 	for(const name of ["a", "b"])
 	{
 		const checkout = join(scratchRoot, `source-${name}`);
@@ -322,8 +313,8 @@ export const runComponentReproducibilityGate = async ({
 		}
 		if(prepared.lakeSnapshot)
 		{
-			const current = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, signal });
-			if(current.sha256 !== prepared.lakeSnapshot.sha256) fail("lake-source-drift", "Locked dependencies changed during release reproduction");
+			const current = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, allowMissingLock: true, signal });
+			if(current.sha256 !== prepared.lakeSnapshot.sha256) fail("lake-source-drift", "Project inputs or locked dependencies changed during release reproduction");
 		}
 		const [left, right] = built;
 		const comparison = compareReleaseInventories(left.inventory, right.inventory);

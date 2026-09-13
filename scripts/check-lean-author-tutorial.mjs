@@ -83,9 +83,9 @@ try
 	assert.deepEqual(analysis.exportCandidates.find(item => item.declaration === "OnboardingSmall.add").theoremCandidates, ["OnboardingSmall.add_commutative"]);
 	await cli("Build the documented component", ["build", "--project", ".", "--target", "npm", "--output", "build/lean-bridge-release"]);
 	const assurance = JSON.parse(await readFile(join(project, "build/lean-bridge-release/bundle/metadata/assurance.json"), "utf8"));
-	// Unlocked builds still retain their earlier unverified relationship records.
-	assert.ok(assurance.claims.every(claim => claim.state === "unverified"));
-	assert.deepEqual(assurance.claims.find(claim => claim.subject === "lean:OnboardingSmall.add").theorems, ["OnboardingSmall.add_commutative"]);
+	assert.deepEqual(assurance.claims, []);
+	const elaboration = JSON.parse(await readFile(join(project, "build/lean-bridge-release/bundle/metadata/lake-entry-exports.json"), "utf8"));
+	assert.deepEqual(elaboration.metadata.modules.flatMap(module => module.declarations).find(item => item.identity === "OnboardingSmall.add").theoremReferences, ["OnboardingSmall.add_commutative"]);
 	assert.equal((await run("Check source remains clean", "git", ["status", "--porcelain=v1", "--untracked-files=all"])).stdout, "");
 	await cli("Build and compare two committed source copies", ["publish", "--project", ".", "--target", "npm", "--dry-run", "--output", output]);
 	const packageRoot = join(output, "release/packages/npm");

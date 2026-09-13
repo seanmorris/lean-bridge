@@ -9,7 +9,6 @@ import { dirname, join, resolve } from "node:path";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { captureLockedLakeProject } from "./lake-workspace.mjs";
 import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
 
@@ -57,7 +56,7 @@ const readIntent = async (inputRoot, signal) => {
 };
 
 /**
- * Build source-only intent from a locked project without assigning declaration types.
+ * Capture source-only intent without assigning declaration types.
  *
  * @param options - Original project and optional release-gate capture.
  * @param options.projectRoot - Original project directory.
@@ -70,18 +69,15 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 	const inventory = await inspectLeanProject(projectRoot, { signal });
 	const configuration = inventory.configurationRecord.configuration;
 	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators"], targetFields: ["name", "version"] });
-	else if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
-		fail("Compiler analysis requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
-	if(purpose === "analysis" && configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))
-		fail("Generator analysis requires a reviewed lake-manifest.json");
+	if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
+		fail("Compiler entry discovery requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
+	if(configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))
+		fail("Lake generators require a reviewed lake-manifest.json");
 	const modules = selectLakeEntryModules(configuration, inventory.inputs);
 	if(!modules.length) fail("Source-only intent requires a selected public entry module");
 	if(inventory.inputs.some(input => input.path.endsWith(".binding-ir.json"))) fail("Public entry signatures must come from fresh Lean metadata, not a supplied Binding IR");
 	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot, signal });
-	else lakeSnapshot = purpose === "analysis"
-		? await prepareLakeDependencySnapshot({ projectRoot, includeProject: true, allowMissingLock: true, signal })
-		: await captureLockedLakeProject({ projectRoot, inputs: inventory.inputs, signal });
-	if(!lakeSnapshot) fail("Source-only intent requires a complete locked capture");
+	else lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot, includeProject: true, allowMissingLock: true, signal });
 	const files = new Map(lakeSnapshot.document.rootInputs.map(input => [input.path, input]));
 	if(inventory.inputs.some(input => files.get(input.path)?.sha256 !== input.sha256 || files.get(input.path)?.bytes !== input.bytes))
 		fail("Source inventory changed before capture");

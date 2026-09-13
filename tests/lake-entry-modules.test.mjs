@@ -80,6 +80,18 @@ test("ordinary locked modules carry source-only intent without host type inferen
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
+test("unlocked module hints allow custom paths but reject ambiguous and partial suffixes", () => {
+	const input = { path: "lib/Shop/Api.lean", bytes: 12, sha256: "a".repeat(64) };
+	const entries = selectLakeEntryModules({ schemaVersion: 1, modules: ["Shop.Api"] }, [input]);
+	assert.deepEqual(entries, [{ ...input, module: "Shop.Api", origin: { kind: "captured" } }]);
+	for(const [modules, inputs, code] of [
+		[["hop.Api"], [input], "unknown-export-module"]
+		, [["Shop.Api"], [input, { ...input, path: "Shop/Api.lean" }], "ambiguous-export-module"]
+		, [["Shop.Api", "Api"], [input], "ambiguous-export-module"]
+	]) assert.throws(() => selectLakeEntryModules({ schemaVersion: 1, modules }, inputs), { code });
+	assert.throws(() => verifyLakeEntryModules(entries, { modules: [{ module: "Shop.Api", path: "root/another/Shop/Api.lean", source: input }] }), { code: "lake-entry-source-drift" });
+});
+
 test("resolved public roots must preserve the planned file and producing generator", () => {
 	const source = { bytes: 12, sha256: "a".repeat(64), origin: { kind: "generated", generator: "root/table", receiptSha256: "b".repeat(64) } };
 	const entry = { module: "Shop", path: "generated/Shop.lean", origin: { kind: "generated", generator: "root/table" } };

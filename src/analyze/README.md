@@ -28,7 +28,7 @@ Analysis leaves the author checkout unchanged. Compilation and configured genera
 |---|---|
 | [`compiler-analysis.mjs`](compiler-analysis.mjs) | Captures sources, invokes the pinned engine, verifies output identities and source stability, and cleans temporary workspaces. |
 | [`project-analysis.mjs`](project-analysis.mjs) | Builds and validates the version-2 public report from compiler metadata or reviewed Binding IR. |
-| [`lean-project.mjs`](lean-project.mjs) | Inventories project files. Its older source scanner remains internal to the unlocked build planner. |
+| [`lean-project.mjs`](lean-project.mjs) | Inventories project files and validates explicit reviewed Binding IR. The older source scanner remains in internal fixture tooling; ordinary CLI builds use fresh compiler metadata. |
 | [`NativeExports.lean`](NativeExports.lean) | Reads fresh Lean interfaces, checks selected implementations, and emits native metadata or the shared rich report. |
 | [`elaborated-metadata.mjs`](elaborated-metadata.mjs) | Hashes complete interfaces and validates the shared report against engine-owned invocation identities. |
 | [`project-elaborated.mjs`](project-elaborated.mjs) | Copies structural compiler types into Binding IR, retaining documentation and theorem references without adding assurance claims. |
@@ -50,7 +50,7 @@ host verification and policy evaluation
 Binding IR proposal or actionable diagnostics
 ```
 
-Public analysis and locked npm builds use the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md). Missing backends block analysis. Unsupported meaning returns diagnostics; extractor faults and stale metadata fail without a scanned-signature fallback. Native CPAN retains its existing compiler metadata profile. Public analysis currently projects pure primitive signatures, not its richer native shapes.
+Public analysis and ordinary npm builds use the [shared compiler report](../../docs/architecture/elaborated-export-metadata.md), including dependency-free projects without a Lake lockfile. Missing backends block analysis. Unsupported meaning returns diagnostics; extractor faults and stale metadata fail without a scanned-signature fallback. Native CPAN retains its existing compiler metadata profile. Public analysis currently projects pure primitive signatures, not its richer native shapes.
 
 The accepted Binding IR moves to [`../binding-ir`](../binding-ir/README.md). Component compilation begins under [`../build`](../build/README.md).
 

@@ -704,9 +704,9 @@ const buildPlainComponentProject = async ({
 		if(entryIntent)
 		{
 			await verifyLakeSnapshotProject({ snapshot: entryIntent.lakeSnapshot, projectRoot: root, signal });
-			const snapshot = lakeSnapshot ?? await captureLockedLakeProject({ projectRoot: root, inputs: entryIntent.document.source.inputs, signal });
-			if(snapshot?.sha256 !== entryIntent.lakeSnapshot.sha256)
-				fail("lake-source-drift", "Locked project inputs changed during the component build");
+			const fresh = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
+			if(fresh.sha256 !== entryIntent.sha256)
+				fail("lake-source-drift", "Project inputs changed during the component build");
 		}
 		else if(componentPlan.document.schemaVersion === 2)
 		{
@@ -819,8 +819,7 @@ export const buildCanonicalProject = async ({
 		else
 		{
 			const inventory = await inspectLeanProject(root, { signal });
-			if(inventory.inputs.some(input => input.path === "lake-manifest.json")
-				&& !inventory.inputs.some(input => input.path.endsWith(".binding-ir.json")))
+			if(!inventory.inputs.some(input => input.path.endsWith(".binding-ir.json")))
 				entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
 			if(!entryIntent) componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
 		}

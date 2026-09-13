@@ -1,5 +1,5 @@
 /**
- * Plan locked public APIs inside the isolated Lean build engine.
+ * Plan public APIs inside the isolated Lean build engine.
  *
  * @file
  */

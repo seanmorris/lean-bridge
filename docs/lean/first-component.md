@@ -116,13 +116,14 @@ lean-bridge build \
   --output build/lean-bridge-release
 ```
 
-The isolated builder compiles the source and generated adapter, then audits the resulting component. Its component-neutral bundle lives in `build/lean-bridge-release/bundle`.
+The isolated builder derives the API from fresh Lean interfaces, compiles the source and generated adapter, then audits the resulting component. This dependency-free project needs no Lake lockfile. Its component-neutral bundle lives in `build/lean-bridge-release/bundle`.
 
 | Bundle path | Contents |
 | --- | --- |
 | `artifacts/` | The compiled component without an embedded runtime binary. |
 | `binding/binding-ir.json` | Public declarations, value types, documentation, and assurance references. |
-| `metadata/assurance.json` | The analyzer's relationship records, still `unverified`. |
+| `metadata/assurance.json` | Empty until a separate theorem audit supplies artifact-bound claims. |
+| `metadata/lake-entry-exports.json` | Fresh compiler metadata, including theorem references. |
 | `metadata/runtime-requirement.json` | The shared runtime identity required by this component. |
 | `metadata/provenance.json` | Source, build-plan, compiler, and linker identities. |
 | `source/` | The source inputs used for this build. |

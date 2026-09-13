@@ -1,6 +1,6 @@
 # Elaborated export metadata
 
-The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Public `lean-bridge analyze` and locked npm builds use this report for captured and generated public modules.
+The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Public `lean-bridge analyze` and ordinary npm builds use this report for captured and generated public modules, with or without a Lake lockfile. Explicit reviewed Binding IR retains its existing validation and build-profile gates.
 
 ## Compiler report
 
@@ -38,4 +38,4 @@ A dependency-free project without `lake-manifest.json` uses snapshot version 3, 
 
 Unsupported meaning returns a reviewable report and exit status 2. Extractor faults or stale metadata return failure, never a source-scanned fallback. An explicit reviewed Binding IR bypasses compilation and reports `existing-validated`, with no fresh compiler evidence. `requireCompiledExports` accepts only fresh compiler-backed exports.
 
-The [metadata milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records interface drift and installed-package checks. The [CLI cutover evidence](../evidence/compiler-analysis-20260913.md) covers engine-backed analysis, lock-absent capture, generated entries, relocation and failure cleanup. Native CPAN retains its existing metadata profile. VO1107 and VO1108 still include native shared projection, finite specialization and the unlocked build-planner cutover.
+The [metadata milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records interface drift and installed-package checks. The [CLI cutover evidence](../evidence/compiler-analysis-20260913.md) covers engine-backed analysis, lock-absent capture, generated entries, relocation and failure cleanup. The [npm cutover evidence](../evidence/unlocked-npm-compiler-20260913.md) covers compiler-owned builds and reproducible publication without a lockfile; external dependencies and configured generators still require a reviewed lock. Native CPAN retains its existing metadata profile. VO1107 and VO1108 still include native shared projection and finite specialization.

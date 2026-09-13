@@ -220,7 +220,7 @@ def resolve (request : Request) : IO Json := do
       error "Custom root manifest paths are not supported by locked builds"
     if !(← (root / "lake-manifest.json").pathExists) then
       unless ws.root.depConfigs.isEmpty do
-        error "Create and review lake-manifest.json before analyzing external dependencies"
+        error "Create and review lake-manifest.json before resolving external dependencies"
       return ws
     let manifest ← Manifest.load (root / "lake-manifest.json")
     for dep in ws.root.depConfigs do

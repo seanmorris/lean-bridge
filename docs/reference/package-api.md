@@ -2,23 +2,23 @@
 
 An application imports functions from the prepared package by its package name. Initialization happens during module loading; the generated pure functions are synchronous afterward. Start with [JavaScript and TypeScript](../javascript-typescript.md) for installation, browser assets, React, and workers.
 
-This reference runs the same analyzer and declaration generator used by the packager. These fixture packages demonstrate a generated API, not names that every Lean package exports.
+This reference runs the package declaration generator against compiler-captured fixture APIs. CI compares those captures with fresh builds, and reference generation checks the source hashes. Each Lean package defines its own exports.
 
 ## The author tutorial package
 
 The [tutorial source](../../tests/fixtures/documentation/lean-author/OnboardingSmall.lean) becomes this declaration file:
 
 ```ts
-// Generated from Binding IR SHA-256 f0235de1048a726a770bfa84976adb0431f855f9347d76dd9f5becd65632420f.
+// Generated from Binding IR SHA-256 9a193d0bab543882de0a7046d52dcd744a3fa288b3df52fda44035766f8cf493.
 /**
  * Add two natural numbers.
  */
-export declare function add(left: bigint, right: bigint): bigint;
+export declare function add(arg0: bigint, arg1: bigint): bigint;
 
 /**
  * Return whether a copied UTF-8 string is empty.
  */
-export declare function isEmpty(value: string): boolean;
+export declare function isEmpty(arg0: string): boolean;
 
 declare const bindings: Readonly<{
   readonly add: typeof add;
@@ -43,11 +43,11 @@ The package exports the functions, not its commutativity theorem. [Proofs and as
 The [scalar fixture](../../tests/fixtures/onboarding/scalars/OnboardingScalars.lean) covers zero-argument functions, all supported primitive types, and a mixed four-argument function. Its generated declarations are:
 
 ```ts
-// Generated from Binding IR SHA-256 05a3929a43bd6a8b26088efb6a27d7fe0a29097b9140d85d793802099a445e70.
+// Generated from Binding IR SHA-256 6183f90d4f0887e12c60a7dc91918a92f8e1aa181a2e76efd9fcbab1eef6b50a.
 /**
  * Add arbitrary-precision natural numbers.
  */
-export declare function add(left: bigint, right: bigint): bigint;
+export declare function add(arg0: bigint, arg1: bigint): bigint;
 
 /**
  * A zero-argument function.
@@ -57,87 +57,87 @@ export declare function answer(): bigint;
 /**
  * Preserve a boolean.
  */
-export declare function boolean(value: boolean): boolean;
+export declare function boolean(arg0: boolean): boolean;
 
 /**
  * Copy a byte array.
  */
-export declare function bytes(value: Uint8Array): Uint8Array;
+export declare function bytes(arg0: Uint8Array): Uint8Array;
 
 /**
  * Preserve an IEEE single-precision value.
  */
-export declare function f32(value: number): number;
+export declare function f32(arg0: number): number;
 
 /**
  * Preserve an IEEE double-precision value.
  */
-export declare function f64(value: number): number;
+export declare function f64(arg0: number): number;
 
 /**
  * Preserve Int16.
  */
-export declare function i16(value: number): number;
+export declare function i16(arg0: number): number;
 
 /**
  * Preserve Int32.
  */
-export declare function i32(value: number): number;
+export declare function i32(arg0: number): number;
 
 /**
  * Preserve Int64.
  */
-export declare function i64(value: bigint): bigint;
+export declare function i64(arg0: bigint): bigint;
 
 /**
  * Preserve Int8.
  */
-export declare function i8(value: number): number;
+export declare function i8(arg0: number): number;
 
 /**
  * Preserve arbitrary-precision signed integers.
  */
-export declare function integer(value: bigint): bigint;
+export declare function integer(arg0: bigint): bigint;
 
 /**
  * Exercise mixed types and more than two arguments.
  */
-export declare function mixed(enabled: boolean, count: number, label: string, value: bigint): bigint;
+export declare function mixed(arg0: boolean, arg1: number, arg2: string, arg3: bigint): bigint;
 
 /**
  * Negate arbitrary-precision integers.
  */
-export declare function negate(value: bigint): bigint;
+export declare function negate(arg0: bigint): bigint;
 
 /**
  * Preserve Unicode text, including embedded NUL.
  */
-export declare function text(value: string): string;
+export declare function text(arg0: string): string;
 
 /**
  * Preserve UInt16.
  */
-export declare function u16(value: number): number;
+export declare function u16(arg0: number): number;
 
 /**
  * Preserve UInt32.
  */
-export declare function u32(value: number): number;
+export declare function u32(arg0: number): number;
 
 /**
  * Preserve UInt64.
  */
-export declare function u64(value: bigint): bigint;
+export declare function u64(arg0: bigint): bigint;
 
 /**
  * Preserve UInt8.
  */
-export declare function u8(value: number): number;
+export declare function u8(arg0: number): number;
 
 /**
  * Preserve unit.
  */
-export declare function unit(value: void): void;
+export declare function unit(arg0: void): void;
 
 declare const bindings: Readonly<{
   readonly add: typeof add;

@@ -10,7 +10,8 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { analyzeLeanProject } from '../src/analyze/lean-project.mjs';
+import { inspectLeanProject } from '../src/analyze/lean-project.mjs';
+import { validateBindingIr } from '../src/binding-ir/contract.mjs';
 import { generateJavaScriptPackage } from '../src/backends/javascript/generate.mjs';
 import { componentScalarTypes, scalarCopyLimit } from '../src/abi/component-scalars.mjs';
 import { cliUsage, cliExitCodes, parseCliArguments } from '../src/cli/contract.mjs';
@@ -91,16 +92,20 @@ export async function algorithmReferences(root = repositoryRoot)
 }
 
 /**
- * Emit the same public declaration file that the component packager emits.
+ * Render a compiler-captured fixture API, checked against fresh builds in CI.
  *
- * @param projectRoot - Ordinary Lean fixture analyzed without compiling or changing it.
+ * @param projectRoot - Documented Lean fixture whose captured source hashes must match.
  */
 export async function packageReference(projectRoot)
 {
-	const analysis = await analyzeLeanProject(projectRoot);
-	assert.ok(analysis.bindingIr, `No inferred API in ${projectRoot}`);
-	const ir = analysis.bindingIr.document;
-	return { ir, declarations: generateJavaScriptPackage(ir)['index.d.ts'] };
+	const inventory = await inspectLeanProject(projectRoot);
+	const snapshot = JSON.parse(await readFile(path.resolve(projectRoot, '../../documentation/package-api', `${path.basename(projectRoot)}.json`), 'utf8'));
+	assert.equal(snapshot.schemaVersion, 1);
+	assert.deepEqual(snapshot.inputs, inventory.inputs, `Compiler reference source changed: ${projectRoot}`);
+	const ir = snapshot.ir;
+	validateBindingIr(ir);
+	const declarations = generateJavaScriptPackage(ir)['index.d.ts'].split('\n').map(line => line.trimEnd()).join('\n');
+	return { ir, declarations };
 }
 
 /**

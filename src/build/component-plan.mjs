@@ -76,7 +76,7 @@ export const validateComponentBuildPlan = plan => {
 	exactKeys(plan.bindingIr, ["schemaVersion", "origin", "semanticSha256", "declarations"], "Binding IR");
 	if(!Number.isSafeInteger(plan.bindingIr.schemaVersion) || plan.bindingIr.schemaVersion < 1) fail("invalid-component-build-plan", "Binding IR version must be positive");
 	if(!new Set(["statically-inferred", "existing-validated", "lean-elaborated"]).has(plan.bindingIr.origin)) fail("invalid-component-build-plan", "Binding IR origin is unsupported");
-	if(plan.bindingIr.origin === "lean-elaborated" && plan.schemaVersion !== 2) fail("invalid-component-build-plan", "Elaborated entry plans require locked sources");
+	if(plan.bindingIr.origin === "lean-elaborated" && plan.schemaVersion !== 2) fail("invalid-component-build-plan", "Elaborated entry plans require a complete source snapshot");
 	hash(plan.bindingIr.semanticSha256);
 	if(!Array.isArray(plan.bindingIr.declarations) || plan.bindingIr.declarations.length === 0 || plan.bindingIr.declarations.some(item => typeof item !== "string" || item === ""))
 	{
