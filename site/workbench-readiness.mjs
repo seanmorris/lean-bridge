@@ -13,6 +13,7 @@
 export const waitForWorkbench = async (page, slug) => {
 	const readiness = {
 		"lean-dijkstra": ["#status.ready", "."]
+		, "lean-tutte": [".tutte-verdict", "Lean accepts this construction"]
 		, "lean-flood-fill": ["#runtime", "^[0-9]"]
 		, "lean-union-find": ["#runtime", "^[0-9]"]
 		, "lean-aho-corasick": ["#match-count", "^[0-9]"]

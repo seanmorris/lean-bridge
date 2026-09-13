@@ -239,7 +239,7 @@ test("benchmark reruns share preparation and pagehide invalidates the old lifeti
 
 test("gallery manifest preserves every published demo artifact directory", async () => {
 	const manifest = JSON.parse(await readFile(resolve(sourceRoot, "manifest.json"), "utf8"));
-	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket", "lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
+	assert.deepEqual(manifest.demos.map(demo => demo.slug), ["lean-tutte", "lean-dijkstra", "lean-flood-fill", "lean-union-find", "lean-topological-sort", "lean-aho-corasick", "lean-lru-cache", "lean-a-star", "lean-tarjan", "lean-token-bucket", "lean-dinic", "lean-myers", "lean-sweep-and-prune"]);
 	for(const demo of manifest.demos)
 	{
 		assert.equal(demo.entrypoint, `${demo.slug}/`);

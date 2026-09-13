@@ -87,12 +87,15 @@ test('non-rendered source links pin a full revision and require tracked paths', 
 test('documentation links to maintained demos use canonical pages under both bases', () => {
 	for(const demo of demos)
 	{
-		const link = rewriteDocumentationLink(`../demos/${demo.entrypoint}index.html#main-content`, page, { revision });
-		for(const base of ['/', '/lean-bridge/'])
+		for(const suffix of ['', 'index.html'])
 		{
-			const target = new URL(link, `https://example.test${base}${page.route.slice(1)}`);
-			assert.equal(target.pathname, `${base}${demo.canonicalPage.slice(1)}`);
-			assert.equal(target.hash, '#main-content');
+			const link = rewriteDocumentationLink(`../demos/${demo.entrypoint}${suffix}#main-content`, page, { revision });
+			for(const base of ['/', '/lean-bridge/'])
+			{
+				const target = new URL(link, `https://example.test${base}${page.route.slice(1)}`);
+				assert.equal(target.pathname, `${base}${demo.canonicalPage.slice(1)}`);
+				assert.equal(target.hash, '#main-content');
+			}
 		}
 	}
 	assert.equal(rewriteDocumentationLink('../demos/index.html', page, { revision }), '../../../demos/');

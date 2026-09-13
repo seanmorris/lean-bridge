@@ -22,6 +22,7 @@ export default [
 	, route("demos/lean-a-star", "routes/a-star.tsx")
 	, route("demos/lean-tarjan", "routes/tarjan.tsx")
 	, route("demos/lean-token-bucket", "routes/token-bucket.tsx")
+	, route("demos/lean-tutte", "routes/tutte.tsx")
 	, route("docs", "routes/guides/documentation.tsx")
 	, route("docs/lean", "routes/guides/lean-author.tsx")
 	, route("docs/lean/setup", "routes/guides/lean-setup.tsx")

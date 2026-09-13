@@ -151,7 +151,7 @@ export async function renderReferenceDocuments({ root = repositoryRoot } = {})
 		]))
 		, ALGORITHMS: algorithms.map(item => [
 			`## ${item.slug}`, '', item.summary, ''
-			, `[Open ${item.title}](../../${item.directory}/index.html) · [Input and result contract](../../${item.directory}/README.md) · [Adapter source](../../${item.directory}/runtime.mjs)`
+			, `[Open ${item.title}](../../${item.directory}/) · [Input and result contract](../../${item.directory}/README.md) · [Adapter source](../../${item.directory}/runtime.mjs)`
 			, ''
 			, table(['Export / call parameters', 'Purpose'], item.exports.map(entry => [inline(entry.signature), entry.summary]))
 			, ''

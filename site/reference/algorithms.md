@@ -1,6 +1,6 @@
 # Algorithm API and proof reference
 
-The twelve demos expose graph, sequence, cache, limiter, and geometry adapters independently of their webpages. These local adapters are repository artifacts, not published npm algorithm packages. To use a prepared library release, start with [package consumption](../consume.md).
+The demos expose graph, sequence, cache, limiter, and geometry adapters independently of their webpages. These local adapters are repository artifacts, not published npm algorithm packages. To use a prepared library release, start with [package consumption](../consume.md).
 
 This catalog is generated from the demo manifest, each adapter's exported declarations and comments, and the proof receipts. The generation check verifies the receipt's Lean source hashes and selected theorem names.
 

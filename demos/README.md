@@ -1,6 +1,8 @@
 # Develop and verify demos
 
-This directory owns the Lean algorithms, proofs, C adapters, runtime APIs, differential tests, and benchmark workloads used by the [algorithm gallery](index.html). The [documentation site](../site/README.md) owns the React presentation for all twelve demos. Source-preview pages mount the same scoped controllers; published legacy URLs redirect to their React routes.
+This directory owns the Lean algorithms, proofs, C adapters, runtime APIs, differential tests, and benchmark workloads used by the [algorithm gallery](index.html). The [documentation site](../site/README.md) owns the React presentation. Source-preview pages mount the same scoped controllers; published legacy URLs redirect to their React routes.
+
+[Tutte's squared rectangles](lean-tutte/README.md) adds a visual mathematical construction: linked squares and electrical wires, exact current balances, and the distinction between simple and compound rectangles.
 
 To call a maintained solver without changing it, use the [demo-local API guide](../docs/demo-api.md). To produce an installable library from your own Lean source, follow the [author guide](../docs/lean-author-guide.md).
 

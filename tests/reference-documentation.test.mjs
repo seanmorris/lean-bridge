@@ -79,6 +79,7 @@ test('algorithm catalog covers every real export and every selected audited theo
 	{
 		const section = markdown.split(`## ${algorithm.slug}\n`)[1]?.split('\n## ')[0];
 		assert.ok(section, algorithm.slug);
+		assert.ok(section.includes(`](../../${algorithm.directory}/)`), 'Demo links do not require a legacy source index.html');
 		assert.ok(algorithm.exports.length > 0);
 		for(const entry of algorithm.exports) assert.ok(section.includes(`\`${entry.signature}\``), entry.name);
 		for(const theorem of algorithm.theorems) assert.ok(section.includes(`\`${theorem}\``), theorem);

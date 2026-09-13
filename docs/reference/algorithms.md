@@ -1,6 +1,6 @@
 # Algorithm API and proof reference
 
-The twelve demos expose graph, sequence, cache, limiter, and geometry adapters independently of their webpages. These local adapters are repository artifacts, not published npm algorithm packages. To use a prepared library release, start with [package consumption](../consume.md).
+The demos expose graph, sequence, cache, limiter, and geometry adapters independently of their webpages. These local adapters are repository artifacts, not published npm algorithm packages. To use a prepared library release, start with [package consumption](../consume.md).
 
 This catalog is generated from the demo manifest, each adapter's exported declarations and comments, and the proof receipts. The generation check verifies the receipt's Lean source hashes and selected theorem names.
 
@@ -8,6 +8,7 @@ This catalog is generated from the demo manifest, each adapter's exported declar
 
 | Algorithm | Use it for |
 | --- | --- |
+| [Tutte’s squared rectangles](#lean-tutte) | Turn a rectangle of unequal squares into a circuit. Inspect current balance, break the fit, and compare simple and compound constructions. |
 | [Dijkstra shortest path](#lean-dijkstra) | A generic weighted-graph solver with a certified shortest-path result. |
 | [Flood fill + capability closure](#lean-flood-fill) | Directed reachability across rooms, locks, keys, obstacles, and one-way ledges. |
 | [Union-find percolation](#lean-union-find) | A generic checked partition finds when open passages first cross a braided porous maze. |
@@ -29,11 +30,27 @@ The export listings below show public names and call parameters read from source
 
 Work through [Dijkstra on a delivery graph](../concepts/dijkstra.md), [flood fill with capabilities](../concepts/flood-fill.md), or the [box-overlap API recipe](../demo-api.md). No example requires React to run the core.
 
+## lean-tutte
+
+Turn a rectangle of unequal squares into a circuit. Inspect current balance, break the fit, and compare simple and compound constructions.
+
+[Open Tutte’s squared rectangles](../../demos/lean-tutte/) · [Input and result contract](../../demos/lean-tutte/README.md) · [Adapter source](../../demos/lean-tutte/runtime.mjs)
+
+| Export / call parameters | Purpose |
+| --- | --- |
+| `createChecker()` | Load the Lean runtime and return a synchronous exact certificate checker. |
+
+Selected theorems: `exported_certificate`, `threeConnectedCheck_sound`, `closed_walk_zero`.
+
+The [proof receipt](../../demos/lean-tutte/runtime/proof-audit.json) records 17 required declarations checked with Lean v4.32.2. This reference build verifies every listed source hash against the Lean files.
+
+[Benchmark source](../../demos/lean-tutte/benchmark-workload.mjs) · [Correctness tests](../../demos/lean-tutte/test.mjs)
+
 ## lean-dijkstra
 
 A generic weighted-graph solver with a certified shortest-path result.
 
-[Open Dijkstra shortest path](../../demos/lean-dijkstra/index.html) · [Input and result contract](../../demos/lean-dijkstra/README.md) · [Adapter source](../../demos/lean-dijkstra/runtime.mjs)
+[Open Dijkstra shortest path](../../demos/lean-dijkstra/) · [Input and result contract](../../demos/lean-dijkstra/README.md) · [Adapter source](../../demos/lean-dijkstra/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -51,7 +68,7 @@ The [proof receipt](../../demos/lean-dijkstra/runtime/proof-audit.json) records 
 
 Directed reachability across rooms, locks, keys, obstacles, and one-way ledges.
 
-[Open Flood fill + capability closure](../../demos/lean-flood-fill/index.html) · [Input and result contract](../../demos/lean-flood-fill/README.md) · [Adapter source](../../demos/lean-flood-fill/runtime.mjs)
+[Open Flood fill + capability closure](../../demos/lean-flood-fill/) · [Input and result contract](../../demos/lean-flood-fill/README.md) · [Adapter source](../../demos/lean-flood-fill/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -70,7 +87,7 @@ The [proof receipt](../../demos/lean-flood-fill/runtime/proof-audit.json) record
 
 A generic checked partition finds when open passages first cross a braided porous maze.
 
-[Open Union-find percolation](../../demos/lean-union-find/index.html) · [Input and result contract](../../demos/lean-union-find/README.md) · [Adapter source](../../demos/lean-union-find/runtime.mjs)
+[Open Union-find percolation](../../demos/lean-union-find/) · [Input and result contract](../../demos/lean-union-find/README.md) · [Adapter source](../../demos/lean-union-find/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -92,7 +109,7 @@ The [proof receipt](../../demos/lean-union-find/runtime/proof-audit.json) record
 
 A generic checked scheduler returns a complete legal order or an explicit directed dependency cycle.
 
-[Open Topological sort + cycle witness](../../demos/lean-topological-sort/index.html) · [Input and result contract](../../demos/lean-topological-sort/README.md) · [Adapter source](../../demos/lean-topological-sort/runtime.mjs)
+[Open Topological sort + cycle witness](../../demos/lean-topological-sort/) · [Input and result contract](../../demos/lean-topological-sort/README.md) · [Adapter source](../../demos/lean-topological-sort/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -111,7 +128,7 @@ The [proof receipt](../../demos/lean-topological-sort/runtime/proof-audit.json) 
 
 One checked byte automaton reports every exact match, including overlaps and duplicate patterns.
 
-[Open Aho–Corasick multi-pattern search](../../demos/lean-aho-corasick/index.html) · [Input and result contract](../../demos/lean-aho-corasick/README.md) · [Adapter source](../../demos/lean-aho-corasick/runtime.mjs)
+[Open Aho–Corasick multi-pattern search](../../demos/lean-aho-corasick/) · [Input and result contract](../../demos/lean-aho-corasick/README.md) · [Adapter source](../../demos/lean-aho-corasick/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -129,7 +146,7 @@ The [proof receipt](../../demos/lean-aho-corasick/runtime/proof-audit.json) reco
 
 A bounded key/value cache with proven recency, capacity, and least-recently-used eviction.
 
-[Open LRU cache](../../demos/lean-lru-cache/index.html) · [Input and result contract](../../demos/lean-lru-cache/README.md) · [Adapter source](../../demos/lean-lru-cache/runtime.mjs)
+[Open LRU cache](../../demos/lean-lru-cache/) · [Input and result contract](../../demos/lean-lru-cache/README.md) · [Adapter source](../../demos/lean-lru-cache/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -147,7 +164,7 @@ The [proof receipt](../../demos/lean-lru-cache/runtime/proof-audit.json) records
 
 A checked heuristic guides a generic shortest-path search. Compare its route and explored region with Dijkstra on weighted terrain.
 
-[Open A* heuristic search](../../demos/lean-a-star/index.html) · [Input and result contract](../../demos/lean-a-star/README.md) · [Adapter source](../../demos/lean-a-star/runtime.mjs)
+[Open A* heuristic search](../../demos/lean-a-star/) · [Input and result contract](../../demos/lean-a-star/README.md) · [Adapter source](../../demos/lean-a-star/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -166,7 +183,7 @@ The [proof receipt](../../demos/lean-a-star/runtime/proof-audit.json) records 22
 
 Find every group of mutually dependent modules, then collapse those groups into an acyclic graph.
 
-[Open Tarjan strongly connected components](../../demos/lean-tarjan/index.html) · [Input and result contract](../../demos/lean-tarjan/README.md) · [Adapter source](../../demos/lean-tarjan/runtime.mjs)
+[Open Tarjan strongly connected components](../../demos/lean-tarjan/) · [Input and result contract](../../demos/lean-tarjan/README.md) · [Adapter source](../../demos/lean-tarjan/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -185,7 +202,7 @@ The [proof receipt](../../demos/lean-tarjan/runtime/proof-audit.json) records 28
 
 Watch a request burst spend available tokens, then refill over time. Exact integer arithmetic enforces the configured rate and burst capacity.
 
-[Open Token-bucket rate limiter](../../demos/lean-token-bucket/index.html) · [Input and result contract](../../demos/lean-token-bucket/README.md) · [Adapter source](../../demos/lean-token-bucket/runtime.mjs)
+[Open Token-bucket rate limiter](../../demos/lean-token-bucket/) · [Input and result contract](../../demos/lean-token-bucket/README.md) · [Adapter source](../../demos/lean-token-bucket/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -203,7 +220,7 @@ The [proof receipt](../../demos/lean-token-bucket/runtime/proof-audit.json) reco
 
 Change a connection's capacity and watch the bottleneck move. Lean returns a maximum flow and a minimum cut through a generic directed network.
 
-[Open Maximum flow / minimum cut](../../demos/lean-dinic/index.html) · [Input and result contract](../../demos/lean-dinic/README.md) · [Adapter source](../../demos/lean-dinic/runtime.mjs)
+[Open Maximum flow / minimum cut](../../demos/lean-dinic/) · [Input and result contract](../../demos/lean-dinic/README.md) · [Adapter source](../../demos/lean-dinic/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -222,7 +239,7 @@ The [proof receipt](../../demos/lean-dinic/runtime/proof-audit.json) records 31 
 
 Edit two documents and inspect their smallest insertion/deletion script. Lean proves that replay reaches the target and no shorter script exists.
 
-[Open Myers shortest edit script](../../demos/lean-myers/index.html) · [Input and result contract](../../demos/lean-myers/README.md) · [Adapter source](../../demos/lean-myers/runtime.mjs)
+[Open Myers shortest edit script](../../demos/lean-myers/) · [Input and result contract](../../demos/lean-myers/README.md) · [Adapter source](../../demos/lean-myers/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |
@@ -242,7 +259,7 @@ The [proof receipt](../../demos/lean-myers/runtime/proof-audit.json) records 37 
 
 Drag moving boxes and see one-axis candidates narrowed to exact overlaps. Lean proves that no overlapping pair is missed or repeated.
 
-[Open Sweep-and-prune collision pairs](../../demos/lean-sweep-and-prune/index.html) · [Input and result contract](../../demos/lean-sweep-and-prune/README.md) · [Adapter source](../../demos/lean-sweep-and-prune/runtime.mjs)
+[Open Sweep-and-prune collision pairs](../../demos/lean-sweep-and-prune/) · [Input and result contract](../../demos/lean-sweep-and-prune/README.md) · [Adapter source](../../demos/lean-sweep-and-prune/runtime.mjs)
 
 | Export / call parameters | Purpose |
 | --- | --- |

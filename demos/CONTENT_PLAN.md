@@ -25,7 +25,7 @@ The homepage's three business cards link to the change-check, audit, and reuse g
 
 ## Contract-backed reference
 
-Four pages under `/docs/reference/` cover [CLI commands](../docs/reference/cli.md), [generated package APIs](../docs/reference/package-api.md), [types and values](../docs/reference/types.md), and [all twelve local algorithm APIs](../docs/reference/algorithms.md).
+Four pages under `/docs/reference/` cover [CLI commands](../docs/reference/cli.md), [generated package APIs](../docs/reference/package-api.md), [types and values](../docs/reference/types.md), and [local algorithm APIs](../docs/reference/algorithms.md).
 
 The generator reads executable CLI contracts, actual generated declarations, scalar capabilities, demo exports, and proof receipts. It checks selected theorem names and source hashes. Contributors edit reviewed templates and explicitly regenerate the canonical Markdown. A stale reference fails the site build.
 

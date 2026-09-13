@@ -8,14 +8,14 @@ import { Link } from "react-router";
 import { DemoCards } from "../components/DemoCards";
 
 /** Describe the prerendered landing page. */
-export const meta = () => [{ title: "Lean Bridge | Checked Lean, ordinary application code" }, { name: "description", content: "Run twelve verified algorithms, inspect their Lean proofs, and learn how to package and consume Lean code." }];
+export const meta = () => [{ title: "Lean Bridge | Checked Lean, ordinary application code" }, { name: "description", content: "Run verified algorithms, inspect their Lean proofs, and learn how to package and consume Lean code." }];
 
 /** Show audience-specific entry points without loading an algorithm runtime. */
 export default function Home()
 {
 	return <main className="site-main home-page" id="main-content">
 		<header className="home-hero"><p className="eyebrow">Lean 4 → WebAssembly</p><h1>Prove it in Lean.<br /><em>Use it in your application.</em></h1>
-			<p className="lede">Compile checked Lean code for other languages. Explore twelve working algorithms, inspect their proofs, and follow the path from a Lean library to a downstream package.</p>
+			<p className="lede">Compile checked Lean code for other languages. Explore the working demos, inspect their proofs, and follow the path from a Lean library to a downstream package.</p>
 			<div className="hero-actions"><Link className="action-link" to="/demos/">Explore the demos →</Link><Link className="text-link" to="/docs/">Read the documentation →</Link></div>
 		</header>
 		<section className="audience-section" aria-labelledby="start-title"><div className="section-heading"><p className="eyebrow">Choose your workflow</p><h2 id="start-title">Build a package or use one.</h2></div>

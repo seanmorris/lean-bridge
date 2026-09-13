@@ -25,7 +25,8 @@ const sourcePages = new Map(docPages.filter(page => page.source)
 	.map(page => [page.source, page]));
 const demoPages = new Map([
 	['demos/index.html', '/demos/']
-	, ...demos.map(demo => [`demos/${demo.entrypoint}index.html`, demo.canonicalPage])
+	, ...demos.flatMap(demo => ['', 'index.html'].map(suffix =>
+		[`demos/${demo.entrypoint}${suffix}`, demo.canonicalPage]))
 ]);
 const languages = [
 	'sh', 'js', 'ts', 'tsx', 'html', 'json', 'lean', 'toml', 'php', 'python'

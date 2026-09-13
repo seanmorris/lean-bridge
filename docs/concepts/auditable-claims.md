@@ -17,7 +17,7 @@ In [Dijkstra](dijkstra.md), the claim is that a returned route is a valid shorte
 | Can I reproduce the check? | The demo's pinned build command and proof audit. |
 | Does the application use the API correctly? | Adapter tests, boundary cases, and the real compiled-call tests. |
 
-The [generated algorithm reference](../reference/algorithms.md) links these sources for all twelve demos. Its build rejects selected theorem names missing from a receipt and rejects changed Lean files whose hashes no longer match.
+The [generated algorithm reference](../reference/algorithms.md) links these sources for every demo. Its build rejects selected theorem names missing from a receipt and rejects changed Lean files whose hashes no longer match.
 
 ## Read the proof in either checker
 

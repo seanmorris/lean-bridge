@@ -100,6 +100,7 @@ export default [
 			, 'demos/lean-dinic/runtime/lean-dinic.mjs'
 			, 'demos/lean-myers/runtime/lean-myers.mjs'
 			, 'demos/lean-sweep-and-prune/runtime/lean-sweep-and-prune.mjs'
+			, 'demos/lean-tutte/runtime/lean-tutte.mjs'
 			, 'result*/**'
 		]
 	}

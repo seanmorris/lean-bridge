@@ -8,7 +8,7 @@ The goal is evidence for a shipping decision, not a rewrite of the application a
 
 A dependency scheduler can require either a complete legal ordering or an explicit cycle. A route service can require a valid least-cost route. A cache can require a capacity bound and a particular eviction rule.
 
-Write down the requirement before selecting a theorem. Then read the selected theorem's inputs, assumptions, and result. The [algorithm reference](../reference/algorithms.md) offers twelve starting points; [Audit a claim](auditable-claims.md) describes the review.
+Write down the requirement before selecting a theorem. Then read the selected theorem's inputs, assumptions, and result. The [algorithm reference](../reference/algorithms.md) lists the available examples; [Audit a claim](auditable-claims.md) describes the review.
 
 ## Check the distribution path
 

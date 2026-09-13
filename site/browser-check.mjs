@@ -154,7 +154,7 @@ try
 				const guide = docPages.find(entry => entry.route === path && entry.source);
 				if(guide && !guide.legacy) assert.ok((await noScript.locator("main").innerText()).length > 500, `${path}: complete guide`);
 				await checkLinks(noScript);
-				if(path === "/") assert.equal(await noScript.locator(".demo-card").count(), 12);
+				if(path === "/") assert.equal(await noScript.locator(".demo-card").count(), demos.length);
 				if(path === "/docs/lean/first-component/") assert.ok(await noScript.locator("pre code").count() > 0);
 			}
 			const missing = await noScript.goto(server.url + "there-is-no-such-guide/");

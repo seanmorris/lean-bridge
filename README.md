@@ -135,7 +135,7 @@ These are observational end-user API measurements, not cross-machine comparisons
 
 ## Verified algorithm demos
 
-The [demo gallery](https://seanmorris.github.io/lean-bridge/) runs twelve proof-backed Lean algorithms directly in the browser, covering graphs, text, caches, rate limits, and collision pairs. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark. The [demo sources](demos/) and [gallery manifest](demos/manifest.json) list the algorithms and their named guarantees.
+The [demo gallery](https://seanmorris.github.io/lean-bridge/) runs proof-backed Lean algorithms directly in the browser, covering graphs, text, caches, rate limits, collision pairs, and squared rectangles. Each demo includes its checked Lean source, proof receipt, compiled Wasm runtime, differential tests, and JavaScript comparison benchmark. The [demo sources](demos/) and [gallery manifest](demos/manifest.json) list the algorithms and their named guarantees.
 
 Build and verify the complete GitHub Pages artifact with:
 
@@ -145,7 +145,7 @@ npm run demos:verify
 
 The assembled static site is written to `build/github-pages`. Pull requests validate it; verified `master` builds deploy it through the dedicated Pages workflow.
 
-The [React documentation site](site/README.md) organizes package creation and publication in one author workflow, with a separate consumer workflow and supporting contributor guides and all twelve algorithm workbenches. Each demo retains its original runtime and proof URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
+The [React documentation site](site/README.md) organizes package creation and publication in one author workflow, with a separate consumer workflow, supporting contributor guides, and the interactive workbenches. Each demo retains its original runtime and proof URLs. Follow [site development](site/README.md) to work on the presentation or [site deployment](docs/contributing/github-pages.md) to assemble and publish the Pages artifact.
 
 ## Documentation
 
