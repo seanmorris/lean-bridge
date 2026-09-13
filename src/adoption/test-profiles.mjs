@@ -29,6 +29,7 @@ const profileManifest = Object.freeze({
 		, "documentation"
 		, "documentation-demo-api"
 		, "export-configuration"
+		, "elaborated-metadata"
 		, "reference-documentation"
 		, "generated-package-gate"
 		, "host-object-generator"

@@ -16,6 +16,7 @@ import { readLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDepe
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -103,8 +104,8 @@ export const compileLeanComponentSources = async ({
 	await assertAbsent(output);
 	let lean = compilerCommand({ engineRoot, environment });
 	const compilerEnvironment = {
-		...environment,
-		ELAN_HOME: environment.ELAN_HOME ?? join(resolve(engineRoot), ".toolchains/elan")
+		...environment
+		, ELAN_HOME: environment.ELAN_HOME ?? join(resolve(engineRoot), ".toolchains/elan")
 	};
 	let identity;
 	try
@@ -176,8 +177,8 @@ export const compileLeanComponentSources = async ({
 		await writeFile(generatedSource, generatedBytes, { mode: 0o444 });
 		inputIdentities.set(compilationPlan.document.compilerAdapters.module, compilationPlan.document.compilerAdapters.leanSourceSha256);
 		const compileEnvironment = {
-			...compilerEnvironment,
-			LEAN_PATH: join(staging, "olean")
+			...compilerEnvironment
+			, LEAN_PATH: join(staging, "olean")
 		};
 		const records = [];
 		for(const module of [...sourceOrder, compilationPlan.document.compilerAdapters.module])
@@ -217,26 +218,43 @@ export const compileLeanComponentSources = async ({
 			const checker = join(resolve(engineRoot), "src/analyze/NativeExports.lean");
 			const request = join(staging, "native-body-request.json");
 			const elaborated = compilationPlan.document.schemaVersion >= 3;
+			const expectedBytes = elaborated ? await readChecked(join(inputs, "generated/lake-entry-exports.json"), { sha256: compilationPlan.document.source.elaborationSha256 }, "elaborated public API") : null;
+			const rich = elaborated && JSON.parse(expectedBytes.toString()).schemaVersion === 3;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
-			const exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [] }
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [] }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
+			const interfaces = [];
+			if(rich)
+			{
+				for(const record of records.slice(0, -1)) interfaces.push({ module: record.module
+					, sourceSha256: record.sourceSha256
+					, ...await identifyLeanInterface(join(staging, record.olean)) });
+				exportRequest = createMetadataRequest(exportRequest, { toolchain: compilationPlan.document.source.toolchain
+					, snapshotSha256: snapshot.sha256
+					, generatedSourcesSha256: lake.generatedSources?.sha256 ?? null
+					, leanCompilerSha256: lake.document.leanCompilerSha256
+					, extractorSha256: sha256(await readFile(checker))
+					, modules: lake.resolution.modules.map((module, index) => ({ name: module.module, sourcePath: module.path, sourceSha256: module.source.sha256, interfaceSha256: interfaces[index].interfaceSha256 })) });
+			}
 			await writeFile(request, canonicalJson(exportRequest));
 			try
 			{
-				const checked = await runner.capture({ command: lean, args: ["--run", checker, ...(elaborated ? [] : ["--check-bodies"]), request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
+				const checked = await runner.capture({ command: lean, args: ["--run", checker, ...(rich ? ["--metadata"] : elaborated ? [] : ["--check-bodies"]), request], cwd: inputs, env: compileEnvironment, timeoutMs: 120000 });
 				if(elaborated)
 				{
-					const actual = { schemaVersion: compilationPlan.document.schemaVersion === 3 ? 1 : 2
+					const actual = { schemaVersion: rich ? 3 : compilationPlan.document.schemaVersion === 3 ? 1 : 2
 						, kind: "lean-bridge-lake-entry-elaboration"
 						, snapshotSha256: snapshot.sha256
 						, generatedSourcesSha256: lake.generatedSources?.sha256 ?? null
 						, leanCompilerSha256: lake.document.leanCompilerSha256
 						, extractorSha256: sha256(await readFile(checker))
 						, request: exportRequest
-						, interfaces: records.slice(0, -1).map(({ module, sourceSha256, oleanSha256 }) => ({ module, sourceSha256, oleanSha256 }))
+						, interfaces: rich ? interfaces : records.slice(0, -1).map(({ module, sourceSha256, oleanSha256 }) => ({ module, sourceSha256, oleanSha256 }))
 						, metadata: JSON.parse(checked.stdout) };
-					const expected = await readChecked(join(inputs, "generated/lake-entry-exports.json"), { sha256: compilationPlan.document.source.elaborationSha256 }, "elaborated public API");
-					if(expected.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
+					if(expectedBytes.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
+					if(rich) for(const record of interfaces)
+						if((await identifyLeanInterface(modulePaths(staging, record.module).olean)).interfaceSha256 !== record.interfaceSha256)
+							fail("lean-entry-elaboration-drift", "Lean interface metadata changed during target extraction");
 				}
 			} catch(error)
 			{

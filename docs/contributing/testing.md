@@ -100,6 +100,18 @@ This compiles two unrelated dependency-importing projects after their original p
 
 With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, C headers, source identity, and fresh interface files. Captured-entry cases reject changed metadata even without generators or C inputs. Unsupported implicit, instance, dependent, generic, IO, Task, unsafe, foreign and admitted exports must fail before target adapter compilation. The [ordinary-entry acceptance record](../evidence/lake-elaborated-entries-20260913.md) records this cutover.
 
+### Compiler-owned export metadata
+
+The rich metadata checks need Git and the pinned Lean compiler, without a WASM runtime or Emscripten:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 \
+  node --test tests/elaborated-metadata.test.mjs
+```
+
+The suite checks structural type projection, aliases, documentation, UTF-16 source ranges, direct theorem references, selection and namespace collisions. It compares relocated reports, rejects altered interface sidecars, and verifies cleanup after extractor execution failures, malformed JSON and cancellation. The Perl consumer CI job runs this suite with its Lean-only toolchain. The [metadata acceptance record](../evidence/elaborated-export-metadata-20260913.md) lists the installed-package regressions.
+
 ### Captured text generators
 
 The internal generator runner needs the pinned Lean compiler, Git, and a C compiler:

@@ -43,7 +43,7 @@ These decisions define the full authoring work. A listed form becomes usable in 
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support pure functions with any number of primitive arguments, including zero:
+Ordinary npm components support pure functions with zero to 32 primitive arguments:
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -60,6 +60,8 @@ Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowin
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
 Compilation, packaging, and loading check the same ordinary-component capability contract. For locked Lake projects, Lean resolves aliases, notation, and inferred types inside the build engine before it generates the primitive adapter. This covers captured and [generated entry modules](existing-package.md#generate-the-public-entry-module). The source-only `analyze` report remains provisional.
+
+Locked builds report separate reasons for implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. A theorem reference in that report records a direct relationship in Lean's environment; it does not add a verified Binding IR assurance claim.
 
 ## Native Perl exports
 

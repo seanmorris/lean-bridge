@@ -158,7 +158,7 @@ Do not supply a captured `MyLibrary.lean` or `generated/MyLibrary.lean` alongsid
 
 Run the usual npm or CPAN build command. Omit `exports` if every public function in the selected modules should be exported. npm's host planner records only the original capture and module intent. The engine generates source, compiles fresh interfaces, and asks Lean for the declarations and their types before creating adapters. Type aliases and inferred result types resolve through Lean. npm retains its pure primitive signature profile; CPAN retains its native signature checks.
 
-The npm bundle includes `metadata/lake-entry-exports.json`. Its compilation plan binds that record's hash and the generated-source handoff. Target compilation checks the metadata against fresh interfaces again before linking. The original source snapshot remains unchanged. A supplied Binding IR cannot replace the generated API's compiler metadata. See the [generated-entry acceptance record](../evidence/lake-generated-entries-20260912.md).
+The npm bundle includes `metadata/lake-entry-exports.json`. Its compilation plan binds that record's hash and the generated-source handoff. The record includes compiler-resolved structural types, binders, documentation, source ranges and direct theorem references. Target compilation must reproduce it from fresh interfaces, including private/server sidecars, before linking. The original source snapshot remains unchanged. A supplied Binding IR cannot replace the generated API's compiler metadata. See the [generated-entry acceptance record](../evidence/lake-generated-entries-20260912.md) and [metadata contract](../architecture/elaborated-export-metadata.md).
 
 ### Choose an npm package name
 

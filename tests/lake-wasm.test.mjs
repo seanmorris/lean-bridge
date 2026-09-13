@@ -94,7 +94,7 @@ for(const layout of ["default", "custom", "native-input"]) for(const variant of 
 		assert.equal(compilation.schemaVersion, 4);
 		assert.equal(elaboration.generatedSourcesSha256, null);
 		assert.deepEqual(elaboration.request.exports, []);
-		assert.deepEqual(elaboration.metadata.declarations.map(item => item.name), [`${context.names.root}.${context.names.operation}`]);
+		assert.deepEqual(elaboration.metadata.modules.flatMap(module => module.declarations).filter(item => item.selected).map(item => item.identity), [`${context.names.root}.${context.names.operation}`]);
 		await assertJsonSchema("lean-target-c-manifest", manifest);
 		let nativeEvidence = null;
 		if(layout === "native-input")
@@ -152,7 +152,7 @@ test("captured entry metadata must match fresh target compilation even without g
 		if(request.args[0] === "--run" && request.args[1].endsWith("NativeExports.lean"))
 		{
 			const metadata = JSON.parse(result.stdout);
-			metadata.declarations[0].result.name = "bool";
+			metadata.modules.flatMap(module => module.declarations).find(item => item.selected).projection.result.name = "bool";
 			altered = true;
 			return { ...result, stdout: canonicalJson(metadata) };
 		}
@@ -166,16 +166,16 @@ test("captured entry metadata must match fresh target compilation even without g
 
 test("captured APIs reject unsupported elaborated declarations before adapter compilation", { skip: !enabled || Boolean(externalEngine), timeout: 180000 }, async t => {
 	for(const [label, source, expected] of [
-		["implicit", "def Shop.quote {value : UInt32} : UInt32 := value", /dependent or implicit parameter/]
-		, ["instance", "def Shop.quote [Inhabited UInt32] (value : UInt32) : UInt32 := value", /dependent or implicit parameter/]
-		, ["dependent", "def Shop.quote (size : Nat) (_value : Fin size) : UInt32 := 0", /dependent or implicit parameter/]
-		, ["generic", "universe u\ndef Shop.quote {α : Type u} (value : α) : α := value", /requires specialization/]
-		, ["io", "def Shop.quote (value : UInt32) : IO UInt32 := pure value", /unsupported native export type|dependent or implicit callback/]
-		, ["task", "def Shop.quote (value : UInt32) : Task UInt32 := Task.pure value", /unsupported native export type/]
-		, ["admitted", "def Shop.quote (_value : UInt32) : UInt32 := by sorry", /depends on sorry/]
-		, ["foreign", '@[extern "unreviewed"] opaque Shop.quote (value : UInt32) : UInt32', /reviewed unsafe, partial or foreign implementation contract/]
-		, ["unsafe", "unsafe def Shop.quote (value : UInt32) : UInt32 := value", /unsafe or partial export/]
-		, ["missing", "def Shop.another (value : UInt32) : UInt32 := value", /Unknown constant/]
+		["implicit", "def Shop.quote {value : UInt32} : UInt32 := value", /implicit-parameter/]
+		, ["instance", "def Shop.quote [Inhabited UInt32] (value : UInt32) : UInt32 := value", /instance-parameter/]
+		, ["dependent", "def Shop.quote (size : Nat) (_value : Fin size) : UInt32 := 0", /dependent-type/]
+		, ["generic", "universe u\ndef Shop.quote {α : Type u} (value : α) : α := value", /specialization-required/]
+		, ["io", "def Shop.quote (value : UInt32) : IO UInt32 := pure value", /unsupported-effect/]
+		, ["task", "def Shop.quote (value : UInt32) : Task UInt32 := Task.pure value", /unsupported-effect/]
+		, ["admitted", "def Shop.quote (_value : UInt32) : UInt32 := by sorry", /admitted-implementation/]
+		, ["foreign", '@[extern "unreviewed"] opaque Shop.quote (value : UInt32) : UInt32', /unreviewed-implementation/]
+		, ["unsafe", "unsafe def Shop.quote (value : UInt32) : UInt32 := value", /unreviewed-implementation/]
+		, ["missing", "def Shop.another (value : UInt32) : UInt32 := value", /missing-declaration/]
 	]) await t.test(label, async t => {
 		const context = await lakeWorkspaceFixture(t);
 		await saveLakeFile(context.root, "Shop.lean", `import Catalog\n${source}\n`);

@@ -315,7 +315,7 @@ test("generated entry metadata must match the fresh target compilation before li
 		if(request.args[0] === "--run" && request.args[1].endsWith("NativeExports.lean"))
 		{
 			const metadata = JSON.parse(result.stdout);
-			metadata.declarations[0].result.name = "bool";
+			metadata.modules.flatMap(module => module.declarations).find(item => item.selected).projection.result.name = "bool";
 			altered = true;
 			return { ...result, stdout: canonicalJson(metadata) };
 		}
@@ -337,7 +337,7 @@ test("generated entry modules cannot introduce admitted implementations", { skip
 	const input = await prepare(context.root, join(context.directory, "build")), before = await lakeInputState(context.workspace);
 	const outputRoot = join(context.directory, "admitted-output");
 	const runner = { capture: () => assert.fail("Admitted generated API reached target compilation") };
-	await assert.rejects(() => executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner }), error => /depends on sorry/.test(JSON.stringify(error.details)));
+	await assert.rejects(() => executeComponentEngineRequest({ ...input, engineRoot, outputRoot, runner }), error => /admitted-implementation/.test(JSON.stringify(error.details)));
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	assert.equal((await readdir(context.directory)).some(name => name === "admitted-output" || name.startsWith(".lean-bridge-entry-engine-")), false);
 });

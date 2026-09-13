@@ -1,22 +1,31 @@
 # Elaborated export metadata
 
-`elaborated-export-metadata.schema.json` is the versioned boundary between the
-Lean-side extractor and JavaScript Binding IR projection. It records fully
-qualified environment identities and pretty-printed elaborated expressions;
-source text is not a substitute for any field in this record.
+The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to JavaScript Binding IR projection. Locked npm builds use this report for captured and generated public modules. The public `lean-bridge analyze` command remains source-only.
 
-The extractor sorts modules, imports, declarations, effects, theorem
-references, and diagnostics before canonical JSON serialization. Its identity
-is SHA-256 over those canonical UTF-8 bytes. Producer identity binds the exact
-adapter version, Lean version, selected toolchain, and invocation inputs.
+## Compiler report
 
-Every selected module binds its source hash and compiled-interface hash.
-Mismatch is a `stale-metadata` error, never a warning that projection may
-ignore. A declaration either has a supported binding shape or one closed
-unsupported reason. Unsupported Lean meaning and extractor failure are
-separate diagnostic categories so adapter work cannot be confused with a
-broken or incomplete extraction run.
+`NativeExports.lean --metadata` imports freshly compiled interfaces and reads Lean's environment. Each selected root module reports its definitions, opaque declarations, abbreviations and theorems. Private and protected declarations retain their visibility; compiler-generated helpers and projections are excluded. Dependency modules retain their source and interface identities without becoming public export roots.
 
-The theorem reference list reports elaborated environment relationships only.
-It does not promote an assurance claim to verified; artifact-bound assurance
-and human review remain separate release gates.
+Each declaration records its fully qualified identity, selection status, documentation, source range, elaborated binders, result expression and runtime projection. Source lines start at 1. Columns count UTF-16 code units from 0. Lean's range may include the documentation comment. A missing range on a selected export produces an extractor error.
+
+The printed expressions support inspection. Binding IR copies the structural types from `projection.parameters` and `projection.result`; JavaScript never parses the printed type strings. Lean resolves aliases and inferred types before assigning those runtime types.
+
+The `component-scalars-v1` profile supports pure functions with zero to 32 explicit primitive arguments. It retains the existing npm scalar types. Implicit, instance, dependent, generic, effectful and nonprimitive signatures receive distinct unsupported reasons. Explicit selections of proof-only or type-valued declarations fail; automatic discovery omits them. Selected implementations also pass the existing unsafe, foreign-call and admitted-proof checks. Duplicate unqualified host names require an export-selection or wrapper decision.
+
+The effects field identifies a returned `IO`, `EIO`, `BaseIO`, `Task` or `ST` action, including aliases. An IO-typed parameter or an array of IO values does not make the function itself effectful. Those types still fail the primitive projection.
+
+## Source and interface identity
+
+The engine hashes the source, compiler, extractor and complete interface set. Each interface identity covers the `.olean` file and any `.olean.private` and `.olean.server` sidecars, including their presence, sizes and bytes. Existing project `.ilean` files supply no metadata. Extraction does not enable package initializers.
+
+Producer identity binds the adapter version, actual Lean version, selected toolchain and measured invocation inputs. The report sorts modules, imports, declarations, effects, theorem references and diagnostics. The enclosing [version-3 elaboration record](../../schema/lake-entry-elaboration.schema.json) binds the source snapshot, optional generated-source handoff, request and report. Its identity is SHA-256 over canonical UTF-8 JSON.
+
+The engine validates the report against its own request and checks source, compiler, extractor and interface identities again after extraction. Target compilation must reproduce the complete record from fresh interfaces before linking. Changed bytes or sidecar presence stop the build. The bundle stores the record at `metadata/lake-entry-exports.json`.
+
+## Diagnostics and theorem references
+
+Report diagnostics distinguish `unsupported-meaning`, `extractor-failure` and `stale-metadata`. Unsupported declarations require an author decision. Extraction faults and stale metadata prevent Binding IR release. Failed extractor execution and malformed JSON produce `lean-metadata-extractor-failed`; target record mismatch produces `lean-entry-elaboration-drift`. These errors retain their compiler context and clean up owned staging.
+
+`theoremReferences` lists theorems in the compiled project closure whose elaborated statement directly uses the declaration. A similar name, comment or string does not create a relationship. This list supplies navigation metadata; Binding IR assurance arrays remain empty. Artifact-bound theorem claims require separate verification and review.
+
+The [milestone evidence](../evidence/elaborated-export-metadata-20260913.md) records relocation, diagnostics, interface drift and installed-package checks. VO1107 and VO1108 still own the compiler-backed CLI analysis cutover. Native CPAN retains its existing metadata profile; finite specialization and additional type-family projections remain staged work.
