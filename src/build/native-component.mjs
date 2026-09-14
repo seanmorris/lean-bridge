@@ -14,6 +14,8 @@ import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallb
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
+import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
@@ -160,6 +162,7 @@ const callbackDefault = nativeCallbackDefault;
  * @param root0.cc - Upstream C compiler executable.
  * @param root0.signal - Optional cancellation signal for child build processes.
  * @param root0.runner - Optional process runner for compiler and drift checks.
+ * @param root0.lakeSnapshot - Shared immutable capture for a multi-profile build.
  */
 export const buildNativeComponent = async ({ projectRoot
 	, outputRoot
@@ -171,6 +174,7 @@ export const buildNativeComponent = async ({ projectRoot
 	, resources
 	, arities
 	, configurationSha256
+	, lakeSnapshot
 	, cc = "cc"
 	, signal
 	, runner = processBuildRunner }) => {
@@ -214,7 +218,8 @@ export const buildNativeComponent = async ({ projectRoot
 		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !entries.some(entry => entry.module === name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
-		const lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
+		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: project, signal });
+		else lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
 		if(config.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
 		let lakeModules;
 		if(lakeSnapshot)
@@ -320,7 +325,7 @@ export const buildNativeComponent = async ({ projectRoot
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };
 		if(lakeWorkspace) sourceIdentity.lakeDependencies = { ...lakeWorkspace.evidence, snapshotSha256: lakeSnapshot.sha256 };
 		const model = createNativeModel({ metadata
-			, component: { id: `${analysis.project.name}@${analysis.project.version}`, name: analysis.project.name, version: analysis.project.version }
+			, component: elaboratedComponent(analysis.project)
 			, moduleName: moduleName ?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}`
 			, sourceIdentity });
 		await verifyElaborationInputs();
@@ -389,8 +394,7 @@ export const buildNativeComponent = async ({ projectRoot
 			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
 			, exports: model.exports.map(item => ({ declaration: item.name, symbol: item.symbol })) };
 		if((await inspectLeanProject(project, { signal })).sourceTreeSha256 !== analysis.sourceTreeSha256) throw new Error("native source changed during compilation");
-		if(lakeSnapshot && (await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal }))?.sha256 !== lakeSnapshot.sha256)
-			throw new Error("native Lake dependency sources changed during compilation");
+		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: project, signal });
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
 		await nativeCompilation?.verify();

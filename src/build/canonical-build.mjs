@@ -34,6 +34,7 @@ import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
+import { buildMultiProfileProject } from "./multi-profile-project.mjs";
 import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
@@ -787,8 +788,15 @@ export const buildCanonicalProject = async ({
 	if(new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
 	if(targets.includes("cpan") || targets.includes("perl"))
 	{
-		if(targets.length !== 1) fail("invalid-package-targets", "Build the native CPAN target separately from WebAssembly targets");
-		return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: ["cpan"], signal, onProgress });
+		const normalized = targets.map(target => target === "perl" ? "cpan" : target);
+		if(new Set(normalized).size !== normalized.length) fail("invalid-package-targets", "Build targets must be unique, including aliases");
+		if(normalized.length === 1)
+			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: ["cpan"], signal, onProgress, lakeSnapshot });
+		if(normalized.length !== 2 || !normalized.includes("npm"))
+			fail("invalid-package-targets", "Combined ordinary builds currently support npm and cpan only");
+		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine
+			, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot
+			, buildWasm: buildCanonicalProject });
 	}
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{

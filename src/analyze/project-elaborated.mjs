@@ -4,10 +4,8 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
-import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
-import { exportContractFor } from "./export-configuration.mjs";
+import { createElaboratedSemanticModel, elaboratedComponent } from "./semantic-model.mjs";
 
 /**
  * Build a reviewable report using structural types supplied by Lean itself.
@@ -59,57 +57,14 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 			, required: true
 			, question: item.code === "unused-export-contract" ? `Which selected public export should contract ${item.declaration} describe?` : `Which existing public declaration should replace ${item.declaration}?`
 			, choices: ["correct-export-selection"] });
-	const doc = summary => ({ summary, details: "" });
-	const declarations = candidates.filter(item => item.status === "exportable").map(candidate => {
-		const source = byIdentity.get(candidate.declaration);
-		const specialization = source.specialization ? { name: source.identity, ...source.specialization } : null;
-		return { id: `lean:${source.identity}`
-			, name: source.identity.split(".").at(-1)
-			, kind: "function"
-			, owner: null
-			, overloadKey: source.identity
-			, typeParameters: []
-			, receiver: null
-			, parameters: source.projection.parameters.map((parameter, index) => ({ name: `arg${index}`
-				, type: parameter.type
-				, ownership: "copy"
-				, lifetime: null
-				, mutability: "immutable"
-				, optional: false
-				, default: null }))
-			, result: { type: source.projection.result, ownership: "copy", lifetime: null }
-			, mutability: "immutable"
-			, effects: []
-			, failure: { mode: "none", errors: [], unexpected: "poison-runtime" }
-			, resultMode: "value"
-			, capabilities: []
-			, assurance: []
-			, documentation: doc(source.documentation ?? `Call ${source.identity}.`)
-			, source: { producer: "lean"
-				, declaration: specialization?.declaration ?? source.identity
-				, extensions: { "lean-lang.org/theorem-references": source.theoremReferences
-					, ...(exportContractFor(request.contracts, source.identity) ? { "lean-lang.org/export-contract": request.contracts[source.identity] } : {})
-					, ...(specialization ? { "lean-lang.org/specialization": specialization } : {}) } } };
-	});
 	const facts = inventory.project;
-	const id = `${facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project"}@${facts.version}`;
-	const document = { schemaVersion: 3
-		, component: { id, name: facts.name, version: facts.version }
-		, producers: [{ id: "lean"
-			, adapter: metadata.producer.adapter
-			, adapterVersion: metadata.producer.adapterVersion
-			, tool: "Lean"
-			, toolVersion: metadata.producer.toolVersion
-			, extensions: { "lean-lang.org/toolchain": facts.toolchain, "lean-lang.org/elaboration-sha256": elaborationSha256 } }]
-		, types: []
-		, declarations
-		, errors: []
-		, capabilities: []
-		, assurance: []
-		, documentation: doc(`Compiler-checked exports for ${facts.name}.`) };
-	if(declarations.length) validateBindingIr(document);
+	const { document, semanticSha256 } = createElaboratedSemanticModel({
+		metadata, request, component: elaboratedComponent(facts), elaborationSha256
+		, include: candidates.filter(item => item.status === "exportable").map(item => item.declaration)
+	});
+	const declarations = document.declarations;
 	const bindingIr = declarations.length && !diagnostics.some(item => item.category === "extractor-failure" || item.category === "stale-metadata")
-		? { origin: "lean-elaborated", path: null, semanticSha256: hashBindingIr(document), document } : null;
+		? { origin: "lean-elaborated", path: null, semanticSha256, document } : null;
 	if(!bindingIr) diagnostics.push({ code: "binding-ir-unavailable", severity: "error", message: "No supported compiler-checked API is available", path: null, hint: "Resolve the compiler diagnostics or select a supported public API." });
 	for(const item of candidates.filter(item => item.documentation === null))
 		diagnostics.push({ code: "documentation-missing", severity: "warning", message: `${item.declaration} has no documentation comment`, path: item.path, hint: null });

@@ -4,25 +4,16 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { validateBindingIr } from "../binding-ir/contract.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { validateNativeType } from "../analyze/native-types.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
-import { exportContractFor, exportContractOwnership } from "../analyze/export-configuration.mjs";
+import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
+import { projectPerlNames } from "../backends/perl/naming.mjs";
 
 export { validateNativeType };
 
 export const nativeAbiVersion = 1;
 export const nativeCopyLimit = 16 * 1024 * 1024;
-/**
-	Convert a checked public declaration name to Perl snake case.
-
- * @param value - Public declaration name to convert.
- */
-export const snake = value => value.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
 const identifier = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
-const doc = summary => ({ summary, details: "" });
-const source = declaration => ({ producer: "lean", declaration, extensions: {} });
 const fail = message => { throw new TypeError(`native-library-v1: ${message}`); };
 
 /**
@@ -109,9 +100,7 @@ const closed = (value, fields, label) => {
  */
 export const createNativeModel = ({ metadata, component, moduleName, sourceIdentity }) => {
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity);
-	if(!/^LeanBridge::[A-Za-z][A-Za-z0-9_]*(?:::[A-Za-z][A-Za-z0-9_]*)*$/.test(moduleName) || /^LeanBridge::Runtime(?:::|$)/.test(moduleName)) fail("invalid or reserved Perl module name");
-	const allTypes = new Map(), definitions = new Map();
-	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
+	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
 		const key = nativeTypeKey(type);
@@ -122,107 +111,26 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
 	};
-	const identity = type => ["resource", "callback"].includes(type.kind);
-	const site = (type, result = false) => ({
-		type: reference(type)
-		, ...exportContractOwnership(type, result)
+	const checked = elaborated.declarations.map(declaration => {
+		if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
+		declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); });
+		visit(declaration.result);
+		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
-	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
-	const reference = type => {
-		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
-		if(type.kind === "array") return { kind: "apply", constructor: "array", arguments: [reference(type.element)] };
-		const id = type.kind === "callback" ? `native:Callback${nativeTypeKey(type)}` : `lean:${type.name}`;
-		if(!definitions.has(id))
-		{
-			const definition = {
-				id
-				, name: type.kind === "callback" ? `Callback${nativeTypeKey(type)}` : type.name.split(".").at(-1)
-				, kind: type.kind
-				, representation: identity(type) ? "identity" : "copied"
-				, mutability: type.kind === "resource" ? "read" : "immutable"
-				, typeParameters: []
-				, fields: []
-				, target: null
-				, resource: null
-				, callable: null
-				, cases: []
-				, host: null
-				, documentation: doc(`Checked Lean ${nativeLeanType(type)}.`)
-				, source: source(type.name ?? nativeLeanType(type))
-				, assurance: []
-			};
-			definitions.set(id, definition);
-			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }));
-			if(type.kind === "resource") definition.resource = { kindId: `resource:${type.name}`, disposal: "required", fallback: "queued-finalizer", cycles: "explicit-cut" };
-			if(type.kind === "callback") definition.callable = {
-				parameters: type.parameters.map(parameter)
-				, result: site(type.result, true)
-				, effects: ["host-call", "fails"]
-				, failure: callbackFailure, resultMode: "value"
-				, invocation: "many", reentry: "same-agent", selfDisposal: "defer"
-			};
-		}
-		return { kind: "named", id };
-	};
-	const names = new Set(["true", "false", "close", "closed", "DESTROY", "CLONE", "CLONE_SKIP"]);
-	const exports = elaborated.declarations.map(declaration => {
-	  if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
-	  const name = snake(declaration.name.split(".").at(-1));
-	  if(names.has(name)) fail(`Perl name collision: ${name}`);
-	  names.add(name);
-	  declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); }); visit(declaration.result);
-	  return { ...declaration, publicName: name, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
+	if(!checked.length) fail("empty export set");
+	const exports = projectPerlNames(moduleName, checked);
+	const semantic = createElaboratedSemanticModel({
+		metadata, request: sourceIdentity.request, component
+		, elaborationSha256: elaborated.sha256
 	});
-	if(!exports.length) fail("empty export set");
-	const declarations = exports.map(item => ({
-		id: `lean:${item.name}`
-		, name: item.publicName
-		, kind: "function"
-		, owner: null
-		, overloadKey: item.name
-		, typeParameters: []
-		, receiver: null
-		, parameters: item.parameters.map((p, i) => parameter(p.type, i))
-		, result: site(item.result, true)
-		, mutability: "immutable"
-		, effects: item.parameters.some(p => p.type.kind === "callback") ? ["host-call", "fails"] : []
-		, failure: item.parameters.some(p => p.type.kind === "callback") ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
-		, resultMode: "value"
-		, capabilities: []
-		, assurance: []
-		, documentation: doc(item.documentation ?? `Call ${item.name}.`)
-		, source: { ...source(item.specialization?.declaration ?? item.name), extensions: {
-			"lean-lang.org/theorem-references": item.theoremReferences
-			, ...(exportContractFor(sourceIdentity.request.contracts, item.name) ? { "lean-lang.org/export-contract": sourceIdentity.request.contracts[item.name] } : {})
-			, "lean-lang.org/source-position": item.sourcePosition
-			, ...(item.specialization ? { "lean-lang.org/specialization": item.specialization } : {})
-		} }
-	}));
-	const ir = {
-		schemaVersion: 3
-		, component
-		, producers: [{ id: "lean", adapter: metadata.producer.adapter
-			, adapterVersion: metadata.producer.adapterVersion
-			, tool: "Lean", toolVersion: sourceIdentity.leanVersion
-			, extensions: { "lean-lang.org/elaboration-sha256": elaborated.sha256 } }]
-		, types: [...definitions.values()], declarations
-		, errors: [{ id: "error:native-callback"
-			, name: "NativeCallbackFailure"
-			, category: "boundary"
-			, payload: null
-			, documentation: doc("A synchronous callback failed. Perl rethrows the original exception after native cleanup.") }]
-		, capabilities: [], assurance: []
-		, documentation: doc(`Checked native exports for ${component.name}.`)
-	};
-	validateBindingIr(ir);
-	const model = { schemaVersion: 1
+	const model = { schemaVersion: 2
 		, profile: "native-library-v1"
 		, pointerBits: 64
 		, byteOrder: "little"
 		, component
 		, moduleName
-		, bindingIr: ir
-		, bindingIrSha256: hashBindingIr(ir)
+		, bindingIr: semantic.document
+		, bindingIrSha256: semantic.semanticSha256
 		, sourceIdentity
 		, exports
 		, types: [...allTypes.values()] };

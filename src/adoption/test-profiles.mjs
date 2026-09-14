@@ -50,6 +50,8 @@ const profileManifest = Object.freeze({
 		, "npm-registry-adapter"
 		, "pending-operation"
 		, "perl-contract"
+		, "semantic-model"
+		, "multi-profile-project"
 		, "public-surface-conformance"
 		, "publication-attestation"
 		, "production-deployment-profile"

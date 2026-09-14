@@ -24,6 +24,8 @@ export const renderReferenceApiCapture = analysis => {
 	const ir = structuredClone(analysis.bindingIr.document);
 	// Documentation captures describe APIs, not artifact-bound proof evidence.
 	delete ir.producers[0].extensions["lean-lang.org/elaboration-sha256"];
+	for(const declaration of ir.declarations)
+		delete declaration.source.extensions["lean-lang.org/source-position"];
 	return canonicalJson({ schemaVersion: 1, inputs: analysis.inputs, ir });
 };
 

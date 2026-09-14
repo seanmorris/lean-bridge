@@ -22,8 +22,9 @@ import { CanonicalBuildError } from "./build-error.mjs";
  * @param root0.targets - Native package targets supported by the installed projections.
  * @param root0.signal - Optional cancellation signal for child build processes.
  * @param root0.onProgress - Optional callback receiving build progress messages.
+ * @param root0.lakeSnapshot - Shared immutable capture for a multi-profile build.
  */
-export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress })
+export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress, lakeSnapshot })
 {
 	if(!Array.isArray(targets) || targets.length !== 1 || targets[0] !== "cpan")
 		throw new CanonicalBuildError("unsupported-native-targets", "The ordinary native project builder currently implements only the cpan target");
@@ -49,6 +50,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, runtimeRoot
 			, leanPrefix
 			, configurationSha256: record.sha256
+			, lakeSnapshot
 			, signal });
 		const projection = await projectCpanPackages({
 			working, runtimeRoot, nativeRoot, leanPrefix

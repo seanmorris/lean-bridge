@@ -166,7 +166,7 @@ test("native finite specializations reproduce and install concrete Perl APIs", {
 		assert.deepEqual(declaration.assurance, []);
 		assert.deepEqual(declaration.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime })), contract.parameters);
 	}
-	const echo = model.bindingIr.declarations.find(item => item.name === "echo_point");
+	const echo = model.bindingIr.declarations.find(item => item.name === "echoPoint");
 	assert.equal(echo.source.declaration, "Sample.echo");
 	assert.deepEqual(echo.source.extensions["lean-lang.org/theorem-references"], ["Sample.echo_spec"]);
 	assert.match(echo.documentation.summary, /🙂 Return the concrete value/);

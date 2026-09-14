@@ -5,6 +5,10 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/analyze/semantic-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/perl/naming.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/multi-profile-project.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/component-runtime-root.mjs", "classification": "strict-migration-backlog" },
 		{
 			"path": "src/abi/callback-signature.mjs",
 			"classification": "strict-migration-backlog"

@@ -45,6 +45,8 @@ nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-
 
 The output contains `native/runtime`, `native/component`, prepared distributions under `packages`, and the two `.tar.gz` files and checksum receipts under `archives`. `native-release.json` records the component, runtime, Binding IR and archive identities. The native profile is `native-library-v1`; it does not alter the WebAssembly side-module ABI.
 
+For APIs that also fit npm's primitive profile, [select npm and CPAN together](npm.md#build-npm-and-cpan-together). The combined build uses one captured source tree and exposes both package sets only after their source APIs agree. Its CPAN archives live under `profiles/native/archives/`. Keep a CPAN-only build for native records, arrays, resources and callbacks.
+
 ### Export a specialized closure
 
 The native builder accepts the shared [finite specialization configuration](../lean/existing-package.md#export-concrete-specializations). For example, define a generic function in `Library.lean`:

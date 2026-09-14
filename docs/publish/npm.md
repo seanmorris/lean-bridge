@@ -30,6 +30,30 @@ Optional [export contracts](../lean/existing-package.md#declare-export-contracts
 
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
+## Build npm and CPAN together
+
+Select both targets to build the same ordinary Lean API for JavaScript and Perl:
+
+```sh
+lean-bridge build --project /path/to/library --target npm --target cpan --output /path/to/new-release
+```
+
+Install the npm build engine and the [native CPAN toolchain](cpan.md#build-an-ordinary-lean-project). The command uses the CLI's prepared Wasm runtime and the selected native Lean compiler and Perl interpreters. Keep npm and CPAN package names under `targets.npm` and `targets.cpan` in the same `lean-bridge.exports.json`.
+
+The builder captures the source tree and Lake dependencies once, compiles one Wasm component and one native component, then checks that both profiles expose the same source API. That comparison includes types, ownership, effects, specialization choices and export contracts. Each profile also retains its compiler and artifact evidence. Both must succeed before the output directory appears; a failed or cancelled build releases neither package set.
+
+| Output | Contents |
+| --- | --- |
+| `packages/npm/` | Component and runtime `.tgz` archives, npm receipt and standalone verifier |
+| `profiles/wasm/` | Wasm bundle and compiler execution evidence |
+| `profiles/native/archives/` | Component and runtime CPAN `.tar.gz` archives and receipts |
+| `profiles/native/native/` | Compiled native component, runtime and checked metadata |
+| `multi-profile-release.json` | Shared source/API identity and both profiles' package and evidence hashes |
+
+Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/packages/npm/component-package-receipt.json`. Install the CPAN archives using the [prepared-package instructions](../consume/perl.md).
+
+The selected exports must fit both profiles. Today that means npm's pure primitive arguments and results, including supported concrete specializations. Native-only arrays, records, resources and callbacks still use a separate CPAN build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
+
 ## Publish an ordinary component
 
 Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Declare its license in `package.json` and include `LICENSE` in the committed source.

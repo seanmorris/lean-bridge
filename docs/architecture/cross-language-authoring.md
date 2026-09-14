@@ -34,6 +34,18 @@ Perl uses the [shared configuration](../lean/existing-package.md#configure-expor
 
 Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. Native projections retain their compiler-checked C representations, resource selection and closure arities. Both build profiles accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis retains the scalar profile. Configuration support does not enable additional source targets.
 
+## Shared semantic model and combined builds
+
+Task 1216's first adapter slice uses one compiler-metadata lowering function for scalar and native Binding IR. Source declarations retain Lean names; the Perl projection applies its own namespace validation and snake-case names. Native representations stay in the native adapter model. Callback type identities describe their semantic signatures, without including native boxing or C layout.
+
+The [combined npm/CPAN build](../publish/npm.md#build-npm-and-cpan-together) passes the same immutable Lake snapshot to both compiler profiles. It compares the resulting source API while retaining each profile's complete Binding IR, source positions, compiler evidence and artifact hashes. Source/API identity includes contracts, specializations and theorem references. It excludes source positions and producer hashes, which remain bound by the individual profile evidence.
+
+The native adapter model is now version 2 because its canonical declaration names and semantic type identities changed. Binding IR remains version 3; native ABI 1 and scalar ABI 2 are unchanged. CPAN staging reconstructs the model from compiler metadata and rejects stale models. Existing Perl call names are unchanged.
+
+The combined builder compiles each profile once and stages both sets of archives privately. Source drift, mismatched APIs, failure or cancellation prevents the final directory from appearing. It rejects mixed targets other than npm and CPAN, including duplicate aliases. Native-only types still require a CPAN-only build. Generic C/C++, managed and WIT/WASI adapters remain subsequent slices of task 1216.
+
+The [shared-model acceptance record](../evidence/shared-model-multi-profile-20260914.md) covers relocated builds, both installed languages, failed-build cleanup and existing native/npm regressions.
+
 ## Locked dependency milestones
 
 Task 1239 now has an offline input snapshotter for the flat package list in `lake-manifest.json`, including inherited entries. It verifies cached Git files against full pinned commits and hashes local package files, native sources, and data. Snapshot identities survive relocation. Capture leaves projects and locks unchanged; writing uses the captured bytes in a new staging directory outside the input projects.

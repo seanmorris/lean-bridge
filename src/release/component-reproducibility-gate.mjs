@@ -4,6 +4,7 @@
  * @file
  */
 
+import { resolveComponentRuntimeRoot } from "./component-runtime-root.mjs";
 import { createHash } from "node:crypto";
 import {
 	cp,
@@ -162,27 +163,6 @@ export const prepareCleanComponentSources = async ({
 	});
 };
 
-const runtimeRootFor = async ({ engineRoot, environment }) => {
-	const candidates = [
-		environment.LEAN_BRIDGE_RUNTIME_ROOT
-		, join(engineRoot, "runtime", "wasm")
-		, join(engineRoot, "build", "lean-link-spike", "lazy")
-	].filter(Boolean).map(value => resolve(value));
-	for(const root of candidates)
-	{
-		try
-		{
-			await Promise.all([stat(join(root, "main.mjs")), stat(join(root, "main.wasm"))]);
-			return root;
-		} catch(error)
-		{
-			if(error.code !== "ENOENT") throw error;
-		}
-	}
-	fail("shared-runtime-package-unavailable", "The installed Lean Bridge package does not contain its shared runtime", {
-		hint: "Reinstall Lean Bridge, then run the same dry-run command."
-	});
-};
 
 const combinedInventory = async ({ buildRoot, packageRoot }) => new Map([
 	...await collectReleaseInventory(join(buildRoot, "bundle"), { prefix: "bundle" })
@@ -283,7 +263,7 @@ export const runComponentReproducibilityGate = async ({
 		report.source = prepared.source;
 		signal?.throwIfAborted();
 		onProgress?.({ phase: "source", state: "completed", message: "Project revision is clean and locked" });
-		const runtimeRoot = await runtimeRootFor({ engineRoot: engine, environment });
+		const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot: engine, environment });
 		const built = [];
 		for(const [index, name] of ["A", "B"].entries())
 		{

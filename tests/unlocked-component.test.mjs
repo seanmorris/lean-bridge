@@ -9,6 +9,7 @@ import { tmpdir } from "node:os";
 import { join, relative, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { sourceApiIdentity } from "../src/analyze/semantic-model.mjs";
 import { buildCanonicalProject, processBuildRunner } from "../src/build/canonical-build.mjs";
 import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
 import { createEngineExecutionRequest } from "../src/build/engine-execution-request.mjs";
@@ -198,8 +199,7 @@ for(const variant of ["tutorial", "custom", "scalars"]) test(`unlocked ${variant
 		const ir = await json(join(bundleRoot, "binding/binding-ir.json"));
 		if(variant !== "custom")
 		{
-			delete ir.producers[0].extensions["lean-lang.org/elaboration-sha256"];
-			assert.deepEqual(ir, (await packageReference(source)).ir, "Compiler-captured documentation API drifted");
+			assert.deepEqual(sourceApiIdentity(ir), sourceApiIdentity((await packageReference(source)).ir), "Compiler-captured documentation API drifted");
 		}
 		else assert.equal(compilation.source.modules[0].path, "lib/OnboardingSmall.lean");
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(directory, `npm-${index}`) });
