@@ -221,6 +221,12 @@ for(const variant of ["tutorial", "custom", "scalars"]) test(`unlocked ${variant
 	await saveLakeFile(consumer, "index.mjs", call);
 	const installed = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer });
 	assert.equal(installed.stdout.trim(), variant === "scalars" ? "18446744073709551615" : '["123",true,false]');
+	if(variant !== "scalars")
+	{
+		const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
+		assert.match(declarations, /add\(arg0: bigint, arg1: bigint\): bigint/);
+		assert.match(declarations, /isEmpty\(arg0: string\): boolean/);
+	}
 });
 
 test("an unlocked publication dry run rebuilds clean clones and verifies the handoff", { skip: !enabled }, async t => {

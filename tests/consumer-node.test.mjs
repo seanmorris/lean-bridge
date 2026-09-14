@@ -164,7 +164,7 @@ test("installed CLI packages one plain Lean project for clean JavaScript and Typ
 
     const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
     assert.doesNotMatch(declarations, /\bany\b/);
-    assert.match(declarations, /add\(left: bigint, right: bigint\): bigint/);
+    assert.match(declarations, /add\(arg0: bigint, arg1: bigint\): bigint/);
     const alphaDeclarations = await readFile(join(consumer, "node_modules/@lean-bridge/alpha/index.d.ts"), "utf8");
     assert.doesNotMatch(alphaDeclarations, /\bany\b/);
     assert.match(alphaDeclarations, /class Box/);
