@@ -1,10 +1,42 @@
 # Build and publish Ruby packages
 
-This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all 16 primitive types, nested arrays and acyclic copied records. Consumers install the package without compiling Lean or writing native conversions.
 
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler and MRI Ruby 3.3 with RubyGems. Set `LEAN_BRIDGE_RUBY` to the Ruby executable if it is not on PATH. The current native profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select modules and functions in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Willow"],
+  "exports": ["Willow.echo_nat", "Willow.echo_text", "Willow.matrix"],
+  "targets": {
+    "rubygems": { "name": "willow-api", "version": "2.0.0.rc.1" }
+  }
+}
+```
+
+Use a gem name your organization owns, then build into a new directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/willow --target rubygems \
+  --output /absolute/path/to/willow-release
+```
+
+The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
+
+Only pure copied values are admitted. Types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Optional values, variants, resources, callbacks and effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with CPAN, C, C++, NuGet and Maven. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
+
+Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Generic package-set verification and signed publication integration remain under VO1240; `lean-bridge verify` does not yet accept the ordinary RubyGems receipt.
+
 ## Build the gem
+
+The separate Alpha fixture retains its resource and callback examples.
 
 From the Lean Bridge checkout with its pinned Nix environment:
 
@@ -29,13 +61,17 @@ Run the [Ruby consumer example](../consume/ruby.md) against the package before p
 
 The example gem is `lean_bridge_alpha` version `0.0.0`. Do not upload that fixture to RubyGems.org.
 
-Choose a name your account or organization controls. Update the reviewed [universal package mapping](../../src/release/universal-release-bundle.mjs), [Ruby generator](../../src/backends/ruby/generate.mjs), and [Alpha identity/version input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json), then regenerate and test the bindings, canonical bundle, and gem. The current profile implements Alpha's API model and has no general package-renaming CLI.
+For ordinary projects, set `targets.rubygems.name` and `targets.rubygems.version` before building. Names use lowercase letters, digits, underscores and hyphens. Versions use three numeric parts and an optional dot-separated prerelease, such as `2.0.0.rc.1`. Hyphenated prereleases are rejected to prevent RubyGems from silently changing the version. Review source licenses and author metadata before publication; the generated gem marks the package license as `Nonstandard`.
+
+For the separate Alpha fixture, update the reviewed [universal package mapping](../../src/release/universal-release-bundle.mjs), [Ruby generator](../../src/backends/ruby/generate.mjs), and [Alpha identity/version input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json), then regenerate and test the bundle and gem.
 
 Do not rename the archive or edit its gemspec after candidate approval. For a private package, review generating `allowed_push_host` metadata to restrict the destination; the current generated gemspec does not set it. [RubyGems publishing and private hosts](https://guides.rubygems.org/publishing/)
 
 ## Freeze and verify the candidate
 
-Use a clean committed checkout. The publication ecosystem is `rubygems`; its binding target is `ruby`.
+For an ordinary release, reproduce the build from another source location, compare its archive hash, and execute a fresh installed consumer. Preserve the original gem and `native-release.json` for review.
+
+The signed-candidate workflow below applies to the universal Alpha bundle, not ordinary gems. Use a clean committed checkout. The publication ecosystem is `rubygems`; its binding target is `ruby`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target rubygems --dry-run \
@@ -99,13 +135,13 @@ export LEAN_BRIDGE_GEM_VERSION=1.0.0
 mkdir build/rubygems-published-download
 cd build/rubygems-published-download
 gem fetch "$LEAN_BRIDGE_GEM_NAME" --version "$LEAN_BRIDGE_GEM_VERSION" \
-  --clear-sources --source "$LEAN_BRIDGE_GEM_HOST"
-export LEAN_BRIDGE_GEM_FILE="$LEAN_BRIDGE_GEM_NAME-$LEAN_BRIDGE_GEM_VERSION.gem"
+  --platform x86_64-linux --clear-sources --source "$LEAN_BRIDGE_GEM_HOST"
+export LEAN_BRIDGE_GEM_FILE="$LEAN_BRIDGE_GEM_NAME-$LEAN_BRIDGE_GEM_VERSION-x86_64-linux.gem"
 cmp "$LEAN_BRIDGE_GEM_ARCHIVE" "$LEAN_BRIDGE_GEM_FILE"
 sha256sum "$LEAN_BRIDGE_GEM_FILE"
 ```
 
-This generated package uses the generic Ruby gem platform, so the filename has no additional platform suffix. If the private host requires download authentication, configure its approved read credential separately. `GEM_HOST_API_KEY` authenticates publication; do not assume it configures every private download client. [RubyGems fetch command](https://guides.rubygems.org/command-reference/#gem-fetch)
+Ordinary gems use the `x86_64-linux` platform suffix. The Alpha fixture uses the generic `ruby` platform and has no filename suffix; select that platform and filename when downloading the fixture. If the private host requires download authentication, configure its approved read credential separately. `GEM_HOST_API_KEY` authenticates publication; do not assume it configures every private download client. [RubyGems fetch command](https://guides.rubygems.org/command-reference/#gem-fetch)
 
 The downloaded digest must match the reviewed manifest. Install only after comparison:
 

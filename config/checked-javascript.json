@@ -5,6 +5,12 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/ruby/copied-assets.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/ruby/copied-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/ruby/copied-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/ruby/copied-values.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-ruby-artifacts.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/native-rubygems.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-assets.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-conversions.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-model.mjs", "classification": "strict-migration-backlog" },

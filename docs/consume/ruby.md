@@ -1,6 +1,6 @@
 # Ruby
 
-Install Alpha as a RubyGem and call its generated Ruby API. The gem includes the compiled Lean libraries and uses Ruby's `Fiddle` transport, with no native Ruby extension build during installation.
+Install a prepared RubyGem and call its generated Ruby API. The gem includes the compiled Lean component and shared runtime. Installation needs no Lean compiler or native Ruby extension build.
 
 ## Use a prepared release
 
@@ -8,7 +8,41 @@ Install Alpha as a RubyGem and call its generated Ruby API. The gem includes the
 
 Use MRI Ruby 3.3 and RubyGems on x86-64 Linux with glibc 2.38 or newer. Check `ruby -v`, `gem --version`, `uname -m`, and `ldd --version`. The [support contract](../consumer-support.v1.json) records the tested Ruby profile.
 
-This guide uses `lean_bridge_alpha-0.0.0.gem`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate that archive. No RubyGems.org publication is assumed.
+Follow [Use a prepared release](receive-package.md) to obtain and authenticate the archive. No RubyGems.org publication is assumed.
+
+### Call an ordinary Lean package
+
+The package README names its require path, module and functions. The local acceptance package is `willow-api-2.0.0.rc.1-x86_64-linux.gem`, with `LeanBridge::Willow` as its public module. This is a test archive, not a RubyGems.org release.
+
+```sh
+export LEAN_BRIDGE_GEM_ARCHIVE=/absolute/path/to/willow-api-2.0.0.rc.1-x86_64-linux.gem
+export GEM_HOME="$PWD/.gems"
+export GEM_PATH="$GEM_HOME"
+gem install "$LEAN_BRIDGE_GEM_ARCHIVE" --local --install-dir "$GEM_HOME" --no-document
+```
+
+Save `example.rb`:
+
+```ruby
+require "lean_bridge/willow"
+
+api = LeanBridge::Willow
+puts api.echo_nat(2**200)
+puts api.echo_text("Lean λ🌿")
+p api.matrix([1, 2, 3])
+```
+
+```sh
+ruby example.rb
+```
+
+Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact without a fixed bit-width limit; Nat rejects negatives. Floating-point values use `Float`, and Float32 rounds to binary32. Text must be valid UTF-8 or US-ASCII. ByteArray uses binary `String`, arrays use `Array`, and copied structures become keyword-initialized record classes. Unit uses the generated `UNIT` singleton in every position, including results; `nil` is not Unit.
+
+Calls copy nested values. Invalid types, numeric ranges, encodings and nested `nil` values throw. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
+
+### Alpha interoperability example
+
+The remaining example uses `lean_bridge_alpha-0.0.0.gem`. It exercises resources and callbacks through the separate Alpha fixture API. Ordinary-source RubyGems builds currently admit pure copied values only.
 
 ## Install the gem
 
@@ -104,27 +138,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `true or false` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `String (UTF-8)` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `String (ASCII-8BIT)` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `Array of Integer` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `UNIT singleton` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Use the generated UNIT singleton in every position, including results. Nil is rejected. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `true or false` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Integer in 0..255; invalid range or implicit coercion throws. Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Integer in 0..65535; invalid range or implicit coercion throws. Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Integer in 0..4294967295, with no floating-point conversion. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Integer in 0..18446744073709551615, with no narrowing. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Exact Integer magnitude; negative input throws. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `Integer` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Exact signed Integer without a fixed bit-width limit. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `Float` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Float inputs round to binary32; NaN classification, infinities and signed zero are tested. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `Float` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `String` (input, result, field); `String (UTF-8)` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Require valid UTF-8 or US-ASCII, preserving embedded NUL. Nil, malformed text and incompatible encodings throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `Binary String` (input, result, field); `String (ASCII-8BIT)` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Binary String with independent returned storage; no text decoding. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `Array` (input, result, field); `Array of Integer` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Array elements are recursively checked and copied. Nested nil values throw. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Payload` (input, result) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Generated Ruby record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated keyword-initialized record classes preserve field order through compiler-owned accessors. Nested returned arrays and strings are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

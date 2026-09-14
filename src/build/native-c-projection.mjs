@@ -15,6 +15,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { packageNativeCFamily } from "../release/native-c-family.mjs";
 import { projectOrdinaryDotnet } from "./native-dotnet-projection.mjs";
 import { projectOrdinaryJvm } from "./native-jvm-projection.mjs";
+import { packageOrdinaryRuby } from "../release/native-rubygems.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -80,6 +81,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 	for(const target of targets) projections.push(target === "nuget"
 		? await projectOrdinaryDotnet({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
 		: target === "maven" ? await projectOrdinaryJvm({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
-			: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
+			: target === "rubygems" ? await packageOrdinaryRuby({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
+				: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
 	return projections;
 };

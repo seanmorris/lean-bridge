@@ -85,7 +85,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '22.0.2'
-      - name: Build one captured API for npm, CPAN, C, C++, NuGet and Maven and execute installations
+      - name: Install Ruby for the combined native projection
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven and RubyGems and execute installations
         env:
           LEAN_BRIDGE_MULTI_PROFILE_TEST: "1"
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
@@ -352,6 +356,19 @@ jobs:
           export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
           source scripts/env.sh
           node --test tests/native-jvm.test.mjs
+      - name: Install the ordinary Ruby runtime
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Build ordinary Lean APIs and install relocated RubyGems releases
+        id: ordinary_ruby
+        env:
+          LEAN_BRIDGE_NATIVE_RUBY_TEST: "1"
+        run: |
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          source scripts/env.sh
+          node --test tests/native-ruby.test.mjs
       - name: Record managed consumer observations
         if: always()
         shell: bash
@@ -370,6 +387,13 @@ jobs:
             if [ "$consumer" = jvm ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs"
               if [ "${{ steps.ordinary_jvm.outcome }}" != success ]; then
+                test_result=failed
+                executed=false
+              fi
+            fi
+            if [ "$consumer" = ruby ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs"
+              if [ "${{ steps.ordinary_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi

@@ -62,7 +62,7 @@ LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
 
 Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. The [NuGet acceptance record](../evidence/native-dotnet-20260914.md) includes the exact locally tested archive hashes.
 
-The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++ and NuGet from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl and .NET.
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven and RubyGems from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22 and Ruby 3.3.
 
 ### Ordinary-source Maven packages
 
@@ -80,7 +80,19 @@ LEAN_BRIDGE_NATIVE_JVM_TEST=1 \
 
 Set `JAVA_HOME` to JDK 22 first, and set `LEAN_BRIDGE_MAVEN` if `mvn` is not on PATH. The suite compiles Maple and Cedar, compares relocated JAR/POM bytes, hides their sources, installs the archives with Maven and executes Java and Kotlin consumers. It checks exact primitives, nested arrays/records, rejection, cleanup, concurrent calls, tampering, class-loader isolation and two packages sharing one runtime. Maven may download its pinned install plugin; the Lean packages come from the supplied files. See the [JVM acceptance record](../evidence/native-jvm-20260914.md).
 
-The mixed-profile Shop check now includes Maven alongside npm, CPAN, C, C++ and NuGet, with one native and one Wasm compilation.
+### Ordinary-source RubyGems packages
+
+Use the pinned Lean compiler, a native C compiler and MRI Ruby 3.3 with RubyGems. CI uses Ruby 3.3.12. Set both executables to the same Ruby installation:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_RUBY=/absolute/path/to/ruby-3.3/bin/ruby
+export LEAN_BRIDGE_GEM=/absolute/path/to/ruby-3.3/bin/gem
+LEAN_BRIDGE_NATIVE_RUBY_TEST=1 \
+  node --test --test-reporter=spec tests/native-ruby.test.mjs
+```
+
+Willow and Aspen each build from two relocated source trees. Their gems must match byte-for-byte. The suite hides both source locations, installs with RubyGems offline, and calls generated APIs without Lean or a C compiler. It covers all primitive values, arrays and record fields, nested values, strict rejection, allocation-failure cleanup, concurrent calls, GC compaction, tampering and two installed gems sharing one runtime. See the [Ruby acceptance record](../evidence/native-ruby-20260914.md).
 
 ## Native PHP package
 

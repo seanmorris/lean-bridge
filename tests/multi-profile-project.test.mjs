@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -174,6 +174,15 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await saveLakeFile(root, "Consumer.java", 'class Consumer { public static void main(String[] args) { System.out.println(org.leanbridge.shop.Api.quote(20)); } }\n');
 		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_JAVAC ?? "javac", args: ["--release", "22", "-cp", jar, "Consumer.java"], cwd: root });
 		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_JAVA ?? "java", args: ["--enable-native-access=ALL-UNNAMED", "-cp", `.:${jar}`, "Consumer"], cwd: root })).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("rubygems"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "rubygems");
+		const root = join(consumer, "ruby"), home = join(root, "gems");
+		await saveLakeFile(root, "consumer.rb", 'require "lean_bridge/shop"\nputs LeanBridge::Shop.quote(20)\n');
+		const env = { PATH: process.env.PATH, GEM_HOME: home, GEM_PATH: home };
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_GEM ?? "gem", args: ["install", join(builds[0].output, pkg.archives[0].path), "--local", "--install-dir", home, "--no-document"], cwd: root, env });
+		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_RUBY ?? "ruby", args: ["consumer.rb"], cwd: root, env })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

@@ -13,14 +13,14 @@ Select the languages your library will serve, then follow each target's build an
 | C++ | [C++ package and CMake integration](publish/cpp.md) | The same ordinary native source profile; CLI target `cpp`. Reviewed Alpha inputs remain supported. |
 | C# / .NET | [NuGet](publish/nuget.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `nuget`. |
 | Java and Kotlin | [Maven](publish/maven.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `maven`. |
-| Ruby | [RubyGems](publish/rubygems.md) | A prepared bundle and Ruby binding inputs. |
+| Ruby | [RubyGems](publish/rubygems.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`. |
 | Perl | [CPAN](publish/cpan.md) | An ordinary Lean project plus shared export configuration; CLI target `cpan` (alias `perl`). |
 | PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | A target-specific PHP package manifest and native or PHP-Wasm compiler inputs. |
 | WIT / WASI | [Component and archive distribution](publish/wit-wasi.md) | A prepared bundle containing the executable adapter and native host. |
 
 Ordinary source builds and package projections are different stages. The Alpha recipes for Python, Rust, C, C++, managed runtimes, PHP, and WASI use this repository's target-specific inputs. They do not make every Lake project buildable for those languages. Each target guide names its current inputs and checks.
 
-For npm, CPAN, C, C++, NuGet and Maven, repeat `--target` to build from one captured source tree. Lean compiles once per required profile: native for CPAN/C/C++/NuGet/Maven, Wasm for npm. Every selected target must succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports). The [implementation stages](architecture/cross-language-authoring.md#stages) cover the remaining source adapters.
+For npm, CPAN, C, C++, NuGet, Maven and RubyGems, repeat `--target` to build from one captured source tree. Lean compiles once per required profile: native for CPAN/C/C++/NuGet/Maven/RubyGems, Wasm for npm. Every selected target must succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports). The [implementation stages](architecture/cross-language-authoring.md#stages) cover the remaining source adapters.
 
 ## Build and approve the same artifacts
 

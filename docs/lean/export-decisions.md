@@ -77,6 +77,8 @@ Ordinary [C# / NuGet builds](../publish/nuget.md#build-an-ordinary-lean-project)
 
 Ordinary [Java/Kotlin Maven builds](../publish/maven.md#build-an-ordinary-lean-project) support the same pure copied primitives, arrays and acyclic records. Unsigned values use wider checked JVM types: UInt8/UInt16 become `int`, UInt32 becomes `long`, and UInt64/Nat/Int become `BigInteger`. Public APIs keep FFM and native layouts private.
 
+Ordinary [RubyGems builds](../publish/rubygems.md#build-an-ordinary-lean-project) support those copied types through Ruby `Integer`, `Float`, `String`, `Array` and generated record classes. The generated `UNIT` singleton represents Unit in every position; `nil` is rejected. Fixed-width integers are range checked, Nat/Int remain exact, and consumers need no native declarations or extension build.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.

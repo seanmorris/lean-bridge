@@ -6,6 +6,8 @@
 
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
+import { compileCopiedRubyModel } from "./copied-model.mjs";
+import { renderCopiedRubyPackage } from "./copied-values.mjs";
 
 const publicSource = () => `# frozen_string_literal: true
 
@@ -386,18 +388,19 @@ end
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const compileRubyPackageModel = ir => Object.freeze({
-	ir
-	, model: compileManagedAlphaModel(ir, "ruby")
-});
+export const compileRubyPackageModel = ir => ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))
+	? Object.freeze({ ir, copied: compileCopiedRubyModel(ir), model: null })
+	: Object.freeze({ ir, copied: null, model: compileManagedAlphaModel(ir, "ruby") });
 
 /**
  * Renders a deterministic Ruby package layout from its compiled model.
  *
  * @param root0 - Compiled Ruby package model.
  * @param root0.model - Managed projection model.
+ * @param root0.copied - Ordinary copied-value model, when selected.
  */
-export const renderRubyPackageLayout = ({ model }) => {
+export const renderRubyPackageLayout = ({ model, copied }) => {
+	if(copied) return renderCopiedRubyPackage(copied);
 	const publicFiles = ["lib/lean_bridge/alpha.rb", "sig/lean_bridge/alpha.rbs"];
 	const internalFiles = ["lib/lean_bridge/alpha/native.rb"];
 	const packageFiles = ["lean_bridge_alpha.gemspec"];
