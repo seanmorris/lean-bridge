@@ -5,7 +5,8 @@
  */
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { sha256 } from "../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mjs";
 
 /**
  * List regular payload files and reject symlinks and special filesystem entries.
@@ -73,4 +74,38 @@ export async function readVerifiedNativeRuntime(root)
 	await verifyNativeFiles(root, manifest.files);
 	if((await nativeArtifactPaths(root)).some(path => path !== "runtime.json" && !Object.hasOwn(manifest.files, path))) throw new Error("unrecorded native runtime artifact");
 	return { manifest, identity: sha256(bytes) };
+}
+
+/**
+ * Reconstruct source semantics and adapters before a new host projection.
+ *
+ * @param root - Compiled component directory.
+ * @param runtimeIdentity - Expected shared runtime manifest identity.
+ */
+export async function readVerifiedNativeComponent(root, runtimeIdentity)
+{
+	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
+	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
+	await verifyNativeFiles(root, inventory.files);
+	if((await nativeArtifactPaths(root)).some(path => path !== "artifacts.json" && !Object.hasOwn(inventory.files, path))) throw new Error("unrecorded native component artifact");
+	const metadata = await read("metadata.json");
+	const reconstructed = createNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity });
+	const adapters = generateNativeLeanAdapters(reconstructed);
+	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== 1
+		|| receipt.runtimeIdentity !== runtimeIdentity
+		|| canonicalJson(model) !== canonicalJson(reconstructed)
+		|| receipt.modelSha256 !== sha256(canonicalJson(model))
+		|| receipt.bindingIrSha256 !== model.bindingIrSha256
+		|| canonicalJson(await read("binding-ir.json")) !== canonicalJson(model.bindingIr)
+		|| receipt.metadataSha256 !== sha256(await readFile(join(root, "metadata.json")))
+		|| receipt.headerSha256 !== sha256(adapters.header)
+		|| adapters.header !== await readFile(join(root, "component.h"), "utf8")
+		|| receipt.adaptersSha256 !== sha256(adapters.leanSource)
+		|| adapters.leanSource !== await readFile(join(root, "generated.lean"), "utf8")
+		|| receipt.initializer !== `initialize_${adapters.module}`
+		|| !/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("native component differs from compiler metadata or runtime");
+	const bytes = await readFile(join(root, receipt.library));
+	validateNativeElf(bytes);
+	if(receipt.nativeLibrary.sha256 !== sha256(bytes) || receipt.nativeLibrary.bytes !== bytes.length) throw new Error("native component binary drift");
+	return { model, receipt };
 }

@@ -786,16 +786,19 @@ export const buildCanonicalProject = async ({
 		fail("invalid-package-targets", "Build targets must be an array of non-empty names");
 	}
 	if(new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
-	if(targets.includes("cpan") || targets.includes("perl"))
+	const sourceC = root !== engine && targets.some(target => target === "c" || target === "cpp")
+		&& !(await inspectLeanProject(root, { signal })).inputs.some(input => input.path.endsWith(".binding-ir.json"));
+	if(sourceC || targets.includes("cpan") || targets.includes("perl"))
 	{
 		const normalized = targets.map(target => target === "perl" ? "cpan" : target);
 		if(new Set(normalized).size !== normalized.length) fail("invalid-package-targets", "Build targets must be unique, including aliases");
-		if(normalized.length === 1)
-			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: ["cpan"], signal, onProgress, lakeSnapshot });
-		if(normalized.length !== 2 || !normalized.includes("npm"))
-			fail("invalid-package-targets", "Combined ordinary builds currently support npm and cpan only");
+		if(normalized.some(target => !["npm", "cpan", "c", "cpp"].includes(target)))
+			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, and cpp targets");
+		if(!normalized.includes("npm"))
+			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: normalized, signal, onProgress, lakeSnapshot });
 		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine
 			, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot
+			, nativeTargets: normalized.filter(target => target !== "npm")
 			, buildWasm: buildCanonicalProject });
 	}
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))

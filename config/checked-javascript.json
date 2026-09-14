@@ -5,6 +5,11 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/c/primitive-surface.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/c/native-primitives.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/cpp/primitives.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-c-projection.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/native-c-family.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/semantic-model.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/perl/naming.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/multi-profile-project.mjs", "classification": "strict-migration-backlog" },

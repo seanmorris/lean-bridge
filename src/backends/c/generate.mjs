@@ -55,7 +55,7 @@ const implementationPath = ir => `src/${prefix(ir)}.c`;
 
 const primitiveCType = name => {
 	const types = {
-		unit: "void"
+		unit: "uint8_t"
 		, bool: "bool"
 		, uint8: "uint8_t"
 		, uint16: "uint16_t"
@@ -1000,3 +1000,18 @@ export const generateCBindingPackage = ir => {
 	auditCPackage(ir, files);
 	return files;
 };
+
+/**
+ * Share the C generator's exact spellings with compiled native adapters.
+ *
+ * @param ir - Validated Binding IR.
+ * @param declaration - A concrete function declaration from that IR.
+ */
+export const describeCFunction = (ir, declaration) => ({
+	prefix: prefix(ir)
+	, name: publicFunctionName(ir, declarationVariants(declaration)[0])
+	, field: runtimeFieldName(ir, declarationVariants(declaration)[0])
+	, signature: runtimeParameters(ir, declarationVariants(declaration)[0]).join(", ")
+	, parameters: declaration.parameters.map(site => ({ name: snake(site.name), type: cType(ir, site.type) }))
+	, resultType: isUnit(ir, declaration.result.type) ? "void" : cType(ir, declaration.result.type)
+});

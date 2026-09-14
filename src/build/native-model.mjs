@@ -95,7 +95,7 @@ const closed = (value, fields, label) => {
  * @param root0 - Named inputs for this operation.
  * @param root0.metadata - Fresh elaborated Lean metadata.
  * @param root0.component - Canonical component name and version.
- * @param root0.moduleName - Public Perl module name.
+ * @param root0.moduleName - Optional Perl projection namespace; omitted for other native targets.
  * @param root0.sourceIdentity - Pinned compiler, source and interface identities.
  */
 export const createNativeModel = ({ metadata, component, moduleName, sourceIdentity }) => {
@@ -118,7 +118,7 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
 	if(!checked.length) fail("empty export set");
-	const exports = projectPerlNames(moduleName, checked);
+	const exports = moduleName === undefined ? checked : projectPerlNames(moduleName, checked);
 	const semantic = createElaboratedSemanticModel({
 		metadata, request: sourceIdentity.request, component
 		, elaborationSha256: elaborated.sha256
@@ -128,7 +128,7 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		, pointerBits: 64
 		, byteOrder: "little"
 		, component
-		, moduleName
+		, ...(moduleName === undefined ? {} : { moduleName })
 		, bindingIr: semantic.document
 		, bindingIrSha256: semantic.semanticSha256
 		, sourceIdentity

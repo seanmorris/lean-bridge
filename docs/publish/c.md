@@ -2,11 +2,48 @@
 
 Prepare C11 headers, native libraries, CMake and pkg-config metadata, then distribute the original archive through a release page or artifact server.
 
-## Check the build inputs
+## Build an ordinary Lean project
+
+Install Node 22, Lean 4.32.2, a C11 compiler, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
+
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied primitive parameters and results. All 16 primitive types work, including exact `Nat` and `Int`, UTF-8 strings, and byte arrays. Concrete specializations use the same configuration. Arrays, records, resources, callbacks, effects and asynchronous signatures are not admitted by this ordinary C/C++ adapter yet; the build reports the rejected Lean declaration and location.
+
+For a Lake project named `sample` at version `1.0.0`, select both native targets:
+
+```sh
+lean-bridge build --project /path/to/sample \
+  --target c --target cpp --output /path/to/new-native-release
+```
+
+Lean compiles once for both targets. The builder compiles one C adapter, checks the C++ header, then assembles the archives without recompiling Lean. A failed target leaves no partial release directory.
+
+The default archives are `archives/sample-1.0.0-c.tar.gz` and `archives/sample-1.0.0-cpp.tar.gz`. Override their coordinates under `targets.c` and `targets.cpp`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Sample"],
+  "exports": ["Sample.increment"],
+  "targets": {
+    "c": { "name": "sample-c", "version": "2.0.0" },
+    "cpp": { "name": "sample-cpp", "version": "2.0.0" }
+  }
+}
+```
+
+Package names do not rename the API. The source component determines `sample.h`, the `sample_` C prefix, `sample.hpp`, and the C++ namespace `lean_bridge::sample`. `native-release.json` records every archive and its SHA-256. The archive's `lean-bridge-package.json` records the header, libraries, compiler evidence, runtime identity and installation metadata. These are local integrity records, not signed publication receipts.
+
+Each archive includes its component library, C adapter and matching Lean runtime. Loading the C library initializes Lean automatically; pkg-config and CMake locate the libraries. The tested public profile is Linux x86-64 with glibc 2.38 or newer. The builder rejects binaries requiring a newer glibc version than the declared floor. Lean and Lean Bridge license notices accompany the binaries; supply your library's license with the release as well.
+
+Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree. That combined build checks source API agreement across profiles and puts the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+
+## Build the reviewed Alpha example
+
+### Check the build inputs
 
 The Alpha example uses a reviewed universal bundle containing its compiled native component and target metadata. An ordinary Lake project alone does not provide those inputs. Follow [existing-library preparation](../lean/existing-package.md) and the [target overview](../publishing.md) before adapting another package.
 
-## Build the target package
+### Build the target package
 
 From a Lean Bridge checkout, [build the example bundle](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer). With that bundle at `build/consumer-universal-bundle`, use a new output directory:
 

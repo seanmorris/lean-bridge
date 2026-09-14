@@ -67,6 +67,12 @@ Use [concrete specializations](existing-package.md#export-concrete-specializatio
 
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
+## Native C and C++ exports
+
+Ordinary `c` and `cpp` builds accept the same 16 pure primitive parameter/result types listed above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
+
+Copied arrays, records, resources, callbacks, effects and asynchronous functions remain unsupported by the ordinary C/C++ adapter. A selected unsupported signature stops the build at its Lean source location. Alpha's reviewed C/C++ example has its own broader fixed API; it does not establish those shapes for arbitrary source packages.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.

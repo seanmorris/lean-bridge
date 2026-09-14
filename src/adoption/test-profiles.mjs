@@ -52,6 +52,7 @@ const profileManifest = Object.freeze({
 		, "perl-contract"
 		, "semantic-model"
 		, "multi-profile-project"
+		, "native-c-family"
 		, "public-surface-conformance"
 		, "publication-attestation"
 		, "production-deployment-profile"

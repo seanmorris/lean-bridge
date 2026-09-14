@@ -480,6 +480,26 @@ export const prepareLakeDependencySnapshot = async ({ projectRoot, signal, limit
 };
 
 /**
+ * Recheck a live author tree, including path dependencies and cached Git sources.
+ * Root-only verification is reserved for relocated engine inputs whose dependency
+ * paths are intentionally supplied by the captured workspace instead.
+ *
+ * @param options - Complete capture and live author root.
+ * @param options.snapshot - Opaque complete source snapshot.
+ * @param options.projectRoot - Original or relocated author checkout.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const verifyLakeSnapshotSourceTree = async ({ snapshot, projectRoot, signal }) => {
+	const state = captured.get(snapshot);
+	if(!state || ![2, 3].includes(snapshot.document.schemaVersion)) fail("invalid-lake-snapshot", "Source verification requires a complete prepared snapshot");
+	const current = await prepareLakeDependencySnapshot({ projectRoot, signal
+		, limits: state.limits, includeProject: true, allowMissingLock: true });
+	if(current.sha256 !== snapshot.sha256)
+		fail("lake-source-drift", "Lake dependency sources changed during compilation");
+	return true;
+};
+
+/**
  * Write captured bytes to a new directory outside every read-only input root.
  *
  * @param options - Prepared snapshot and new destination.

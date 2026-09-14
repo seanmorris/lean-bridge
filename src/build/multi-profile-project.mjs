@@ -13,7 +13,7 @@ import { buildNativeProject } from "./native-project.mjs";
 import { createNativeModel } from "./native-model.mjs";
 import { verifyNativeFiles } from "./native-artifacts.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
-import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
+import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { validateComponentBuildPlan } from "./component-plan.mjs";
 import { buildComponentNpmPackages } from "../release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../release/component-package-receipt.mjs";
@@ -78,10 +78,12 @@ export const assertProfileApiAgreement = ({ intent, configurationSha256, wasmPla
  * @param options.onProgress - Build progress observer.
  * @param options.lakeSnapshot - Optional independently captured source tree.
  * @param options.buildWasm - Canonical single-profile build entry point.
+ * @param options.nativeTargets - Native packages sharing the native compilation.
  */
 export const buildMultiProfileProject = async ({
 	projectRoot, engineRoot, outputRoot
 	, environment, runner, cache, signal, onProgress, lakeSnapshot, buildWasm
+	, nativeTargets = ["cpan"]
 }) => {
 	signal?.throwIfAborted();
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-release"));
@@ -89,7 +91,8 @@ export const buildMultiProfileProject = async ({
 		throw new CanonicalBuildError("invalid-output-root", "Build output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	assertExportConfigurationCapabilities(record.configuration, { target: "cpan", fields: ["modules", "exports", "specializations", "contracts", "generators"], targetFields: ["module", "version"] });
+	for(const target of nativeTargets)
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: ["modules", "exports", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal });
 	const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot, environment });
 	await mkdir(dirname(output), { recursive: true });
@@ -100,7 +103,7 @@ export const buildMultiProfileProject = async ({
 		const shared = { projectRoot: project, environment, signal, onProgress, lakeSnapshot: intent.lakeSnapshot };
 		await buildWasm({ ...shared, engineRoot, runner, cache, targets: ["npm"], outputRoot: wasmRoot });
 		signal?.throwIfAborted();
-		const built = await buildNativeProject({ ...shared, targets: ["cpan"], outputRoot: nativeRoot });
+		const built = await buildNativeProject({ ...shared, targets: nativeTargets, outputRoot: nativeRoot });
 		signal?.throwIfAborted();
 		const componentRoot = join(nativeRoot, "native/component"), bundleRoot = join(wasmRoot, "bundle");
 		const nativeModel = await json(join(componentRoot, "model.json"));
@@ -137,7 +140,9 @@ export const buildMultiProfileProject = async ({
 				{ profile: "component-scalars-v1", target: "npm", path: "profiles/wasm"
 					, bindingIrSha256: hashBindingIr(wasmIr)
 					, evidence: await identify("profiles/wasm/engine-execution-report.json") }
-				, { profile: "native-library-v1", target: "cpan", path: "profiles/native"
+				, { profile: "native-library-v1"
+					, ...(nativeTargets.length === 1 ? { target: nativeTargets[0] } : { targets: nativeTargets })
+					, path: "profiles/native"
 					, bindingIrSha256: nativeModel.bindingIrSha256
 					, evidence: await identify("profiles/native/native/component/native-component.json") }
 			]
@@ -145,21 +150,22 @@ export const buildMultiProfileProject = async ({
 				{ target: "npm", path: "packages/npm"
 					, receipt: await identify("packages/npm/component-package-receipt.json")
 					, archives: await archives("packages/npm", [npm.report.runtime, npm.report.package]) }
-				, { target: "cpan", path: "profiles/native/archives"
+				, ...await Promise.all((built.projections ?? [built]).map(async projection => ({
+					target: projection.ecosystem, path: "profiles/native/archives"
 					, receipt: await identify("profiles/native/native-release.json")
-					, archives: await archives("profiles/native/archives", built.packages) }
+					, archives: await archives("profiles/native/archives", projection.packages) })))
 			]
 			, policies: { sourceReadOnly: true, profilesCompiledOnce: true
 				, componentBinariesRebuiltByProjection: false }
 		};
-		await verifyLakeSnapshotProject({ snapshot: intent.lakeSnapshot, projectRoot: project, signal });
+		await verifyLakeSnapshotSourceTree({ snapshot: intent.lakeSnapshot, projectRoot: project, signal });
 		if((await readExportConfiguration(project, { signal })).sha256 !== record.sha256)
 			fail("Export configuration changed during the multi-profile build");
 		await writeFile(join(staging, "multi-profile-release.json"), canonicalJson(manifest), { flag: "wx" });
 		signal?.throwIfAborted();
 		await absent(output);
 		await rename(staging, output);
-		return Object.freeze({ ...manifest, output, targets: ["npm", "cpan"] });
+		return Object.freeze({ ...manifest, output, targets: ["npm", ...nativeTargets] });
 	} catch(error)
 	{ await rm(staging, { recursive: true, force: true }); throw error; }
 };

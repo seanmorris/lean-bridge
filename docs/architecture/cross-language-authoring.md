@@ -42,7 +42,7 @@ The [combined npm/CPAN build](../publish/npm.md#build-npm-and-cpan-together) pas
 
 The native adapter model is now version 2 because its canonical declaration names and semantic type identities changed. Binding IR remains version 3; native ABI 1 and scalar ABI 2 are unchanged. CPAN staging reconstructs the model from compiler metadata and rejects stale models. Existing Perl call names are unchanged.
 
-The combined builder compiles each profile once and stages both sets of archives privately. Source drift, mismatched APIs, failure or cancellation prevents the final directory from appearing. It rejects mixed targets other than npm and CPAN, including duplicate aliases. Native-only types still require a CPAN-only build. Generic C/C++, managed and WIT/WASI adapters remain subsequent slices of task 1216.
+The combined builder compiles each profile once and stages its archives privately. Source drift, mismatched APIs, failure or cancellation prevents the final directory from appearing. Ordinary builds now accept npm, CPAN, C and C++ together, rejecting unsupported targets and duplicate aliases. C/C++ admits all 16 copied primitives in concrete, pure function signatures. It reuses the compiled native component and checks every selected export before generating packages. Native-only arrays, records, resources and callbacks still require a CPAN-only build. Broader C/C++ types, managed and WIT/WASI adapters remain subsequent slices of task 1216.
 
 The [shared-model acceptance record](../evidence/shared-model-multi-profile-20260914.md) covers relocated builds, both installed languages, failed-build cleanup and existing native/npm regressions.
 

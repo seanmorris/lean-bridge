@@ -102,6 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -124,11 +125,11 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		const result = await buildCanonicalProject({
 			projectRoot, engineRoot, environment, runner
 			, outputRoot: join(context.directory, `release-${index}`)
-			, targets: index ? ["cpan", "npm"] : ["npm", "perl"]
+			, targets: [...(index ? ["cpan", "npm"] : ["npm", "perl"]), ...nativeTargets.slice(1)]
 			, onProgress: event => { if(event.message === "Compiling checked native Lean exports") nativeCalls++; } })
 			.catch(error => { throw new Error(`${error.message}\n${JSON.stringify(error.details ?? {})}`, { cause: error }); });
 		assert.equal(wasmCalls, 1); assert.equal(nativeCalls, 1);
-		assert.deepEqual(result.targets, ["npm", "cpan"]);
+		assert.deepEqual(result.targets, ["npm", ...nativeTargets]);
 		builds.push(result);
 	}
 	assert.deepEqual(await json(join(builds[0].output, "multi-profile-release.json")), await json(join(builds[1].output, "multi-profile-release.json")));
@@ -141,7 +142,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const consumer = join(context.directory, "consumer");
 	await mkdir(consumer);
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
-	const [npm, cpan] = builds[0].packages;
+	const npm = builds[0].packages.find(pkg => pkg.target === "npm"), cpan = builds[0].packages.find(pkg => pkg.target === "cpan");
 	const installed = { command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(context.directory, "npm-cache"), ...npm.archives.map(file => join(builds[0].output, file.path))], cwd: consumer };
 	await processBuildRunner.capture(installed);
 	await saveLakeFile(consumer, "index.mjs", `import {${context.names.operation}} from "@example/${variant}";\nconsole.log(${context.names.operation}(20));\n`);
@@ -152,4 +153,21 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await installCpanArchive({ archive: join(builds[0].output, file.path), prefix, perl, mode: "prebuilt-only", workingRoot: consumer, environment });
 	await saveLakeFile(consumer, "consumer.pl", `use strict; use warnings; use LeanBridge::${context.names.root} ();\nprint LeanBridge::${context.names.root}::${context.names.operation}(20), "\\n";\n`);
 	assert.equal((await processBuildRunner.capture({ command: perl, args: ["consumer.pl"], cwd: consumer, env: { ...environment, PERL5LIB: join(prefix, "lib/perl5") } })).stdout.trim(), expected);
+	for(const target of nativeTargets.filter(target => target !== "cpan"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === target), install = join(consumer, target);
+		await mkdir(install);
+		await processBuildRunner.capture({ command: "tar", args: ["-xzf", join(builds[0].output, pkg.archives[0].path), "-C", install] });
+		const packageRoot = join(install, (await readdir(install))[0]);
+		const manifest = await json(join(packageRoot, "lean-bridge-package.json"));
+		const p = manifest.component.name.toLowerCase(), ext = target === "cpp" ? "cpp" : "c";
+		const source = target === "cpp"
+			? `#include "${p}.hpp"\n#include <cassert>\nint main() { assert(lean_bridge::${p}::${context.names.operation}(20) == ${expected}); }\n`
+			: `#include "${p}.h"\n#include <assert.h>\nint main(void) { uint32_t result = 0; ${p}_error error = {0}; assert(${p}_${context.names.operation}(20, &result, &error) == ${p.toUpperCase()}_STATUS_OK); assert(result == ${expected}); }\n`;
+		await saveLakeFile(install, `main.${ext}`, source);
+		const env = { PATH: "/usr/bin:/bin", PKG_CONFIG_PATH: join(packageRoot, "lib/pkgconfig") };
+		const flags = (await processBuildRunner.capture({ command: "pkg-config", args: ["--cflags", "--libs", manifest.pkgConfig], env })).stdout.trim().split(/\s+/);
+		await processBuildRunner.capture({ command: target === "cpp" ? "c++" : "cc", args: [target === "cpp" ? "-std=c++20" : "-std=c11", join(install, `main.${ext}`), ...flags, "-o", join(install, "consumer")], env });
+		await processBuildRunner.capture({ command: join(install, "consumer"), args: [], env });
+	}
 });

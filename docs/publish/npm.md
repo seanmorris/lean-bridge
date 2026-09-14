@@ -52,6 +52,8 @@ The builder captures the source tree and Lake dependencies once, compiles one Wa
 
 Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/packages/npm/component-package-receipt.json`. Install the CPAN archives using the [prepared-package instructions](../consume/perl.md).
 
+Add `--target c` or `--target cpp` to include [prepared native C/C++ archives](c.md#build-an-ordinary-lean-project). Those targets share the same native compilation with CPAN. You can also omit CPAN and build npm with either C-family target; no Perl installation is needed in that case.
+
 The selected exports must fit both profiles. Today that means npm's pure primitive arguments and results, including supported concrete specializations. Native-only arrays, records, resources and callbacks still use a separate CPAN build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
 
 ## Publish an ordinary component

@@ -11,6 +11,9 @@ import { canonicalJson } from "../capsule/node.mjs";
 import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
+import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
+import { projectNativeCFamily } from "./native-c-projection.mjs";
+import { validateNativeCSettings } from "../release/native-c-family.mjs";
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
@@ -26,13 +29,18 @@ import { CanonicalBuildError } from "./build-error.mjs";
  */
 export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress, lakeSnapshot })
 {
-	if(!Array.isArray(targets) || targets.length !== 1 || targets[0] !== "cpan")
-		throw new CanonicalBuildError("unsupported-native-targets", "The ordinary native project builder currently implements only the cpan target");
+	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp"].includes(target)))
+		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, and cpan targets");
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
-	assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: ["module", "version"] });
-	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-perl"));
-	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "Perl output cannot replace the source project");
+	for(const target of targets)
+	{
+		assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
+	}
+	const cTargets = targets.filter(target => target !== "cpan");
+	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, targets.length === 1 && targets[0] === "cpan" ? "build/lean-bridge-perl" : "build/lean-bridge-native"));
+	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "Native output cannot replace the source project");
 	try
 	{ await readdir(output); throw new Error(`output already exists: ${output}`); }
 	catch(error)
@@ -51,21 +59,28 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, leanPrefix
 			, configurationSha256: record.sha256
 			, lakeSnapshot
+			, targets
+			, validateModel: cTargets.length ? model => compilePrimitiveCSurface(model.bindingIr) : undefined
 			, signal });
-		const projection = await projectCpanPackages({
+		const projections = cTargets.length ? await projectNativeCFamily({
+			working, nativeRoot, runtimeRoot, leanPrefix
+			, targets: cTargets, settings: config.targets
+			, environment, signal }) : [];
+		if(targets.includes("cpan")) projections.push(await projectCpanPackages({
 			working, runtimeRoot, nativeRoot, leanPrefix
 			, settings: config.targets?.cpan
-			, environment, signal, onProgress });
+			, environment, signal, onProgress }));
 		const manifest = { schemaVersion: 1
 			, profile: "native-library-v1"
-			, ...projection
+			, ...(projections.length === 1 ? projections[0] : { projections, packages: projections.flatMap(projection => projection.packages) })
 			, component: built.model.component
 			, nativeRuntimeIdentity: built.receipt.runtimeIdentity
 			, bindingIrSha256: built.model.bindingIrSha256
 			, configurationSha256: record.sha256 };
 		await writeFile(join(working, "native-release.json"), canonicalJson(manifest));
+		signal?.throwIfAborted();
 		await rename(working, output);
-		return { schemaVersion: 1, project, output, targets: ["cpan"], ...manifest };
+		return { schemaVersion: 1, project, output, targets, ...manifest };
 	} catch(error)
 	{
 		await rm(working, { recursive: true, force: true });

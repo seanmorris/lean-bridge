@@ -6,6 +6,7 @@
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "./primitives.mjs";
 
 const exactAlphaShape = ir => {
 	const declarations = ir.declarations.map(item => item.id);
@@ -208,6 +209,7 @@ inline Transform make_adder(std::uint32_t base) {
  */
 export const compileCppPackageModel = irValue => {
 	const ir = validateBindingIr(irValue);
+	if(ir.declarations.every(declaration => declaration.kind === "function")) return compilePrimitiveCppModel(ir);
 	exactAlphaShape(ir);
 	return Object.freeze({
 		component: Object.freeze({ ...ir.component })
@@ -218,11 +220,11 @@ export const compileCppPackageModel = irValue => {
 /**
  * Renders the deterministic C++ package layout from a compiled projection model.
  *
- * @param root0 - Compiled C++ package model.
- * @param root0.component - Projected component identity.
- * @param root0.bindingIrSha256 - Canonical semantic input identity.
+ * @param model - Compiled C++ package model and its semantic identity.
  */
-export const renderCppPackageLayout = ({ component, bindingIrSha256 }) => {
+export const renderCppPackageLayout = model => {
+	if(model.kind === "copied-primitives") return renderPrimitiveCppPackage(model);
+	const { component, bindingIrSha256 } = model;
 	const files = {
 		"include/lean_alpha.hpp": header
 		, "src/lean_alpha.cpp": "#include \"lean_alpha.hpp\"\n"

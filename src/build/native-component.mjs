@@ -14,7 +14,7 @@ import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallb
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
-import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
+import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
@@ -163,6 +163,8 @@ const callbackDefault = nativeCallbackDefault;
  * @param root0.signal - Optional cancellation signal for child build processes.
  * @param root0.runner - Optional process runner for compiler and drift checks.
  * @param root0.lakeSnapshot - Shared immutable capture for a multi-profile build.
+ * @param root0.targets - Native projections that must all admit the compiled API.
+ * @param root0.validateModel - Optional target admission check before adapter compilation.
  */
 export const buildNativeComponent = async ({ projectRoot
 	, outputRoot
@@ -175,6 +177,8 @@ export const buildNativeComponent = async ({ projectRoot
 	, arities
 	, configurationSha256
 	, lakeSnapshot
+	, targets = ["cpan"]
+	, validateModel
 	, cc = "cc"
 	, signal
 	, runner = processBuildRunner }) => {
@@ -188,7 +192,8 @@ export const buildNativeComponent = async ({ projectRoot
 		const record = await readExportConfiguration(project, { signal });
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
-		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: ["module", "version"] });
+		for(const target of targets)
+			assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
@@ -198,7 +203,7 @@ export const buildNativeComponent = async ({ projectRoot
 		exports ??= config.exports ?? [];
 		resources ??= config.resources ?? [];
 		arities ??= config.arities ?? {};
-		moduleName ??= config.targets?.cpan?.module;
+		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
 		const analysis = inventory;
@@ -218,7 +223,7 @@ export const buildNativeComponent = async ({ projectRoot
 		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !entries.some(entry => entry.module === name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
-		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: project, signal });
+		if(lakeSnapshot) await verifyLakeSnapshotSourceTree({ snapshot: lakeSnapshot, projectRoot: project, signal });
 		else lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
 		if(config.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
 		let lakeModules;
@@ -326,8 +331,9 @@ export const buildNativeComponent = async ({ projectRoot
 		if(lakeWorkspace) sourceIdentity.lakeDependencies = { ...lakeWorkspace.evidence, snapshotSha256: lakeSnapshot.sha256 };
 		const model = createNativeModel({ metadata
 			, component: elaboratedComponent(analysis.project)
-			, moduleName: moduleName ?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}`
+			, moduleName: moduleName ?? (targets.includes("cpan") ? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}` : undefined)
 			, sourceIdentity });
+		validateModel?.(model);
 		await verifyElaborationInputs();
 		const adapters = generateNativeLeanAdapters(model), generated = join(sourceRoot, `${adapters.module}.lean`), generatedC = join(staging, "c/adapter.c");
 		await save(generated, adapters.leanSource);
@@ -394,7 +400,7 @@ export const buildNativeComponent = async ({ projectRoot
 			, ...(nativeCompilation ? { nativeCompilation: nativeCompilation.document } : {})
 			, exports: model.exports.map(item => ({ declaration: item.name, symbol: item.symbol })) };
 		if((await inspectLeanProject(project, { signal })).sourceTreeSha256 !== analysis.sourceTreeSha256) throw new Error("native source changed during compilation");
-		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: project, signal });
+		if(lakeSnapshot) await verifyLakeSnapshotSourceTree({ snapshot: lakeSnapshot, projectRoot: project, signal });
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
 		await nativeCompilation?.verify();

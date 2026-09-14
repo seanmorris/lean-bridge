@@ -11,7 +11,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 import { deflateSync, inflateSync } from "node:zlib";
-import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, validateLakeDependencySnapshotDocument, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
+import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, validateLakeDependencySnapshotDocument, verifyLakeDependencySnapshot, verifyLakeSnapshotProject, verifyLakeSnapshotSourceTree, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
@@ -69,6 +69,27 @@ const fixture = async (t, { withGit = false, objectFormat = "sha1" } = {}) => {
 	const capture = options => prepareLakeDependencySnapshot({ projectRoot: root, ...options });
 	return { directory, root, local, cached, manifest, lock, capture };
 };
+test("live source verification detects dependency drift that root-only verification excludes", async t => {
+	for(const variant of ["local", "git", "relocated", "unlocked"]) await t.test(variant, async t => {
+		const context = await fixture(t, { withGit: variant === "git" });
+		if(variant === "unlocked") await rm(join(context.root, "lake-manifest.json"));
+		const snapshot = await context.capture({ includeProject: true, allowMissingLock: true });
+		let projectRoot = context.root, local = context.local;
+		if(variant === "relocated")
+		{
+			const moved = join(context.directory, "relocated");
+			await cp(join(context.directory, "workspace"), moved, { recursive: true });
+			projectRoot = join(moved, "project"); local = join(moved, "local");
+		}
+		assert.equal(await verifyLakeSnapshotSourceTree({ snapshot, projectRoot }), true);
+		if(variant === "unlocked") await save(projectRoot, "Extra.lean", "def extra := 42\n");
+		else if(variant === "git") await save(context.cached, "Remote.lean", "def Remote.changed := 99\n");
+		else await save(local, "Local.lean", "def Local.changed := 99\n");
+		if(variant !== "unlocked") assert.equal(await verifyLakeSnapshotProject({ snapshot, projectRoot }), true);
+		await assert.rejects(() => verifyLakeSnapshotSourceTree({ snapshot, projectRoot }), error => ["lake-source-drift", "lake-git-drift"].includes(error.code));
+	});
+});
+
 const inputState = async root => {
 	const entries = [];
 	const visit = async prefix => {

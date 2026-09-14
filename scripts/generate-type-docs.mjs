@@ -192,7 +192,7 @@ export async function renderTypeDocuments({ root })
 			, ""
 			, table(["Lean type or source form", "Meaning", "Bounds and representation", "Ownership, absence and failure"], shapeRows)
 			, ""
-			, "The ordinary npm scalar path has installed acceptance for its 16 primitive input/result types. Alpha's reviewed profiles exercise a narrower selection of records, arrays, resources and callables. C++, C#, Java, Kotlin and Ruby currently use fixed Alpha projections; they do not implement general mappings for all the rows above."
+			, "The ordinary npm, C and C++ paths have installed acceptance for their 16 primitive input/result types. Alpha's reviewed profiles exercise a narrower selection of records, arrays, resources and callables. C#, Java, Kotlin and Ruby currently use fixed Alpha projections; they do not implement general mappings for all the rows above."
 			, ""
 			, "PHP's numeric and async declarations, Python's rich annotations and WIT's declarations extend beyond their installed transport coverage. Rust rejects arbitrary-precision integers. JavaScript rejects anonymous Option, result and tuple applications. Missing implementations remain assigned work in the [type inventory](../type-surface.v1.json)."
 		].join("\n")

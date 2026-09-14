@@ -8,8 +8,8 @@ Choose the package backend before installing its build tools. All current source
 | Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, Git for locked Git dependencies, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
 | Python | The prepared native bundle, Python and pip; see [PyPI](../publish/pypi.md) | Install the matching native runtime package. |
 | Rust | The prepared native bundle, Rust and Cargo; see [Cargo](../publish/cargo.md) | The generated crate selects its native runtime inputs. |
-| C | The prepared native bundle, a C compiler, CMake or pkg-config; see [C packages](../publish/c.md) | Use the archive's runtime and link metadata. |
-| C++ | The prepared native bundle, a C++ compiler and CMake; see [C++ packages](../publish/cpp.md) | Use the archive's runtime and link metadata. |
+| C | Node 22, Lean 4.32.2, C11 compiler and binutils on Linux x86-64; see [C packages](../publish/c.md) | The native build includes the matching runtime in the archive. |
+| C++ | The C author tools plus a C++20 compiler; see [C++ packages](../publish/cpp.md) | C and C++ share one native component and runtime. |
 | C# / .NET | The prepared bundle and .NET SDK; see [NuGet](../publish/nuget.md) | Package the matching native library and runtime. |
 | Java and Kotlin | The prepared bundle, JDK, Maven, and Kotlin tooling where used; see [Maven](../publish/maven.md) | Package the matching native library and runtime. |
 | Ruby | The prepared bundle, Ruby and RubyGems; see [RubyGems](../publish/rubygems.md) | Package the matching native library and runtime. |
