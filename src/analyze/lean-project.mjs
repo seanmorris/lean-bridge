@@ -557,6 +557,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	const inspected = await inspectLeanProject(root, { signal });
 	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
 	const configuration = configurationRecord.configuration;
+	if(configuration.specializations?.length)
+		fail("specialization-requires-elaboration", "Finite specializations require compiler-backed analysis; source discovery cannot assign their types");
 	const environment = await compiledEnvironment(root, { signal });
 	signal?.throwIfAborted();
 	const compiledDeclarations = new Set(environment.modules.flatMap(module => module.declarations));
@@ -667,7 +669,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	}
 
 	const existingPaths = inputs.filter(input => input.path.endsWith(".binding-ir.json"));
-	if(existingPaths.length && ["modules", "exports", "resources", "arities"].some(key => configuration[key] !== undefined))
+	if(existingPaths.length && ["modules", "exports", "resources", "arities", "specializations"].some(key => configuration[key] !== undefined))
 		fail("export-configuration-reviewed-ir", "Shared source selection cannot yet override a reviewed Binding IR; keep export decisions in the reviewed document until the elaborated pipeline supports this combination");
 	let bindingIr = null;
 	if(existingPaths.length === 1)

@@ -36,6 +36,7 @@ A first interrupt cancels the active process and returns 130.
 | `build-tools-unavailable`, `nix-unavailable`, or `docker-unavailable` | Compiler-backed analysis or building has no usable pinned backend. | Complete [backend setup](setup.md#select-the-build-backend). Analysis does not fall back to scanned signatures. |
 | `invalid-compiler-analysis` | Engine output, invocation identity, or source inputs changed. | Keep inputs stable and rerun. Preserve the diagnostic if it repeats. |
 | `analysis-configuration-unsupported` | Public analysis cannot project configured resources or closure arities yet. | Use the native target's build path or an explicit reviewed Binding IR for those APIs. |
+| `invalid-specialization` | Lean could not resolve a configured type application or its instance dictionaries, or found an admitted or unreviewed implementation. | Read the compiler message. Check the leading type arguments and instances in [the specialization configuration](existing-package.md#export-concrete-specializations). |
 | `source-not-git` | The dry-run project is outside Git. | Initialize Git and commit the project inputs. |
 | `source-tree-dirty` | A project input differs from the candidate revision. | Run `git status --short`, review the changes, and commit the intended inputs. |
 | `lean-toolchain-drift` | The source requests a different Lean version from the builder. | Compare `lean-toolchain` with the pinned builder and runtime. |

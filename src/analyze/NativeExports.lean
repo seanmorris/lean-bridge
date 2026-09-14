@@ -18,6 +18,12 @@ structure MetadataContext where
   modules : Array MetadataModule
   deriving FromJson
 
+structure Specialization where
+  name : String
+  declaration : String
+  types : Array String
+  deriving FromJson
+
 structure Request where
   profile : Option String := none
   modules : Array String
@@ -25,6 +31,7 @@ structure Request where
   exports : Array String := #[]
   resources : Array String := #[]
   arities : Array (String × Nat) := #[]
+  specializations : Option (Array Specialization) := none
   metadata : Option MetadataContext := none
   deriving FromJson
 
@@ -183,8 +190,8 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
   let name ← ofExcept <| value.getObjValAs? String "name"
   return obj [("kind", str "primitive"), ("name", str name)]
 
-def describeScalarSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) :=
-  forallTelescopeReducing info.type fun arguments result => do
+def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Json × String × Json) :=
+  forallTelescopeReducing type fun arguments result => do
     let mut parameters := #[]
     let mut runtimeParameters := #[]
     let mut problem : Option Json := none
@@ -216,7 +223,7 @@ def describeScalarSignature (request : Request) (info : ConstantInfo) : MetaM (A
       ("result", runtimeResult)])
 
 def describeSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) := do
-  let (parameters, resultText, scalarProjection) ← describeScalarSignature request info
+  let (parameters, resultText, scalarProjection) ← describeScalarSignature request info.type
   if request.profile.getD "component-scalars-v1" != "native-library-v1" then return (parameters, resultText, scalarProjection)
   let arity := request.arities.find? (·.1 == info.name.toString) |>.map (·.2) |>.getD 1024
   try
@@ -239,12 +246,129 @@ def diagnosticKey (value : Json) : String :=
   ["category", "code", "module", "declaration"].foldl (init := "") fun key field =>
     key ++ "|" ++ (value.getObjValAs? String field).toOption.getD ""
 
+/- Apply only a finite leading type prefix, then resolve its instance dictionaries.
+   The caller still checks the resulting runtime signature and all used bodies. -/
+def specialize (selection : Specialization) : MetaM Expr := do
+  let mut value ← mkConstWithFreshMVarLevels selection.declaration.toName
+  for typeName in selection.types do
+    let .forallE _ domain _ _ ← whnf (← inferType value)
+      | throwError "{selection.declaration} has fewer leading type parameters than configured"
+    unless (← whnf domain).isSort do
+      throwError "{selection.declaration}: configured types must bind leading type parameters"
+    let argument ← mkConstWithFreshMVarLevels typeName.toName
+    let argumentType ← inferType argument
+    unless (← whnf argumentType).isSort && (← isDefEq domain argumentType) do
+      throwError "{typeName} is not a closed type accepted by {selection.declaration}"
+    value := mkApp value argument
+  repeat
+    let .forallE _ domain _ .instImplicit ← whnf (← inferType value) | break
+    value := mkApp value (← synthInstance domain)
+  value ← instantiateMVars value
+  if value.hasMVar || value.hasLevelParam || value.hasFVar || value.hasLooseBVars then
+    throwError "{selection.declaration} still has unresolved type or universe parameters"
+  return value
+
+/- Serialize the checked expression, rather than resolving pretty-printed names
+   again in an adapter namespace. Every constant has an absolute Lean name. -/
+partial def applicationSource (value : Expr) (variables : Array String := #[])
+    (depth : Nat := 0) : MetaM String := do
+  if depth > 128 then throwError "specialization application exceeds the expression nesting limit"
+  let render := fun e => applicationSource e variables (depth + 1)
+  match value with
+  | .const name levels =>
+    if isPrivateName name || name.hasMacroScopes then
+      throwError "specialization requires a public named dictionary or a monomorphic wrapper: {name}"
+    let identifier ← PrettyPrinter.ppTerm ⟨mkIdent (rootNamespace ++ name)⟩
+    let levels ← levels.mapM fun level => return (← PrettyPrinter.ppLevel level).pretty
+    return "@" ++ identifier.pretty ++ (if levels.isEmpty then "" else ".{" ++ String.intercalate ", " levels ++ "}")
+  | .app .. =>
+    let fn := value.getAppFn
+    if !fn.isConst && !fn.isBVar then
+      let reduced ← whnf value
+      if reduced != value then return ← render reduced
+      throwError "specialization requires a named function application or a monomorphic wrapper"
+    let head ← render fn
+    let arguments ← value.getAppArgs.mapM fun arg => return "(" ++ (← render arg) ++ ")"
+    return "(" ++ (if fn.isBVar then "@" else "") ++ head ++ " " ++ String.intercalate " " arguments.toList ++ ")"
+  | .mdata _ body => render body
+  | .bvar index =>
+    if index < variables.size then return variables[variables.size - 1 - index]!
+    throwError "specialization application contains an unbound variable"
+  | .sort level => return s!"(Sort {(← PrettyPrinter.ppLevel level).pretty})"
+  | .lit (.natVal value) => return s!"({value} : _root_.Nat)"
+  | .lit (.strVal value) => return (← PrettyPrinter.ppTerm ⟨Syntax.mkStrLit value⟩).pretty
+  | .lam _ type body binder | .forallE _ type body binder =>
+    let name := s!"_bridgeSpecial{variables.size}"
+    let declaration := s!"{name} : {← render type}"
+    let binding := match binder with
+      | .default => "(" ++ declaration ++ ")"
+      | .implicit => "{" ++ declaration ++ "}"
+      | .strictImplicit => "⦃" ++ declaration ++ "⦄"
+      | .instImplicit => "[" ++ declaration ++ "]"
+    let body ← applicationSource body (variables.push name) (depth + 1)
+    return if value.isLambda then s!"(fun {binding} => {body})" else s!"(∀ {binding}, {body})"
+  | .letE _ type assigned body _ =>
+    let name := s!"_bridgeSpecial{variables.size}"
+    return s!"(let {name} : {← render type} := {← render assigned}; {← applicationSource body (variables.push name) (depth + 1)})"
+  | _ => throwError "specialization application requires a monomorphic wrapper for this expression: {value}"
+
+def checkedApplicationSource (value : Expr) : MetaM String := do
+  let source ← applicationSource value
+  let parsed ← ofExcept <| Parser.runParserCategory (← getEnv) `term source
+  let reconstructed ← Elab.Term.TermElabM.run' <| Elab.Term.withoutErrToSorry do
+    let term ← Elab.Term.elabTermEnsuringType parsed (← inferType value)
+    Elab.Term.synthesizeSyntheticMVarsNoPostponing
+    instantiateMVars term
+  unless !reconstructed.hasMVar && (← isDefEq value reconstructed) do
+    throwError "serialized specialization differs from its compiler application"
+  return source
+
+def extractSpecialization (request : Request) (source : Json) (selection : Specialization) : MetaM Json := do
+  let mut result := source.setObjVal! "identity" (str selection.name) |>.setObjVal! "selected" (toJson true)
+  let mut application := Json.null
+  try
+    unless (source.getObjValAs? String "visibility").toOption == some "public" &&
+        (source.getObjValAs? String "kind").toOption != some "theorem" do
+      throwError "specializations require a public executable source declaration"
+    let value ← specialize selection
+    for name in value.getUsedConstants do
+      let _ ← checkBody request name
+      if (← collectAxioms name).contains ``sorryAx then
+        throwError "specialization depends on sorry: {name}"
+    let type ← inferType value
+    let (parameters, resultText, projection) ← describeScalarSignature request type
+    let effects ← effectNames type
+    let typeText ← expression type
+    let projection := if effects.isEmpty then projection else unsupported "unsupported-effect" typeText
+    result := result.setObjVal! "typeExpression" (str typeText)
+      |>.setObjVal! "parameters" (toJson parameters) |>.setObjVal! "resultExpression" (str resultText)
+      |>.setObjVal! "effects" (toJson effects) |>.setObjVal! "projection" projection
+    application := str (← checkedApplicationSource value)
+  catch error =>
+    result := result.setObjVal! "projection" (unsupported "invalid-specialization" (← error.toMessageData.toString))
+  return result.setObjVal! "specialization" (obj [("declaration", str selection.declaration),
+    ("types", toJson selection.types), ("application", application)])
+
+/- Rehydrate only Lean's built-in class/instance indexes. Importing arbitrary
+   extension initializers would execute package code during analysis. -/
+def loadBuiltinIndex {α β σ : Type} [Inhabited σ]
+    (extension : PersistentEnvExtension α β σ) (env : Environment) : IO Environment := do
+  let entries := (extension.toEnvExtension.getState env).importedEntries
+  let state ← extension.addImportedFn entries { env := env, opts := {} }
+  return extension.setState env state
+
 def extractMetadata (request : Request) : MetaM Json := do
   let some context := request.metadata | throwError "metadata context is required"
   let profile := request.profile.getD "component-scalars-v1"
   unless ["component-scalars-v1", "native-library-v1"].contains profile do
     throwError "unsupported metadata profile"
   let env ← getEnv
+  let specializations := request.specializations.getD #[]
+  if profile != "component-scalars-v1" && !specializations.isEmpty then
+    throwError "native finite specialization is not supported by this profile"
+  for selection in specializations do
+    if env.contains selection.name.toName then
+      throwError "specialization name already exists: {selection.name}"
   let selectedModules := request.exportModules.getD request.modules
   if selectedModules.isEmpty || selectedModules.any (!request.modules.contains ·) ||
       context.modules.map (·.name) != request.modules then
@@ -277,7 +401,8 @@ def extractMetadata (request : Request) : MetaM Json := do
         let visibility := if isPrivateName name then "private" else if isProtected env name then "protected" else "public"
         let typeValue ← forallTelescopeReducing info.type fun _ result => pure result.isSort
         let proofValue ← forallTelescopeReducing info.type fun _ result => isProp result
-        let selected := if request.exports.isEmpty then visibility == "public" && kind != "theorem" && !typeValue && !proofValue
+        let selected := if request.exports.isEmpty then visibility == "public" && kind != "theorem" && !typeValue && !proofValue &&
+            !specializations.any (·.declaration == name.toString)
           else request.exports.contains name.toString
         if selected then discovered := discovered.push name.toString
         let typeText ← expression info.type
@@ -314,12 +439,28 @@ def extractMetadata (request : Request) : MetaM Json := do
           ("documentation", toJson documentation), ("typeExpression", str typeText),
           ("parameters", toJson parameters), ("resultExpression", str resultText),
           ("effects", toJson effects), ("theoremReferences", toJson references), ("projection", projection)]
+    let originals := items
+    for selection in specializations do
+      if let some original := originals.find? (fun item => (item.getObjValAs? String "identity").toOption == some selection.declaration) then
+        let item ← extractSpecialization request original selection
+        items := items.push item
+        discovered := discovered.push selection.name
+        let projection ← ofExcept <| item.getObjVal? "projection"
+        if (projection.getObjValAs? String "status").toOption == some "unsupported" then
+          let reason ← ofExcept <| projection.getObjValAs? String "reason"
+          let message ← ofExcept <| projection.getObjValAs? String "expression"
+          diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" reason
+            s!"{selection.name}: {message}" source.name (some selection.name)
+        if (item.getObjVal? "source").toOption == some Json.null then
+          diagnostics := diagnostics.push <| diagnostic "extractor-failure" "missing-source-position"
+            s!"Lean supplied no source range for {selection.declaration}" source.name (some selection.name)
     let imports := env.header.moduleData[moduleIndex.toNat]!.imports.map (·.module.toString)
       |>.toList |>.mergeSort (· < ·) |>.eraseDups |>.toArray
     modules := modules.push <| obj [("name", str source.name), ("sourcePath", str source.sourcePath),
       ("sourceSha256", str source.sourceSha256), ("interfaceSha256", str source.interfaceSha256),
-      ("directImports", toJson imports), ("declarations", toJson items)]
-  for name in request.exports do
+      ("directImports", toJson imports), ("declarations", toJson (items.qsort fun a b =>
+        (a.getObjValAs? String "identity").toOption.getD "" < (b.getObjValAs? String "identity").toOption.getD ""))]
+  for name in (request.exports ++ specializations.map (·.name)).toList.eraseDups do
     if !discovered.contains name then
       diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" "missing-declaration"
         s!"Selected export is absent or outside selected modules: {name}" "" (some name)
@@ -341,7 +482,10 @@ unsafe def main (args : List String) : IO UInt32 := do
   let json ← IO.ofExcept <| Json.parse (← IO.FS.readFile path)
   let request ← IO.ofExcept <| fromJson? (α := LeanBridge.NativeExports.Request) json
   initSearchPath (← findSysroot)
-  let env ← importModules (request.modules.map fun name => { module := name.toName }) {} 0
+  let mut env ← importModules (request.modules.map fun name => { module := name.toName }) {} 0
+  if !(request.specializations.getD #[]).isEmpty then
+    env ← LeanBridge.NativeExports.loadBuiltinIndex classExtension env
+    env ← LeanBridge.NativeExports.loadBuiltinIndex instanceExtension.ext env
   let operation := if safetyOnly then do
       if request.exports.isEmpty then throwError "no exports supplied for implementation checking"
       for name in request.exports do

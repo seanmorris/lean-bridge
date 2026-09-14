@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { assertExportConfigurationCapabilities, exportConfigurationFile, exportTargets
-	, readExportConfiguration, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
+	, readExportConfiguration, specializationSelection, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { buildNativeProject } from "../src/build/native-project.mjs";
@@ -100,6 +100,42 @@ test("npm projection settings keep the Lean identity and validate exact coordina
 		assert.deepEqual(plan.document.component, original.bindingIr.document.component);
 		assert.notEqual(plan.document.source.treeSha256, original.sourceTreeSha256);
 	}
+});
+
+test("finite specialization choices are closed, ordered and rejected by unsupported backends", async t => {
+	const item = { name: "Library.echoWord", declaration: "Library.echo", types: ["UInt32"] };
+	const config = specializations => ({ schemaVersion: 1, specializations });
+	for(const value of [config([]), config([item]), config([item, { ...item, name: "Library.echoText", types: ["String"] }])])
+	{
+		assert.equal(validateExportConfiguration(value), value);
+		await assertJsonSchema("lean-export-configuration", value);
+	}
+	for(const invalid of [
+		null, {}, [null], [{ ...item, ignored: true }]
+		, [{ ...item, name: "Library.bad\n" }]
+		, [{ ...item, declaration: "Library.echo\r" }]
+		, [{ ...item, types: ["UInt32\u2028"] }]
+		, [{ ...item, types: [] }], [{ ...item, types: ["Array UInt32"] }]
+		, [{ ...item, types: Array(9).fill("UInt32") }]
+		, Array(129).fill(item)
+	]) {
+		assert.throws(() => validateExportConfiguration(config(invalid)), { code: "invalid-export-configuration" });
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", config(invalid)));
+	}
+	for(const value of [config([item, item])
+		, config([{ ...item, name: item.declaration }])
+		, config([item, { name: "Library.chain", declaration: item.name, types: ["Nat"] }])
+		, { ...config([item]), exports: {} }
+		, { ...config([item]), exports: ["Library.echo"] }])
+		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
+	const unsorted = [item, { ...item, name: "Library.echoText", types: ["String"] }];
+	assert.deepEqual(specializationSelection(config(unsorted)), specializationSelection(config(unsorted.toReversed())));
+	assert.deepEqual(specializationSelection(config([])), {});
+	assert.throws(() => assertExportConfigurationCapabilities(config([item]), { target: "cpan", fields: ["modules", "exports", "resources", "arities"] }), /does not yet implement specializations/);
+	const directory = await workspace(t);
+	await configure(directory, config([item]));
+	await assert.rejects(() => analyzeLeanProject(directory), { code: "specialization-requires-elaboration" });
+	await assert.rejects(() => buildNativeProject({ projectRoot: directory, outputRoot: join(directory, "output") }), { code: "unsupported-export-configuration" });
 });
 
 test("absent configuration preserves defaults without creating a file", async t => {

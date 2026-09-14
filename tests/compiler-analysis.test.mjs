@@ -230,6 +230,32 @@ test("real compiler analyzes a new package without creating a lock or trusting c
 	]) await assert.rejects(() => analyzeCompilerProject(root, { runner: replay(change), environment }), { code: "invalid-compiler-analysis" });
 });
 
+test("real compiler analysis binds finite selections to source intent and rejects substituted types", { skip: !enabled }, async t => {
+	const { root, directory } = await fixture(t);
+	await saveLakeFile(root, "OnboardingSmall.lean", "universe u\n/-- Double a selected concrete value. -/\ndef OnboardingSmall.twice {α : Type u} [Add α] (value : α) : α := value + value\n");
+	const specializations = [{ name: "OnboardingSmall.twiceWord", declaration: "OnboardingSmall.twice", types: ["UInt32"] }];
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.twiceWord"], specializations }));
+	const before = await lakeInputState(root);
+	const first = await analyzeCompilerProject(root, { runner: transport(), environment });
+	await assertJsonSchema("project-analysis", first);
+	assert.deepEqual(first.adapterHints, [], JSON.stringify(first.diagnostics));
+	assert.deepEqual(first.proposedExports, ["lean:OnboardingSmall.twiceWord"]);
+	assert.equal(first.bindingIr.document.declarations[0].parameters[0].type.name, "uint32");
+	assert.equal(first.bindingIr.document.declarations[0].source.declaration, "OnboardingSmall.twice");
+	const inventory = await inspectLeanProject(root), intent = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis" });
+	for(const change of [
+		value => { value.elaboration.request.specializations[0].types = ["Nat"]; }
+		, value => { delete value.elaboration.request.specializations; }
+		, value => { value.bindingIr.document.declarations[0].source.extensions["lean-lang.org/specialization"].application = "id"; }
+	]) {
+		const invalid = structuredClone(first); change(invalid);
+		assert.throws(() => validateCompilerProjectAnalysis(invalid, inventory, intent));
+	}
+	await cp(root, join(directory, "moved"), { recursive: true });
+	assert.deepEqual(await analyzeCompilerProject(join(directory, "moved"), { runner: transport(), environment }), first);
+	assert.deepEqual(await lakeInputState(root), before);
+});
+
 for(const variant of ["shop", "telemetry"]) test(`real compiler analysis preserves ${variant} aliases, custom paths and locked dependencies after relocation`, { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t, variant), path = await customLakeRoot(context);
 	await elaboratedLakeApi(context, path);

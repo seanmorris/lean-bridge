@@ -8,6 +8,8 @@ The analyzer captures the selected project root, Lean sources, Lake configuratio
 
 Fresh Lean interfaces supply names, types, documentation, source positions, effects, and theorem references. Cached `.ilean` files and source-scanned signatures supply no semantic evidence. An explicit reviewed Binding IR bypasses compilation and is labeled `existing-validated`.
 
+The scalar profile accepts [configured finite specializations](../../docs/lean/existing-package.md#export-concrete-specializations). Lean binds named concrete types, resolves following instance dictionaries, and checks the remaining primitive signature. Metadata retains each compiler application and its original declaration. Only Lean's built-in class/instance indexes are loaded; package initializers remain disabled. Native specialization and generic host overload dispatch remain separate work.
+
 ## Output
 
 An analysis result contains:

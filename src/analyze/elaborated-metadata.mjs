@@ -7,6 +7,7 @@ import { lstat, readFile, realpath } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
 import { validateNativeType } from "./native-types.mjs";
+import { validateExportConfiguration } from "./export-configuration.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-elaborated-metadata" }); };
 const closed = (value, keys) => {
@@ -16,7 +17,7 @@ const closed = (value, keys) => {
 const text = value => typeof value === "string" && value.length > 0;
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const ordered = values => Array.isArray(values) && values.every(text) && same(values, [...new Set(values)].sort());
-const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit"];
+const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "invalid-specialization", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit"];
 
 /**
  * Hash every interface artifact that Lean may import, including server/private data.
@@ -65,6 +66,13 @@ export const createMetadataRequest = (request, context) => ({ ...request, metada
 export const validateElaboratedMetadata = (report, request) => {
 	closed(report, ["schemaVersion", "kind", "profile", "producer", "modules", "diagnostics"]);
 	const profile = request.profile ?? "component-scalars-v1", native = profile === "native-library-v1";
+	const specializations = request.specializations ?? [];
+	try
+	{ validateExportConfiguration({ schemaVersion: 1, specializations, ...(request.exports.length ? { exports: request.exports } : {}) }); }
+	catch
+	{ fail("Invalid specialization selection"); }
+	if(native && specializations.length) fail("Native specialization is not supported");
+	const selections = new Map(specializations.map(item => [item.name, item]));
 	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
 		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");
 	closed(report.producer, ["adapter", "adapterVersion", "tool", "toolVersion", "toolchain", "invocationIdentitySha256"]);
@@ -83,7 +91,20 @@ export const validateElaboratedMetadata = (report, request) => {
 			|| !ordered(module.declarations.map(item => item?.identity))) fail("Metadata declarations or imports are not canonical");
 		for(const declaration of module.declarations)
 		{
-			closed(declaration, ["identity", "kind", "visibility", "selected", "source", "documentation", "typeExpression", "parameters", "resultExpression", "effects", "theoremReferences", "projection"]);
+			const selection = selections.get(declaration.identity);
+			closed(declaration, ["identity", "kind", "visibility", "selected", "source", "documentation", "typeExpression", "parameters", "resultExpression", "effects", "theoremReferences", "projection", ...(selection ? ["specialization"] : [])]);
+			if(selection)
+			{
+				const specialization = declaration.specialization;
+				closed(specialization, ["declaration", "types", "application"]);
+				const original = module.declarations.find(item => item.identity === selection.declaration);
+				if(!original || selections.has(original.identity) || specialization.declaration !== selection.declaration
+					|| !same(specialization.types, selection.types) || (specialization.application !== null && !text(specialization.application))
+					|| ["kind", "visibility", "source", "documentation", "theoremReferences"].some(key => !same(declaration[key], original[key])))
+					fail("Specialization differs from its configured source declaration");
+				if(declaration.projection?.status === "supported" && (!text(specialization.application) || declaration.visibility !== "public" || declaration.kind === "theorem"))
+					fail("Supported specialization lacks a compiler application");
+			}
 			if(identities.has(declaration.identity)) fail("Metadata repeats a declaration identity");
 			identities.add(declaration.identity);
 			if(!["definition", "opaque", "abbreviation", "theorem"].includes(declaration.kind) || !["public", "protected", "private"].includes(declaration.visibility)
@@ -105,9 +126,10 @@ export const validateElaboratedMetadata = (report, request) => {
 				if(!text(parameter.name) || !text(parameter.typeExpression) || !["explicit", "implicit", "strict-implicit", "instance-implicit"].includes(parameter.binderInfo)) fail("Invalid elaborated binder");
 			}
 			const projection = declaration.projection;
-			const expectedSelection = request.exportModules.includes(module.name) && (request.exports.length
+			const expectedSelection = request.exportModules.includes(module.name) && (Boolean(selection) || (request.exports.length
 				? request.exports.includes(declaration.identity)
-				: declaration.visibility === "public" && declaration.kind !== "theorem" && !["proof-only", "type-declaration"].includes(projection?.reason));
+				: declaration.visibility === "public" && declaration.kind !== "theorem" && !["proof-only", "type-declaration"].includes(projection?.reason)
+					&& !specializations.some(item => item.declaration === declaration.identity)));
 			if(declaration.selected !== expectedSelection) fail("Metadata selection differs from the authorized public API");
 			if(projection?.status === "unsupported")
 			{
@@ -156,11 +178,11 @@ export const validateElaboratedMetadata = (report, request) => {
 	for(const module of report.modules)
 		for(const declaration of module.declarations.filter(item => item.selected))
 		{
-			const hasDiagnostic = (category, code) => report.diagnostics.some(item => item.category === category && item.code === code && item.module === module.name && item.declaration === declaration.identity);
+			const hasDiagnostic = (category, code) => report.diagnostics.some(item => item.category === category && item.code === code && item.severity === "error" && item.module === module.name && item.declaration === declaration.identity);
 			if(declaration.projection.status === "unsupported" && !hasDiagnostic("unsupported-meaning", declaration.projection.reason)) fail("Unsupported export lacks its compiler diagnostic");
 			if(declaration.source === null && !hasDiagnostic("extractor-failure", "missing-source-position")) fail("Absent source position lacks an extractor diagnostic");
 		}
-	for(const name of request.exports)
-		if(!identities.has(name) && !report.diagnostics.some(item => item.category === "unsupported-meaning" && item.code === "missing-declaration" && item.declaration === name)) fail("Selected export is missing without a compiler diagnostic");
+	for(const name of [...request.exports, ...selections.keys()])
+		if(!identities.has(name) && !report.diagnostics.some(item => item.category === "unsupported-meaning" && item.code === "missing-declaration" && item.severity === "error" && item.declaration === name)) fail("Selected export is missing without a compiler diagnostic");
 	return true;
 };

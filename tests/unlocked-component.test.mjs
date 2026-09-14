@@ -229,6 +229,124 @@ for(const variant of ["tutorial", "custom", "scalars"]) test(`unlocked ${variant
 	}
 });
 
+test("finite specializations compile, reproduce and install as concrete npm exports", { skip: !enabled }, async t => {
+	const { directory, root } = await fixture(t);
+	await saveLakeFile(root, "OnboardingSmall.lean", `namespace OnboardingSmall
+universe u v
+abbrev Word := UInt32
+/-- Return the selected concrete value. -/
+def echo {α : Type u} (value : α) : α := value
+theorem echo_eq {α : Type u} (value : α) : echo value = value := rfl
+instance (priority := high) : Inhabited UInt32 := ⟨37⟩
+def choose {α : Type u} [Inhabited α] (useValue : Bool) (value : α) : α :=
+  if useValue then value else default
+def first (α : Type u) (β : Type v) (a : α) (_b : β) : α := a
+def plainWord (value : UInt32) : UInt32 := value + 3
+end OnboardingSmall
+namespace LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
+def OnboardingSmall.choose {α : Type u} [Inhabited α] (_useValue : Bool) (value : α) : α := value
+def OnboardingSmall.plainWord (value : UInt32) : UInt32 := value + 99
+abbrev UInt32 := UInt64
+end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
+`);
+	const specializations = [
+		{ name: "OnboardingSmall.echoWord", declaration: "OnboardingSmall.echo", types: ["OnboardingSmall.Word"] }
+		, { name: "OnboardingSmall.echoText", declaration: "OnboardingSmall.echo", types: ["String"] }
+		, { name: "OnboardingSmall.echoNat", declaration: "OnboardingSmall.echo", types: ["Nat"] }
+		, { name: "OnboardingSmall.chooseWord", declaration: "OnboardingSmall.choose", types: ["UInt32"] }
+		, { name: "OnboardingSmall.firstWord", declaration: "OnboardingSmall.first", types: ["UInt32", "String"] }
+	];
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.plainWord"], specializations }));
+	const before = await lakeInputState(root), moved = join(directory, "moved"), releases = [];
+	await cp(root, moved, { recursive: true });
+	const movedBefore = await lakeInputState(moved);
+	for(const [index, projectRoot] of [root, moved].entries())
+	{
+		const outputRoot = join(directory, `build-${index}`);
+		await build(projectRoot, outputRoot).catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
+		const bundleRoot = join(outputRoot, "bundle"), ir = await json(join(bundleRoot, "binding/binding-ir.json"));
+		assert.deepEqual(ir.declarations.map(item => item.name), ["chooseWord", "echoNat", "echoText", "echoWord", "firstWord", "plainWord"]);
+		assert.deepEqual(ir.assurance, []);
+		assert.ok(ir.declarations.every(item => item.typeParameters.length === 0 && item.assurance.length === 0));
+		releases.push(await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
+		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
+	}
+	assert.deepEqual(releases[0].report, releases[1].report);
+	assert.equal(sha256(await readFile(releases[0].componentArchive)), sha256(await readFile(releases[1].componentArchive)));
+	assert.deepEqual(await lakeInputState(root), before);
+	assert.deepEqual(await lakeInputState(moved), movedBefore);
+	const consumer = join(directory, "consumer");
+	await mkdir(consumer);
+	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
+	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
+	await saveLakeFile(consumer, "index.mjs", `import assert from "node:assert/strict";
+import * as api from "onboarding-small";
+assert.equal(api.echoWord(4294967295), 4294967295);
+assert.equal(api.echoText("Lean λ 🙂"), "Lean λ 🙂");
+assert.equal(api.echoNat(2n ** 100n), 2n ** 100n);
+assert.equal(api.chooseWord(false, 9), 37);
+assert.equal(api.chooseWord(true, 9), 9);
+assert.equal(api.firstWord(71, "ignored"), 71);
+assert.equal(api.plainWord(71), 74);
+assert.equal(api.echo, undefined);
+assert.throws(() => api.echoWord(-1));
+assert.throws(() => api.echoText(7));
+console.log("finite exports passed");
+`);
+	const installed = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer })
+		.catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
+	assert.equal(installed.stdout.trim(), "finite exports passed");
+	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
+	assert.match(declarations, /echoWord\(arg0: number\): number/);
+	assert.match(declarations, /echoText\(arg0: string\): string/);
+	assert.match(declarations, /echoNat\(arg0: bigint\): bigint/);
+	assert.match(declarations, /chooseWord\(arg0: boolean, arg1: number\): number/);
+	assert.doesNotMatch(declarations, /<T>|\bany\b/);
+	await lakeGit(root, "init", "--quiet");
+	await lakeGit(root, "add", ".");
+	await lakeGit(root, "commit", "--quiet", "-m", "Finite specialization source");
+	const result = await runComponentReproducibilityGate({ projectRoot: root
+		, outputRoot: join(directory, "publication"), engineRoot
+		, targets: ["npm"], environment
+		, build: options => buildCanonicalProject({ ...options, runner: transport() }) });
+	assert.equal(result.result, "passed");
+	assert.equal(result.externalRegistryWrites, false);
+	await verifyPublishManifest({ manifestPath: result.publishManifest });
+	t.diagnostic(`Finite component archive SHA-256: ${sha256(await readFile(releases[0].componentArchive))}`);
+});
+
+test("specialized target metadata cannot substitute its compiler application or concrete types", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	for(const mode of ["application", "types"])
+	{
+		await t.test(mode, async t => {
+			const { directory, root } = await fixture(t);
+			await saveLakeFile(root, "OnboardingSmall.lean", "def OnboardingSmall.echo {α : Type} (value : α) := value\n");
+			await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], specializations: [{ name: "OnboardingSmall.echoWord", declaration: "OnboardingSmall.echo", types: ["UInt32"] }] }));
+			const before = await lakeInputState(root);
+			let extracted = false, linked = false;
+			const compiler = { capture: async command => {
+				if(command.args.some(value => value.includes("SIDE_MODULE="))) linked = true;
+				const result = await processBuildRunner.capture(command);
+				if(command.args.includes("--metadata"))
+				{
+					extracted = true;
+					const report = JSON.parse(result.stdout);
+					const specialization = report.modules.flatMap(module => module.declarations).find(item => item.specialization).specialization;
+					if(mode === "application") specialization.application = "fun (value : UInt32) => value + 1";
+					else specialization.types = ["String"];
+					return { ...result, stdout: JSON.stringify(report) };
+				}
+				return result;
+			} };
+			await assert.rejects(() => build(root, join(directory, "rejected"), transport({ compiler })), { code: "lean-entry-elaboration-drift" });
+			assert.equal(extracted, true);
+			assert.equal(linked, false);
+			assert.deepEqual(await lakeInputState(root), before);
+			assert.deepEqual(await readdir(directory), ["project"]);
+		});
+	}
+});
+
 test("an unlocked publication dry run rebuilds clean clones and verifies the handoff", { skip: !enabled }, async t => {
 	const { directory, root } = await fixture(t);
 	await lakeGit(root, "init", "--quiet");

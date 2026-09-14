@@ -37,6 +37,7 @@
       "properties": {
         "bindingId": { "type": "string", "minLength": 1 },
         "sourceDeclaration": { "type": "string", "minLength": 1 },
+        "sourceApplication": { "type": "string", "minLength": 1 },
         "sourceModule": { "type": "string", "minLength": 1 },
         "wrapper": { "type": "string", "pattern": "^export_[0-9a-f]{20}$" },
         "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },

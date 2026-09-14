@@ -60,7 +60,7 @@ const leanType = type => {
 	{
 		const result = primitiveLeanTypes.get(type.name);
 		if(result === undefined) fail("unsupported-compiler-type", `No Lean compiler adapter type exists for ${type.name}`);
-		return result;
+		return `_root_.${result}`;
 	}
 	if(type.kind === "named")
 	{
@@ -105,7 +105,8 @@ export const validateCompilerAdapterPlan = plan => {
 	const symbols = new Set();
 	for(const item of plan.exports)
 	{
-		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect"], "compiler export");
+		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect", ...(item.sourceApplication === undefined ? [] : ["sourceApplication"])], "compiler export");
+		if(item.sourceApplication !== undefined && (typeof item.sourceApplication !== "string" || !item.sourceApplication.length)) fail("invalid-compiler-adapter-plan", "Specialized exports require a compiler application");
 		for(const key of ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "leanResultType"]) if(typeof item[key] !== "string" || item[key] === "") fail("invalid-compiler-adapter-plan", `compiler export ${key} must be a string`);
 		if(!/^lean_bridge_[0-9a-f]{24}$/.test(item.symbol) || symbols.has(item.symbol)) fail("invalid-compiler-adapter-plan", "compiler export symbols must be unique generated names");
 		symbols.add(item.symbol);
@@ -143,8 +144,8 @@ const renderLeanSource = ({ imports, exports, module }) => {
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
 		const arguments_ = item.parameters.map(parameter => parameter.name).join(" ");
 		lines.push(`@[export ${item.symbol}_lean]`);
-		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : Unit)" : parameters} : ${item.leanEffect === null ? item.leanResultType : `${item.leanEffect} ${item.leanResultType}`} :=`);
-		lines.push(`  ${item.sourceDeclaration}${arguments_ === "" ? "" : ` ${arguments_}`}`);
+		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : _root_.Unit)" : parameters} : ${item.leanEffect === null ? item.leanResultType : `_root_.${item.leanEffect} ${item.leanResultType}`} :=`);
+		lines.push(`  ${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${arguments_ === "" ? "" : ` ${arguments_}`}`);
 		lines.push("");
 	}
 	lines.push(`end ${module}`, "");
@@ -166,12 +167,23 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
     assertComponentSignature(declaration);
     if(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null) fail("unsupported-compiler-declaration", `Compiler adapter cannot emit ${declaration.id}`);
     const sourceDeclaration = declaration.source.declaration;
-    const candidate = candidates.get(sourceDeclaration);
+    const specialization = declaration.source.extensions["lean-lang.org/specialization"];
+    const candidate = candidates.get(specialization?.name ?? sourceDeclaration);
     if(candidate?.status !== "exportable") fail("compiler-source-declaration-missing", `No exportable Lean source declaration matches ${sourceDeclaration}`);
+    if(specialization)
+    {
+      const checked = analysis.elaboration?.metadata.modules.flatMap(module => module.declarations).find(item => item.identity === specialization.name);
+      if(analysis.bindingIr.origin !== "lean-elaborated" || !checked?.specialization
+        || checked.projection.status !== "supported" || !checked.selected
+        || specialization.declaration !== sourceDeclaration
+        || canonicalJson(specialization) !== canonicalJson({ name: checked.identity, ...checked.specialization }))
+        fail("compiler-specialization-drift", "Specialization lacks its matching compiler-owned application");
+    }
     const effect = declaration.source.extensions["lean-lang.org/effect"] ?? null;
     const item = Object.freeze({
       bindingId: declaration.id
       , sourceDeclaration
+      , ...(specialization ? { sourceApplication: specialization.application } : {})
       , sourceModule: candidate.sourceModule ?? sourceModule(candidate.path)
       , wrapper: wrapperIdentifier(declaration.id)
       , symbol: exportSymbol(analysis.bindingIr.document.component.id, declaration.id)

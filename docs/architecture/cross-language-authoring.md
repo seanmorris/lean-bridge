@@ -28,7 +28,7 @@ The first implementation supplies `modules`, `exports`, `resources`, `arities`, 
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. Native projections retain their compiler-checked C representations, resource selection and closure arities. Tasks 1107 and 1108 remain open for finite specialization and remaining parity checks. Configuration support does not enable additional source targets.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. Native projections retain their compiler-checked C representations, resource selection and closure arities. npm and public analysis accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Tasks 1107 and 1108 remain open for native specialization and remaining parity checks. Configuration support does not enable additional source targets.
 
 ## Locked dependency milestones
 

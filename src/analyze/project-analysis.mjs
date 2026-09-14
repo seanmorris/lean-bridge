@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { projectElaboratedMetadata } from "./project-elaborated.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
+import { specializationSelection } from "./export-configuration.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-compiler-analysis" }); };
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
@@ -78,7 +79,7 @@ export const compilerProjectAnalysis = (inventory, entries, elaboration) => {
 export const reviewedProjectAnalysis = async (projectRoot, inventory, signal) => {
 	const paths = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json"));
 	if(!paths.length) fail("Reviewed analysis requires an explicit Binding IR document");
-	if(["modules", "exports", "resources", "arities"].some(key => inventory.configurationRecord.configuration[key] !== undefined))
+	if(["modules", "exports", "resources", "arities", "specializations"].some(key => inventory.configurationRecord.configuration[key] !== undefined))
 		throw Object.assign(new Error("Shared source selection cannot override a reviewed Binding IR"), { code: "export-configuration-reviewed-ir" });
 	let bindingIr = null;
 	if(paths.length === 1)
@@ -140,7 +141,8 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 	const elaboration = analysis?.elaboration;
 	closed(elaboration, ["schemaVersion", "kind", "snapshotSha256", "generatedSourcesSha256", "leanCompilerSha256", "extractorSha256", "request", "interfaces", "metadata"]);
 	const { request } = elaboration;
-	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata"]);
+	const selectionFields = specializationSelection(inventory.configurationRecord.configuration);
+	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields)]);
 	closed(request.metadata, ["toolchain", "invocationIdentitySha256", "modules"]);
 	if(![elaboration.snapshotSha256, elaboration.leanCompilerSha256, elaboration.extractorSha256].every(digest)
 		|| (elaboration.generatedSourcesSha256 !== null && !digest(elaboration.generatedSourcesSha256))
@@ -151,6 +153,7 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 	if(elaboration.snapshotSha256 !== intent.lakeSnapshot.sha256 || request.metadata.toolchain !== inventory.project.toolchain
 		|| !same(request.exportModules, intent.document.modules.map(item => item.module).sort())
 		|| !same(request.exports, inventory.configurationRecord.configuration.exports ?? [])
+		|| !same(request.specializations ?? [], selectionFields.specializations ?? [])
 		|| !request.exportModules.every(name => request.modules.includes(name)))
 		fail("Compiler analysis differs from the authorized source or export selection");
 	if(!same(request.metadata.modules.map(module => module?.name), request.modules)) fail("Compiler analysis module order differs from its invocation");

@@ -12,6 +12,7 @@ import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
+const specializationName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
 export const exportTargets = Object.freeze([
 	"npm", "pypi", "cargo", "c", "cpp", "nuget", "maven", "rubygems"
 	, "cpan", "php-native", "php-wasm", "wit-wasi"
@@ -55,9 +56,30 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "specializations", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.generators !== undefined) validateGeneratorConfiguration(configuration.generators);
+	if(configuration.specializations !== undefined)
+	{
+		const values = configuration.specializations;
+		if(!Array.isArray(values) || values.length > 128)
+			fail("invalid-export-configuration", "specializations must be an array of at most 128 concrete exports");
+		const names = new Set();
+		for(const value of values)
+		{
+			closed(value, ["name", "declaration", "types"], "specialization");
+			if([value.name, value.declaration].some(name => typeof name !== "string" || !specializationName.test(name))
+				|| value.name === value.declaration || names.has(value.name)
+				|| !Array.isArray(value.types) || !value.types.length || value.types.length > 8
+				|| value.types.some(name => typeof name !== "string" || !specializationName.test(name)))
+				fail("invalid-export-configuration", "Each specialization needs a unique new Lean name, a source declaration and one to eight closed type names");
+			if(configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(value.name)))
+				fail("invalid-export-configuration", `Specialization ${value.name} must appear in exports when exports is configured`);
+			names.add(value.name);
+		}
+		if(values.some(value => names.has(value.declaration)))
+			fail("invalid-export-configuration", "Specializations must refer to source declarations, not other specializations");
+	}
 	for(const key of ["modules", "exports", "resources"])
 	{
 		if(configuration[key] === undefined) continue;
@@ -110,6 +132,15 @@ export const validateExportConfiguration = configuration => {
 	}
 	return configuration;
 };
+
+/**
+ * Carry finite author choices into a deterministic compiler request.
+ *
+ * @param configuration - Validated source configuration.
+ */
+export const specializationSelection = configuration => configuration.specializations?.length
+	? { specializations: configuration.specializations.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0) }
+	: {};
 
 /**
  * Read optional author intent and reject the removed Perl-only configuration.

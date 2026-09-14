@@ -46,7 +46,45 @@ Ordinary npm builds send source and module selection to the engine without host-
 
 Native CPAN uses the same [compiler report](../architecture/elaborated-export-metadata.md) with its native type projection. Its prepared package includes `metadata.json` with documentation, source locations, resolved native types and theorem references. The native receipt binds that report to the compiled library. `resources` and `arities` remain native configuration decisions; public `analyze` still checks the ordinary scalar profile.
 
-The npm builder accepts shared module/export selection, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+The npm builder accepts shared module/export selection, `specializations`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection accepts module/export selection, `generators`, `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`; it does not yet accept `specializations`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+
+### Export concrete specializations
+
+For npm, select concrete versions of a generic function without adding wrappers to the Lean library. Given this definition in `Library.lean`:
+
+```lean
+universe u
+def Library.echo {α : Type u} (value : α) : α := value
+```
+
+Configure the exported names and their type arguments in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Library"],
+  "exports": ["Library.echoNat", "Library.echoText"],
+  "specializations": [
+    { "name": "Library.echoNat", "declaration": "Library.echo", "types": ["Nat"] },
+    { "name": "Library.echoText", "declaration": "Library.echo", "types": ["String"] }
+  ]
+}
+```
+
+Lean checks each application and the build compiles two concrete functions. The generated TypeScript API is:
+
+```ts
+export declare function echoNat(arg0: bigint): bigint;
+export declare function echoText(arg0: string): string;
+```
+
+Use the usual `analyze`, `build --target npm`, and `publish --target npm --dry-run` commands. Consumers call the named functions from the installed package; they supply no Lean type arguments. The runtime remains an automatic npm dependency.
+
+Each entry needs a new fully qualified `name`, an existing public `declaration` in the selected modules, and one to eight `types`. Types are closed Lean constant names, including aliases, in leading parameter order. Expressions such as `Array UInt32` are not configuration syntax. Lean resolves universe levels and any instance binders immediately following that type prefix. Remaining arguments and results must fit the [primitive npm profile](export-decisions.md#start-with-the-runnable-npm-shapes).
+
+The file accepts at most 128 specializations. Names cannot duplicate each other, shadow existing declarations, or refer to another specialization. When `exports` is present, include every configured specialization name. Without `exports`, discovery includes the concrete names and omits their unspecialized source functions; other public functions still need supported signatures.
+
+Missing instances, unresolved types, dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Configured specialization currently supports npm and its scalar analysis profile, not native CPAN or generic host-language overload dispatch.
 
 ### Select modules in a custom source directory
 

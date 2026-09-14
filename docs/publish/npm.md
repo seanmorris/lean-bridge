@@ -24,6 +24,8 @@ Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-
 
 A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm's supported API remains pure functions with primitive arguments and results. Explicit reviewed Binding IR uses its existing separate validation path.
 
+To publish concrete versions of generic Lean functions, configure [finite specializations](../lean/existing-package.md#export-concrete-specializations). Lean checks the selected types and instance dictionaries; each configured name becomes a concrete JavaScript/TypeScript function. The source configuration and compiler applications travel with the build bundle and publication receipts.
+
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
 ## Publish an ordinary component

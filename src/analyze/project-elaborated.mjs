@@ -61,6 +61,7 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 	const doc = summary => ({ summary, details: "" });
 	const declarations = candidates.filter(item => item.status === "exportable").map(candidate => {
 		const source = byIdentity.get(candidate.declaration);
+		const specialization = source.specialization ? { name: source.identity, ...source.specialization } : null;
 		return { id: `lean:${source.identity}`
 			, name: source.identity.split(".").at(-1)
 			, kind: "function"
@@ -83,7 +84,10 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 			, capabilities: []
 			, assurance: []
 			, documentation: doc(source.documentation ?? `Call ${source.identity}.`)
-			, source: { producer: "lean", declaration: source.identity, extensions: { "lean-lang.org/theorem-references": source.theoremReferences } } };
+			, source: { producer: "lean"
+				, declaration: specialization?.declaration ?? source.identity
+				, extensions: { "lean-lang.org/theorem-references": source.theoremReferences
+					, ...(specialization ? { "lean-lang.org/specialization": specialization } : {}) } } };
 	});
 	const facts = inventory.project;
 	const id = `${facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project"}@${facts.version}`;

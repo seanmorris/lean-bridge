@@ -179,22 +179,22 @@
         {"path":"schema/lake-dependency-snapshot.schema.json","sha256":"cd7c248698129132f028f288d404609eb4f07b310d300359620250804220e2b8"},
         {"path":"tests/lake-workspace.test.mjs","sha256":"b23bcb41c26a4a6426aa41cf86333abf75956c46e4294ae1a9911187e7bbafe6"},
         {"path":"tests/helpers/lake-workspace.mjs","sha256":"6335d57f250ee95a4f2309d6259f525c040cce95acf611231f01bb4539b4336a"},
-        {"path":"src/analyze/export-configuration.mjs","sha256":"50257540b127629c3e0100d39a8d541df17cf053e71b18fd6a5e62c515cc81ed"},
-        {"path":"schema/lean-export-configuration.schema.json","sha256":"ec367ca0c1399b3e78a960cf16ad566f238d94c539f060e097f62e72101f0f52"},
+        {"path":"src/analyze/export-configuration.mjs","sha256":"33dc504cb253e657d372ff396bc72c422443df2dc8bb5c77dce80821750a6a76"},
+        {"path":"schema/lean-export-configuration.schema.json","sha256":"bcb21866e3c8ccb6d202b16021be103650c8afc08f2917e1e0263b1383315393"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
-        {"path":"tests/export-configuration.test.mjs","sha256":"83e4914adcf39e3f173a20a267e27319bb3e82196cc8c4d898a251516de4db92"},
+        {"path":"tests/export-configuration.test.mjs","sha256":"ea8554af6d94d5d743925e9391303bf3f682fa940de57eb5c6580a717808ed27"},
         {"path":"tests/fixtures/perl/ordinary/lean-bridge.exports.json","sha256":"2fe018e046eed132796a61fd0b32b7169796ffbd19c2f77b88b5c6339aeee684"},
         {"path":"scripts/prepare-perl-platform-packages.mjs","sha256":"b9c1b9d66d6852d952b830e51d553760034236f7807e298f2bdfe0ef704b8519"},
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "d95fce46e4fb14d0afd994ea1b90bd5e98432e1093fe1cfdbe7dc2aff137b6b1"
+          "sha256": "ef64d96221167d901f1b0c734566880b4b597d3be38668da798265be10c86eb2"
         },
         {"path":"src/analyze/native-metadata.mjs","sha256":"24c86d39a59f483e4fc72b597c89e69ce1783da00d7c05003396077ef2d60340"},
         {"path":"src/analyze/native-types.mjs","sha256":"70f5f9c4d080eddf778b4f34782d8135fefe45d3a921ab6e820f73aa475502c1"},
-        {"path":"src/analyze/elaborated-metadata.mjs","sha256":"93887faa60fece1864c4842e83ed23013e44b80b8348a15f2791b7757d7bf6d3"},
-        {"path":"schema/elaborated-export-metadata.schema.json","sha256":"e37ba2b4c106fa98ce57cb05e8cefcf9061ca07d55077a8e2e1257f24184c3b6"},
+        {"path":"src/analyze/elaborated-metadata.mjs","sha256":"b6f73f71705206672af00efe6dd8e9e7fe5d590628a0808c65e06eb206fdfece"},
+        {"path":"schema/elaborated-export-metadata.schema.json","sha256":"8fa060e285a0c9b9a9739f9adb385de93619b4ec00c2e812c1ea62aff1d15129"},
         {"path":"schema/native-metadata-type.schema.json","sha256":"06219659d15d0dda06f86c4664e6bf2f0f20af267a1085032633e4f875cb42d3"},
         {
           "path": "src/build/native-component.mjs",
@@ -340,8 +340,8 @@
       "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
-        {"path":"src/analyze/lean-project.mjs","sha256":"17f74b315f6b521611297d65dcd7e5b7ab21fe33a5ea16c809805ed1572cf5c5"},
-        {"path":"src/build/component-plan.mjs","sha256":"9aeff469132dfc1f2848f8c997d9439db58c63cc233591a5c1edfab36e06a3b0"},
+        {"path":"src/analyze/lean-project.mjs","sha256":"4c5aa771daaf1e5d6944dbbed553ac49258f71d7f69087baba01cf4ecdfdb7af"},
+        {"path":"src/build/component-plan.mjs","sha256":"a3d02b3d9c9ca735844029d85cbc6ea802d4b7e622862fdf5e939a9c66eebf00"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"f55f8d21f20ac2182d0dbb1766427a435bf26bece6fa32d84cdc3a8441f683fb"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},
@@ -349,7 +349,7 @@
         {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
         {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
         {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
-        {"path":"src/release/component-npm-package.mjs","sha256":"4fd921ec86796ede20af288a64ae74e602deac8a0295cdd0fe857dd41fb42fec"}
+        {"path":"src/release/component-npm-package.mjs","sha256":"fab406d588d1fe26232f1bc74b1cd26010a411aa2da7bfb309b5d87e04bd3236"}
       ],
       "artifacts": []
     },

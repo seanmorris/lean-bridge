@@ -137,7 +137,16 @@
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 1 }
         },
-        "projection": { "$ref": "#/$defs/projection" }
+        "projection": { "$ref": "#/$defs/projection" },
+        "specialization": {
+          "type": "object", "additionalProperties": false,
+          "required": ["declaration", "types", "application"],
+          "properties": {
+            "declaration": { "$ref": "lean-export-configuration.schema.json#/$defs/specializationName" },
+            "types": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "$ref": "lean-export-configuration.schema.json#/$defs/specializationName" } },
+            "application": { "type": ["string", "null"], "minLength": 1 }
+          }
+        }
       }
     },
     "projection": {
@@ -248,6 +257,7 @@
                 "unsupported-result-type",
                 "visibility",
                 "specialization-required",
+                "invalid-specialization",
                 "type-declaration",
                 "proof-only",
                 "admitted-implementation",

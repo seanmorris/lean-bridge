@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { chmod, cp, readdir, writeFile } from "node:fs/promises";
+import { access, chmod, cp, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 import { createMetadataRequest, identifyLeanInterface, validateElaboratedMetadata } from "../src/analyze/elaborated-metadata.mjs";
@@ -171,6 +171,113 @@ test("namespace collisions remain explicit adapter decisions instead of merged h
 	assert.equal(report.bindingIr, null);
 	assert.equal(report.adapterHints.length, 2);
 	assert.ok(report.adapterHints.every(item => item.reason === "public-name-collision"));
+});
+
+test("finite specializations resolve aliases, universes and instance dictionaries in Lean", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `import Catalog
+initialize IO.FS.writeFile ${JSON.stringify(join(context.directory, "initializer-ran"))} "unexpected"
+namespace Shop
+universe u v
+abbrev Word := UInt32
+/-- Keep the chosen concrete value. -/
+def keep {α : Type u} (value : α) : α := value
+theorem keep_eq {α : Type u} (value : α) : keep value = value := rfl
+instance (priority := high) : Inhabited UInt32 := ⟨37⟩
+def pick {α : Type u} [Inhabited α] (useValue : Bool) (value : α) : α :=
+  if useValue then value else default
+def first (α : Type u) (β : Type v) (a : α) (_b : β) : α := a
+end Shop
+`);
+	const specializations = [
+		{ name: "Shop.keepWord", declaration: "Shop.keep", types: ["Shop.Word"] }
+		, { name: "Shop.keepText", declaration: "Shop.keep", types: ["String"] }
+		, { name: "Shop.pickWord", declaration: "Shop.pick", types: ["UInt32"] }
+		, { name: "Shop.firstWord", declaration: "Shop.first", types: ["UInt32", "String"] }
+	];
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: specializations.map(item => item.name), specializations }));
+	const before = await lakeInputState(context.workspace), first = await inspect(context);
+	assert.deepEqual(first.adapterHints, [], JSON.stringify(first.diagnostics));
+	await assertJsonSchema("elaborated-export-metadata", first.elaboration.metadata);
+	await assertJsonSchema("lake-entry-elaboration", first.elaboration);
+	const definitions = first.bindingIr.document.declarations;
+	assert.deepEqual(definitions.map(item => item.name), ["firstWord", "keepText", "keepWord", "pickWord"]);
+	assert.deepEqual(definitions.find(item => item.name === "firstWord").parameters.map(item => item.type.name), ["uint32", "string"]);
+	const keep = definitions.find(item => item.name === "keepWord");
+	assert.equal(keep.source.declaration, "Shop.keep");
+	assert.deepEqual(keep.source.extensions["lean-lang.org/theorem-references"], ["Shop.keep_eq"]);
+	assert.deepEqual(keep.assurance, []);
+	assert.equal(keep.parameters[0].type.name, "uint32");
+	assert.match(definitions.find(item => item.name === "pickWord").source.extensions["lean-lang.org/specialization"].application, /Shop\.instInhabitedUInt32/);
+	const moved = join(context.directory, "moved");
+	await cp(context.workspace, moved, { recursive: true });
+	assert.deepEqual(await inspect({ ...context, root: join(moved, "project") }), first);
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+	await assert.rejects(() => access(join(context.directory, "initializer-ran")), { code: "ENOENT" });
+	for(const change of [
+		item => { item.specialization.types = ["Nat"]; }
+		, item => { item.specialization.declaration = "Shop.first"; }
+		, item => { item.specialization.application = null; }
+		, item => { delete item.specialization; }
+		, item => { item.theoremReferences = []; }
+	]) {
+		const forged = structuredClone(first.elaboration.metadata);
+		change(forged.modules.find(module => module.name === "Shop").declarations.find(item => item.identity === "Shop.keepWord"));
+		assert.throws(() => validateElaboratedMetadata(forged, first.elaboration.request), { code: "invalid-elaborated-metadata" });
+	}
+});
+
+test("finite specializations reject unresolved, dependent, effectful and admitted applications", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `import Catalog
+namespace Shop
+universe u v
+def keep {α : Type u} (value : α) : α := value
+def two {α : Type u} {β : Type v} (a : α) (_b : β) : α := a
+def dependent {α : Type} (size : Nat) (_value : Fin size) (_a : α) : Nat := size
+def effect {α : Type} (a : α) : IO α := pure a
+def admitted {α : Type} (a : α) : α := by sorry
+class Missing (α : Type) where value : α
+def needsMissing {α : Type} [Missing α] : α := Missing.value
+class UnsafeDefault (α : Type) where value : α
+instance : UnsafeDefault UInt32 := ⟨by sorry⟩
+def needsUnsafe {α : Type} [UnsafeDefault α] : α := UnsafeDefault.value
+abbrev Words := Array UInt32
+end Shop
+`);
+	const cases = [
+		["unknownType", "keep", ["UnknownType"], "invalid-specialization"]
+		, ["extraType", "keep", ["UInt32", "String"], "invalid-specialization"]
+		, ["remainingType", "two", ["UInt32"], "invalid-specialization"]
+		, ["dependentArg", "dependent", ["UInt32"], "dependent-type"]
+		, ["effectful", "effect", ["UInt32"], "unsupported-effect"]
+		, ["unproven", "admitted", ["UInt32"], "invalid-specialization"]
+		, ["missingInstance", "needsMissing", ["UInt32"], "invalid-specialization"]
+		, ["admittedInstance", "needsUnsafe", ["UInt32"], "invalid-specialization"]
+		, ["container", "keep", ["Shop.Words"], "unsupported-parameter-type"]
+	];
+	const specializations = cases.map(([name, declaration, types]) => ({ name: `Shop.${name}`, declaration: `Shop.${declaration}`, types }));
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: specializations.map(item => item.name), specializations }));
+	const before = await lakeInputState(context.workspace), result = await inspect(context);
+	assert.equal(result.bindingIr, null);
+	for(const [name, , , reason] of cases)
+		assert.ok(result.adapterHints.some(item => item.declaration === `Shop.${name}` && item.reason === reason), JSON.stringify(result.diagnostics));
+	assert.match(result.diagnostics.find(item => item.declaration === "Shop.admittedInstance").message, /sorry/);
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+	await assertJsonSchema("elaborated-export-metadata", result.elaboration.metadata);
+});
+
+test("specialization names cannot shadow declarations or expose a dependency as a public root", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", "import Catalog\ndef Shop.keep {α : Type} (value : α) := value\ndef Shop.exists : UInt32 := 2\n");
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], specializations: [{ name: "Shop.keepWord", declaration: "Shop.keep", types: ["UInt32"] }] }));
+	assert.deepEqual((await inspect(context)).bindingIr.document.declarations.map(item => item.name), ["exists", "keepWord"]);
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], specializations: [{ name: "Shop.exists", declaration: "Shop.keep", types: ["UInt32"] }] }));
+	await assert.rejects(() => inspect(context), error => error.code === "lean-metadata-extractor-failed" && /specialization name already exists/.test(JSON.stringify(error.details)));
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: ["Shop.fromDependency"], specializations: [{ name: "Shop.fromDependency", declaration: "Catalog.quote", types: ["UInt32"] }] }));
+	const result = await inspect(context);
+	assert.equal(result.bindingIr, null);
+	assert.equal(result.adapterHints[0].reason, "missing-declaration");
 });
 
 test("interface identity includes server/private sidecars and detects changed bytes", async t => {
