@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -165,6 +165,15 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await call(["restore", "--source", source, "--nologo"]);
 		await call(["build", "--no-restore", "--configuration", "Release", "--disable-build-servers", "/p:UseSharedCompilation=false", "--nologo"]);
 		assert.equal((await call(["bin/Release/net8.0/Consumer.dll"])).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("maven"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "maven");
+		const jar = join(builds[0].output, pkg.archives.find(file => file.path.endsWith(".jar")).path);
+		const root = join(consumer, "java");
+		await saveLakeFile(root, "Consumer.java", 'class Consumer { public static void main(String[] args) { System.out.println(org.leanbridge.shop.Api.quote(20)); } }\n');
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_JAVAC ?? "javac", args: ["--release", "22", "-cp", jar, "Consumer.java"], cwd: root });
+		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_JAVA ?? "java", args: ["--enable-native-access=ALL-UNNAMED", "-cp", `.:${jar}`, "Consumer"], cwd: root })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

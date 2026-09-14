@@ -64,6 +64,24 @@ Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on P
 
 The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++ and NuGet from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl and .NET.
 
+### Ordinary-source Maven packages
+
+Use the pinned Lean compiler, a native C compiler, JDK 22, Maven and Kotlin's JVM compiler/runner. CI uses Temurin 22.0.2 and the checksummed Kotlin 2.2.0 compiler archive. Run all JVM tools with the same JDK:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+export LEAN_BRIDGE_KOTLINC=/absolute/path/to/kotlinc/bin/kotlinc
+export LEAN_BRIDGE_KOTLIN=/absolute/path/to/kotlinc/bin/kotlin
+LEAN_BRIDGE_NATIVE_JVM_TEST=1 \
+  node --test --test-reporter=spec tests/native-jvm.test.mjs
+```
+
+Set `JAVA_HOME` to JDK 22 first, and set `LEAN_BRIDGE_MAVEN` if `mvn` is not on PATH. The suite compiles Maple and Cedar, compares relocated JAR/POM bytes, hides their sources, installs the archives with Maven and executes Java and Kotlin consumers. It checks exact primitives, nested arrays/records, rejection, cleanup, concurrent calls, tampering, class-loader isolation and two packages sharing one runtime. Maven may download its pinned install plugin; the Lean packages come from the supplied files. See the [JVM acceptance record](../evidence/native-jvm-20260914.md).
+
+The mixed-profile Shop check now includes Maven alongside npm, CPAN, C, C++ and NuGet, with one native and one Wasm compilation.
+
 ## Native PHP package
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:

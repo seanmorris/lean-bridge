@@ -6,6 +6,8 @@
 
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
+import { compileCopiedJvmModel } from "./copied-model.mjs";
+import { renderCopiedJvmPackage } from "./copied-values.mjs";
 
 const publicSources = model => ({
 	"src/main/java/org/leanbridge/alpha/Payload.java": `package org.leanbridge.alpha;
@@ -421,18 +423,19 @@ const pomSource = model => `<project xmlns="http://maven.apache.org/POM/4.0.0" x
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const compileJvmPackageModel = ir => Object.freeze({
-	ir
-	, model: compileManagedAlphaModel(ir, "jvm")
-});
+export const compileJvmPackageModel = ir => ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))
+	? Object.freeze({ ir, copied: compileCopiedJvmModel(ir), model: null })
+	: Object.freeze({ ir, copied: null, model: compileManagedAlphaModel(ir, "jvm") });
 
 /**
  * Renders a deterministic JVM package layout from its compiled model.
  *
  * @param root0 - Compiled JVM package model.
  * @param root0.model - Managed projection model.
+ * @param root0.copied - Ordinary copied-value projection, when selected.
  */
-export const renderJvmPackageLayout = ({ model }) => {
+export const renderJvmPackageLayout = ({ model, copied }) => {
+	if(copied) return renderCopiedJvmPackage(copied);
 	const publicEntries = publicSources(model);
 	const publicFiles = Object.keys(publicEntries).sort();
 	const internalFiles = ["src/main/java/org/leanbridge/alpha/Runtime.java"];

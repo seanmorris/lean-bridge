@@ -15,6 +15,7 @@ import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
+import { compileCopiedJvmModel, validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
@@ -30,14 +31,15 @@ import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../back
  */
 export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress, lakeSnapshot })
 {
-	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget"].includes(target)))
-		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, and cpan targets");
+	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven"].includes(target)))
+		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, and cpan targets");
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
 	for(const target of targets)
 	{
 		assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 		if(target === "nuget") validateOrdinaryNugetSettings(config.targets?.[target]);
+		else if(target === "maven") validateOrdinaryMavenSettings(config.targets?.[target]);
 		else if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
 	}
 	const cTargets = targets.filter(target => target !== "cpan");
@@ -62,7 +64,11 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
-			, validateModel: cTargets.length ? model => targets.includes("nuget") ? compileCopiedDotnetModel(model.bindingIr) : compilePrimitiveCSurface(model.bindingIr) : undefined
+			, validateModel: cTargets.length ? model => {
+				compilePrimitiveCSurface(model.bindingIr);
+				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
+				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
+			} : undefined
 			, signal });
 		const projections = cTargets.length ? await projectNativeCFamily({
 			working, nativeRoot, runtimeRoot, leanPrefix

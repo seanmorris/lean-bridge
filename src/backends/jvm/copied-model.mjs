@@ -1,0 +1,75 @@
+/**
+ * Admit copied JVM APIs and calculate the Linux x86-64 C value layouts.
+ *
+ * @file
+ */
+import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
+
+const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
+const camel = name => { const value = pascal(name); return value[0].toLowerCase() + value.slice(1); };
+const reserved = new Set(("Api Unit Runtime NativeAssets Scope LeanBridgeException Object String System Class Record Throwable Error Exception RuntimeException IllegalArgumentException IllegalStateException ExceptionInInitializerError UnsupportedOperationException NullPointerException AssertionError BigInteger Objects Arrays Math Byte Short Integer Long Float Double Character Boolean MemorySegment Arena Linker FunctionDescriptor SymbolLookup MethodHandle ByteBuffer CharBuffer StandardCharsets CodingErrorAction CharacterCodingException IOException InputStream OutputStream Files Path MessageDigest HexFormat PosixFilePermissions Properties equals hashCode toString getClass clone finalize notify notifyAll wait").split(" "));
+const keywords = new Set(("abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null record sealed permits var yield").split(" "));
+const publicTypes = { unit: "Unit", bool: "boolean", uint8: "int", uint16: "int", uint32: "long", uint64: "java.math.BigInteger", int8: "byte", int16: "short", int32: "int", int64: "long", nat: "java.math.BigInteger", int: "java.math.BigInteger", float32: "float", float64: "double", string: "String", bytes: "byte[]" };
+const nativeTypes = { unit: "byte", bool: "byte", uint8: "byte", uint16: "short", uint32: "int", uint64: "long", int8: "byte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double" };
+const widths = { byte: 1, short: 2, int: 4, long: 8, float: 4, double: 8 };
+const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
+
+/**
+ * Validate copied source types and calculate their Java names and C layouts.
+ *
+ * @param ir - Compiler-authorized Binding IR.
+ */
+export const compileCopiedJvmModel = ir => {
+	const surface = compilePrimitiveCSurface(ir);
+	const fail = (declaration, message) => {
+		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
+	};
+	if(keywords.has(surface.prefix)) fail(ir.declarations[0], "Java package name is a reserved word");
+	const names = new Set(reserved);
+	for(const copy of surface.copies)
+	{
+		copy.nativeType = copy.aggregate ? "MemorySegment" : nativeTypes[copy.ref.name];
+		copy.layout = copy.aggregate ? "ADDRESS" : `JAVA_${copy.nativeType.toUpperCase()}`;
+		if(copy.record)
+		{
+			copy.publicName = pascal(copy.record.name);
+			if(names.has(copy.publicName)) fail(ir.declarations[0], `Java record name collides: ${copy.publicName}`);
+			names.add(copy.publicName);
+			const fields = new Set();
+			let size = 0, alignment = 1;
+			for(const field of copy.fields)
+			{
+				field.publicName = camel(field.name);
+				if(fields.has(field.publicName) || reserved.has(field.publicName) || keywords.has(field.publicName)) fail(ir.declarations[0], `Java field name collides: ${field.publicName}`);
+				fields.add(field.publicName);
+				field.offset = align(size, field.type.alignment);
+				size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);
+			}
+			copy.alignment = alignment; copy.size = Math.max(1, align(size, alignment));
+		} else
+		{
+			copy.alignment = copy.aggregate ? 8 : widths[copy.nativeType];
+			copy.size = copy.aggregate ? copy.ref.name === "int" ? 40 : 32 : copy.alignment;
+		}
+	}
+	const functionNames = new Set();
+	for(const fn of surface.functions)
+	{
+		fn.publicName = camel(fn.field);
+		if(functionNames.has(fn.publicName) || reserved.has(fn.publicName) || keywords.has(fn.publicName)) fail(fn.declaration, `Java function name collides: ${fn.publicName}`);
+		functionNames.add(fn.publicName);
+	}
+	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.ref.name];
+	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType };
+};
+
+/**
+ * Reject unsafe coordinates and mutable version selectors.
+ *
+ * @param settings - Optional groupId:artifactId and exact release version.
+ */
+export const validateOrdinaryMavenSettings = (settings = {}) => {
+	if(settings.name !== undefined && (settings.name.length > 200 || !/^[a-z][a-z0-9]*(?:[.][a-z][a-z0-9]*)*:[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/.test(settings.name))) throw new TypeError("Maven name must be a lowercase groupId:artifactId coordinate");
+	if(settings.version !== undefined && (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)*)?$/.test(settings.version) || /snapshot/i.test(settings.version))) throw new TypeError("Maven version must be an exact three-part non-SNAPSHOT release");
+};

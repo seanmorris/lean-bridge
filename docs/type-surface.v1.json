@@ -157,11 +157,118 @@
   ],
   "evidence": [
     {
+      "id": "native-jvm-installed-copied",
+      "kind": "installed",
+      "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
+      "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-jvm-20260914.md",
+          "sha256": "4ac8c0679bcd0df5a1b454ee4b82f99fe30d0433876708714fb42680e098e09b"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/jvm/copied-model.mjs",
+          "sha256": "6f448c88995727c6bed487da3ff85666e84ab8efacdd56be4b1163212459465e"
+        },
+        {
+          "path": "src/backends/jvm/copied-conversions.mjs",
+          "sha256": "856235dc49a1b23d5ae1b6ebfa28074b82623c828ce1f2218df1e38435e6b07b"
+        },
+        {
+          "path": "src/backends/jvm/copied-assets.mjs",
+          "sha256": "847302ed2a8ddab834a09c8b677f039ca8c9504f937c9ececea5f5fd212d2037"
+        },
+        {
+          "path": "src/backends/jvm/copied-values.mjs",
+          "sha256": "e37237a3cba1dcef40de3615db1f8395ef3b599e4cd593692a035ded7558068e"
+        },
+        {
+          "path": "src/backends/jvm/generate.mjs",
+          "sha256": "cd4995489850d36029c0474fb3c56b51e320b6e6a6f13d42827a654748e229f0"
+        },
+        {
+          "path": "src/backends/managed/package-audit.mjs",
+          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "28604127115e2ec3734f19624ba47b715966254a6ecdb21b35b0e03e4f1e6e66"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "dd75d3e624167fdfda45f03ac9b86046ec58e82cacea0c888fa116ec38a71da9"
+        },
+        {
+          "path": "src/build/native-jvm-artifacts.mjs",
+          "sha256": "69f360fcd6c7c6e870c683025bc3357deb46c7ef472d061169b2afd93c47dd7a"
+        },
+        {
+          "path": "src/build/native-jvm-projection.mjs",
+          "sha256": "56f01e62c060f8758ad6a036d57d1a05fa0366d590b62abc39fbccded079e59e"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "455859de6116442d41d3b253a188005cc95d745691b5c0f3209e5ccde3a5b9dc"
+        },
+        {
+          "path": "src/build/multi-profile-project.mjs",
+          "sha256": "cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"
+        },
+        {
+          "path": "src/release/native-maven.mjs",
+          "sha256": "7019c7dab0d25d7e9bcc1eb868bff441ee094922bc105208333d622414d439b3"
+        },
+        {
+          "path": "tests/native-jvm.test.mjs",
+          "sha256": "45bd2f1ef07a889b7428aa41b17fb77d00466e35fcdf96be13ac1f26d754775a"
+        },
+        {
+          "path": "tests/multi-profile-project.test.mjs",
+          "sha256": "6575c0aaf99028f3b41fad1c051bd965d4e0ceae4f0f1166862a66bd7941d783"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "maple-api-2.0.0-rc.1.jar",
+          "sha256": "cb42af457a3a99cdcc3f6c84d9ca0c8dc675dc0d79e94fb9ae64006d573ca466"
+        },
+        {
+          "path": "maple-api-2.0.0-rc.1.pom",
+          "sha256": "1c5b8414ed85705b0f3f13e3fb13fcc59cc647edba80593e6a64e4f8dabe6a8f"
+        },
+        {
+          "path": "cedar-api-2.0.0-rc.1.jar",
+          "sha256": "be52035b900b7c2a0aea8cd2e9ca1e0fd8f632322243ce0d34b0043df6e8e70c"
+        },
+        {
+          "path": "cedar-api-2.0.0-rc.1.pom",
+          "sha256": "d6aeba6114aa5fbc008f1997f5842f917ecdfc5eddb79078b69e4c91465e07b8"
+        }
+      ]
+    },
+    {
       "id": "native-dotnet-installed-copied",
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -205,11 +312,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
+          "sha256": "28604127115e2ec3734f19624ba47b715966254a6ecdb21b35b0e03e4f1e6e66"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
+          "sha256": "dd75d3e624167fdfda45f03ac9b86046ec58e82cacea0c888fa116ec38a71da9"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -221,7 +328,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "c4be39af3b95a8f5198549a1bfc86a214404060be13adf98931c94e781b6e55a"
+          "sha256": "455859de6116442d41d3b253a188005cc95d745691b5c0f3209e5ccde3a5b9dc"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -237,7 +344,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
+          "sha256": "6575c0aaf99028f3b41fad1c051bd965d4e0ceae4f0f1166862a66bd7941d783"
         }
       ],
       "artifacts": [
@@ -256,7 +363,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -304,7 +411,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
+          "sha256": "dd75d3e624167fdfda45f03ac9b86046ec58e82cacea0c888fa116ec38a71da9"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -316,7 +423,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
+          "sha256": "28604127115e2ec3734f19624ba47b715966254a6ecdb21b35b0e03e4f1e6e66"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -328,7 +435,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
+          "sha256": "6575c0aaf99028f3b41fad1c051bd965d4e0ceae4f0f1166862a66bd7941d783"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -363,7 +470,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -387,11 +494,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
+          "sha256": "28604127115e2ec3734f19624ba47b715966254a6ecdb21b35b0e03e4f1e6e66"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
+          "sha256": "dd75d3e624167fdfda45f03ac9b86046ec58e82cacea0c888fa116ec38a71da9"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -427,7 +534,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
+          "sha256": "6575c0aaf99028f3b41fad1c051bd965d4e0ceae4f0f1166862a66bd7941d783"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -466,13 +573,13 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types.",
       "files": [
         {"path":"src/analyze/semantic-model.mjs","sha256":"6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"},
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
         {"path":"src/build/multi-profile-project.mjs","sha256":"cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"6575c0aaf99028f3b41fad1c051bd965d4e0ceae4f0f1166862a66bd7941d783"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -520,7 +627,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
+          "sha256": "28604127115e2ec3734f19624ba47b715966254a6ecdb21b35b0e03e4f1e6e66"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -781,11 +888,11 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "Inspected the retained Alpha resource/callback generator paths for C#, JVM and Ruby. Ordinary C# copied values now have separate installed evidence; this entry remains scoped to the fixed Alpha API.",
+      "scope": "Inspected the retained Alpha resource/callback generator paths for C#, JVM and Ruby. Ordinary C# and JVM copied values have separate installed evidence; this entry remains scoped to the fixed Alpha API.",
       "files": [
         {"path":"src/backends/managed/alpha-model.mjs","sha256":"f1d8efd1e70f95dbf3967e55f912e921a11ec25b3c91833d306b724a7e219418"},
         {"path":"src/backends/dotnet/generate.mjs","sha256":"a064f250e95da195639859b14d54aa4c579c4aa7a5bde2303ae7f29a94210b0b"},
-        {"path":"src/backends/jvm/generate.mjs","sha256":"69e703f18a7b8bae1c6cb96b52d1a7499afd8a44f058ba2a97b168e4087fbc5d"},
+        {"path":"src/backends/jvm/generate.mjs","sha256":"cd4995489850d36029c0474fb3c56b51e320b6e6a6f13d42827a654748e229f0"},
         {"path":"src/backends/ruby/generate.mjs","sha256":"1b9b83a2af395854c5d6b688b79ed8c9a7a5769517bc77216414c26a5595b9ae"}
       ],
       "artifacts": []
@@ -830,6 +937,366 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-jvm-copied-java",
+      "profiles": [
+        "java"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Maven-installed java calls copied primitives, nested arrays and acyclic records from two unrelated ordinary Lean packages.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "Unit",
+          "result": "void",
+          "field": "Unit"
+        },
+        "bool": {
+          "parameter": "boolean",
+          "result": "boolean",
+          "field": "boolean"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint32": {
+          "parameter": "long",
+          "result": "long",
+          "field": "long"
+        },
+        "uint64": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int8": {
+          "parameter": "byte",
+          "result": "byte",
+          "field": "byte"
+        },
+        "int16": {
+          "parameter": "short",
+          "result": "short",
+          "field": "short"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int64": {
+          "parameter": "long",
+          "result": "long",
+          "field": "long"
+        },
+        "nat": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "float64": {
+          "parameter": "double",
+          "result": "double",
+          "field": "double"
+        },
+        "string": {
+          "parameter": "String",
+          "result": "String",
+          "field": "String"
+        },
+        "bytes": {
+          "parameter": "byte[]",
+          "result": "byte[]",
+          "field": "byte[]"
+        },
+        "array": {
+          "parameter": "Typed Java array",
+          "result": "Typed Java array",
+          "field": "Typed Java array"
+        },
+        "record": {
+          "parameter": "Generated Java record",
+          "result": "Generated Java record",
+          "field": "Generated Java record"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "Native input and output share a 16 MiB conversion budget; Java bounds input scratch independently. Lean working memory is separate.",
+        "Linux x86-64, Java 22 FFM with native access enabled. Kotlin uses the same Java API. Local glibc 2.36 acceptance; production floor 2.38."
+      ],
+      "conversionNotes": {
+        "unit": "Pass Unit.INSTANCE; Unit results return void. Unit fields and array elements use the generated enum.",
+        "uint8": "Checked nonnegative integer, at most 255.",
+        "uint16": "Checked nonnegative integer, at most 65535.",
+        "uint32": "Checked nonnegative long, at most 4294967295.",
+        "uint64": "BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing.",
+        "nat": "Exact BigInteger magnitude; negative input throws.",
+        "int": "Exact signed BigInteger with no narrowing.",
+        "string": "Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw.",
+        "bytes": "Copied mutable byte array with independent returned storage. Null throws.",
+        "array": "Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls.",
+        "record": "Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies."
+      }
+    },
+    {
+      "id": "native-jvm-copied-kotlin",
+      "profiles": [
+        "kotlin"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Maven-installed kotlin calls copied primitives, nested arrays and acyclic records from two unrelated ordinary Lean packages.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "Generated Java Unit enum",
+          "result": "Unit",
+          "field": "Generated Java Unit enum"
+        },
+        "bool": {
+          "parameter": "Boolean",
+          "result": "Boolean",
+          "field": "Boolean"
+        },
+        "uint8": {
+          "parameter": "Int",
+          "result": "Int",
+          "field": "Int"
+        },
+        "uint16": {
+          "parameter": "Int",
+          "result": "Int",
+          "field": "Int"
+        },
+        "uint32": {
+          "parameter": "Long",
+          "result": "Long",
+          "field": "Long"
+        },
+        "uint64": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int8": {
+          "parameter": "Byte",
+          "result": "Byte",
+          "field": "Byte"
+        },
+        "int16": {
+          "parameter": "Short",
+          "result": "Short",
+          "field": "Short"
+        },
+        "int32": {
+          "parameter": "Int",
+          "result": "Int",
+          "field": "Int"
+        },
+        "int64": {
+          "parameter": "Long",
+          "result": "Long",
+          "field": "Long"
+        },
+        "nat": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "float32": {
+          "parameter": "Float",
+          "result": "Float",
+          "field": "Float"
+        },
+        "float64": {
+          "parameter": "Double",
+          "result": "Double",
+          "field": "Double"
+        },
+        "string": {
+          "parameter": "String",
+          "result": "String",
+          "field": "String"
+        },
+        "bytes": {
+          "parameter": "ByteArray",
+          "result": "ByteArray",
+          "field": "ByteArray"
+        },
+        "array": {
+          "parameter": "Primitive array or Array<T>",
+          "result": "Primitive array or Array<T>",
+          "field": "Primitive array or Array<T>"
+        },
+        "record": {
+          "parameter": "Generated Java record",
+          "result": "Generated Java record",
+          "field": "Generated Java record"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-jvm-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated JAR/POM byte comparison and Maven-installed Java/Kotlin execution."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "Native input and output share a 16 MiB conversion budget; Java bounds input scratch independently. Lean working memory is separate.",
+        "Linux x86-64, Java 22 FFM with native access enabled. Kotlin uses the same Java API. Local glibc 2.36 acceptance; production floor 2.38."
+      ],
+      "conversionNotes": {
+        "unit": "Alias the generated Java Unit enum and pass its INSTANCE. Lean Unit results return Kotlin Unit.",
+        "uint8": "Checked nonnegative integer, at most 255.",
+        "uint16": "Checked nonnegative integer, at most 65535.",
+        "uint32": "Checked nonnegative long, at most 4294967295.",
+        "uint64": "BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing.",
+        "nat": "Exact BigInteger magnitude; negative input throws.",
+        "int": "Exact signed BigInteger with no narrowing.",
+        "string": "Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw.",
+        "bytes": "Copied mutable byte array with independent returned storage. Null throws.",
+        "array": "Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls.",
+        "record": "Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies."
+      }
+    },
     {
       "id": "native-dotnet-copied",
       "profiles": [

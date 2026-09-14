@@ -60,8 +60,9 @@ test("Java and Kotlin keep their own host representations without widening Alpha
 	assert.match(row(kotlin, "UInt32"), /`Long`/u);
 	for(const source of [java, kotlin])
 	{
-		assert.match(row(source, "Nat"), /no host mapping/u);
-		assert.doesNotMatch(row(source, "Nat"), /Installed checks passed/u);
+		assert.match(row(source, "Nat"), /`BigInteger`.*Ordinary source: Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, "Nat"), /Reviewed IR: Inspected: no host mapping/u);
+		assert.doesNotMatch(row(source, "Nat").split("Reviewed IR:")[1], /Installed checks passed/u);
 		assert.match(row(source, "Task α / asynchronous result"), /Generation rejected/u);
 		assert.doesNotMatch(source, /Alpha.*exposes no `Nat`/u);
 	}

@@ -786,14 +786,14 @@ export const buildCanonicalProject = async ({
 		fail("invalid-package-targets", "Build targets must be an array of non-empty names");
 	}
 	if(new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
-	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget"].includes(target))
+	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget", "maven"].includes(target))
 		&& !(await inspectLeanProject(root, { signal })).inputs.some(input => input.path.endsWith(".binding-ir.json"));
 	if(sourceC || targets.includes("cpan") || targets.includes("perl"))
 	{
 		const normalized = targets.map(target => target === "perl" ? "cpan" : target);
 		if(new Set(normalized).size !== normalized.length) fail("invalid-package-targets", "Build targets must be unique, including aliases");
-		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget"].includes(target)))
-			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, and nuget targets");
+		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven"].includes(target)))
+			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, and maven targets");
 		if(!normalized.includes("npm"))
 			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: normalized, signal, onProgress, lakeSnapshot });
 		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine

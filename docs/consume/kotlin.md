@@ -1,6 +1,6 @@
 # Kotlin
 
-Use Alpha's Java API directly from Kotlin. The package is the same Maven JAR used by Java consumers; no separate Kotlin binding is required.
+Call the generated Java API directly from Kotlin. Java and Kotlin use the same prepared Maven JAR and bundled Lean runtime; no separate Kotlin binding is required.
 
 ## Use a prepared release
 
@@ -8,7 +8,36 @@ Use Alpha's Java API directly from Kotlin. The package is the same Maven JAR use
 
 Use JDK 22, the Kotlin JVM command-line compiler and runner, and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `kotlinc -version`, `kotlin -version`, `mvn -version`, and `ldd --version`. Run all JVM tools with JDK 22. The [support contract](../consumer-support.v1.json) records the shared JVM profile; the pinned consumer environment supplies Kotlin.
 
-Follow [Use a prepared release](receive-package.md) for the authenticated Alpha Maven release, `org.leanbridge:lean-alpha:0.0.0`. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute directory containing its `repository/` directory. No Gradle project or registry publication is required for this example.
+Follow [Use a prepared release](receive-package.md) to authenticate the JAR and POM.
+
+### Call an ordinary Lean package
+
+Use the [Java installation commands](java.md#call-an-ordinary-lean-package) to install the local `com.acme:maple-api:2.0.0-rc.1` acceptance package and set `LEAN_BRIDGE_JAR`. Save `Example.kt`:
+
+```kotlin
+import java.math.BigInteger
+import org.leanbridge.maple.Api
+
+fun main() {
+    println(Api.echoNat(BigInteger.ONE.shiftLeft(200)))
+    println(Api.echoText("Lean λ🌿"))
+    println(Api.matrix(longArrayOf(1, 2, 3))[1][2])
+}
+```
+
+```sh
+kotlinc -classpath "$LEAN_BRIDGE_JAR" -d classes Example.kt
+kotlin -J--enable-native-access=ALL-UNNAMED \
+  -classpath "classes:$LEAN_BRIDGE_JAR" ExampleKt
+```
+
+UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.math.BigInteger`, with runtime range checks. Signed integers use `Byte`, `Short`, `Int` and `Long`; floats use `Float` and `Double`. Primitive arrays use their Kotlin array types, such as `LongArray`; records and nested arrays use `Array<T>`. ByteArray maps to Kotlin `ByteArray`.
+
+Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. Java platform types do not make null a valid Lean value; generated calls reject null. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
+
+### Alpha interoperability example
+
+The remaining example uses the authenticated `org.leanbridge:lean-alpha:0.0.0` fixture to demonstrate resources and callbacks. Ordinary-source Maven builds currently admit pure copied values only. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.
 
 ## Resolve the JAR
 
@@ -112,27 +141,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `Boolean` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `String` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `ByteArray` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `LongArray` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `Generated Java Unit enum` (input, field); `Unit` (result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Alias the generated Java Unit enum and pass its INSTANCE. Lean Unit results return Kotlin Unit. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `Boolean` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `Int` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Checked nonnegative integer, at most 255. Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `Int` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Checked nonnegative integer, at most 65535. Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Checked nonnegative long, at most 4294967295. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `BigInteger` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `Byte` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `Short` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `Int` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `Long` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `BigInteger` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Exact BigInteger magnitude; negative input throws. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `BigInteger` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Exact signed BigInteger with no narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `Float` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `Double` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `String` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `ByteArray` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `Primitive array or Array<T>` (input, result, field); `LongArray` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Payload` (input, result) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

@@ -1,10 +1,42 @@
 # Build and publish Java and Kotlin packages
 
-This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all 16 primitive types, nested arrays and acyclic copied records. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 Deploy the reviewed JAR and POM to an organization-controlled Maven repository. Java and Kotlin consumers use the same artifact.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler and JDK 22. Set `LEAN_BRIDGE_JAVAC` to the compiler executable if it is not on PATH. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select modules and functions in `lean-bridge.exports.json`. Choose coordinates your organization owns:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Maple"],
+  "exports": ["Maple.echo_nat", "Maple.echo_text", "Maple.matrix"],
+  "targets": {
+    "maven": { "name": "com.acme:maple-api", "version": "2.0.0-rc.1" }
+  }
+}
+```
+
+Build into a new directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/maple --target maven \
+  --output /absolute/path/to/maple-release
+```
+
+The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes compiled Java 22 classes, native libraries, generated sources, compiler evidence and dependency license notices. Its README names the generated Java package and API. Changing the Maven coordinate does not rename the Lean-derived Java package.
+
+Calls accept concrete, pure copied values. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Optional values, variants, resources, callbacks and effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
+
+Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Generic package-set verification and signed publication integration remain under VO1240; `lean-bridge verify` does not yet accept the ordinary Maven receipt.
+
 ## Build the repository layout
+
+The separate Alpha interoperability fixture retains its resource and callback examples.
 
 From the Lean Bridge checkout with the pinned Nix environment:
 
@@ -34,13 +66,15 @@ Check both the [Java](../consume/java.md) and [Kotlin](../consume/kotlin.md) con
 
 The example coordinate is `org.leanbridge:lean-alpha:0.0.0`. Do not publish it as your own package.
 
-The [universal bundle mapping](../../src/release/universal-release-bundle.mjs) fixes the package name, while [Alpha's Binding IR](../../poc/lean-link-spike/bindings/alpha.binding-ir.json) supplies the version. Review those inputs, the [JVM generator](../../src/backends/jvm/generate.mjs), and consumer fixtures when adopting an owned group ID, artifact ID, and new version. Regenerate the bindings, canonical bundle, and packages from that source change.
+For ordinary projects, set `targets.maven.name` to a lowercase `groupId:artifactId` and `targets.maven.version` to an exact three-part release version, optionally with a prerelease suffix. Mutable selectors, version ranges and SNAPSHOT releases are rejected. Rebuild to change coordinates; do not edit an approved JAR or POM.
 
-The current managed profile implements Alpha's API model. An arbitrary ordinary Lean project does not automatically produce a JVM package. Do not override coordinates during deployment or edit the approved POM to disguise the fixture.
+For the separate Alpha fixture, the [universal bundle mapping](../../src/release/universal-release-bundle.mjs) fixes the package name and [Alpha's Binding IR](../../poc/lean-link-spike/bindings/alpha.binding-ir.json) supplies the version. Do not override coordinates during deployment to disguise that fixture.
 
 ## Produce and review the candidate
 
-Use a clean committed checkout. The publication ecosystem is `maven`; its binding target is `jvm`.
+For an ordinary release, reproduce the build from a different source location, compare both archive hashes, and execute fresh installed consumers. Review source and dependency licenses. Preserve the original JAR, POM and `native-release.json` for the approved upload.
+
+The signed-candidate workflow below applies to the universal Alpha bundle, not ordinary Maven outputs. Use a clean committed checkout. The publication ecosystem is `maven`; its binding target is `jvm`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target maven --dry-run \

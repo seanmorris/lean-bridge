@@ -75,6 +75,8 @@ The native C/C++ adapters also accept arrays and acyclic copied records, includi
 
 Ordinary [C# / NuGet builds](../publish/nuget.md#build-an-ordinary-lean-project) use the same copied-value native adapter. C# exposes exact-width scalars, `BigInteger`, `T[]` arrays and sealed records. Generated code handles native buffers, deep cleanup and compatible runtime loading. This path accepts pure primitives, arrays and acyclic records; the separate Alpha fixture still supplies the resource/callback example.
 
+Ordinary [Java/Kotlin Maven builds](../publish/maven.md#build-an-ordinary-lean-project) support the same pure copied primitives, arrays and acyclic records. Unsigned values use wider checked JVM types: UInt8/UInt16 become `int`, UInt32 becomes `long`, and UInt64/Nat/Int become `BigInteger`. Public APIs keep FFM and native layouts private.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.

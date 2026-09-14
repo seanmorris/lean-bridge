@@ -163,6 +163,7 @@ Build and publish options:
   --target cpan         Build native Perl packages using lean-bridge.exports.json
   --target c|cpp        Build native C/C++ packages for copied-value exports
   --target nuget        Build ordinary C#/.NET copied-value NuGet packages
+  --target maven        Build ordinary Java/Kotlin copied-value Maven packages
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run

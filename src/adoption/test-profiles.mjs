@@ -55,6 +55,7 @@ const profileManifest = Object.freeze({
 		, "native-c-family"
 		, "native-c-copied"
 		, "native-dotnet"
+		, "native-jvm"
 		, "public-surface-conformance"
 		, "publication-attestation"
 		, "production-deployment-profile"
