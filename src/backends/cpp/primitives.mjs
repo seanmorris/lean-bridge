@@ -4,40 +4,30 @@
  * @file
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
+import { copiedCppType, renderCppCopiedValues } from "./copied-values.mjs";
 
-const dynamic = name => ["string", "bytes", "nat", "int"].includes(name);
-const cppType = name => ({ unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: "Nat", int: "Int", bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
-const wrapper = (p, fn) => {
-	const { declaration, parameters } = fn, result = declaration.result.type.name;
-	const lines = [`inline ${result === "unit" ? "void" : cppType(result)} ${fn.field}(${parameters.map((parameter, i) => {
-		const type = declaration.parameters[i].type.name;
-		return `${dynamic(type) ? `const ${cppType(type)}&` : cppType(type)} ${parameter.name}`;
-	}).join(", ")}) {`
-	, `  ${p}_error lb_error{};`];
-	const args = parameters.map((parameter, i) => {
-		const type = declaration.parameters[i].type.name, name = parameter.name;
-		if(type === "unit")
-		{ lines.push(`  (void)${name};`); return "0"; }
-		if(!dynamic(type)) return name;
-		const data = ["nat", "int"].includes(type) ? `${name}.limbs` : name;
-		lines.push(`  ${parameter.type} lb_arg${i}{${data}.data(), ${data}.size(), nullptr, nullptr${type === "int" ? `, ${name}.negative` : ""}};`);
-		return `&lb_arg${i}`;
+const wrapper = (surface, fn) => {
+	const p = surface.prefix, result = surface.copy(fn.declaration.result.type);
+	const unit = result.ref.kind === "primitive" && result.ref.name === "unit";
+	const parameters = fn.parameters.map((parameter, i) => ({ ...parameter, copy: surface.copy(fn.declaration.parameters[i].type) }));
+	const lines = [`inline ${unit ? "void" : copiedCppType(result)} ${fn.field}(${parameters.map(({ name, copy }) => `${copiedCppType(copy)}${copy.aggregate ? " const&" : ""} ${name}`).join(", ")}) {`
+		, `  ${p}_error lb_error{}; size_t budget = 16u * 1024u * 1024u; (void)budget;`];
+	for(const { name, copy } of parameters) lines.push(`  detail::check${copy.index}(${name}, budget);`);
+	const args = parameters.map(({ name, copy }, i) => {
+		lines.push(`  detail::View${copy.index} lb_arg${i}{${name}};`);
+		return `${copy.aggregate ? "&" : ""}lb_arg${i}.value`;
 	});
-	if(result !== "unit")
+	if(!unit)
 	{
-		lines.push(`  ${fn.resultType} lb_result{};`);
-		if(dynamic(result)) lines.push(`  detail::Owned<${fn.resultType}, ${fn.resultType}_clear> lb_owner{&lb_result};`);
+		lines.push(`  ${result.name} lb_result{};`);
+		if(result.aggregate) lines.push(`  detail::Owned<${result.name}, ${result.name}_clear> lb_owner{&lb_result};`);
 		args.push("&lb_result");
 	}
 	lines.push(`  detail::check(${fn.name}(${[...args, "&lb_error"].join(", ")}), lb_error);`);
-	if(result === "string") lines.push('  return lb_result.length ? std::string(lb_result.data, lb_result.length) : std::string{};');
-	else if(result === "bytes") lines.push('  return lb_result.length ? std::vector<uint8_t>(lb_result.data, lb_result.data + lb_result.length) : std::vector<uint8_t>{};');
-	else if(result === "nat" || result === "int") lines.push(`  return ${cppType(result)}{${result === "int" ? "lb_result.negative, " : ""}lb_result.length ? std::vector<uint32_t>(lb_result.data, lb_result.data + lb_result.length) : std::vector<uint32_t>{}};`);
-	else if(result !== "unit") lines.push("  return lb_result;");
+	if(!unit) lines.push(`  return detail::from${result.index}(lb_result);`);
 	lines.push("}", "");
 	return lines.join("\n");
 };
-
 /**
  * Compile a generic C++ model through the same C surface admission.
  *
@@ -53,9 +43,11 @@ export const compilePrimitiveCppModel = ir => ({ kind: "copied-primitives", surf
  */
 export const renderPrimitiveCppPackage = ({ surface }) => {
 	const p = surface.prefix;
+	const values = renderCppCopiedValues(surface);
 	const header = `#pragma once
 #include "${p}.h"
 #include <stdexcept>
+#include <memory>
 #include <string>
 #include <variant>
 #include <vector>
@@ -63,6 +55,7 @@ export const renderPrimitiveCppPackage = ({ surface }) => {
 namespace lean_bridge::${p} {
 struct Nat { std::vector<uint32_t> limbs; };
 struct Int { bool negative; std::vector<uint32_t> limbs; };
+${values.records}
 class Error final : public std::runtime_error {
 public:
   ${p}_status status;
@@ -71,6 +64,7 @@ public:
     : std::runtime_error(error.message ? std::string(error.message, error.message_length) : "Lean call failed"), status(value), code(error.code) {}
 };
 namespace detail {
+${values.helpers}
 inline void check(${p}_status status, const ${p}_error& error) {
   if (status != ${p.toUpperCase()}_STATUS_OK) throw Error(status, error);
 }
@@ -82,7 +76,7 @@ template<class T, void (*Clear)(T*)> struct Owned {
   explicit Owned(T* input) : value(input) {}
 };
 }
-${surface.functions.map(fn => wrapper(p, fn)).join("\n")}}
+${surface.functions.map(fn => wrapper(surface, fn)).join("\n")}}
 `;
 	const files = { [`include/${p}.hpp`]: header
 		, [`src/${p}.cpp`]: `#include "${p}.hpp"\n`

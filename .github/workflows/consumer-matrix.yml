@@ -264,7 +264,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
-          node --test tests/native-c-family.test.mjs
+          node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs
       - name: Record native consumer observations
         if: always()
         shell: bash

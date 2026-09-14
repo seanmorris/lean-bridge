@@ -1,65 +1,11 @@
 /**
- * Per-declaration native C adapters for the admitted copied primitive surface.
+ * Per-declaration native C adapters for the admitted copied value surface.
  *
  * @file
  */
-import { nativeCopyLimit, nativeCType, nativeObjectType } from "../../build/native-model.mjs";
+import { generateCopiedNativeCalls } from "./native-copied-values.mjs";
 import { compilePrimitiveCSurface } from "./primitive-surface.mjs";
 
-const dynamic = type => ["nat", "int", "string", "bytes"].includes(type.name);
-const input = (type, name) => {
-	if(type.name === "unit") return "lean_box(0)";
-	if(type.name === "string") return `lean_mk_string_from_bytes(${name}->length ? ${name}->data : "", ${name}->length)`;
-	if(type.name === "bytes") return `lb_bytes_in(${name}->data, ${name}->length)`;
-	if(type.name === "nat") return `lb_nat_in(${name}->data, ${name}->length)`;
-	if(type.name === "int") return `lb_int_in(${name}->data, ${name}->length, ${name}->negative)`;
-	return `(${nativeCType(type)})${name}`;
-};
-
-const emitFunction = (p, fn, native) => {
-	const macro = p.toUpperCase();
-	const lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`
-		, "  (void)context;", `  size_t budget = ${nativeCopyLimit}u;`
-		, "  (void)budget;" ];
-	for(const [i, { name }] of fn.parameters.entries())
-	{
-		const type = native.parameters[i].type;
-		if(type.name === "unit") lines.push(`  if (${name} != 0) return lb_invalid(error, "Unit requires zero");`);
-		if(!dynamic(type)) continue;
-		const size = ["nat", "int"].includes(type.name) ? "sizeof(uint32_t)" : "1";
-		lines.push(`  if (${name} == NULL || (${name}->length && ${name}->data == NULL) || ${name}->length > budget / ${size}) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`
-			, `  budget -= ${name}->length * ${size};`);
-		if(type.name === "string") lines.push(`  if (!lb_utf8((const uint8_t *)${name}->data, ${name}->length)) return lb_invalid(error, "String requires valid UTF-8");`);
-	}
-	const args = fn.parameters.map(({ name }, i) => input(native.parameters[i].type, name));
-	if(!args.length) args.push("lean_box(0)");
-	lines.push(`  ${nativeCType(native.result)} value = ${native.symbol}(${args.join(", ")});`);
-	const result = native.result.name;
-	if(result === "string" || result === "bytes")
-	{
-		const length = result === "string" ? "lean_string_size(value) - 1" : "lean_sarray_size(value)";
-		const data = result === "string" ? "lean_string_cstr(value)" : "lean_sarray_cptr(value)";
-		lines.push(`  size_t length = ${length};`, "  if (length > budget) { lean_dec(value); return lb_invalid(error, \"16 MiB call limit exceeded\"); }"
-			, "  void *copy = length ? malloc(length) : NULL;"
-			, "  if (length && copy == NULL) { lean_dec(value); return lb_failure(error, \"Cannot allocate copied result\"); }"
-			, `  if (length) memcpy(copy, ${data}, length);`, "  lean_dec(value);"
-			, `  *out = (${p}_${result}){copy, length, copy, free};`);
-	}
-	else if(result === "nat" || result === "int")
-	{
-		if(result === "int") lines.push("  bool negative = lean_int_lt(value, lean_box(0));", "  lean_object *magnitude = lean_nat_abs(value);", "  lean_dec(value);", "  value = magnitude;");
-		lines.push("  uint32_t *limbs = NULL; size_t length = 0;"
-			, "  int copied = lb_nat_out(value, &limbs, &length, budget);", "  lean_dec(value);"
-			, '  if (copied == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
-			, '  if (copied < 0) return lb_failure(error, "Cannot allocate copied result");'
-			, `  *out = (${p}_${result}){limbs, length, limbs, free${result === "int" ? ", negative" : ""}};`);
-	}
-	else if(nativeObjectType(native.result)) lines.push("  lean_dec(value);");
-	else if(/^int\d/.test(result)) lines.push("  memcpy(out, &value, sizeof(value));");
-	else lines.push(`  *out = (${fn.resultType})value;`);
-	lines.push(`  if (error != NULL) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}", "");
-	return lines.join("\n");
-};
 
 /**
  * Generate a checked native vtable; all calls use Lean-emitted typed symbols.
@@ -70,12 +16,6 @@ const emitFunction = (p, fn, native) => {
 export const generateNativePrimitiveC = (model, receipt) => {
 	const surface = compilePrimitiveCSurface(model.bindingIr), p = surface.prefix, macro = p.toUpperCase();
 	if(!/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(receipt.initializer)) throw new TypeError("Invalid native initializer identity");
-	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item]));
-	const functions = surface.functions.map(fn => {
-		const native = exports.get(fn.declaration.id);
-		if(!native) throw new TypeError(`C declaration has no compiled native symbol: ${fn.declaration.id}`);
-		return emitFunction(p, fn, native);
-	});
 	return `#include "${p}_runtime.h"
 #include "component.h"
 #include "lean_bridge_native_runtime.h"
@@ -89,6 +29,10 @@ static inline ${p}_status lb_invalid(${p}_error *error, const char *message) {
 static inline ${p}_status lb_failure(${p}_error *error, const char *message) {
   if (error) *error = (${p}_error){${macro}_ERROR_UNEXPECTED, message, strlen(message)};
   return ${macro}_STATUS_UNEXPECTED_ERROR;
+}
+static inline int lb_charge(size_t *budget, size_t length, size_t width) {
+  if (length > *budget / width) return 0;
+  *budget -= length * width; return 1;
 }
 static inline int lb_utf8(const uint8_t *bytes, size_t length) {
   size_t i = 0;
@@ -143,7 +87,7 @@ static inline int lb_nat_out(lean_object *value, uint32_t **out, size_t *length,
   lean_dec(value); *out = data; *length = used; return 1;
 }
 
-${functions.join("\n")}
+${generateCopiedNativeCalls(model, surface)}
 extern lean_object *${receipt.initializer}(uint8_t builtin);
 static void *lb_initialize(uint8_t builtin) { return ${receipt.initializer}(builtin); }
 static ${p}_status lb_runtime_initialize(void *context, ${p}_error *error) {

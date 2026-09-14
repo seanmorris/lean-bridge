@@ -157,15 +157,122 @@
   ],
   "evidence": [
     {
+      "id": "native-c-installed-copied",
+      "kind": "installed",
+      "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
+      "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-c-copied-20260914.md",
+          "sha256": "240da0bd4c30067249cce6a4fa7bbb5c80529d74edd071484d8a0f89fb41c586"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "c4925bc530f9d8285cc76819364291ac618cbbb4e408374ba591be5017003313"
+        },
+        {
+          "path": "src/backends/cpp/generate.mjs",
+          "sha256": "8f285b799ef19a4002f69f7f5f01bde30e1778f058ed6f55b4cc530db527ca68"
+        },
+        {
+          "path": "src/backends/cpp/primitives.mjs",
+          "sha256": "8747212d104a359ab8bcc7e321854dc60b4bcd67bf42a022a105a88a672c615a"
+        },
+        {
+          "path": "src/build/multi-profile-project.mjs",
+          "sha256": "cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"
+        },
+        {
+          "path": "src/build/native-artifacts.mjs",
+          "sha256": "bcbb1fab5b08b9c91c1367dca691df64e135fe4d3724bbd25e7d5d64150f567d"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "b90a7f72f77ae95e53c299499597a66f5bc2540bd7c3a5f9aa8f168907182555"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "5eb0de6aea6d61b4fe1e0781a316827273fb3f384499c6e0c39993f36091d2dd"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "6babdc6a5829681139e1c4877821b8e6b3415b525743609958763f979c2aeaa3"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "09314d9664fcce18384bc4490111497a95658976279e9e43bfbcdafac7b108b1"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "c0d0699efa8f89ed8c8763c8473540560c3522ee6736b4131c84432ad3c7af0d"
+        },
+        {
+          "path": "tests/cpp-generator.test.mjs",
+          "sha256": "a3ee91f5f195665576f2639cf7b60de0d7f197df6f572c367e06aafcbe1d189e"
+        },
+        {
+          "path": "tests/multi-profile-project.test.mjs",
+          "sha256": "6cd5d4b73592c8d9c08f124534a7edddc4b0864f3a7d9f39a8fa9c7501507119"
+        },
+        {
+          "path": "tests/native-c-copied.test.mjs",
+          "sha256": "56a853cdf8e32c7215df178f7637c7fb29dcb9eb6170a7f96bbe37c75db23513"
+        },
+        {
+          "path": "tests/native-c-family.test.mjs",
+          "sha256": "4ad0fa58b7d0d8b9e1fc03a524c80970e588baf0ff9bfa2401f8401529ea3d63"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "parcel-c-1.0.0-c.tar.gz",
+          "sha256": "cf30606039d71e474cc0d76c0929d3f23f29dde3c585caa3569072bfcbb2bd99"
+        },
+        {
+          "path": "parcel-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "536dac74829f16b077275d348c450ff3405bfc1bf50c0b11bab67cfeb369fd89"
+        },
+        {
+          "path": "archive-c-1.0.0-c.tar.gz",
+          "sha256": "aa371738520179510d4ca21341a9b7db38fde4ac517162714ad4fe802dac8e35"
+        },
+        {
+          "path": "archive-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "f85de05c224e1a653419c81e9cf418e069f9c32268ed26709036446fd5224db0"
+        }
+      ]
+    },
+    {
       "id": "native-c-installed-primitives",
       "kind": "installed",
-      "revision": "c4c65c0cfc24f3e1eaf9fe3cdd4a22e02ec78f5a",
+      "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Working-tree acceptance based on c4c65c0, bound by the source hashes below. Two ordinary projects, relocated C/C++ archives, sixteen primitive input/result types, CMake/pkg-config installs and native execution without Lean or Perl. Linux x86-64 with local glibc 2.36; production floor 2.38. Does not cover fields, callbacks, other type families or platforms.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
-          "sha256": "f4050ac07f3016684a915db7c413843e381922e15a9b9ce9dbac3e0f82efe544"
+          "sha256": "6a8978046c14b5f45c06ca535c8e6c04e61dcb1cd181f75d02da7ae37f708fb3"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -197,15 +304,15 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "5944795b709717cce6a804b5338d019ba5515b1a5941ab77eb2cabed0cee96f4"
+          "sha256": "1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "8c2555c1ee1b143b1a1da549e8ff4ef58282b066e253c99e7afc7645b898fa9e"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "6b0565410b51aa6b705a184496b910b047dbbdd4544945f77fb3590eb1823e87"
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -213,37 +320,49 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "06e30315e1eabec682c6853cc709e02e6c167430c0c8907763326463d2d4375e"
+          "sha256": "8747212d104a359ab8bcc7e321854dc60b4bcd67bf42a022a105a88a672c615a"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "222ff5bdd52b66380d8581f1a2a0aaefa66fd29da5179ab4686f109b96e29a4a"
+          "sha256": "c0d0699efa8f89ed8c8763c8473540560c3522ee6736b4131c84432ad3c7af0d"
         },
         {
           "path": "tests/native-c-family.test.mjs",
-          "sha256": "4d4c6877a9dc281219546bac67452a0aa09d9dcd5a47929e6bab3854a27f3ab4"
+          "sha256": "4ad0fa58b7d0d8b9e1fc03a524c80970e588baf0ff9bfa2401f8401529ea3d63"
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
           "sha256": "6cd5d4b73592c8d9c08f124534a7edddc4b0864f3a7d9f39a8fa9c7501507119"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "c4925bc530f9d8285cc76819364291ac618cbbb4e408374ba591be5017003313"
+        },
+        {
+          "path": "docs/evidence/native-c-copied-20260914.md",
+          "sha256": "240da0bd4c30067249cce6a4fa7bbb5c80529d74edd071484d8a0f89fb41c586"
         }
       ],
       "artifacts": [
         {
           "path": "mosaic-c-2.0.0-c.tar.gz",
-          "sha256": "f261751265bb66e3336ecc919e0ded3352f8390257e5e164abc958560dccbebe"
+          "sha256": "85f698a6f63f2586afffa1f429d2b6d764a673f970571f35eea3d4a3ee545c71"
         },
         {
           "path": "mosaic-cpp-2.0.0-cpp.tar.gz",
-          "sha256": "6e441beb6cf9a77c4b366594b4adf54581b781d88abe281a9ace0e270dedfef4"
+          "sha256": "fc0f907498868b8b99a40eaada832e71ce0e8165be12647157e5102c3aff47df"
         },
         {
           "path": "survey-c-2.0.0-c.tar.gz",
-          "sha256": "d541910ea13c75f978ac85a3df2387e6c7b53126ff203db785bc0af14cf43c95"
+          "sha256": "f28906f689ff0811f46c31fb3661a382eed54afb48cc569f9356cf4c8c9e005e"
         },
         {
           "path": "survey-cpp-2.0.0-cpp.tar.gz",
-          "sha256": "620275d3d748101d9dd200d7fa0c38d413e4d7ebfac66081b51eb0d1fbe21aba"
+          "sha256": "a8727b4323345510d7fd142ce73517e2e486f96109888cd09e4f2ba537dcb08b"
         }
       ]
     },
@@ -547,7 +666,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"5944795b709717cce6a804b5338d019ba5515b1a5941ab77eb2cabed0cee96f4"}
+        {"path":"src/backends/c/generate.mjs","sha256":"1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"}
       ],
       "artifacts": []
     },
@@ -616,6 +735,412 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-c-copied",
+      "profiles": [
+        "c"
+      ],
+      "path": "ordinary-source",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No retained resource or callback identity.",
+        "Input/output payloads, array slots and record storage share a 16 MiB conversion budget; Lean internal allocations are separate.",
+        "Linux x86-64 only; local glibc 2.36 acceptance and production floor 2.38."
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Nested copied arrays and acyclic records, including arrays of all primitive types, empty records and native scalar-represented records.",
+      "hostTypes": {
+        "array": {
+          "parameter": "<prefix>_array_<type>_span",
+          "result": "<prefix>_array_<type>_span",
+          "field": "<prefix>_array_<type>_span"
+        },
+        "record": {
+          "parameter": "<prefix>_<record>",
+          "result": "<prefix>_<record>",
+          "field": "<prefix>_<record>"
+        }
+      },
+      "conversionNotes": {
+        "array": "Typed data/length spans. Inputs borrow caller storage; generated clear releases every owned nested output element. Do not shallow-copy an owned result.",
+        "record": "Generated structs and deep clear functions. Zero-initialize outputs. Empty records contain a placeholder byte; Lean constructors/accessors preserve compiler layout."
+      }
+    },
+    {
+      "id": "native-c-copied-fields",
+      "profiles": [
+        "c"
+      ],
+      "path": "ordinary-source",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No retained resource or callback identity.",
+        "Input/output payloads, array slots and record storage share a 16 MiB conversion budget; Lean internal allocations are separate.",
+        "Linux x86-64 only; local glibc 2.36 acceptance and production floor 2.38."
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "scope": "All sixteen primitive fields are constructed and read through compiler-owned record adapters in the relocated Parcel/Archive installed consumers.",
+      "hostTypes": {
+        "unit": {
+          "field": "uint8_t (zero)"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "uint8_t"
+        },
+        "uint16": {
+          "field": "uint16_t"
+        },
+        "uint32": {
+          "field": "uint32_t"
+        },
+        "uint64": {
+          "field": "uint64_t"
+        },
+        "int8": {
+          "field": "int8_t"
+        },
+        "int16": {
+          "field": "int16_t"
+        },
+        "int32": {
+          "field": "int32_t"
+        },
+        "int64": {
+          "field": "int64_t"
+        },
+        "nat": {
+          "field": "<prefix>_nat"
+        },
+        "int": {
+          "field": "<prefix>_int"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "<prefix>_string"
+        },
+        "bytes": {
+          "field": "<prefix>_bytes"
+        }
+      },
+      "conversionNotes": {
+        "unit": "C inputs use zero; Unit results have no output argument.",
+        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
+        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
+        "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data."
+      }
+    },
+    {
+      "id": "native-cpp-copied",
+      "profiles": [
+        "cpp"
+      ],
+      "path": "ordinary-source",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No retained resource or callback identity.",
+        "Input/output payloads, array slots and record storage share a 16 MiB conversion budget; Lean internal allocations are separate.",
+        "Linux x86-64 only; local glibc 2.36 acceptance and production floor 2.38."
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Nested copied arrays and acyclic records, including arrays of all primitive types, empty records and native scalar-represented records.",
+      "hostTypes": {
+        "array": {
+          "parameter": "std::vector<T>",
+          "result": "std::vector<T>",
+          "field": "std::vector<T>"
+        },
+        "record": {
+          "parameter": "generated record struct",
+          "result": "generated record struct",
+          "field": "generated record struct"
+        }
+      },
+      "conversionNotes": {
+        "array": "Owned `std::vector<T>`, including `std::vector<bool>`; scoped views preserve all nested input storage. Returned values are independent copies.",
+        "record": "Generated structs with owned fields and deep result cleanup on exceptions. Empty records use empty structs."
+      }
+    },
+    {
+      "id": "native-cpp-copied-fields",
+      "profiles": [
+        "cpp"
+      ],
+      "path": "ordinary-source",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-c-installed-copied"
+          ],
+          "note": "Fresh native compiler metadata, relocated compiled packages and installed nested-value execution, with failure cleanup checks."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No retained resource or callback identity.",
+        "Input/output payloads, array slots and record storage share a 16 MiB conversion budget; Lean internal allocations are separate.",
+        "Linux x86-64 only; local glibc 2.36 acceptance and production floor 2.38."
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "scope": "All sixteen primitive fields are constructed and read through compiler-owned record adapters in the relocated Parcel/Archive installed consumers.",
+      "hostTypes": {
+        "unit": {
+          "field": "std::monostate"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "uint8_t"
+        },
+        "uint16": {
+          "field": "uint16_t"
+        },
+        "uint32": {
+          "field": "uint32_t"
+        },
+        "uint64": {
+          "field": "uint64_t"
+        },
+        "int8": {
+          "field": "int8_t"
+        },
+        "int16": {
+          "field": "int16_t"
+        },
+        "int32": {
+          "field": "int32_t"
+        },
+        "int64": {
+          "field": "int64_t"
+        },
+        "nat": {
+          "field": "lean_bridge::<prefix>::Nat"
+        },
+        "int": {
+          "field": "lean_bridge::<prefix>::Int"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "std::string"
+        },
+        "bytes": {
+          "field": "std::vector<uint8_t>"
+        }
+      },
+      "conversionNotes": {
+        "unit": "Pass std::monostate; Unit results return void.",
+        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
+        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
+        "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data."
+      }
+    },
     {
       "id": "native-c-primitives",
       "profiles": [

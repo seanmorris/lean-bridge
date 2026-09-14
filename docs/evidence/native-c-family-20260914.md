@@ -1,5 +1,7 @@
 # Ordinary-source C and C++ acceptance
 
+This records the primitive milestone in commit `3320e4d`. The [array and record follow-up](native-c-copied-20260914.md) extends its type coverage and reruns the primitive regression suite.
+
 Task 1216 adds copied primitive C/C++ adapters to the shared native compiler pipeline. The runtime profile is Linux x86-64, little endian, with Lean 4.32.2 at `f3b06c705e6c85f5314019d5d3baab0fec5b580c`.
 
 ## Installed packages

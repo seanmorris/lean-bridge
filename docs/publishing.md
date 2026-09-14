@@ -9,7 +9,7 @@ Select the languages your library will serve, then follow each target's build an
 | JavaScript, TypeScript, browser, React, workers | [npm](publish/npm.md) | An ordinary Lake project with supported pure primitive exports; CLI target `npm`. |
 | Python | [pip / PyPI](publish/pypi.md) | A prepared native bundle and reviewed Python binding metadata. |
 | Rust | [Cargo](publish/cargo.md) | A prepared native bundle and reviewed Rust binding metadata. |
-| C | [C package and CMake integration](publish/c.md) | An ordinary Lake project with pure copied primitive exports; CLI target `c`. Reviewed Alpha inputs remain supported. |
+| C | [C package and CMake integration](publish/c.md) | An ordinary Lake project with pure copied primitive, array or record exports; CLI target `c`. Reviewed Alpha inputs remain supported. |
 | C++ | [C++ package and CMake integration](publish/cpp.md) | The same ordinary native source profile; CLI target `cpp`. Reviewed Alpha inputs remain supported. |
 | C# / .NET | [NuGet](publish/nuget.md) | A prepared bundle and managed binding inputs. |
 | Java and Kotlin | [Maven](publish/maven.md) | A prepared bundle and shared JVM binding inputs. |

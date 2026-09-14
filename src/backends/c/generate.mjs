@@ -226,13 +226,15 @@ const validateCoverage = ir => {
 					constructor: resolved.constructor
 				});
 			}
-			const element = resolveAlias(ir, resolved.arguments[0]);
-			if(element.kind !== "primitive" || primitiveCType(element.name) === null)
-			{
-				fail("unsupported-array-element", "the C POC supports arrays of fixed-width primitives", {
-					element
-				});
-			}
+			const copied = (ref, seen = new Set()) => {
+				const value = resolveAlias(ir, ref);
+				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
+				if(value.kind === "apply") return value.constructor === "array" && value.arguments.length === 1 && copied(value.arguments[0], seen);
+				const type = value.kind === "named" && namedType(ir, value.id);
+				if(!type || type.kind !== "record" || seen.has(type.id)) return false;
+				return type.fields.every(field => copied(field.type, new Set([...seen, type.id])));
+			};
+			if(!copied(resolved.arguments[0])) fail("unsupported-array-element", "C arrays require acyclic copied elements");
 		}
 	}
 	for(const declaration of ir.declarations)
@@ -371,6 +373,21 @@ const isUnit = (ir, ref) => {
 	const resolved = resolveAlias(ir, ref);
 	return resolved.kind === "primitive" && resolved.name === "unit";
 };
+
+/**
+ * Describe one copied C value using the public generator's names and layout.
+ *
+ * @param ir - Canonical Binding IR.
+ * @param ref - Validated type reference.
+ */
+export const describeCType = (ir, ref) => ({ name: cType(ir, ref), aggregate: isAggregate(ir, ref) });
+
+/**
+ * Normalize a public C identifier.
+ *
+ * @param value - Semantic name.
+ */
+export const cIdentifier = value => snake(value);
 
 const siteInput = (ir, site, name, { runtime = false } = {}) => {
 	const resolved = resolveAlias(ir, site.type);
@@ -522,12 +539,33 @@ const emitPublicHeader = ir => {
 		, ""
 	];
 
-	for(const ref of uniqueBy(dynamicTypes(ir), ref => cType(ir, ref)))
+	const dynamic = uniqueBy(dynamicTypes(ir), ref => cType(ir, ref));
+	const records = [], visited = new Set();
+	const visitRecord = type => {
+		if(visited.has(type.id)) return;
+		visited.add(type.id);
+		for(const field of type.fields)
+		{
+			const ref = resolveAlias(ir, field.type);
+			if(ref.kind === "named" && namedType(ir, ref.id)?.kind === "record") visitRecord(namedType(ir, ref.id));
+		}
+		records.push(type);
+	};
+	ir.types.filter(type => type.kind === "record").forEach(visitRecord);
+	// Array elements may be records or other arrays. Pointers need declarations,
+	// while by-value record fields need definitions in dependency order.
+	if(dynamic.some(ref => resolveAlias(ir, ref).kind === "apply" && isAggregate(ir, resolveAlias(ir, ref).arguments[0])))
+	{
+		for(const ref of [...dynamic, ...records.map(type => ({ kind: "named", id: type.id }))])
+			lines.push(`typedef struct ${cType(ir, ref)} ${cType(ir, ref)};`);
+		lines.push("");
+	}
+	for(const ref of dynamic)
 	{
 		const resolved = resolveAlias(ir, ref);
 		const type = cType(ir, resolved);
 		const element = resolved.kind === "apply"
-			? primitiveCType(resolveAlias(ir, resolved.arguments[0]).name)
+			? cType(ir, resolved.arguments[0])
 			: resolved.name === "string" ? "char" : resolved.name === "bytes" ? "uint8_t" : "uint32_t";
 		lines.push(
 			`typedef struct ${type} {`,
@@ -543,11 +581,11 @@ const emitPublicHeader = ir => {
 		);
 	}
 
-	const records = ir.types.filter(type => type.kind === "record");
 	for(const type of records)
 	{
 		const name = cType(ir, { kind: "named", id: type.id });
 		lines.push(`typedef struct ${name} {`);
+		if(!type.fields.length) lines.push("  uint8_t empty;");
 		for(const field of type.fields)
 		{
 			lines.push(`  ${cType(ir, field.type)} ${snake(field.name)};`);

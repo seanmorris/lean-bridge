@@ -53,6 +53,7 @@ const profileManifest = Object.freeze({
 		, "semantic-model"
 		, "multi-profile-project"
 		, "native-c-family"
+		, "native-c-copied"
 		, "public-surface-conformance"
 		, "publication-attestation"
 		, "production-deployment-profile"

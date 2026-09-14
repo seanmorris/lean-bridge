@@ -43,7 +43,7 @@ test("C/C++ source lowering shares C names and has no Alpha or Perl requirements
 
 test("C/C++ admission rejects unsupported signatures and reserved names at the Lean source", () => {
 	for(const change of [
-		ir => { ir.declarations[0].parameters[0].type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] }; }
+		ir => { ir.declarations[0].parameters[0].type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }; }
 		, ir => { ir.declarations[0].name = "initialize"; }
 		, ir => { ir.declarations[0].name = "class"; }
 		, ir => { ir.declarations[0].parameters[0].name = "out"; }
@@ -220,7 +220,7 @@ test("unsupported ordinary C exports fail atomically with source locations", { s
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-c-reject-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
 	const source = join(working, "source"), outputRoot = join(working, "release"); await project(source, "Unsupported");
-	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : Array UInt32) := a\nend Unsupported\n");
+	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : UInt32 → UInt32) := a 42\nend Unsupported\n");
 	await saveLakeFile(source, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Unsupported"], exports: ["Unsupported.values"] }));
 	await assert.rejects(() => buildCanonicalProject({ projectRoot: source, outputRoot, targets: ["c", "cpp"], environment }), error => error.code === "unsupported-native-c-signature" && error.details.source.path === "Unsupported.lean");
 	assert.deepEqual(await readdir(working), ["source"]);

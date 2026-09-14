@@ -71,7 +71,7 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 Ordinary `c` and `cpp` builds accept the same 16 pure primitive parameter/result types listed above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
 
-Copied arrays, records, resources, callbacks, effects and asynchronous functions remain unsupported by the ordinary C/C++ adapter. A selected unsupported signature stops the build at its Lean source location. Alpha's reviewed C/C++ example has its own broader fixed API; it does not establish those shapes for arbitrary source packages.
+The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Resources, callbacks, effects and asynchronous functions remain unsupported on this path. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ still requires a primitive-only API.
 
 ## Native Perl exports
 

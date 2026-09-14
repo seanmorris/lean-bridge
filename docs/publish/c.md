@@ -6,7 +6,7 @@ Prepare C11 headers, native libraries, CMake and pkg-config metadata, then distr
 
 Install Node 22, Lean 4.32.2, a C11 compiler, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied primitive parameters and results. All 16 primitive types work, including exact `Nat` and `Int`, UTF-8 strings, and byte arrays. Concrete specializations use the same configuration. Arrays, records, resources, callbacks, effects and asynchronous signatures are not admitted by this ordinary C/C++ adapter yet; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied parameters and results. The C/C++ adapters accept all 16 primitive types, arrays and acyclic records, including nested combinations. Concrete specializations use the same configuration. Resources, callbacks, effects and asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
 
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 
@@ -35,7 +35,17 @@ Package names do not rename the API. The source component determines `sample.h`,
 
 Each archive includes its component library, C adapter and matching Lean runtime. Loading the C library initializes Lean automatically; pkg-config and CMake locate the libraries. The tested public profile is Linux x86-64 with glibc 2.38 or newer. The builder rejects binaries requiring a newer glibc version than the declared floor. Lean and Lean Bridge license notices accompany the binaries; supply your library's license with the release as well.
 
-Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree. That combined build checks source API agreement across profiles and puts the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+Add `--target cpan` to produce Perl archives from that same native compilation. For primitive-only APIs, add `--target npm` to also compile one Wasm component from the same captured source tree. npm does not yet accept arrays or records; selecting it for those signatures rejects the combined build without partial output. Combined builds check source API agreement across profiles and put the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+
+## Copied arrays and records
+
+Arrays become typed spans with `data`, `length`, `owner` and `release` fields. Records become named C structs with their declared fields. Arrays can contain any admitted copied element, including strings, arbitrary integers, other arrays and records. Records can contain those same types. An empty Lean record has a zero-initialized placeholder byte in C.
+
+Inputs borrow caller storage for the duration of the call. The adapter validates the complete input before calling Lean and ignores input ownership callbacks. Results own independent copies. Zero-initialize result structs and call the generated `<type>_clear` before reusing or discarding them. Clearing an array releases its nested elements; clearing a record releases its fields. Repeated clear is safe. Do not shallow-copy an owned result and clear both copies.
+
+The 16 MiB per-call budget covers input and output payloads together, array slots and copied record storage. Array slots cost at least one native pointer each; output arrays also account for their ownership header. It is a conversion limit, not a limit on memory used by the Lean algorithm. Type nesting is limited to 32. Invalid input and conversion failures leave the caller's output slot unchanged; partially built outputs are released internally.
+
+Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. See the [installed array and record acceptance](../evidence/native-c-copied-20260914.md) for nested structures, exact values and allocation-failure checks.
 
 ## Build the reviewed Alpha example
 
