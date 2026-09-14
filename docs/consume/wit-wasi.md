@@ -1,8 +1,76 @@
 # WIT and WASI
 
-The Alpha package includes a WebAssembly Component Model adapter and a Wasmtime host. The exported `read-box` function enters the component, calls a typed native host import, and returns the value read from a real Lean `Box`.
-
 ## Use a prepared release
+
+### Ordinary project packages
+
+An ordinary `wit-wasi` release includes generated WIT, a Component Model binary, a Wasmtime 42.0.1 embedding library and the compiled native Lean runtime. Use it on Linux x86-64 with glibc 2.38 or newer. You do not install Lean or Wasmtime separately.
+
+For the Cobalt example, [authenticate the release](receive-package.md), then extract its original archive:
+
+```sh
+export COBALT_WIT_ARCHIVE=/absolute/path/to/cobalt-api-2.0.0-rc.1-wit-wasi.tar.gz
+mkdir cobalt-example
+cd cobalt-example
+tar -xzf "$COBALT_WIT_ARCHIVE"
+export COBALT_WIT_PACKAGE="$PWD/cobalt-api-2.0.0-rc.1-wit-wasi"
+```
+
+Save this as `main.c`. These are Wasmtime's public value types; the package handles native Lean loading and conversion:
+
+```c file=wit-wasi/ordinary.c
+#include "cobalt_wasmtime.h"
+#include <stdio.h>
+
+static int report(wasmtime_error_t *error)
+{
+    if (!error) return 0;
+    wasm_name_t message;
+    wasmtime_error_message(error, &message);
+    fprintf(stderr, "%.*s\n", (int)message.size, message.data);
+    wasm_name_delete(&message);
+    wasmtime_error_delete(error);
+    return 1;
+}
+
+int main(void)
+{
+    cobalt_wasmtime *session = NULL;
+    if (report(cobalt_wasmtime_open(&session))) return 1;
+    wasmtime_component_val_t input = {
+        .kind = WASMTIME_COMPONENT_U32, .of.u32 = 42
+    };
+    wasmtime_component_val_t output = {0};
+    int failed = report(cobalt_wasmtime_call(
+        session, "echo-u32", &input, 1, &output));
+    if (!failed) {
+        printf("%u\n", output.of.u32);
+        wasmtime_component_val_delete(&output);
+    }
+    cobalt_wasmtime_close(session);
+    return failed;
+}
+```
+
+Compile your application with a C compiler and pkg-config, then run it:
+
+```sh
+export PKG_CONFIG_PATH="$COBALT_WIT_PACKAGE/lib/pkgconfig"
+cc main.c $(pkg-config --cflags --libs cobalt-api-wit) -o cobalt-example
+./cobalt-example
+```
+
+The program prints `42`. It calls `echo-u32` through the embedded component. The archive also contains the same bytes as `component/cobalt-api.wasm`. Custom Wasmtime hosts can load that file and call `cobalt_wasmtime_link` to supply its native imports.
+
+Keep the installed libraries together. Arguments borrow caller-owned Wasmtime values for one call; results own independent storage and remain valid after the session closes. Delete results with `wasmtime_component_val_delete` and errors with `wasmtime_error_delete`. An error leaves the result unchanged. Each session belongs to one calling thread; separate sessions share the native Lean runtime.
+
+`Unit` uses a single-case WIT enum in all positions. `Nat` uses least-significant-first `u32` limbs, with an empty list for zero. `Int` adds a `negative` flag. Trailing zero limbs and negative zero are rejected. Arrays and records copy recursively; strings preserve UTF-8 and embedded NUL. Empty records use a single-case enum. The adapter caps conversion work at 16 MiB, and canonical-ABI scratch memory at 64 MiB. The session helper resets successful calls and replaces trapped stores before reuse. Custom embeddings must discard trapped instances. These limits do not bound the Lean algorithm's working memory.
+
+See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
+
+## Alpha prepared package
+
+The Alpha package includes a WebAssembly Component Model adapter and a Wasmtime host. The exported `read-box` function enters the component, calls a typed native host import, and returns the value read from a real Lean `Box`.
 
 ### Prerequisites
 
@@ -73,31 +141,31 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `u8` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `u16` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `u32` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The executable's u32 -> u32 Box probe covers an input and result. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `u64` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `s8` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `s16` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `s32` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `s64` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `f32` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `f64` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `string` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `list<u8>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `list<T>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | `option<T>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | `result<T, E>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `tuple<T, U>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated WIT record` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Generated WIT type alias` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | This type is not exposed by the packaged executable adapter. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Unit` | `Single-case WIT enum { unit }` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | Ordinary packages use a single-case enum, including inputs, results and fields. The Alpha executable adapter does not expose this type. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `u8` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `u16` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `u32` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The executable's u32 -> u32 Box probe covers an input and result. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `u64` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `s8` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `s16` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `s32` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `s64` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `list<u32> limbs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | Ordinary packages use least-significant-first u32 limbs. Empty limbs are zero; trailing zero limbs are rejected. The Alpha executable adapter does not expose this type. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `record { negative: bool, limbs: list<u32> }` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generation rejected (input, result); Not audited (field, callback input, callback result) | Ordinary packages use a negative flag and least-significant-first u32 limbs. Negative zero and trailing zero limbs are rejected. The Alpha executable adapter does not expose this type. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `f32` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary f32 calls preserve binary32 rounding, NaN classification, infinities and signed zero. The Alpha executable adapter does not expose this type. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `f64` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `string` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages validate UTF-8 before Wasmtime copies it, preserving embedded NUL. The Alpha executable adapter does not expose this type. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `list<u8>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages copy byte lists with independent returned storage. The Alpha executable adapter does not expose this type. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `list<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages check and copy every nested element. Conversion budgets count Wasmtime slots and native scratch. The Alpha executable adapter does not expose this type. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `option<T>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `result<T, E>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `tuple<T, U>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Copied structure` | `Generated WIT record (empty: single-case enum)` (input, result, field); `Generated WIT record` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages use WIT field order and compiler-owned Lean accessors. Empty records use a single-case enum; returned values remain valid after closing the session. The Alpha executable adapter does not expose this type. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Type alias` | `Generated WIT type alias` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
-| `Host function passed to Lean` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
+| `Host function passed to Lean` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering. |
 | `Char` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
@@ -106,7 +174,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
-| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
+| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
 | `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |
@@ -115,12 +183,12 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `IO α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Executing IO is not automatically asynchronous. Preserve effect order and exceptions. |
 | `EIO ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve typed failures separately from transport validation and unexpected traps. |
 | `Declared failure contract` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Project every declared error and payload; preserve trap or poisoned-runtime handling separately. |
-| `Task α / asynchronous result` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Keep completion, rejection, cancellation and runtime lifetime distinct; do not block a browser event loop. |
+| `Task α / asynchronous result` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Keep completion, rejection, cancellation and runtime lifetime distinct; do not block a browser event loop. |
 | `Declared host object` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate typed members and preserve receiver identity, dynamic-access policy and lifetime. |
-| `Lean function returned to the host` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Preserve captured state, call signature, errors and deterministic disposal. |
+| `Lean function returned to the host` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Preserve captured state, call signature, errors and deterministic disposal. |
 | `Cancellation protocol` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specify acknowledgement and late completion; release pending work exactly once. |
-| `Synchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Preserve values, end-of-sequence, failure, early return and cleanup. |
-| `Asynchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | This type is not exposed by the packaged executable adapter. Required: Preserve backpressure, pending-pull cancellation and terminal cleanup. |
+| `Synchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Preserve values, end-of-sequence, failure, early return and cleanup. |
+| `Asynchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Preserve backpressure, pending-pull cancellation and terminal cleanup. |
 
 ### Alpha example API
 
@@ -136,7 +204,7 @@ The executable adapter only exposes `read-box: u32 -> u32`. The package also inc
 | `Payload` | `record payload` | Copied fields in the WIT projection; `round-trip` is not exported by this adapter. |
 | `Box` | `resource box` | Declared in WIT. The executable host creates and disposes a native box internally; it does not return a resource to the caller. |
 | `UInt32 → UInt32` callback or returned Lean closure | No callable value mapping | Omitted from the WIT projection and executable adapter. |
-| `Nat` or `Int` | No lossless built-in mapping | Arbitrary-precision integer signatures are rejected by the current WIT generator, not narrowed to `u64` or `s64`. |
+| `Nat` or `Int` | Not exposed by the Alpha adapter | Alpha's resource-oriented WIT projection rejects these signatures. Ordinary copied-value packages use the lossless limb representations described above. |
 
 The `result<u32, bridge-error>` on the broader WIT `box.read` method describes its declared failures. It is not the return type of the executable `read-box`, which returns `u32`.
 

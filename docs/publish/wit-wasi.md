@@ -2,9 +2,42 @@
 
 Prepare WIT declarations, a Component Model adapter, a Wasmtime host, and native Lean libraries, then distribute the original archive through a release page or artifact server.
 
+## Build an ordinary Lean project
+
+The `wit-wasi` target accepts pure copied primitives, arrays and acyclic records from an ordinary Lake project. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
+
+Use Lean 4.32.2, a native C compiler, wasm-tools 1.245.1 and the [Wasmtime 42.0.1 x86-64 Linux C API archive](https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz). Its SHA-256 is `2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082`. Extract it and set `LEAN_BRIDGE_WASMTIME_C_API` to that directory. The builder checks the library, headers and license against the pinned archive before compilation. Wasmtime is an author-side build dependency and is included in the consumer package.
+
+For a Lake package named `cobalt`, select its exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Cobalt"],
+  "exports": ["Cobalt.echo_u32"],
+  "targets": {
+    "wit-wasi": { "name": "cobalt-api", "version": "2.0.0-rc.1" }
+  }
+}
+```
+
+Build into a new directory:
+
+```sh
+export LEAN_BRIDGE_WASMTIME_C_API=/absolute/path/to/wasmtime-c-api
+lean-bridge build --project /absolute/path/to/cobalt \
+  --target wit-wasi --output /absolute/path/to/cobalt-release
+```
+
+The archive is `archives/cobalt-api-2.0.0-rc.1-wit-wasi.tar.gz`. Its WIT world imports `lean-bridge:cobalt-api/native@2.0.0-rc.1` and exports `lean-bridge:cobalt-api/api@2.0.0-rc.1`. The supplied host implements the native import with compiled Lean code. The component is not a standalone WASI command.
+
+Repeat `--target` to add C, C++, CPAN, NuGet, Maven, RubyGems or npm. Native targets reuse one Lean compilation; npm adds one Wasm compilation. No release directory appears unless every selected target succeeds. Unsupported signatures fail with the source declaration instead of being omitted.
+
+Run the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks. Generic local package-set verification remains under VO1240; the existing npm receipt command does not verify these archives.
+
 ## Check the build inputs
 
-The Alpha example uses a reviewed universal bundle containing its compiled native component and target metadata plus the executable WASI adapter. An ordinary Lake project alone does not provide those inputs. Follow [existing-library preparation](../lean/existing-package.md) and the [target overview](../publishing.md) before adapting another package.
+The separate Alpha example uses a reviewed universal bundle containing its compiled native component and target metadata plus the executable WASI adapter. The following bundle commands retain that example's `read-box` API. Use the ordinary-project workflow above for a new package.
 
 ## Build the target package
 

@@ -62,7 +62,7 @@ LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
 
 Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. The [NuGet acceptance record](../evidence/native-dotnet-20260914.md) includes the exact locally tested archive hashes.
 
-The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven and RubyGems from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22 and Ruby 3.3.
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems and WIT/WASI from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3 and the pinned Wasmtime C API.
 
 ### Ordinary-source Maven packages
 
@@ -107,6 +107,23 @@ export LEAN_ALPHA_PHP_PACKAGE=$(readlink -f build/consumer-php-native)
 The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../php.md#native-php) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
 
 ## WASI package
+
+### Ordinary-source WIT packages
+
+Use the pinned Lean compiler, a native C compiler, pkg-config, wasm-tools 1.245.1 and Wasmtime 42.0.1. From this checkout, the Wasmtime build-tool output can be obtained independently:
+
+```sh
+nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+source scripts/env.sh
+export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+LEAN_BRIDGE_NATIVE_WIT_TEST=1 \
+  node --test --test-reporter=spec tests/native-wit.test.mjs
+```
+
+Cobalt and Saffron each build from two relocated source trees. The suite hides their source directories, extracts the original archives and compiles consumer applications against the installed public headers and libraries. It checks copied values, input rejection, cleanup, shared runtime composition, altered artifacts and atomic build failure. See the [ordinary WIT acceptance record](../evidence/native-wit-20260914.md).
+
+### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:
 

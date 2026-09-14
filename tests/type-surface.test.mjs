@@ -81,7 +81,7 @@ test("Perl installed evidence stays scoped to ordinary-source types and audited 
 	assert.equal(state("task", "signature"), "unreviewed");
 });
 
-for(const [profile, evidence] of [["dotnet", "native-dotnet-installed-copied"], ["java", "native-jvm-installed-copied"], ["kotlin", "native-jvm-installed-copied"], ["ruby", "native-ruby-installed-copied"]]) test(`ordinary ${profile} installed evidence stays within copied-value positions`, () => {
+for(const [profile, evidence] of [["dotnet", "native-dotnet-installed-copied"], ["java", "native-jvm-installed-copied"], ["kotlin", "native-jvm-installed-copied"], ["ruby", "native-ruby-installed-copied"], ["wit-wasi", "native-wit-installed-copied"]]) test(`ordinary ${profile} installed evidence stays within copied-value positions`, () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed");

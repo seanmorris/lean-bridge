@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -183,6 +183,18 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		const env = { PATH: process.env.PATH, GEM_HOME: home, GEM_PATH: home };
 		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_GEM ?? "gem", args: ["install", join(builds[0].output, pkg.archives[0].path), "--local", "--install-dir", home, "--no-document"], cwd: root, env });
 		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_RUBY ?? "ruby", args: ["consumer.rb"], cwd: root, env })).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("wit-wasi"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "wit-wasi"), install = join(consumer, "wit");
+		await mkdir(install);
+		await processBuildRunner.capture({ command: "tar", args: ["-xzf", join(builds[0].output, pkg.archives[0].path), "-C", install] });
+		const root = join(install, (await readdir(install))[0]);
+		await saveLakeFile(install, "consumer.c", '#include "shop_wasmtime.h"\n#include <assert.h>\n#include <stdio.h>\nint main(void) { shop_wasmtime *session; assert(!shop_wasmtime_open(&session)); wasmtime_component_val_t input = {.kind = WASMTIME_COMPONENT_U32, .of.u32 = 20}, output = {0}; assert(!shop_wasmtime_call(session, "quote", &input, 1, &output)); printf("%u\\n", output.of.u32); wasmtime_component_val_delete(&output); shop_wasmtime_close(session); }\n');
+		const env = { PATH: "/usr/bin:/bin", PKG_CONFIG_PATH: join(root, "lib/pkgconfig") };
+		const flags = (await processBuildRunner.capture({ command: "pkg-config", args: ["--cflags", "--libs", "shop-wit"], env })).stdout.trim().split(/\s+/);
+		await processBuildRunner.capture({ command: "cc", args: ["consumer.c", ...flags, "-o", "consumer"], cwd: install, env });
+		assert.equal((await processBuildRunner.capture({ command: join(install, "consumer"), args: [], env })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

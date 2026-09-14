@@ -79,6 +79,8 @@ Ordinary [Java/Kotlin Maven builds](../publish/maven.md#build-an-ordinary-lean-p
 
 Ordinary [RubyGems builds](../publish/rubygems.md#build-an-ordinary-lean-project) support those copied types through Ruby `Integer`, `Float`, `String`, `Array` and generated record classes. The generated `UNIT` singleton represents Unit in every position; `nil` is rejected. Fixed-width integers are range checked, Nat/Int remain exact, and consumers need no native declarations or extension build.
 
+Ordinary [WIT/WASI builds](../publish/wit-wasi.md#build-an-ordinary-lean-project) support the same copied types through Component Model functions and a packaged Wasmtime/native Lean host. Unit uses a single-case enum. Nat uses least-significant-first `u32` limbs; Int adds a sign flag. Empty records also use a single-case enum. Every selected function receives an executable adapter; the separate Alpha resource/callback fixture keeps its narrower WIT path.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.

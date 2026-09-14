@@ -419,6 +419,8 @@
             '';
           };
 
+          wasmtime-c-api = wasmtimeCapi;
+
           wasi-component-artifacts = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-wasi-component-artifacts";
             version = "0.0.0";

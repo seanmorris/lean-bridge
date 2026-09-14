@@ -6,6 +6,7 @@
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { compileCopiedWitModel, renderCopiedWitLayout } from "./copied-model.mjs";
 
 /**
  * Reports WIT binding generation failures with stable machine-readable codes and structured diagnostic context.
@@ -403,7 +404,15 @@ const projectWitPackageModel = ir => {
  *
  * @param irValue - Binding IR document.
  */
-export const compileWitPackageModel = irValue => projectWitPackageModel(validateBindingIr(irValue));
+export const compileWitPackageModel = irValue => {
+	const ir = validateBindingIr(irValue);
+	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+	{
+		const copied = compileCopiedWitModel(ir);
+		return { wit: copied.wit, manifest: copied.manifest, copied };
+	}
+	return projectWitPackageModel(ir);
+};
 
 /**
  * Renders the deterministic WIT package from a compiled projection model.
@@ -411,8 +420,10 @@ export const compileWitPackageModel = irValue => projectWitPackageModel(validate
  * @param root0 - Compiled WIT package model.
  * @param root0.wit - Rendered WIT source produced by semantic projection.
  * @param root0.manifest - Projected WIT package manifest.
+ * @param root0.copied - Ordinary copied-value component projection, if selected.
  */
-export const renderWitPackageLayout = ({ wit, manifest }) => {
+export const renderWitPackageLayout = ({ wit, manifest, copied = null }) => {
+	if(copied) return renderCopiedWitLayout(copied);
 	const worldName = manifest.wit.world;
 	const files = Object.freeze({
 		[`wit/${worldName}.wit`]: wit
