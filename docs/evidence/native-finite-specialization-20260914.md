@@ -60,3 +60,20 @@ Local tests use Lean 4.32.2, Node 22.23.2 and Perl 5.38.2-threaded. The local gl
 This milestone completes native specialization within the existing native type profile. Shared lifetime, ownership, refinement and effect configuration remain under VO1238. Generic host dispatch, additional source targets and broader type-family delivery remain in their dependent stages. No package is published to a registry.
 
 Eight exact evidence hashes are refreshed without promoting type coverage. The matrix remains at 6,562 cells, 2,193 observed cells, 116 installed-tested cells and 32,230 required stage gaps.
+
+## CI scheduling follow-up
+
+[Downstream run 34808647472](https://github.com/seanmorris/lean-bridge/actions/runs/34808647472) for `4418eff` reached the Perl job's 60-minute limit. The shared compiler/Lake checks and the first three Perl configurations completed. Each completed ABI suite passed all 25 tests; the job was cancelled while running Perl 5.38.2 unthreaded. The pinned Nix Perl job and every other consumer job passed. Core and performance workflows also passed.
+
+The workflow now runs the four ABI suites in separate jobs, with independent toolchain caches and artifact names. Shared compiler/Lake checks run once in a separate job. Every check remains enabled. A failed configuration does not cancel its siblings. The combined consumer observation requires the entire ABI matrix, shared checks, pinned Nix installation and evidence download to succeed. Its performance measurement retains the Perl 5.38.2 threaded worker's CPU identity.
+
+The local command still runs all four configurations by default. `--configuration 5.38.2-unthreaded` selects only that suite and cannot emit the complete matrix's observation. The runner removes stale observations, checks that the benchmark and installed acceptance identify the same native library and interpreter, and writes performance evidence only after the full native suite succeeds.
+
+The scheduling regression tests cover all four selections, invalid arguments, stale observations, toolchain failure, failures after benchmark execution, missing files, invalid timings and mismatched artifacts. Actionlint 1.7.12 validates both consumer workflows, including shell checks. Core validation passes 568 tests with 28 separately gated skips; all 63 documentation tests, 40 site tests, 16 generated reference checks, lint, checked JavaScript, site type checking and the 79-page production build pass. The refreshed runner hash does not change type coverage.
+
+The real single-configuration command passes all 25 native tests on Perl 5.38.2 unthreaded in 380 seconds, including both installation paths and the 183-assertion Workshop consumer. Its performance observation passes the shared consumer-result validator. This local run uses the test-only glibc floor of 2.36; the four production ABI configurations and pinned Nix checks run in CI.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 npm run test:consumer:perl -- --configuration 5.38.2-unthreaded
+```

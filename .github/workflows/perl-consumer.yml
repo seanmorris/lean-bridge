@@ -24,6 +24,8 @@ jobs:
         run: nix run .#perl-build-engine -- --project tests/fixtures/perl/ordinary --output build/perl-nix
       - name: Install the prepared archives with the pinned Perl
         run: |
+          # Expand PWD inside the Nix shell.
+          # shellcheck disable=SC2016
           nix shell --inputs-from . nixpkgs#perl nixpkgs#gnumake --command bash -eu -c '
             node scripts/test-perl-package-consumer.mjs \
               --archive build/perl-nix/archives/LeanBridge-Runtime-0.001.tar.gz \
@@ -36,8 +38,8 @@ jobs:
             perl tests/fixtures/documentation/consumers/perl/consumer.pl
           '
 
-  perl:
-    name: Perl XS compatibility and installed execution
+  compiler-checks:
+    name: Shared compiler and Lake acceptance
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -58,6 +60,8 @@ jobs:
         env:
           LEAN_BRIDGE_LAKE_WORKSPACE_TEST: "1"
         run: |
+          # JavaScript evaluates the template literal in the resource monitor.
+          # shellcheck disable=SC2016
           node --input-type=module -e '
             import { execFileSync } from "node:child_process";
             const report = () => {
@@ -87,28 +91,94 @@ jobs:
         env:
           LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"
         run: node --test --test-concurrency=1 tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs tests/lake-generated-workspace.test.mjs
-      - name: Restore checksummed Perl toolchains
-        uses: actions/cache@v4
-        with:
-          path: .toolchains/perl
-          key: perl-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
       - name: Install relocated packages with generated Lean and C values
         env:
           LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST: "1"
         run: node --test --test-name-pattern='generated native' tests/lake-generated-packages.test.mjs
-      - name: Test both install paths on all four Perl configurations
-        id: consumer
-        continue-on-error: true
-        run: npm run test:consumer:perl
+
+  perl:
+    name: Perl XS (${{ matrix.configuration }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - 5.36.3-threaded
+          - 5.36.3-unthreaded
+          - 5.38.2-threaded
+          - 5.38.2-unthreaded
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore this checksummed Perl toolchain
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl/${{ matrix.configuration }}
+          key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Test both install paths on this Perl configuration
+        run: npm run test:consumer:perl -- --configuration "${{ matrix.configuration }}"
+      - name: Upload this configuration's acceptance and benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-abi-${{ matrix.configuration }}-${{ github.sha }}
+          # Preserve the configuration directory when the four artifacts merge.
+          path: |
+            build/consumer-ci/perl/*/benchmark.json
+            build/consumer-ci/perl/*/acceptance.json
+            build/consumer-ci/perl/*/perl.json
+          if-no-files-found: error
+          overwrite: true
+
+  perl-summary:
+    name: Combined Perl consumer observation
+    if: always()
+    needs:
+      - compiler-checks
+      - nix-engine
+      - perl
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download all four configurations' evidence
+        id: evidence
+        uses: actions/download-artifact@v5
+        with:
+          pattern: perl-abi-*-${{ github.sha }}
+          path: build/consumer-ci/perl
+          merge-multiple: true
       - name: Record Perl consumer observation
         if: always()
+        env:
+          PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}
         run: |
+          test_result=failed
+          if [[ "$PERL_ACCEPTED" == true ]]; then test_result=passed; fi
           node scripts/consumer-ci.mjs record --consumer perl \
-            --test-result "${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}" \
-            --package-installation "${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}" \
-            --real-lean-execution "${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}" \
-            --performance build/consumer-ci/performance/perl.json \
+            --test-result "$test_result" \
+            --package-installation "$PERL_ACCEPTED" \
+            --real-lean-execution "$PERL_ACCEPTED" \
+            --performance build/consumer-ci/perl/5.38.2-threaded/perl.json \
             --output build/consumer-ci/results/perl.json
+          test "$PERL_ACCEPTED" = true
       - name: Upload consumer observation
         if: always()
         uses: actions/upload-artifact@v7
@@ -125,8 +195,6 @@ jobs:
           path: |
             build/consumer-ci/perl/**/benchmark.json
             build/consumer-ci/perl/**/acceptance.json
+            build/consumer-ci/perl/**/perl.json
           if-no-files-found: warn
           overwrite: true
-      - name: Enforce installed Perl acceptance
-        if: steps.consumer.outcome != 'success'
-        run: exit 1

@@ -289,6 +289,16 @@ Keep the command output and reports with the change. See the [native consumer ev
 
 Build only the pinned Lean compiler with `bash scripts/bootstrap-toolchains.sh --lean-only`, then run `npm run test:consumer:perl` on x86-64 Linux with glibc 2.38 or newer. The suite builds checksummed Perl 5.36.3 and 5.38.2, with and without interpreter threads, and installs generated packages through both prebuilt and XS-only paths. It records archive identities and warmed benchmarks in `build/consumer-ci/perl/`, plus the aggregate performance observation in `build/consumer-ci/performance/perl.json`.
 
+To repeat one configuration:
+
+```sh
+npm run test:consumer:perl -- --configuration 5.38.2-unthreaded
+```
+
+The accepted configurations are `5.36.3-threaded`, `5.36.3-unthreaded`, `5.38.2-threaded`, and `5.38.2-unthreaded`. A single-configuration run writes its observation to `build/consumer-ci/perl/<configuration>/perl.json`; only a complete four-configuration run writes the aggregate observation. Each run removes the previous aggregate observation before testing.
+
+CI runs these four configurations in parallel, with separate toolchain caches and evidence artifacts. The shared compiler/Lake checks and pinned Nix installation run in their own jobs. The combined Perl observation requires every job to pass and retains the warmed Perl 5.38.2 threaded measurement with the CPU information from that configuration's runner.
+
 For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` lowers only the test package's declared floor. Do not publish those development packages as the production profile. `LEAN_BRIDGE_KEEP_PERL_TEST=1` preserves a suite's task-local build directory for inspection; otherwise it is removed after the run.
 
 The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
