@@ -10,6 +10,8 @@ Fresh Lean interfaces supply names, types, documentation, source positions, effe
 
 Both profiles accept [configured finite specializations](../../docs/lean/existing-package.md#export-concrete-specializations). Lean binds named concrete types, resolves following instance dictionaries, and checks the remaining scalar or native signature. Metadata retains each compiler application and its original declaration. Native arities refer to the specialization name and count runtime arguments. Only Lean's built-in class/instance indexes are loaded; package initializers remain disabled. Generic host overload dispatch remains separate work.
 
+Optional [export contracts](../../docs/lean/existing-package.md#declare-export-contracts) constrain the selected adapter's ownership, lifetime, refinement policy and boundary effects. Lean checks them against structural signatures after specialization and arity selection. Metadata validation repeats those checks. `compilerExportSelection` carries canonical contracts into the invocation identity; Binding IR retains them under `lean-lang.org/export-contract`. Unsupported choices fail before linking. Contracts supply neither types nor assurance claims, and the internal source scanner cannot authorize them.
+
 ## Output
 
 An analysis result contains:
@@ -35,6 +37,7 @@ Analysis leaves the author checkout unchanged. Compilation and configured genera
 | [`elaborated-metadata.mjs`](elaborated-metadata.mjs) | Hashes complete interfaces and validates the shared report against engine-owned invocation identities. |
 | [`native-types.mjs`](native-types.mjs) | Validates native structural types, compiler representations and copied-value restrictions. |
 | [`native-metadata.mjs`](native-metadata.mjs) | Binds the shared native report to retained compiler/source evidence and projects the selected API for CPAN. |
+| [`export-configuration.mjs`](export-configuration.mjs) | Validates shared source configuration, canonicalizes compiler selections, and checks declared contracts against implemented adapter rules. |
 | [`project-elaborated.mjs`](project-elaborated.mjs) | Copies structural compiler types into Binding IR, retaining documentation and theorem references without adding assurance claims. |
 | [`policy.mjs`](policy.mjs) | Validates built-in or supplied policy, normalizes it, computes identity, and evaluates a result. |
 | [`output.mjs`](output.mjs) | Writes machine-readable files to an explicitly selected output directory. |

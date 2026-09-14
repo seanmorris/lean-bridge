@@ -193,6 +193,7 @@ test("Perl CI runs four independent ABI jobs and gates its single observation on
 		assert.ok(matrix.includes(`build/consumer-ci/perl/*/${name}.json`));
 	assert.match(matrix, /if-no-files-found: error/);
 	assert.doesNotMatch(shared, /test:consumer:perl|matrix:/);
+	assert.ok(shared.includes("unlocked builds reject (new dependencies|target metadata|export contract)"));
 	for(const name of [
 		"lake-workspace", "lake-wasm", "unlocked-component", "elaborated-metadata"
 		, "compiler-analysis", "lake-generators", "lake-generator-prerequisites"
@@ -281,6 +282,31 @@ test("native arity and resources stay bound to configuration in the shared repor
 	rebind({ arities: [["Sample.increment", 1]] });
 	assert.equal(projectNativeMetadata(input.metadata, input.sourceIdentity).declarations[0].result.kind, "callback");
 	await assertJsonSchema("elaborated-export-metadata", input.metadata);
+});
+
+test("native export contracts bind the invocation and model without adding assurance", () => {
+	const input = nativeMetadataFixture();
+	const copy = { ownership: "copy", lifetime: null };
+	const contract = { parameters: [copy], result: copy, effects: [] };
+	const { metadata: context, ...selection } = input.sourceIdentity.request;
+	input.sourceIdentity.request = createMetadataRequest({ ...selection, contracts: { "Sample.increment": contract } }, {
+		toolchain: context.toolchain, modules: context.modules
+		, leanCompilerSha256: input.sourceIdentity.leanCompilerSha256
+		, extractorSha256: input.sourceIdentity.extractorSha256 });
+	assert.throws(() => projectNativeMetadata(input.metadata, input.sourceIdentity), /producer differs from the authorized invocation/);
+	input.metadata.producer.invocationIdentitySha256 = input.sourceIdentity.request.metadata.invocationIdentitySha256;
+	const model = createNativeModel({ ...input, component: fixture().component, moduleName: "LeanBridge::Sample" });
+	assert.deepEqual(model.bindingIr.declarations[0].source.extensions["lean-lang.org/export-contract"], contract);
+	assert.deepEqual(model.bindingIr.declarations[0].assurance, []);
+	assert.deepEqual(model.bindingIr.assurance, []);
+	for(const change of [
+		value => { delete value.contracts; }
+		, value => { value.contracts["Sample.increment"].effects = ["async"]; }
+		, value => { value.contracts["Sample.increment"].parameters = []; }
+	]) {
+		const changed = structuredClone(input); change(changed.sourceIdentity.request);
+		assert.throws(() => projectNativeMetadata(changed.metadata, changed.sourceIdentity), /invocation differs/);
+	}
 });
 
 test("native specializations retain original provenance and require matching concrete selections", async () => {

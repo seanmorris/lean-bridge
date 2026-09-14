@@ -256,7 +256,10 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 		, { name: "OnboardingSmall.chooseWord", declaration: "OnboardingSmall.choose", types: ["UInt32"] }
 		, { name: "OnboardingSmall.firstWord", declaration: "OnboardingSmall.first", types: ["UInt32", "String"] }
 	];
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.plainWord"], specializations }));
+	const copy = { ownership: "copy", lifetime: null };
+	const contracts = { "OnboardingSmall.echoWord": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
+		, "OnboardingSmall.plainWord": { parameters: [copy], result: copy, effects: [] } };
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.plainWord"], specializations, contracts }));
 	const before = await lakeInputState(root), moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	const movedBefore = await lakeInputState(moved);
@@ -268,6 +271,8 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 		assert.deepEqual(ir.declarations.map(item => item.name), ["chooseWord", "echoNat", "echoText", "echoWord", "firstWord", "plainWord"]);
 		assert.deepEqual(ir.assurance, []);
 		assert.ok(ir.declarations.every(item => item.typeParameters.length === 0 && item.assurance.length === 0));
+		for(const [name, contract] of Object.entries(contracts))
+			assert.deepEqual(ir.declarations.find(item => item.id === `lean:${name}`).source.extensions["lean-lang.org/export-contract"], contract);
 		releases.push(await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
 		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
 	}
@@ -366,6 +371,26 @@ test("an unlocked publication dry run rebuilds clean clones and verifies the han
 	await verifyPublishManifest({ manifestPath: result.publishManifest });
 	await verifyComponentPackageReceipt({ receiptPath: result.receipt.path });
 	assert.deepEqual(await lakeInputState(root), before);
+});
+
+test("unlocked builds reject export contract mismatches without target compilation", { skip: !enabled || Boolean(externalEngine) }, async t => {
+	const copy = { ownership: "copy", lifetime: null };
+	for(const [label, contract] of [
+		["arity", { parameters: [] }]
+		, ["identity", { result: { ownership: "lease", lifetime: { scope: "explicit", anchor: null } } }]
+		, ["effects", { effects: ["async"] }]
+		, ["refinement", { result: { ...copy, refinement: { constructor: "OnboardingSmall.checked" } } }]
+	]) await t.test(label, async t => {
+		const { directory, root } = await fixture(t);
+		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.add"], contracts: { "OnboardingSmall.add": contract } }));
+		const before = await lakeInputState(root);
+		await assert.rejects(() => build(root, join(directory, "rejected"), transport({ compiler: { capture: () => assert.fail("Invalid contract reached target compilation") } })), error => {
+			assert.match(`${error.message}\n${JSON.stringify(error.details)}`, /export-contract-mismatch/);
+			return true;
+		});
+		assert.deepEqual(await lakeInputState(root), before);
+		assert.deepEqual(await readdir(directory), ["project"]);
+	});
 });
 
 test("unlocked builds reject new dependencies and unsupported APIs without a scanner fallback", { skip: !enabled || Boolean(externalEngine) }, async t => {

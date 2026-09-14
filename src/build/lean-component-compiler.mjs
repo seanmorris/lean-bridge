@@ -15,7 +15,7 @@ import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
 import { readLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
-import { readExportConfiguration, specializationSelection } from "../analyze/export-configuration.mjs";
+import { readExportConfiguration, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 
 /**
@@ -222,7 +222,7 @@ export const compileLeanComponentSources = async ({
 			const rich = elaborated && JSON.parse(expectedBytes.toString()).schemaVersion === 3;
 			if(elaborated && !rich) fail("lean-entry-elaboration-drift", "Target compilation requires the shared compiler metadata report");
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
-			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [], ...specializationSelection(configuration) }
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [], ...compilerExportSelection(configuration) }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
 			const interfaces = [];
 			if(rich)

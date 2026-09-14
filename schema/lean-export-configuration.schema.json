@@ -11,6 +11,7 @@
     "resources": {"$ref": "#/$defs/names"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
     "specializations": {"$ref": "#/$defs/specializations"},
+    "contracts": {"$ref": "#/$defs/contracts"},
     "generators": {"$ref": "lake-generator-configuration.schema.json"},
     "targets": {
       "type": "object",
@@ -58,6 +59,42 @@
     }
   },
   "$defs": {
+    "contracts": {
+      "type": "object", "maxProperties": 128,
+      "propertyNames": {"$ref": "#/$defs/specializationName"},
+      "additionalProperties": {
+        "type": "object", "minProperties": 1, "additionalProperties": false,
+        "properties": {
+          "parameters": {"type": "array", "maxItems": 1024, "items": {"$ref": "#/$defs/contractSite"}},
+          "result": {"$ref": "#/$defs/contractSite"},
+          "effects": {"type": "array", "uniqueItems": true, "items": {"enum": ["allocates", "reads-resource", "writes-resource", "fails", "host-call", "async", "nondeterministic"]}}
+        }
+      }
+    },
+    "contractSite": {
+      "type": "object", "additionalProperties": false, "required": ["ownership", "lifetime"],
+      "properties": {
+        "ownership": {"enum": ["copy", "borrow", "lease", "transfer"]},
+        "lifetime": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/contractLifetime"}]},
+        "refinement": {"oneOf": [
+          {"const": "reject"},
+          {"type": "object", "additionalProperties": false, "required": ["constructor"], "properties": {"constructor": {"$ref": "#/$defs/specializationName"}}}
+        ]}
+      },
+      "if": {"properties": {"ownership": {"const": "copy"}}},
+      "then": {"properties": {"lifetime": {"type": "null"}}},
+      "else": {"properties": {"lifetime": {"$ref": "#/$defs/contractLifetime"}}}
+    },
+    "contractLifetime": {
+      "type": "object", "additionalProperties": false, "required": ["scope", "anchor"],
+      "properties": {
+        "scope": {"enum": ["call", "receiver", "parameter", "explicit", "runtime"]},
+        "anchor": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^arg(0|[1-9][0-9]*)$(?![\\s\\S])"}]}
+      },
+      "if": {"properties": {"scope": {"const": "parameter"}}},
+      "then": {"properties": {"anchor": {"type": "string"}}},
+      "else": {"properties": {"anchor": {"type": "null"}}}
+    },
     "specializations": {
       "type": "array", "maxItems": 128,
       "items": {

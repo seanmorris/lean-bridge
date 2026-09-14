@@ -25,6 +25,8 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
+Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts currently enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. They do not enable checked-constructor lowering, transferred ownership, retained host callbacks or async adapters.
+
 ## Check each consumer representation
 
 | Consumer | Conversion table | Package guide |
@@ -69,7 +71,7 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.
 
-Shared export configuration selects modules, optional exact exports, resources, and closure arities. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work. Unsupported native shapes fail before packaging.
+Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work. Unsupported native shapes fail before packaging.
 
 Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. The compiler supplies native types and declaration selection; npm's primitive frame is a separate ABI.
 
@@ -105,6 +107,8 @@ Required questions identify the declaration, reason, and closed choices. Current
 | --- | --- |
 | Existing foreign declaration | Exclude it or provide a reviewed foreign contract. |
 | Unsupported value, effect, or callable shape | Exclude it or provide an adapter. |
+| Contract differs from the implemented adapter | Correct the contract to match the intended supported behavior, or wait for the required type-family support. |
+| Contract names no selected export | Correct the name or export selection. |
 | Duplicate public names | Qualify, rename, or exclude the conflicting names. |
 | Several Binding IR documents | Select the intended component. |
 

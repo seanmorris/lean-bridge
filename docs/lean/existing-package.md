@@ -46,7 +46,7 @@ Ordinary npm builds send source and module selection to the engine without host-
 
 Native CPAN uses the same [compiler report](../architecture/elaborated-export-metadata.md) with its native type projection. Its prepared package includes `metadata.json` with documentation, source locations, resolved native types and theorem references. The native receipt binds that report to the compiled library. `resources` and `arities` remain native configuration decisions; public `analyze` still checks the ordinary scalar profile.
 
-The npm builder accepts shared module/export selection, `specializations`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection accepts module/export selection, `specializations`, `generators`, `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors currently produces an explicit error.
+The npm builder accepts shared module/export selection, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. Other target metadata and the remaining type-family decisions are tracked in the [staged implementation](../architecture/cross-language-authoring.md). Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors or contracts currently produces an explicit error.
 
 ### Export concrete specializations
 
@@ -87,6 +87,47 @@ Each entry needs a new fully qualified `name`, an existing public `declaration` 
 The file accepts at most 128 specializations. Names cannot duplicate each other, shadow existing declarations, or refer to another specialization. When `exports` is present, include every configured specialization name. Without `exports`, discovery includes the concrete names and omits their unspecialized source functions; other public functions still need supported signatures.
 
 Missing instances, unresolved types, dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.
+
+### Declare export contracts
+
+Use `contracts` to require specific ownership, lifetimes, refinement policies or boundary effects. Each key names an exact exported declaration or configured specialization. Lean checks the decisions against the compiled signature and the selected adapter. A mismatch stops the build before linking.
+
+For the `Library.echo` definition above, this configuration requires a copied `UInt32` argument and result:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Library"],
+  "exports": ["Library.echoWord"],
+  "specializations": [
+    { "name": "Library.echoWord", "declaration": "Library.echo", "types": ["UInt32"] }
+  ],
+  "contracts": {
+    "Library.echoWord": {
+      "parameters": [{ "ownership": "copy", "lifetime": null }],
+      "result": { "ownership": "copy", "lifetime": null, "refinement": "reject" },
+      "effects": []
+    }
+  }
+}
+```
+
+Each contract needs at least one of `parameters`, `result` or `effects`. Omitted decisions keep the adapter's existing rules. If supplied, `parameters` covers every runtime argument in order, after specialization and configured closure arity. The file accepts at most 128 contracts. When `exports` is present, every contract key must appear there; otherwise it must name an export discovered by Lean.
+
+| Value at the boundary | Supported ownership and lifetime |
+| --- | --- |
+| npm primitive arguments and results | `"copy"`, `null` |
+| CPAN primitive values, copied arrays and copied records | `"copy"`, `null` |
+| CPAN resource or callback argument | `"borrow"`, `{ "scope": "call", "anchor": null }` |
+| CPAN resource or Lean closure result | `"lease"`, `{ "scope": "explicit", "anchor": null }` |
+
+Native leases use the generated object's lifetime and `close` operation. A call-scoped borrow does not let Lean retain a host callback after the call. See the [CPAN closure example](../publish/cpan.md#export-a-specialized-closure).
+
+`effects` must match the adapter's boundary effects: `[]` for the current scalar and native APIs without callback arguments, or `["host-call", "fails"]` when a native argument is a callback. Order does not matter. These labels describe the host-call protocol, not memory allocation inside Lean or a proof that arbitrary function bodies are pure. Returned `IO`, `EIO`, `Task` and other unsupported actions still fail signature checking.
+
+`refinement: "reject"` keeps unsupported refined types rejected; it does not erase a `Fin` bound or a `Subtype` predicate. The schema also recognizes `{ "constructor": "Library.checked" }`, transferred ownership, anchored lifetimes and additional effect labels. Current adapters reject those choices. They require the [corresponding type-family implementation](../architecture/cross-language-authoring.md#stages), not a configuration override.
+
+Analysis and both builders bind contracts into the compiler request and source identity. Target compilation checks them again. Generated Binding IR records them under `lean-lang.org/export-contract` for inspection without adding proof claims. Public `analyze` uses the scalar profile; native-only contracts must be checked with the CPAN build.
 
 ### Select modules in a custom source directory
 

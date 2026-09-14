@@ -24,6 +24,10 @@ The `native-library-v1` profile retains native CPAN's primitive values, finite c
 
 ## Source and interface identity
 
+The compiler request carries optional `contracts` from shared source configuration, keyed by exact export or specialization name. `compilerExportSelection` sorts the keys and effect sets before hashing the request. Lean checks each selected contract after specialization, arity selection and structural type projection. Parameter counts, ownership, lifetimes and boundary effects must match the implemented adapter; checked refinement constructors remain unsupported. Unsupported source types and effects are never made supported by a contract.
+
+Metadata validation repeats those checks against the structural projection. A mismatch produces `export-contract-mismatch`; a contract without a selected declaration requires `unused-export-contract`. Binding IR retains the author decisions in `lean-lang.org/export-contract`, separately from the compiler-derived types and empty assurance arrays. Native callback boundary labels (`host-call`, `fails`) differ from the declaration's returned-action `effects` field described above.
+
 The engine hashes the source, compiler, extractor and complete interface set. Each interface identity covers the `.olean` file and any `.olean.private` and `.olean.server` sidecars, including their presence, sizes and bytes. Existing project `.ilean` files supply no metadata. Extraction does not enable package initializers. Specialization rehydrates only Lean's built-in class and instance indexes from imported metadata; it checks the bodies and axioms of every constant used by the resulting application, including synthesized dictionaries.
 
 Producer identity binds the adapter version, actual Lean version, selected toolchain and measured invocation inputs. The report sorts modules, imports, declarations, effects, theorem references and diagnostics. For analysis and npm, the enclosing [version-3 elaboration record](../../schema/lake-entry-elaboration.schema.json) binds the source snapshot, optional generated-source handoff, request and report. Its identity is SHA-256 over canonical UTF-8 JSON.

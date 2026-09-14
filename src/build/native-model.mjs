@@ -8,6 +8,7 @@ import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { validateNativeType } from "../analyze/native-types.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
+import { exportContractFor, exportContractOwnership } from "../analyze/export-configuration.mjs";
 
 export { validateNativeType };
 
@@ -124,8 +125,7 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 	const identity = type => ["resource", "callback"].includes(type.kind);
 	const site = (type, result = false) => ({
 		type: reference(type)
-		, ownership: identity(type) ? (result ? "lease" : "borrow") : "copy"
-		, lifetime: identity(type) ? { scope: result ? "explicit" : "call", anchor: null } : null
+		, ...exportContractOwnership(type, result)
 	});
 	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
 	const reference = type => {
@@ -193,6 +193,7 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		, documentation: doc(item.documentation ?? `Call ${item.name}.`)
 		, source: { ...source(item.specialization?.declaration ?? item.name), extensions: {
 			"lean-lang.org/theorem-references": item.theoremReferences
+			, ...(exportContractFor(sourceIdentity.request.contracts, item.name) ? { "lean-lang.org/export-contract": sourceIdentity.request.contracts[item.name] } : {})
 			, "lean-lang.org/source-position": item.sourcePosition
 			, ...(item.specialization ? { "lean-lang.org/specialization": item.specialization } : {})
 		} }

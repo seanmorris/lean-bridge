@@ -79,6 +79,17 @@ test("Binding IR uses structural compiler types and never parses rendered expres
 	assert.deepEqual(analysis().bindingIr.document.assurance, []);
 });
 
+test("supported metadata must honor contracts and report every unused contract", () => {
+	const { request, report } = sample();
+	request.contracts = { "Sample.keep": { parameters: [{ ownership: "copy", lifetime: null }], effects: [] } };
+	assert.equal(validateElaboratedMetadata(report, request), true);
+	request.contracts["Sample.keep"].effects = ["async"];
+	assert.throws(() => validateElaboratedMetadata(report, request), /violates its configured export contract/);
+	request.contracts = { "Sample.missing": { effects: [] } };
+	request.exports = [];
+	assert.throws(() => validateElaboratedMetadata(report, request), /unused without a compiler diagnostic/);
+});
+
 const inspect = async (context, runner = processBuildRunner, signal) => {
 	const intent = await prepareLakeEntryIntent({ projectRoot: context.root });
 	const prefix = await leanPrefix();
@@ -90,6 +101,48 @@ const inspect = async (context, runner = processBuildRunner, signal) => {
 	finally
 	{ await workspace.dispose(); }
 };
+
+test("Lean checks contracts against selected signatures without erasing refinements or effects", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+abbrev Word := UInt32
+/-- Keep a copied word. -/
+def keep (value : Word) : Word := value
+def borrowWord (value : Word) : Word := value
+def wrongArity (value : Word) : Word := value
+def wrongEffects (value : Word) : Word := value
+def checkedWord (value : Word) : Word := value
+def bounded (value : Fin 5) : Fin 5 := value
+def effect (value : Word) : IO Word := pure value
+end Shop
+`);
+	const copy = { ownership: "copy", lifetime: null };
+	const contracts = {
+		"Shop.keep": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
+		, "Shop.borrowWord": { parameters: [{ ownership: "borrow", lifetime: { scope: "call", anchor: null } }] }
+		, "Shop.wrongArity": { parameters: [] }
+		, "Shop.wrongEffects": { effects: ["async"] }
+		, "Shop.checkedWord": { result: { ...copy, refinement: { constructor: "Shop.checked" } } }
+		, "Shop.bounded": { parameters: [{ ...copy, refinement: "reject" }] }
+		, "Shop.effect": { effects: [] }
+		, "Shop.missing": { effects: [] }
+	};
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], contracts }));
+	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
+	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
+	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
+	assert.deepEqual(analysis.proposedExports, ["lean:Shop.keep"]);
+	assert.deepEqual(analysis.bindingIr.document.declarations[0].source.extensions["lean-lang.org/export-contract"], contracts["Shop.keep"]);
+	assert.deepEqual(analysis.bindingIr.document.declarations[0].assurance, []);
+	const declarations = analysis.elaboration.metadata.modules.flatMap(module => module.declarations);
+	for(const name of ["borrowWord", "wrongArity", "wrongEffects", "checkedWord"])
+		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.reason, "export-contract-mismatch");
+	assert.equal(declarations.find(item => item.identity === "Shop.bounded").projection.status, "unsupported");
+	assert.equal(declarations.find(item => item.identity === "Shop.effect").projection.reason, "unsupported-effect");
+	assert.ok(analysis.diagnostics.some(item => item.code === "unused-export-contract" && item.declaration === "Shop.missing"));
+	assert.ok(analysis.diagnostics.some(item => item.code === "export-contract-mismatch" && item.path === "root/Shop.lean"));
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
 
 test("fresh metadata preserves aliases, documentation, UTF-16 ranges and actual theorem relationships after relocation", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);

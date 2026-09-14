@@ -26,6 +26,8 @@ A generator can also produce a [selected public entry module](../lean/existing-p
 
 To publish concrete versions of generic Lean functions, configure [finite specializations](../lean/existing-package.md#export-concrete-specializations). Lean checks the selected types and instance dictionaries; each configured name becomes a concrete JavaScript/TypeScript function. The source configuration and compiler applications travel with the build bundle and publication receipts.
 
+Optional [export contracts](../lean/existing-package.md#declare-export-contracts) require copied argument/result ownership, a refinement rejection policy and the implemented boundary effects. Lean checks each contract against the selected primitive signature. Unsupported requirements stop the build before linking; package assembly and publication retain the captured configuration.
+
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
 ## Publish an ordinary component

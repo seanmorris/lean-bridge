@@ -7,6 +7,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
+import { exportContractFor } from "./export-configuration.mjs";
 
 /**
  * Build a reviewable report using structural types supplied by Lean itself.
@@ -51,12 +52,12 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 		, question: reason === "public-name-collision" ? "Which namespace-qualified export should this component expose?" : `How should Lean Bridge project ${candidate.declaration} (${reason})?`
 		, choices: reason === "public-name-collision" ? ["select-one-export", "provide-wrapper"] : ["exclude", "provide-adapter"]
 	})));
-	for(const item of metadata.diagnostics.filter(item => item.code === "missing-declaration"))
-		adapterHints.push({ id: `hint:${item.declaration}:missing-declaration`
+	for(const item of metadata.diagnostics.filter(item => ["missing-declaration", "unused-export-contract"].includes(item.code)))
+		adapterHints.push({ id: `hint:${item.declaration}:${item.code}`
 			, declaration: item.declaration
 			, reason: item.code
 			, required: true
-			, question: `Which existing public declaration should replace ${item.declaration}?`
+			, question: item.code === "unused-export-contract" ? `Which selected public export should contract ${item.declaration} describe?` : `Which existing public declaration should replace ${item.declaration}?`
 			, choices: ["correct-export-selection"] });
 	const doc = summary => ({ summary, details: "" });
 	const declarations = candidates.filter(item => item.status === "exportable").map(candidate => {
@@ -87,6 +88,7 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 			, source: { producer: "lean"
 				, declaration: specialization?.declaration ?? source.identity
 				, extensions: { "lean-lang.org/theorem-references": source.theoremReferences
+					, ...(exportContractFor(request.contracts, source.identity) ? { "lean-lang.org/export-contract": request.contracts[source.identity] } : {})
 					, ...(specialization ? { "lean-lang.org/specialization": specialization } : {}) } } };
 	});
 	const facts = inventory.project;

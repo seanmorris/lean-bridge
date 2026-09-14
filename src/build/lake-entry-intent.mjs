@@ -68,7 +68,7 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 	if(!["build", "analysis"].includes(purpose)) fail("Unknown public entry intent purpose");
 	const inventory = await inspectLeanProject(projectRoot, { signal });
 	const configuration = inventory.configurationRecord.configuration;
-	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators", "specializations"], targetFields: ["name", "version"] });
+	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
 	if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
 		fail("Compiler entry discovery requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
 	if(configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))

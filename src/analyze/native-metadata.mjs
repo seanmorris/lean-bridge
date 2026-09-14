@@ -22,7 +22,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity) => {
 		|| !digest(sourceIdentity.sourceTreeSha256) || !/^[a-f0-9]{40}$/.test(sourceIdentity.leanCommit)
 		|| !Array.isArray(sourceIdentity.modules) || !sourceIdentity.modules.length) fail("Native metadata requires measured compiler and source identities");
 	const { metadata: context, ...selection } = sourceIdentity.request ?? {};
-	if(canonicalJson(Object.keys(selection).sort()) !== canonicalJson(["arities", "exportModules", "exports", "modules", "profile", "resources", ...(selection.specializations === undefined ? [] : ["specializations"])])
+	if(canonicalJson(Object.keys(selection).sort()) !== canonicalJson(["arities", "exportModules", "exports", "modules", "profile", "resources", ...(selection.specializations === undefined ? [] : ["specializations"]), ...(selection.contracts === undefined ? [] : ["contracts"])].sort())
 		|| selection.profile !== "native-library-v1" || !names(selection.modules) || !selection.modules.length || !names(selection.exportModules) || !selection.exportModules.length
 		|| selection.exportModules.some(module => !selection.modules.includes(module)) || !names(selection.exports) || !names(selection.resources)
 		|| !Array.isArray(selection.arities) || selection.arities.some(item => !Array.isArray(item) || item.length !== 2 || !name(item[0]) || !Number.isSafeInteger(item[1]) || item[1] < 0 || item[1] > 32)

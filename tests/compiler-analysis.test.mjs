@@ -234,7 +234,8 @@ test("real compiler analysis binds finite selections to source intent and reject
 	const { root, directory } = await fixture(t);
 	await saveLakeFile(root, "OnboardingSmall.lean", "universe u\n/-- Double a selected concrete value. -/\ndef OnboardingSmall.twice {α : Type u} [Add α] (value : α) : α := value + value\n");
 	const specializations = [{ name: "OnboardingSmall.twiceWord", declaration: "OnboardingSmall.twice", types: ["UInt32"] }];
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.twiceWord"], specializations }));
+	const contracts = { "OnboardingSmall.twiceWord": { parameters: [{ ownership: "copy", lifetime: null }], effects: [] } };
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.twiceWord"], specializations, contracts }));
 	const before = await lakeInputState(root);
 	const first = await analyzeCompilerProject(root, { runner: transport(), environment });
 	await assertJsonSchema("project-analysis", first);
@@ -242,10 +243,14 @@ test("real compiler analysis binds finite selections to source intent and reject
 	assert.deepEqual(first.proposedExports, ["lean:OnboardingSmall.twiceWord"]);
 	assert.equal(first.bindingIr.document.declarations[0].parameters[0].type.name, "uint32");
 	assert.equal(first.bindingIr.document.declarations[0].source.declaration, "OnboardingSmall.twice");
+	assert.deepEqual(first.bindingIr.document.declarations[0].source.extensions["lean-lang.org/export-contract"], contracts["OnboardingSmall.twiceWord"]);
 	const inventory = await inspectLeanProject(root), intent = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis" });
 	for(const change of [
 		value => { value.elaboration.request.specializations[0].types = ["Nat"]; }
 		, value => { delete value.elaboration.request.specializations; }
+		, value => { delete value.elaboration.request.contracts; }
+		, value => { value.elaboration.request.contracts["OnboardingSmall.twiceWord"].effects = ["async"]; }
+		, value => { delete value.bindingIr.document.declarations[0].source.extensions["lean-lang.org/export-contract"]; }
 		, value => { value.bindingIr.document.declarations[0].source.extensions["lean-lang.org/specialization"].application = "id"; }
 	]) {
 		const invalid = structuredClone(first); change(invalid);

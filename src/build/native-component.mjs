@@ -7,7 +7,7 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } fr
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, specializationSelection } from "../analyze/export-configuration.mjs";
+import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
@@ -184,7 +184,7 @@ export const buildNativeComponent = async ({ projectRoot
 		const record = await readExportConfiguration(project, { signal });
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
-		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "generators"], targetFields: ["module", "version"] });
+		assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: ["module", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
@@ -274,7 +274,7 @@ export const buildNativeComponent = async ({ projectRoot
 			, modules: compileOrder.map(item => item.module)
 			, exports, resources
 			, arities: Object.entries(arities)
-			, ...specializationSelection(config)
+			, ...compilerExportSelection(config)
 			, exportModules: selectedModules };
 		const request = createMetadataRequest(selection, { toolchain: analysis.project.toolchain
 			, leanCompilerSha256, extractorSha256

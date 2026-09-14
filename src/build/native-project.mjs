@@ -29,7 +29,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 		throw new CanonicalBuildError("unsupported-native-targets", "The ordinary native project builder currently implements only the cpan target");
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
-	assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "generators"], targetFields: ["module", "version"] });
+	assertExportConfigurationCapabilities(config, { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: ["module", "version"] });
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-perl"));
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "Perl output cannot replace the source project");
 	try

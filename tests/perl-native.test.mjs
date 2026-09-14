@@ -11,6 +11,7 @@ import test from "node:test";
 import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
 import { buildNativeProject } from "../src/build/native-project.mjs";
 import { readExportConfiguration } from "../src/analyze/export-configuration.mjs";
+import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
 import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-package.mjs";
 import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
@@ -54,7 +55,7 @@ end Sample
 	return { working, projectRoot, runtimeRoot: join(working, "runtime"), leanPrefix };
 };
 
-const specializationProject = async t => {
+const specializationProject = async (t, withContracts = false) => {
 	const context = await metadataProject(t);
 	const source = join(context.projectRoot, "Sample.lean"), configuration = join(context.projectRoot, "lean-bridge.exports.json");
 	await chmod(source, 0o644); await chmod(configuration, 0o644);
@@ -114,13 +115,28 @@ end LeanBridgeNative${sha256("sample@1.0.0").slice(0, 16)}
 		, resources: ["Sample.Counter"]
 		, arities: { "Sample.makeWordAdder": 1, "Sample.echoUnary": 1 }
 		, targets: { cpan: { module: "LeanBridge::Concrete", version: "0.002" } } };
+	if(withContracts)
+	{
+		const copy = { ownership: "copy", lifetime: null };
+		const borrow = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
+		const lease = { ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
+		config.contracts = {
+			"Sample.echoPoint": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
+			, "Sample.echoWords": { parameters: [copy], result: copy }
+			, "Sample.echoCounter": { parameters: [borrow], result: lease, effects: [] }
+			, "Sample.readCounter": { parameters: [borrow], result: copy }
+			, "Sample.makeCounter": { parameters: [copy], result: lease }
+			, "Sample.makeWordAdder": { parameters: [copy], result: lease, effects: [] }
+			, "Sample.applyWord": { parameters: [borrow, copy], result: copy, effects: ["host-call", "fails"] }
+		};
+	}
 	await writeFile(configuration, canonicalJson(config));
 	await chmod(source, 0o444); await chmod(configuration, 0o444);
 	return { ...context, config };
 };
 
 test("native finite specializations reproduce and install concrete Perl APIs", { skip: !enabled, timeout: 600_000 }, async t => {
-	const context = await specializationProject(t), before = await lakeInputState(context.projectRoot);
+	const context = await specializationProject(t, true), before = await lakeInputState(context.projectRoot);
 	const moved = join(context.working, "relocated");
 	await cp(context.projectRoot, moved, { recursive: true });
 	const movedBefore = await lakeInputState(moved), releases = [];
@@ -142,6 +158,14 @@ test("native finite specializations reproduce and install concrete Perl APIs", {
 	await assertJsonSchema("elaborated-export-metadata", metadata);
 	assert.equal(model.exports.length, 15);
 	assert.deepEqual(model.bindingIr.assurance, []);
+	for(const [name, contract] of Object.entries(context.config.contracts))
+	{
+		const declaration = model.bindingIr.declarations.find(item => item.id === `lean:${name}`);
+		const normalized = { ...contract, ...(contract.effects ? { effects: contract.effects.toSorted() } : {}) };
+		assert.deepEqual(declaration.source.extensions["lean-lang.org/export-contract"], normalized);
+		assert.deepEqual(declaration.assurance, []);
+		assert.deepEqual(declaration.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime })), contract.parameters);
+	}
 	const echo = model.bindingIr.declarations.find(item => item.name === "echo_point");
 	assert.equal(echo.source.declaration, "Sample.echo");
 	assert.deepEqual(echo.source.extensions["lean-lang.org/theorem-references"], ["Sample.echo_spec"]);
@@ -208,22 +232,79 @@ done_testing;
 	}
 	const entry = releases[0].result.packages[1];
 	t.diagnostic(`Finite CPAN archive SHA-256: ${sha256(await readFile(join(releases[0].outputRoot, "archives", entry.archive)))}`);
-	// Rehashing the report and receipt cannot substitute a checked application.
-	metadata.modules[0].declarations.find(item => item.identity === "Sample.echoWord").specialization.application = "fun (value : UInt32) => value + 1";
-	await writeFile(join(nativeRoot, "metadata.json"), canonicalJson(metadata));
-	const receipt = JSON.parse(await readFile(join(nativeRoot, "native-component.json"), "utf8"));
-	receipt.metadataSha256 = sha256(canonicalJson(metadata));
-	await writeFile(join(nativeRoot, "native-component.json"), canonicalJson(receipt));
-	const artifacts = JSON.parse(await readFile(join(nativeRoot, "artifacts.json"), "utf8"));
-	for(const path of ["metadata.json", "native-component.json"])
+	// Rehashing the report and receipt cannot substitute an application or contract.
+	const originalReceipt = JSON.parse(await readFile(join(nativeRoot, "native-component.json"), "utf8"));
+	for(const mode of ["application", "contract"])
 	{
-		const bytes = await readFile(join(nativeRoot, path));
-		artifacts.files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+		const report = structuredClone(metadata), receipt = structuredClone(originalReceipt), forged = structuredClone(model);
+		if(mode === "application")
+			report.modules[0].declarations.find(item => item.identity === "Sample.echoWord").specialization.application = "fun (value : UInt32) => value + 1";
+		else
+		{
+			const { metadata: context, ...selection } = receipt.sourceIdentity.request;
+			selection.contracts["Sample.applyWord"].effects = [];
+			receipt.sourceIdentity.request = createMetadataRequest(selection, {
+				toolchain: context.toolchain, modules: context.modules
+				, leanCompilerSha256: receipt.sourceIdentity.leanCompilerSha256
+				, extractorSha256: receipt.sourceIdentity.extractorSha256 });
+			report.producer.invocationIdentitySha256 = receipt.sourceIdentity.request.metadata.invocationIdentitySha256;
+			forged.sourceIdentity = receipt.sourceIdentity;
+		}
+		receipt.metadataSha256 = sha256(canonicalJson(report));
+		receipt.modelSha256 = sha256(canonicalJson(forged));
+		await writeFile(join(nativeRoot, "metadata.json"), canonicalJson(report));
+		await writeFile(join(nativeRoot, "model.json"), canonicalJson(forged));
+		await writeFile(join(nativeRoot, "native-component.json"), canonicalJson(receipt));
+		const artifacts = JSON.parse(await readFile(join(nativeRoot, "artifacts.json"), "utf8"));
+		for(const path of ["metadata.json", "model.json", "native-component.json"])
+		{
+			const bytes = await readFile(join(nativeRoot, path));
+			artifacts.files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+		}
+		await writeFile(join(nativeRoot, "artifacts.json"), canonicalJson(artifacts));
+		await assert.rejects(() => stageCpanPackage({ componentRoot: nativeRoot
+			, runtimeRoot: join(releases[0].outputRoot, "native/runtime"), leanPrefix
+			, outputRoot: join(context.working, `forged-${mode}`) }), mode === "application"
+			? /model differs from shared compiler metadata/ : /violates its configured export contract/);
 	}
-	await writeFile(join(nativeRoot, "artifacts.json"), canonicalJson(artifacts));
-	await assert.rejects(() => stageCpanPackage({ componentRoot: nativeRoot
-		, runtimeRoot: join(releases[0].outputRoot, "native/runtime"), leanPrefix
-		, outputRoot: join(context.working, "forged-package") }), /model differs from shared compiler metadata/);
+});
+
+test("native export contracts reject unsupported decisions before linking", { skip: !enabled, timeout: 300_000 }, async t => {
+	const context = await specializationProject(t);
+	await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
+	const copy = { ownership: "copy", lifetime: null };
+	const borrow = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
+	const lease = { ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
+	for(const [label, name, contract] of [
+		["copied-resource", "echoCounter", { parameters: [copy] }]
+		, ["borrowed-result", "makeCounter", { result: borrow }]
+		, ["transfer", "readCounter", { parameters: [{ ...lease, ownership: "transfer" }] }]
+		, ["retained-callback", "applyWord", { parameters: [lease, copy] }]
+		, ["callback-effects", "applyWord", { effects: [] }]
+		, ["closure-arity", "makeWordAdder", { parameters: [copy, copy] }]
+		, ["refinement", "plain", { result: { ...copy, refinement: { constructor: "Sample.checked" } } }]
+		, ["unknown", "missing", { effects: [] }]
+	]) await t.test(label, async () => {
+		const config = { ...context.config, contracts: { [`Sample.${name}`]: contract } };
+		if(label === "unknown") config.exports = [...config.exports, "Sample.missing"];
+		const path = join(context.projectRoot, "lean-bridge.exports.json");
+		await chmod(path, 0o644); await writeFile(path, canonicalJson(config)); await chmod(path, 0o444);
+		const before = await lakeInputState(context.projectRoot);
+		let extractions = 0;
+		const runner = { capture: async request => {
+			assert.notEqual(request.args[0], "-shared", "Invalid contract reached linking");
+			if(request.args.includes("--metadata")) extractions++;
+			return processBuildRunner.capture(request);
+		} };
+		await assert.rejects(() => buildNativeComponent({ ...context, outputRoot: join(context.working, label), runner }), error => {
+			assert.equal(error.code, "native-elaboration-unsupported", errorText(error));
+			assert.match(errorText(error), label === "unknown" ? /unused-export-contract/ : /export-contract-mismatch/);
+			return true;
+		});
+		assert.equal(extractions, 1);
+		assert.deepEqual(await readdir(context.working), ["project", "runtime"]);
+		assert.deepEqual(await lakeInputState(context.projectRoot), before);
+	});
 });
 
 test("native specializations reject changed applications and unsupported ownership before linking", { skip: !enabled, timeout: 300_000 }, async t => {

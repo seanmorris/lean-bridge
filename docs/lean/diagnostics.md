@@ -37,6 +37,9 @@ A first interrupt cancels the active process and returns 130.
 | `invalid-compiler-analysis` | Engine output, invocation identity, or source inputs changed. | Keep inputs stable and rerun. Preserve the diagnostic if it repeats. |
 | `analysis-configuration-unsupported` | Public analysis cannot project configured resources or closure arities yet. | Use the native target's build path or an explicit reviewed Binding IR for those APIs. |
 | `invalid-specialization` | Lean could not resolve a configured type application or its instance dictionaries, or found an admitted or unreviewed implementation. | Read the compiler message. Check the leading type arguments and instances in [the specialization configuration](existing-package.md#export-concrete-specializations). |
+| `export-contract-mismatch` | A declared parameter count, ownership, lifetime, refinement policy or effect set differs from the implemented adapter. | Check [export contracts](existing-package.md#declare-export-contracts) against the compiled signature and selected profile. Required unsupported behavior needs an adapter implementation. |
+| `unused-export-contract` | A contract names no selected declaration or specialization. | Correct the exact export name or module/export selection. |
+| `contracts-require-elaboration` | Internal source-scanning tooling received contracts it cannot check. | Use compiler-backed `lean-bridge analyze` or the target's build command. |
 | `source-not-git` | The dry-run project is outside Git. | Initialize Git and commit the project inputs. |
 | `source-tree-dirty` | A project input differs from the candidate revision. | Run `git status --short`, review the changes, and commit the intended inputs. |
 | `lean-toolchain-drift` | The source requests a different Lean version from the builder. | Compare `lean-toolchain` with the pinned builder and runtime. |

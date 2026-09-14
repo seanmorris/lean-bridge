@@ -8,8 +8,8 @@ import { access, cp, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { assertExportConfigurationCapabilities, exportConfigurationFile, exportTargets
-	, readExportConfiguration, specializationSelection, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
+import { assertExportConfigurationCapabilities, exportConfigurationFile, exportTargets, exportContractFor, exportContractProblem
+	, readExportConfiguration, compilerExportSelection, validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { buildNativeProject } from "../src/build/native-project.mjs";
@@ -25,6 +25,80 @@ const workspace = async t => {
 	return directory;
 };
 const configure = (directory, value) => writeFile(join(directory, exportConfigurationFile), JSON.stringify(value));
+const copySite = { ownership: "copy", lifetime: null };
+
+test("export contracts and their schema agree on closed ownership, lifetime, refinement and effect choices", async () => {
+	const wrap = contract => ({ schemaVersion: 1, contracts: { "Library.run": contract } });
+	const borrowed = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
+	for(const value of [
+		{ schemaVersion: 1, contracts: {} }
+		, wrap({ parameters: [], effects: [] })
+		, wrap({ parameters: [copySite, borrowed], result: { ownership: "lease", lifetime: { scope: "explicit", anchor: null } } })
+		, wrap({ parameters: [borrowed], result: { ownership: "borrow", lifetime: { scope: "parameter", anchor: "arg0" } } })
+		, wrap({ result: { ...copySite, refinement: "reject" } })
+		, wrap({ parameters: [{ ...copySite, refinement: { constructor: "Library.checked" } }], effects: ["async", "fails"] })
+	]) {
+		assert.equal(validateExportConfiguration(value), value);
+		await assertJsonSchema("lean-export-configuration", value);
+	}
+	for(const value of [
+		{ schemaVersion: 1, contracts: null }
+		, { schemaVersion: 1, contracts: [] }
+		, { schemaVersion: 1, contracts: { "Library.run\n": { effects: [] } } }
+		, wrap({}), wrap({ guessedType: "UInt32" }), wrap({ parameters: {} })
+		, wrap({ parameters: Array(1025).fill(copySite) })
+		, wrap({ effects: "pure" }), wrap({ effects: ["host-call", "host-call"] })
+		, wrap({ effects: ["trust-me"] }), wrap({ result: null })
+		, ...[{}, { ...copySite, ownership: "shared" }
+			, { ...copySite, type: "UInt32" }
+			, { ownership: "borrow", lifetime: null }
+			, { ...copySite, lifetime: borrowed.lifetime }
+			, { ...borrowed, lifetime: { scope: "call", anchor: "arg0" } }
+			, { ...borrowed, lifetime: { scope: "parameter", anchor: null } }
+			, { ...borrowed, lifetime: { scope: "parameter", anchor: "arg01" } }
+			, { ...copySite, refinement: "erase" }
+			, { ...copySite, refinement: { constructor: "Library.checked", trust: true } }
+			, { ...copySite, refinement: { constructor: "Library.checked\n" } }
+		].map(result => wrap({ result }))
+	]) {
+		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", value));
+	}
+	assert.throws(() => validateExportConfiguration({ ...wrap({ effects: [] }), exports: ["Library.other"] }), /selected export/);
+	assert.throws(() => validateExportConfiguration(wrap({ parameters: [copySite], result: { ownership: "borrow", lifetime: { scope: "parameter", anchor: "arg1" } } })), /outside its parameters/);
+	assert.deepEqual(compilerExportSelection({ contracts: {} }), {});
+	assert.deepEqual(compilerExportSelection(wrap({ effects: ["host-call", "fails"] })), compilerExportSelection(wrap({ effects: ["fails", "host-call"] })));
+	assert.equal(exportContractFor({ other: { effects: [] } }, "constructor"), undefined);
+	assert.equal(exportContractFor({ other: { effects: [] } }, "toString"), undefined);
+	assert.deepEqual(exportContractFor(JSON.parse('{"constructor":{"effects":[]}}'), "constructor"), { effects: [] });
+});
+
+test("contract decisions constrain the existing adapter instead of supplying types or behavior", () => {
+	const primitive = { kind: "primitive", name: "uint32" };
+	const scalar = { status: "supported", parameters: [{ name: "value", type: primitive }], result: primitive };
+	assert.equal(exportContractProblem({ parameters: [copySite], result: { ...copySite, refinement: "reject" }, effects: [] }, scalar), null);
+	assert.match(exportContractProblem({ parameters: [] }, scalar), /runtime argument count/);
+	assert.match(exportContractProblem({ effects: ["async"] }, scalar), /effects/);
+	assert.match(exportContractProblem({ result: { ...copySite, refinement: { constructor: "Library.make" } } }, scalar), /not implemented/);
+	assert.match(exportContractProblem({ result: { ownership: "lease", lifetime: { scope: "explicit", anchor: null } } }, scalar), /ownership/);
+	const identity = { status: "supported", parameters: [{ name: "resource", type: { kind: "resource" } }, { name: "fn", type: { kind: "callback" } }], result: { kind: "resource" } };
+	const borrow = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
+	assert.equal(exportContractProblem({ parameters: [borrow, borrow], result: { ownership: "lease", lifetime: { scope: "explicit", anchor: null } }, effects: ["host-call", "fails"] }, identity), null);
+	assert.match(exportContractProblem({ effects: [] }, identity), /effects/);
+	assert.match(exportContractProblem({ result: { ownership: "transfer", lifetime: { scope: "explicit", anchor: null } } }, identity), /ownership/);
+	assert.match(exportContractProblem({ result: { ownership: "borrow", lifetime: { scope: "parameter", anchor: "arg0" } } }, identity), /lifetime/);
+	assert.equal(exportContractProblem({ effects: [] }, { status: "unsupported", reason: "unsupported-effect" }), null);
+});
+
+test("contracts require compiler authority and unsupported target fields cannot be ignored", async t => {
+	const directory = await workspace(t), config = { schemaVersion: 1, exports: ["First.bump"], contracts: { "First.bump": { effects: [] } } };
+	await configure(directory, config);
+	await assert.rejects(() => analyzeLeanProject(directory), { code: "contracts-require-elaboration" });
+	assert.throws(() => assertExportConfigurationCapabilities(config, { target: "unimplemented" }), /does not yet implement contracts/);
+	const first = await readExportConfiguration(directory);
+	await configure(directory, { ...config, contracts: { "First.bump": { effects: ["async"] } } });
+	assert.notEqual((await readExportConfiguration(directory)).sha256, first.sha256);
+});
 
 test("shared export configuration and schema accept the same structural choices", async () => {
 	const targets = Object.fromEntries(exportTargets.map(target => {
@@ -129,8 +203,8 @@ test("finite specialization choices are closed, ordered and rejected by unsuppor
 		, { ...config([item]), exports: ["Library.echo"] }])
 		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
 	const unsorted = [item, { ...item, name: "Library.echoText", types: ["String"] }];
-	assert.deepEqual(specializationSelection(config(unsorted)), specializationSelection(config(unsorted.toReversed())));
-	assert.deepEqual(specializationSelection(config([])), {});
+	assert.deepEqual(compilerExportSelection(config(unsorted)), compilerExportSelection(config(unsorted.toReversed())));
+	assert.deepEqual(compilerExportSelection(config([])), {});
 	assert.doesNotThrow(() => assertExportConfigurationCapabilities(config([item]), { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations"] }));
 	assert.throws(() => assertExportConfigurationCapabilities(config([item]), { target: "unimplemented", fields: ["modules", "exports"] }), /does not yet implement specializations/);
 	const directory = await workspace(t);

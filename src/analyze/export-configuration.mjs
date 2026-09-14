@@ -13,6 +13,7 @@ export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const specializationName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
+const effects = ["allocates", "reads-resource", "writes-resource", "fails", "host-call", "async", "nondeterministic"];
 export const exportTargets = Object.freeze([
 	"npm", "pypi", "cargo", "c", "cpp", "nuget", "maven", "rubygems"
 	, "cpan", "php-native", "php-wasm", "wit-wasi"
@@ -56,9 +57,56 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "specializations", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.generators !== undefined) validateGeneratorConfiguration(configuration.generators);
+	if(configuration.contracts !== undefined)
+	{
+		if(!object(configuration.contracts) || Object.keys(configuration.contracts).length > 128)
+			fail("invalid-export-configuration", "contracts must map at most 128 exact export names to author decisions");
+		for(const [name, contract] of Object.entries(configuration.contracts))
+		{
+			if(!specializationName.test(name)) fail("invalid-export-configuration", "contracts require exact Lean export names");
+			if(configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(name)))
+				fail("invalid-export-configuration", `Contract ${name} must refer to a selected export`);
+			closed(contract, ["parameters", "result", "effects"], `contracts.${name}`);
+			if(!Object.keys(contract).length) fail("invalid-export-configuration", `Contract ${name} must declare a decision`);
+			if(contract.effects !== undefined && (!Array.isArray(contract.effects)
+				|| contract.effects.some(effect => !effects.includes(effect))
+				|| new Set(contract.effects).size !== contract.effects.length))
+				fail("invalid-export-configuration", `Contract ${name} has invalid or duplicate effects`);
+			if(contract.parameters !== undefined && (!Array.isArray(contract.parameters) || contract.parameters.length > 1024))
+				fail("invalid-export-configuration", `Contract ${name} requires an ordered array of at most 1024 parameter sites`);
+			const sites = [...(contract.parameters ?? [])];
+			if(contract.result !== undefined) sites.push(contract.result);
+			for(const site of sites)
+			{
+				closed(site, ["ownership", "lifetime", "refinement"], `Contract ${name} site`);
+				if(!["copy", "borrow", "lease", "transfer"].includes(site.ownership) || site.lifetime === undefined)
+					fail("invalid-export-configuration", `Contract ${name} sites require ownership and lifetime`);
+				if(site.ownership === "copy")
+				{
+					if(site.lifetime !== null) fail("invalid-export-configuration", "Copied values cannot declare an identity lifetime");
+				}
+				else
+				{
+					closed(site.lifetime, ["scope", "anchor"], `Contract ${name} lifetime`);
+					const { scope, anchor } = site.lifetime;
+					if(!["call", "receiver", "parameter", "explicit", "runtime"].includes(scope)
+						|| (scope === "parameter" ? typeof anchor !== "string" || !/^arg(?:0|[1-9][0-9]*)$(?![\s\S])/.test(anchor) : anchor !== null))
+						fail("invalid-export-configuration", `Contract ${name} has an invalid lifetime or parameter anchor`);
+					if(scope === "parameter" && contract.parameters && Number(anchor.slice(3)) >= contract.parameters.length)
+						fail("invalid-export-configuration", `Contract ${name} lifetime anchor is outside its parameters`);
+				}
+				if(site.refinement !== undefined && site.refinement !== "reject")
+				{
+					closed(site.refinement, ["constructor"], `Contract ${name} checked refinement`);
+					if(typeof site.refinement.constructor !== "string" || !specializationName.test(site.refinement.constructor))
+						fail("invalid-export-configuration", `Contract ${name} refinement needs a checked constructor name`);
+				}
+			}
+		}
+	}
 	if(configuration.specializations !== undefined)
 	{
 		const values = configuration.specializations;
@@ -138,9 +186,70 @@ export const validateExportConfiguration = configuration => {
  *
  * @param configuration - Validated source configuration.
  */
-export const specializationSelection = configuration => configuration.specializations?.length
-	? { specializations: configuration.specializations.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0) }
-	: {};
+export const compilerExportSelection = configuration => {
+	const selection = {};
+	if(configuration.specializations?.length)
+		selection.specializations = configuration.specializations.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+	if(Object.keys(configuration.contracts ?? {}).length)
+	{
+		const entries = [];
+		for(const name of Object.keys(configuration.contracts).sort())
+		{
+			const contract = configuration.contracts[name];
+			entries.push([name, { ...contract, ...(contract.effects ? { effects: contract.effects.toSorted() } : {}) }]);
+		}
+		selection.contracts = Object.fromEntries(entries);
+	}
+	return selection;
+};
+
+/**
+ * Look up an authored contract without treating object prototype names as exports.
+ *
+ * @param contracts - Optional map from exact Lean names to decisions.
+ * @param name - Compiler-owned declaration or specialization name.
+ */
+export const exportContractFor = (contracts, name) => contracts && Object.hasOwn(contracts, name) ? contracts[name] : undefined;
+
+/**
+ * Describe the ownership implemented by the current scalar and native profiles.
+ *
+ * @param type - Compiler-owned structural runtime type.
+ * @param result - Whether this is a returned value instead of a call argument.
+ */
+export const exportContractOwnership = (type, result = false) => ["resource", "callback"].includes(type.kind)
+	? { ownership: result ? "lease" : "borrow", lifetime: { scope: result ? "explicit" : "call", anchor: null } }
+	: { ownership: "copy", lifetime: null };
+
+/**
+ * Describe the boundary effects implemented for a compiled runtime signature.
+ *
+ * @param projection - Compiler-owned parameters and result, without source-text parsing.
+ */
+export const exportContractEffects = projection => projection.parameters.some(parameter => parameter.type.kind === "callback") ? ["fails", "host-call"] : [];
+
+/**
+ * Reject author decisions the current runtime signature cannot honor.
+ *
+ * @param contract - Structurally validated decisions for one selected export.
+ * @param projection - Supported compiler-owned runtime projection.
+ */
+export const exportContractProblem = (contract, projection) => {
+	if(!contract || projection.status !== "supported") return null;
+	if(contract.effects && canonicalJson(contract.effects.toSorted()) !== canonicalJson(exportContractEffects(projection)))
+		return "effects differ from the implemented boundary effects";
+	if(contract.parameters && contract.parameters.length !== projection.parameters.length)
+		return "parameter decisions must cover the exact runtime argument count";
+	const sites = (contract.parameters ?? []).map((site, index) => ({ site, type: projection.parameters[index].type, result: false, label: `arg${index}` }));
+	if(contract.result) sites.push({ site: contract.result, type: projection.result, result: true, label: "result" });
+	for(const { site, type, result, label } of sites)
+	{
+		if(site.refinement !== undefined && site.refinement !== "reject") return `${label}: checked refinement constructors are not implemented by this profile`;
+		if(canonicalJson({ ownership: site.ownership, lifetime: site.lifetime }) !== canonicalJson(exportContractOwnership(type, result)))
+			return `${label}: ownership or lifetime differs from the implemented adapter`;
+	}
+	return null;
+};
 
 /**
  * Read optional author intent and reject the removed Perl-only configuration.

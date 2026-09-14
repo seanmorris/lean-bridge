@@ -32,6 +32,7 @@ structure Request where
   resources : Array String := #[]
   arities : Array (String × Nat) := #[]
   specializations : Option (Array Specialization) := none
+  contracts : Option Json := none
   metadata : Option MetadataContext := none
   deriving FromJson
 
@@ -222,6 +223,52 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
       ("bindingShape", str "pure-function"), ("parameters", toJson runtimeParameters),
       ("result", runtimeResult)])
 
+/- Contracts constrain the adapter; they never supply a type or authorize erasure. -/
+def contractSiteProblem (site type : Json) (result : Bool) (label : String) : Option String := Id.run do
+  if let .ok refinement := site.getObjVal? "refinement" then
+    if refinement != str "reject" then
+      return some s!"{label}: checked refinement constructors are not implemented by this profile"
+  let identity := ["resource", "callback"].contains ((type.getObjValAs? String "kind").toOption.getD "")
+  let ownership := if identity then (if result then "lease" else "borrow") else "copy"
+  if (site.getObjValAs? String "ownership").toOption != some ownership then
+    return some s!"{label}: ownership or lifetime differs from the implemented adapter"
+  let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
+  if identity then
+    if (lifetime.getObjValAs? String "scope").toOption != some (if result then "explicit" else "call") ||
+        (lifetime.getObjVal? "anchor").toOption != some Json.null then
+      return some s!"{label}: ownership or lifetime differs from the implemented adapter"
+  else if lifetime != Json.null then
+    return some s!"{label}: ownership or lifetime differs from the implemented adapter"
+  return none
+
+def contractProblem (contract projection : Json) : Option String := Id.run do
+  let parameters := (projection.getObjValAs? (Array Json) "parameters").toOption.getD #[]
+  if let .ok effects := contract.getObjValAs? (Array String) "effects" then
+    let hasCallback := parameters.any fun parameter =>
+      ((parameter.getObjVal? "type" >>= fun type => type.getObjValAs? String "kind").toOption == some "callback")
+    let expected := if hasCallback then #["fails", "host-call"] else #[]
+    if effects.qsort (· < ·) != expected then
+      return some "effects differ from the implemented boundary effects"
+  if let .ok sites := contract.getObjValAs? (Array Json) "parameters" then
+    if sites.size != parameters.size then
+      return some "parameter decisions must cover the exact runtime argument count"
+    for index in [:sites.size] do
+      let type := (parameters[index]!.getObjVal? "type").toOption.getD Json.null
+      if let some problem := contractSiteProblem sites[index]! type false s!"arg{index}" then
+        return some problem
+  if let .ok site := contract.getObjVal? "result" then
+    let type := (projection.getObjVal? "result").toOption.getD Json.null
+    if let some problem := contractSiteProblem site type true "result" then return some problem
+  return none
+
+def constrainProjection (request : Request) (name : String) (projection : Json) : Json := Id.run do
+  if (projection.getObjValAs? String "status").toOption != some "supported" then return projection
+  if let some contracts := request.contracts then
+    if let .ok contract := contracts.getObjVal? name then
+      if let some problem := contractProblem contract projection then
+        return unsupported "export-contract-mismatch" problem
+  return projection
+
 def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do
   let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
   if request.profile.getD "component-scalars-v1" != "native-library-v1" then return (parameters, resultText, scalarProjection)
@@ -339,7 +386,8 @@ def extractSpecialization (request : Request) (source : Json) (selection : Speci
     let (parameters, resultText, projection) ← describeSignature request selection.name type
     let effects ← effectNames type
     let typeText ← expression type
-    let projection := if effects.isEmpty then projection else unsupported "unsupported-effect" typeText
+    let projection := constrainProjection request selection.name <|
+      if effects.isEmpty then projection else unsupported "unsupported-effect" typeText
     result := result.setObjVal! "typeExpression" (str typeText)
       |>.setObjVal! "parameters" (toJson parameters) |>.setObjVal! "resultExpression" (str resultText)
       |>.setObjVal! "effects" (toJson effects) |>.setObjVal! "projection" projection
@@ -418,6 +466,7 @@ def extractMetadata (request : Request) : MetaM Json := do
             if (← collectAxioms name).contains ``sorryAx then
               projection := unsupported "admitted-implementation" typeText
           catch error => projection := unsupported "unreviewed-implementation" (← error.toMessageData.toString)
+        if selected then projection := constrainProjection request name.toString projection
         let ranges ← findDeclarationRanges? name
         let position := ranges.map fun ranges => obj [("path", str source.sourcePath),
           ("startLine", toJson ranges.range.pos.line), ("startColumn", toJson ranges.range.charUtf16),
@@ -427,8 +476,10 @@ def extractMetadata (request : Request) : MetaM Json := do
             s!"Lean supplied no source range for {name}" source.name (some name.toString)
         if selected && (projection.getObjValAs? String "status").toOption == some "unsupported" then
           let reason ← ofExcept <| projection.getObjValAs? String "reason"
+          let explanation := if reason == "export-contract-mismatch" then
+              (projection.getObjValAs? String "expression").toOption.getD reason else reason
           diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" reason
-            s!"{name}: {reason}" source.name (some name.toString)
+            s!"{name}: {explanation}" source.name (some name.toString)
         let references := theorems.filter (fun item => item.2.getUsedConstants.contains name)
           |>.map (·.1.toString) |>.qsort (· < ·)
         let documentation ← findDocString? env name
@@ -462,6 +513,11 @@ def extractMetadata (request : Request) : MetaM Json := do
     if !discovered.contains name then
       diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" "missing-declaration"
         s!"Selected export is absent or outside selected modules: {name}" "" (some name)
+  if let some contracts := request.contracts then
+    for (name, _) in (← ofExcept contracts.getObj?).toArray do
+      if !discovered.contains name then
+        diagnostics := diagnostics.push <| diagnostic "unsupported-meaning" "unused-export-contract"
+          s!"Contract must name a selected public export: {name}" "" (some name)
   return obj [("schemaVersion", toJson (2 : Nat)), ("kind", str "lean-bridge-elaborated-exports"),
     ("profile", str profile),
     ("producer", obj [("adapter", str "lean-bridge-elaborator"), ("adapterVersion", toJson (2 : Nat)),

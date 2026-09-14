@@ -84,6 +84,7 @@
           "const": []
         },
         "specializations": { "$ref": "lean-export-configuration.schema.json#/$defs/specializations" },
+        "contracts": { "$ref": "lean-export-configuration.schema.json#/$defs/contracts" },
         "metadata": {
           "type": "object",
           "additionalProperties": false,

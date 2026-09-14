@@ -85,6 +85,22 @@ test("shared author selections and the CPAN example match executable configurati
 		JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.exports.json", "utf8")));
 });
 
+test("export contract examples validate and distinguish implemented decisions from pending behavior", async () => {
+	const existing = await readFile("docs/lean/existing-package.md", "utf8");
+	const native = await readFile("docs/publish/cpan.md", "utf8");
+	const shared = JSON.parse(fences(existing.split("### Declare export contracts\n")[1]).find(block => block.language === "json").source);
+	const closure = JSON.parse(fences(native.split("### Export a specialized closure\n")[1]).find(block => block.language === "json").source);
+	for(const config of [shared, closure]) validateExportConfiguration(config);
+	assert.equal(shared.contracts["Library.echoWord"].result.refinement, "reject");
+	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
+	assert.match(existing, /after specialization and configured closure arity/);
+	assert.match(existing, /Current adapters reject those choices/);
+	assert.match(existing, /not memory allocation inside Lean/);
+	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");
+	for(const code of ["export-contract-mismatch", "unused-export-contract", "contracts-require-elaboration"])
+		assert.ok(diagnostics.includes(`\`${code}\``));
+});
+
 test("the installed-package example uses npm and a runnable JavaScript file", async () => {
 	const content = await readFile("docs/lean/first-component.md", "utf8");
 	const section = content.split("## Call the installed package\n")[1];

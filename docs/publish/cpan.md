@@ -66,6 +66,13 @@ Select its concrete type and give the resulting export an arity:
     { "name": "Library.makeWordAdder", "declaration": "Library.makeAdder", "types": ["UInt32"] }
   ],
   "arities": { "Library.makeWordAdder": 1 },
+  "contracts": {
+    "Library.makeWordAdder": {
+      "parameters": [{ "ownership": "copy", "lifetime": null }],
+      "result": { "ownership": "lease", "lifetime": { "scope": "explicit", "anchor": null } },
+      "effects": []
+    }
+  },
   "targets": { "cpan": { "module": "LeanBridge::Library", "version": "0.001" } }
 }
 ```
@@ -79,6 +86,8 @@ my $add_seven = LeanBridge::Library::make_word_adder(7);
 print $add_seven->call(35), "\n"; # 42
 $add_seven->close;
 ```
+
+The contract requires a copied argument and a returned closure lease. An export taking a resource or callback instead uses `"ownership": "borrow"` with `"lifetime": { "scope": "call", "anchor": null }`. Callback arguments also require `["host-call", "fails"]` when `effects` is declared; returning a Lean closure alone does not. Lean and package staging check these requirements against the implemented adapter. Declaring a transfer, retained host callback, anchored borrow or checked refinement constructor currently fails. See the [complete contract rules](../lean/existing-package.md#declare-export-contracts).
 
 Specializations can also use named aliases for supported copied arrays, records, resources and callbacks. Existing ownership rules still apply: a resource inside a copied array or record requires an explicit ownership policy, and callbacks inside copied containers require a retention policy. Those shapes remain rejected. The metadata records the concrete application and its original declaration; native compilation reproduces that report after compiling the adapter and before linking.
 

@@ -7,7 +7,7 @@ import { lstat, readFile, realpath } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
 import { validateNativeType } from "./native-types.mjs";
-import { validateExportConfiguration } from "./export-configuration.mjs";
+import { exportContractFor, exportContractProblem, validateExportConfiguration } from "./export-configuration.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-elaborated-metadata" }); };
 const closed = (value, keys) => {
@@ -17,7 +17,7 @@ const closed = (value, keys) => {
 const text = value => typeof value === "string" && value.length > 0;
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const ordered = values => Array.isArray(values) && values.every(text) && same(values, [...new Set(values)].sort());
-const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "invalid-specialization", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit"];
+const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "invalid-specialization", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit", "export-contract-mismatch"];
 
 /**
  * Hash every interface artifact that Lean may import, including server/private data.
@@ -68,9 +68,9 @@ export const validateElaboratedMetadata = (report, request) => {
 	const profile = request.profile ?? "component-scalars-v1", native = profile === "native-library-v1";
 	const specializations = request.specializations ?? [];
 	try
-	{ validateExportConfiguration({ schemaVersion: 1, specializations, ...(request.exports.length ? { exports: request.exports } : {}) }); }
+	{ validateExportConfiguration({ schemaVersion: 1, specializations, ...(request.contracts === undefined ? {} : { contracts: request.contracts }), ...(request.exports.length ? { exports: request.exports } : {}) }); }
 	catch
-	{ fail("Invalid specialization selection"); }
+	{ fail("Invalid specialization or export contract selection"); }
 	const selections = new Map(specializations.map(item => [item.name, item]));
 	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
 		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");
@@ -161,6 +161,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					validateType(parameter.type);
 				});
 				validateType(projection.result);
+				if(declaration.selected && exportContractProblem(exportContractFor(request.contracts, declaration.identity), projection))
+					fail("Supported projection violates its configured export contract");
 			}
 		}
 	}
@@ -183,5 +185,9 @@ export const validateElaboratedMetadata = (report, request) => {
 		}
 	for(const name of [...request.exports, ...selections.keys()])
 		if(!identities.has(name) && !report.diagnostics.some(item => item.category === "unsupported-meaning" && item.code === "missing-declaration" && item.severity === "error" && item.declaration === name)) fail("Selected export is missing without a compiler diagnostic");
+	for(const name of Object.keys(request.contracts ?? {}))
+		if(!report.modules.some(module => module.declarations.some(item => item.identity === name && item.selected))
+			&& !report.diagnostics.some(item => item.category === "unsupported-meaning" && item.code === "unused-export-contract" && item.severity === "error" && item.declaration === name))
+			fail("Configured export contract is unused without a compiler diagnostic");
 	return true;
 };
