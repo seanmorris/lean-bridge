@@ -183,26 +183,26 @@
         {"path":"schema/lean-export-configuration.schema.json","sha256":"bcb21866e3c8ccb6d202b16021be103650c8afc08f2917e1e0263b1383315393"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
-        {"path":"tests/export-configuration.test.mjs","sha256":"ea8554af6d94d5d743925e9391303bf3f682fa940de57eb5c6580a717808ed27"},
+        {"path":"tests/export-configuration.test.mjs","sha256":"88e700ae37402f11cf875a8b0c7148a1d2f12484cc1c2746690ed7520bd15a36"},
         {"path":"tests/fixtures/perl/ordinary/lean-bridge.exports.json","sha256":"2fe018e046eed132796a61fd0b32b7169796ffbd19c2f77b88b5c6339aeee684"},
         {"path":"scripts/prepare-perl-platform-packages.mjs","sha256":"b9c1b9d66d6852d952b830e51d553760034236f7807e298f2bdfe0ef704b8519"},
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "ef64d96221167d901f1b0c734566880b4b597d3be38668da798265be10c86eb2"
+          "sha256": "61564b1481ad1a94b00645be6b0ae698d5f9c2cabb42f502e1b2cf6b5e3d523e"
         },
-        {"path":"src/analyze/native-metadata.mjs","sha256":"24c86d39a59f483e4fc72b597c89e69ce1783da00d7c05003396077ef2d60340"},
+        {"path":"src/analyze/native-metadata.mjs","sha256":"464a2d9f8020c74f48700d178878c17fe8225c4ed2f2a29ae4fe86ed3b20d8c5"},
         {"path":"src/analyze/native-types.mjs","sha256":"70f5f9c4d080eddf778b4f34782d8135fefe45d3a921ab6e820f73aa475502c1"},
-        {"path":"src/analyze/elaborated-metadata.mjs","sha256":"b6f73f71705206672af00efe6dd8e9e7fe5d590628a0808c65e06eb206fdfece"},
+        {"path":"src/analyze/elaborated-metadata.mjs","sha256":"d5b12d98469daa495d2711684ef33df83d94cf3be3f7b4b96e293a21d46179b7"},
         {"path":"schema/elaborated-export-metadata.schema.json","sha256":"8fa060e285a0c9b9a9739f9adb385de93619b4ec00c2e812c1ea62aff1d15129"},
         {"path":"schema/native-metadata-type.schema.json","sha256":"06219659d15d0dda06f86c4664e6bf2f0f20af267a1085032633e4f875cb42d3"},
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "cb6979ed08c736a55550265f5b9694e419d7b8404374cb30c021dfd19429e818"
+          "sha256": "49ceb85abcded0c5318fac9e6675a1c51073199c5556a90e31adb5b58dddbbd9"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "463098df87252fc61f27e1987144607cb56bb3c3ebb4996c16ec769eb21a36bb"
+          "sha256": "dbfb82dfa98f4f52b4e91a20c852e404c2356849051afca86b0038cd1f3b2670"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -210,7 +210,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "ef73ade2adcc8c9732cf9bf10a8228abc7c590b40dac2d089d09eacf4fe68138"
+          "sha256": "c1d5ad240d7514ddecaa3fc0fc748e9ed9f9685e012b60852daac824cac33091"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -254,7 +254,7 @@
         },
         {
           "path": "tests/perl-native.test.mjs",
-          "sha256": "541e52d6af6ee3e5333c7709db6d3dacfcf9568e96b6745a8f2401a0f6c95bd5"
+          "sha256": "b36a6d73898e61ab7e73fea79445cf2fa658f3ce4b2dd574c23fa4b8d057a78d"
         },
         {
           "path": "tests/fixtures/perl/ordinary/Workshop.lean",

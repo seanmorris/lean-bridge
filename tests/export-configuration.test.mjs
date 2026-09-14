@@ -131,11 +131,11 @@ test("finite specialization choices are closed, ordered and rejected by unsuppor
 	const unsorted = [item, { ...item, name: "Library.echoText", types: ["String"] }];
 	assert.deepEqual(specializationSelection(config(unsorted)), specializationSelection(config(unsorted.toReversed())));
 	assert.deepEqual(specializationSelection(config([])), {});
-	assert.throws(() => assertExportConfigurationCapabilities(config([item]), { target: "cpan", fields: ["modules", "exports", "resources", "arities"] }), /does not yet implement specializations/);
+	assert.doesNotThrow(() => assertExportConfigurationCapabilities(config([item]), { target: "cpan", fields: ["modules", "exports", "resources", "arities", "specializations"] }));
+	assert.throws(() => assertExportConfigurationCapabilities(config([item]), { target: "unimplemented", fields: ["modules", "exports"] }), /does not yet implement specializations/);
 	const directory = await workspace(t);
 	await configure(directory, config([item]));
 	await assert.rejects(() => analyzeLeanProject(directory), { code: "specialization-requires-elaboration" });
-	await assert.rejects(() => buildNativeProject({ projectRoot: directory, outputRoot: join(directory, "output") }), { code: "unsupported-export-configuration" });
 });
 
 test("absent configuration preserves defaults without creating a file", async t => {

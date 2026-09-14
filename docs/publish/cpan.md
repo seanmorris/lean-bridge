@@ -45,6 +45,43 @@ nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-
 
 The output contains `native/runtime`, `native/component`, prepared distributions under `packages`, and the two `.tar.gz` files and checksum receipts under `archives`. `native-release.json` records the component, runtime, Binding IR and archive identities. The native profile is `native-library-v1`; it does not alter the WebAssembly side-module ABI.
 
+### Export a specialized closure
+
+The native builder accepts the shared [finite specialization configuration](../lean/existing-package.md#export-concrete-specializations). For example, define a generic function in `Library.lean`:
+
+```lean
+universe u
+def Library.makeAdder {α : Type u} [Add α] (base : α) : α → α :=
+  fun value => base + value
+```
+
+Select its concrete type and give the resulting export an arity:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Library"],
+  "exports": ["Library.makeWordAdder"],
+  "specializations": [
+    { "name": "Library.makeWordAdder", "declaration": "Library.makeAdder", "types": ["UInt32"] }
+  ],
+  "arities": { "Library.makeWordAdder": 1 },
+  "targets": { "cpan": { "module": "LeanBridge::Library", "version": "0.001" } }
+}
+```
+
+Lean resolves the `Add UInt32` instance. The arity belongs to the configured name, `Library.makeWordAdder`, and counts only runtime arguments. Here it preserves the returned closure after `base`. Build with the usual CPAN command, install both prepared distributions, then call:
+
+```perl
+use LeanBridge::Library;
+
+my $add_seven = LeanBridge::Library::make_word_adder(7);
+print $add_seven->call(35), "\n"; # 42
+$add_seven->close;
+```
+
+Specializations can also use named aliases for supported copied arrays, records, resources and callbacks. Existing ownership rules still apply: a resource inside a copied array or record requires an explicit ownership policy, and callbacks inside copied containers require a retention policy. Those shapes remain rejected. The metadata records the concrete application and its original declaration; native compilation reproduces that report after compiling the adapter and before linking.
+
 ### Build with locked Lake dependencies
 
 Keep the reviewed `lake-manifest.json` beside `lean-toolchain`. Supply each local path dependency at its recorded relative path and each Git checkout in the lock's package cache directory, normally `.lake/packages/<name>`. Git pins must contain the full commit hash. Install Git so the builder can verify the cached commit, tree, and file contents. The build does not fetch packages or update the lock.

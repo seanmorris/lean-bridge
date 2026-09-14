@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { chmod, copyFile, cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { chmod, copyFile, cp, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
@@ -53,6 +53,228 @@ end Sample
 	for(const path of await readdir(projectRoot)) await chmod(join(projectRoot, path), 0o444);
 	return { working, projectRoot, runtimeRoot: join(working, "runtime"), leanPrefix };
 };
+
+const specializationProject = async t => {
+	const context = await metadataProject(t);
+	const source = join(context.projectRoot, "Sample.lean"), configuration = join(context.projectRoot, "lean-bridge.exports.json");
+	await chmod(source, 0o644); await chmod(configuration, 0o644);
+	await writeFile(source, `namespace Sample
+universe u v
+abbrev Word := UInt32
+abbrev Words := Array Word
+abbrev Unary := Word → Word
+structure Point where
+  x : Word
+  y : Word
+structure Counter where
+  label : String
+  value : Word
+abbrev Counters := Array Counter
+abbrev Callbacks := Array Unary
+/-- 🙂 Return the concrete value without changing it. -/
+def echo {α : Type u} (value : α) : α := value
+theorem echo_spec {α : Type u} (value : α) : echo value = value := rfl
+instance (priority := high) : Inhabited UInt32 := ⟨37⟩
+def choose {α : Type u} [Inhabited α] (useValue : Bool) (value : α) : α :=
+  if useValue then value else default
+def first (α : Type u) (β : Type v) (a : α) (_b : β) : α := a
+def makeAdder {α : Type u} [Add α] (base : α) : α → α := fun value => base + value
+def apply {α : Type u} (fn : α → α) (value : α) : α := fn value
+def makeCounter (value : Word) : Counter := ⟨"counter", value⟩
+def readCounter (value : Counter) : Word := value.value
+def plain (value : Word) : Word := value + 3
+def effect {α : Type} (value : α) : IO α := pure value
+def admitted {α : Type u} (value : α) : α := by sorry
+end Sample
+namespace LeanBridgeNative${sha256("sample@1.0.0").slice(0, 16)}
+def Sample.plain (value : _root_.UInt32) := value + 99
+def Sample.Point.mk (x y : _root_.UInt32) : _root_.Sample.Point := ⟨y, x⟩
+def Sample.Point.x (value : _root_.Sample.Point) := value.y
+abbrev Sample.Point := _root_.Sample.Point
+abbrev UInt32 := UInt64
+end LeanBridgeNative${sha256("sample@1.0.0").slice(0, 16)}
+`);
+	const specializations = [
+		["echoWord", "echo", ["Sample.Word"]]
+		, ["echoText", "echo", ["String"]]
+		, ["echoNat", "echo", ["Nat"]]
+		, ["echoInt", "echo", ["Int"]]
+		, ["echoWords", "echo", ["Sample.Words"]]
+		, ["echoPoint", "echo", ["Sample.Point"]]
+		, ["echoCounter", "echo", ["Sample.Counter"]]
+		, ["echoUnary", "echo", ["Sample.Unary"]]
+		, ["chooseWord", "choose", ["UInt32"]]
+		, ["firstWord", "first", ["UInt32", "String"]]
+		, ["makeWordAdder", "makeAdder", ["UInt32"]]
+		, ["applyWord", "apply", ["UInt32"]]
+	].map(([name, declaration, types]) => ({ name: `Sample.${name}`, declaration: `Sample.${declaration}`, types }));
+	const config = { schemaVersion: 1
+		, modules: ["Sample"], specializations
+		, exports: [...specializations.map(item => item.name), "Sample.makeCounter", "Sample.readCounter", "Sample.plain"]
+		, resources: ["Sample.Counter"]
+		, arities: { "Sample.makeWordAdder": 1, "Sample.echoUnary": 1 }
+		, targets: { cpan: { module: "LeanBridge::Concrete", version: "0.002" } } };
+	await writeFile(configuration, canonicalJson(config));
+	await chmod(source, 0o444); await chmod(configuration, 0o444);
+	return { ...context, config };
+};
+
+test("native finite specializations reproduce and install concrete Perl APIs", { skip: !enabled, timeout: 600_000 }, async t => {
+	const context = await specializationProject(t), before = await lakeInputState(context.projectRoot);
+	const moved = join(context.working, "relocated");
+	await cp(context.projectRoot, moved, { recursive: true });
+	const movedBefore = await lakeInputState(moved), releases = [];
+	for(const [index, projectRoot] of [context.projectRoot, moved].entries())
+	{
+		const outputRoot = join(context.working, `release-${index}`);
+		const result = await buildNativeProject({ projectRoot, outputRoot
+			, targets: ["cpan"]
+			, environment: { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: JSON.stringify([perl]) } })
+			.catch(error => { throw new Error(errorText(error), { cause: error }); });
+		releases.push({ outputRoot, result });
+	}
+	assert.deepEqual(releases[0].result.packages, releases[1].result.packages);
+	for(const entry of releases[0].result.packages)
+		assert.equal(sha256(await readFile(join(releases[0].outputRoot, "archives", entry.archive))), sha256(await readFile(join(releases[1].outputRoot, "archives", entry.archive))));
+	const nativeRoot = join(releases[0].outputRoot, "native/component");
+	const model = JSON.parse(await readFile(join(nativeRoot, "model.json"), "utf8"));
+	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
+	await assertJsonSchema("elaborated-export-metadata", metadata);
+	assert.equal(model.exports.length, 15);
+	assert.deepEqual(model.bindingIr.assurance, []);
+	const echo = model.bindingIr.declarations.find(item => item.name === "echo_point");
+	assert.equal(echo.source.declaration, "Sample.echo");
+	assert.deepEqual(echo.source.extensions["lean-lang.org/theorem-references"], ["Sample.echo_spec"]);
+	assert.match(echo.documentation.summary, /🙂 Return the concrete value/);
+	assert.deepEqual(echo.typeParameters, []);
+	assert.deepEqual(echo.assurance, []);
+	assert.equal(model.exports.find(item => item.publicName === "make_word_adder").result.kind, "callback");
+	assert.equal(model.exports.find(item => item.publicName === "make_word_adder").parameters.length, 1);
+	assert.deepEqual(await lakeInputState(context.projectRoot), before);
+	assert.deepEqual(await lakeInputState(moved), movedBefore);
+	// Installed execution has no author source tree to fall back to.
+	await rename(context.projectRoot, join(context.working, "source-hidden"));
+	await rename(moved, join(context.working, "relocated-hidden"));
+	const detached = join(context.working, "detached");
+	await mkdir(detached);
+	await saveLakeFile(detached, "consumer.t", `use strict;
+use warnings;
+use utf8;
+use Test::More;
+use Math::BigInt;
+use Scalar::Util qw(refaddr);
+use LeanBridge::Concrete;
+is(LeanBridge::Concrete::echo_word(4294967295), 4294967295, 'concrete alias');
+is(LeanBridge::Concrete::echo_text("A\\0λ🙂"), "A\\0λ🙂", 'concrete String');
+my $big = Math::BigInt->new(2)->bpow(100);
+is(LeanBridge::Concrete::echo_nat($big)->bstr, $big->bstr, 'concrete Nat');
+is(LeanBridge::Concrete::echo_int($big->copy->bneg)->bstr, $big->copy->bneg->bstr, 'concrete Int');
+is(LeanBridge::Concrete::choose_word(LeanBridge::Concrete::false(), 9), 37, 'compiler-selected custom dictionary');
+is(LeanBridge::Concrete::first_word(71, 'ignored'), 71, 'two type parameters');
+is(LeanBridge::Concrete::plain(71), 74, 'ordinary namespace shadow cannot redirect the call');
+is_deeply(LeanBridge::Concrete::echo_words([0, 42, 4294967295]), [0, 42, 4294967295], 'copied array');
+my $point = LeanBridge::Concrete::Point->new(x => 7, y => 19);
+my $copy = LeanBridge::Concrete::echo_point($point);
+is_deeply($copy, $point, 'record constructors and projections use absolute names');
+isnt(refaddr($copy), refaddr($point), 'record is copied');
+my $counter = LeanBridge::Concrete::make_counter(42);
+is(refaddr(LeanBridge::Concrete::echo_counter($counter)), refaddr($counter), 'resource keeps canonical identity');
+is(LeanBridge::Concrete::read_counter($counter), 42, 'resource stays usable');
+$counter->close;
+my $adder = LeanBridge::Concrete::make_word_adder(7);
+is($adder->call(35), 42, 'specialization arity preserves a returned closure');
+my $same = LeanBridge::Concrete::echo_unary($adder);
+is(refaddr($same), refaddr($adder), 'closure alias keeps canonical identity');
+is(LeanBridge::Concrete::apply_word($adder, 35), 42, 'Lean callback');
+is(LeanBridge::Concrete::apply_word(sub { $_[0] + 1 }, 41), 42, 'synchronous Perl callback');
+my $exception = bless {}, 'ConcreteFailure';
+eval { LeanBridge::Concrete::apply_word(sub { die $exception }, 0) };
+is(refaddr($@), refaddr($exception), 'callback preserves the original exception');
+$adder->close;
+eval { LeanBridge::Concrete::echo_word(-1) }; like($@, qr/integer/, 'invalid scalar rejected');
+ok(!LeanBridge::Concrete->can('echo'), 'unbound generic is absent');
+done_testing;
+`);
+	for(const mode of ["prebuilt-only", "build-xs"])
+	{
+		const prefix = join(context.working, mode);
+		for(const entry of releases[0].result.packages)
+			await installCpanArchive({ archive: join(releases[0].outputRoot, "archives", entry.archive), workingRoot: context.working, prefix, perl, mode })
+				.catch(error => { throw new Error(`${mode} ${entry.archive}: ${errorText(error)}`, { cause: error }); });
+		const result = await run(perl, ["consumer.t"], detached, { ...process.env, PERL5LIB: join(prefix, "lib/perl5") })
+			.catch(error => { throw new Error(errorText(error), { cause: error }); });
+		assert.match(result.stdout, /1\.\.19/);
+		assert.doesNotMatch(result.stdout, /^not ok/m);
+	}
+	const entry = releases[0].result.packages[1];
+	t.diagnostic(`Finite CPAN archive SHA-256: ${sha256(await readFile(join(releases[0].outputRoot, "archives", entry.archive)))}`);
+	// Rehashing the report and receipt cannot substitute a checked application.
+	metadata.modules[0].declarations.find(item => item.identity === "Sample.echoWord").specialization.application = "fun (value : UInt32) => value + 1";
+	await writeFile(join(nativeRoot, "metadata.json"), canonicalJson(metadata));
+	const receipt = JSON.parse(await readFile(join(nativeRoot, "native-component.json"), "utf8"));
+	receipt.metadataSha256 = sha256(canonicalJson(metadata));
+	await writeFile(join(nativeRoot, "native-component.json"), canonicalJson(receipt));
+	const artifacts = JSON.parse(await readFile(join(nativeRoot, "artifacts.json"), "utf8"));
+	for(const path of ["metadata.json", "native-component.json"])
+	{
+		const bytes = await readFile(join(nativeRoot, path));
+		artifacts.files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+	}
+	await writeFile(join(nativeRoot, "artifacts.json"), canonicalJson(artifacts));
+	await assert.rejects(() => stageCpanPackage({ componentRoot: nativeRoot
+		, runtimeRoot: join(releases[0].outputRoot, "native/runtime"), leanPrefix
+		, outputRoot: join(context.working, "forged-package") }), /model differs from shared compiler metadata/);
+});
+
+test("native specializations reject changed applications and unsupported ownership before linking", { skip: !enabled, timeout: 300_000 }, async t => {
+	const context = await specializationProject(t);
+	await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
+	for(const mode of ["application", "types", "late-json", "source", "resource-array", "callback-array", "instance", "effect", "admitted"])
+		await t.test(mode, async () => {
+			const invalid = { "resource-array": ["echo", "Sample.Counters"]
+				, "callback-array": ["echo", "Sample.Callbacks"]
+				, instance: ["choose", "Sample.Point"]
+				, effect: ["effect", "UInt32"]
+				, admitted: ["admitted", "UInt32"] }[mode];
+			const config = invalid ? { schemaVersion: 1, modules: ["Sample"]
+				, exports: ["Sample.invalid"], resources: ["Sample.Counter"]
+				, specializations: [{ name: "Sample.invalid", declaration: `Sample.${invalid[0]}`, types: [invalid[1]] }] } : context.config;
+			const path = join(context.projectRoot, "lean-bridge.exports.json");
+			await chmod(path, 0o644); await writeFile(path, canonicalJson(config)); await chmod(path, 0o444);
+			const before = await lakeInputState(context.projectRoot);
+			let extractions = 0, linked = false;
+			const runner = { capture: async request => {
+				if(request.args[0] === "-shared") linked = true;
+				const result = await processBuildRunner.capture(request);
+				if(request.args.includes("--metadata"))
+				{
+					extractions++;
+					if(extractions === 2)
+					{
+						if(mode === "late-json") return { ...result, stdout: "{invalid" };
+						const report = JSON.parse(result.stdout);
+						const item = report.modules[0].declarations.find(item => item.identity === "Sample.echoWord");
+						if(mode === "application") item.specialization.application = "fun (value : UInt32) => value + 1";
+						if(mode === "types") item.specialization.types = ["String"];
+						if(mode === "source") await writeFile(join(dirname(request.args.at(-1)), "source/Sample.lean"), "-- changed\n");
+						return { ...result, stdout: canonicalJson(report) };
+					}
+				}
+				return result;
+			} };
+			const code = invalid ? "native-elaboration-unsupported" : mode === "late-json" ? "lean-metadata-extractor-failed" : "native-elaboration-drift";
+			await assert.rejects(() => buildNativeComponent({ ...context, outputRoot: join(context.working, mode), runner }), error => {
+				assert.equal(error.code, code, errorText(error));
+				if(mode === "resource-array") assert.match(errorText(error), /ownership policy/);
+				if(mode === "callback-array") assert.match(errorText(error), /retention policy/);
+				return true;
+			});
+			assert.equal(extractions, invalid ? 1 : 2);
+			assert.equal(linked, false);
+			assert.deepEqual(await readdir(context.working), ["project", "runtime"]);
+			assert.deepEqual(await lakeInputState(context.projectRoot), before);
+		});
+});
 
 test("native shared metadata preserves checked aliases, docs and proof relationships across relocation", { skip: !enabled, timeout: 180_000 }, async t => {
 	const context = await metadataProject(t), before = await lakeInputState(context.projectRoot);

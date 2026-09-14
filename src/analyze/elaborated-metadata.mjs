@@ -71,7 +71,6 @@ export const validateElaboratedMetadata = (report, request) => {
 	{ validateExportConfiguration({ schemaVersion: 1, specializations, ...(request.exports.length ? { exports: request.exports } : {}) }); }
 	catch
 	{ fail("Invalid specialization selection"); }
-	if(native && specializations.length) fail("Native specialization is not supported");
 	const selections = new Map(specializations.map(item => [item.name, item]));
 	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
 		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");

@@ -98,6 +98,42 @@ test("native arity and resources stay bound to configuration in the shared repor
 	await assertJsonSchema("elaborated-export-metadata", input.metadata);
 });
 
+test("native specializations retain original provenance and require matching concrete selections", async () => {
+	const input = nativeMetadataFixture(), declarations = input.metadata.modules[0].declarations;
+	const original = declarations[0], concrete = structuredClone(original);
+	original.selected = false;
+	concrete.identity = "Sample.incrementWord";
+	concrete.specialization = { declaration: original.identity, types: ["UInt32"], application: "(@_root_.Sample.increment (@_root_.UInt32))" };
+	declarations.push(concrete);
+	const { metadata: context, ...selection } = input.sourceIdentity.request;
+	input.sourceIdentity.request = createMetadataRequest({ ...selection, exports: [concrete.identity]
+		, specializations: [{ name: concrete.identity, declaration: original.identity, types: ["UInt32"] }] }, {
+		toolchain: context.toolchain, modules: context.modules
+		, leanCompilerSha256: input.sourceIdentity.leanCompilerSha256
+		, extractorSha256: input.sourceIdentity.extractorSha256 });
+	input.metadata.producer.invocationIdentitySha256 = input.sourceIdentity.request.metadata.invocationIdentitySha256;
+	await assertJsonSchema("elaborated-export-metadata", input.metadata);
+	const model = createNativeModel({ ...input, component: fixture().component, moduleName: "LeanBridge::Sample" });
+	assert.equal(model.exports[0].publicName, "increment_word");
+	const declaration = model.bindingIr.declarations[0];
+	assert.equal(declaration.source.declaration, original.identity);
+	assert.deepEqual(declaration.source.extensions["lean-lang.org/specialization"], { name: concrete.identity, ...concrete.specialization });
+	assert.deepEqual(declaration.assurance, []);
+	assert.deepEqual(declaration.typeParameters, []);
+	assert.ok(generateNativeLeanAdapters(model).leanSource.includes(concrete.specialization.application));
+	for(const change of [
+		value => { delete value.sourceIdentity.request.specializations; }
+		, value => { value.sourceIdentity.request.specializations[0].types = ["String"]; }
+		, value => { value.metadata.modules[0].declarations[1].specialization.types = ["String"]; }
+		, value => { value.metadata.modules[0].declarations[1].specialization.application = null; }
+		, value => { value.metadata.modules[0].declarations[1].specialization.declaration = "Sample.missing"; }
+		, value => { value.metadata.modules[0].declarations[1].theoremReferences = []; }
+	]) {
+		const forged = structuredClone(input); change(forged);
+		assert.throws(() => projectNativeMetadata(forged.metadata, forged.sourceIdentity));
+	}
+});
+
 test("shared source configuration selects native declarations and CPAN metadata", async () => {
   const config = JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.exports.json"));
   assert.equal(validateExportConfiguration(config), config);
@@ -132,6 +168,8 @@ test("adapters expose explicit typed native prototypes", () => {
   const adapters = generateNativeLeanAdapters(model);
   assert.match(adapters.header, /uint32_t lb_[a-f0-9]+\(uint32_t a0\)/);
   assert.match(adapters.leanSource, /@\[export lb_/);
+  assert.match(adapters.leanSource, /_root_\.Sample\.increment a0/);
+  assert.match(adapters.leanSource, /a0 : _root_\.UInt32/);
   assert.throws(() => nativeCallbackDefault({ kind: "resource" }), /callback results/);
 });
 

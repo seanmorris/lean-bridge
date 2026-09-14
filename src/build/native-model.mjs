@@ -34,6 +34,11 @@ export const nativeLeanType = type => {
 	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(nativeLeanType).join(" → ")})`;
 	return type.lean;
 };
+const absoluteLeanType = type => {
+	if(type.kind === "array") return `(_root_.Array ${absoluteLeanType(type.element)})`;
+	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(absoluteLeanType).join(" → ")})`;
+	return `_root_.${type.lean}`;
+};
 /**
 	Hash the checked representation and semantic type, excluding its cached key.
 
@@ -81,9 +86,9 @@ export const nativeCallbackDefault = type => {
 
 const callbackLeanDefault = type => {
 	if(type.kind === "array") return "#[]";
-	if(type.kind === "record") return `(${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
+	if(type.kind === "record") return `(_root_.${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values");
-	return { unit: "()", bool: "false", string: '""', bytes: "ByteArray.empty" }[type.name] ?? "0";
+	return { unit: "()", bool: "false", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
 };
 
 const closed = (value, fields, label) => {
@@ -186,9 +191,10 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		, capabilities: []
 		, assurance: []
 		, documentation: doc(item.documentation ?? `Call ${item.name}.`)
-		, source: { ...source(item.name), extensions: {
+		, source: { ...source(item.specialization?.declaration ?? item.name), extensions: {
 			"lean-lang.org/theorem-references": item.theoremReferences
 			, "lean-lang.org/source-position": item.sourcePosition
+			, ...(item.specialization ? { "lean-lang.org/specialization": item.specialization } : {})
 		} }
 	}));
 	const ir = {
@@ -234,21 +240,21 @@ export const generateNativeLeanAdapters = model => {
 	// returned closure's arguments to the exported C function. Trivial-structure
 	// elimination preserves the closure object's representation without copying.
 	for(const type of model.types.filter(type => type.kind === "callback"))
-	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${nativeLeanType(type)}`, "");
+	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${absoluteLeanType(type)}`, "");
 	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>"];
 	const emit = (symbol, parameters, result, body) => {
 		const ps = parameters.length ? parameters : [{ name: "unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
 		const callback = result.kind === "callback";
-		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${nativeLeanType(p.type)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : nativeLeanType(result)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
+		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${absoluteLeanType(p.type)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : absoluteLeanType(result)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
 		prototypes.push(`${nativeCType(result)} ${symbol}(${ps.map(p => `${nativeCType(p.type)} ${p.name}`).join(", ")});`);
 	};
-	for(const item of model.exports) emit(item.symbol, item.parameters.map((p, i) => ({ name: `a${i}`, type: p.type })), item.result, `${item.name} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
+	for(const item of model.exports) emit(item.symbol, item.parameters.map((p, i) => ({ name: `a${i}`, type: p.type })), item.result, `${item.specialization ? `(${item.specialization.application})` : `_root_.${item.name}`} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
 	for(const type of model.types)
 	{
 		if(type.kind === "record")
 		{
-			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
-			type.fields.forEach((field, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], field.type, `${field.projection} value`));
+			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `_root_.${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
+			type.fields.forEach((field, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], field.type, `_root_.${field.projection} value`));
 		}
 		if(type.kind === "callback")
 		{
@@ -257,15 +263,15 @@ export const generateNativeLeanAdapters = model => {
 			emit(`lb_t${type.key}_call`, [{ name: "closure", type }, ...parameters], type.result, `closure ${arguments_}`);
 			// No Perl symbol or Perl interpreter pointer enters the compiled component.
 			// A synchronous callback uses a private C trampoline installed by XS.
-			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : USize) ${parameters.map(p => `(${p.name} : ${nativeLeanType(p.type)})`).join(" ")} : ${nativeLeanType(type.result)} := ${callbackLeanDefault(type.result)}`, "");
-			lines.push(`@[export lb_t${type.key}_wrap]`, `def wrap_${type.key} (token : USize) : ClosureCarry${type.key} := ⟨fun ${arguments_} => invoke_${type.key} token ${arguments_}⟩`, "");
+			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : _root_.USize) ${parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type)})`).join(" ")} : ${absoluteLeanType(type.result)} := ${callbackLeanDefault(type.result)}`, "");
+			lines.push(`@[export lb_t${type.key}_wrap]`, `def wrap_${type.key} (token : _root_.USize) : ClosureCarry${type.key} := ⟨fun ${arguments_} => invoke_${type.key} token ${arguments_}⟩`, "");
 			prototypes.push(`lean_object * lb_t${type.key}_wrap(size_t token);`);
 		}
 	}
 	// Exact Nat/Int decimal conversion uses checked Lean operations, independent of limb layout.
-	emit("lb_native_nat_text", [{ name: "value", type: { kind: "primitive", name: "nat", lean: "Nat" } }], { kind: "primitive", name: "string", lean: "String" }, "toString value");
-	emit("lb_native_int_text", [{ name: "value", type: { kind: "primitive", name: "int", lean: "Int" } }], { kind: "primitive", name: "string", lean: "String" }, "toString value");
-	emit("lb_native_int_parse", [{ name: "value", type: { kind: "primitive", name: "string", lean: "String" } }], { kind: "primitive", name: "int", lean: "Int" }, "value.toInt!");
+	emit("lb_native_nat_text", [{ name: "value", type: { kind: "primitive", name: "nat", lean: "Nat" } }], { kind: "primitive", name: "string", lean: "String" }, "_root_.Nat.repr value");
+	emit("lb_native_int_text", [{ name: "value", type: { kind: "primitive", name: "int", lean: "Int" } }], { kind: "primitive", name: "string", lean: "String" }, "_root_.Int.repr value");
+	emit("lb_native_int_parse", [{ name: "value", type: { kind: "primitive", name: "string", lean: "String" } }], { kind: "primitive", name: "int", lean: "Int" }, "_root_.String.toInt! value");
 	lines.push(`end ${module}`, "");
 	return { module, leanSource: lines.join("\n"), header: `${prototypes.join("\n")}\n` };
 };

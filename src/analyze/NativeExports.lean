@@ -222,12 +222,12 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
       ("bindingShape", str "pure-function"), ("parameters", toJson runtimeParameters),
       ("result", runtimeResult)])
 
-def describeSignature (request : Request) (info : ConstantInfo) : MetaM (Array Json × String × Json) := do
-  let (parameters, resultText, scalarProjection) ← describeScalarSignature request info.type
+def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do
+  let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
   if request.profile.getD "component-scalars-v1" != "native-library-v1" then return (parameters, resultText, scalarProjection)
-  let arity := request.arities.find? (·.1 == info.name.toString) |>.map (·.2) |>.getD 1024
+  let arity := request.arities.find? (·.1 == name) |>.map (·.2) |>.getD 1024
   try
-    let (nativeParameters, result) ← signature request info.type arity
+    let (nativeParameters, result) ← signature request type arity
     let nativeParameters := nativeParameters.mapIdx fun index parameter =>
       obj [("name", (parameters[index]?.bind fun value => (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
         ("type", (parameter.getObjVal? "type").toOption.getD Json.null)]
@@ -336,7 +336,7 @@ def extractSpecialization (request : Request) (source : Json) (selection : Speci
       if (← collectAxioms name).contains ``sorryAx then
         throwError "specialization depends on sorry: {name}"
     let type ← inferType value
-    let (parameters, resultText, projection) ← describeScalarSignature request type
+    let (parameters, resultText, projection) ← describeSignature request selection.name type
     let effects ← effectNames type
     let typeText ← expression type
     let projection := if effects.isEmpty then projection else unsupported "unsupported-effect" typeText
@@ -364,8 +364,6 @@ def extractMetadata (request : Request) : MetaM Json := do
     throwError "unsupported metadata profile"
   let env ← getEnv
   let specializations := request.specializations.getD #[]
-  if profile != "component-scalars-v1" && !specializations.isEmpty then
-    throwError "native finite specialization is not supported by this profile"
   for selection in specializations do
     if env.contains selection.name.toName then
       throwError "specialization name already exists: {selection.name}"
@@ -406,7 +404,7 @@ def extractMetadata (request : Request) : MetaM Json := do
           else request.exports.contains name.toString
         if selected then discovered := discovered.push name.toString
         let typeText ← expression info.type
-        let (parameters, resultText, runtimeProjection) ← describeSignature request info
+        let (parameters, resultText, runtimeProjection) ← describeSignature request name.toString info.type
         let effects ← effectNames info.type
         let mut projection := runtimeProjection
         if !info.levelParams.isEmpty then projection := unsupported "specialization-required" typeText
