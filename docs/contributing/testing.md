@@ -49,6 +49,21 @@ The outputs contain `LeanBridge.Alpha.0.0.0.nupkg`, `repository/org/leanbridge/l
 
 The [managed runner](../../scripts/test-managed-registry-consumers.mjs) installs the original packages and executes the C#, Java, Kotlin, and Ruby programs. It checks copied payloads, identity, callback failures, returned callables, repeated close, and closed-resource errors. Separate checks cover composition, isolated Java class loaders, Ruby GC compaction, and performance. See [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
 
+### Ordinary-source NuGet packages
+
+Install the pinned Lean compiler, a native C compiler and .NET SDK 8.0.424 on x86-64 Linux. Use glibc 2.38 or newer for the production native profile:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
+  node --test --test-reporter=spec tests/native-dotnet.test.mjs
+```
+
+Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. The [NuGet acceptance record](../evidence/native-dotnet-20260914.md) includes the exact locally tested archive hashes.
+
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++ and NuGet from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl and .NET.
+
 ## Native PHP package
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:

@@ -81,6 +81,26 @@ test("Perl installed evidence stays scoped to ordinary-source types and audited 
 	assert.equal(state("task", "signature"), "unreviewed");
 });
 
+test("ordinary .NET installed evidence covers copied values without advancing other profiles or callbacks", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.profile === "dotnet" && cell.path === "ordinary-source"
+		&& cell.stages.installedExecution.state === "passed");
+	assert.equal(observed.length, 54);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record"].sort());
+	for(const cell of observed)
+	{
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, ["native-dotnet-installed-copied"]);
+		}
+	}
+	for(const cell of cells.filter(cell => ["dotnet", "java", "kotlin", "ruby"].includes(cell.profile)
+		&& cell.path === "ordinary-source" && !observed.includes(cell)))
+		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
+});
+
 for(const [name, change] of [
 	["primitive", schema => schema.$defs.typeRef.oneOf[0].properties.name.enum.push("decimal")]
 	, ["constructor", schema => schema.$defs.typeRef.oneOf[3].properties.constructor.enum.push("map")]

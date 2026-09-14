@@ -145,7 +145,7 @@
     {"id":"browser-worker","consumer":"browser-javascript","language":"javascript","context":"Dedicated browser worker","wordBits":32},
     {"id":"php-native","consumer":"php-native","language":"php","context":"Native Zend extension; PHP_INT_SIZE = 8","wordBits":64},
     {"id":"php-wasm","consumer":"php-wasm","language":"php","context":"Node-hosted PHP-Wasm; PHP_INT_SIZE = 4; lazy and startup adapters","wordBits":32},
-    {"id":"dotnet","consumer":"dotnet","language":"csharp","context":"C# over LibraryImport","wordBits":64},
+    {"id":"dotnet","consumer":"dotnet","language":"csharp","context":"C# over generated native interop","wordBits":64},
     {"id":"java","consumer":"jvm","language":"java","context":"Java over finalized FFM","wordBits":64},
     {"id":"kotlin","consumer":"jvm","language":"kotlin","context":"Kotlin calling the generated Java API","wordBits":64},
     {"id":"ruby","consumer":"ruby","language":"ruby","context":"MRI over Fiddle","wordBits":64},
@@ -157,11 +157,106 @@
   ],
   "evidence": [
     {
+      "id": "native-dotnet-installed-copied",
+      "kind": "installed",
+      "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
+      "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-dotnet-20260914.md",
+          "sha256": "96379b999d7d2e58b9856bda651fb88b4a2d0d3724e1f55c9a009665f5ceb634"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "97da55051b3d6e111fce14ebb369d0cdcc219368acf1a08b34f3c40dd27b1982"
+        },
+        {
+          "path": "src/backends/dotnet/copied-conversions.mjs",
+          "sha256": "d2c732a151e8fa608e13c5affafdf6ca21f8777f4525045fc1d94ad383b741e5"
+        },
+        {
+          "path": "src/backends/dotnet/copied-values.mjs",
+          "sha256": "5306ef7c5cfba50a96d4189a2fb54e693c04eaefa249f2478b318e69d7757894"
+        },
+        {
+          "path": "src/backends/dotnet/generate.mjs",
+          "sha256": "a064f250e95da195639859b14d54aa4c579c4aa7a5bde2303ae7f29a94210b0b"
+        },
+        {
+          "path": "src/backends/managed/package-audit.mjs",
+          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
+        },
+        {
+          "path": "src/build/native-dotnet-artifacts.mjs",
+          "sha256": "7a51ec5953cf43473bd8110401c922a764ee854af39c4bba09a82434bfafa640"
+        },
+        {
+          "path": "src/build/native-dotnet-projection.mjs",
+          "sha256": "0251e2977aa7fabae75b346d73863119057aa82c7640a32780db756c62a22741"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "c4be39af3b95a8f5198549a1bfc86a214404060be13adf98931c94e781b6e55a"
+        },
+        {
+          "path": "src/build/multi-profile-project.mjs",
+          "sha256": "cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"
+        },
+        {
+          "path": "src/release/native-nuget.mjs",
+          "sha256": "b7a523fd9062a7e226fdab3da1b42b3434311eec4591be78b654e854c560eeef"
+        },
+        {
+          "path": "tests/native-dotnet.test.mjs",
+          "sha256": "29ca3b6433e8695f87427d14978cea8f055538e69d037298df770e2e0ace4905"
+        },
+        {
+          "path": "tests/multi-profile-project.test.mjs",
+          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "Acme.Aurora.2.0.0-rc.1.nupkg",
+          "sha256": "5fef4cd4bff99e4703ac350cb190d8b9b3df15684600dd5ba8417b877d48b880"
+        },
+        {
+          "path": "Acme.Boreal.2.0.0-rc.1.nupkg",
+          "sha256": "ff1df11bfdb2fae0e2e261d8f9bd180b3af48a290d1b3863c51898e360473ca6"
+        }
+      ]
+    },
+    {
       "id": "native-c-installed-copied",
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -209,7 +304,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "b90a7f72f77ae95e53c299499597a66f5bc2540bd7c3a5f9aa8f168907182555"
+          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -221,7 +316,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "09314d9664fcce18384bc4490111497a95658976279e9e43bfbcdafac7b108b1"
+          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -233,7 +328,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "6cd5d4b73592c8d9c08f124534a7edddc4b0864f3a7d9f39a8fa9c7501507119"
+          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -268,7 +363,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -292,11 +387,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "09314d9664fcce18384bc4490111497a95658976279e9e43bfbcdafac7b108b1"
+          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "b90a7f72f77ae95e53c299499597a66f5bc2540bd7c3a5f9aa8f168907182555"
+          "sha256": "dc96a404fe29c0089abd6c74377a629ef3eea9fa9d01878007b6d553e9dafb66"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -332,7 +427,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "6cd5d4b73592c8d9c08f124534a7edddc4b0864f3a7d9f39a8fa9c7501507119"
+          "sha256": "f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -371,13 +466,13 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix.",
       "files": [
         {"path":"src/analyze/semantic-model.mjs","sha256":"6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"},
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
         {"path":"src/build/multi-profile-project.mjs","sha256":"cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"6cd5d4b73592c8d9c08f124534a7edddc4b0864f3a7d9f39a8fa9c7501507119"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"f71be08c047a27ca374e630663e3c0717d193b2a3200477fb8d32ea3fe2c9819"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -425,7 +520,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "09314d9664fcce18384bc4490111497a95658976279e9e43bfbcdafac7b108b1"
+          "sha256": "b65cd3a4723f44b748c34a1d0362cabe2370b744a66c29778ea195aad4b973eb"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -686,10 +781,10 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "C#, JVM and Ruby render Alpha-specific interfaces, not general scalar mappings.",
+      "scope": "Inspected the retained Alpha resource/callback generator paths for C#, JVM and Ruby. Ordinary C# copied values now have separate installed evidence; this entry remains scoped to the fixed Alpha API.",
       "files": [
         {"path":"src/backends/managed/alpha-model.mjs","sha256":"f1d8efd1e70f95dbf3967e55f912e921a11ec25b3c91833d306b724a7e219418"},
-        {"path":"src/backends/dotnet/generate.mjs","sha256":"7b6130cddc9e87876556706353d2fc72b3cfc09b7fad46cc1796c0f132cfbae1"},
+        {"path":"src/backends/dotnet/generate.mjs","sha256":"a064f250e95da195639859b14d54aa4c579c4aa7a5bde2303ae7f29a94210b0b"},
         {"path":"src/backends/jvm/generate.mjs","sha256":"69e703f18a7b8bae1c6cb96b52d1a7499afd8a44f058ba2a97b168e4087fbc5d"},
         {"path":"src/backends/ruby/generate.mjs","sha256":"1b9b83a2af395854c5d6b688b79ed8c9a7a5769517bc77216414c26a5595b9ae"}
       ],
@@ -735,6 +830,182 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-dotnet-copied",
+      "profiles": [
+        "dotnet"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "All sixteen primitives, nested arrays and acyclic records as inputs, results and fields, compiled from unrelated ordinary projects and executed from relocated installed NuGet packages.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "Unit",
+          "result": "void",
+          "field": "Unit"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool"
+        },
+        "uint8": {
+          "parameter": "byte",
+          "result": "byte",
+          "field": "byte"
+        },
+        "uint16": {
+          "parameter": "ushort",
+          "result": "ushort",
+          "field": "ushort"
+        },
+        "uint32": {
+          "parameter": "uint",
+          "result": "uint",
+          "field": "uint"
+        },
+        "uint64": {
+          "parameter": "ulong",
+          "result": "ulong",
+          "field": "ulong"
+        },
+        "int8": {
+          "parameter": "sbyte",
+          "result": "sbyte",
+          "field": "sbyte"
+        },
+        "int16": {
+          "parameter": "short",
+          "result": "short",
+          "field": "short"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int64": {
+          "parameter": "long",
+          "result": "long",
+          "field": "long"
+        },
+        "nat": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "float64": {
+          "parameter": "double",
+          "result": "double",
+          "field": "double"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        },
+        "bytes": {
+          "parameter": "byte[]",
+          "result": "byte[]",
+          "field": "byte[]"
+        },
+        "array": {
+          "parameter": "T[]",
+          "result": "T[]",
+          "field": "T[]"
+        },
+        "record": {
+          "parameter": "Generated sealed record",
+          "result": "Generated sealed record",
+          "field": "Generated sealed record"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-dotnet-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, deterministic managed/native artifacts and relocated offline NuGet installation with exact-value and failure checks."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-dotnet-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, deterministic managed/native artifacts and relocated offline NuGet installation with exact-value and failure checks."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-dotnet-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, deterministic managed/native artifacts and relocated offline NuGet installation with exact-value and failure checks."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-dotnet-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, deterministic managed/native artifacts and relocated offline NuGet installation with exact-value and failure checks."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-dotnet-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, deterministic managed/native artifacts and relocated offline NuGet installation with exact-value and failure checks."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. Optional values, variants, resources, callbacks and effects remain outside this profile.",
+        "Input and output share a 16 MiB native conversion budget; managed input scratch is also bounded. Lean internal allocations are separate.",
+        "Linux x86-64, .NET 8; local glibc 2.36 acceptance and production floor 2.38."
+      ],
+      "conversionNotes": {
+        "unit": "Pass default(Unit); Unit results return void. Unit fields and array elements use the generated Unit value type.",
+        "nat": "Arbitrary-precision BigInteger. Negative input throws; zero and multi-limb magnitudes copy without floating-point conversion.",
+        "int": "Signed arbitrary-precision BigInteger with exact sign and magnitude.",
+        "string": "Strict Unicode conversion preserves embedded NUL. Invalid UTF-16 input throws; null is not an empty string.",
+        "bytes": "Copied byte arrays with independent returned storage. Null is rejected.",
+        "array": "Recursive copied T[] values, including jagged arrays and arrays of records. Input scratch and deep native outputs are released on failure.",
+        "record": "Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies."
+      }
+    },
     {
       "id": "native-c-copied",
       "profiles": [

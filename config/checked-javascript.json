@@ -5,6 +5,12 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/dotnet/copied-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/dotnet/copied-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/dotnet/copied-values.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-dotnet-artifacts.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-dotnet-projection.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/native-nuget.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/primitive-surface.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/native-copied-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/cpp/copied-values.mjs", "classification": "strict-migration-backlog" },

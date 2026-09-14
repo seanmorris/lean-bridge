@@ -54,6 +54,7 @@ const profileManifest = Object.freeze({
 		, "multi-profile-project"
 		, "native-c-family"
 		, "native-c-copied"
+		, "native-dotnet"
 		, "public-surface-conformance"
 		, "publication-attestation"
 		, "production-deployment-profile"

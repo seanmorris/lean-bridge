@@ -13,6 +13,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageNativeCFamily } from "../release/native-c-family.mjs";
+import { projectOrdinaryDotnet } from "./native-dotnet-projection.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -75,6 +76,8 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library, files: inventory }));
 	const projections = [];
-	for(const target of targets) projections.push(await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
+	for(const target of targets) projections.push(target === "nuget"
+		? await projectOrdinaryDotnet({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
+		: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
 	return projections;
 };

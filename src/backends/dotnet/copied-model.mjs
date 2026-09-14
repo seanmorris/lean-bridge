@@ -1,0 +1,59 @@
+/**
+ * Admit ordinary copied-value APIs and define their C# projection.
+ *
+ * @file
+ */
+import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
+
+const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
+const reserved = new Set(["Api", "Unit", "LeanBridgeException", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
+const runtimeNames = new Set(("Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding Span ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison").split(" "));
+const scalar = { unit: "Unit", bool: "bool", uint8: "byte", uint16: "ushort", uint32: "uint", uint64: "ulong", int8: "sbyte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double", string: "string", bytes: "byte[]", nat: "global::System.Numerics.BigInteger", int: "global::System.Numerics.BigInteger" };
+
+/**
+ * Build a closed projection over the checked native C surface.
+ *
+ * @param ir - Compiler-authorized Binding IR.
+ */
+export const compileCopiedDotnetModel = ir => {
+	const surface = compilePrimitiveCSurface(ir), componentName = pascal(surface.prefix);
+	const fail = (declaration, message) => {
+		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-dotnet-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
+	};
+	if(!/^[A-Za-z][A-Za-z0-9]*$/.test(componentName) || reserved.has(componentName)) fail(null, "Component name collides with the generated C# namespace");
+	const names = new Set(reserved);
+	for(const copy of surface.copies.filter(copy => copy.record))
+	{
+		copy.publicName = pascal(copy.record.name);
+		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^N\d+$/.test(copy.publicName)) fail(ir.declarations[0], `C# record name collides with a generated identifier: ${copy.publicName}`);
+		names.add(copy.publicName);
+		const fields = new Set([...reserved, copy.publicName]);
+		for(const field of copy.fields)
+		{
+			field.publicName = pascal(field.name);
+			if(fields.has(field.publicName)) fail(ir.declarations[0], `C# record field name collides: ${field.publicName}`);
+			fields.add(field.publicName);
+		}
+	}
+	const functionNames = new Set(reserved);
+	for(const fn of surface.functions)
+	{
+		fn.publicName = pascal(fn.field);
+		if(functionNames.has(fn.publicName)) fail(fn.declaration, `C# function name collides: ${fn.publicName}`);
+		functionNames.add(fn.publicName);
+	}
+	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.ref.name];
+	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.ref.name) ? "byte" : scalar[copy.ref.name];
+	return { ir, surface, componentName, namespace: `LeanBridge.${componentName}`, assembly: `LeanBridge.${componentName}`, publicType, nativeType };
+};
+
+/**
+ * Validate exact NuGet coordinates before invoking any compiler.
+ *
+ * @param settings - Optional package name and version.
+ */
+export const validateOrdinaryNugetSettings = (settings = {}) => {
+	if(settings.name !== undefined && (settings.name.length > 100 || !/^[A-Za-z][A-Za-z0-9]*(?:[_.-][A-Za-z0-9]+)*$/.test(settings.name))) throw new TypeError("NuGet package name must be an ASCII package ID of at most 100 characters");
+	if(settings.version !== undefined && !/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)*)?$/.test(settings.version)) throw new TypeError("NuGet package version must be an exact three-part version without build metadata or normalization");
+};

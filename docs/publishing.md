@@ -11,7 +11,7 @@ Select the languages your library will serve, then follow each target's build an
 | Rust | [Cargo](publish/cargo.md) | A prepared native bundle and reviewed Rust binding metadata. |
 | C | [C package and CMake integration](publish/c.md) | An ordinary Lake project with pure copied primitive, array or record exports; CLI target `c`. Reviewed Alpha inputs remain supported. |
 | C++ | [C++ package and CMake integration](publish/cpp.md) | The same ordinary native source profile; CLI target `cpp`. Reviewed Alpha inputs remain supported. |
-| C# / .NET | [NuGet](publish/nuget.md) | A prepared bundle and managed binding inputs. |
+| C# / .NET | [NuGet](publish/nuget.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `nuget`. |
 | Java and Kotlin | [Maven](publish/maven.md) | A prepared bundle and shared JVM binding inputs. |
 | Ruby | [RubyGems](publish/rubygems.md) | A prepared bundle and Ruby binding inputs. |
 | Perl | [CPAN](publish/cpan.md) | An ordinary Lean project plus shared export configuration; CLI target `cpan` (alias `perl`). |
@@ -20,7 +20,7 @@ Select the languages your library will serve, then follow each target's build an
 
 Ordinary source builds and package projections are different stages. The Alpha recipes for Python, Rust, C, C++, managed runtimes, PHP, and WASI use this repository's target-specific inputs. They do not make every Lake project buildable for those languages. Each target guide names its current inputs and checks.
 
-For npm, CPAN, C and C++, repeat `--target` to build from one captured source tree. Lean compiles once per required profile: native for CPAN/C/C++, Wasm for npm. Every selected target must succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports). The [implementation stages](architecture/cross-language-authoring.md#stages) cover the remaining source adapters.
+For npm, CPAN, C, C++ and NuGet, repeat `--target` to build from one captured source tree. Lean compiles once per required profile: native for CPAN/C/C++/NuGet, Wasm for npm. Every selected target must succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports). The [implementation stages](architecture/cross-language-authoring.md#stages) cover the remaining source adapters.
 
 ## Build and approve the same artifacts
 
@@ -51,7 +51,7 @@ After publication, download the released bytes and run the matching [consumer ex
 | --- | --- |
 | `component-package-receipt.json` | An unsigned npm handoff inventory binding component and runtime archives to their hashes. |
 | Component `publish-manifest.json` | A version-two publication plan binding the reproduced component, runtime dependency, destination, and signer policy. |
-| Native C/C++/Perl `native-release.json` and archive receipts | Native runtime, component, Binding IR, and archive identities. These are not universal signed transaction receipts. |
+| Native C/C++/Perl/NuGet `native-release.json` and archive receipts | Native runtime, component, Binding IR, and archive identities. These are not universal signed transaction receipts. |
 | Universal `release-authorization.json` and `publish-manifest.json` | Lean Bridge's own reproduced candidate and ordered target selection. |
 | `registry-transaction.json` | Preflight, writes, and partial progress for a configured transaction. |
 | `release-receipt.json` | A signed completed transaction binding package coordinates and archive identities. |

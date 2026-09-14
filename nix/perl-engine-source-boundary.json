@@ -23,6 +23,10 @@
     "src/backends/cpp/copied-values.mjs",
     "src/backends/cpp/generate.mjs",
     "src/backends/cpp/primitives.mjs",
+    "src/backends/dotnet/copied-conversions.mjs",
+    "src/backends/dotnet/copied-model.mjs",
+    "src/backends/dotnet/copied-values.mjs",
+    "src/backends/managed/package-audit.mjs",
     "src/backends/native/runtime-broker.mjs",
     "src/backends/perl/Build.pm",
     "src/backends/perl/Platform.pm",
@@ -48,6 +52,8 @@
     "src/build/native-artifacts.mjs",
     "src/build/native-c-projection.mjs",
     "src/build/native-component.mjs",
+    "src/build/native-dotnet-artifacts.mjs",
+    "src/build/native-dotnet-projection.mjs",
     "src/build/native-model.mjs",
     "src/build/native-project.mjs",
     "src/build/perl-xs.mjs",
@@ -58,6 +64,8 @@
     "src/release/cpan-install.mjs",
     "src/release/cpan-package.mjs",
     "src/release/deterministic-archive.mjs",
-    "src/release/native-c-family.mjs"
+    "src/release/deterministic-zip.mjs",
+    "src/release/native-c-family.mjs",
+    "src/release/native-nuget.mjs"
   ]
 }

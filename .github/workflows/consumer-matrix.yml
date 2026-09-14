@@ -76,7 +76,11 @@ jobs:
           node --test tests/lake-wasm.test.mjs
           node --test tests/unlocked-component.test.mjs
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
-      - name: Build one captured API for npm, CPAN, C and C++ and execute installations
+      - name: Install C# for the combined native projection
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
+      - name: Build one captured API for npm, CPAN, C, C++ and NuGet and execute installations
         env:
           LEAN_BRIDGE_MULTI_PROFILE_TEST: "1"
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
@@ -310,14 +314,35 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:managed
+      - name: Install the ordinary C# compiler
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
+      - name: Compile ordinary Lean APIs and install relocated NuGet releases
+        id: ordinary_dotnet
+        env:
+          LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential zstd
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          source scripts/env.sh
+          node --test tests/native-dotnet.test.mjs
       - name: Record managed consumer observations
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
           for consumer in dotnet jvm ruby; do
-            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:managed"
+            consumer_command="npm run test:consumer:managed"
+            test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+            executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+            if [ "$consumer" = dotnet ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs"
+              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ]; then
+                test_result=failed
+                executed=false
+              fi
+            fi
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "$consumer_command"
           done
       - name: Upload managed consumer observations
         if: always()

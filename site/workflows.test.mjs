@@ -48,7 +48,8 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(existing, /Missing backends and compiler errors never fall back to source-scanned signatures/);
 	assert.match(existing, /metadata\/lake-entry-exports\.json/);
 	const targets = await readFile("docs/publishing.md", "utf8");
-	assert.match(targets, /For npm, CPAN, C and C\+\+, repeat `--target` to build from one captured source tree/);
+	assert.match(targets, /For npm, CPAN, C, C\+\+ and NuGet, repeat `--target` to build from one captured source tree/);
+	assert.match(targets, /\[NuGet\]\(publish\/nuget\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `nuget`/);
 	assert.match(targets, /Lean compiles once per required profile/);
 	assert.match(targets, /does not require Lean Bridge's internal deployment-profile approvals/);
 });

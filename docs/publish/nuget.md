@@ -1,10 +1,44 @@
 # Build and publish C# / .NET packages
 
-This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 16 primitive types, nested arrays, and acyclic copied records. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 Build the NuGet projection, test the installed C# API, and upload the approved `.nupkg` to a feed controlled by your organization. Use a sandbox feed and sandbox credentials for the first external run.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md) with the pinned Lean compiler, a native C compiler, and the .NET 8 SDK. Set `LEAN_BRIDGE_DOTNET` if the SDK executable is not named `dotnet` on your PATH. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select your modules and functions in `lean-bridge.exports.json`. Set a package ID you control and an exact version:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Aurora"],
+  "exports": ["Aurora.echo_nat", "Aurora.echo_text", "Aurora.matrix"],
+  "targets": {
+    "nuget": { "name": "Acme.Aurora", "version": "2.0.0-rc.1" }
+  }
+}
+```
+
+Build into a new output directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/aurora --target nuget \
+  --output /absolute/path/to/aurora-release
+```
+
+The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
+
+The native profile accepts concrete, pure functions with copied parameters and results. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Optional values, variants, resources, callbacks and effects remain outside this ordinary NuGet profile.
+
+Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API also fits its primitive-only source profile; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
+
+NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. The generic package-set receipt and signed publication integration remain tracked under VO1240; `lean-bridge verify` does not yet accept the ordinary NuGet receipt.
+
 ## Build and inspect the package
+
+The existing Alpha interoperability fixture remains available separately. It exercises resources and callbacks through the reviewed fixture API.
 
 From the Lean Bridge checkout with its pinned Nix environment:
 
@@ -26,15 +60,17 @@ Run the [C# consumer example](../consume/dotnet.md) against the package before r
 
 ## Choose an owned identity
 
-The current source fixes the example package ID to `LeanBridge.Alpha`; its version comes from Alpha's Binding IR. Do not upload that fixture to a public registry.
+For an ordinary package, configure `targets.nuget.name` and `targets.nuget.version` before building. Names must be ASCII NuGet IDs of at most 100 characters; versions use three numeric parts with an optional prerelease suffix and no build metadata.
 
-For your own release, review the coordinate mapping in [universal bundle generation](../../src/release/universal-release-bundle.mjs), the [.NET generator](../../src/backends/dotnet/generate.mjs), and the [Alpha identity input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json). Adopt an ID your organization controls and a new version, regenerate the bindings and bundle, then rerun package and consumer checks. This profile's API model is Alpha-specific; it has no general `--package-name` override.
+The separate Alpha fixture fixes its package ID to `LeanBridge.Alpha`, with a version from Alpha's Binding IR. Do not upload that fixture to a public registry or edit its generated files to represent another library.
 
 Renaming the `.nupkg` or editing its embedded `.nuspec` after approval changes neither the reviewed source nor its authorization. Produce a new candidate when metadata changes. NuGet associates publication permissions with the owning account and its scoped API key. [NuGet publishing and ownership](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package)
 
 ## Review the candidate
 
-From a clean committed checkout, select the publication ecosystem `nuget`. The binding target inside the package is `dotnet`.
+For an ordinary package, reproduce the build from a separate source location, compare the archive digest, and run a fresh consumer against that exact archive. Review source and dependency licenses before publication. Preserve `native-release.json` and the original `.nupkg` with the release record.
+
+The following signed-candidate workflow applies to the repository's universal fixture bundle, not to ordinary NuGet outputs. From a clean committed checkout, select ecosystem `nuget`; its binding target is `dotnet`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target nuget --dry-run \

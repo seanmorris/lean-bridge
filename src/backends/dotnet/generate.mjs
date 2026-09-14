@@ -6,6 +6,8 @@
 
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
+import { compileCopiedDotnetModel } from "./copied-model.mjs";
+import { renderCopiedDotnetPackage } from "./copied-values.mjs";
 
 const publicSource = model => `using System;
 
@@ -388,18 +390,19 @@ const projectSource = model => `<Project Sdk="Microsoft.NET.Sdk">
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const compileDotnetPackageModel = ir => Object.freeze({
-	ir
-	, model: compileManagedAlphaModel(ir, "dotnet")
-});
+export const compileDotnetPackageModel = ir => ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))
+	? Object.freeze({ ir, copied: compileCopiedDotnetModel(ir), model: null })
+	: Object.freeze({ ir, copied: null, model: compileManagedAlphaModel(ir, "dotnet") });
 
 /**
  * Renders a deterministic .NET package layout from its compiled model.
  *
  * @param root0 - Compiled .NET package model.
  * @param root0.model - Managed projection model.
+ * @param root0.copied - Ordinary copied-value projection, when selected.
  */
-export const renderDotnetPackageLayout = ({ model }) => {
+export const renderDotnetPackageLayout = ({ model, copied }) => {
+	if(copied) return renderCopiedDotnetPackage(copied);
 	const publicFiles = ["src/LeanBridge.Alpha/Alpha.cs"];
 	const internalFiles = ["src/LeanBridge.Alpha/Runtime.cs"];
 	const packageFiles = ["src/LeanBridge.Alpha/LeanBridge.Alpha.csproj"];

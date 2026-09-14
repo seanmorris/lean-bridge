@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -153,7 +153,20 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await installCpanArchive({ archive: join(builds[0].output, file.path), prefix, perl, mode: "prebuilt-only", workingRoot: consumer, environment });
 	await saveLakeFile(consumer, "consumer.pl", `use strict; use warnings; use LeanBridge::${context.names.root} ();\nprint LeanBridge::${context.names.root}::${context.names.operation}(20), "\\n";\n`);
 	assert.equal((await processBuildRunner.capture({ command: perl, args: ["consumer.pl"], cwd: consumer, env: { ...environment, PERL5LIB: join(prefix, "lib/perl5") } })).stdout.trim(), expected);
-	for(const target of nativeTargets.filter(target => target !== "cpan"))
+	if(nativeTargets.includes("nuget"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "nuget");
+		const root = join(consumer, "dotnet"), source = join(builds[0].output, pkg.path);
+		await saveLakeFile(root, "Consumer.csproj", '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework></PropertyGroup><ItemGroup><PackageReference Include="LeanBridge.Shop" Version="1.0.0" /></ItemGroup></Project>\n');
+		await saveLakeFile(root, "Program.cs", 'System.Console.WriteLine(LeanBridge.Shop.Api.Quote(20));\n');
+		const command = process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
+		const env = { PATH: process.env.PATH, DOTNET_ROOT: process.env.DOTNET_ROOT, DOTNET_CLI_HOME: join(context.directory, "dotnet-cli"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(context.directory, "nuget-cache") };
+		const call = args => processBuildRunner.capture({ command, args, cwd: root, env });
+		await call(["restore", "--source", source, "--nologo"]);
+		await call(["build", "--no-restore", "--configuration", "Release", "--disable-build-servers", "/p:UseSharedCompilation=false", "--nologo"]);
+		assert.equal((await call(["bin/Release/net8.0/Consumer.dll"])).stdout.trim(), expected);
+	}
+	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{
 		const pkg = builds[0].packages.find(pkg => pkg.target === target), install = join(consumer, target);
 		await mkdir(install);

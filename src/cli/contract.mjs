@@ -161,7 +161,8 @@ Build and publish options:
   --cache-directory <path> Select an explicit cache directory
   --output <path>       Local build, gate, or publication output
   --target cpan         Build native Perl packages using lean-bridge.exports.json
-  --target c|cpp        Build native C/C++ packages for copied primitive exports
+  --target c|cpp        Build native C/C++ packages for copied-value exports
+  --target nuget        Build ordinary C#/.NET copied-value NuGet packages
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run

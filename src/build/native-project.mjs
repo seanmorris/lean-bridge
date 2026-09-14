@@ -14,6 +14,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
+import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
@@ -29,14 +30,15 @@ import { validateNativeCSettings } from "../release/native-c-family.mjs";
  */
 export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress, lakeSnapshot })
 {
-	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp"].includes(target)))
-		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, and cpan targets");
+	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget"].includes(target)))
+		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, and cpan targets");
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
 	for(const target of targets)
 	{
 		assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
-		if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
+		if(target === "nuget") validateOrdinaryNugetSettings(config.targets?.[target]);
+		else if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
 	}
 	const cTargets = targets.filter(target => target !== "cpan");
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, targets.length === 1 && targets[0] === "cpan" ? "build/lean-bridge-perl" : "build/lean-bridge-native"));
@@ -60,7 +62,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
-			, validateModel: cTargets.length ? model => compilePrimitiveCSurface(model.bindingIr) : undefined
+			, validateModel: cTargets.length ? model => targets.includes("nuget") ? compileCopiedDotnetModel(model.bindingIr) : compilePrimitiveCSurface(model.bindingIr) : undefined
 			, signal });
 		const projections = cTargets.length ? await projectNativeCFamily({
 			working, nativeRoot, runtimeRoot, leanPrefix

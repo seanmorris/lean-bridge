@@ -1,6 +1,6 @@
 # C# and .NET
 
-Install the Alpha NuGet package and call its generated C# API from a .NET 8 console application. The archive includes the compiled Lean libraries; package installation does not invoke a native compiler.
+Install a prepared NuGet package and call its generated C# API. The archive includes the compiled Lean component and shared runtime. Consumers need .NET, not Lean, Node, a C compiler, or handwritten conversions.
 
 ## Use a prepared release
 
@@ -8,7 +8,53 @@ Install the Alpha NuGet package and call its generated C# API from a .NET 8 cons
 
 Use the .NET 8 SDK on x86-64 Linux with glibc 2.38 or newer. Check your machine with `dotnet --list-sdks`, `uname -m`, and `ldd --version`. The [support contract](../consumer-support.v1.json) records the tested platform.
 
-This example consumes `LeanBridge.Alpha.0.0.0.nupkg`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate the archive. Put it in a local directory and set `LEAN_BRIDGE_NUGET` to that directory's absolute path. No public NuGet feed is assumed.
+Follow [Use a prepared release](receive-package.md) to obtain and authenticate the archive. Put it in a local directory and set `LEAN_BRIDGE_NUGET` to that directory's absolute path. No public NuGet feed is assumed.
+
+### Call an ordinary Lean package
+
+The package's README names its NuGet coordinate, generated namespace, and functions. The `Aurora` acceptance package uses `Acme.Aurora` version `2.0.0-rc.1` and exposes `LeanBridge.Aurora.Api`. These example coordinates identify a locally built archive, not a published NuGet.org package.
+
+Create `Consumer.csproj`:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Acme.Aurora" Version="[2.0.0-rc.1]" />
+  </ItemGroup>
+</Project>
+```
+
+Save `Program.cs` beside it:
+
+```csharp
+using System;
+using System.Numerics;
+using LeanBridge.Aurora;
+
+Console.WriteLine(Api.EchoNat(BigInteger.One << 200));
+Console.WriteLine(Api.EchoText("Lean λ🌿"));
+Console.WriteLine(string.Join(", ", Api.Matrix(new uint[] { 1, 2, 3 })[1]));
+```
+
+Restore from the prepared archive directory, then build and run:
+
+```sh
+dotnet restore Consumer.csproj --source "$LEAN_BRIDGE_NUGET"
+dotnet build Consumer.csproj --configuration Release --no-restore --disable-build-servers
+dotnet bin/Release/net8.0/Consumer.dll
+```
+
+Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# numeric types. Strings preserve Unicode and embedded NUL; invalid UTF-16 throws. Arrays use `T[]`, byte arrays use `byte[]`, and copied Lean records become sealed C# records. Calls copy nested values; changing a returned array cannot change the input. Unit arguments use `default(Unit)` and Unit results return `void`.
+
+Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Input and output share a 16 MiB conversion budget, including array slots and record storage. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. The [author guide](../publish/nuget.md#build-an-ordinary-lean-project) describes this pure copied-value profile.
+
+### Alpha interoperability example
+
+The following example consumes `LeanBridge.Alpha.0.0.0.nupkg`. Its separate fixture API demonstrates resources and callbacks, which ordinary NuGet source builds do not yet admit.
 
 ## Create the application
 
@@ -116,27 +162,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `uint` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `string` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `ReadOnlyMemory<byte>` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `ReadOnlyMemory<uint>` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `Unit` (input, field); `void` (result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Pass default(Unit); Unit results return void. Unit fields and array elements use the generated Unit value type. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `byte` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `ushort` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `uint` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `ulong` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `sbyte` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `short` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `long` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `BigInteger` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Arbitrary-precision BigInteger. Negative input throws; zero and multi-limb magnitudes copy without floating-point conversion. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `BigInteger` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Signed arbitrary-precision BigInteger with exact sign and magnitude. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `double` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `string` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Invalid UTF-16 input throws; null is not an empty string. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `byte[]` (input, result, field); `ReadOnlyMemory<byte>` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Copied byte arrays with independent returned storage. Null is rejected. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `T[]` (input, result, field); `ReadOnlyMemory<uint>` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Recursive copied T[] values, including jagged arrays and arrays of records. Input scratch and deep native outputs are released on failure. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Payload` (input, result) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Generated sealed record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
@@ -197,7 +243,7 @@ Alpha's `RoundTrip` flips `Enabled` and increments `Count`, preserving the label
 - Other reported Lean/native failures raise `LeanBridgeException` or its generated subclasses. Catch the specific failure your application can handle.
 - If restore cannot find `LeanBridge.Alpha`, check that the source directory contains the original `LeanBridge.Alpha.0.0.0.nupkg` and the project requests version `0.0.0`.
 - A native-library load error can indicate an unsupported architecture, an older glibc, or a missing packaged library. Inspect the original archive and the platform requirements. Do not substitute arbitrary system Lean libraries.
-- Leave `LEAN_BRIDGE_NATIVE_ROOT` unset for package consumption; it overrides the packaged native-library location.
+- For the Alpha fixture, leave `LEAN_BRIDGE_NATIVE_ROOT` unset; it overrides the packaged native-library location. Ordinary NuGet packages always load their supplied native assets and do not use this override.
 
 ## Start from a raw Lean package
 

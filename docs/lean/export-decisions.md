@@ -73,6 +73,8 @@ Ordinary `c` and `cpp` builds accept the same 16 pure primitive parameter/result
 
 The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Resources, callbacks, effects and asynchronous functions remain unsupported on this path. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ still requires a primitive-only API.
 
+Ordinary [C# / NuGet builds](../publish/nuget.md#build-an-ordinary-lean-project) use the same copied-value native adapter. C# exposes exact-width scalars, `BigInteger`, `T[]` arrays and sealed records. Generated code handles native buffers, deep cleanup and compatible runtime loading. This path accepts pure primitives, arrays and acyclic records; the separate Alpha fixture still supplies the resource/callback example.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.
