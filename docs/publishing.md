@@ -15,12 +15,12 @@ Select the languages your library will serve, then follow each target's build an
 | Java and Kotlin | [Maven](publish/maven.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `maven`. |
 | Ruby | [RubyGems](publish/rubygems.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`. |
 | Perl | [CPAN](publish/cpan.md) | An ordinary Lean project plus shared export configuration; CLI target `cpan` (alias `perl`). |
-| PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | Ordinary pure copied source with CLI target `php-native` for native PHP CLI. Alpha Zend and PHP-Wasm use separate manifests and compiler inputs. |
+| PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | Ordinary pure copied source with CLI target `php-native` or `php-wasm`. PHP-Wasm uses its own compiler inputs and npm/Composer coordinates. Alpha recipes retain separate manifests. |
 | WIT / WASI | [Component and archive distribution](publish/wit-wasi.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `wit-wasi`. |
 
 Ordinary source builds and package projections are different stages. The Alpha recipes for Python, Rust, C, C++, managed runtimes, PHP, and WASI use this repository's target-specific inputs. They do not make every Lake project buildable for those languages. Each target guide names its current inputs and checks.
 
-For npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI, Cargo and native PHP, repeat `--target` to build from one captured source tree. Lean compiles once per required profile: native for CPAN/C/C++/NuGet/Maven/RubyGems/WIT/PyPI/Cargo/PHP, Wasm for npm. Every selected target must succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports). The [implementation stages](architecture/cross-language-authoring.md#stages) cover the remaining source adapters.
+Repeat `--target` to build from one captured source tree. Lean compiles once per required ABI: native for CPAN/C/C++/NuGet/Maven/RubyGems/WIT/PyPI/Cargo/native PHP, JavaScript-Wasm for npm, and separately for PHP-Wasm. Every selected target must admit the API and succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports).
 
 ## Build and approve the same artifacts
 
@@ -52,6 +52,7 @@ After publication, download the released bytes and run the matching [consumer ex
 | `component-package-receipt.json` | An unsigned npm handoff inventory binding component and runtime archives to their hashes. |
 | Component `publish-manifest.json` | A version-two publication plan binding the reproduced component, runtime dependency, destination, and signer policy. |
 | Ordinary native `native-release.json` and archive receipts | Runtime, component, Binding IR, and archive identities for C, C++, Perl, NuGet, Maven, RubyGems, WIT, PyPI, Cargo and native PHP. These are not universal signed transaction receipts. |
+| Ordinary PHP-Wasm `php-wasm-release.json` and `php-wasm-package-set.json` | Compiled wasm32 inputs, npm runtime/component archives and Composer API identities. These are unsigned inventories, not CLI registry-transaction receipts. |
 | Universal `release-authorization.json` and `publish-manifest.json` | Lean Bridge's own reproduced candidate and ordered target selection. |
 | `registry-transaction.json` | Preflight, writes, and partial progress for a configured transaction. |
 | `release-receipt.json` | A signed completed transaction binding package coordinates and archive identities. |

@@ -1,14 +1,15 @@
 # Build and publish PHP packages
 
-Build an ordinary Lake project with `--target php-native` for a self-contained Composer package. The separate Alpha recipes below build a Zend extension or Node-hosted PHP-Wasm package.
+Build an ordinary Lake project with `--target php-native` for native PHP, or `--target php-wasm` for PHP hosted by Node. The Alpha recipes below retain their separate Zend and loading profiles.
 
 | Host | Build inputs | Package manager |
 | --- | --- | --- |
 | Ordinary PHP 8.2+ NTS CLI | Ordinary Lean source, the C author toolchain and PHP for syntax checks | Composer ZIP with bundled native libraries and automatic FFI loading |
+| Ordinary Node-hosted PHP 8.4 Wasm | Ordinary Lean source and the pinned PHP-Wasm compiler inputs | npm component and shared-runtime archives, plus a companion Composer ZIP |
 | Native PHP 8.2 NTS | Reviewed PHP package manifest, generated bindings, Zend extension and native Lean toolchain | Composer, plus the matching native extension/runtime |
 | Node-hosted PHP 8.4 Wasm | Reviewed profile manifest, pinned PHP source and Emscripten toolchain | npm, with Composer files installed inside PHP's virtual filesystem |
 
-The Alpha recipes use repository-specific inputs. An ordinary Lake project's npm build does not produce a PHP package unless you also select `--target php-native`. Check the [source preparation and target boundaries](../lean/existing-package.md). Neither PHP profile is a universal registry-publisher target.
+Select a PHP target explicitly. `--target npm` alone produces JavaScript packages. Neither PHP target has a CLI registry-upload adapter.
 
 ## Build an ordinary Lean project
 
@@ -38,6 +39,66 @@ Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install 
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Preserve the SHA-256 inventory and supply it through your authenticated handoff. This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
+
+## Build an ordinary PHP-Wasm package
+
+Prepare the [PHP-Wasm author toolchain](../contributing/author-toolchain.md#php-wasm). This compiler uses Emscripten 3.1.68 and PHP 8.4.1 headers, separately from the JavaScript-Wasm toolchain. Consumers need neither compiler nor headers.
+
+Give the npm component and Composer API separate coordinates in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["SharedApi"],
+  "exports": ["SharedApi.echo_u32", "SharedApi.echo_nat"],
+  "targets": {
+    "php-wasm": {
+      "npm": { "name": "@example/willow-php-wasm", "version": "2.0.0-RC.1" },
+      "composer": { "name": "example/willow-php-wasm", "version": "2.0.0-RC.1" }
+    }
+  }
+}
+```
+
+Use your own module and export names. Build into an absent directory:
+
+```sh
+lean-bridge build --project ./willow --target php-wasm --output ./release-php-wasm
+```
+
+The build checks fresh Lean metadata and wasm32 C layouts, compiles a PHP extension, and produces:
+
+| Path under `release-php-wasm/` | Contents |
+| --- | --- |
+| `php-wasm-release.json` | Source, configuration, runtime and archive identities |
+| `php-wasm/runtime/` and `php-wasm/component/` | Verified compiled inputs and their evidence |
+| `packages/php-wasm/archives/` | npm runtime and component `.tgz` files, plus the Composer `.zip` |
+| `packages/php-wasm/php-wasm-package-set.json` | Exact package files and archive hashes |
+
+The npm component declares its exact shared-runtime dependency. Its default descriptor registers the extension and bundled PHP sources before startup. Composer applications use the companion ZIP and the component's `extensions` export. Follow the [installed consumer example](../php.md#ordinary-php-wasm-packages).
+
+Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Loading is startup-only. Lazy loading and browser-engine acceptance remain separate work; the tested host is Node 22 with `php-wasm` 0.1.0.
+
+### Combine PHP-Wasm with other targets
+
+For an API accepted by every selected target:
+
+```sh
+lean-bridge build --project ./telemetry --output ./release-all \
+  --target npm --target php-native --target php-wasm
+```
+
+Lean compiles once for JavaScript-Wasm, once for native code, and once for PHP-Wasm. The builder compares their source API and captures one source/dependency snapshot. It exposes the release only after every requested target succeeds. Arrays and records can combine native targets with PHP-Wasm; adding npm currently requires the ordinary scalar API.
+
+`multi-profile-release.json` lists every profile, archive and receipt. Releases containing PHP-Wasm use manifest version 2. PHP-Wasm files live under `profiles/php-wasm/`; native files remain under `profiles/native/`, and JavaScript archives remain under `packages/npm/`. The three ABIs retain separate runtimes.
+
+### Distribute the ordinary packages
+
+Choose package names you control before building. Publish the approved npm runtime archive first if its exact version is absent, then the component archive, using the [npm ownership and upload procedure](npm.md#publish-to-the-public-npm-registry). Publishing the `@lean-bridge` runtime requires that scope's publisher; application authors use its approved runtime release. Keep the generated runtime name and content-bound version. Do not overwrite an existing version with different bytes.
+
+Publish the Composer ZIP through your authenticated artifact channel or a Composer repository, using its generated `composer.json` and immutable ZIP URL as described for [native packages](#build-an-ordinary-lean-project). Supply the package-set inventory alongside the archives. It records local integrity, not a signed publisher identity; `lean-bridge verify --receipt` does not yet accept this PHP-Wasm receipt format.
+
+Download and install the exact uploaded archives in a separate application, then run the consumer example. The [public CLI acceptance record](../evidence/php-wasm-cli-20260915.md) covers installed packages and combined builds.
 
 ## Native PHP with Composer
 
@@ -232,7 +293,7 @@ npm pack ./build/publish-php-wasm --ignore-scripts \
 
 Use new output directories. The manifest's `graphLock.profile` selects lazy or startup loading. Both fixture profiles currently use `php-wasm-lean-alpha@0.0.0`; they cannot be uploaded as different bytes under that same coordinate. Select one profile, or regenerate distinct reviewed package identities before packaging. Contributors can check both profiles with the [PHP release regression checks](../contributing/testing.md#consumer-acceptance).
 
-Freeze the resulting `.tgz`, record its profile and hash, then use the sandbox upload and download checks above. There is no universal `--target php-wasm`, and the universal `npm` target identifies `@lean-bridge/alpha`, not this package.
+Freeze the resulting `.tgz`, record its profile and hash, then use the sandbox upload and download checks above. The ordinary `--target php-wasm` command builds the copied startup profile. This Alpha recipe uses separate manifests, and the universal `npm` target identifies `@lean-bridge/alpha`, not this package.
 
 
 ### Publish and verify the npm archive

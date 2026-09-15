@@ -10,10 +10,10 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject, processBuildRunner } from "../src/build/canonical-build.mjs";
-import { assertProfileApiAgreement, buildMultiProfileProject } from "../src/build/multi-profile-project.mjs";
+import { assertCompiledProfileApiAgreement, assertProfileApiAgreement, buildMultiProfileProject } from "../src/build/multi-profile-project.mjs";
 import { createComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
-import { createNativeModel } from "../src/build/native-model.mjs";
+import { createNativeModel, createPhpWasmCopiedModel } from "../src/build/native-model.mjs";
 import { installCpanArchive } from "../src/release/cpan-install.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -60,9 +60,32 @@ test("multi-profile API agreement rejects different sources, meaning, contracts 
 	}
 });
 
+test("PHP-Wasm/native agreement retains distinct widths and rejects source or API drift", () => {
+	const input = nativeMetadataFixture(), snapshot = "6".repeat(64);
+	input.sourceIdentity.lakeDependencies = { snapshotSha256: snapshot };
+	const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
+	const options = { intent: { document: { component, source: { treeSha256: input.sourceIdentity.sourceTreeSha256, toolchain: "leanprover/lean4:v4.32.2", lakeSnapshotSha256: snapshot } } }
+		, configurationSha256: input.sourceIdentity.exportConfigurationSha256
+		, models: [createNativeModel({ ...input, component }), createPhpWasmCopiedModel({ ...structuredClone(input), component })] };
+	assert.match(assertCompiledProfileApiAgreement(options), /^[a-f0-9]{64}$/);
+	for(const change of [
+		value => { value.models[1].pointerBits = 64; }
+		, value => { value.models[1].sourceIdentity.leanCompilerSha256 = "0".repeat(64); }
+		, value => { value.models[1].sourceIdentity.extractorSha256 = "0".repeat(64); }
+		, value => { value.models[1].sourceIdentity.sourceTreeSha256 = "0".repeat(64); }
+		, value => { value.models[1].bindingIr.declarations[0].result.type.name = "uint64"; }
+		, value => { value.models.push(value.models[1]); }
+	]) {
+		const changed = structuredClone(options); change(changed);
+		assert.throws(() => assertCompiledProfileApiAgreement(changed), { code: "multi-profile-mismatch" });
+	}
+});
+
 test("mixed builds reject unknown targets and duplicate aliases before invoking a compiler", async () => {
-	for(const targets of [["cpan", "perl"], ["npm", "cpan", "composer"], ["cpan", "composer"], ["npm", "npm", "cpan"]])
+	for(const targets of [["cpan", "perl"], ["npm", "cpan", "composer"], ["cpan", "composer"], ["npm", "npm", "cpan"], ["php-wasm", "cpan", "perl"], ["php-wasm", "unknown"]])
 		await assert.rejects(() => buildCanonicalProject({ projectRoot: "/missing/project", targets }), { code: "invalid-package-targets" });
+	for(const wasmTargets of [[], ["php-wasm", "php-wasm"], ["unknown"], ["npm", "php-wasm", "unknown"]])
+		await assert.rejects(buildMultiProfileProject({ projectRoot: "/missing/project", nativeTargets: [], wasmTargets }), { code: "invalid-package-targets" });
 });
 
 test("failed and cancelled combined builds leave no output or profile staging", async t => {
@@ -91,6 +114,23 @@ test("failed and cancelled combined builds leave no output or profile staging", 
 		assert.deepEqual((await readdir(directory)).sort(), ["project", "runtime"]);
 		assert.deepEqual(await lakeInputState(root), before);
 	});
+});
+
+test("a late PHP-Wasm failure removes the completed npm profile and preserves sources", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-multi-failure-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const project = join(directory, "project"), runtime = join(directory, "runtime");
+	await cp("tests/fixtures/documentation/lean-author", project, { recursive: true });
+	await saveLakeFile(runtime, "main.mjs", ""); await saveLakeFile(runtime, "main.wasm", "");
+	const before = await lakeInputState(project);
+	let calls = 0;
+	await assert.rejects(buildMultiProfileProject({
+		projectRoot: project, outputRoot: join(directory, "release")
+		, nativeTargets: [], wasmTargets: ["php-wasm", "npm"]
+		, environment: { ...environment, LEAN_BRIDGE_RUNTIME_ROOT: runtime, LEAN_BRIDGE_PHP_EMSDK: join(directory, "missing-sdk") }
+		, buildWasm: async options => { calls++; await saveLakeFile(options.outputRoot, "completed", "unexposed npm result"); } }), { code: "php-wasm-toolchain-unavailable" });
+	assert.equal(calls, 1); assert.deepEqual(await lakeInputState(project), before);
+	assert.deepEqual((await readdir(directory)).sort(), ["project", "runtime"]);
 });
 
 for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages agree after relocation and run without their source trees`, { skip: !enabled, timeout: 900000 }, async t => {

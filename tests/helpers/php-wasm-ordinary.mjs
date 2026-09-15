@@ -56,7 +56,7 @@ def answer : UInt16 := ${name === "Willow" ? 17 : 29}
 theorem echo_rows_spec (value : Array (Array Leaf)) : echo_rows value = value := rfl
 end SharedApi
 `);
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["SharedApi"], exports: [...phpWasmOrdinaryScalars.flatMap(([label]) => [`SharedApi.echo_${label}`, `SharedApi.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "nat_low_word", "answer"].map(label => `SharedApi.${label}`)], targets: { "php-wasm": { name: `example/${name.toLowerCase()}-api`, version: "2.0.0-RC.1" } } }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["SharedApi"], exports: [...phpWasmOrdinaryScalars.flatMap(([label]) => [`SharedApi.echo_${label}`, `SharedApi.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "nat_low_word", "answer"].map(label => `SharedApi.${label}`)], targets: { "php-wasm": { npm: { name: `@example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" }, composer: { name: `example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" } } } }));
 };
 
 /**

@@ -87,6 +87,8 @@ Ordinary [WIT/WASI builds](../publish/wit-wasi.md#build-an-ordinary-lean-project
 
 Ordinary [native PHP builds](../publish/php.md#build-an-ordinary-lean-project) expose checked functions, readonly records, lists, and exact `BigInteger` values through Composer. They use the shared C adapter and automatic FFI loading. Parameters carry precise PHPDoc and use runtime checks to prevent weak-mode PHP coercion. This path covers NTS CLI; the Alpha Zend and PHP-Wasm profiles retain their separate adapters.
 
+Ordinary [PHP-Wasm builds](../publish/php.md#build-an-ordinary-php-wasm-package) compile those copied values for a separate wasm32 Zend adapter. `UInt32` and `Int64` use `BigInteger` on this host, alongside `UInt64`, `Nat` and `Int`. Generated npm descriptors register the shared runtime and component before PHP starts; the companion Composer ZIP supplies the same public PHP API. Startup loading runs in Node-hosted PHP 8.4. Browser-engine and lazy-loading acceptance remain open.
+
 ## Native Perl exports
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records and arrays, configured identity resources, synchronous host callbacks, and returned Lean closures. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.

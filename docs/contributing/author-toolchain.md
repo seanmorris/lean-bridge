@@ -79,3 +79,33 @@ test -f "$LEAN_BRIDGE_RUNTIME_ROOT/main.wasm"
 ```
 
 Both commands must succeed for the checkout-based setup. If either fails, finish the selected runtime build before running the package dry run. Continue with [your first component](../lean/first-component.md).
+
+## PHP-Wasm
+
+Ordinary PHP-Wasm builds use Lean 4.32.2, Emscripten 3.1.68 and PHP 8.4.1 headers. The runtime-inclusive CLI's JavaScript runtime cannot substitute for this ABI. Until these build inputs have a prepared distribution, produce them from a Lean Bridge checkout.
+
+Install the prerequisites listed by [the PHP-Wasm bootstrap](../../scripts/bootstrap-php-wasm-ci.sh), including the PHP configure tools. From the checkout:
+
+```sh
+npm ci --ignore-scripts
+bash scripts/bootstrap-toolchains.sh
+bash scripts/bootstrap-php-wasm-ci.sh
+(
+  export LEAN_WASM_EMSDK="$PWD/.toolchains/emsdk-php-wasm"
+  export LEAN_WASM_RUNTIME_PROFILE=browser
+  export LEAN_WASM_RUNTIME_VARIANT=php-wasm-3.1.68
+  export LEAN_WASM_ARTIFACT_TARGET=php-wasm-emscripten-3.1.68
+  source scripts/env.sh
+  source scripts/lean-runtime-config.sh
+  bash scripts/build-lean-runtime.sh
+  printf 'LEAN_BRIDGE_PHP_LEAN_RUNTIME=%s/build/lean-runtime/%s\n' \
+    "$PWD" "$LEAN_WASM_RUNTIME_BUILD_ID"
+)
+export LEAN_BRIDGE_LEAN_PREFIX="$PWD/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2"
+export LEAN_BRIDGE_PHP_EMSDK="$PWD/.toolchains/emsdk-php-wasm"
+export LEAN_BRIDGE_PHP_SOURCE="$PWD/build/php-wasm-sdk/php8.4-src"
+```
+
+Set `LEAN_BRIDGE_PHP_LEAN_RUNTIME` to the absolute directory printed above when using an installed CLI outside the checkout. The public [PHP-Wasm build command](../publish/php.md#build-an-ordinary-php-wasm-package) links the runtime from those pinned target archives. SDK and header inputs must remain available for component compilation.
+
+To reuse a runtime from a completed ordinary PHP-Wasm release, set `LEAN_BRIDGE_PHP_COPIED_RUNTIME` to that release's `php-wasm/runtime/` directory. The builder checks its receipt and file inventory before copying it. Components are still compiled afresh; `--cache-directory` is not supported for this target. Keep `LEAN_BRIDGE_RUNTIME_ROOT` for JavaScript-Wasm only.

@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, readFile, rename, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, rename, rm, symlink } from "node:fs/promises";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { build as buildVite } from "vite";
@@ -44,6 +44,8 @@ export const exerciseInstalledPhpWasmPackages = async options => {
 	await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/php-wasm-consumer", config: { platform: { php: "8.4.1" } }, repositories: [{ "packagist.org": false }, ...composerEntries.map(entry => ({ type: "package", package: entry }))], require: Object.fromEntries(composerEntries.map(entry => [entry.name, entry.version])) }));
 	await run(process.env.LEAN_BRIDGE_COMPOSER ?? "composer", ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], consumer, { ...process.env, COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(working, "composer-home"), COMPOSER_CACHE_DIR: join(working, "composer-cache") });
 	await rename(consumer, moved);
+	// Supply the pinned test host under its public package name for the exact guide file.
+	await symlink(phpHost, join(moved, "node_modules/php-wasm"), "dir");
 	await rename(artifacts, `${artifacts}-unavailable`);
 	for(const release of releases) await rename(release.output, `${release.output}-unavailable`);
 	const imports = releases.map(({ report }, i) => `import api${i} from ${JSON.stringify(report.npmSettings.name)};`).join("\n");
@@ -91,5 +93,9 @@ console.log(JSON.stringify({mode, exports: 88, runtimeInitializations: 1, compon
 		assert.deepEqual(JSON.parse(result.stdout.trim()), { mode, exports: 88, runtimeInitializations: 1, components: 2, repeatedRequests: 20 });
 		t.diagnostic(`installed PHP-Wasm ${mode}: 88 exports, one runtime, two components`);
 	}
+	await cp("tests/fixtures/documentation/consumers/php-wasm/ordinary/main.mjs", join(moved, "guide.mjs"));
+	const guide = await run(process.execPath, ["guide.mjs"], moved, { ...process.env, PATH: join(working, "no-compilers") });
+	assert.equal(guide.stdout, "4294967295"); assert.equal(guide.stderr, "");
+	t.diagnostic("published ordinary PHP-Wasm consumer file: exact UInt32 upper bound");
 	await rm(moved, { recursive: true });
 };

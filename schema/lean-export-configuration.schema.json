@@ -53,7 +53,24 @@
           }
         },
         "php-native": {"$ref": "#/$defs/package"},
-        "php-wasm": {"$ref": "#/$defs/package"},
+        "php-wasm": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "npm": {
+              "allOf": [
+                {"$ref": "#/properties/targets/properties/npm"},
+                {"properties": {"name": {"not": {"const": "@lean-bridge/php-wasm-copied-runtime"}}}}
+              ]
+            },
+            "composer": {
+              "type": "object", "additionalProperties": false,
+              "properties": {
+                "name": {"type": "string", "maxLength": 100, "pattern": "^[a-z][a-z0-9]*(?:[-_][a-z0-9]+)*/[a-z][a-z0-9]*(?:[-_][a-z0-9]+)*$(?![\\s\\S])"},
+                "version": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:alpha|beta|RC)\\.(?:0|[1-9][0-9]*))?$(?![\\s\\S])"}
+              }
+            }
+          }
+        },
         "wit-wasi": {"$ref": "#/$defs/package"}
       }
     }

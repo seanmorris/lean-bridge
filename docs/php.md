@@ -1,12 +1,13 @@
 # PHP
 
-Install the package for the PHP runtime that executes your application. Ordinary native packages load their bundled Lean runtime automatically. The separate Alpha examples use a Zend extension or PHP-Wasm. Consumers do not build Lean.
+Install the package for the PHP runtime that executes your application. Ordinary native packages load their bundled Lean runtime automatically. Ordinary PHP-Wasm packages register it with the host before startup. Consumers do not build Lean.
 
 ## Use a prepared release
 
 | Application | Installation | Tested runtime |
 | --- | --- | --- |
 | Ordinary native PHP CLI package | [Composer archive](#ordinary-project-packages) | PHP 8.2+ NTS CLI, Linux x86-64, FFI enabled, glibc 2.38 or newer |
+| Ordinary PHP-Wasm package | [npm and optional Composer archive](#ordinary-php-wasm-packages) | Node 22, PHP 8.4, `php-wasm` 0.1.0, startup loading |
 | Native PHP CLI or deployment | [Native PHP](#native-php) | PHP 8.2 NTS, x86-64 Linux, glibc 2.38 or newer |
 | PHP hosted by Node | [PHP-Wasm](#php-wasm) | Node 22, PHP 8.4, `php-wasm` 0.1.0 |
 
@@ -59,6 +60,74 @@ Ordinary packages support pure functions over 16 primitive types, arrays and acy
 Parameters use `mixed` with precise PHPDoc so generated checks can reject numeric coercion even in weak caller mode. Invalid types raise `TypeError`; range and conversion limits raise `ValueError`; native failures raise the package's `LeanBridgeError`. `Float32` rounds PHP floats to binary32; floating-point conversions preserve NaN classification, infinities and signed zero.
 
 Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
+
+### Ordinary PHP-Wasm packages
+
+Use Node 22 and `php-wasm` 0.1.0 with PHP 8.4's default variant. Authenticate the publisher's archives and `php-wasm-package-set.json` through your release channel. The package set contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
+
+Install the two npm `.tgz` files from your release directory along with the host:
+
+```sh
+npm install --ignore-scripts --no-audit --no-fund \
+  ./releases/lean-bridge-php-wasm-copied-runtime-*.tgz \
+  ./releases/example-willow-php-wasm-2.0.0-RC.1.tgz \
+  php-wasm@0.1.0
+```
+
+Keep only the reviewed runtime archive in that directory. From a registry, install your publisher's exact component version and `php-wasm@0.1.0`; npm resolves the exact runtime dependency automatically.
+
+For the Willow acceptance package, save this as `main.mjs`:
+
+```js file=php-wasm/ordinary/main.mjs
+/**
+ * Execute an installed ordinary Lean API in PHP-Wasm.
+ *
+ * @file
+ */
+import assert from 'node:assert/strict';
+import { PhpNode } from 'php-wasm/PhpNode.mjs';
+import api from '@example/willow-php-wasm';
+
+const php = new PhpNode({ version: '8.4', sharedLibs: [api] });
+php.addEventListener('output', event => {
+  for(const part of event.detail) process.stdout.write(part);
+});
+php.addEventListener('error', event => {
+  for(const part of event.detail) process.stderr.write(part);
+});
+const status = await php.run(String.raw`<?php
+require_once '${api.autoload}';
+use LeanWillow\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+`);
+assert.equal(status, 0);
+```
+
+Run `node main.mjs`. Expected output is `4294967295`. Register every component in `sharedLibs` before accessing `php.binary` or running PHP. Compatible packages share one runtime; duplicate registration does not reload an extension. Different runtime identities fail before startup.
+
+#### Copied type conversions
+
+These mappings apply to ordinary copied packages. The Alpha tables later on this page retain their separate profile.
+
+| Lean type | PHP-Wasm value | Rules |
+| --- | --- | --- |
+| `Unit` | `null` | Arguments, results and fields |
+| `Bool` | `bool` | No integer coercion |
+| `UInt8`, `UInt16`, `Int8`, `Int16`, `Int32` | `int` | Exact width and range checks |
+| `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` | Generated `BigInteger` | Canonical decimal input; exact values across the 32-bit host boundary |
+| `Float32`, `Float` | `float` | Binary32 rounding for `Float32`; NaN, infinities and signed zero preserved |
+| `String` | `string` | Valid UTF-8, including embedded NUL |
+| `ByteArray` | Generated `Bytes` | Arbitrary binary data |
+| `Array T` | PHP list | Consecutive keys; recursively checked copied elements |
+| Acyclic Lean record | Generated readonly class | Named fields and independent copied results |
+
+Invalid types raise `TypeError`; out-of-range values and conversion limits raise `ValueError`. Native conversion failures raise the package's `LeanBridgeError`. Converted input and output have separate 16 MiB accounting limits; those limits do not bound Lean's working memory.
+
+#### Use the companion Composer API
+
+Install the matching Composer ZIP using the [artifact-repository setup](#ordinary-project-packages), with its own coordinate, `example/willow-php-wasm:2.0.0-RC.1`. When Composer runs on a native host, set `config.platform.php` to `8.4.1` for this Wasm application. Use the npm descriptor's `extensions` export in `sharedLibs`, mount your installed `vendor/` directory into the PHP virtual filesystem, then require that mounted `vendor/autoload.php`. The default descriptor already supplies the PHP files and needs no Composer install; do not preload a second copy.
+
+The [installed tests](evidence/php-wasm-cli-20260915.md) execute both arrangements and Vite-bundled assets in Node. Browser-engine execution and lazy loading are not yet covered for ordinary packages.
 
 ## Native PHP
 

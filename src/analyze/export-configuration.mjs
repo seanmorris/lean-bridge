@@ -7,6 +7,7 @@ import { lstat, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
+import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
@@ -150,6 +151,26 @@ export const validateExportConfiguration = configuration => {
 		closed(configuration.targets, exportTargets, "targets (use cpan, not the perl CLI alias)");
 		for(const [target, settings] of Object.entries(configuration.targets))
 		{
+			if(target === "php-wasm")
+			{
+				closed(settings, ["npm", "composer"], "targets.php-wasm");
+				for(const [ecosystem, values] of Object.entries(settings))
+				{
+					closed(values, ["name", "version"], `targets.php-wasm.${ecosystem}`);
+					try
+					{
+						if(Object.values(values).some(value => typeof value !== "string" || value.trim() !== value)) throw new TypeError("Package settings must be unpadded strings");
+						if(ecosystem === "composer") validateOrdinaryPhpSettings(values);
+						else
+						{
+							const identity = componentNpmIdentity({ name: "php-wasm-package", version: "0.0.0" }, values);
+							if(identity.name === "@lean-bridge/php-wasm-copied-runtime") throw new TypeError("The component cannot replace its PHP-Wasm runtime package");
+						}
+					} catch(error)
+					{ fail("invalid-export-configuration", `targets.php-wasm.${ecosystem}: ${error.message}`); }
+				}
+				continue;
+			}
 			closed(settings, target === "cpan" ? ["module", "version"] : ["name", "version"], `targets.${target}`);
 			if(target === "npm")
 			{

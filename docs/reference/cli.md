@@ -48,6 +48,7 @@ Build and publish options:
   --target pypi         Build ordinary Python APIs as prepared native wheels
   --target cargo        Build ordinary Rust copied-value crates
   --target php-native   Build ordinary PHP CLI copied-value Composer packages
+  --target php-wasm     Build ordinary PHP-Wasm npm and Composer startup packages
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run

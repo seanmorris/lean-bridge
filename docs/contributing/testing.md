@@ -137,7 +137,22 @@ LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
   node --test --test-reporter=spec tests/php-wasm-ordinary.test.mjs
 ```
 
-Willow and Aspen each compile 44 ordinary Lean exports twice. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks bundled PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The [compiler record](../evidence/php-wasm-ordinary-20260915.md) documents the binary identities; the [installed package record](../evidence/php-wasm-packages-20260915.md) documents loading and receipt checks. Public CLI integration, browser-engine acceptance and lazy loading remain separate work.
+Willow and Aspen each compile 44 ordinary Lean exports twice through a tarball-installed CLI's public `build --target php-wasm` command. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks bundled PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The [compiler record](../evidence/php-wasm-ordinary-20260915.md), [installed package record](../evidence/php-wasm-packages-20260915.md) and [public CLI record](../evidence/php-wasm-cli-20260915.md) retain each milestone's evidence. Browser-engine acceptance and lazy loading remain separate work.
+
+For PHP-Wasm combined with JavaScript and native PHP, also prepare the ordinary JavaScript engine/runtime and native PHP author tools. Reset the shell to the default JavaScript Emscripten profile before this check; the PHP compiler selects its separate SDK explicitly:
+
+```sh
+unset LEAN_WASM_EMSDK LEAN_WASM_RUNTIME_VARIANT LEAN_WASM_ARTIFACT_TARGET
+source scripts/env.sh
+nix build .#universal-core-artifacts --out-link build/php-multi-runtime
+nix build .#component-build-engine --out-link build/php-multi-engine
+LEAN_BRIDGE_LAKE_ENGINE=build/php-multi-engine/bin/lean-bridge-component-engine \
+LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/php-multi-runtime/lazy \
+LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 \
+  node --test --test-reporter=spec tests/php-wasm-multi-profile.test.mjs
+```
+
+The suite executes all three profiles and both PHP-Wasm pairs, counts one compilation per ABI, compares relocated releases with reversed target order, and hides source/build directories before installed execution. The PHP consumer CI gate requires both ordinary suites.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 

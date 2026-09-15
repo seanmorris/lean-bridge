@@ -14,7 +14,7 @@ Choose the package backend before installing its build tools. All current source
 | Java and Kotlin | The C author tools plus JDK 22; Maven and Kotlin tooling for their examples; see [Maven](../publish/maven.md#build-an-ordinary-lean-project) | The JAR includes the matching native library and runtime. |
 | Ruby | The C author tools plus Ruby 3.3 and RubyGems; see [RubyGems](../publish/rubygems.md#build-an-ordinary-lean-project) | The gem includes the matching native library and runtime. |
 | Native PHP | The C author tools and PHP 8.2+; see [PHP](../publish/php.md#build-an-ordinary-lean-project). Composer and FFI for installed acceptance. | Ordinary CLI packages bundle native libraries and load them automatically. The Alpha Zend recipe additionally needs PHP headers. |
-| PHP-Wasm | The PHP-Wasm compiler inputs and npm; see [PHP](../publish/php.md#php-wasm-with-npm) | Use the matching PHP-Wasm transport and runtime. |
+| PHP-Wasm | Lean 4.32.2, pinned Emscripten 3.1.68 and PHP 8.4.1 headers; see [PHP](../publish/php.md#build-an-ordinary-php-wasm-package) | Prepare the separate target archives, or reuse a verified ordinary PHP-Wasm runtime. |
 | WIT / WASI | The C author tools, wasm-tools 1.245.1 and Wasmtime C API 42.0.1; see [WIT / WASI](../publish/wit-wasi.md#build-an-ordinary-lean-project) | The archive includes the executable adapter, native host and runtime. |
 
 For Perl, use the [native build configuration and toolchain selection](../publish/cpan.md#build-an-ordinary-lean-project). The Nix `perl-build-engine` supplies the pinned compiler environment. The Wasm runtime checks below apply to npm only.

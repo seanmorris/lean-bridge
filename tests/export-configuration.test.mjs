@@ -100,10 +100,35 @@ test("contracts require compiler authority and unsupported target fields cannot 
 	assert.notEqual((await readExportConfiguration(directory)).sha256, first.sha256);
 });
 
+test("PHP-Wasm config separates npm and Composer coordinates without ignored fields", async () => {
+	const wrap = settings => ({ schemaVersion: 1, targets: { "php-wasm": settings } });
+	for(const value of [wrap({}), wrap({ npm: {} }), wrap({ composer: {} }), wrap({ npm: { name: "@example/wasm-api", version: "2.0.0-beta.1" }, composer: { name: "example/api", version: "2.0.0-RC.1" } })])
+	{
+		assert.equal(validateExportConfiguration(value), value);
+		await assertJsonSchema("lean-export-configuration", value);
+	}
+	for(const value of [
+		{ name: "old-ambiguous-name" }, { loading: "lazy" }
+		, { npm: null }, { composer: [] }
+		, { npm: { registry: "https://example.invalid" } }
+		, { npm: { name: "@lean-bridge/php-wasm-copied-runtime" } }
+		, { npm: { name: "@lean-bridge/runtime" } }
+		, { npm: { version: "1.0.0+metadata" } }
+		, { composer: { version: "1.0.0-rc.1" } }
+		, { composer: { version: "1.0.0\n" } }
+		, { composer: { name: "../escape" } }
+		, { composer: { name: "example/api\n" } }
+	]) {
+		assert.throws(() => validateExportConfiguration(wrap(value)), { code: "invalid-export-configuration" });
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", wrap(value)));
+	}
+});
+
 test("shared export configuration and schema accept the same structural choices", async () => {
 	const targets = Object.fromEntries(exportTargets.map(target => {
 		const settings = target === "cpan"
 			? { module: "LeanBridge::Demo", version: "0.001_02" }
+			: target === "php-wasm" ? { npm: { name: "php-wasm-demo", version: "1.0.0" }, composer: { name: "example/demo", version: "1.0.0" } }
 			: { name: "demo", version: "1.0.0" };
 		return [target, settings];
 	}));
