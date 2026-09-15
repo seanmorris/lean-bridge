@@ -6,9 +6,9 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, readdir, rm, symlink } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
@@ -17,6 +17,26 @@ import { collectToolchainPreflight, renderToolchainPreflight, toolchainPreflight
 const commandFor = async command => `/tools/${command}`;
 const absent = new Set();
 const versions = new Map();
+
+test("the filtered Nix and Docker component engine starts without checkout imports", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-engine-startup-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
+	const core = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
+	for(const path of new Set([...boundary.includedFiles, ...boundary.identityFiles, ...core.includedFiles, ...core.includedDirectoryPrefixes]))
+	{
+		await mkdir(dirname(join(scratch, path)), { recursive: true });
+		await cp(path, join(scratch, path), { recursive: true });
+	}
+	// Argument validation happens after Node resolves the actual engine imports.
+	// No compiler, Nix installation or source checkout may fill a missing module.
+	await assert.rejects(promisify(execFile)(process.execPath, [join(scratch, "scripts/run-component-engine.mjs")], { cwd: scratch, env: { PATH: scratch }, timeout: 10000 }), error => {
+		assert.equal(error.code, 1);
+		assert.doesNotMatch(error.stderr, /ERR_MODULE_NOT_FOUND/);
+		assert.match(error.stderr, /Error: missing --request/);
+		return true;
+	});
+});
 
 test("PHP-Wasm host bootstrap checks prerequisites before modifying compiler inputs", async t => {
 	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-php-prerequisites-"));
