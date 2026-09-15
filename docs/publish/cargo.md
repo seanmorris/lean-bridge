@@ -1,20 +1,47 @@
 # Build and publish Rust packages
 
-This target currently packages the repository's prepared Alpha bundle and target metadata. For another library, first check [source preparation and target inputs](../lean/existing-package.md). Your language's package manager installs the completed output without compiling Lean.
+Build an ordinary Lake project with `--target cargo` to produce a typed Rust crate with compiled native libraries. Consumers use Cargo without Lean or handwritten FFI. The separate Alpha recipe below exercises resource and callback APIs.
 
 Lean Bridge creates a deterministic `.crate` for direct installation. Cargo's publishing command creates another archive from a source directory before uploading it. It has no option that uploads an existing `.crate` unchanged. A Cargo CLI publication therefore needs its own reviewed archive and verification record. [cargo publish](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
+
+## Build an ordinary Lean project
+
+Install the [C author toolchain](c.md#build-an-ordinary-lean-project), Rust 1.90 or newer, and Cargo. Set `LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` only if the tools are not on `PATH`. The production target is Linux x86-64 with glibc 2.38 or newer.
+
+Configure the source exports and Cargo coordinates in the project's `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Cedar"],
+  "exports": ["Cedar.echo_u32", "Cedar.echo_nat", "Cedar.echo_text", "Cedar.array_u32"],
+  "targets": { "cargo": { "name": "cedar-api", "version": "2.0.0-rc.1" } }
+}
+```
+
+Use your own modules, exports and package coordinate. Build into a new directory:
+
+```sh
+lean-bridge build --project ./cedar --target cargo --output ./release-cargo
+```
+
+The build compiles Lean and its C adapter, checks the generated Rust with a pinned dependency lock, then archives those files without further compiler access. `release-cargo/archives/cedar-api-2.0.0-rc.1.crate` contains Rust sources, native libraries, licenses, source identities and package receipts. Repeat `--target c`, `--target nuget` or another supported ordinary target to share the native compilation. Name and version come from the export configuration, not an archive rename.
+
+This path supports pure copied primitives, nested arrays and acyclic records. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages) and [installed acceptance](../evidence/native-rust-20260915.md).
+
+Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. Ordinary crates do not contain `.cargo_vcs_info.json`, so skip that fixture-specific move. Preserve their supplied lockfile rather than generating a new one. Their unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
 ## Package identity and publisher prerequisites
 
 The Alpha fixture uses crate `lean_bridge_alpha@0.0.0` and Rust edition 2021. Its native libraries target Linux x86-64 with glibc 2.38 or newer. Build and run consumer checks on that platform.
 
-Use the fixture coordinate only in a registry you control. For crates.io, establish ownership of the intended name, select an unused version, and regenerate the canonical package mapping and artifacts through a reviewed build change. The package builder has no `--name` override. Changing only the tarball filename does not change the crate identity.
+Use the fixture coordinate only in a registry you control. For crates.io, establish ownership of the intended name and select an unused version. Ordinary source builds set these in `targets.cargo`. For Alpha, regenerate the canonical package mapping and artifacts through a reviewed build change. Changing only the tarball filename does not change the crate identity.
 
 Choose either an operator-controlled Cargo registry with a publishing API or crates.io. A static crate download directory alone is not a Cargo registry. Cargo needs an index and its associated API and download configuration. [Alternate registries](https://doc.rust-lang.org/cargo/reference/registries.html), [registry index format](https://doc.rust-lang.org/cargo/reference/registry-index.html).
 
 ## Build and verify the Lean Bridge archive
 
-Prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
+For the separate Alpha fixture, prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
 
 ```sh
 node scripts/build-cargo-package.mjs \
@@ -134,7 +161,7 @@ Then run the [Rust example](../consume/rust.md) in a fresh project with a pinned
 lean_bridge_alpha = { version = "=0.0.0", registry = "lean_sandbox" }
 ```
 
-Use the actual approved crate name and version. For crates.io, omit the `registry` field. Resolve the lockfile, then run `cargo run --release --locked`. Keep the installed crate's native files at its build-time location as required by the current Rust loader. Record the consumer result and registry checksum with the manual publication record.
+Use the actual approved crate name and version. For crates.io, omit the `registry` field. Resolve the lockfile, then run `cargo run --release --locked`. Alpha's loader requires its installed native files at their build-time location; ordinary crates embed them in the executable. Record the consumer result and registry checksum with the manual publication record.
 
 ## Recover an interrupted release
 

@@ -61,7 +61,7 @@ test("multi-profile API agreement rejects different sources, meaning, contracts 
 });
 
 test("mixed builds reject unknown targets and duplicate aliases before invoking a compiler", async () => {
-	for(const targets of [["cpan", "perl"], ["npm", "cpan", "cargo"], ["cpan", "cargo"], ["npm", "npm", "cpan"]])
+	for(const targets of [["cpan", "perl"], ["npm", "cpan", "composer"], ["cpan", "composer"], ["npm", "npm", "cpan"]])
 		await assert.rejects(() => buildCanonicalProject({ projectRoot: "/missing/project", targets }), { code: "invalid-package-targets" });
 });
 
@@ -93,7 +93,7 @@ test("failed and cancelled combined builds leave no output or profile staging", 
 	});
 });
 
-for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages agree after relocation and run without their source trees`, { skip: !enabled, timeout: 600000 }, async t => {
+for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages agree after relocation and run without their source trees`, { skip: !enabled, timeout: 900000 }, async t => {
 	const context = await lakeWorkspaceFixture(t, variant);
 	const path = await customLakeRoot(context);
 	await elaboratedLakeApi(context, path);
@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -204,6 +204,19 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await processBuildRunner.capture({ command: interpreter, args: ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", join(builds[0].output, pkg.archives[0].path)], env });
 		await saveLakeFile(consumer, "consumer.py", "from lean_shop import quote\nprint(quote(20))\n");
 		assert.equal((await processBuildRunner.capture({ command: interpreter, args: ["-I", join(consumer, "consumer.py")], env })).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("cargo"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "cargo"), install = join(consumer, "rust");
+		await mkdir(join(install, "vendor"), { recursive: true });
+		await processBuildRunner.capture({ command: "tar", args: ["-xzf", join(builds[0].output, pkg.archives[0].path), "-C", join(install, "vendor")] });
+		await saveLakeFile(install, "Cargo.toml", '[package]\nname = "shop-consumer"\nversion = "0.0.0"\nedition = "2021"\n[dependencies]\nlean_bridge_shop = { path = "vendor/lean_bridge_shop-1.0.0" }\n');
+		await saveLakeFile(install, "src/main.rs", 'fn main() { println!("{}", lean_bridge_shop::quote(20).unwrap()); }\n');
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_CARGO ?? "cargo", args: ["build", "--offline"], cwd: install, env: { ...process.env, RUSTC: process.env.LEAN_BRIDGE_RUSTC ?? "rustc" } });
+		const moved = join(consumer, "shop-rust");
+		await rename(join(install, "target/debug/shop-consumer"), moved);
+		await rename(join(install, "vendor"), join(install, "vendor-hidden"));
+		assert.equal((await processBuildRunner.capture({ command: moved, args: [], cwd: consumer, env: { PATH: "/usr/bin:/bin" } })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

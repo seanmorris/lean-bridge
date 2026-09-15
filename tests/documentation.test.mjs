@@ -302,6 +302,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(packageDocument.scripts["test:consumer:node"], /\.\#npm-package/);
   assert.equal(packageDocument.scripts["test:consumer:docker-ci"], "bash scripts/test-docker-consumer-ci.sh");
   assert.match(workflow, /npm run test:consumer:docker-ci/);
+  assert.match(workflow, /bootstrap-rust-ci\.sh/);
+  assert.match(workflow, /LEAN_BRIDGE_NATIVE_RUST_TEST: "1"/);
+  assert.match(workflow, /id: ordinary_rust/);
+  assert.match(workflow, /steps\.ordinary_rust\.outcome != 'success'/);
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
   assert.match(packageDocument.scripts["test:consumer:managed"], /\.\#nuget-package/);

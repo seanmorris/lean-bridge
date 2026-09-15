@@ -167,6 +167,7 @@ Build and publish options:
   --target rubygems     Build ordinary Ruby copied-value gems
   --target wit-wasi     Build ordinary WIT APIs with a native Wasmtime host
   --target pypi         Build ordinary Python APIs as prepared native wheels
+  --target cargo        Build ordinary Rust copied-value crates
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run

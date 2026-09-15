@@ -157,6 +157,113 @@
   ],
   "evidence": [
     {
+      "id": "native-rust-installed-copied",
+      "kind": "installed",
+      "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
+      "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-rust-20260915.md",
+          "sha256": "f7daa2367f6cafc006f4458d16d15e888a98ed8e4bf4a9df7ded274ce57e7b43"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/rust/copied-model.mjs",
+          "sha256": "f910e3389d23f1ba542e630cbb9af663fb745b2235d58aa90cf2cce28b69bec2"
+        },
+        {
+          "path": "src/backends/rust/copied-assets.mjs",
+          "sha256": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f"
+        },
+        {
+          "path": "src/backends/rust/copied-conversions.mjs",
+          "sha256": "48c96f8302a7a80438969633a7912f7948a78df915fd72b3baedc24e68297589"
+        },
+        {
+          "path": "src/backends/rust/copied-values.mjs",
+          "sha256": "1345f5c50112210f968cfa1d1892e49a719cbebca2aad5ffd73859b1ba6060cf"
+        },
+        {
+          "path": "src/backends/rust/generate.mjs",
+          "sha256": "cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"
+        },
+        {
+          "path": "src/backends/rust/package-audit.mjs",
+          "sha256": "3894184d830b9cdc4c3f9f4f89eb910db6d0cce3021ce99848ff31f950295950"
+        },
+        {
+          "path": "src/backends/rust/dependencies.lock",
+          "sha256": "11602e653105ab63f26028801a07262cd6d32eb5d4f43628f9a74a522f4e27cd"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+        },
+        {
+          "path": "src/build/native-rust-artifacts.mjs",
+          "sha256": "1276d918c58370151d76fba63f01a31ec1defd366472f4faebbcc5507d17fd0c"
+        },
+        {
+          "path": "src/build/native-rust-projection.mjs",
+          "sha256": "d55767a3a3dce3aef9349b1019275f96ec066acf7faa88ad6ce625d74930535b"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+        },
+        {
+          "path": "src/release/native-cargo.mjs",
+          "sha256": "3bd3ced6aa66cba0d66658caec4c00fef4fb69457cc5d6ad6eb122960bca42a9"
+        },
+        {
+          "path": "tests/native-rust.test.mjs",
+          "sha256": "cce167f215c81de7a83af89a5d50619be34e19ee5456f2768abddfecb3f838c2"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/rust/ordinary/Cargo.toml",
+          "sha256": "f9571ba8944e39e061f0e0ddafcadbfd6f80d746be62430cf7748ffa07384e20"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/rust/ordinary/src/main.rs",
+          "sha256": "7c9da8af9c3422dbeaa32ea9f5c3fdca9843ba6b3693fb66583fb09564d9ade5"
+        },
+        {
+          "path": "scripts/bootstrap-rust-ci.sh",
+          "sha256": "c42f473d210e2ec64eb78090b991f4a90d763d61da6f2ebb1e1fa72de478c582"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "cedar-api-2.0.0-rc.1.crate",
+          "sha256": "e9fe4420be288cf4aba57776a059b8e5b64f8bf8fc5b533f77700c602c17d0b4"
+        },
+        {
+          "path": "hazel-api-2.0.0-rc.1.crate",
+          "sha256": "25e6025cb8de5e9753c0ade18bdcba76b00ed926564beec081a66daa844755ba"
+        }
+      ]
+    },
+    {
       "id": "native-python-installed-copied",
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
@@ -209,11 +316,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -221,7 +328,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -296,11 +403,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -312,7 +419,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -391,11 +498,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -403,7 +510,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -419,7 +526,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
+          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
         }
       ],
       "artifacts": [
@@ -486,11 +593,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -502,7 +609,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -518,7 +625,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
+          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
         }
       ],
       "artifacts": [
@@ -589,11 +696,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -605,7 +712,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -621,7 +728,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
+          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
         }
       ],
       "artifacts": [
@@ -688,7 +795,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -700,7 +807,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -712,7 +819,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
+          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -771,11 +878,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -811,7 +918,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
+          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -856,7 +963,7 @@
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
         {"path":"src/build/multi-profile-project.mjs","sha256":"cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -877,7 +984,7 @@
         {"path":"schema/lean-export-configuration.schema.json","sha256":"3b9e7aff0e4ec61a6d20e1355e0cd001025589f327f4280b10c17419073aac0e"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
-        {"path":"tests/export-configuration.test.mjs","sha256":"8463bb6f08e19b97d3875d1dcfd9baec9711a2d8eb0c7ece87595aa84087b12e"},
+        {"path":"tests/export-configuration.test.mjs","sha256":"a41358b344ad3694c3404860a84352b05cd68187341adb2cc530aae615595ffe"},
         {"path":"tests/fixtures/perl/ordinary/lean-bridge.exports.json","sha256":"2fe018e046eed132796a61fd0b32b7169796ffbd19c2f77b88b5c6339aeee684"},
         {"path":"scripts/prepare-perl-platform-packages.mjs","sha256":"b9c1b9d66d6852d952b830e51d553760034236f7807e298f2bdfe0ef704b8519"},
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
@@ -904,7 +1011,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1065,7 +1172,7 @@
       "command": "Inspect rustType in src/backends/rust/generate.mjs.",
       "scope": "The generator explicitly rejects Nat and Int with unsupported-arbitrary-integer. This required mapping remains assigned to VO1218.",
       "files": [
-        {"path":"src/backends/rust/generate.mjs","sha256":"ff3ce0db6e9e406080775821c835a49a86b6ecea6f5a90e3669c25725dee1c5b"}
+        {"path":"src/backends/rust/generate.mjs","sha256":"cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"}
       ],
       "artifacts": []
     },
@@ -1134,7 +1241,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "Rust generator type spellings, arbitrary-integer rejection and synchronous result handling.",
       "files": [
-        {"path":"src/backends/rust/generate.mjs","sha256":"ff3ce0db6e9e406080775821c835a49a86b6ecea6f5a90e3669c25725dee1c5b"}
+        {"path":"src/backends/rust/generate.mjs","sha256":"cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"}
       ],
       "artifacts": []
     },
@@ -1214,6 +1321,185 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-rust-copied",
+      "profiles": [
+        "rust"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Offline Cargo consumers exercise copied primitives, nested arrays and acyclic records from two unrelated ordinary Lean projects, then run relocated executables without the source crates.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "()",
+          "result": "()",
+          "field": "()"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool"
+        },
+        "uint8": {
+          "parameter": "u8",
+          "result": "u8",
+          "field": "u8"
+        },
+        "uint16": {
+          "parameter": "u16",
+          "result": "u16",
+          "field": "u16"
+        },
+        "uint32": {
+          "parameter": "u32",
+          "result": "u32",
+          "field": "u32"
+        },
+        "uint64": {
+          "parameter": "u64",
+          "result": "u64",
+          "field": "u64"
+        },
+        "int8": {
+          "parameter": "i8",
+          "result": "i8",
+          "field": "i8"
+        },
+        "int16": {
+          "parameter": "i16",
+          "result": "i16",
+          "field": "i16"
+        },
+        "int32": {
+          "parameter": "i32",
+          "result": "i32",
+          "field": "i32"
+        },
+        "int64": {
+          "parameter": "i64",
+          "result": "i64",
+          "field": "i64"
+        },
+        "nat": {
+          "parameter": "&BigUint",
+          "result": "BigUint",
+          "field": "BigUint"
+        },
+        "int": {
+          "parameter": "&BigInt",
+          "result": "BigInt",
+          "field": "BigInt"
+        },
+        "float32": {
+          "parameter": "f32",
+          "result": "f32",
+          "field": "f32"
+        },
+        "float64": {
+          "parameter": "f64",
+          "result": "f64",
+          "field": "f64"
+        },
+        "string": {
+          "parameter": "&str",
+          "result": "String",
+          "field": "String"
+        },
+        "bytes": {
+          "parameter": "&[u8]",
+          "result": "Vec<u8>",
+          "field": "Vec<u8>"
+        },
+        "array": {
+          "parameter": "&[T]",
+          "result": "Vec<T>",
+          "field": "Vec<T>"
+        },
+        "record": {
+          "parameter": "&Generated struct",
+          "result": "Generated struct",
+          "field": "Generated struct"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-rust-installed-copied"
+          ],
+          "note": "Compiler metadata, relocated byte-identical crates and offline-installed Rust execution with moved binaries."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-rust-installed-copied"
+          ],
+          "note": "Compiler metadata, relocated byte-identical crates and offline-installed Rust execution with moved binaries."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-rust-installed-copied"
+          ],
+          "note": "Compiler metadata, relocated byte-identical crates and offline-installed Rust execution with moved binaries."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-rust-installed-copied"
+          ],
+          "note": "Compiler metadata, relocated byte-identical crates and offline-installed Rust execution with moved binaries."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-rust-installed-copied"
+          ],
+          "note": "Compiler metadata, relocated byte-identical crates and offline-installed Rust execution with moved binaries."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "Rust conversions and native copying have separate 16 MiB accounting budgets. Not all Rust allocation overhead or Lean working memory is bounded. RAII applies to errors and unwinding, not abort.",
+        "Rust/Cargo 1.90.0 on Linux x86-64 GNU. Local glibc 2.36 acceptance; production floor 2.38. Writable /tmp and Linux /proc required. Forked reuse and foreign runtime loaders are rejected."
+      ],
+      "conversionNotes": {
+        "unit": "Unit uses () in every position.",
+        "bool": "Rust bool accepts no numeric coercion.",
+        "nat": "Exact num-bigint BigUint magnitude, borrowed input and owned output.",
+        "int": "Exact num-bigint BigInt sign and magnitude, borrowed input and owned output.",
+        "float32": "Rust f32 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "float64": "Rust f64 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "string": "Borrowed UTF-8 str input and owned String output preserve embedded NUL.",
+        "bytes": "Borrowed byte slice input and owned `Vec<u8>` output.",
+        "array": "Borrowed slices become scoped native arrays; returned nested Vec values own independent copies.",
+        "record": "Named typed structs use borrowed inputs and owned outputs, including empty and scalar-represented records."
+      }
+    },
     {
       "id": "native-python-copied",
       "profiles": [

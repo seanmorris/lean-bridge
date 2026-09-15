@@ -1,8 +1,57 @@
 # Use a Lean package from Rust
 
-The Alpha crate exposes Rust values, resource types with `Drop`, and fallible calls returning `Result`. Its packaged native libraries execute the compiled Lean component.
+Add the publisher's crate to your Cargo project and call its generated functions. The crate supplies typed Rust values, compiled Lean libraries and automatic runtime loading. You do not need Lean, handwritten FFI or runtime paths.
 
 ## Use a prepared release
+
+### Ordinary project packages
+
+Use Rust 1.90 or newer on Linux x86-64 with glibc 2.38 or newer. This example uses the Cedar acceptance package. Substitute your publisher's crate name and version, and authenticate the archive using [Use a prepared release](receive-package.md) before extraction:
+
+```sh
+mkdir -p src vendor
+tar -xzf ./cedar-api-2.0.0-rc.1.crate -C vendor
+```
+
+Save this as `Cargo.toml`:
+
+```toml file=rust/ordinary/Cargo.toml
+[package]
+name = "lean-copied-docs"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+cedar-api = { path = "vendor/cedar-api-2.0.0-rc.1" }
+```
+
+Save this as `src/main.rs`:
+
+```rust file=rust/ordinary/src/main.rs
+use cedar_api::{array_u32, echo_nat, echo_text, echo_u32, BigUint};
+
+fn main() -> Result<(), cedar_api::Error> {
+    assert_eq!(echo_u32(42)?, 42);
+    let large = (BigUint::from(1u8) << 4096usize) + BigUint::from(1u8);
+    assert_eq!(echo_nat(&large)?, large);
+    assert_eq!(echo_text("Lean λ\0")?, "Lean λ\0");
+    assert_eq!(array_u32(&[0, u32::MAX])?, vec![0, u32::MAX]);
+    println!("42; exact integers and copied arrays");
+    Ok(())
+}
+```
+
+Run `cargo run --release`. Cargo resolves the crate's normal Rust dependencies, `num-bigint` and `sha2`; it does not compile Lean or a C extension. For an offline build, cache or vendor the dependencies first and use `--offline`. For a registry release, replace the path dependency with your publisher's exact version and registry settings. See [Cargo publication and installation](../publish/cargo.md#verify-the-published-crate-and-consumer).
+
+Ordinary packages support pure functions over 16 primitive types, arrays and acyclic records. Fixed-width integers use Rust's matching integer types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate failures with `?`.
+
+Rust conversion and native copying each use a 16 MiB accounting budget. Array conversion counts at least eight bytes per element. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
+
+Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
+
+### Alpha resource and callback example
+
+The remaining example uses the separate Alpha fixture. Its resources, callbacks and returned closures are not part of the ordinary Rust source path. Alpha also uses an older loader that needs its installed native files to remain in place.
 
 ### Requirements and package
 
@@ -90,27 +139,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `()` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `u8` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `u16` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `u32` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `u64` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `i8` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `i16` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `i32` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `i64` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `f32` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `f64` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `Vec<u8>` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `Vec<T>` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `()` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Unit uses () in every position. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Rust bool accepts no numeric coercion. Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `u8` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `u16` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `u32` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `u64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `i8` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `i16` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `i32` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `i64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `&BigUint` (input); `BigUint` (result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generation rejected | Exact num-bigint BigUint magnitude, borrowed input and owned output. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `&BigInt` (input); `BigInt` (result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generation rejected | Exact num-bigint BigInt sign and magnitude, borrowed input and owned output. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `f32` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Rust f32 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `f64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Rust f64 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `&str` (input); `String` (result, field, input, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Borrowed UTF-8 str input and owned String output preserve embedded NUL. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `&[u8]` (input); `Vec<u8>` (result, field, input, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Borrowed byte slice input and owned `Vec<u8>` output. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `&[T]` (input); `Vec<T>` (result, field, input, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Borrowed slices become scoped native arrays; returned nested Vec values own independent copies. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | `Option<T>` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | `Result<T, E>` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | The inner Result<T, E> represents Except; an outer Result<..., Error> can report bridge failures. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `(T, U, ...)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated owned struct (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `&Generated struct` (input); `Generated struct` (result, field); `Generated owned struct (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Named typed structs use borrowed inputs and owned outputs, including empty and scalar-represented records. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated enum` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated owned wrapper` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

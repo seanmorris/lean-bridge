@@ -81,6 +81,8 @@ Ordinary [RubyGems builds](../publish/rubygems.md#build-an-ordinary-lean-project
 
 Ordinary [Python/PyPI builds](../publish/pypi.md#build-an-ordinary-lean-project) expose `None`, `bool`, exact `int`, `float`, `str`, `bytes`, arrays and frozen record classes. Arrays accept lists or tuples and return tuples. Generated private conversions validate values, clear native results and share the bundled runtime automatically. Consumers install a prepared wheel without Lean, native declarations or an extension build. This path admits pure copied values; resources and callbacks remain in the separate Alpha fixture.
 
+Ordinary [Rust/Cargo builds](../publish/cargo.md#build-an-ordinary-lean-project) expose typed functions returning `Result`, fixed-width Rust integers, `BigUint`/`BigInt`, `String`, `Vec` and named structs. Aggregate inputs are borrowed; results own independent values. Private C conversions and RAII guards handle native ownership. The crate embeds the native libraries and loads a shared runtime automatically. This path admits pure copied values; Alpha's resource and callback APIs remain separate.
+
 Ordinary [WIT/WASI builds](../publish/wit-wasi.md#build-an-ordinary-lean-project) support the same copied types through Component Model functions and a packaged Wasmtime/native Lean host. Unit uses a single-case enum. Nat uses least-significant-first `u32` limbs; Int adds a sign flag. Empty records also use a single-case enum. Every selected function receives an executable adapter; the separate Alpha resource/callback fixture keeps its narrower WIT path.
 
 ## Native Perl exports

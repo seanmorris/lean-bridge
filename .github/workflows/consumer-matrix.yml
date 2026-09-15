@@ -89,7 +89,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
-      - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT and PyPI and execute installations
+      - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT, PyPI and Cargo and execute installations
         env:
           LEAN_BRIDGE_MULTI_PROFILE_TEST: "1"
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
@@ -98,6 +98,9 @@ jobs:
           sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv zstd
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
           source scripts/env.sh
@@ -290,6 +293,17 @@ jobs:
           sudo apt-get update && sudo apt-get install -y python3-venv
           source scripts/env.sh
           node --test tests/native-python.test.mjs
+      - name: Build ordinary Lean APIs and execute relocated Cargo crates
+        id: ordinary_rust
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_NATIVE_RUST_TEST: "1"
+        run: |
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          source scripts/env.sh
+          node --test tests/native-rust.test.mjs
       - name: Record native consumer observations
         if: always()
         shell: bash
@@ -307,6 +321,13 @@ jobs:
                 installed=false
               fi
             fi
+            if [ "$consumer" = rust ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs"
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ]; then
+                result=failed
+                installed=false
+              fi
+            fi
             node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$result" --package-installation "$installed" --real-lean-execution "$installed" --command "$consumer_command"
           done
       - name: Upload native consumer observations
@@ -319,7 +340,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_python.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_python.outcome != 'success' || steps.ordinary_rust.outcome != 'success'
         run: exit 1
 
   managed-consumers:

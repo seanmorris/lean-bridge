@@ -48,7 +48,7 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(existing, /Missing backends and compiler errors never fall back to source-scanned signatures/);
 	assert.match(existing, /metadata\/lake-entry-exports\.json/);
 	const targets = await readFile("docs/publishing.md", "utf8");
-	assert.match(targets, /For npm, CPAN, C, C\+\+, NuGet, Maven, RubyGems, WIT\/WASI and PyPI, repeat `--target` to build from one captured source tree/);
+	assert.match(targets, /For npm, CPAN, C, C\+\+, NuGet, Maven, RubyGems, WIT\/WASI, PyPI and Cargo, repeat `--target` to build from one captured source tree/);
 	assert.match(targets, /\[pip \/ PyPI\]\(publish\/pypi\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `pypi`/);
 	assert.match(targets, /\[Maven\]\(publish\/maven\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `maven`/);
 	assert.match(targets, /\[RubyGems\]\(publish\/rubygems\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`/);

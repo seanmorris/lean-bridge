@@ -62,7 +62,16 @@ LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
 
 Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. The [NuGet acceptance record](../evidence/native-dotnet-20260914.md) includes the exact locally tested archive hashes.
 
-The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI and PyPI from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3, Python 3.11+ with venv and the pinned Wasmtime C API.
+For ordinary Rust crates, install Rust 1.90+ and Cargo. `scripts/bootstrap-rust-ci.sh` installs the SHA-256-pinned CI toolchain. Set `LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` when they are not on `PATH`, then run:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs
+```
+
+This builds Cedar and Hazel twice, installs exact crates, exercises all primitive and nested copied values, injects conversion failures and unwinding, and runs moved binaries without their Cargo source trees. It checks shared-runtime composition, post-fork rejection, package drift and atomic build failure. Cargo dependencies must be cached for offline consumer checks; the author build fetches the pinned dependencies. The [Rust evidence](../evidence/native-rust-20260915.md) lists the local toolchain and archive hashes.
+
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI and Cargo from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3, Python 3.11+ with venv, Rust 1.90+ with Cargo and the pinned Wasmtime C API.
 
 ### Ordinary-source Maven packages
 

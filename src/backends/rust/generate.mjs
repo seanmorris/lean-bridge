@@ -5,6 +5,8 @@
  */
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { compileCopiedRustModel } from "./copied-model.mjs";
+import { renderCopiedRustPackage } from "./copied-values.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import {
 	GenericSpecializationError,
@@ -806,6 +808,8 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
  */
 export const compileRustPackageModel = ir => {
 	validateBindingIr(ir);
+	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+		return Object.freeze({ ir, copied: compileCopiedRustModel(ir) });
 	validateCoverage(ir);
 	return Object.freeze({ ir });
 };
@@ -816,6 +820,7 @@ export const compileRustPackageModel = ir => {
  * @param model - Validated Rust package projection model.
  */
 export const renderRustPackageLayout = model => {
+	if(model.copied) return renderCopiedRustPackage(model.copied);
 	const { ir } = model;
 	const lib = emitLibrary(ir);
 	const runtime = emitRuntime(ir);

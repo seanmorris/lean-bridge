@@ -7,7 +7,7 @@ Choose the package backend before installing its build tools. All current source
 | [JavaScript / TypeScript (npm)](../publish/npm.md) | Node 22, Git, and Nix or Docker. Use Lean 4.32.2 to check source locally. | The engine supplies the compiler. Use the prepared CLI's bundled Wasm runtime. |
 | Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, Git for locked Git dependencies, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
 | Python | The C author tools plus Python 3.11 or newer; see [PyPI](../publish/pypi.md#build-an-ordinary-lean-project) | The wheel includes its native libraries and loads a shared runtime automatically. |
-| Rust | The prepared native bundle, Rust and Cargo; see [Cargo](../publish/cargo.md) | The generated crate selects its native runtime inputs. |
+| Rust | The C author tools, Rust 1.90+ and Cargo; see [Cargo](../publish/cargo.md#build-an-ordinary-lean-project) | The crate embeds its native libraries and loads a shared runtime automatically. |
 | C | Node 22, Lean 4.32.2, C11 compiler and binutils on Linux x86-64; see [C packages](../publish/c.md) | The native build includes the matching runtime in the archive. |
 | C++ | The C author tools plus a C++20 compiler; see [C++ packages](../publish/cpp.md) | C and C++ share one native component and runtime. |
 | C# / .NET | The C author tools plus .NET SDK 8; see [NuGet](../publish/nuget.md#build-an-ordinary-lean-project) | The package includes the matching native library and runtime. |
