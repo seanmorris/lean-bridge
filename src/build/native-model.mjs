@@ -97,8 +97,10 @@ const closed = (value, fields, label) => {
  * @param root0.component - Canonical component name and version.
  * @param root0.moduleName - Optional Perl projection namespace; omitted for other native targets.
  * @param root0.sourceIdentity - Pinned compiler, source and interface identities.
+ * @param profile - Fixed compilation profile.
+ * @param pointerBits - Fixed target pointer width.
  */
-export const createNativeModel = ({ metadata, component, moduleName, sourceIdentity }) => {
+const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }, profile, pointerBits) => {
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity);
 	const allTypes = new Map();
 	const visit = type => {
@@ -124,8 +126,8 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		, elaborationSha256: elaborated.sha256
 	});
 	const model = { schemaVersion: 2
-		, profile: "native-library-v1"
-		, pointerBits: 64
+		, profile
+		, pointerBits
 		, byteOrder: "little"
 		, component
 		, ...(moduleName === undefined ? {} : { moduleName })
@@ -135,6 +137,33 @@ export const createNativeModel = ({ metadata, component, moduleName, sourceIdent
 		, exports
 		, types: [...allTypes.values()] };
 	return Object.freeze(model);
+};
+
+/**
+ * Build the fixed 64-bit native profile from fresh compiler metadata.
+ *
+ * @param options - Elaborated metadata, component and source identity.
+ */
+export const createNativeModel = options => createCompiledModel(options, "native-library-v1", 64);
+
+/**
+ * Reuse C-shape elaboration, not a compiled native receipt, for wasm32.
+ * The target C compiler checks the emitted definitions against these prototypes.
+ *
+ * @param options - Elaborated metadata, component and source identity.
+ */
+export const createPhpWasmCopiedModel = options => {
+	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm models cannot carry a Perl namespace");
+	const model = createCompiledModel(options, "php-wasm-copied-v1", 32);
+	const copied = type => type.kind === "primitive" || (type.kind === "array" && copied(type.element)) || (type.kind === "record" && type.fields.every(field => copied(field.type)));
+	const unsupported = model.exports.find(item => !item.parameters.every(parameter => copied(parameter.type)) || !copied(item.result));
+	if(unsupported)
+	{
+		const declaration = model.bindingIr.declarations.find(item => item.source.declaration === unsupported.name);
+		const source = declaration.source.extensions?.["lean-lang.org/source-position"];
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm copied compilation admits only primitives, arrays and records`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
+	}
+	return model;
 };
 
 /**

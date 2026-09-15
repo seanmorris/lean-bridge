@@ -251,6 +251,19 @@ jobs:
         run: |
           bash scripts/bootstrap-php-wasm-ci.sh
           node --test tests/php-copied-zend.test.mjs
+      - name: Compile ordinary Lean APIs and execute relocated PHP-Wasm artifacts
+        id: ordinary_php_wasm
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST: "1"
+          LEAN_WASM_RUNTIME_PROFILE: browser
+          LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
+          LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
+        run: |
+          bash scripts/bootstrap-toolchains.sh
+          export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
+          bash scripts/build-lean-runtime.sh
+          node --test tests/php-wasm-ordinary.test.mjs
       - name: Record PHP observations
         if: always()
         shell: bash
@@ -263,8 +276,14 @@ jobs:
             native_result=failed
             native_executed=false
           fi
+          wasm_result="$test_result"
+          wasm_executed="$executed"
+          if [ "${{ steps.ordinary_php_wasm.outcome }}" != success ] || [ "${{ steps.copied_zend.outcome }}" != success ]; then
+            wasm_result=failed
+            wasm_executed=false
+          fi
           node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs"
-          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 node --test tests/php-wasm-ordinary.test.mjs"
       - name: Upload PHP observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -275,7 +294,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success' || steps.copied_zend.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success'
         run: exit 1
 
   native-consumers:

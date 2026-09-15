@@ -60,6 +60,7 @@ const profileManifest = Object.freeze({
 		, "native-python"
 		, "native-php"
 		, "php-copied-zend"
+		, "php-wasm-ordinary"
 		, "native-rust"
 		, "native-wit"
 		, "public-surface-conformance"

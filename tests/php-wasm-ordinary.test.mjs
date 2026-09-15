@@ -1,0 +1,198 @@
+/**
+ * Actual Lean compilation and relocated execution in the PHP-Wasm Zend host.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
+import { pathToFileURL } from "node:url";
+import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { buildPhpWasmCopiedComponent, buildPhpWasmCopiedRuntime } from "../src/build/php-wasm-copied-component.mjs";
+import { phpWasmCopiedPins as pins, readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime } from "../src/build/php-wasm-copied-artifacts.mjs";
+import { createNativeModel, createPhpWasmCopiedModel } from "../src/build/native-model.mjs";
+import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
+import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { createPhpWasmOrdinaryProject, phpWasmOrdinaryConsumer } from "./helpers/php-wasm-ordinary.mjs";
+
+const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
+const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+const emsdkRoot = process.env.LEAN_BRIDGE_PHP_EMSDK ?? join(process.cwd(), ".toolchains/emsdk-php-wasm");
+const phpSource = process.env.LEAN_BRIDGE_PHP_SOURCE ?? join(process.cwd(), "build/php-wasm-sdk/php8.4-src");
+const leanRuntimeRoot = process.env.LEAN_BRIDGE_PHP_LEAN_RUNTIME ?? join(process.cwd(), `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser-php-wasm-3.1.68`);
+const phpHost = process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? join(process.cwd(), "build/php-wasm-host/node_modules/php-wasm");
+
+test("PHP-Wasm uses a fixed wasm32 model without changing native compilation", () => {
+	const options = { ...nativeMetadataFixture(), component: { id: "example@1.0.0", name: "example", version: "1.0.0" } };
+	const native = createNativeModel(options), wasm = createPhpWasmCopiedModel(options);
+	assert.equal(native.profile, "native-library-v1"); assert.equal(native.pointerBits, 64);
+	assert.equal(wasm.profile, "php-wasm-copied-v1"); assert.equal(wasm.pointerBits, 32);
+	assert.deepEqual(wasm.bindingIr, native.bindingIr);
+	assert.deepEqual(wasm.exports, native.exports);
+	assert.throws(() => createPhpWasmCopiedModel({ ...options, moduleName: "LeanBridge::Example" }), /Perl namespace/);
+	const callback = nativeMetadataFixture(), declaration = callback.metadata.modules[0].declarations[0];
+	const scalar = declaration.projection.result;
+	declaration.projection.result = { kind: "callback", parameters: [scalar], result: scalar, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
+	assert.throws(() => createPhpWasmCopiedModel({ ...callback, component: options.component }), error => error.code === "unsupported-php-wasm-signature" && error.details.source.path === "Sample.lean" && error.details.source.startLine === 2);
+});
+
+test("shared compilation rejects arbitrary profiles and receipt paths before reading sources", async () => {
+	for(const options of [{ profile: "unknown", receiptName: "native-component.json" }, { profile: "native-library-v1", receiptName: "../outside.json" }, { profile: "php-wasm-copied-v1", receiptName: "native-component.json" }])
+		await assert.rejects(buildElaboratedComponent(options), /Invalid compiled component profile/);
+	await assert.rejects(buildPhpWasmCopiedComponent({ targets: ["php-wasm", "npm"] }), /own target selection/);
+	await assert.rejects(buildPhpWasmCopiedComponent({ moduleName: "LeanBridge::Example" }), /Perl namespace/);
+});
+
+test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm host", { skip: !enabled, timeout: 600000 }, async t => {
+	const working = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-ordinary-"));
+	t.after(() => rm(working, { recursive: true, force: true }));
+	const cachedRuntime = process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
+	const runtime = cachedRuntime
+		? { root: cachedRuntime, ...await readVerifiedPhpWasmCopiedRuntime(cachedRuntime) }
+		: await buildPhpWasmCopiedRuntime({ outputRoot: join(working, "runtime"), leanRuntimeRoot, emsdkRoot });
+	t.diagnostic(`runtime ${runtime.identity}`);
+	const components = [];
+	for(const name of ["Willow", "Aspen"])
+	{
+		const project = join(working, name), outputRoot = join(working, `${name}-compiled`);
+		await createPhpWasmOrdinaryProject(project, name);
+		const before = await lakeInputState(project);
+		const result = await buildPhpWasmCopiedComponent({ projectRoot: project, outputRoot, runtimeRoot: runtime.root, leanPrefix, emsdkRoot, phpSource });
+		assert.equal(result.model.pointerBits, 32); assert.equal(result.model.exports.length, 44);
+		assert.deepEqual(await lakeInputState(project), before);
+		await readVerifiedPhpWasmCopiedComponent(outputRoot, runtime.identity);
+		const binary = await readFile(join(outputRoot, result.receipt.library));
+		assert.equal(binary.includes(Buffer.from(working)), false, "Extension contains an absolute build path");
+		assert.equal(binary.includes(Buffer.from(runtime.root)), false, "Extension contains its runtime header path");
+		const repeatedSource = join(working, "relocated-source", name);
+		await cp(project, repeatedSource, { recursive: true });
+		const beforeRepeated = await lakeInputState(repeatedSource);
+		const repeatedRuntime = join(working, "relocated-runtime", name);
+		await cp(runtime.root, repeatedRuntime, { recursive: true });
+		const repeated = await buildPhpWasmCopiedComponent({ projectRoot: repeatedSource, outputRoot: join(working, `${name}-repeat`), runtimeRoot: repeatedRuntime, leanPrefix, emsdkRoot, phpSource });
+		assert.deepEqual(await lakeInputState(repeatedSource), beforeRepeated);
+		assert.deepEqual(result.receipt, repeated.receipt);
+		assert.deepEqual(await readFile(join(outputRoot, "artifacts.json")), await readFile(join(repeated.root, "artifacts.json")));
+		t.diagnostic(`${name} extension ${result.receipt.wasmLibrary.sha256}`);
+		const relocated = join(working, "installed", name);
+		await cp(outputRoot, relocated, { recursive: true });
+		await rename(project, `${project}-source-unavailable`);
+		await rename(repeatedSource, `${repeatedSource}-unavailable`);
+		await rm(outputRoot, { recursive: true }); await rm(repeated.root, { recursive: true });
+		await rm(repeatedRuntime, { recursive: true });
+		await saveLakeFile(working, `${name}-consumer.php`, phpWasmOrdinaryConsumer(name));
+		components.push({ name, root: relocated, receipt: result.receipt });
+	}
+	const relocatedRuntime = join(working, "installed/runtime");
+	await cp(runtime.root, relocatedRuntime, { recursive: true });
+	if(!cachedRuntime) await rm(runtime.root, { recursive: true });
+	assert.equal((await readVerifiedPhpWasmCopiedRuntime(relocatedRuntime)).identity, runtime.identity);
+	for(const component of components) await readVerifiedPhpWasmCopiedComponent(component.root, runtime.identity);
+	// A separate test-only extension observes the production broker. The public
+	// generated APIs do not expose a runtime, pointer, counter, or FFI object.
+	await saveLakeFile(working, "probe.c", `#include <php.h>
+#include "lean_bridge_native_runtime.h"
+ZEND_BEGIN_ARG_INFO_EX(probe_args, 0, 0, 0)
+ZEND_END_ARG_INFO()
+static ZEND_FUNCTION(lean_bridge_test_snapshot) {
+  lean_bridge_native_snapshot snapshot;
+  lean_bridge_native_snapshot_read(&snapshot);
+  array_init(return_value);
+  add_next_index_long(return_value, snapshot.abi_version);
+  add_next_index_long(return_value, snapshot.runtime_state);
+  add_next_index_long(return_value, snapshot.runtime_init_runs);
+  add_next_index_long(return_value, snapshot.component_init_runs);
+  add_next_index_long(return_value, snapshot.attached_components);
+  add_next_index_long(return_value, snapshot.live_identities);
+}
+static const zend_function_entry probe_functions[] = {
+  ZEND_FE(lean_bridge_test_snapshot, probe_args)
+  PHP_FE_END
+};
+zend_module_entry probe_module_entry = {
+  STANDARD_MODULE_HEADER, "lean_bridge_test_probe", probe_functions,
+  NULL, NULL, NULL, NULL, NULL, "1", STANDARD_MODULE_PROPERTIES
+};
+ZEND_GET_MODULE(probe)
+`);
+	const probeIncludes = [phpSource, ...["Zend", "main", "TSRM", "ext"].map(path => join(phpSource, path)), join(relocatedRuntime, "include")];
+	const probeArgs = ["-O2", "-shared", "-sSIDE_MODULE=2"
+		, "-sEXPORTED_FUNCTIONS=['_get_module']"
+		, ...probeIncludes.flatMap(path => ["-I", path])
+		, "probe.c", join(relocatedRuntime, runtime.manifest.library)
+		, "-o", "probe.so"];
+	await processBuildRunner.capture({ command: join(emsdkRoot, "upstream/emscripten/emcc"), args: probeArgs, cwd: working });
+	const libraries = [{ name: basename(runtime.manifest.library), url: pathToFileURL(join(relocatedRuntime, runtime.manifest.library)).href, ini: false }
+		, { name: "probe.so", url: pathToFileURL(join(working, "probe.so")).href, ini: true }
+		, ...components.map(({ root, receipt }) => ({ name: basename(receipt.library), url: pathToFileURL(join(root, receipt.library)).href, ini: true }))];
+	await saveLakeFile(working, "host.mjs", `import { readFile } from 'node:fs/promises';
+import { PhpNode } from ${JSON.stringify(pathToFileURL(join(phpHost, "PhpNode.mjs")).href)};
+try {
+const php = new PhpNode({version: '8.4', sharedLibs: ${JSON.stringify(libraries)}.map(lib => ({...lib, url: new URL(lib.url)})), ini: 'memory_limit=512M'});
+let stdout = '', stderr = '';
+php.addEventListener('output', e => { for (const part of e.detail) stdout += part; });
+php.addEventListener('error', e => { for (const part of e.detail) stderr += part; });
+await php.binary;
+${components.map(({ name, root }) => `await php.mkdir('/${name}'); await php.mkdir('/${name}/src'); await php.mkdir('/${name}/src/Internal');
+${["src/Api.php", "src/Internal/Native.php"].map(path => `await php.writeFile('/${name}/${path}', await readFile(${JSON.stringify(join(root, path))}, 'utf8'));`).join("\n")}
+await php.writeFile('/${name}/consumer.php', await readFile(${JSON.stringify(join(working, `${name}-consumer.php`))}, 'utf8'));`).join("\n")}
+const status = await php.run("<?php require '/Willow/consumer.php'; require '/Aspen/consumer.php';");
+if (status || stderr || stdout !== 'Willow:okAspen:ok') throw new Error(JSON.stringify({status,stdout,stderr}));
+stdout = ''; stderr = '';
+for (let i = 0; i < 20; i++) {
+  const status = await php.run("<?php echo LeanWillow\\\\answer(), ':', LeanAspen\\\\answer(), ';';");
+  if (status) throw new Error('Repeated request failed');
+}
+if (stderr || stdout !== '17:29;'.repeat(20)) throw new Error(JSON.stringify({stdout,stderr}));
+stdout = ''; stderr = '';
+const snapshotStatus = await php.run("<?php echo json_encode(lean_bridge_test_snapshot());");
+if (snapshotStatus || stderr || stdout !== '[1,2,1,2,2,0]') throw new Error('Unexpected shared runtime snapshot: ' + JSON.stringify({snapshotStatus,stdout,stderr}));
+console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20}));
+} catch (error) { console.error(error.stack); process.exitCode = 1; }
+`);
+	const host = await processBuildRunner.capture({ command: process.execPath
+		, args: ["host.mjs"], cwd: working, timeoutMs: 120000
+		, env: { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" } });
+	assert.deepEqual(JSON.parse(host.stdout.trim()), { status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20 });
+	const victim = components[0];
+	await assert.rejects(readVerifiedPhpWasmCopiedComponent(victim.root, "0".repeat(64)), /differs/);
+	for(const [label, changes, pattern] of [
+		["extra-file", { "extra.txt": "unrecorded" }, /Unrecorded/]
+		, ["changed-php", { "src/Api.php": "<?php // substituted wrapper" }, /Zend source drift/]
+		, ["non-wasm", { [victim.receipt.library]: Buffer.from("7f454c4602010100", "hex") }, /expected magic word|WebAssembly/]
+	]) {
+		const damaged = join(working, `damaged-${label}`);
+		await cp(victim.root, damaged, { recursive: true });
+		const inventory = JSON.parse(await readFile(join(damaged, "artifacts.json")));
+		for(const [path, value] of Object.entries(changes))
+		{
+			await saveLakeFile(damaged, path, value);
+			if(label !== "extra-file") inventory.files[path] = { bytes: Buffer.byteLength(value), sha256: sha256(value) };
+		}
+		if(label === "non-wasm")
+		{
+			const receipt = { ...victim.receipt, wasmLibrary: inventory.files[victim.receipt.library] };
+			const source = canonicalJson(receipt);
+			await saveLakeFile(damaged, "php-wasm-component.json", source);
+			inventory.files["php-wasm-component.json"] = { bytes: Buffer.byteLength(source), sha256: sha256(source) };
+		}
+		await saveLakeFile(damaged, "artifacts.json", canonicalJson(inventory));
+		await assert.rejects(readVerifiedPhpWasmCopiedComponent(damaged, runtime.identity), pattern);
+	}
+	const originalRuntime = await readFile(join(relocatedRuntime, "runtime.json"));
+	const badRuntime = JSON.parse(originalRuntime); badRuntime.pointerBits = 64;
+	await saveLakeFile(relocatedRuntime, "runtime.json", canonicalJson(badRuntime));
+	await assert.rejects(readVerifiedPhpWasmCopiedRuntime(relocatedRuntime), /Invalid PHP-Wasm/);
+	await saveLakeFile(relocatedRuntime, "runtime.json", originalRuntime);
+	const original = await readFile(join(victim.root, "model.json"));
+	const forged = JSON.parse(original); forged.pointerBits = 64;
+	await saveLakeFile(victim.root, "model.json", canonicalJson(forged));
+	const inventory = JSON.parse(await readFile(join(victim.root, "artifacts.json")));
+	inventory.files["model.json"] = { bytes: Buffer.byteLength(canonicalJson(forged)), sha256: sha256(canonicalJson(forged)) };
+	await saveLakeFile(victim.root, "artifacts.json", canonicalJson(inventory));
+	await assert.rejects(readVerifiedPhpWasmCopiedComponent(victim.root, runtime.identity), /differs/);
+});

@@ -59,6 +59,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Cross-language semantic parity](cross-language-semantic-parity.md)
 - [PHP transport parity](php-transport-parity.md)
 - [Copied Zend boundary in 32-bit PHP-Wasm, 15 September 2026](php-wasm-copied-zend-20260915.md)
+- [Ordinary Lean compilation for PHP-Wasm, 15 September 2026](php-wasm-ordinary-20260915.md)
 - [PHP-Wasm shared runtime composition](php-wasm-shared-runtime-composition.md)
 
 ## Performance

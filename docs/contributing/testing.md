@@ -112,7 +112,7 @@ source scripts/env.sh
 LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs
 ```
 
-This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires this suite, the Alpha transport checks below, and the copied Zend boundary check.
+This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires this suite, the Alpha transport checks below, the copied Zend boundary check, and ordinary PHP-Wasm compilation.
 
 The generic Zend adapter has a separate real PHP-Wasm check:
 
@@ -122,6 +122,22 @@ LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs
 ```
 
 This compiles two synthetic C providers and executes their generated APIs inside 32-bit PHP-Wasm. It checks exact integer conversion, nested copied values, relocated builds, allocation failures and Zend bailout cleanup. It does not run Lean or establish installed ordinary PHP-Wasm support. The [Zend boundary record](../evidence/php-wasm-copied-zend-20260915.md) lists the tested scope and remaining compiler/package integration.
+
+To compile ordinary Lean implementations for that boundary, prepare the separate PHP-Wasm runtime profile:
+
+```sh
+bash scripts/bootstrap-toolchains.sh
+bash scripts/bootstrap-php-wasm-ci.sh
+export LEAN_WASM_EMSDK="$PWD/.toolchains/emsdk-php-wasm"
+export LEAN_WASM_RUNTIME_PROFILE=browser
+export LEAN_WASM_RUNTIME_VARIANT=php-wasm-3.1.68
+export LEAN_WASM_ARTIFACT_TARGET=php-wasm-emscripten-3.1.68
+bash scripts/build-lean-runtime.sh
+LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
+  node --test --test-reporter=spec tests/php-wasm-ordinary.test.mjs
+```
+
+Willow and Aspen each compile 44 ordinary Lean exports twice. The suite compares relocated builds, hides their source and build directories, and executes the copied artifacts in one PHP-Wasm host without compiler commands on `PATH`. It checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated PHP requests, and one runtime initialization. The [ordinary PHP-Wasm compiler record](../evidence/php-wasm-ordinary-20260915.md) documents the receipt and binary identities. This is compiled-artifact acceptance; npm/Composer package installation and lazy loading remain separate work.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 
