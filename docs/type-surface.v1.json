@@ -157,6 +157,97 @@
   ],
   "evidence": [
     {
+      "id": "native-python-installed-copied",
+      "kind": "installed",
+      "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
+      "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-python-20260915.md",
+          "sha256": "d98dfad97275015ad5502463c983e7078dd6f4f5746b59284ff468e650cb99f7"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "812e4446deaaf4e074f76eb848e8d5030efff2f224fa0c42e91d572abdee120a"
+        },
+        {
+          "path": "src/backends/python/copied-assets.mjs",
+          "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "80e7229db891680ffd81074726c9f7b881911d6f0fb6cd69231d6e584d7e5f42"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "9f12aa23bdd153defa3412501cc43c20f06ffabc803c449efe7a9cba00e43236"
+        },
+        {
+          "path": "src/backends/python/generate.mjs",
+          "sha256": "3acf71b3b314004e16bf26f8a9746cad35ae8e7d04d8dfa4c77b41444f58fe51"
+        },
+        {
+          "path": "src/backends/python/package-audit.mjs",
+          "sha256": "99d4d9344c2b248e98d1f5be26348456a3c94c0c021177e622c3f3e29695b2d9"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "557b14a5fae0d6e45f5f340d07cc1532b501431f5eccf6dc07b4d2ce2a185af4"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "944fcc7de2b6655391e9daf9765194ccc7c720b663a856643e79d949969e7314"
+        },
+        {
+          "path": "tests/native-python.test.mjs",
+          "sha256": "2b240f96d43cb4d5494ca1db1f6920398499c946b5dcd41b0ce325c2bfb3f6b1"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/python/ordinary.py",
+          "sha256": "b40ab87c935d052c0971efe7edc0abee48a9f7e3d52ad88f0d197caca9eb8298"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "iris_api-2.0.0rc1-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "a120d42187d83ec928538357004ac0439b4379c475c864b2ca91b1755a74d346"
+        },
+        {
+          "path": "lotus_api-2.0.0rc1-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "263183bf07baa66810e359ff81c2cc3060a87c4dc97bed84b38854ed1a160ba8"
+        }
+      ]
+    },
+    {
       "id": "native-wit-installed-copied",
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
@@ -205,11 +296,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -221,7 +312,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "1114dc30eab57eabb4b669d97ba12be7b85b8586c0a04a5201fb2a3b5b6f387b"
+          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -300,11 +391,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -312,7 +403,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "1114dc30eab57eabb4b669d97ba12be7b85b8586c0a04a5201fb2a3b5b6f387b"
+          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -328,7 +419,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"
+          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
         }
       ],
       "artifacts": [
@@ -395,11 +486,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -411,7 +502,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "1114dc30eab57eabb4b669d97ba12be7b85b8586c0a04a5201fb2a3b5b6f387b"
+          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -427,7 +518,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"
+          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
         }
       ],
       "artifacts": [
@@ -498,11 +589,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -514,7 +605,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "1114dc30eab57eabb4b669d97ba12be7b85b8586c0a04a5201fb2a3b5b6f387b"
+          "sha256": "2d866e58e69b64b2ea59cafc2bf6801f7d4c9956c560af70fcdd9c38212d1bd8"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -530,7 +621,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"
+          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
         }
       ],
       "artifacts": [
@@ -597,7 +688,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -609,7 +700,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -621,7 +712,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"
+          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -680,11 +771,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a4c435e1d84bc039837dc6bc24fc71b3171f6370e2916fb268ab4cef392ef578"
+          "sha256": "636a71d6f27c0118443da46c0bbfaec27e19d03bcf52b5c93c44f943fc501caa"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -720,7 +811,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"
+          "sha256": "da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -765,7 +856,7 @@
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
         {"path":"src/build/multi-profile-project.mjs","sha256":"cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"39823e32af0a89fcf5ad1819eed027b7546efc205ebfd506691a5e821c41e410"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"da8e0e5e9f3d3a9d5ea6ef2f41b1f32437528a01c578e0e96fcba5a4392a0d05"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -786,7 +877,7 @@
         {"path":"schema/lean-export-configuration.schema.json","sha256":"3b9e7aff0e4ec61a6d20e1355e0cd001025589f327f4280b10c17419073aac0e"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"src/build/cpan-projection.mjs","sha256":"2ffb510580830ef31762068d503f13576e6eeba65d2ae32a8ff25908574d0e96"},
-        {"path":"tests/export-configuration.test.mjs","sha256":"8fc5dcdbbf451e6c3e9ad2cceb3d08a8416e0b3137c7baf518a89d6e3dc73b75"},
+        {"path":"tests/export-configuration.test.mjs","sha256":"8463bb6f08e19b97d3875d1dcfd9baec9711a2d8eb0c7ece87595aa84087b12e"},
         {"path":"tests/fixtures/perl/ordinary/lean-bridge.exports.json","sha256":"2fe018e046eed132796a61fd0b32b7169796ffbd19c2f77b88b5c6339aeee684"},
         {"path":"scripts/prepare-perl-platform-packages.mjs","sha256":"b9c1b9d66d6852d952b830e51d553760034236f7807e298f2bdfe0ef704b8519"},
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
@@ -813,7 +904,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "28df5833a4b1b8746232eeeb58a3cc0fbd91034f2188e77e230d2e043185a472"
+          "sha256": "28f9a03b6f210571920b1bad1d4437fb75f85d2cc4d593e67faa13e551c3d883"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1032,7 +1123,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "Python generator type spellings and finite-specialization logic; no compiled or installed mapping is inferred.",
       "files": [
-        {"path":"src/backends/python/generate.mjs","sha256":"b163f6fd0e24a076ccc7f4188e422c5d361545fd25141c6fb5098307419cda43"}
+        {"path":"src/backends/python/generate.mjs","sha256":"3acf71b3b314004e16bf26f8a9746cad35ae8e7d04d8dfa4c77b41444f58fe51"}
       ],
       "artifacts": []
     },
@@ -1123,6 +1214,185 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-python-copied",
+      "profiles": [
+        "python"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Offline pip-installed calls exercise copied primitives, nested arrays and acyclic records from two unrelated ordinary Lean packages.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "None",
+          "result": "None",
+          "field": "None"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint64": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int64": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "nat": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "float64": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "string": {
+          "parameter": "str",
+          "result": "str",
+          "field": "str"
+        },
+        "bytes": {
+          "parameter": "bytes",
+          "result": "bytes",
+          "field": "bytes"
+        },
+        "array": {
+          "parameter": "tuple[T, ...] (also list[T] input)",
+          "result": "tuple[T, ...]",
+          "field": "tuple[T, ...] (also list[T] input)"
+        },
+        "record": {
+          "parameter": "Generated frozen dataclass",
+          "result": "Generated frozen dataclass",
+          "field": "Generated frozen dataclass"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-python-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated wheel byte comparison and offline-installed Python execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-python-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated wheel byte comparison and offline-installed Python execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-python-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated wheel byte comparison and offline-installed Python execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-python-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated wheel byte comparison and offline-installed Python execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-python-installed-copied"
+          ],
+          "note": "Fresh compiler metadata, relocated wheel byte comparison and offline-installed Python execution."
+        }
+      },
+      "limitations": [
+        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "Native input/output and Python conversions have separate 16 MiB accounting budgets. Python object overhead and Lean working memory are separate.",
+        "CPython 3.11.2 on Linux x86-64. Local glibc 2.36 acceptance; production floor 2.38. Free-threading and post-fork calls are rejected; subinterpreters and other implementations have not been accepted."
+      ],
+      "conversionNotes": {
+        "unit": "Ordinary packages use None in every position.",
+        "bool": "Only exact bool values are accepted, without numeric coercion.",
+        "uint64": "Exact int in 0..18446744073709551615; no floating-point conversion.",
+        "nat": "Exact nonnegative int without a fixed bit-width limit.",
+        "int": "Exact signed int without narrowing.",
+        "float32": "Require float and round to binary32; NaN classification, infinities and signed zero are tested.",
+        "string": "Strict Unicode str preserves embedded NUL; surrogate code points are rejected during UTF-8 encoding.",
+        "bytes": "Exact bytes input and independently owned immutable output.",
+        "array": "Exact list or tuple inputs are snapshotted and recursively checked. Returned tuples own their elements; conversion budgets apply at every level.",
+        "record": "Generated frozen dataclasses use compiler-owned accessors. Returned nested arrays, records and byte values are independent copies."
+      }
+    },
     {
       "id": "native-wit-copied",
       "profiles": [

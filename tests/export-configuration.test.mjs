@@ -328,5 +328,5 @@ test("configured changes cannot be silently ignored by a compiler or reviewed IR
 	const analysis = await analyzeLeanProject(directory);
 	await writeFile(join(directory, "reviewed.binding-ir.json"), canonicalJson(analysis.bindingIr.document));
 	await assert.rejects(() => analyzeLeanProject(directory), { code: "export-configuration-reviewed-ir" });
-	await assert.rejects(() => buildNativeProject({ projectRoot: directory, targets: ["cpan", "pypi"] }), { code: "unsupported-native-targets" });
+	await assert.rejects(() => buildNativeProject({ projectRoot: directory, targets: ["cpan", "cargo"] }), { code: "unsupported-native-targets" });
 });

@@ -1,8 +1,43 @@
 # Use a Lean package from Python
 
-Install the Alpha interoperability wheel and import `lean_alpha`. The wheel includes the generated Python API, its native adapter, the Alpha component, and the Lean runtime. Consumers do not compile Lean.
+Install the publisher's platform wheel and import its generated Python module. The wheel includes the API, native adapter, compiled Lean component and runtime. Consumers need neither Lean nor a C compiler.
 
 ## Use a prepared release
+
+### Ordinary project packages
+
+Use Python 3.11 or newer on Linux x86-64 with glibc 2.38 or newer. Install the original wheel in an isolated environment. This example uses the Iris acceptance package; substitute the filename and module supplied by your publisher:
+
+```sh
+python3 -m venv .venv
+./.venv/bin/python -m pip install --no-index --no-deps \
+  ./iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl
+```
+
+Save this as `ordinary.py`:
+
+```python file=python/ordinary.py
+from lean_iris import array_u32, echo_nat, echo_text, echo_u32
+
+assert echo_u32(42) == 42
+assert echo_nat(2**4096 + 1) == 2**4096 + 1
+assert echo_text("Lean λ\0") == "Lean λ\0"
+assert array_u32([0, 2**32 - 1]) == (0, 2**32 - 1)
+
+print("42; exact integers and copied arrays")
+```
+
+Run `./.venv/bin/python ordinary.py`. The wheel supplies type annotations, type stubs and a `py.typed` marker. Importing it verifies its native libraries and loads a compatible shared runtime automatically. There is no runtime path or `ctypes` setup in application code.
+
+Ordinary packages support pure functions over the 16 primitive types, arrays and acyclic records. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays accept lists or tuples and return tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
+
+Python conversion and native input/output copying each have a 16 MiB budget. Array conversion counts at least eight bytes per element, and text counts encoding/decoding storage. These budgets do not bound all Python object overhead or the Lean algorithm's working memory. Inputs raise `TypeError`, `ValueError` or an encoding error when invalid. Native failures raise the package's `LeanBridgeError`. Native results and temporary buffers are released even if Python result conversion fails.
+
+Calls can run on separate threads. Do not mutate inputs during conversion. The loader rejects free-threaded interpreters and calls after `fork`; start a fresh interpreter in the child process. Subinterpreters and non-CPython implementations have not been accepted. See the [installed-wheel evidence](../evidence/native-python-20260915.md) for tested versions and cases.
+
+### Alpha resource and callback example
+
+The remaining example uses the separate Alpha fixture to demonstrate resources, callbacks and returned closures. Those operations are not yet available through the ordinary Python source path.
 
 ### Requirements and package
 
@@ -80,27 +115,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `None` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `str` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `bytes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `tuple[T, ...]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `None` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Ordinary packages use None in every position. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Only exact bool values are accepted, without numeric coercion. Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact int in 0..18446744073709551615; no floating-point conversion. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact nonnegative int without a fixed bit-width limit. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact signed int without narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Require float and round to binary32; NaN classification, infinities and signed zero are tested. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `str` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Strict Unicode str preserves embedded NUL; surrogate code points are rejected during UTF-8 encoding. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `bytes` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact bytes input and independently owned immutable output. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `tuple[T, ...] (also list[T] input)` (input, field); `tuple[T, ...]` (result, input, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact list or tuple inputs are snapshotted and recursively checked. Returned tuples own their elements; conversion budgets apply at every level. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | `T \| None` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | The current nullable annotation collapses nested Option and Option Unit; lossless tagged conversion remains work. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | `Ok[T] \| Err[E]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `tuple[T, U, ...]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated frozen dataclass (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Generated frozen dataclass` (input, result, field); `Generated frozen dataclass (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated frozen dataclasses use compiler-owned accessors. Returned nested arrays, records and byte values are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated case classes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated resource class` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
@@ -162,7 +197,7 @@ Use `with` for `Box` and the `Transform` returned by `make_adder`. Both release 
 
 #### Diagnose wheel compatibility
 
-For more detail before retrying installation, request the release's adjacent `python-wheel-preflight.mjs`. This optional diagnostic needs Node.js 22; normal wheel installation and Python calls do not.
+For the Alpha release, request its adjacent `python-wheel-preflight.mjs` for more detail before retrying installation. This optional diagnostic needs Node.js 22; normal wheel installation and Python calls do not. Ordinary wheels use pip's platform check and the generated loader instead.
 
 ```sh
 node ./python-wheel-preflight.mjs \

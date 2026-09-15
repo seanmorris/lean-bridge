@@ -1,0 +1,122 @@
+/**
+ * Render scoped ctypes input copies and independently owned Python results.
+ *
+ * @file
+ */
+
+/** Private allocation and error helpers; no raw pointers enter the public API. */
+export const copiedPythonHelpers = `class _Scope:
+    def __init__(self):
+        self.remaining = 16 * 1024 * 1024
+        self.owners = []
+
+    def charge(self, count, width=1):
+        if count < 0 or width < 1 or count > self.remaining // width:
+            raise ValueError("16 MiB Python conversion limit exceeded")
+        self.remaining -= count * width
+
+    def allocate(self, element, count):
+        self.charge(count, _c.sizeof(element))
+        value = (element * count)()
+        self.owners.append(value)
+        return value
+
+    def close(self):
+        self.owners.clear()
+
+def _integer(value, minimum, maximum):
+    if type(value) is not int:
+        raise TypeError("Expected an int, without Boolean or numeric coercion")
+    if (minimum is not None and value < minimum) or (maximum is not None and value > maximum):
+        raise ValueError("Integer is outside the declared Lean range")
+    return value
+
+def _text_size(value):
+    if value.isascii():
+        return len(value)
+    return sum(1 if ord(c) < 0x80 else 2 if ord(c) < 0x800 else 3 if ord(c) < 0x10000 else 4 for c in value)
+
+def _buffer(data, scope):
+    memory = scope.allocate(_c.c_uint8, len(data))
+    if data:
+        _c.memmove(memory, data, len(data))
+    return _c.addressof(memory) if data else None
+
+def _read(data, length, scope, width=1):
+    scope.charge(length, width)
+    if length and not data:
+        raise LeanBridgeError(5, "Native result has a missing buffer")
+    return _c.string_at(data, length) if length else b""
+
+class _Error(_c.Structure):
+    _fields_ = [("code", _c.c_int), ("message", _c.c_void_p), ("message_length", _c.c_size_t)]
+
+def _check(status, error):
+    if status:
+        message = _c.string_at(error.message, min(error.message_length, 16384)).decode("utf-8", "replace") if error.message else "Native Lean call failed"
+        raise LeanBridgeError(status, message)
+`;
+
+/**
+ * Describe the portable C-facing layout with ctypes, never Lean object offsets.
+ *
+ * @param model - Admitted copied Python model.
+ */
+export const copiedPythonTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => {
+	const fields = copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
+		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.ref.name === "int" ? [["negative", "_c.c_bool"]] : [])];
+	return `class ${copy.ctype}(_c.Structure):\n    _fields_ = [${fields.map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]\n`;
+}).join("\n");
+
+/**
+ * Emit one conversion pair for each closed copied type.
+ *
+ * @param model - Canonical native descriptions and public record names.
+ */
+export const copiedPythonConversions = model => model.surface.copies.map(copy => {
+	const input = [], output = [], name = copy.ref.name;
+	if(name === "unit")
+	{
+		input.push('if value is not None: raise TypeError("Unit requires None")', "return 0");
+		output.push("return None");
+	} else if(name === "bool")
+	{
+		input.push('if type(value) is not bool: raise TypeError("Bool requires bool")', "return value");
+		output.push("return bool(value)");
+	} else if(/^(?:u?int)(?:8|16|32|64)$/.test(name))
+	{
+		const signed = name.startsWith("int"), bits = Number(name.match(/\d+/)[0]);
+		input.push(`return _integer(value, ${signed ? `-(1 << ${bits-1})` : "0"}, (1 << ${signed ? bits-1 : bits}) - 1)`);
+		output.push("return value");
+	} else if(name === "float32" || name === "float64")
+	{
+		input.push('if type(value) is not float: raise TypeError("Expected a float, without numeric coercion")', `return ${name === "float32" ? "_c.c_float(value).value" : "value"}`);
+		output.push("return value");
+	} else if(name === "string" || name === "bytes")
+	{
+		input.push(`if type(value) is not ${name === "string" ? "str" : "bytes"}: raise TypeError("Expected ${name === "string" ? "str" : "bytes"}")`);
+		if(name === "string") input.push("scope.charge(_text_size(value))", 'value = value.encode("utf-8", "strict")');
+		input.push(`return ${copy.ctype}(_buffer(value, scope), len(value), None, None)`);
+		output.push(`return _read(value.data, value.length, scope${name === "string" ? ", 4" : ""})${name === "string" ? '.decode("utf-8", "strict")' : ""}`);
+	} else if(name === "nat" || name === "int")
+	{
+		input.push(`_integer(value, ${name === "nat" ? "0" : "None"}, None)`, "length = (value.bit_length() + 31) // 32", "scope.charge(length, 4)", 'data = abs(value).to_bytes(length * 4, "little")', `return ${copy.ctype}(_buffer(data, scope), length, None, None${name === "int" ? ", value < 0" : ""})`);
+		output.push('magnitude = int.from_bytes(_read(value.data, value.length * 4, scope, 2), "little")', `return ${name === "int" ? "-magnitude if value.negative else magnitude" : "magnitude"}`);
+	} else if(copy.record)
+	{
+		input.push(`if type(value) is not ${copy.publicName}: raise TypeError("Expected ${copy.publicName}")`, `return ${copy.ctype}(${copy.fields.map(field => `_to${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
+		output.push(`return ${copy.publicName}(${copy.fields.map(field => `${field.name}=_from${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
+	} else
+	{
+		input.push('if type(value) not in (tuple, list): raise TypeError("Expected a tuple or list")', "scope.charge(len(value), 8)", "value = tuple(value)", `memory = scope.allocate(${copy.element.ctype}, len(value))`, "for index, item in enumerate(value):", `    memory[index] = _to${copy.element.index}(item, scope)`, `return ${copy.ctype}(_c.addressof(memory) if len(value) else None, len(value), None, None)`);
+		output.push(`scope.charge(value.length, max(8, _c.sizeof(${copy.element.ctype})))`, 'if value.length and not value.data: raise LeanBridgeError(5, "Native array has a missing buffer")', `memory = (${copy.element.ctype} * value.length).from_address(value.data) if value.length else ()`, `return tuple(_from${copy.element.index}(item, scope) for item in memory)`);
+	}
+	return `def _to${copy.index}(value, scope):
+    scope.charge(1, _c.sizeof(${copy.ctype}))
+${input.map(line => `    ${line}`).join("\n")}
+
+def _from${copy.index}(value, scope):
+    scope.charge(1, _c.sizeof(${copy.ctype}))
+${output.map(line => `    ${line}`).join("\n")}
+`;
+}).join("\n");

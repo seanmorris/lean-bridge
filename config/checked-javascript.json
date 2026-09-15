@@ -5,6 +5,12 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/python/copied-assets.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/python/copied-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/python/copied-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/python/copied-values.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-python-artifacts.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/native-pypi.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/copied-component.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/copied-conversions.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/copied-host.mjs", "classification": "strict-migration-backlog" },

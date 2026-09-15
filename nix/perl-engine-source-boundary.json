@@ -39,6 +39,11 @@
     "src/backends/perl/generate.mjs",
     "src/backends/perl/naming.mjs",
     "src/backends/perl/runtime.h",
+    "src/backends/python/copied-assets.mjs",
+    "src/backends/python/copied-conversions.mjs",
+    "src/backends/python/copied-model.mjs",
+    "src/backends/python/copied-values.mjs",
+    "src/backends/python/package-audit.mjs",
     "src/backends/ruby/copied-assets.mjs",
     "src/backends/ruby/copied-conversions.mjs",
     "src/backends/ruby/copied-model.mjs",
@@ -70,6 +75,7 @@
     "src/build/native-jvm-projection.mjs",
     "src/build/native-model.mjs",
     "src/build/native-project.mjs",
+    "src/build/native-python-artifacts.mjs",
     "src/build/native-ruby-artifacts.mjs",
     "src/build/native-wit-artifacts.mjs",
     "src/build/native-wit-projection.mjs",
@@ -85,6 +91,7 @@
     "src/release/native-c-family.mjs",
     "src/release/native-maven.mjs",
     "src/release/native-nuget.mjs",
+    "src/release/native-pypi.mjs",
     "src/release/native-rubygems.mjs",
     "src/release/native-wasi.mjs"
   ]

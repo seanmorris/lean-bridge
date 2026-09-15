@@ -11,6 +11,8 @@ import {
 	compileFiniteGenericSpecializations,
 } from "../../abi/generic-specialization.mjs";
 import { auditPythonPackage } from "./package-audit.mjs";
+import { compileCopiedPythonModel } from "./copied-model.mjs";
+import { renderCopiedPythonPackage } from "./copied-values.mjs";
 
 /**
  * Reports Python binding generation failures with stable machine-readable codes and structured diagnostic context.
@@ -1083,6 +1085,8 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
  */
 export const compilePythonPackageModel = ir => {
 	validateBindingIr(ir);
+	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+		return Object.freeze({ ir, copied: compileCopiedPythonModel(ir) });
 	validateCoverage(ir);
 	const packageDir = packageName(ir);
 	return Object.freeze({ ir, packageDir });
@@ -1094,6 +1098,7 @@ export const compilePythonPackageModel = ir => {
  * @param model - Validated Python package projection model.
  */
 export const renderPythonPackageLayout = model => {
+	if(model.copied) return renderCopiedPythonPackage(model.copied);
 	const { ir, packageDir } = model;
 	const publicModule = `${packageDir}/__init__.py`;
 	const typeStub = `${packageDir}/__init__.pyi`;

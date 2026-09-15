@@ -17,6 +17,7 @@ import { projectOrdinaryDotnet } from "./native-dotnet-projection.mjs";
 import { projectOrdinaryJvm } from "./native-jvm-projection.mjs";
 import { packageOrdinaryRuby } from "../release/native-rubygems.mjs";
 import { projectOrdinaryWasi } from "./native-wit-projection.mjs";
+import { packageOrdinaryPython } from "../release/native-pypi.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -84,6 +85,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		: target === "maven" ? await projectOrdinaryJvm({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
 			: target === "rubygems" ? await packageOrdinaryRuby({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
 				: target === "wit-wasi" ? await projectOrdinaryWasi({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
-					: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
+					: target === "pypi" ? await packageOrdinaryPython({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
+						: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
 	return projections;
 };

@@ -6,16 +6,16 @@ Choose the package backend before installing its build tools. All current source
 | --- | --- | --- |
 | [JavaScript / TypeScript (npm)](../publish/npm.md) | Node 22, Git, and Nix or Docker. Use Lean 4.32.2 to check source locally. | The engine supplies the compiler. Use the prepared CLI's bundled Wasm runtime. |
 | Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, Git for locked Git dependencies, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
-| Python | The prepared native bundle, Python and pip; see [PyPI](../publish/pypi.md) | Install the matching native runtime package. |
+| Python | The C author tools plus Python 3.11 or newer; see [PyPI](../publish/pypi.md#build-an-ordinary-lean-project) | The wheel includes its native libraries and loads a shared runtime automatically. |
 | Rust | The prepared native bundle, Rust and Cargo; see [Cargo](../publish/cargo.md) | The generated crate selects its native runtime inputs. |
 | C | Node 22, Lean 4.32.2, C11 compiler and binutils on Linux x86-64; see [C packages](../publish/c.md) | The native build includes the matching runtime in the archive. |
 | C++ | The C author tools plus a C++20 compiler; see [C++ packages](../publish/cpp.md) | C and C++ share one native component and runtime. |
-| C# / .NET | The prepared bundle and .NET SDK; see [NuGet](../publish/nuget.md) | Package the matching native library and runtime. |
-| Java and Kotlin | The prepared bundle, JDK, Maven, and Kotlin tooling where used; see [Maven](../publish/maven.md) | Package the matching native library and runtime. |
-| Ruby | The prepared bundle, Ruby and RubyGems; see [RubyGems](../publish/rubygems.md) | Package the matching native library and runtime. |
+| C# / .NET | The C author tools plus .NET SDK 8; see [NuGet](../publish/nuget.md#build-an-ordinary-lean-project) | The package includes the matching native library and runtime. |
+| Java and Kotlin | The C author tools plus JDK 22; Maven and Kotlin tooling for their examples; see [Maven](../publish/maven.md#build-an-ordinary-lean-project) | The JAR includes the matching native library and runtime. |
+| Ruby | The C author tools plus Ruby 3.3 and RubyGems; see [RubyGems](../publish/rubygems.md#build-an-ordinary-lean-project) | The gem includes the matching native library and runtime. |
 | Native PHP | PHP headers, the native compiler inputs, and Composer; see [PHP](../publish/php.md#native-php-with-composer) | Build the extension for the selected PHP ABI. |
 | PHP-Wasm | The PHP-Wasm compiler inputs and npm; see [PHP](../publish/php.md#php-wasm-with-npm) | Use the matching PHP-Wasm transport and runtime. |
-| WIT / WASI | The prepared component, native host, and compatible runner; see [WIT / WASI](../publish/wit-wasi.md) | Include the executable adapter and its native host. |
+| WIT / WASI | The C author tools, wasm-tools 1.245.1 and Wasmtime C API 42.0.1; see [WIT / WASI](../publish/wit-wasi.md#build-an-ordinary-lean-project) | The archive includes the executable adapter, native host and runtime. |
 
 For Perl, use the [native build configuration and toolchain selection](../publish/cpan.md#build-an-ordinary-lean-project). The Nix `perl-build-engine` supplies the pinned compiler environment. The Wasm runtime checks below apply to npm only.
 

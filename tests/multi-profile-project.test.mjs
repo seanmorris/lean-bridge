@@ -61,7 +61,7 @@ test("multi-profile API agreement rejects different sources, meaning, contracts 
 });
 
 test("mixed builds reject unknown targets and duplicate aliases before invoking a compiler", async () => {
-	for(const targets of [["cpan", "perl"], ["npm", "cpan", "pypi"], ["cpan", "pypi"], ["npm", "npm", "cpan"]])
+	for(const targets of [["cpan", "perl"], ["npm", "cpan", "cargo"], ["cpan", "cargo"], ["npm", "npm", "cpan"]])
 		await assert.rejects(() => buildCanonicalProject({ projectRoot: "/missing/project", targets }), { code: "invalid-package-targets" });
 });
 
@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -195,6 +195,15 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		const flags = (await processBuildRunner.capture({ command: "pkg-config", args: ["--cflags", "--libs", "shop-wit"], env })).stdout.trim().split(/\s+/);
 		await processBuildRunner.capture({ command: "cc", args: ["consumer.c", ...flags, "-o", "consumer"], cwd: install, env });
 		assert.equal((await processBuildRunner.capture({ command: join(install, "consumer"), args: [], env })).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("pypi"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "pypi"), install = join(consumer, "python");
+		const env = { PATH: "/usr/bin:/bin" }, interpreter = join(install, "bin/python");
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_PYTHON ?? "python3", args: ["-I", "-m", "venv", install], env });
+		await processBuildRunner.capture({ command: interpreter, args: ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", join(builds[0].output, pkg.archives[0].path)], env });
+		await saveLakeFile(consumer, "consumer.py", "from lean_shop import quote\nprint(quote(20))\n");
+		assert.equal((await processBuildRunner.capture({ command: interpreter, args: ["-I", join(consumer, "consumer.py")], env })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

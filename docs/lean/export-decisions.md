@@ -79,6 +79,8 @@ Ordinary [Java/Kotlin Maven builds](../publish/maven.md#build-an-ordinary-lean-p
 
 Ordinary [RubyGems builds](../publish/rubygems.md#build-an-ordinary-lean-project) support those copied types through Ruby `Integer`, `Float`, `String`, `Array` and generated record classes. The generated `UNIT` singleton represents Unit in every position; `nil` is rejected. Fixed-width integers are range checked, Nat/Int remain exact, and consumers need no native declarations or extension build.
 
+Ordinary [Python/PyPI builds](../publish/pypi.md#build-an-ordinary-lean-project) expose `None`, `bool`, exact `int`, `float`, `str`, `bytes`, arrays and frozen record classes. Arrays accept lists or tuples and return tuples. Generated private conversions validate values, clear native results and share the bundled runtime automatically. Consumers install a prepared wheel without Lean, native declarations or an extension build. This path admits pure copied values; resources and callbacks remain in the separate Alpha fixture.
+
 Ordinary [WIT/WASI builds](../publish/wit-wasi.md#build-an-ordinary-lean-project) support the same copied types through Component Model functions and a packaged Wasmtime/native Lean host. Unit uses a single-case enum. Nat uses least-significant-first `u32` limbs; Int adds a sign flag. Empty records also use a single-case enum. Every selected function receives an executable adapter; the separate Alpha resource/callback fixture keeps its narrower WIT path.
 
 ## Native Perl exports

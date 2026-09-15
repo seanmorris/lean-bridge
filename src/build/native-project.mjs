@@ -18,6 +18,7 @@ import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../back
 import { compileCopiedJvmModel, validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { compileCopiedRubyModel, validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { compileCopiedWitModel, validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
+import { compileCopiedPythonModel, validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
@@ -33,8 +34,8 @@ import { compileCopiedWitModel, validateOrdinaryWasiSettings } from "../backends
  */
 export async function buildNativeProject({ projectRoot, outputRoot, environment = process.env, targets = ["cpan"], signal, onProgress, lakeSnapshot })
 {
-	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi"].includes(target)))
-		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, and cpan targets");
+	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi"].includes(target)))
+		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, and cpan targets");
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
 	for(const target of targets)
@@ -44,6 +45,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 		else if(target === "maven") validateOrdinaryMavenSettings(config.targets?.[target]);
 		else if(target === "rubygems") validateOrdinaryRubySettings(config.targets?.[target]);
 		else if(target === "wit-wasi") validateOrdinaryWasiSettings(config.targets?.[target]);
+		else if(target === "pypi") validateOrdinaryPythonSettings(config.targets?.[target]);
 		else if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
 	}
 	const cTargets = targets.filter(target => target !== "cpan");
@@ -74,6 +76,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
 				if(targets.includes("rubygems")) compileCopiedRubyModel(model.bindingIr);
 				if(targets.includes("wit-wasi")) compileCopiedWitModel(model.bindingIr, config.targets?.["wit-wasi"]);
+				if(targets.includes("pypi")) compileCopiedPythonModel(model.bindingIr);
 			} : undefined
 			, signal });
 		const projections = cTargets.length ? await projectNativeCFamily({
