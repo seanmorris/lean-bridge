@@ -11,6 +11,7 @@ import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { createNativeModel } from "../build/native-model.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -93,6 +94,8 @@ export const stageCpanPackage = async ({ outputRoot
 		if(!/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("invalid native component library path");
 		if(receipt.runtimeIdentity !== nativeRuntimeIdentity) throw new Error("component and runtime identities differ");
 		if(sha256(await readFile(join(componentRoot, receipt.library))) !== receipt.nativeLibrary.sha256) throw new Error("corrupt native component");
+		for(const [path, bytes] of (await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity)).files)
+			await save(join(directory, "notices", path), bytes);
 		moduleName = model.moduleName; xs = "Component.xs"; include = ".";
 		const files = generatePerlBindingPackage(model, { ...receipt, runtimeIdentity }), relative = moduleName.replaceAll("::", "/");
 		for(const [path, bytes] of Object.entries(files)) await save(join(directory, path), path.endsWith(".pm") ? bytes.replace("our $VERSION = '0.001';", `our $VERSION = '${version}';`) : bytes);
@@ -124,7 +127,7 @@ export const stageCpanPackage = async ({ outputRoot
 	}
 	await copy(join(templates, "Build.pm"), join(directory, "LeanBridgeBuild.pm"));
 	await copy(join(templates, "Platform.pm"), join(directory, "inc/LeanBridge/Runtime/Platform.pm"));
-	await copy(join(root, "LICENSE"), join(directory, "LICENSE"));
+	await copy(join(root, "LICENSE"), join(directory, componentRoot ? "notices/LeanBridge-LICENSE" : "LICENSE"));
 	for(const name of ["lean.txt", "lean-bundled.txt"]) await copy(join(root, "notices/runtime", name), join(directory, "notices", name));
 	await save(join(directory, "Makefile.PL"), "use strict;\nuse warnings;\nuse lib '.';\nuse LeanBridgeBuild;\nLeanBridgeBuild::configure();\n");
 	await save(join(directory, "t/00-load.t"), `use strict;\nuse warnings;\nuse Test::More tests => 1;\nuse_ok('${moduleName}');\n`);
@@ -133,8 +136,8 @@ export const stageCpanPackage = async ({ outputRoot
 		, name: distribution
 		, version
 		, abstract: "Generated native Lean bindings"
-		, author: ["Lean Bridge contributors"]
-		, license: ["mit"]
+		, author: [componentRoot ? "Author not declared" : "Lean Bridge contributors"]
+		, license: [componentRoot ? "unknown" : "mit"]
 		, dynamic_config: true
 		, release_status: version.includes("_") ? "testing" : "stable"
 		, generated_by: "lean-bridge cpan-package-v1"
@@ -142,7 +145,7 @@ export const stageCpanPackage = async ({ outputRoot
 			, runtime: { requires: { perl: "5.036", "Math::BigInt": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(componentRoot ? { "LeanBridge::Runtime": perlRuntimeVersion } : {}) } }
 			, test: { requires: { "Test::More": "0" } } }
 		, provides: { [moduleName]: { file: `lib/${moduleName.replaceAll("::", "/")}.pm`, version } }
-		, resources: { repository: { type: "git", url: "https://github.com/seanmorris/lean-bridge.git" } }
+		, ...(componentRoot ? {} : { resources: { repository: { type: "git", url: "https://github.com/seanmorris/lean-bridge.git" } } })
 		, no_index: { directory: ["inc", "prebuilt", "notices", "t"], file: ["LeanBridgeBuild.pm"], package: ["LeanBridge::Runtime::Platform"] } }));
 	const manifest = { schemaVersion: 1
 		, ecosystem: "cpan"

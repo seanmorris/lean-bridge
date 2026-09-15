@@ -58,6 +58,10 @@ export const lakeWorkspaceFixture = async (t, variant = "shop") => {
 	const url = `https://example.invalid/locked/${names.remote}.git`;
 	for(const path of [root, local, cached])
 		await saveLakeFile(path, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
+	await saveLakeFile(root, "LICENSE", `Source notice fixture: ${names.root}\n`);
+	await saveLakeFile(root, "legal/NOTICE.txt", `Nested source notice fixture: ${names.root}\n`);
+	await saveLakeFile(local, "COPYRIGHT", `Source notice fixture: ${names.local}\n`);
+	await saveLakeFile(cached, "LICENSES/Apache-2.0.txt", `Source notice fixture: ${names.remote}\n`);
 	await saveLakeFile(cached, "lakefile.toml", `name = "${names.remote}"\nversion = "1.0.0"\n[[lean_lib]]\nname = "${names.remote}"\nsrcDir = "lib"\n`);
 	await saveLakeFile(cached, `lib/${names.remote}.lean`, `def ${names.remote}.convert (value : UInt32) : UInt32 := value * ${variant === "shop" ? 2 : 3}\n`);
 	await saveLakeFile(cached, "lake-manifest.json", JSON.stringify({ version: "1.2.0", packages: [] }));

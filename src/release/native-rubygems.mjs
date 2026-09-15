@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -48,6 +49,7 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");
 	await copy(join(leanPrefix, "LICENSE"), "lean-bridge/licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "lean-bridge/licenses/Lean-LICENSES");
+	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`lean-bridge/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "lean-bridge/licenses/LeanBridge-LICENSE");
 	await save("lean-bridge/platform.json", canonicalJson({ profile: "native-library-v1", ruby: "3.3", platform: "x86_64-linux", glibcMinimumVersion }));
 	const inventory = {};
@@ -59,7 +61,7 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
   spec.name = ${rubyLiteral(name)}
   spec.version = ${rubyLiteral(version)}
   spec.summary = "Compiled Lean API with generated Ruby copied-value conversions"
-  spec.authors = ["Lean Bridge"]
+  spec.authors = ["Author not declared"]
   spec.license = "Nonstandard"
   spec.date = "1970-01-01"
   spec.platform = Gem::Platform.new("x86_64-linux")

@@ -22,6 +22,27 @@ Ordinary source builds and package projections are different stages. The Alpha r
 
 Repeat `--target` to build from one captured source tree. Lean compiles once per required ABI: native for CPAN/C/C++/NuGet/Maven/RubyGems/WIT/PyPI/Cargo/native PHP, JavaScript-Wasm for npm, and separately for PHP-Wasm. Every selected target must admit the API and succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports).
 
+## Retain library and dependency licenses
+
+Keep your library's license and redistribution notices in its source tree, and retain those supplied by its Lake dependencies. Lean Bridge captures files named `LICENSE`, `LICENCE`, `LICENSES`, `NOTICE`, `NOTICES`, `COPYING` or `COPYRIGHT`, including case variations, suffixed filenames and nested paths. It also captures files inside `LICENSES/` directories. Lean source and other code files do not become notices merely because they are named `Notice.lean` or `License.js`.
+
+Native and PHP-Wasm compilation writes `source-notices.json` with each package's name, source identity, original notice paths and payload hashes. Package assembly checks this inventory against the compilation receipt and includes the exact notice bytes. A package with no captured notices has an empty list. Lean Bridge does not assign its own MIT license to that library.
+
+| Package | Source-notice inventory location |
+| --- | --- |
+| CPAN component | `notices/source-notices.json` |
+| C, C++, WIT/WASI | `share/lean-bridge/licenses/source-notices.json` |
+| Cargo, NuGet, RubyGems | `lean-bridge/licenses/source-notices.json` |
+| Maven | `META-INF/lean-bridge/licenses/source-notices.json` |
+| Python wheel | `<distribution>.dist-info/licenses/source-notices.json` |
+| Native PHP, PHP-Wasm npm component and Composer API | `licenses/source-notices.json` |
+
+Each inventory points to `source-notices/<sha256>.txt` beside it. The payload retains the original file bytes; the inventory retains its original filename. Identical notice bytes share a payload. Lean and Lean Bridge licenses remain separately named files. Shared runtime packages do not receive the consuming library's notices.
+
+Ordinary JavaScript npm packages retain root notice filenames, nested root notices under `notices/source/`, and dependency notices under `notices/lake/`. Their `sbom.json` records the root notices, and `package.json` takes its license declaration from the source project's `package.json`.
+
+Native and PHP-Wasm metadata does not yet project a library-wide license expression, author or repository declaration. CPAN uses `unknown` for the component license; Cargo leaves its license field unset. Required author fields use `Author not declared`. Complete that publisher-metadata review before a registry release. Capturing notice files does not determine which license terms apply to a combined package.
+
 ## Build and approve the same artifacts
 
 Check the library's proofs and application API, build into a new output directory, and install the generated package in a separate application. Preserve the source revision, package name and version, exact archive hashes, runtime dependencies, and consumer results.

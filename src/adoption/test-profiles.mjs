@@ -19,6 +19,7 @@ const profileManifest = Object.freeze({
 		, "cli-npm-package"
 		, "cli-verification"
 		, "package-set-receipt"
+		, "source-notices"
 		, "compiler-analysis"
 		, "unlocked-component"
 		, "component-consumer-docs"

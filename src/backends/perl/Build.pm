@@ -142,9 +142,10 @@ sub configure {
   # Corrupt or ABI-incompatible binaries fail here. They never trigger fallback.
   system($^X, '-Ilib', '-M' . $manifest->{module}, '-e', '1') == 0
     or die "Installed XS compatibility check failed\n";
+  my $metadata = read_json('META.json');
   WriteMakefile(NAME => $manifest->{module}, VERSION => $manifest->{version},
-    ABSTRACT => 'Generated native Lean bindings', AUTHOR => 'Lean Bridge contributors',
-    LICENSE => 'mit', MIN_PERL_VERSION => '5.036',
+    ABSTRACT => $metadata->{abstract}, AUTHOR => join(', ', @{$metadata->{author}}),
+    LICENSE => $metadata->{license}[0], MIN_PERL_VERSION => '5.036',
     PREREQ_PM => { 'Math::BigInt' => 0, 'JSON::PP' => 0, 'Digest::SHA' => 0,
       ($manifest->{module} eq 'LeanBridge::Runtime' ? () : ('LeanBridge::Runtime' => $manifest->{runtimeVersion})) },
     PM => \%pm, XS => {}, C => [], OBJECT => '', NO_META => 1,

@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "../build/native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
@@ -54,6 +55,7 @@ export const packageOrdinaryWasi = async options => {
 	await copy(join(runtimeRoot, "runtime.json"), "share/lean-bridge/runtime.json");
 	await copy(join(leanPrefix, "LICENSE"), "share/lean-bridge/licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "share/lean-bridge/licenses/Lean-LICENSES");
+	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`share/lean-bridge/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "share/lean-bridge/licenses/LeanBridge-LICENSE");
 	await save(`lib/pkgconfig/${name}-wit.pc`, `prefix=\${pcfiledir}/../..
 includedir=\${prefix}/include

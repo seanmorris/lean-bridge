@@ -10,6 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readLakeDependencySnapshot, writeLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
 import { readLakeGeneratedSources } from "../build/lake-generated-workspace.mjs";
+import { isSourceNotice } from "./source-notices.mjs";
 
 /**
  * Reports component release bundle failures with stable machine-readable codes and structured diagnostic context.
@@ -225,7 +226,7 @@ export const buildComponentReleaseBundle = async ({
 		const packageInput = componentPlan.document.source.inputs.find(item => item.path === "package.json");
 		const metadata = packageInput ? JSON.parse(await readFile(join(staging, "source/package.json"), "utf8")) : {};
 		const license = typeof metadata.license === "string" && metadata.license.trim() ? metadata.license : "UNLICENSED";
-		const notices = componentPlan.document.source.inputs.filter(item => /^(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(item.path));
+		const notices = componentPlan.document.source.inputs.filter(item => isSourceNotice(item.path));
 		await write(staging, "metadata/sbom.json", canonicalJson({
 			schemaVersion: 1
 			, kind: "lean-bridge-component-sbom"

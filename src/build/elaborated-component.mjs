@@ -19,6 +19,7 @@ import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
+import { captureSourceNotices } from "../release/source-notices.mjs";
 
 const engineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 export const pinnedCompiledLean = "f3b06c705e6c85f5314019d5d3baab0fec5b580c";
@@ -214,10 +215,15 @@ export const buildElaboratedComponent = async ({ projectRoot
 			}
 		};
 		const metadata = await extractMetadata();
+		const notices = await captureSourceNotices({ projectRoot: project
+			, projectName: analysis.project.name, inputs: analysis.inputs
+			, sourceTreeSha256: analysis.sourceTreeSha256, snapshot: lakeSnapshot
+			, snapshotRoot: lakeWorkspace?.snapshotRoot });
 		const sourceIdentity = { leanVersion
 			, leanCommit: pinnedCompiledLean
 			, leanCompilerSha256
 			, sourceTreeSha256: analysis.sourceTreeSha256
+			, sourceNoticesSha256: notices.sha256
 			, exportConfigurationSha256: record.sha256
 			, extractorSha256
 			, request
@@ -254,6 +260,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		await save(join(staging, "metadata.json"), json(metadata)); await save(join(staging, "model.json"), json(model));
 		await save(join(staging, "binding-ir.json"), json(model.bindingIr)); await save(join(staging, receiptName), json(receipt));
 		await save(join(staging, "generated.lean"), adapters.leanSource);
+		for(const [path, bytes] of notices.files) await save(join(staging, path), bytes);
 		for(const path of ["source", "olean", "c", "native-objects", "request.json"]) await rm(join(staging, path), { recursive: true, force: true });
 		const files = {};
 		for(const path of await nativeArtifactPaths(staging)) files[path] = await fileIdentity(join(staging, path));

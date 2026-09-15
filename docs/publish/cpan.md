@@ -2,6 +2,8 @@
 
 Prepare a `LeanBridge::Runtime` distribution and one generated distribution per Lean component. Each component declares the runtime dependency and checks its exact native identity when loaded.
 
+Component archives retain [source-library and dependency notices](../publishing.md#retain-library-and-dependency-licenses) separately from Lean Bridge's MIT license. Until author metadata is configured, their `META.json` uses license `unknown`, author `Author not declared`, and no repository URL. CPAN defines `unknown` as a missing metadata declaration. Review these fields before uploading; they do not identify the library as MIT. [CPAN metadata specification](https://perldoc.perl.org/CPAN::Meta::Spec#license).
+
 ## Build an ordinary Lean project
 
 Use the native Perl row in [author setup](../lean/setup.md): Node 22, Lean 4.32.2, a C compiler, and the selected Perl interpreters. This path does not use the npm Wasm runtime. Add the shared `lean-bridge.exports.json` at the Lean project root:

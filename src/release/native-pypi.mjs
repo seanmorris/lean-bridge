@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryPythonEvidence } from "../build/native-python-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -46,6 +47,7 @@ export const packageOrdinaryPython = async options => {
 	const tag = `py3-none-manylinux_${glibcMinimumVersion.replace(".", "_")}_x86_64`;
 	await copy(join(leanPrefix, "LICENSE"), `${distInfo}/licenses/Lean-LICENSE`);
 	await copy(join(leanPrefix, "LICENSES"), `${distInfo}/licenses/Lean-LICENSES`);
+	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`${distInfo}/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), `${distInfo}/licenses/LeanBridge-LICENSE`);
 	await save(`${distInfo}/METADATA`, `Metadata-Version: 2.1\nName: ${name}\nVersion: ${version}\nSummary: Compiled Lean API with generated Python copied-value conversions\nLicense: See bundled license notices\nRequires-Python: >=3.11\nDescription-Content-Type: text/markdown\n\n${files["README.md"]}`);
 	await save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\nGenerator: lean-bridge-python-copied/1\nRoot-Is-Purelib: false\nTag: ${tag}\n`);

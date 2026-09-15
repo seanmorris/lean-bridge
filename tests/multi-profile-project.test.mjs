@@ -18,6 +18,7 @@ import { installCpanArchive } from "../src/release/cpan-install.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
+import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_MULTI_PROFILE_TEST === "1";
 const engineRoot = process.cwd(), json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -181,6 +182,12 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	assert.deepEqual(await lakeInputState(moved), movedBefore);
 	await rename(context.workspace, join(context.directory, "source-hidden"));
 	await rename(moved, join(context.directory, "relocated-hidden"));
+	await assertPackagedSourceNotices(t, builds[0].output, [
+		`Source notice fixture: ${context.names.root}\n`
+		, `Nested source notice fixture: ${context.names.root}\n`
+		, `Source notice fixture: ${context.names.local}\n`
+		, `Source notice fixture: ${context.names.remote}\n`
+	]);
 	await assertRelocatedPackageSet(t, builds[0].output);
 	await assertRelocatedPackageSet(t, join(builds[0].output, "profiles/native"));
 	await assertRelocatedPackageSet(t, join(builds[0].output, "packages/npm"));

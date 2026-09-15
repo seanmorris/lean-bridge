@@ -11,6 +11,7 @@ import { ordinaryRustEvidence } from "../build/native-rust-artifacts.mjs";
 import { generateCopiedRustPackage, copiedRustLock } from "../backends/rust/copied-values.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 
 /**
  * Archive checked Rust sources, compiled libraries and their provenance.
@@ -53,6 +54,7 @@ export const packageOrdinaryCargo = async ({ working, rustRoot, nativeRoot, runt
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");
 	await copy(join(leanPrefix, "LICENSE"), "lean-bridge/licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "lean-bridge/licenses/Lean-LICENSES");
+	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`lean-bridge/licenses/${path}`, bytes);
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }

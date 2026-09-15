@@ -28,6 +28,7 @@ const fields = name => name === "Willow" ? phpWasmOrdinaryScalars : [...phpWasmO
  * @param name - Component discriminator and public namespace suffix.
  */
 export const createPhpWasmOrdinaryProject = async (root, name) => {
+	await saveLakeFile(root, "LICENSE", `Source notice fixture: ${name}\n`);
 	await saveLakeFile(root, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
 	await saveLakeFile(root, "lakefile.toml", `name = "${name.toLowerCase()}"\n[[lean_lib]]\nname = "SharedApi"\n`);
 	await saveLakeFile(root, "SharedApi.lean", `namespace SharedApi

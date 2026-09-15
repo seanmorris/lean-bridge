@@ -24,6 +24,7 @@ import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { buildPhpWasmCompilerInputs, readVerifiedPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
+import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -118,6 +119,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const before = await lakeInputState(project);
 		const result = await build(project, buildRoot), outputRoot = result.root;
 		assert.equal(result.receipt.phpHeadersSha256, compilerInputs.phpHeadersSha256);
+		await assertPackagedSourceNotices(t, buildRoot, [`Source notice fixture: ${name}\n`]);
 		assert.equal(result.model.pointerBits, 32); assert.equal(result.model.exports.length, 44);
 		assert.deepEqual(await lakeInputState(project), before);
 		await readVerifiedPhpWasmCopiedComponent(outputRoot, runtime.identity);

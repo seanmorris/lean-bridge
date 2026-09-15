@@ -528,9 +528,18 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
     await installCpanArchive({ archive: runtimeArchive.path, workingRoot: working, prefix, perl, mode: "prebuilt-only", environment: prebuiltEnv });
     await stageCpanPackage({ outputRoot: componentPackage, runtimeRoot, componentRoot: nativeRoot, leanPrefix, version: "0.002", glibcMinimumVersion: floor });
     const metadata = JSON.parse(await readFile(join(componentPackage, "META.json"), "utf8"));
+    assert.deepEqual(metadata.license, ["unknown"]);
+    assert.deepEqual(metadata.author, ["Author not declared"]);
+    assert.equal(metadata.resources, undefined);
     assert.equal(metadata.prereqs.runtime.requires["LeanBridge::Runtime"], "0.001", "component releases do not advance the shared runtime version");
     await compileCpanXsVariant({ packageRoot: componentPackage, perl, environment: env });
     const archive = await archiveCpanPackage({ packageRoot: componentPackage, outputRoot: join(working, "archives") });
+    const metadataCheck = join(working, "metadata-check");
+    await cp(componentPackage, metadataCheck, { recursive: true });
+    await run(perl, ["Makefile.PL", `INSTALL_BASE=${prefix}`], metadataCheck, { ...env, LEAN_BRIDGE_PERL_INSTALL_MODE: "prebuilt-only" });
+    const configuredMetadata = JSON.parse(await readFile(join(metadataCheck, "MYMETA.json"), "utf8"));
+    assert.deepEqual(configuredMetadata.license, ["unknown"]);
+    assert.deepEqual(configuredMetadata.author, ["Author not declared"]);
     await installCpanArchive({ archive: archive.path, workingRoot: working, prefix, perl, mode: "prebuilt-only", environment: prebuiltEnv });
     const otherProject = join(working, "other-source");
     await cp(join(root, "tests/fixtures/perl/other"), otherProject, { recursive: true });

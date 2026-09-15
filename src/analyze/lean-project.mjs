@@ -12,6 +12,7 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentSignatureProblem } from "../abi/component-scalars.mjs";
 import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations, selectSourceModules } from "./export-configuration.mjs";
+import { isSourceNotice } from "../release/source-notices.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -530,7 +531,7 @@ export const inspectLeanProject = async (projectRoot, { signal = undefined } = {
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
     || relevantProjectFiles.has(basename(path))
-    || /^(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(basename(path))
+    || isSourceNotice(relative(root, path).replaceAll("\\", "/"))
 	);
 	const inputs = [];
 	for(const absolute of relevant)

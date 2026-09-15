@@ -22,6 +22,7 @@ import { assertComponentSignature, componentScalarAbi } from "../abi/component-s
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
+import { isSourceNotice } from "./source-notices.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -165,15 +166,20 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	}
 	const componentPackageJson = JSON.parse(generated["package.json"]);
 	const sbom = JSON.parse(await readFile(join(bundle.root, "metadata/sbom.json"), "utf8"));
-	for(const notice of sbom.notices) await copy(join(bundle.root, notice.path), join(componentPackage, basename(notice.path)));
+	for(const notice of sbom.notices)
+	{
+		const path = notice.path.slice("source/".length);
+		if(!notice.path.startsWith("source/") || !isSourceNotice(path)) throw new Error("Invalid source notice path in component SBOM");
+		await copy(join(bundle.root, notice.path), join(componentPackage, path.includes("/") ? `notices/source/${path}` : path));
+	}
 	const dependencyNotices = bundle.manifest.files.filter(file => file.role === "source" && file.path.startsWith("lake/packages/")
-		&& /^(?:LICENSE|NOTICE|COPYING)(?:\..+)?$/i.test(basename(file.path)));
+		&& isSourceNotice(file.path));
 	for(const notice of dependencyNotices)
 		await copy(join(bundle.root, notice.path), join(componentPackage, "notices/lake", notice.path.slice("lake/packages/".length)));
 	const componentExports = componentPackageJson.exports?.["."] ?? {};
 	await writeFile(join(componentPackage, "package.json"), json({
 		...componentPackageJson
-		, ...(dependencyNotices.length ? { files: [...new Set([...componentPackageJson.files, "notices"])] } : {})
+		, files: [...new Set([...componentPackageJson.files, "notices", ...sbom.notices.filter(item => !item.path.slice("source/".length).includes("/")).map(item => basename(item.path))])]
 		, name: packageIdentity.name
 		, version: packageIdentity.version
 		, license: sbom.license

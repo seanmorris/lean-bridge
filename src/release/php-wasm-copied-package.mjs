@@ -13,6 +13,7 @@ import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
+import { readVerifiedSourceNotices } from "./source-notices.mjs";
 
 const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
@@ -27,7 +28,7 @@ const settings = (value, label) => {
 	if(!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).some(key => !["name", "version"].includes(key))) throw new TypeError(`Unknown ${label} package setting`);
 };
 
-const sources = async ({ model, receipt, runtime, npmSettings, composerSettings, notices }) => {
+const sources = async ({ model, receipt, runtime, npmSettings, composerSettings, notices, sourceNotices }) => {
 	settings(npmSettings, "npm"); settings(composerSettings, "Composer");
 	const localVersion = model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version;
 	const npm = componentNpmIdentity({ name: `php-wasm-${model.component.name}`, version: localVersion }, npmSettings);
@@ -89,6 +90,7 @@ This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256 })
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
+			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}
 	};
 };
@@ -116,7 +118,8 @@ export const readVerifiedPhpWasmCopiedPackageSet = async root => {
 	const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(join(root, "component/package/compiled"), runtime.identity);
 	const noticePaths = ["Lean-LICENSE", "Lean-LICENSES", "LeanBridge-LICENSE", ...(await nativeArtifactPaths(fileURLToPath(new URL("../../notices/runtime/", import.meta.url)))).map(path => `runtime/${path}`)];
 	const notices = Object.fromEntries(await Promise.all(noticePaths.map(async path => [path, await readFile(join(root, "runtime/package/licenses", path))])));
-	const generated = await sources({ model, receipt, runtime, npmSettings: report.npmSettings, composerSettings: report.composerSettings, notices });
+	const { files: sourceNotices } = await readVerifiedSourceNotices(join(root, "component/package/compiled"), receipt.sourceIdentity);
+	const generated = await sources({ model, receipt, runtime, npmSettings: report.npmSettings, composerSettings: report.composerSettings, notices, sourceNotices });
 	if(!same(report.component, model.component) || report.componentIdentity !== generated.definition.identity || report.runtimeIdentity !== runtime.identity || report.loaderIdentity !== generated.loaderIdentity) throw new Error("PHP-Wasm package identities differ from compiled artifacts");
 	for(const [path, bytes] of Object.entries(generated.files))
 		if(!Buffer.from(bytes).equals(await readFile(join(root, path)))) throw new Error(`Generated PHP-Wasm package drift: ${path}`);
@@ -156,7 +159,8 @@ export const buildPhpWasmCopiedPackages = async ({ componentRoot, runtimeRoot, o
 	const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);
 	const notices = { "Lean-LICENSE": await readFile(join(leanPrefix, "LICENSE")), "Lean-LICENSES": await readFile(join(leanPrefix, "LICENSES")), "LeanBridge-LICENSE": await readFile(new URL("../../LICENSE", import.meta.url)) };
 	for(const path of await nativeArtifactPaths(fileURLToPath(new URL("../../notices/runtime/", import.meta.url)))) notices[`runtime/${path}`] = await readFile(new URL(`../../notices/runtime/${path}`, import.meta.url));
-	const generated = await sources({ model, receipt, runtime, npmSettings, composerSettings, notices });
+	const { files: sourceNotices } = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
+	const generated = await sources({ model, receipt, runtime, npmSettings, composerSettings, notices, sourceNotices });
 	const output = resolve(outputRoot);
 	if(await lstat(output).then(() => true, error => { if(error.code === "ENOENT") return false; throw error; })) throw new Error("PHP-Wasm package output already exists");
 	await mkdir(dirname(output), { recursive: true });
