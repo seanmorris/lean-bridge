@@ -49,6 +49,6 @@ The fresh-runtime acceptance run passed all three tests in 163.4 seconds. Both s
 
 ## Remaining integration
 
-This stage exposes internal package-building and verification functions. Public CLI selection, shared source configuration for the npm/Composer coordinates, and atomic native/npm/PHP-Wasm orchestration remain in VO1216. Lazy loading remains unimplemented for the ordinary copied profile. Resources, callbacks, other non-copied signatures and Lake native C inputs remain rejected by its compiler.
+This stage exposed internal package-building and verification functions. Subsequent milestones added [public CLI selection, configured npm/Composer coordinates and multi-profile builds](php-wasm-cli-20260915.md), then [first-call loading](php-wasm-lazy-20260915.md). Resources, callbacks, other non-copied signatures and Lake native C inputs remain rejected by the ordinary copied compiler.
 
 The existing Alpha release and native PHP packages retain their separate paths. This record does not change their support contract or the installed type-coverage inventory. No registry publication is part of this acceptance.

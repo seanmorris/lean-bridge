@@ -10,7 +10,7 @@ import { buildPhpWasmCopiedPackages } from "../src/release/php-wasm-copied-packa
 
 const runtime = { identity: "1".repeat(64), loaderIdentity: "2".repeat(64), library: `liblean_bridge_php_wasm_copied_${"3".repeat(20)}.so`, url: new URL("file:///installed/runtime/runtime.so") };
 const component = { id: "willow@1.0.0", identity: "4".repeat(64), runtimeIdentity: runtime.identity, namespace: "LeanWillow", library: `php8.4-lb_willow_${"5".repeat(16)}.so`, composer: "example/willow" };
-const base = { library: new URL("file:///installed/willow/api.so"), api: new URL("file:///installed/willow/Api.php"), native: new URL("file:///installed/willow/Native.php") };
+const base = { library: new URL("file:///installed/willow/api.so"), api: new URL("file:///installed/willow/Api.php"), native: new URL("file:///installed/willow/Native.php"), registration: new URL("file:///installed/willow/lazy-library.txt") };
 const host = () => ({ phpVersion: "8.4", phpVariant: "", phpArgs: {} });
 
 test("installed descriptors deduplicate runtime, extension and PHP files per host", () => {
@@ -47,7 +47,7 @@ test("descriptor registration rejects incompatible identities before accepting a
 	assert.throws(() => descriptor({ ...runtime, identity: "0".repeat(64) }, component, base), /another PHP-Wasm runtime/);
 });
 
-test("startup descriptors reject unsupported versions, variants, lazy use and late registration", async () => {
+test("descriptors reject unsupported versions, variants, misplaced modes and late registration", async () => {
 	const a = descriptor(runtime, component, base);
 	for(const php of [null, {}, { ...host(), phpVersion: "8.3" }, { ...host(), phpVariant: "zts" }])
 		assert.throws(() => a.getLibs(php), error => error.code === "unsupported-php-wasm-host");
@@ -56,7 +56,47 @@ test("startup descriptors reject unsupported versions, variants, lazy use and la
 		assert.throws(() => a.getLibs({ ...host(), phpArgs: { dynamicLibs: [entry] } }), error => error.code === "unsupported-php-wasm-loading");
 	for(const change of [{ library: "../../escape.so" }, { composer: "../escape" }, { namespace: "LeanFoo\\Bar" }])
 		assert.throws(() => descriptor(runtime, { ...component, ...change }, base), /Invalid generated/);
-	await assert.rejects(buildPhpWasmCopiedPackages({ loading: "lazy" }), /requires startup loading/);
+	await assert.rejects(buildPhpWasmCopiedPackages({ loading: "lazy" }), /installed package's lazy descriptor/);
 	await assert.rejects(buildPhpWasmCopiedPackages({ npmSettings: { ignored: true } }), /Unknown npm/);
 	await assert.rejects(buildPhpWasmCopiedPackages({ composerSettings: { ignored: true } }), /Unknown Composer/);
+});
+
+test("lazy descriptors register URLs and opt-in files without startup extensions", () => {
+	const a = descriptor(runtime, component, base), php = host();
+	const environment = Object.freeze({ APP_SETTING: "kept" });
+	php.phpArgs = { dynamicLibs: [a.lazy, a.lazy], ENV: environment };
+	const libraries = a.lazy.getLibs(php);
+	assert.equal(libraries.length, 2);
+	assert.ok(libraries.every(library => library.ini === false));
+	assert.equal(php.phpArgs.ENV.APP_SETTING, "kept");
+	assert.deepEqual(environment, { APP_SETTING: "kept" });
+	const files = a.lazy.getFiles(php);
+	assert.equal(files.length, 3);
+	assert.equal(files[0].path, `/__lean_bridge/php_wasm_lazy/${component.library}.txt`);
+	assert.equal(files[0].url.href, base.registration.href);
+	assert.deepEqual(a.lazy.getLibs(php), []); assert.deepEqual(a.lazy.getFiles(php), []);
+	assert.equal(a.lazy.autoload, a.autoload);
+	assert.deepEqual(Object.keys(a.lazy.extensions), ["getLibs", "getFiles"]);
+	assert.ok(a.lazy.extensions.getLibs(host()).every(library => library.ini === false));
+	const composerHost = host();
+	assert.equal(a.lazy.extensions.getFiles(composerHost).length, 1);
+	assert.deepEqual(a.lazy.extensions.getFiles(composerHost), []);
+	assert.equal(a.lazy.getFiles(composerHost).length, 2);
+	assert.throws(() => a.getLibs(php), error => error.code === "php-wasm-loading-conflict");
+	assert.throws(() => a.lazy.getLibs({ ...host(), phpArgs: { sharedLibs: [a.lazy] } }), error => error.code === "unsupported-php-wasm-loading");
+	assert.throws(() => a.lazy.getLibs({ ...host(), phpArgs: { sharedLibs: [a.lazy.extensions] } }), error => error.code === "unsupported-php-wasm-loading");
+	assert.throws(() => a.lazy.getLibs({ ...host(), binary: Promise.resolve({}) }), error => error.code === "php-wasm-host-already-started");
+});
+
+test("different components can mix loading modes while sharing one runtime", () => {
+	const a = descriptor(runtime, component, base);
+	const b = descriptor(runtime, { ...component, id: "aspen@1.0.0", namespace: "LeanAspen", composer: "example/aspen", library: `php8.4-lb_aspen_${"6".repeat(16)}.so` }, base);
+	for(const [first, second] of [[a, b.lazy], [b.lazy, a]])
+	{
+		const php = host(), libraries = [...first.getLibs(php), ...second.getLibs(php)];
+		assert.equal(libraries.length, 3);
+		assert.equal(libraries.filter(library => library.ini).length, 1);
+		assert.equal(libraries.filter(library => library.name === runtime.library).length, 1);
+		assert.equal(php.phpArgs.ENV, undefined);
+	}
 });

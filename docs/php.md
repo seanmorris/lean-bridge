@@ -1,17 +1,17 @@
 # PHP
 
-Install the package for the PHP runtime that executes your application. Ordinary native packages load their bundled Lean runtime automatically. Ordinary PHP-Wasm packages register it with the host before startup. Consumers do not build Lean.
+Install the package for the PHP runtime that executes your application. Ordinary native packages load their bundled Lean runtime automatically. Ordinary PHP-Wasm packages can load at startup or on the first API call. Consumers do not build Lean.
 
 ## Use a prepared release
 
 | Application | Installation | Tested runtime |
 | --- | --- | --- |
 | Ordinary native PHP CLI package | [Composer archive](#ordinary-project-packages) | PHP 8.2+ NTS CLI, Linux x86-64, FFI enabled, glibc 2.38 or newer |
-| Ordinary PHP-Wasm package | [npm and optional Composer archive](#ordinary-php-wasm-packages) | Node 22 or Chromium, PHP 8.4, `php-wasm` 0.1.0, startup loading |
+| Ordinary PHP-Wasm package | [npm and optional Composer archive](#ordinary-php-wasm-packages) | Node 22 or Chromium, PHP 8.4, `php-wasm` 0.1.0, startup or first-call loading |
 | Native PHP CLI or deployment | [Native PHP](#native-php) | PHP 8.2 NTS, x86-64 Linux, glibc 2.38 or newer |
 | PHP hosted by Node | [PHP-Wasm](#php-wasm) | Node 22, PHP 8.4, `php-wasm` 0.1.0 |
 
-The Alpha native package includes an extension, Lean runtime, and Composer library. Its PHP-Wasm profile uses an npm archive containing side modules and loader metadata, tested in Node. Ordinary PHP-Wasm packages also run in Chromium with the same startup descriptor.
+The Alpha native package includes an extension, Lean runtime, and Composer library. Its PHP-Wasm profile uses an npm archive containing side modules and loader metadata, tested in Node. Ordinary PHP-Wasm packages also run in Chromium with the same startup and lazy descriptors.
 
 ### Ordinary project packages
 
@@ -105,9 +105,24 @@ assert.equal(status, 0);
 
 Run `node main.mjs`. Expected output is `4294967295`. Register every component in `sharedLibs` before accessing `php.binary` or running PHP. Compatible packages share one runtime; duplicate registration does not reload an extension. Different runtime identities fail before startup.
 
+#### Load on the first call
+
+The same package exports a `lazy` descriptor. In `main.mjs`, replace the component import and host construction with:
+
+```js
+import { lazy as api } from '@example/willow-php-wasm';
+const php = new PhpNode({ version: '8.4', dynamicLibs: [api] });
+```
+
+Keep the rest of the file unchanged. Loading the PHP declarations does not fetch Lean libraries. The first valid API call fetches the shared runtime and that component's extension. Calling another component fetches only its extension. Unused components stay unloaded; invalid inputs fail before loading.
+
+Register the default descriptor in `sharedLibs` for startup loading, or `lazy` in `dynamicLibs` for first-call loading. Different components can choose different modes. Do not register the same component in both modes. npm handles the same runtime dependency in either case.
+
+The pinned PHP host supports asynchronous library downloads through `dl()`. Keep `enable_dl=1`, its default, and await each `php.run()` before starting another. A failed extension load raises the package's `LeanBridgeError`; create a new PHP instance before trying again. The loader does not retry a partially linked library.
+
 #### Run in a browser
 
-Use the same installed component with `PhpWeb`. For a new Vite application, install the tested Vite version and copy the pinned PHP host into its public directory:
+Use the same installed component with `PhpWeb`. This example selects first-call loading. For a new Vite application, install the tested Vite version and copy the pinned PHP host into its public directory:
 
 ```sh
 npm install --save-dev --save-exact vite@8.2.1
@@ -144,12 +159,12 @@ Serve `public/php-host/` at `/php-host/`, even when the application lives under 
  * @file
  */
 import { PhpWeb } from '/php-host/PhpWeb.mjs';
-import api from '@example/willow-php-wasm';
+import { lazy as api } from '@example/willow-php-wasm';
 
 const output = globalThis.document.querySelector('#result');
 try
 {
-	const php = new PhpWeb({ version: '8.4', autoTransaction: false, sharedLibs: [api] });
+	const php = new PhpWeb({ version: '8.4', autoTransaction: false, dynamicLibs: [api] });
 	let stderr = '';
 	php.addEventListener('output', event => {
 		for(const part of event.detail) output.textContent += part;
@@ -191,7 +206,7 @@ export default {
 
 Run `npx vite build`, then `npx vite preview` and open the printed localhost address. The page displays `4294967295`. Vite bundles the Lean descriptor and copies its libraries and PHP files to asset URLs. The external import leaves the PHP host unchanged. `autoTransaction: false` disables automatic filesystem persistence for this stateless example.
 
-The [Chromium acceptance](evidence/php-wasm-browser-20260915.md) runs these exact files, plus two installed components together, with external requests blocked. Ordinary packages currently load at startup. Lazy loading, other browser engines and browser workers need separate acceptance.
+The [first-call acceptance](evidence/php-wasm-lazy-20260915.md) runs these exact files, plus two installed components together, with external requests blocked. It checks both loading modes and browser responsiveness during delayed library downloads. Other browser engines and browser workers need separate acceptance.
 
 #### Copied type conversions
 
@@ -215,7 +230,7 @@ Invalid types raise `TypeError`; out-of-range values and conversion limits raise
 
 Install the matching Composer ZIP using the [artifact-repository setup](#ordinary-project-packages), with its own coordinate, `example/willow-php-wasm:2.0.0-RC.1`. When Composer runs on a native host, set `config.platform.php` to `8.4.1` for this Wasm application. Use the npm descriptor's `extensions` export in `sharedLibs`, mount your installed `vendor/` directory into the PHP virtual filesystem, then require that mounted `vendor/autoload.php`. The default descriptor already supplies the PHP files and needs no Composer install; do not preload a second copy.
 
-The [installed tests](evidence/php-wasm-cli-20260915.md) execute both arrangements and Vite-bundled assets in Node. The [browser check](evidence/php-wasm-browser-20260915.md) executes the default descriptor with bundled PHP sources in Chromium.
+For first-call loading, import `lazy` and pass `lazy.extensions` in `dynamicLibs` instead. The [installed tests](evidence/php-wasm-lazy-20260915.md) execute both loading modes with embedded PHP files, Composer autoloading and Vite-bundled assets in Node. Chromium executes bundled PHP sources in both modes.
 
 ## Native PHP
 

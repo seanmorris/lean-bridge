@@ -27,30 +27,56 @@ export const exerciseBrowserPhpWasmPackages = async options => {
 	await buildVite({ root: guide, configFile: join(guide, "vite.config.mjs"), publicDir: false, logLevel: "silent", build: { outDir: join(consumer, "bundled/guide") } });
 	await saveLakeFile(consumer, "bundled/browser.mjs", `import { PhpWeb } from '/php-host/PhpWeb.mjs';
 import { api0, api1 } from './consumer.mjs';
-const php = new PhpWeb({version: '8.4', autoTransaction: false, ini: 'memory_limit=512M', sharedLibs: [{name: 'probe.so', url: new URL('/probe.so', location.href), ini: true}, api0, api1, api0]});
+const loading = new URL(location.href).searchParams.get('loading') ?? 'startup';
+const failure = new URL(location.href).searchParams.get('failure');
+const apis = [api0, api1, api0];
+const php = new PhpWeb({version: '8.4', autoTransaction: false, ini: 'memory_limit=512M' + (failure === 'disabled' ? '\\nenable_dl=0' : ''), sharedLibs: loading === 'startup' ? apis : [], dynamicLibs: [{name: 'probe.so', url: new URL('/probe.so', location.href), ini: false}, ...(loading === 'lazy' ? apis.map(api => api.lazy) : [])]});
 let stdout = '', stderr = '';
 php.addEventListener('output', event => { for (const value of event.detail) stdout += value; });
 php.addEventListener('error', event => { for (const value of event.detail) stderr += value; });
 const run = async code => { const status = await php.run(code); if (status !== 0 || stderr) throw new Error(JSON.stringify({status, stdout, stderr})); };
+window.ticks = 0;
+const timer = setInterval(() => window.ticks++, 10);
+const stage = async name => { window.stage = name; await new Promise(resolve => { window.advance = resolve; }); };
 try {
-  for (const api of [api0, api1, api0]) await run("<?php require_once '" + api.autoload + "';");
-  ${["Willow", "Aspen"].map(name => `await run(${JSON.stringify(phpWasmOrdinaryConsumer(name).replace(`require_once '/${name}/src/Api.php';`, ""))});`).join("\n  ")}
+  for (const api of apis) await run("<?php require_once '" + api.autoload + "';");
+  window.failureProbe = async namespace => {
+    stdout = ''; stderr = '';
+    await run("<?php try { " + namespace + "\\\\answer(); throw new Exception('Expected loading error'); } catch (" + namespace + "\\\\LeanBridgeError $error) { echo $error->getMessage(); }");
+    return stdout;
+  };
+  await stage('ready');
+  await run("<?php try { LeanWillow\\\\echo_u32(1); throw new Exception('Expected TypeError'); } catch (TypeError $error) {}");
+  await stage('invalid');
+  const ticksBefore = window.ticks;
+  await run(${JSON.stringify(phpWasmOrdinaryConsumer("Willow").replace("require_once '/Willow/src/Api.php';", ""))});
+  window.loadTicks = window.ticks - ticksBefore;
+  await stage('willow');
+  await run(${JSON.stringify(phpWasmOrdinaryConsumer("Aspen").replace("require_once '/Aspen/src/Api.php';", ""))});
+  await stage('aspen');
   if (stdout !== 'Willow:okAspen:ok') throw new Error('Copied value checks: ' + stdout);
   stdout = '';
   for (let i = 0; i < 20; i++) await run("<?php echo LeanWillow\\\\answer(), ':', LeanAspen\\\\answer(), ';';");
   if (stdout !== '17:29;'.repeat(20)) throw new Error('Repeated calls: ' + stdout);
   stdout = '';
-  await run("<?php echo json_encode(lean_bridge_test_snapshot());");
+  await run("<?php if (!dl('probe.so')) throw new Exception('Probe failed'); echo json_encode(lean_bridge_test_snapshot());");
   window.result = {exports: 88, repeatedRequests: 20, counters: JSON.parse(stdout)};
 } catch(error) { window.result = {error: error.stack}; }
+finally { clearInterval(timer); }
 `);
 	const roots = [["/nested/app/", await realpath(join(consumer, "bundled"))], ["/php-host/", await realpath(phpHost)]];
 	const requests = [], errors = [];
+	let delayLibraries = false, corruptRuntime = false;
 	const server = createServer(async (request, response) => {
 		try
 		{
 			const path = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
 			requests.push(path);
+			if(corruptRuntime && (path.includes("liblean_bridge_php_wasm_copied_") || /php8\.4-lb_.*\.so\.so$/.test(path)))
+			{
+				response.writeHead(200, { "Content-Type": "application/octet-stream", "Cache-Control": "no-store" });
+				response.end("deliberately corrupt test library"); return;
+			}
 			if(path === "/nested/app/")
 			{
 				response.writeHead(200, { "Content-Type": "text/html" });
@@ -68,6 +94,8 @@ try {
 				if(!file.startsWith(root + sep) || !(await stat(file)).isFile()) throw new Error("Invalid asset path");
 			}
 			const bytes = await readFile(file);
+			if(delayLibraries && path.endsWith(".so") && path !== "/probe.so")
+				await new Promise(accept => setTimeout(accept, 100));
 			const type = { ".html": "text/html", ".mjs": "text/javascript", ".js": "text/javascript", ".wasm": "application/wasm" }[extname(file)] ?? "application/octet-stream";
 			response.writeHead(200, { "Content-Type": type, "Content-Length": bytes.length, "Cache-Control": "no-store" });
 			response.end(bytes);
@@ -88,15 +116,57 @@ try {
 		await page.route("**/*", route => new URL(route.request().url()).origin === origin ? route.continue() : (errors.push(`External request: ${route.request().url()}`), route.abort()));
 		page.on("pageerror", error => errors.push(error.message));
 		page.on("requestfailed", request => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
-		await page.goto(`${origin}/nested/app/`);
-		await page.waitForFunction(() => globalThis.result !== undefined, undefined, { timeout: 120000 });
-		const result = await page.evaluate(() => globalThis.result);
-		assert.deepEqual(result, { exports: 88, repeatedRequests: 20, counters: [1, 2, 1, 2, 2, 0] });
-		assert.deepEqual(errors, []);
-		const libraries = requests.filter(path => path.endsWith(".so") && path !== "/probe.so");
-		assert.equal(libraries.length, 3); assert.equal(new Set(libraries).size, 3);
-		assert.equal(libraries.filter(path => path.includes("liblean_bridge_php_wasm_copied_")).length, 1);
-		t.diagnostic(`Chromium ${browser.version()}: 88 exports, 20 requests, one runtime and two extensions fetched once under /nested/app/`);
+		const stage = async expected => {
+			await page.waitForFunction(name => globalThis.stage === name || globalThis.result !== undefined, expected, { timeout: 120000 });
+			assert.equal(await page.evaluate(() => globalThis.result?.error), undefined);
+			assert.equal(await page.evaluate(() => globalThis.stage), expected);
+		};
+		for(const loading of ["startup", "lazy"])
+		{
+			const start = requests.length;
+			const libraries = () => requests.slice(start).filter(path => path.endsWith(".so") && path !== "/probe.so");
+			await page.goto(`${origin}/nested/app/?loading=${loading}`);
+			await stage("ready");
+			assert.equal(libraries().length, loading === "lazy" ? 0 : 3, "Import and autoload must not fetch lazy libraries");
+			await page.evaluate(() => globalThis.advance()); await stage("invalid");
+			assert.equal(libraries().length, loading === "lazy" ? 0 : 3, "Invalid input must not fetch lazy libraries");
+			delayLibraries = loading === "lazy";
+			await page.evaluate(() => globalThis.advance()); await stage("willow");
+			assert.equal(libraries().length, loading === "lazy" ? 2 : 3);
+			if(loading === "lazy") assert.ok(await page.evaluate(() => globalThis.loadTicks > 0), "Browser timers must run while a cold library fetch is pending");
+			delayLibraries = false;
+			await page.evaluate(() => globalThis.advance()); await stage("aspen");
+			assert.equal(libraries().length, 3);
+			await page.evaluate(() => globalThis.advance());
+			await page.waitForFunction(() => globalThis.result !== undefined, undefined, { timeout: 120000 });
+			const result = await page.evaluate(() => globalThis.result);
+			assert.deepEqual(result, { exports: 88, repeatedRequests: 20, counters: [1, 2, 1, 2, 2, 0] });
+			assert.deepEqual(errors, []);
+			assert.equal(libraries().length, 3); assert.equal(new Set(libraries()).size, 3);
+			assert.equal(libraries().filter(path => path.includes("liblean_bridge_php_wasm_copied_")).length, 1);
+			t.diagnostic(`Chromium ${browser.version()} ${loading}: 88 exports, 20 requests, one runtime and two extensions fetched once under /nested/app/`);
+		}
+		for(const failure of ["disabled", "corrupt-runtime"])
+		{
+			const start = requests.length;
+			corruptRuntime = failure === "corrupt-runtime";
+			await page.goto(`${origin}/nested/app/?loading=lazy&failure=${failure}`);
+			await stage("ready");
+			const libraries = () => requests.slice(start).filter(path => path.endsWith(".so"));
+			assert.equal(libraries().length, 0);
+			const first = await page.evaluate(() => globalThis.failureProbe("LeanWillow"));
+			assert.match(first, failure === "disabled" ? /enable_dl=1/ : /create a new PHP instance/);
+			const afterFirst = libraries().length;
+			const second = await page.evaluate(() => globalThis.failureProbe("LeanAspen"));
+			const repeated = await page.evaluate(() => globalThis.failureProbe("LeanWillow"));
+			assert.equal(second, first); assert.equal(repeated, first);
+			assert.equal(libraries().length, afterFirst);
+			if(failure === "disabled") assert.equal(afterFirst, 0);
+			else assert.ok(afterFirst > 0);
+			assert.deepEqual(errors, []);
+			t.diagnostic(`Chromium ${failure}: explicit failure without another lazy load`);
+		}
+		corruptRuntime = false;
 		const guideRequestsStart = requests.length;
 		await page.goto(`${origin}/nested/app/guide/index.html`);
 		await page.waitForFunction(() => globalThis.document.querySelector("#result")?.dataset.state !== undefined, undefined, { timeout: 120000 });
@@ -108,7 +178,12 @@ try {
 		t.diagnostic("published browser PHP-Wasm HTML, Vite config and consumer file: exact UInt32 upper bound");
 	} finally
 	{
-		await browser?.close(); server.closeAllConnections();
-		await new Promise(accept => server.close(accept));
+		try
+		{ await browser?.close(); }
+		finally
+		{
+			server.closeAllConnections();
+			await new Promise(accept => server.close(accept));
+		}
 	}
 };

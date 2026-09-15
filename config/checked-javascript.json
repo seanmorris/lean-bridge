@@ -2,7 +2,8 @@
 	"schemaVersion": 1,
 	"checked": [
 		"src/adoption/test-profiles.mjs",
-		"src/adoption/toolchain-preflight.mjs"
+		"src/adoption/toolchain-preflight.mjs",
+		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
 		{ "path": "src/backends/php/copied-assets.mjs", "classification": "strict-migration-backlog" },

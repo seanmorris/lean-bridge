@@ -14,7 +14,7 @@ import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 
-const profile = "php-wasm-copied-startup-v1";
+const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
 const receiptPath = "php-wasm-package-set.json";
 const json = canonicalJson;
@@ -35,7 +35,7 @@ const sources = async ({ model, receipt, runtime, npmSettings, composerSettings,
 	const composer = { name: composerSettings.name ?? `lean-bridge/${model.component.name.replaceAll("_", "-")}-php-wasm`, version: composerSettings.version ?? localVersion };
 	validateOrdinaryPhpSettings(composer);
 	const host = await readFile(new URL("../backends/php/php-wasm-copied-host.mjs", import.meta.url));
-	const loaderIdentity = sha256(json({ profile, runtimeIdentity: runtime.identity, host: identity(host), packaging: identity(await readFile(new URL(import.meta.url))), archive: identity(await readFile(new URL("./deterministic-archive.mjs", import.meta.url))), notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) }));
+	const loaderIdentity = sha256(json({ profile, runtimeIdentity: runtime.identity, host: identity(host), phpLoader: identity(await readFile(new URL("../backends/php/php-wasm-copied-loader.mjs", import.meta.url))), packaging: identity(await readFile(new URL(import.meta.url))), archive: identity(await readFile(new URL("./deterministic-archive.mjs", import.meta.url))), notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) }));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
 	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
@@ -48,12 +48,13 @@ const descriptor = createDescriptor(${JSON.stringify(definition)}, {
   library: new URL(${JSON.stringify(`./compiled/${receipt.library}`)}, import.meta.url),
   api: new URL('./compiled/src/Api.php', import.meta.url),
   native: new URL('./compiled/src/Internal/Native.php', import.meta.url),
+  registration: new URL('./lazy-library.txt', import.meta.url),
 });
-export const { getLibs, getFiles, extensions, autoload } = descriptor;
+export const { getLibs, getFiles, extensions, autoload, lazy } = descriptor;
 export default descriptor;
 `;
 	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
-	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
+	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
 	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, require: { php: ">=8.4 <8.5" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
 	const readme = `# ${model.component.name} for PHP-Wasm
 
@@ -71,7 +72,9 @@ Call the generated functions in the \`${namespace}\` PHP namespace. The \`compil
 
 For a Composer application, install the companion \`${composer.name}:${composer.version}\` ZIP, mount your application's \`vendor\` directory into PHP-Wasm, and use the named \`extensions\` export in \`sharedLibs\` instead of the default descriptor. Require your normal \`vendor/autoload.php\`. This export registers the native libraries without preloading a second copy of the PHP files.
 
-This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant. Register descriptors before constructing the host; \`dynamicLibs\` and lazy extension loading are not supported by this profile. No compiler, FFI extension or install script is required. The handoff receipt verifies package bytes; the descriptor checks compatibility identities, not downloaded byte integrity.
+For first-call loading, import \`{ lazy as api }\` from this package and pass \`dynamicLibs: [api]\` instead. With Composer, use \`api.extensions\` in \`dynamicLibs\`. The host loads PHP declarations at startup but fetches the Lean runtime and this component only on its first valid API call. An unused component stays unloaded. Different components may choose different modes; registering the same component in both modes is rejected.
+
+This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node or Chromium. Register descriptors before constructing the host. Lazy loading requires \`enable_dl=1\`; await each host request before starting another. After an extension-loading failure, create a new PHP instance. No compiler, FFI extension or install script is required. The handoff receipt verifies package bytes; the descriptor checks compatibility identities, not downloaded byte integrity.
 `;
 	return {
 		npm, composer, definition, loaderIdentity, runtimeVersion
@@ -82,6 +85,7 @@ This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant. Regist
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
 			, "component/package/README.md": readme
+			, "component/package/lazy-library.txt": definition.library
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256 })
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
@@ -134,7 +138,7 @@ export const readVerifiedPhpWasmCopiedPackageSet = async root => {
 };
 
 /**
- * Assemble an atomic startup package set without invoking consumer compilers.
+ * Assemble one atomic package set with startup and first-call descriptors.
  *
  * @param options - Verified component/runtime roots, Lean notices and exact coordinates.
  * @param options.componentRoot - Freshly compiled copied component directory.
@@ -143,10 +147,10 @@ export const readVerifiedPhpWasmCopiedPackageSet = async root => {
  * @param options.leanPrefix - Pinned Lean installation supplying license notices.
  * @param options.npmSettings - Exact npm component name and version.
  * @param options.composerSettings - Exact companion Composer name and version.
- * @param options.loading - Currently only startup loading is admitted.
+ * @param options.loading - The default descriptor is startup; consumers select lazy.
  */
 export const buildPhpWasmCopiedPackages = async ({ componentRoot, runtimeRoot, outputRoot, leanPrefix, npmSettings = {}, composerSettings = {}, loading = "startup" }) => {
-	if(loading !== "startup") throw new TypeError("Ordinary PHP-Wasm packaging currently requires startup loading");
+	if(loading !== "startup") throw new TypeError("Select lazy loading with the installed package's lazy descriptor, not a build option");
 	settings(npmSettings, "npm"); settings(composerSettings, "Composer");
 	const runtime = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);

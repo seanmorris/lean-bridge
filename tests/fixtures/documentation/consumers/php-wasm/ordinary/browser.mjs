@@ -4,12 +4,12 @@
  * @file
  */
 import { PhpWeb } from '/php-host/PhpWeb.mjs';
-import api from '@example/willow-php-wasm';
+import { lazy as api } from '@example/willow-php-wasm';
 
 const output = globalThis.document.querySelector('#result');
 try
 {
-	const php = new PhpWeb({ version: '8.4', autoTransaction: false, sharedLibs: [api] });
+	const php = new PhpWeb({ version: '8.4', autoTransaction: false, dynamicLibs: [api] });
 	let stderr = '';
 	php.addEventListener('output', event => {
 		for(const part of event.detail) output.textContent += part;

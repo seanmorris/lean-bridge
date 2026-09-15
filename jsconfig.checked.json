@@ -15,6 +15,7 @@
 	},
 	"include": [
 		"src/adoption/test-profiles.mjs",
-		"src/adoption/toolchain-preflight.mjs"
+		"src/adoption/toolchain-preflight.mjs",
+		"src/backends/php/php-wasm-copied-loader.mjs"
 	]
 }

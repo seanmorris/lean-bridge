@@ -11,6 +11,7 @@ import { copiedPhpPublicSource } from "./copied-values.mjs";
 import { copiedPhpChecks } from "./copied-conversions.mjs";
 import { copiedZendSupport } from "./copied-zend-support.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
+import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 
 const phpWire = model => model.surface.copies.map(copy => {
 	const name = copy.ref.name, ns = `\\${model.namespace}\\`;
@@ -32,9 +33,10 @@ const phpWire = model => model.surface.copies.map(copy => {
     private static function from${copy.index}(mixed $value): mixed { return ${output}; }`;
 }).join("\n");
 
-const nativePhp = (model, transport) => `<?php
+const nativePhp = (model, transport, library) => `<?php
 declare(strict_types=1);
-namespace ${model.namespace}\\Internal;
+${library ? copiedPhpWasmLoader : ""}
+namespace ${model.namespace}\\Internal {
 
 final class Budget
 {
@@ -54,13 +56,17 @@ final class Native
 {
 ${phpWire(model)}
 ${model.surface.functions.map((fn, index) => `    public static function call${index}(${fn.parameters.map((_, i) => `mixed $arg${i}`).join(", ")}): mixed {
-        if (!function_exists('${transport}\\\\call${index}')) throw new \\${model.namespace}\\LeanBridgeError('The generated Zend transport is not loaded');
         $budget = new Budget();
 ${fn.declaration.parameters.map((site, i) => { const c = model.surface.copy(site.type); return `        $input${i} = self::to${c.index}(Checks::check${c.index}($arg${i}, $budget));`; }).join("\n")}
+        if (!function_exists('${transport}\\\\call${index}')) {
+            ${library ? `try { \\LeanBridge\\CopiedPhpWasmV1\\Loader::load('${library}', '${transport}\\\\call${index}'); }
+            catch (\\Throwable $error) { throw new \\${model.namespace}\\LeanBridgeError($error->getMessage(), 0, $error); }` : `throw new \\${model.namespace}\\LeanBridgeError('The generated Zend transport is not loaded');`}
+        }
         try { $output = \\${transport}\\call${index}(${fn.parameters.map((_, i) => `$input${i}`).join(", ")}); }
         catch (\\Exception $error) { throw new \\${model.namespace}\\LeanBridgeError($error->getMessage(), $error->getCode(), $error); }
         return self::from${model.surface.copy(fn.declaration.result.type).index}($output);
     }`).join("\n")}
+}
 }
 `;
 
@@ -135,7 +141,7 @@ export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);
 	const files = { "src/Api.php": copiedPhpPublicSource(model)
-		, "src/Internal/Native.php": nativePhp(model, transport)
+		, "src/Internal/Native.php": nativePhp(model, transport, integerBits === 32 ? `php8.4-${stem}.so` : null)
 		, [model.surface.paths.publicHeader]: c[model.surface.paths.publicHeader]
 		, [`extension/${stem}.c`]: `#include <php.h>
 #include <limits.h>

@@ -46,4 +46,4 @@ Unit tests reject source, compiler, extractor, pointer-width and API drift, dupl
 
 ## Remaining work
 
-At this milestone, ordinary loading was startup-only and Vite assets had executed in Node-hosted PHP, not a browser engine. The subsequent [Chromium acceptance](php-wasm-browser-20260915.md) executes those installed packages and the browser guide in a real browser. Lazy loading, generic CLI receipt verification and prepared compiler-input distribution remain open. No registry publication occurred. Installed type-inventory coverage remains 656 cells; neither milestone promotes the separate Alpha or reviewed-IR mappings.
+At this milestone, ordinary loading was startup-only and Vite assets had executed in Node-hosted PHP, not a browser engine. Subsequent [Chromium acceptance](php-wasm-browser-20260915.md) and [first-call acceptance](php-wasm-lazy-20260915.md) execute startup and lazy loading in a real browser. Generic CLI receipt verification and prepared compiler-input distribution remain open. No registry publication occurred. Installed type-inventory coverage remains 656 cells; these milestones do not promote the separate Alpha or reviewed-IR mappings.

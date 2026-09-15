@@ -13,6 +13,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { phpWasmOrdinaryConsumer } from "./php-wasm-ordinary.mjs";
 import { exerciseBrowserPhpWasmPackages } from "./php-wasm-browser.mjs";
+import { exercisePhpWasmLoadingFailures } from "./php-wasm-loading-failures.mjs";
 
 /**
  * Install both package ecosystems and exercise a compiler-free PHP-Wasm host.
@@ -53,6 +54,7 @@ export const exerciseInstalledPhpWasmPackages = async options => {
 	await saveLakeFile(moved, "browser-entry.mjs", releases.map(({ report }, i) => `export { default as api${i} } from ${JSON.stringify(report.npmSettings.name)};`).join("\n"));
 	await buildVite({ root: moved, configFile: false, logLevel: "silent", base: "./", build: { outDir: "bundled", assetsInlineLimit: 0, modulePreload: false, rollupOptions: { input: join(moved, "browser-entry.mjs"), preserveEntrySignatures: "strict", output: { entryFileNames: "consumer.mjs" } } } });
 	for(const mode of ["embedded", "composer", "bundled"])
+	for(const loading of ["startup", "lazy", ...(mode === "embedded" ? ["mixed"] : [])])
 	{
 		await saveLakeFile(moved, `${mode}.mjs`, `import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
@@ -60,13 +62,17 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PhpNode } from ${JSON.stringify(pathToFileURL(join(phpHost, "PhpNode.mjs")).href)};
 ${mode === "bundled" ? "import { api0, api1 } from './bundled/consumer.mjs';" : imports}
-const mode = ${JSON.stringify(mode)};
+const mode = ${JSON.stringify(mode)}, loading = ${JSON.stringify(loading)};
 const apis = [api0, api1, api0];
-const php = new PhpNode({version: '8.4', sharedLibs: [${JSON.stringify({ name: "probe.so", url: pathToFileURL(probe).href, ini: true })}, ...apis.map(api => mode === 'composer' ? api.extensions : api)], ini: 'memory_limit=512M'});
+const selected = apis.map(api => ({api: loading === 'lazy' || loading === 'mixed' && api === api1 ? api.lazy : api, lazy: loading === 'lazy' || loading === 'mixed' && api === api1}));
+const libraries = [];
+const php = new PhpNode({version: '8.4', sharedLibs: selected.filter(item => !item.lazy).map(({api}) => mode === 'composer' ? api.extensions : api), dynamicLibs: [${JSON.stringify({ name: "probe.so", url: pathToFileURL(probe).href, ini: false })}, ...selected.filter(item => item.lazy).map(({api}) => mode === 'composer' ? api.extensions : api)], ini: 'memory_limit=512M', locateFile: name => { if (name.endsWith('.so') && name !== 'libxml2.so' && name !== 'probe.so') libraries.push(name); }});
 let stdout = '', stderr = '';
 php.addEventListener('output', e => { for (const part of e.detail) stdout += part; });
 php.addEventListener('error', e => { for (const part of e.detail) stderr += part; });
 await php.binary;
+const initialLibraries = loading === 'lazy' ? 0 : loading === 'mixed' ? 2 : 3;
+assert.equal(libraries.length, initialLibraries);
 if (mode === 'composer') {
   const mount = async (source, target) => {
     await php.mkdir(target);
@@ -80,20 +86,26 @@ if (mode === 'composer') {
 } else {
   for (const api of apis) assert.equal(await php.run("<?php require_once '" + api.autoload + "';"), 0);
 }
-${["Willow", "Aspen"].map(name => `assert.equal(await php.run(${JSON.stringify(phpWasmOrdinaryConsumer(name).replace(`require_once '/${name}/src/Api.php';`, ""))}), 0, 'Installed ${name} failed');`).join("\n")}
+assert.equal(libraries.length, initialLibraries, 'PHP autoload must not fetch a lazy Lean library');
+assert.equal(await php.run("<?php try { LeanWillow\\\\echo_u32(1); throw new Exception('Expected TypeError'); } catch (TypeError $error) {}"), 0);
+assert.equal(libraries.length, initialLibraries, 'Invalid input must not load a lazy extension');
+${["Willow", "Aspen"].map((name, i) => `assert.equal(await php.run(${JSON.stringify(phpWasmOrdinaryConsumer(name).replace(`require_once '/${name}/src/Api.php';`, ""))}), 0, JSON.stringify({component: '${name}', mode, loading, stdout, stderr}));
+assert.equal(libraries.length, ${i === 0 ? "loading === 'startup' ? 3 : 2" : "3"});`).join("\n")}
 assert.equal(stderr, ''); assert.equal(stdout, 'Willow:okAspen:ok');
 stdout = '';
 for (let i = 0; i < 20; i++) assert.equal(await php.run("<?php echo LeanWillow\\\\answer(), ':', LeanAspen\\\\answer(), ';';"), 0);
 assert.equal(stderr, ''); assert.equal(stdout, '17:29;'.repeat(20));
 stdout = '';
-assert.equal(await php.run("<?php echo json_encode(lean_bridge_test_snapshot());"), 0);
+assert.equal(libraries.length, 3); assert.equal(new Set(libraries).size, 3);
+assert.equal(await php.run("<?php if (!dl('probe.so')) throw new Exception('Probe failed'); echo json_encode(lean_bridge_test_snapshot());"), 0);
 assert.equal(stderr, ''); assert.equal(stdout, '[1,2,1,2,2,0]');
-console.log(JSON.stringify({mode, exports: 88, runtimeInitializations: 1, components: 2, repeatedRequests: 20}));
+console.log(JSON.stringify({mode, loading, exports: 88, runtimeInitializations: 1, components: 2, repeatedRequests: 20}));
 `);
 		const result = await run(process.execPath, [`${mode}.mjs`], moved, { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" });
-		assert.deepEqual(JSON.parse(result.stdout.trim()), { mode, exports: 88, runtimeInitializations: 1, components: 2, repeatedRequests: 20 });
-		t.diagnostic(`installed PHP-Wasm ${mode}: 88 exports, one runtime, two components`);
+		assert.deepEqual(JSON.parse(result.stdout.trim()), { mode, loading, exports: 88, runtimeInitializations: 1, components: 2, repeatedRequests: 20 });
+		t.diagnostic(`installed PHP-Wasm ${mode}/${loading}: 88 exports, one runtime, two components`);
 	}
+	await exercisePhpWasmLoadingFailures({ consumer: moved, phpHost, imports, t });
 	await cp("tests/fixtures/documentation/consumers/php-wasm/ordinary/main.mjs", join(moved, "guide.mjs"));
 	const guide = await run(process.execPath, ["guide.mjs"], moved, { ...process.env, PATH: join(working, "no-compilers") });
 	assert.equal(guide.stdout, "4294967295"); assert.equal(guide.stderr, "");

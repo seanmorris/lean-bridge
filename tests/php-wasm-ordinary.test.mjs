@@ -207,7 +207,7 @@ console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 
 	// install hook. The reader reconstructs the sources and deterministic archives.
 	const packageVictim = releases[0];
 	await assert.rejects(buildPhpWasmCopiedPackages({ componentRoot: components[0].root, runtimeRoot: relocatedRuntime, leanPrefix, outputRoot: join(components[0].root, "nested-package-output") }), /inside its compiled inputs/);
-	for(const path of ["component/package/index.mjs", "composer/src/Api.php", `archives/${packageVictim.report.archives[0].archive}`])
+	for(const path of ["component/package/index.mjs", "component/package/lazy-library.txt", "runtime/package/host.mjs", "composer/src/Api.php", `archives/${packageVictim.report.archives[0].archive}`])
 	{
 		const absolute = join(packageVictim.output, path), original = await readFile(absolute);
 		const changed = Buffer.concat([original, Buffer.from("\n// substituted\n")]);

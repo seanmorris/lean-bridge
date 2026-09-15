@@ -75,9 +75,9 @@ The build checks fresh Lean metadata and wasm32 C layouts, compiles a PHP extens
 | `packages/php-wasm/archives/` | npm runtime and component `.tgz` files, plus the Composer `.zip` |
 | `packages/php-wasm/php-wasm-package-set.json` | Exact package files and archive hashes |
 
-The npm component declares its exact shared-runtime dependency. Its default descriptor registers the extension and bundled PHP sources before startup. Composer applications use the companion ZIP and the component's `extensions` export. Follow the [installed consumer example](../php.md#ordinary-php-wasm-packages).
+The npm component declares its exact shared-runtime dependency. Its default descriptor registers the extension and bundled PHP sources before startup. Its named `lazy` descriptor defers the extension and Lean runtime until the first valid API call. Consumers choose the loading mode from the same archive; no second build or author setting is needed. Composer applications use the companion ZIP with `extensions` or `lazy.extensions`. Follow the [installed consumer example](../php.md#ordinary-php-wasm-packages).
 
-Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Loading is startup-only, tested in Node 22 and Chromium with `php-wasm` 0.1.0. The same npm descriptor works in both hosts. The [browser example](../php.md#run-in-a-browser) bundles Lean assets with Vite and serves the PHP host unchanged. Lazy loading remains separate work.
+Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Startup and first-call loading execute in Node 22 and Chromium with `php-wasm` 0.1.0. The [browser example](../php.md#run-in-a-browser) bundles Lean assets with Vite and serves the PHP host unchanged. The [acceptance record](../evidence/php-wasm-lazy-20260915.md) covers deferred downloads, runtime sharing and loading failures.
 
 ### Combine PHP-Wasm with other targets
 
