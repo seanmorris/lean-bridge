@@ -21,6 +21,7 @@ import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { assertComponentSignature, componentScalarAbi } from "../abi/component-scalars.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { writeNpmPackageSet } from "./package-set-assembly.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -248,5 +249,6 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		writeFile(join(output, "component-package-receipt.json"), canonicalJson(report))
 		, copy(new URL("./component-package-receipt.mjs", import.meta.url), join(output, "verify-component-package-receipt.mjs"))
 	]);
+	await writeNpmPackageSet({ root: output, report, runtimeIdentity });
 	return Object.freeze({ output, runtimeArchive: runtimeArchivePath, componentArchive: componentArchivePath, report });
 };

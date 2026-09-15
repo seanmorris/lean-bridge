@@ -9,8 +9,9 @@ Obtain the prepared release for your language and platform from its publisher. A
 | Package | Files to request | Next step |
 | --- | --- | --- |
 | Signed release | Exact archive, release receipt and its `.sha256` sidecar, signer policy, signed subject path, and coordinate | Authenticate each archive before installation. |
+| Ordinary-source package set, including mixed targets | `package-set-receipt.json`, `package-set-receipt.json.sha256`, and every archive named in the receipt, preserving relative paths | Verify the package set, then use your language's package manager. |
 | Local `onboarding-small` npm release | Runtime archive, component archive, and component receipt | Verify the local receipt and install both archives in one command. |
-| Native Perl package | Runtime and component CPAN archives, native release inventory, and authenticated checksums | Follow the [Perl installation](perl.md). Its native receipt is not a universal signed transaction receipt. |
+| Earlier native Perl handoff without a package-set receipt | Runtime and component CPAN archives, native release inventory, and authenticated checksums | Follow the [Perl installation](perl.md). Its native receipt is not a universal signed transaction receipt. |
 | Local Alpha package | The language-specific archive from a trusted distributor, with its identity and tested platform | Follow that language's installation recipe. A local archive alone has no signed release identity. |
 
 Get the expected signer-policy hash from reviewed configuration or a separate trusted channel. A policy file and a hash delivered beside an untrusted archive cannot establish the signer's identity.
@@ -37,6 +38,24 @@ lean-bridge verify --help
 ```
 
 Verification needs Node 22 and the downloaded files. A runtime-free CLI archive is sufficient; do not install Lean, Git, Nix, Docker, or a shared runtime for this command. The command does not read a Lean project or its configuration, install packages, or contact a registry. Ordinary registry consumers can use their package manager without this separate archive-verification workflow.
+
+### Verify a local package set
+
+Use this receipt for ordinary-source npm, PyPI, Cargo, C, C++, NuGet, Maven, RubyGems, CPAN, native PHP, PHP-Wasm, and WIT/WASI builds, including combined releases. Keep `package-set-receipt.json` and its mandatory `package-set-receipt.json.sha256` sidecar together. Keep every named archive at its recorded relative path:
+
+```sh
+lean-bridge verify --receipt ./release/package-set-receipt.json
+```
+
+The command checks the receipt's sidecar, each archive's SHA-256 and byte count, unique package names, exact in-set dependencies, and runtime compatibility within each compiled profile. Missing files, changed bytes, symlinks, unsafe paths, conflicting names, and incompatible dependencies fail verification. It does not unpack or execute package contents.
+
+Successful output lists the component and package identities. With `--json`, it reports `verificationType: "local-package-set"` and `authenticated: false`. The receipt checks declared metadata and archive consistency. It does not authenticate a publisher, inspect package-manager metadata inside archives, or rerun Lean proofs. Obtain the receipt and archives through a trusted release channel; use the signed procedure below when the publisher supplies signed records.
+
+Only the receipt, sidecar, and named archives are needed. Compiler staging, unpacked package directories and Lean sources can remain with the author. If the archives are stored separately, pass `--artifacts /absolute/path/to/archive-root`; paths inside that directory must still match the receipt. Do not rename or flatten the archive tree.
+
+Single-target npm builds put this receipt under `release/packages/npm/`. Native and PHP-Wasm builds put it at the release root. Combined builds add a release-root receipt covering all selected profiles. The older npm receipt below remains supported without a sidecar.
+
+After verification, follow your [language guide](../consume.md#choose-your-language) to install the exact archives. Keep the generated runtime dependencies. A Maven package includes both its JAR and POM; a PHP-Wasm handoff includes its npm runtime, npm component, and Composer companion. The receipt's `requires` field records exact dependencies within the handoff, not external requirements such as PHP or the .NET runtime.
 
 ### Authenticate a signed archive
 

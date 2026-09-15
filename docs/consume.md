@@ -29,7 +29,7 @@ The [runtime and package reference](consumers.md) lists the tested platform for 
 
 ### Verify a release
 
-[Use a prepared release](consume/receive-package.md) identifies the files to request and the verification steps for each handoff. Continue with your language guide's install command, program, expected output, and cleanup steps.
+[Use a prepared release](consume/receive-package.md) identifies the files to request and the verification steps for each handoff. Ordinary-source builds include a [package-set receipt](consume/receive-package.md#verify-a-local-package-set) accepted by the Node-only CLI across all target ecosystems. Continue with your language guide's install command, program, expected output, and cleanup steps.
 
 JavaScript packages declare their runtime dependency, and their imports load it automatically. A local npm handoff includes the runtime archive alongside the component so the install can resolve both without a registry copy.
 

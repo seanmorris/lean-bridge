@@ -161,7 +161,7 @@
       "kind": "installed",
       "revision": "0413a9d241574326e663112bcbe87cdcc25c318e",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion.",
+      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -185,7 +185,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -260,7 +260,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -312,7 +312,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -367,7 +367,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -415,7 +415,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -458,7 +458,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -502,7 +502,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -549,7 +549,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -597,7 +597,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -613,7 +613,7 @@
         },
         {
           "path": "src/build/multi-profile-project.mjs",
-          "sha256": "b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"
+          "sha256": "897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"
         },
         {
           "path": "src/release/native-rubygems.mjs",
@@ -625,7 +625,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"
+          "sha256": "43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"
         }
       ],
       "artifacts": [
@@ -644,7 +644,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -692,7 +692,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -712,7 +712,7 @@
         },
         {
           "path": "src/build/multi-profile-project.mjs",
-          "sha256": "b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"
+          "sha256": "897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -724,7 +724,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"
+          "sha256": "43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"
         }
       ],
       "artifacts": [
@@ -751,7 +751,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -795,7 +795,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -815,7 +815,7 @@
         },
         {
           "path": "src/build/multi-profile-project.mjs",
-          "sha256": "b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"
+          "sha256": "897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -827,7 +827,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"
+          "sha256": "43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"
         }
       ],
       "artifacts": [
@@ -846,7 +846,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -886,7 +886,7 @@
         },
         {
           "path": "src/build/multi-profile-project.mjs",
-          "sha256": "b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"
+          "sha256": "897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -910,7 +910,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -922,7 +922,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"
+          "sha256": "43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -957,7 +957,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -985,7 +985,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -993,7 +993,7 @@
         },
         {
           "path": "src/build/multi-profile-project.mjs",
-          "sha256": "b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"
+          "sha256": "897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1025,7 +1025,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"
+          "sha256": "43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1064,13 +1064,13 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {"path":"src/analyze/semantic-model.mjs","sha256":"6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"},
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
-        {"path":"src/build/multi-profile-project.mjs","sha256":"b91e49f6546cd61f6d2f90e0c9d1314d0de9fa23a8a5c1072d6e1fd98c655991"},
+        {"path":"src/build/multi-profile-project.mjs","sha256":"897acf67d437cf826c5ff178c7bab692bc06c49b310a53ec65ecae7db723f28e"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"68a6b8cfb97f526aa1c4fbab6eef3e13c632931bf54dc455ca60376158b4d984"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"43862cd075798e3bbdd32b14c27ea4faac5a445dc1ed4becf2704fddb631946b"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -1122,7 +1122,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+          "sha256": "f3010b4ef7cb260500e1ceebbded269cc227530f2eee7ed5cdbde01aa3903d53"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1249,7 +1249,7 @@
       "kind": "inspection",
       "revision": "445502a10f0ee7478c40e1d0ee8cbd29e09e0cbc",
       "command": "Inspect the source analyzer, scalar guard, generated declarations, compiled adapters and npm package builder; node --test tests/lean-project-analyzer.test.mjs.",
-      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover.",
+      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
         {"path":"src/analyze/lean-project.mjs","sha256":"f827dbfb8072460ff74a438aaf34471b2f8395f9fcc938ef6bdadd9fa8ceca81"},
@@ -1261,7 +1261,7 @@
         {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
         {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
         {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
-        {"path":"src/release/component-npm-package.mjs","sha256":"72272216b0ba1300856bc93b2cf2e0b52cef1d1e89c1d93e1149ae32fc61d4ec"}
+        {"path":"src/release/component-npm-package.mjs","sha256":"224326d3a0b21b8122909cc082e4f417f9d3531c785f71ee3e3e121188a295b8"}
       ],
       "artifacts": []
     },

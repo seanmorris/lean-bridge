@@ -6,6 +6,8 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/release/package-set-assembly.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/package-set-receipt.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/php/copied-assets.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/php/copied-conversions.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/php/copied-model.mjs", "classification": "strict-migration-backlog" },

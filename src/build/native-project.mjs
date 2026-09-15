@@ -21,6 +21,7 @@ import { compileCopiedWitModel, validateOrdinaryWasiSettings } from "../backends
 import { compileCopiedPythonModel, validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { compileCopiedRustModel, validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
+import { writeNativePackageSet } from "../release/package-set-assembly.mjs";
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
@@ -101,6 +102,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, bindingIrSha256: built.model.bindingIrSha256
 			, configurationSha256: record.sha256 };
 		await writeFile(join(working, "native-release.json"), canonicalJson(manifest));
+		await writeNativePackageSet({ root: working, model: built.model, runtimeIdentity: built.receipt.runtimeIdentity, projections, signal });
 		signal?.throwIfAborted();
 		await rename(working, output);
 		return { schemaVersion: 1, project, output, targets, ...manifest };

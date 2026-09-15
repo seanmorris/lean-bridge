@@ -14,6 +14,7 @@ import { executeComponentEngineRequest } from "../src/build/component-engine.mjs
 import { buildPhpWasmCopiedRuntime } from "../src/build/php-wasm-copied-component.mjs";
 import { phpWasmCopiedPins as pins } from "../src/build/php-wasm-copied-artifacts.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST === "1";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -74,10 +75,13 @@ test("PHP-Wasm combines atomically with either or both native PHP and JavaScript
 		builds.push(built); t.diagnostic(`${targets.join(" + ")}: one compilation per ABI, API ${built.sourceApiSha256}`);
 	}
 	assert.deepEqual(await json(join(builds[0].output, "multi-profile-release.json")), await json(join(builds[1].output, "multi-profile-release.json")));
+	assert.deepEqual(await json(join(builds[0].output, "package-set-receipt.json")), await json(join(builds[1].output, "package-set-receipt.json")));
 	assert.deepEqual(await lakeInputState(context.workspace), before); assert.deepEqual(await lakeInputState(relocated), movedBefore);
 	await rename(context.workspace, `${context.workspace}-hidden`); await rename(relocated, `${relocated}-hidden`);
 	for(const [index, built] of builds.entries())
 	{
+		await assertRelocatedPackageSet(t, built.output);
+		await assertRelocatedPackageSet(t, join(built.output, "profiles/php-wasm"));
 		const consumer = join(context.directory, `consumer-${index}`), moved = `${consumer}-moved`;
 		await mkdir(consumer); await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
 		const npm = built.packages.find(pkg => pkg.target === "npm"), php = built.packages.find(pkg => pkg.target === "php-wasm");

@@ -287,6 +287,17 @@ npm run test:cli-package
 
 This checks deterministic archive bytes, excluded private files, executable permissions, local/global/npm-exec installation, reviewed-IR analysis from a read-only installation, and blocked source analysis when no backend is available. It requires Node and npm.
 
+Run the Node-only receipt and installed verifier checks with:
+
+```sh
+node --test --test-reporter=spec \
+  tests/package-set-receipt.test.mjs tests/cli-verification.test.mjs
+```
+
+The package-set unit fixtures use inert bytes to test schema closure, deterministic receipts, corrupted archives, sidecar checks, symlinks, runtime mismatches, dependency cycles, cross-profile name collisions and cancellation. The installed CLI test runs package-set, npm v1/v2 and signed verification with only Node on `PATH`. It needs no compiler or shared runtime.
+
+The compiled `multi-profile-project`, `php-wasm-multi-profile` and `php-wasm-ordinary` suites also copy only real receipts, sidecars and their named archives into fresh directories, then verify them with Node. Their existing installed-consumer checks execute the public APIs separately. These suites require the author and consumer toolchains described above; archive verification does not.
+
 Run the compiler-backed analysis suite with the pinned Lean toolchain:
 
 ```sh

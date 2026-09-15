@@ -63,7 +63,7 @@ Validation, PHP conversion and native copying each have a 16 MiB accounting limi
 
 ### Ordinary PHP-Wasm packages
 
-Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Authenticate the publisher's archives and `php-wasm-package-set.json` through your release channel. The package set contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
+Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Obtain the publisher's archives, `package-set-receipt.json`, and its `.json.sha256` sidecar through your trusted release channel. [Verify the package set](consume/receive-package.md#verify-a-local-package-set) before installation. It contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
 
 Install the two npm `.tgz` files from your release directory along with the host:
 

@@ -36,7 +36,7 @@ The build compiles Lean and the shared C adapter, generates and syntax-checks PH
 
 Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts pure copied primitives, arrays and acyclic records. It does not add FPM, ZTS, ordinary resources, callbacks or PHP-Wasm support. The [acceptance record](../evidence/native-php-copied-20260915.md) records the installed checks and hashes.
 
-Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Preserve the SHA-256 inventory and supply it through your authenticated handoff. This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
+Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
 
@@ -74,6 +74,7 @@ The build checks fresh Lean metadata and wasm32 C layouts, compiles a PHP extens
 | `php-wasm/runtime/` and `php-wasm/component/` | Verified compiled inputs and their evidence |
 | `packages/php-wasm/archives/` | npm runtime and component `.tgz` files, plus the Composer `.zip` |
 | `packages/php-wasm/php-wasm-package-set.json` | Exact package files and archive hashes |
+| `package-set-receipt.json` and `package-set-receipt.json.sha256` | Node-only CLI receipt covering all three archives and their exact in-set dependencies |
 
 The npm component declares its exact shared-runtime dependency. Its default descriptor registers the extension and bundled PHP sources before startup. Its named `lazy` descriptor defers the extension and Lean runtime until the first valid API call. Consumers choose the loading mode from the same archive; no second build or author setting is needed. Composer applications use the companion ZIP with `extensions` or `lazy.extensions`. Follow the [installed consumer example](../php.md#ordinary-php-wasm-packages).
 
@@ -90,13 +91,13 @@ lean-bridge build --project ./telemetry --output ./release-all \
 
 Lean compiles once for JavaScript-Wasm, once for native code, and once for PHP-Wasm. The builder compares their source API and captures one source/dependency snapshot. It exposes the release only after every requested target succeeds. Arrays and records can combine native targets with PHP-Wasm; adding npm currently requires the ordinary scalar API.
 
-`multi-profile-release.json` lists every profile, archive and receipt. Releases containing PHP-Wasm use manifest version 2. PHP-Wasm files live under `profiles/php-wasm/`; native files remain under `profiles/native/`, and JavaScript archives remain under `packages/npm/`. The three ABIs retain separate runtimes.
+`multi-profile-release.json` lists every profile, archive and receipt. Releases containing PHP-Wasm use manifest version 2. PHP-Wasm files live under `profiles/php-wasm/`; native files remain under `profiles/native/`, and JavaScript archives remain under `packages/npm/`. The three ABIs retain separate runtimes. The root `package-set-receipt.json` covers the combined archive tree; verify it with `lean-bridge verify --receipt ./release-all/package-set-receipt.json`. Give JavaScript and PHP-Wasm distinct npm names, and native PHP and PHP-Wasm distinct Composer names. A collision stops the build before exposing the release.
 
 ### Distribute the ordinary packages
 
 Choose package names you control before building. Publish the approved npm runtime archive first if its exact version is absent, then the component archive, using the [npm ownership and upload procedure](npm.md#publish-to-the-public-npm-registry). Publishing the `@lean-bridge` runtime requires that scope's publisher; application authors use its approved runtime release. Keep the generated runtime name and content-bound version. Do not overwrite an existing version with different bytes.
 
-Publish the Composer ZIP through your authenticated artifact channel or a Composer repository, using its generated `composer.json` and immutable ZIP URL as described for [native packages](#build-an-ordinary-lean-project). Supply the package-set inventory alongside the archives. It records local integrity, not a signed publisher identity; `lean-bridge verify --receipt` does not yet accept this PHP-Wasm receipt format.
+Publish the Composer ZIP through your authenticated artifact channel or a Composer repository, using its generated `composer.json` and immutable ZIP URL as described for [native packages](#build-an-ordinary-lean-project). Supply the root `package-set-receipt.json`, its `.json.sha256` sidecar, and all named archives with their original relative paths. Recipients run `lean-bridge verify --receipt ./release-php-wasm/package-set-receipt.json` using only Node. The existing `php-wasm-package-set.json` remains a producer inventory; the CLI accepts the new ecosystem-neutral receipt. Both records are unsigned.
 
 Download and install the exact uploaded archives in a separate application, then run the consumer example. The [public CLI acceptance record](../evidence/php-wasm-cli-20260915.md) covers installed packages and combined builds.
 

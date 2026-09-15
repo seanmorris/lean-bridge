@@ -59,6 +59,23 @@ test("PHP-Wasm host bootstrap checks prerequisites before modifying compiler inp
 		assert.ok(preparation.includes(command === "libtoolize" ? "libtool" : command), command);
 	assert.ok(workflow.indexOf("--check-prerequisites") < workflow.indexOf("id: ordinary_php"));
 });
+
+test("the filtered Perl engine retains package-set assembly without checkout imports", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-perl-startup-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const boundary = JSON.parse(await readFile("nix/perl-engine-source-boundary.json", "utf8"));
+	for(const path of boundary.includedFiles)
+	{
+		await mkdir(dirname(join(scratch, path)), { recursive: true });
+		await cp(path, join(scratch, path));
+	}
+	await assert.rejects(promisify(execFile)(process.execPath, [join(scratch, "scripts/run-perl-engine.mjs")], { cwd: scratch, env: { PATH: scratch }, timeout: 10000 }), error => {
+		assert.equal(error.code, 1);
+		assert.doesNotMatch(error.stderr, /ERR_MODULE_NOT_FOUND/);
+		assert.match(error.stderr, /Error: project and output are required/);
+		return true;
+	});
+});
 const runner = Object.freeze({
 	/**
 	 * Returns deterministic probe output or a configured absence.

@@ -1,6 +1,31 @@
 # Hand off a local package
 
-Give the recipient both npm archives, the component receipt, and its verifier. The component archive depends on the shared-runtime archive; handing over only the component leaves the installation incomplete.
+Give the recipient the package-set receipt, its hash sidecar, and every archive it names. Ordinary-source builds generate this receipt for npm, native targets, PHP-Wasm, and combinations of those profiles. Recipients verify it with Node and install the packages using their language tools.
+
+## Hand off an ordinary package set
+
+Build with your [target-language guide](../publishing.md#choose-the-package-ecosystem). Each successful build adds `package-set-receipt.json` and `package-set-receipt.json.sha256` without changing its installable archives or existing receipts:
+
+| Selected targets | Receipt directory below your build output |
+| --- | --- |
+| npm alone | `packages/npm/` |
+| Native targets: CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI, Cargo, native PHP | The output root |
+| PHP-Wasm alone | The output root |
+| Multiple ABI profiles | The output root covers all selected profiles; each profile also retains its own receipt |
+
+Set the receipt path from that table and verify before transfer:
+
+```sh
+lean-bridge verify --receipt ./release/package-set-receipt.json
+```
+
+Copy that receipt, its sidecar, and its named archives, preserving every relative path. You do not need to distribute compiler staging or unpacked package directories. The recipient runs the same command after transfer, then follows [their language's installation guide](../consume.md). [Package-set verification](../consume/receive-package.md#verify-a-local-package-set) explains separate archive roots and the checks performed.
+
+The builder records each package's own name and version, its ABI profile and runtime identity, and exact in-set dependencies. npm and CPAN include separate runtime packages. PHP-Wasm includes npm runtime and component packages plus a Composer API companion. Other native projections embed their runtime libraries. Conflicting package names within one ecosystem fail the combined build, including JavaScript/PHP-Wasm npm collisions and native/PHP-Wasm Composer collisions. Assign distinct names in `lean-bridge.exports.json` before rebuilding.
+
+The receipt and sidecar are unsigned consistency records. Use an authenticated transfer channel or the [signed publication flow](npm.md#publish-an-ordinary-component) for publisher identity. Package-manager upload instructions and [signed Nix cache publication](nix.md) remain separate distribution steps.
+
+The npm workflow below also reproduces the package twice and retains its original npm-specific receipt and portable verifier. Send both runtime and component archives; the component alone leaves a local installation incomplete.
 
 ## Prepare the Lean project
 
@@ -36,6 +61,7 @@ The output also contains:
 | `evidence/reproducibility.json` | The source revision and two-build comparison |
 | `publish-manifest.json` and `publish-manifest.sha256` | The local component package plan and its hash |
 | `release/packages/npm/component-package-receipt.json` | The two archive identities and their relationship |
+| `release/packages/npm/package-set-receipt.json` and `package-set-receipt.json.sha256` | Ecosystem-neutral package identities, runtime dependencies, and archive hashes |
 | `release/packages/npm/verify-component-package-receipt.mjs` | Portable Node verifier for recipients without the CLI |
 
 This version-two `publish-manifest.json` has `kind: lean-bridge-component-publish-plan`. The registry executor accepts it when its publication settings match your CLI configuration. For registry publication, configure the destination and public signing policy before the dry run using the [npm publishing guide](npm.md#publish-an-ordinary-component). The local archive handoff itself needs no registry credentials.

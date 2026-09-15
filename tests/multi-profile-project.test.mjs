@@ -17,6 +17,7 @@ import { createNativeModel, createPhpWasmCopiedModel } from "../src/build/native
 import { installCpanArchive } from "../src/release/cpan-install.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_MULTI_PROFILE_TEST === "1";
 const engineRoot = process.cwd(), json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -173,12 +174,16 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		builds.push(result);
 	}
 	assert.deepEqual(await json(join(builds[0].output, "multi-profile-release.json")), await json(join(builds[1].output, "multi-profile-release.json")));
+	assert.deepEqual(await json(join(builds[0].output, "package-set-receipt.json")), await json(join(builds[1].output, "package-set-receipt.json")));
 	for(const pkg of builds[0].packages) for(const archive of pkg.archives)
 		assert.equal(sha256(await readFile(join(builds[1].output, archive.path))), archive.sha256);
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	assert.deepEqual(await lakeInputState(moved), movedBefore);
 	await rename(context.workspace, join(context.directory, "source-hidden"));
 	await rename(moved, join(context.directory, "relocated-hidden"));
+	await assertRelocatedPackageSet(t, builds[0].output);
+	await assertRelocatedPackageSet(t, join(builds[0].output, "profiles/native"));
+	await assertRelocatedPackageSet(t, join(builds[0].output, "packages/npm"));
 	const consumer = join(context.directory, "consumer");
 	await mkdir(consumer);
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');

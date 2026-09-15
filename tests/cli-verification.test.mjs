@@ -20,6 +20,7 @@ import { createLocalHandoff } from "./helpers/component-receipt-fixture.mjs";
 import { createSignedHandoff, sha256 } from "./helpers/release-receipt-fixture.mjs";
 import { validateComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { createPackageSetHandoff } from "./helpers/package-set.mjs";
 
 const execute = promisify(execFile);
 const entrypoint = resolve("scripts/lean-bridge.mjs");
@@ -247,7 +248,7 @@ test("verification cancellation wins before and after a validator completes", as
 	}
 });
 
-test("an offline-installed runtime-free CLI verifies both handoffs with only Node on PATH", async t => {
+test("an offline-installed runtime-free CLI verifies npm, package-set and signed handoffs with only Node on PATH", async t => {
 	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-verify-installed-"));
 	t.after(() => rm(scratch, { recursive: true, force: true }));
 	const built = await buildCliNpmPackage({ outputRoot: join(scratch, "candidate") });
@@ -270,17 +271,21 @@ test("an offline-installed runtime-free CLI verifies both handoffs with only Nod
 	const signed = await createSignedHandoff(t);
 	for(const script of [local.verifierPath, renamed.verifierPath, join(signed.directory, "verify-release-archive.mjs")])
 		await writeFile(script, 'throw new Error("Do not execute code from the handoff");\n');
+	const packageSet = await createPackageSetHandoff(t);
 	const inputPaths = [
 		local.receiptPath, local.runtimePath, local.archivePath, local.verifierPath
 		, renamed.receiptPath, renamed.runtimePath, renamed.archivePath
 		, renamed.verifierPath
 		, signed.receiptPath, signed.archivePath, signed.policyPath
 		, join(signed.directory, "release-receipt.sha256")
+		, packageSet.receiptPath, `${packageSet.receiptPath}.sha256`
+		, ...packageSet.receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => join(packageSet.root, artifact.path)))
 	];
 	const before = await Promise.all(inputPaths.map(path => readFile(path)));
 	const verificationCases = [
 		[["--receipt", local.receiptPath], false]
 		, [["--receipt", renamed.receiptPath], false], [signed.args, true]
+		, [["--receipt", packageSet.receiptPath], false]
 	];
 	await chmod(working, 0o555);
 	try

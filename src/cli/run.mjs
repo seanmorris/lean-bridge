@@ -47,6 +47,9 @@ const humanResult = response => {
 				, `archive: ${result.filename}`, `sha256: ${result.sha256}`
 				, `signer policy: ${result.signerPolicySha256}`
 			);
+			else if(result.verificationType === "local-package-set") lines.push("verification: local package-set consistency (unsigned receipt)"
+				, `component: ${result.component}`, `archives: ${result.archives}`
+				, ...result.packages.map(pkg => `package: ${pkg.ecosystem}:${pkg.name}@${pkg.version} (${pkg.target})`));
 			else lines.push("verification: local npm archive consistency (unsigned receipt)"
 				, `component: ${result.component}`, `runtime: ${result.runtime}`);
 			lines.push(`receipt sha256: ${result.receiptSha256}`);

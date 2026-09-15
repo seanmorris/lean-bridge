@@ -136,7 +136,7 @@ Commands:
   analyze              Inspect a Lean project without changing it
   build                Build the canonical artifact set
   publish              Verify and publish configured package projections
-  verify               Check a local npm handoff or authenticate a signed archive
+  verify               Check a local package handoff or authenticate a signed archive
 
 Common options:
   --format human|json  Final result format, defaults to human
@@ -169,15 +169,16 @@ Build and publish options:
   --target pypi         Build ordinary Python APIs as prepared native wheels
   --target cargo        Build ordinary Rust copied-value crates
   --target php-native   Build ordinary PHP CLI copied-value Composer packages
-  --target php-wasm     Build ordinary PHP-Wasm npm and Composer startup packages
+  --target php-wasm     Build ordinary PHP-Wasm npm and Composer packages
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run
   --dry-run             Build twice, compare, authorize, and plan without registry writes
 
 Verify options (no project or build tools required):
-  --receipt <path>      Required local npm receipt or signed release receipt
-  --artifacts <dir>     Local npm archives; defaults to the receipt's directory
+  --receipt <path>      Required package-set, local npm, or signed release receipt
+  --artifacts <dir>     Local archive root; defaults to the receipt's directory
+  Package-set receipts require their adjacent .json.sha256 sidecar.
 
 Signed verification requires all five options below and the receipt's .sha256 sidecar:
   --archive <path>      Downloaded archive with its original filename

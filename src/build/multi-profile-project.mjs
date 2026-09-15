@@ -21,6 +21,7 @@ import { resolveComponentRuntimeRoot } from "../release/component-runtime-root.m
 import { CanonicalBuildError } from "./build-error.mjs";
 import { buildPhpWasmProject } from "./php-wasm-project.mjs";
 import { readVerifiedPhpWasmCopiedComponent } from "./php-wasm-copied-artifacts.mjs";
+import { writeCombinedPackageSet } from "../release/package-set-assembly.mjs";
 
 const fail = message => { throw new CanonicalBuildError("multi-profile-mismatch", message); };
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -216,6 +217,7 @@ export const buildMultiProfileProject = async ({
 		if((await readExportConfiguration(project, { signal })).sha256 !== record.sha256)
 			fail("Export configuration changed during the multi-profile build");
 		await writeFile(join(staging, "multi-profile-release.json"), canonicalJson(manifest), { flag: "wx" });
+		await writeCombinedPackageSet({ root: staging, roots: [...(npm ? ["packages/npm"] : []), ...(built ? ["profiles/native"] : []), ...(php ? ["profiles/php-wasm"] : [])], component: manifest.component, source: { treeSha256: manifest.source.treeSha256 }, signal });
 		signal?.throwIfAborted();
 		await absent(output);
 		await rename(staging, output);

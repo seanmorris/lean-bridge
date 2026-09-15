@@ -15,6 +15,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
 import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
+import { writePhpWasmPackageSet } from "../release/package-set-assembly.mjs";
 
 const installedEngine = fileURLToPath(new URL("../../", import.meta.url));
 const absent = async path => {
@@ -87,6 +88,7 @@ export const buildPhpWasmProject = async options => {
 			, packageSet: "packages/php-wasm/php-wasm-package-set.json"
 			, packages: packages.report.archives.map(archive => ({ ecosystem: archive.ecosystem, role: archive.role, name: archive.name, version: archive.version, archive: archive.archive, bytes: archive.bytes, sha256: archive.sha256, path: `packages/php-wasm/archives/${archive.archive}` })) };
 		await writeFile(join(staging, "php-wasm-release.json"), canonicalJson(manifest), { flag: "wx" });
+		await writePhpWasmPackageSet({ root: staging, model: built.model, report: packages.report, signal });
 		signal?.throwIfAborted(); await absent(output);
 		await rename(staging, output);
 		return { ...manifest, output, targets: ["php-wasm"] };

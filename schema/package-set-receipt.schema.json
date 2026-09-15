@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "package-set-receipt.schema.json",
+  "title": "Unsigned prepared package-set receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "component", "source", "profiles", "packages"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-package-set-receipt" },
+    "component": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "version"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)*@[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$(?![\\s\\S])" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "version": { "type": "string", "maxLength": 256, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$(?![\\s\\S])" }
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["treeSha256"],
+      "properties": { "treeSha256": { "$ref": "#/$defs/hash" } }
+    },
+    "profiles": {
+      "type": "array", "minItems": 1, "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "bindingIrSha256", "runtimeIdentity"],
+        "properties": { "id": { "$ref": "#/$defs/profile" }, "bindingIrSha256": { "$ref": "#/$defs/hash" }, "runtimeIdentity": { "$ref": "#/$defs/hash" } }
+      }
+    },
+    "packages": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/package" } }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$(?![\\s\\S])" },
+    "token": { "type": "string", "maxLength": 256, "pattern": "^[A-Za-z0-9@][A-Za-z0-9@._:/+-]*$(?![\\s\\S])" },
+    "version": { "type": "string", "maxLength": 256, "pattern": "^[0-9][A-Za-z0-9._+-]*$(?![\\s\\S])" },
+    "profile": { "enum": ["component-scalars-v1", "native-library-v1", "php-wasm-copied-v1"] },
+    "ecosystem": { "enum": ["npm", "composer", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo"] },
+    "dependency": {
+      "type": "object", "additionalProperties": false, "required": ["ecosystem", "name", "version"],
+      "properties": { "ecosystem": { "$ref": "#/$defs/ecosystem" }, "name": { "$ref": "#/$defs/token" }, "version": { "$ref": "#/$defs/version" } }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false, "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string", "maxLength": 1024, "pattern": "^(?!.*(?:^|/)\\.{1,2}(?:/|$))[A-Za-z0-9_@.+-]+(?:/[A-Za-z0-9_@.+-]+)*$(?![\\s\\S])" },
+        "bytes": { "type": "integer", "minimum": 1, "maximum": 4294967296 },
+        "sha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target", "ecosystem", "name", "version", "profile", "role", "runtimeIdentity", "runtimeDelivery", "requires", "artifacts"],
+      "properties": {
+        "target": { "enum": ["npm", "php-wasm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"] },
+        "ecosystem": { "$ref": "#/$defs/ecosystem" }, "name": { "$ref": "#/$defs/token" }, "version": { "$ref": "#/$defs/version" },
+        "profile": { "$ref": "#/$defs/profile" }, "role": { "enum": ["runtime", "component", "api"] },
+        "runtimeIdentity": { "$ref": "#/$defs/hash" }, "runtimeDelivery": { "enum": ["provided", "embedded", "dependency"] },
+        "requires": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/dependency" } },
+        "artifacts": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "#/$defs/artifact" } }
+      }
+    }
+  }
+}

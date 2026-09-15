@@ -15,7 +15,7 @@ Commands:
   analyze              Inspect a Lean project without changing it
   build                Build the canonical artifact set
   publish              Verify and publish configured package projections
-  verify               Check a local npm handoff or authenticate a signed archive
+  verify               Check a local package handoff or authenticate a signed archive
 
 Common options:
   --format human|json  Final result format, defaults to human
@@ -48,15 +48,16 @@ Build and publish options:
   --target pypi         Build ordinary Python APIs as prepared native wheels
   --target cargo        Build ordinary Rust copied-value crates
   --target php-native   Build ordinary PHP CLI copied-value Composer packages
-  --target php-wasm     Build ordinary PHP-Wasm npm and Composer startup packages
+  --target php-wasm     Build ordinary PHP-Wasm npm and Composer packages
 
 Publish options:
   --manifest <path>     Consume the exact manifest produced by publish --dry-run
   --dry-run             Build twice, compare, authorize, and plan without registry writes
 
 Verify options (no project or build tools required):
-  --receipt <path>      Required local npm receipt or signed release receipt
-  --artifacts <dir>     Local npm archives; defaults to the receipt's directory
+  --receipt <path>      Required package-set, local npm, or signed release receipt
+  --artifacts <dir>     Local archive root; defaults to the receipt's directory
+  Package-set receipts require their adjacent .json.sha256 sidecar.
 
 Signed verification requires all five options below and the receipt's .sha256 sidecar:
   --archive <path>      Downloaded archive with its original filename
@@ -78,7 +79,7 @@ Exit codes:
 
 An explicit `--output` writes the version-2 analysis report, available Binding IR, and optional policy report. `requireCompiledExports` requires fresh compiler evidence. `build` creates local artifacts. `publish --dry-run` performs release preparation and verification without registry uploads; it can still build artifacts and invoke configured authorization providers.
 
-`verify --receipt <path>` checks a local npm handoff. Add `--artifacts <directory>` only when its two archives are stored outside the receipt's directory. Signed verification requires `--archive`, `--policy`, `--policy-sha256`, `--subject`, and `--coordinate` together, plus the receipt's matching `.sha256` sidecar. Do not combine those options with `--artifacts`. Unknown receipt types and failed authentication are errors; they never select a weaker check. See [Use a prepared release](../consume/receive-package.md) for both commands and Node-only CLI installation.
+`verify --receipt <path>` checks an ordinary-source package set or an existing local npm handoff. Package sets require their adjacent `package-set-receipt.json.sha256` sidecar and every named archive. Add `--artifacts <directory>` when those archives are stored outside the receipt's directory, preserving their relative paths. Signed verification requires `--archive`, `--policy`, `--policy-sha256`, `--subject`, and `--coordinate` together, plus the signed receipt's matching `.sha256` sidecar. Do not combine signed options with `--artifacts`. Unknown receipt types and failed authentication are errors; they never select a weaker check. See [Use a prepared release](../consume/receive-package.md) for the commands and Node-only CLI installation.
 
 `--bundle` and `--authorization` are also accepted by the parser for an explicit bundle-and-authorization publication path. They are not prerequisites for the ordinary component workflow. Follow [Release Lean Bridge](../contributing/production-release.md) for that path rather than combining examples from different release modes.
 
@@ -136,7 +137,7 @@ The [result schema](../../schema/cli-result.schema.json) requires these fields:
 
 The command-specific `result` contains analysis, build, publication, or verification data. A blocked command can return useful diagnostics without producing a usable package. Prompts require the explicit `--interactive` option; attaching a terminal does not authorize a release.
 
-Verification results keep the version-two envelope with `project: null`, an empty target selection, and caching disabled. Successful local checks include `result.verificationType: "local-npm"` and `result.authenticated: false`, alongside the component, runtime and receipt identities. Signed checks use `result.verificationType: "signed-archive"` and `result.authenticated: true`, alongside the archive identity, trusted policy hash and signature counts. `verified: true` on an unsigned receipt establishes archive consistency, not signer authentication.
+Verification results keep the version-two envelope with `project: null`, an empty target selection, and caching disabled. Successful package-set checks return `result.verificationType: "local-package-set"` and `result.authenticated: false`, plus the component, profiles, package coordinates, archive count and receipt hash. Existing npm receipts return `verificationType: "local-npm"`, `authenticated: false`, and their component/runtime identities. Signed checks use `verificationType: "signed-archive"` and `authenticated: true`, alongside the archive identity, trusted policy hash and signature counts. `verified: true` on an unsigned receipt establishes consistency with the declared metadata and file hashes, not signer authentication or archive-internal metadata inspection.
 
 ## Exit codes
 

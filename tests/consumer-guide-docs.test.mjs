@@ -40,6 +40,12 @@ test("prepared releases lead with project-free CLI verification and retain both 
 	assert.match(signed, /authenticated: true/);
 	assert.match(source, /runtime-free CLI archive is sufficient/);
 	assert.match(source, /Ordinary registry consumers can use their package manager/);
+	const packages = source.split("### Verify a local package set\n")[1]?.split("### Authenticate a signed archive\n")[0];
+	assert.ok(packages);
+	for(const required of ["package-set-receipt.json.sha256", "lean-bridge verify", "local-package-set", "authenticated: false", "--artifacts", "native PHP", "PHP-Wasm", "CPAN", "PyPI", "NuGet", "Maven", "Cargo", "RubyGems", "WIT/WASI"])
+		assert.ok(packages.includes(required), required);
+	assert.match(packages, /does not unpack or execute/);
+	assert.match(packages, /does not authenticate a publisher/);
 	for(const guide of ["docs/lean/first-component.md", "docs/publish/local-handoff.md"])
 		assert.match(await readFile(guide, "utf8"), /```sh\nlean-bridge verify/);
 });

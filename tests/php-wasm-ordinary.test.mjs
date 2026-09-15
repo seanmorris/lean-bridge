@@ -22,6 +22,7 @@ import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from 
 import { exerciseInstalledPhpWasmPackages } from "./helpers/php-wasm-packages.mjs";
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -113,6 +114,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const repeated = await build(repeatedSource, repeatedBuild, repeatedRuntime);
 		assert.deepEqual(await lakeInputState(repeatedSource), beforeRepeated);
 		assert.deepEqual(result.receipt, repeated.receipt);
+		await assertRelocatedPackageSet(t, buildRoot, cli);
 		assert.deepEqual(await readFile(join(outputRoot, "artifacts.json")), await readFile(join(repeated.root, "artifacts.json")));
 		t.diagnostic(`${name} extension ${result.receipt.wasmLibrary.sha256}`);
 		const release = result.release, repeatRelease = repeated.release;

@@ -92,7 +92,9 @@ Use exact host integers and ecosystem numeric libraries. Preserve Unit, missing/
 
 Compile Lean once per compatible profile. Package assembly cannot invoke compilers, and consumer installation cannot compile Lean or rebuild its runtime. Perl may compile supplied XS; ordinary downstream-language compilation remains supported. Include runtime dependencies, licenses, notices, source identities, and provenance in prepared outputs.
 
-Extend the existing Node-only verifier with ecosystem-neutral local package-set receipts. Retain existing npm and signed formats and distinguish local integrity from authenticated provenance.
+Ordinary npm, native, PHP-Wasm and combined builds now include ecosystem-neutral local package-set receipts. The [Node-only verifier](../consume/receive-package.md#verify-a-local-package-set) checks archive hashes, sidecars, declared package identities, exact in-set dependencies and per-profile runtime agreement. It retains npm and signed formats and reports unsigned local consistency separately from authenticated provenance. It does not inspect archive-internal metadata or replace installed-consumer acceptance.
+
+The [package-set acceptance record](../evidence/package-set-verification-20260915.md) covers relocated receipts across all ordinary target ecosystems, installed CLI verification, mixed-profile name collisions, and unchanged PHP-Wasm archive bytes.
 
 ## Evidence and closure
 

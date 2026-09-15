@@ -31,7 +31,7 @@ The [first component](lean/first-component.md) exports `add` and `isEmpty` and c
 
 [Check the relevant proofs](lean/proofs-and-assurance.md), review the exported API, and commit the intended source. Follow the [target guide](publishing.md) to build its packages and verify them in a separate application.
 
-For npm, [share a local package](publish/local-handoff.md) explains the reproducibility dry run, runtime and component archives, receipt, and verifier. For Perl, the [native build](publish/cpan.md) produces runtime and component CPAN archives and their native identity records.
+[Share a local package](publish/local-handoff.md) explains the package-set receipt and Node-only verification for every ordinary-source target. It also covers npm's reproducibility dry run and portable verifier. The [Perl native build](publish/cpan.md) produces separate runtime and component CPAN archives.
 
 ## Publish and verify the release
 
