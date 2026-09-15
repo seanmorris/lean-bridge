@@ -12,6 +12,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { phpWasmOrdinaryConsumer } from "./php-wasm-ordinary.mjs";
+import { exerciseBrowserPhpWasmPackages } from "./php-wasm-browser.mjs";
 
 /**
  * Install both package ecosystems and exercise a compiler-free PHP-Wasm host.
@@ -97,5 +98,7 @@ console.log(JSON.stringify({mode, exports: 88, runtimeInitializations: 1, compon
 	const guide = await run(process.execPath, ["guide.mjs"], moved, { ...process.env, PATH: join(working, "no-compilers") });
 	assert.equal(guide.stdout, "4294967295"); assert.equal(guide.stderr, "");
 	t.diagnostic("published ordinary PHP-Wasm consumer file: exact UInt32 upper bound");
+	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1")
+		await exerciseBrowserPhpWasmPackages({ consumer: moved, phpHost, probe, t });
 	await rm(moved, { recursive: true });
 };

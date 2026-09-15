@@ -1,11 +1,11 @@
 # Build and publish PHP packages
 
-Build an ordinary Lake project with `--target php-native` for native PHP, or `--target php-wasm` for PHP hosted by Node. The Alpha recipes below retain their separate Zend and loading profiles.
+Build an ordinary Lake project with `--target php-native` for native PHP, or `--target php-wasm` for PHP hosted by Node or Chromium. The Alpha recipes below retain their separate Zend and loading profiles.
 
 | Host | Build inputs | Package manager |
 | --- | --- | --- |
 | Ordinary PHP 8.2+ NTS CLI | Ordinary Lean source, the C author toolchain and PHP for syntax checks | Composer ZIP with bundled native libraries and automatic FFI loading |
-| Ordinary Node-hosted PHP 8.4 Wasm | Ordinary Lean source and the pinned PHP-Wasm compiler inputs | npm component and shared-runtime archives, plus a companion Composer ZIP |
+| Ordinary PHP 8.4 Wasm in Node or Chromium | Ordinary Lean source and the pinned PHP-Wasm compiler inputs | npm component and shared-runtime archives, plus a companion Composer ZIP |
 | Native PHP 8.2 NTS | Reviewed PHP package manifest, generated bindings, Zend extension and native Lean toolchain | Composer, plus the matching native extension/runtime |
 | Node-hosted PHP 8.4 Wasm | Reviewed profile manifest, pinned PHP source and Emscripten toolchain | npm, with Composer files installed inside PHP's virtual filesystem |
 
@@ -77,7 +77,7 @@ The build checks fresh Lean metadata and wasm32 C layouts, compiles a PHP extens
 
 The npm component declares its exact shared-runtime dependency. Its default descriptor registers the extension and bundled PHP sources before startup. Composer applications use the companion ZIP and the component's `extensions` export. Follow the [installed consumer example](../php.md#ordinary-php-wasm-packages).
 
-Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Loading is startup-only. Lazy loading and browser-engine acceptance remain separate work; the tested host is Node 22 with `php-wasm` 0.1.0.
+Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Loading is startup-only, tested in Node 22 and Chromium with `php-wasm` 0.1.0. The same npm descriptor works in both hosts. The [browser example](../php.md#run-in-a-browser) bundles Lean assets with Vite and serves the PHP host unchanged. Lazy loading remains separate work.
 
 ### Combine PHP-Wasm with other targets
 

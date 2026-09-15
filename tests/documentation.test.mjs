@@ -311,6 +311,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_ZEND_TEST: "1"/);
   assert.match(workflow, /id: copied_zend/);
   assert.match(workflow, /steps\.copied_zend\.outcome != 'success'/);
+  const ordinaryPhpWasm = workflow.split("id: ordinary_php_wasm\n")[1].split("      - name:")[0];
+  assert.match(ordinaryPhpWasm, /LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST: "1"/);
+  assert.match(ordinaryPhpWasm, /LEAN_BRIDGE_PHP_WASM_BROWSER_TEST: "1"/);
+  assert.match(ordinaryPhpWasm, /npx playwright install --with-deps chromium/);
+  assert.match(ordinaryPhpWasm, /node --test tests\/php-wasm-ordinary\.test\.mjs/);
+  assert.match(workflow, /steps\.ordinary_php_wasm\.outcome != 'success'/);
   assert.match(workflow, /steps\.ordinary_php\.outcome != 'success'/);
   assert.match(workflow, /php-cli php-common composer/);
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);

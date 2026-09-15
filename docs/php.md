@@ -7,11 +7,11 @@ Install the package for the PHP runtime that executes your application. Ordinary
 | Application | Installation | Tested runtime |
 | --- | --- | --- |
 | Ordinary native PHP CLI package | [Composer archive](#ordinary-project-packages) | PHP 8.2+ NTS CLI, Linux x86-64, FFI enabled, glibc 2.38 or newer |
-| Ordinary PHP-Wasm package | [npm and optional Composer archive](#ordinary-php-wasm-packages) | Node 22, PHP 8.4, `php-wasm` 0.1.0, startup loading |
+| Ordinary PHP-Wasm package | [npm and optional Composer archive](#ordinary-php-wasm-packages) | Node 22 or Chromium, PHP 8.4, `php-wasm` 0.1.0, startup loading |
 | Native PHP CLI or deployment | [Native PHP](#native-php) | PHP 8.2 NTS, x86-64 Linux, glibc 2.38 or newer |
 | PHP hosted by Node | [PHP-Wasm](#php-wasm) | Node 22, PHP 8.4, `php-wasm` 0.1.0 |
 
-The Alpha native package includes an extension, Lean runtime, and Composer library. PHP-Wasm uses an npm archive containing side modules and loader metadata. The Wasm consumer profile covers Node hosting, not browser-hosted PHP.
+The Alpha native package includes an extension, Lean runtime, and Composer library. Its PHP-Wasm profile uses an npm archive containing side modules and loader metadata, tested in Node. Ordinary PHP-Wasm packages also run in Chromium with the same startup descriptor.
 
 ### Ordinary project packages
 
@@ -63,7 +63,7 @@ Validation, PHP conversion and native copying each have a 16 MiB accounting limi
 
 ### Ordinary PHP-Wasm packages
 
-Use Node 22 and `php-wasm` 0.1.0 with PHP 8.4's default variant. Authenticate the publisher's archives and `php-wasm-package-set.json` through your release channel. The package set contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
+Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Authenticate the publisher's archives and `php-wasm-package-set.json` through your release channel. The package set contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
 
 Install the two npm `.tgz` files from your release directory along with the host:
 
@@ -105,6 +105,94 @@ assert.equal(status, 0);
 
 Run `node main.mjs`. Expected output is `4294967295`. Register every component in `sharedLibs` before accessing `php.binary` or running PHP. Compatible packages share one runtime; duplicate registration does not reload an extension. Different runtime identities fail before startup.
 
+#### Run in a browser
+
+Use the same installed component with `PhpWeb`. For a new Vite application, install the tested Vite version and copy the pinned PHP host into its public directory:
+
+```sh
+npm install --save-dev --save-exact vite@8.2.1
+mkdir public
+cp -R node_modules/php-wasm public/php-host
+```
+
+Serve `public/php-host/` at `/php-host/`, even when the application lives under a nested URL. Keep the PHP package's internal directory layout intact. Save these three files in the application root.
+
+`index.html`:
+
+```html file=php-wasm/ordinary/index.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>Lean in PHP-Wasm</title>
+  </head>
+  <body>
+    <output id="result" aria-live="polite"></output>
+    <script type="module" src="./browser.mjs"></script>
+  </body>
+</html>
+```
+
+`browser.mjs`:
+
+```js file=php-wasm/ordinary/browser.mjs
+/**
+ * Execute an installed ordinary Lean API in browser-hosted PHP.
+ *
+ * @file
+ */
+import { PhpWeb } from '/php-host/PhpWeb.mjs';
+import api from '@example/willow-php-wasm';
+
+const output = globalThis.document.querySelector('#result');
+try
+{
+	const php = new PhpWeb({ version: '8.4', autoTransaction: false, sharedLibs: [api] });
+	let stderr = '';
+	php.addEventListener('output', event => {
+		for(const part of event.detail) output.textContent += part;
+	});
+	php.addEventListener('error', event => {
+		for(const part of event.detail) stderr += part;
+	});
+	const status = await php.run(String.raw`<?php
+require_once '${api.autoload}';
+use LeanWillow\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+`);
+	if(status !== 0 || stderr) throw new Error(stderr || `PHP exited with status ${status}`);
+	output.dataset.state = 'ready';
+} catch(error)
+{
+	output.textContent = error.message;
+	output.dataset.state = 'error';
+	throw error;
+}
+```
+
+`vite.config.mjs`:
+
+```js file=php-wasm/ordinary/vite.config.mjs
+/**
+ * Bundle the Lean package and serve the pinned PHP host unchanged.
+ *
+ * @file
+ */
+export default {
+	base: './'
+	, build: {
+		assetsInlineLimit: 0
+		, rollupOptions: { external: ['/php-host/PhpWeb.mjs'] }
+	}
+};
+```
+
+Run `npx vite build`, then `npx vite preview` and open the printed localhost address. The page displays `4294967295`. Vite bundles the Lean descriptor and copies its libraries and PHP files to asset URLs. The external import leaves the PHP host unchanged. `autoTransaction: false` disables automatic filesystem persistence for this stateless example.
+
+The [Chromium acceptance](evidence/php-wasm-browser-20260915.md) runs these exact files, plus two installed components together, with external requests blocked. Ordinary packages currently load at startup. Lazy loading, other browser engines and browser workers need separate acceptance.
+
 #### Copied type conversions
 
 These mappings apply to ordinary copied packages. The Alpha tables later on this page retain their separate profile.
@@ -127,7 +215,7 @@ Invalid types raise `TypeError`; out-of-range values and conversion limits raise
 
 Install the matching Composer ZIP using the [artifact-repository setup](#ordinary-project-packages), with its own coordinate, `example/willow-php-wasm:2.0.0-RC.1`. When Composer runs on a native host, set `config.platform.php` to `8.4.1` for this Wasm application. Use the npm descriptor's `extensions` export in `sharedLibs`, mount your installed `vendor/` directory into the PHP virtual filesystem, then require that mounted `vendor/autoload.php`. The default descriptor already supplies the PHP files and needs no Composer install; do not preload a second copy.
 
-The [installed tests](evidence/php-wasm-cli-20260915.md) execute both arrangements and Vite-bundled assets in Node. Browser-engine execution and lazy loading are not yet covered for ordinary packages.
+The [installed tests](evidence/php-wasm-cli-20260915.md) execute both arrangements and Vite-bundled assets in Node. The [browser check](evidence/php-wasm-browser-20260915.md) executes the default descriptor with bundled PHP sources in Chromium.
 
 ## Native PHP
 

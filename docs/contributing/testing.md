@@ -133,11 +133,15 @@ export LEAN_WASM_RUNTIME_PROFILE=browser
 export LEAN_WASM_RUNTIME_VARIANT=php-wasm-3.1.68
 export LEAN_WASM_ARTIFACT_TARGET=php-wasm-emscripten-3.1.68
 bash scripts/build-lean-runtime.sh
+npx playwright install --with-deps chromium
 LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
+LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 \
   node --test --test-reporter=spec tests/php-wasm-ordinary.test.mjs
 ```
 
-Willow and Aspen each compile 44 ordinary Lean exports twice through a tarball-installed CLI's public `build --target php-wasm` command. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks bundled PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The [compiler record](../evidence/php-wasm-ordinary-20260915.md), [installed package record](../evidence/php-wasm-packages-20260915.md) and [public CLI record](../evidence/php-wasm-cli-20260915.md) retain each milestone's evidence. Browser-engine acceptance and lazy loading remain separate work.
+Willow and Aspen each compile 44 ordinary Lean exports twice through a tarball-installed CLI's public `build --target php-wasm` command. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks bundled PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The [compiler record](../evidence/php-wasm-ordinary-20260915.md), [installed package record](../evidence/php-wasm-packages-20260915.md) and [public CLI record](../evidence/php-wasm-cli-20260915.md) retain each milestone's evidence.
+
+With `LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1`, the same installed packages execute in Chromium under a nested application URL with external requests blocked. The browser checks all 88 exports, 20 repeated requests and one fetch per library, then builds and executes the exact consumer guide's HTML, Vite config and JavaScript. Use `CHROMIUM_PATH` for an existing browser binary; otherwise the helper uses `/usr/bin/chromium` when present, then Playwright's installed Chromium. CI requires the browser check. The [browser record](../evidence/php-wasm-browser-20260915.md) records its tested scope. Lazy loading remains separate work.
 
 For PHP-Wasm combined with JavaScript and native PHP, also prepare the ordinary JavaScript engine/runtime and native PHP author tools. Reset the shell to the default JavaScript Emscripten profile before this check; the PHP compiler selects its separate SDK explicitly:
 
