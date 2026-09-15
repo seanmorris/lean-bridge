@@ -32,7 +32,7 @@ The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `nati
 
 Only pure copied values are admitted. Types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Optional values, variants, resources, callbacks and effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with CPAN, C, C++, NuGet and Maven. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
 
-Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Generic package-set verification and signed publication integration remain under VO1240; `lean-bridge verify` does not yet accept the ordinary RubyGems receipt.
+Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
 ## Build the gem
 

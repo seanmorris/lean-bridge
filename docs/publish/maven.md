@@ -32,7 +32,7 @@ The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, 
 
 Calls accept concrete, pure copied values. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Optional values, variants, resources, callbacks and effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
 
-Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Generic package-set verification and signed publication integration remain under VO1240; `lean-bridge verify` does not yet accept the ordinary Maven receipt.
+Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
 ## Build the repository layout
 

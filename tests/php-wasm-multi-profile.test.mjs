@@ -15,6 +15,7 @@ import { buildPhpWasmCopiedRuntime } from "../src/build/php-wasm-copied-componen
 import { phpWasmCopiedPins as pins } from "../src/build/php-wasm-copied-artifacts.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
+import { buildPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST === "1";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -35,9 +36,11 @@ test("PHP-Wasm combines atomically with either or both native PHP and JavaScript
 	const runtime = await buildPhpWasmCopiedRuntime({
 		outputRoot: join(context.directory, "php-runtime"), emsdkRoot
 		, leanRuntimeRoot: process.env.LEAN_BRIDGE_PHP_LEAN_RUNTIME ?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser-php-wasm-3.1.68`) });
+	const compilerInputs = await buildPhpWasmCompilerInputs({ runtimeRoot: runtime.root, phpSource: process.env.LEAN_BRIDGE_PHP_SOURCE ?? join(engineRoot, "build/php-wasm-sdk/php8.4-src"), outputRoot: join(context.directory, "php-compiler-inputs") });
 	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix"
 		, LEAN_BRIDGE_RUNTIME_ROOT: resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy")
-		, LEAN_BRIDGE_PHP_COPIED_RUNTIME: runtime.root };
+		, LEAN_BRIDGE_PHP_INPUTS: compilerInputs.directory };
+	for(const name of ["LEAN_BRIDGE_PHP_SOURCE", "LEAN_BRIDGE_PHP_COPIED_RUNTIME", "LEAN_BRIDGE_PHP_LEAN_RUNTIME"]) delete environment[name];
 	const selections = [["npm", "php-native", "php-wasm"], ["php-wasm", "php-native", "npm"], ["php-native", "php-wasm"], ["php-wasm", "npm"]];
 	const builds = [];
 	for(const [index, targets] of selections.entries())

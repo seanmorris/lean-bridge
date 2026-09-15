@@ -68,7 +68,7 @@ LEAN_BRIDGE_PHP_MARKER="$LEAN_BRIDGE_PHP_SOURCE/.lean-bridge-configured"
 LEAN_BRIDGE_PHP_MARKER_VALUE="$LEAN_BRIDGE_PHP_COMMIT:$LEAN_BRIDGE_PHP_WASM_COMMIT:$LEAN_BRIDGE_EMSCRIPTEN_COMMIT"
 if [[ ! -f "$LEAN_BRIDGE_PHP_MARKER" ]] || \
   [[ "$(<"$LEAN_BRIDGE_PHP_MARKER")" != "$LEAN_BRIDGE_PHP_MARKER_VALUE" ]] || \
-  [[ ! -f "$LEAN_BRIDGE_PHP_SOURCE/config.h" ]]; then
+  [[ ! -f "$LEAN_BRIDGE_PHP_SOURCE/main/php_config.h" ]]; then
   if [[ ! -d "$LEAN_BRIDGE_PHP_SOURCE/.git" ]]; then
     git clone --filter=blob:none --no-checkout \
       https://github.com/php/php-src.git \

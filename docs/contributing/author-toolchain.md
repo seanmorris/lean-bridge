@@ -82,7 +82,7 @@ Both commands must succeed for the checkout-based setup. If either fails, finish
 
 ## PHP-Wasm
 
-Ordinary PHP-Wasm builds use Lean 4.32.2, Emscripten 3.1.68 and PHP 8.4.1 headers. The runtime-inclusive CLI's JavaScript runtime cannot substitute for this ABI. Until these build inputs have a prepared distribution, produce them from a Lean Bridge checkout.
+Ordinary PHP-Wasm builds use Lean 4.32.2, Emscripten 3.1.68 and PHP 8.4.1 headers. Authors can use [prepared PHP-Wasm inputs](../publish/php.md#build-an-ordinary-php-wasm-package) without a Lean Bridge checkout. The steps below produce those inputs from source. The CLI's JavaScript runtime cannot substitute for this ABI.
 
 Install the prerequisites listed by [the PHP-Wasm bootstrap](../../scripts/bootstrap-php-wasm-ci.sh), including the PHP configure tools. From the checkout:
 
@@ -109,3 +109,26 @@ export LEAN_BRIDGE_PHP_SOURCE="$PWD/build/php-wasm-sdk/php8.4-src"
 Set `LEAN_BRIDGE_PHP_LEAN_RUNTIME` to the absolute directory printed above when using an installed CLI outside the checkout. The public [PHP-Wasm build command](../publish/php.md#build-an-ordinary-php-wasm-package) links the runtime from those pinned target archives. SDK and header inputs must remain available for component compilation.
 
 To reuse a runtime from a completed ordinary PHP-Wasm release, set `LEAN_BRIDGE_PHP_COPIED_RUNTIME` to that release's `php-wasm/runtime/` directory. The builder checks its receipt and file inventory before copying it. Components are still compiled afresh; `--cache-directory` is not supported for this target. Keep `LEAN_BRIDGE_RUNTIME_ROOT` for JavaScript-Wasm only.
+
+### Package PHP-Wasm compiler inputs
+
+From a completed ordinary PHP-Wasm build, assemble the runtime, configured headers and retained license notices into a deterministic archive:
+
+```sh
+node scripts/build-php-wasm-compiler-inputs.mjs \
+  --runtime /absolute/path/to/release/php-wasm/runtime \
+  --php-source "$LEAN_BRIDGE_PHP_SOURCE" \
+  --output build/php-wasm-inputs
+```
+
+Assembly uses Node only. It does not invoke Git, configure, Lean or Emscripten. The new output contains `php-wasm-compiler-inputs/`, a content-named `.tgz`, and the archive's SHA-256 sidecar. The extracted directory has its own versioned manifest and sidecar, runtime compiler identities, PHP source pins, file hashes and upstream notices. No PHP implementation sources, Git metadata, host compilers or target static archives are distributed.
+
+Include the verified directory in a standalone CLI candidate:
+
+```sh
+npm run build:cli-package -- \
+  --php-wasm-inputs build/php-wasm-inputs/php-wasm-compiler-inputs \
+  --output build/cli-with-php-wasm
+```
+
+Add `--runtime /absolute/path/to/javascript-runtime` to include JavaScript-Wasm inputs too. The inventory records these choices independently as `phpWasmInputsIncluded` and `runtimeIncluded`. Publish neither archive until its installed-CLI acceptance checks pass. Archive creation does not upload it anywhere. Supply the archive's expected hash through the same trusted channel as the candidate.

@@ -14,7 +14,7 @@ Choose the package backend before installing its build tools. All current source
 | Java and Kotlin | The C author tools plus JDK 22; Maven and Kotlin tooling for their examples; see [Maven](../publish/maven.md#build-an-ordinary-lean-project) | The JAR includes the matching native library and runtime. |
 | Ruby | The C author tools plus Ruby 3.3 and RubyGems; see [RubyGems](../publish/rubygems.md#build-an-ordinary-lean-project) | The gem includes the matching native library and runtime. |
 | Native PHP | The C author tools and PHP 8.2+; see [PHP](../publish/php.md#build-an-ordinary-lean-project). Composer and FFI for installed acceptance. | Ordinary CLI packages bundle native libraries and load them automatically. The Alpha Zend recipe additionally needs PHP headers. |
-| PHP-Wasm | Lean 4.32.2, pinned Emscripten 3.1.68 and PHP 8.4.1 headers; see [PHP](../publish/php.md#build-an-ordinary-php-wasm-package) | Prepare the separate target archives, or reuse a verified ordinary PHP-Wasm runtime. |
+| PHP-Wasm | Node 22, Lean 4.32.2 and the pinned Emscripten 3.1.68 installation; see [PHP](../publish/php.md#build-an-ordinary-php-wasm-package) | Use the CLI's bundled runtime and configured PHP headers, or a separate prepared compiler-input bundle. |
 | WIT / WASI | The C author tools, wasm-tools 1.245.1 and Wasmtime C API 42.0.1; see [WIT / WASI](../publish/wit-wasi.md#build-an-ordinary-lean-project) | The archive includes the executable adapter, native host and runtime. |
 
 For Perl, use the [native build configuration and toolchain selection](../publish/cpan.md#build-an-ordinary-lean-project). The Nix `perl-build-engine` supplies the pinned compiler environment. The Wasm runtime checks below apply to npm only.
@@ -34,7 +34,7 @@ sha256sum "$LEAN_BRIDGE_CLI_ARCHIVE"
 tar -xOf "$LEAN_BRIDGE_CLI_ARCHIVE" package/cli-package-inventory.json
 ```
 
-Compare the hash with the maintainer's reviewed value and check that the inventory has `runtimeIncluded: true`. A runtime-free candidate supports [receipt verification](../consume/receive-package.md#install-the-verifier-cli) and packaging tests, but lacks the runtime needed to prepare component archives.
+Compare the hash with the maintainer's reviewed value. For npm builds, check that the inventory has `runtimeIncluded: true`. For PHP-Wasm builds, check `phpWasmInputsIncluded: true`, or supply a [separate input bundle](../publish/php.md#build-an-ordinary-php-wasm-package). Neither input is needed for [receipt verification](../consume/receive-package.md#install-the-verifier-cli).
 
 Install the verified archive into the work directory:
 
@@ -45,7 +45,7 @@ lean-bridge --version
 lean-bridge --help
 ```
 
-The prepared CLI uses its bundled shared runtime automatically. Leave `LEAN_BRIDGE_RUNTIME_ROOT` unset for this path. You do not need a Lean Bridge checkout. Keep the work directory for the author tutorial and its separate test application.
+The prepared CLI uses bundled inputs automatically. Leave `LEAN_BRIDGE_RUNTIME_ROOT` unset for npm and `LEAN_BRIDGE_PHP_INPUTS` unset for PHP-Wasm. You do not need a Lean Bridge checkout. Keep the work directory for the author tutorial and its separate test application.
 
 ## Select the build backend
 

@@ -18,6 +18,7 @@ import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { phpWasmCopiedPins as pins, phpWasmCopiedProfile as profile, phpWasmCopiedCompilerFiles, readVerifiedPhpWasmCopiedRuntime, validatePhpWasmCopiedBinary } from "./php-wasm-copied-artifacts.mjs";
+import { phpWasmHeaderPaths } from "../release/php-wasm-compiler-inputs.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
@@ -101,13 +102,6 @@ export const buildPhpWasmCopiedRuntime = async ({ outputRoot, leanRuntimeRoot, e
 	{ await rm(staging, { recursive: true, force: true }); throw error; }
 };
 
-const phpHeaderPaths = async root => {
-	const paths = (await readdir(root, { withFileTypes: true })).filter(entry => entry.isFile() && entry.name.endsWith(".h")).map(entry => entry.name);
-	for(const subdir of ["Zend", "main", "TSRM", "ext"])
-		paths.push(...(await nativeArtifactPaths(join(root, subdir))).filter(path => path.endsWith(".h")).map(path => `${subdir}/${path}`));
-	return paths.sort();
-};
-
 /**
  * Emit one private Zend extension containing freshly compiled ordinary Lean C.
  * No native ELF receipt or npm Wasm artifact enters this build.
@@ -121,7 +115,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 	const verifiedRuntime = await readVerifiedPhpWasmCopiedRuntime(runtime);
 	const compiler = await toolchain(emsdkRoot, runner, signal);
 	if(!same(verifiedRuntime.manifest.compiler, compiler.compiler)) throw new Error("PHP-Wasm runtime/component compiler identity mismatch");
-	const phpHeaders = await capture(php, await phpHeaderPaths(php));
+	const phpHeaders = await capture(php, await phpWasmHeaderPaths(php));
 	return buildElaboratedComponent({ ...options, targets: ["php-wasm"]
 		, moduleName: undefined, profile, receiptName: "php-wasm-component.json"
 		, createModel: createPhpWasmCopiedModel

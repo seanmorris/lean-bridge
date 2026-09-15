@@ -62,6 +62,7 @@ const profileManifest = Object.freeze({
 		, "native-php"
 		, "php-copied-zend"
 		, "php-wasm-ordinary"
+		, "php-wasm-compiler-inputs"
 		, "php-wasm-multi-profile"
 		, "php-wasm-copied-package"
 		, "native-rust"

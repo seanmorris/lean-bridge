@@ -16,6 +16,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
 import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { writePhpWasmPackageSet } from "../release/package-set-assembly.mjs";
+import { readVerifiedPhpWasmCompilerInputs } from "../release/php-wasm-compiler-inputs.mjs";
 
 const installedEngine = fileURLToPath(new URL("../../", import.meta.url));
 const absent = async path => {
@@ -48,9 +49,15 @@ export const buildPhpWasmProject = async options => {
 	// Source-only capture admits declarations; the wasm32 compiler admits types.
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis" });
 	const emsdkRoot = await directory(environment.LEAN_BRIDGE_PHP_EMSDK ?? join(engineRoot, ".toolchains/emsdk-php-wasm"), "LEAN_BRIDGE_PHP_EMSDK");
-	const phpSource = await directory(environment.LEAN_BRIDGE_PHP_SOURCE ?? join(engineRoot, "build/php-wasm-sdk/php8.4-src"), "LEAN_BRIDGE_PHP_SOURCE");
-	const preparedRuntime = environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME === undefined ? null : await directory(environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME, "LEAN_BRIDGE_PHP_COPIED_RUNTIME");
-	const leanRuntimeRoot = preparedRuntime ? null : await directory(environment.LEAN_BRIDGE_PHP_LEAN_RUNTIME ?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser-php-wasm-3.1.68`), "LEAN_BRIDGE_PHP_LEAN_RUNTIME");
+	const rawInputs = ["LEAN_BRIDGE_PHP_SOURCE", "LEAN_BRIDGE_PHP_COPIED_RUNTIME", "LEAN_BRIDGE_PHP_LEAN_RUNTIME"].some(name => environment[name] !== undefined);
+	if(environment.LEAN_BRIDGE_PHP_INPUTS !== undefined && rawInputs)
+		throw new CanonicalBuildError("conflicting-php-wasm-inputs", "LEAN_BRIDGE_PHP_INPUTS cannot be combined with raw PHP source or runtime overrides");
+	const defaultInputs = join(engineRoot, "runtime/php-wasm");
+	const inputRoot = environment.LEAN_BRIDGE_PHP_INPUTS ?? (!rawInputs && await lstat(defaultInputs).catch(error => { if(error.code === "ENOENT") return null; throw error; }) ? defaultInputs : null);
+	const inputs = inputRoot === null ? null : await readVerifiedPhpWasmCompilerInputs(await directory(inputRoot, "LEAN_BRIDGE_PHP_INPUTS"), { signal });
+	let phpSource = inputs ? null : await directory(environment.LEAN_BRIDGE_PHP_SOURCE ?? join(engineRoot, "build/php-wasm-sdk/php8.4-src"), "LEAN_BRIDGE_PHP_SOURCE");
+	const preparedRuntime = inputs || environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME === undefined ? null : await directory(environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME, "LEAN_BRIDGE_PHP_COPIED_RUNTIME");
+	const leanRuntimeRoot = inputs || preparedRuntime ? null : await directory(environment.LEAN_BRIDGE_PHP_LEAN_RUNTIME ?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser-php-wasm-3.1.68`), "LEAN_BRIDGE_PHP_LEAN_RUNTIME");
 	let leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
 	if(!leanPrefix)
 	{
@@ -65,7 +72,17 @@ export const buildPhpWasmProject = async options => {
 	try
 	{
 		const runtimeRoot = join(staging, "php-wasm/runtime"), componentRoot = join(staging, "php-wasm/component");
-		if(preparedRuntime)
+		if(inputs)
+		{
+			phpSource = join(staging, ".compiler-inputs/php");
+			for(const [path, bytes] of inputs.files)
+			{
+				if(!path.startsWith("php/") && !path.startsWith("runtime/")) continue;
+				const destination = path.startsWith("runtime/") ? join(runtimeRoot, path.slice(8)) : join(staging, ".compiler-inputs", path);
+				await mkdir(dirname(destination), { recursive: true }); await writeFile(destination, bytes, { flag: "wx" });
+			}
+			if((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity !== inputs.manifest.runtimeIdentity) throw new Error("Prepared PHP-Wasm runtime changed while staging");
+		} else if(preparedRuntime)
 		{
 			const expected = await readVerifiedPhpWasmCopiedRuntime(preparedRuntime);
 			await cp(preparedRuntime, runtimeRoot, { recursive: true });
@@ -73,6 +90,11 @@ export const buildPhpWasmProject = async options => {
 		} else await buildPhpWasmCopiedRuntime({ outputRoot: runtimeRoot, leanRuntimeRoot, emsdkRoot, signal });
 		onProgress?.({ phase: "build", state: "info", message: "Compiling checked PHP-Wasm Lean exports" });
 		const built = await buildPhpWasmCopiedComponent({ projectRoot: project, outputRoot: componentRoot, runtimeRoot, leanPrefix, emsdkRoot, phpSource, configurationSha256: record.sha256, lakeSnapshot: intent.lakeSnapshot, signal });
+		if(inputs)
+		{
+			if(built.receipt.phpHeadersSha256 !== inputs.manifest.phpHeadersSha256) throw new Error("Prepared PHP-Wasm headers changed while staging");
+			await rm(join(staging, ".compiler-inputs"), { recursive: true });
+		}
 		signal?.throwIfAborted();
 		const packages = await buildPhpWasmCopiedPackages({ componentRoot, runtimeRoot, outputRoot: join(staging, "packages/php-wasm"), leanPrefix, npmSettings: config.npm, composerSettings: config.composer });
 		await readVerifiedPhpWasmCopiedPackageSet(packages.output);

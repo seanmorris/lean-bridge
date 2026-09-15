@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 
 import { canonicalJson } from "../capsule/node.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
+import { readVerifiedPhpWasmCompilerInputs } from "./php-wasm-compiler-inputs.mjs";
 
 const installedRoot = fileURLToPath(new URL("../../", import.meta.url));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -60,21 +61,23 @@ const readManifest = async root => {
 	return config;
 };
 
-const packageReadme = (config, runtimeIncluded) => `# Lean Bridge
+const packageReadme = (config, runtimeIncluded, phpWasmInputsIncluded) => `# Lean Bridge
 
 Compile Lean libraries into packages with generated native-language APIs.
 
 ## Use the CLI
 
-Run \`lean-bridge --help\` after installation. Authors need Node 22, Git, and Nix or Docker for isolated compilation.
+Run \`lean-bridge --help\` after installation. npm authors need Node 22, Git, and Nix or Docker for isolated compilation. Other targets use the tools listed in the author guide.
 
 \`lean-bridge analyze --project . --target npm --check\` inspects an ordinary Lake project.
 
 \`lean-bridge build --project . --target npm --output build/component\` compiles its supported exports.
 
-\`lean-bridge verify --receipt /path/to/component-package-receipt.json\` checks both local npm archives. Signed archives additionally require the trusted policy, policy hash, archive path, signed subject and expected coordinate listed by \`lean-bridge verify --help\`. Verification requires only Node and the supplied files, without a project or build tools.
+\`lean-bridge verify --receipt /path/to/package-set-receipt.json\` checks a prepared multi-ecosystem archive set. Existing npm receipts remain supported. Signed archives additionally require the trusted policy, policy hash, archive path, signed subject and expected coordinate listed by \`lean-bridge verify --help\`. Verification requires only Node and the supplied files, without a project or build tools.
 
-This candidate is \`${config.name}@${config.version}\`. ${runtimeIncluded ? "It includes the prebuilt runtime needed to prepare local component archives." : "It does not include runtime binaries. This runtime-free candidate supports receipt verification and packaging checks; it is not a complete author release."}
+This candidate is \`${config.name}@${config.version}\`. ${runtimeIncluded ? "It includes the prebuilt JavaScript-Wasm runtime needed to prepare local component archives." : "It does not include the JavaScript-Wasm runtime."}
+
+${phpWasmInputsIncluded ? "It includes the PHP-Wasm runtime and configured headers. PHP-Wasm authors need Lean 4.32.2 and the pinned Emscripten 3.1.68 SDK, but no Lean Bridge checkout or PHP configure tools." : "It does not include PHP-Wasm compiler inputs. Supply a prepared bundle through LEAN_BRIDGE_PHP_INPUTS to build that target."}
 
 ## Documentation
 
@@ -98,8 +101,9 @@ Lean Bridge source is distributed under the MIT license in LICENSE. Upstream run
  * @param root0.projectRoot - Checkout containing the reviewed CLI source manifest.
  * @param root0.outputRoot - New directory reserved for the candidate and its inventory.
  * @param root0.runtimeRoot - Optional prepared directory containing main.mjs and main.wasm.
+ * @param root0.phpWasmInputsRoot - Optional verified PHP-Wasm compiler-input directory.
  */
-export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRoot, runtimeRoot = null }) => {
+export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRoot, runtimeRoot = null, phpWasmInputsRoot = null }) => {
 	const root = await realpath(projectRoot);
 	if(typeof outputRoot !== "string" || outputRoot === "") fail("cli-package-output-required", "A new CLI package output directory is required");
 	const output = resolve(outputRoot);
@@ -116,7 +120,12 @@ export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRo
 			files.set(`runtime/wasm/${path}`, await sourceFile(runtime, path));
 		if(!WebAssembly.validate(files.get("runtime/wasm/main.wasm"))) fail("invalid-cli-runtime", "The supplied CLI runtime is not a valid WebAssembly module");
 	}
-	files.set("README.md", Buffer.from(packageReadme(config, runtimeRoot !== null)));
+	if(phpWasmInputsRoot !== null)
+	{
+		const inputs = await readVerifiedPhpWasmCompilerInputs(phpWasmInputsRoot);
+		for(const [path, bytes] of inputs.files) files.set(`runtime/php-wasm/${path}`, bytes);
+	}
+	files.set("README.md", Buffer.from(packageReadme(config, runtimeRoot !== null, phpWasmInputsRoot !== null)));
 	const manifest = {
 		name: config.name
 		, version: config.version
@@ -144,6 +153,7 @@ export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRo
 		, package: { name: config.name, version: config.version }
 		, sourceDateEpoch: config.sourceDateEpoch
 		, runtimeIncluded: runtimeRoot !== null
+		, phpWasmInputsIncluded: phpWasmInputsRoot !== null
 		, productionApproved: false
 		, files: inventory
 	};

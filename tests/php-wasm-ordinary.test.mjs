@@ -23,6 +23,7 @@ import { exerciseInstalledPhpWasmPackages } from "./helpers/php-wasm-packages.mj
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
+import { buildPhpWasmCompilerInputs, readVerifiedPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -77,17 +78,34 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		? { root: cachedRuntime, ...await readVerifiedPhpWasmCopiedRuntime(cachedRuntime) }
 		: await buildPhpWasmCopiedRuntime({ outputRoot: join(working, "runtime"), leanRuntimeRoot, emsdkRoot });
 	t.diagnostic(`runtime ${runtime.identity}`);
-	const cliArchive = await buildCliNpmPackage({ outputRoot: join(working, "cli-archive") });
+	const compilerInputs = await buildPhpWasmCompilerInputs({ runtimeRoot: runtime.root, phpSource, outputRoot: join(working, "compiler-inputs") });
+	t.diagnostic(`compiler inputs ${compilerInputs.identity}, archive ${compilerInputs.archiveSha256}`);
+	const inputCopy = join(working, "relocated-compiler-source");
+	for(const [path, bytes] of (await readVerifiedPhpWasmCompilerInputs(compilerInputs.directory)).files)
+	{
+		if(path.startsWith("runtime/") || path.startsWith("php/")) await saveLakeFile(inputCopy, path, bytes);
+		else if(path.startsWith("notices/php/")) await saveLakeFile(inputCopy, `php/${path.slice(12)}`, bytes);
+	}
+	const repeatedInputsArchive = await buildPhpWasmCompilerInputs({ runtimeRoot: join(inputCopy, "runtime"), phpSource: join(inputCopy, "php"), outputRoot: join(working, "compiler-inputs-repeat") });
+	assert.deepEqual(await readFile(compilerInputs.archive), await readFile(repeatedInputsArchive.archive));
+	await rm(inputCopy, { recursive: true });
+	const cliArchive = await buildCliNpmPackage({ outputRoot: join(working, "cli-archive"), phpWasmInputsRoot: compilerInputs.directory });
 	const cliHome = join(working, "cli-installed"); await mkdir(cliHome);
 	await saveLakeFile(cliHome, "package.json", '{"private":true}');
 	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", cliArchive.archive], cwd: cliHome });
 	const cli = join(cliHome, "node_modules/.bin/lean-bridge");
-	const build = async (projectRoot, outputRoot, runtimeRoot) => {
+	const installedInputs = join(cliHome, "node_modules/lean-bridge/runtime/php-wasm");
+	assert.equal((await readVerifiedPhpWasmCompilerInputs(installedInputs)).identity, compilerInputs.identity);
+	await rename(compilerInputs.directory, `${compilerInputs.directory}-unavailable`);
+	const build = async (projectRoot, outputRoot, inputRoot = null) => {
+		const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PHP_EMSDK: emsdkRoot, LEAN_BRIDGE_RUNTIME_ROOT: "/unused-npm-runtime" };
+		for(const name of ["LEAN_BRIDGE_PHP_SOURCE", "LEAN_BRIDGE_PHP_COPIED_RUNTIME", "LEAN_BRIDGE_PHP_LEAN_RUNTIME", "LEAN_BRIDGE_PHP_INPUTS"]) delete environment[name];
+		if(inputRoot) environment.LEAN_BRIDGE_PHP_INPUTS = inputRoot;
 		const response = await processBuildRunner.capture({
 			command: process.execPath
 			, args: [cli, "build", "--project", projectRoot, "--output", outputRoot, "--target", "php-wasm", "--json", "--progress", "none"]
 			, cwd: working
-			, env: { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PHP_EMSDK: emsdkRoot, LEAN_BRIDGE_PHP_SOURCE: phpSource, LEAN_BRIDGE_PHP_COPIED_RUNTIME: runtimeRoot, LEAN_BRIDGE_RUNTIME_ROOT: "/unused-npm-runtime" } });
+			, env: environment });
 		const { result, status } = JSON.parse(response.stdout);
 		assert.equal(status, "ok"); assert.deepEqual(result.targets, ["php-wasm"]);
 		return { ...await readVerifiedPhpWasmCopiedComponent(join(outputRoot, "php-wasm/component"), runtime.identity), root: join(outputRoot, "php-wasm/component"), release: { output: join(outputRoot, "packages/php-wasm"), ...(await readVerifiedPhpWasmCopiedPackageSet(join(outputRoot, "packages/php-wasm"))) } };
@@ -98,7 +116,8 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const project = join(working, name), buildRoot = join(working, `${name}-compiled`);
 		await createPhpWasmOrdinaryProject(project, name);
 		const before = await lakeInputState(project);
-		const result = await build(project, buildRoot, runtime.root), outputRoot = result.root;
+		const result = await build(project, buildRoot), outputRoot = result.root;
+		assert.equal(result.receipt.phpHeadersSha256, compilerInputs.phpHeadersSha256);
 		assert.equal(result.model.pointerBits, 32); assert.equal(result.model.exports.length, 44);
 		assert.deepEqual(await lakeInputState(project), before);
 		await readVerifiedPhpWasmCopiedComponent(outputRoot, runtime.identity);
@@ -108,10 +127,19 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const repeatedSource = join(working, "relocated-source", name);
 		await cp(project, repeatedSource, { recursive: true });
 		const beforeRepeated = await lakeInputState(repeatedSource);
-		const repeatedRuntime = join(working, "relocated-runtime", name);
-		await cp(runtime.root, repeatedRuntime, { recursive: true });
+		const extracted = join(working, "relocated-inputs", name); await mkdir(extracted, { recursive: true });
+		await processBuildRunner.capture({ command: "tar", args: ["-xzf", compilerInputs.archive, "-C", extracted], cwd: working });
+		const repeatedInputs = join(extracted, "php-wasm-compiler-inputs");
+		assert.equal((await readVerifiedPhpWasmCompilerInputs(repeatedInputs)).identity, compilerInputs.identity);
 		const repeatedBuild = join(working, `${name}-repeat`);
-		const repeated = await build(repeatedSource, repeatedBuild, repeatedRuntime);
+		// Hide the default bundle so the repeated build must use the explicit,
+		// relocated bundle, without raw PHP source or target-archive selectors.
+		await rename(installedInputs, `${installedInputs}-unavailable`);
+		let repeated;
+		try
+		{ repeated = await build(repeatedSource, repeatedBuild, repeatedInputs); }
+		finally
+		{ await rename(`${installedInputs}-unavailable`, installedInputs); }
 		assert.deepEqual(await lakeInputState(repeatedSource), beforeRepeated);
 		assert.deepEqual(result.receipt, repeated.receipt);
 		await assertRelocatedPackageSet(t, buildRoot, cli);
@@ -130,7 +158,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		await rename(project, `${project}-source-unavailable`);
 		await rename(repeatedSource, `${repeatedSource}-unavailable`);
 		await rm(buildRoot, { recursive: true }); await rm(repeatedBuild, { recursive: true });
-		await rm(repeatedRuntime, { recursive: true });
+		await rm(repeatedInputs, { recursive: true });
 		await saveLakeFile(working, `${name}-consumer.php`, phpWasmOrdinaryConsumer(name));
 		components.push({ name, root: relocated, receipt: result.receipt });
 	}

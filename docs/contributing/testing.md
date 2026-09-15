@@ -320,7 +320,7 @@ npm run acceptance:cli-package -- \
 
 The acceptance runner installs the original CLI tarball with scripts disabled, creates an independent committed Lake project, builds and reproduces its packages without a runtime-path override, then calls the generated exports from a separate installed consumer. It retains the candidate reports and command logs, and removes its own scratch directory after success. It performs no registry upload.
 
-Without `--runtime`, the packager creates a source-only candidate for packaging tests. Runtime correctness, registry acceptance, namespace ownership, and release approval remain required before publication.
+Without either input flag, the packager creates a source-only candidate for packaging tests. `--php-wasm-inputs` includes the separate PHP-Wasm runtime and headers; see [compiler-input packaging](author-toolchain.md#package-php-wasm-compiler-inputs). The PHP-Wasm suite builds with the CLI's bundled inputs, then repeats with a relocated standalone bundle while hiding the default bundle. Neither build selects checkout PHP sources or Lean target archives. `node --test tests/php-wasm-compiler-inputs.test.mjs` checks deterministic assembly, manifests, corruption, symlinks, size bounds and conflicting selectors. Runtime correctness, registry acceptance, namespace ownership, and release approval remain required before publication.
 
 ## Reference package examples
 

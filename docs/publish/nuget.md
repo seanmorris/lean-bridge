@@ -34,7 +34,7 @@ The native profile accepts concrete, pure functions with copied parameters and r
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API also fits its primitive-only source profile; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
-NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. The generic package-set receipt and signed publication integration remain tracked under VO1240; `lean-bridge verify` does not yet accept the ordinary NuGet receipt.
+NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
 ## Build and inspect the package
 

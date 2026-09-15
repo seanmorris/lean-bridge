@@ -42,7 +42,28 @@ Review the source library's license and bundled notices before publication; gene
 
 ## Build an ordinary PHP-Wasm package
 
-Prepare the [PHP-Wasm author toolchain](../contributing/author-toolchain.md#php-wasm). This compiler uses Emscripten 3.1.68 and PHP 8.4.1 headers, separately from the JavaScript-Wasm toolchain. Consumers need neither compiler nor headers.
+Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.
+
+Authors still need Lean 4.32.2 and the bundle's pinned Emscripten 3.1.68 installation:
+
+```sh
+export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
+export LEAN_BRIDGE_PHP_EMSDK=/absolute/path/to/emsdk-3.1.68
+```
+
+The Emsdk checkout must match the commit in `runtime/runtime.json`; the builder also checks compiler-file hashes. These inputs have been exercised on Linux x86-64. No Lean Bridge checkout, PHP configure tools or Lean target archives are needed for this prepared path. Consumers need none of these author tools.
+
+If the CLI does not include PHP-Wasm inputs, obtain the separate compiler-input archive and its expected SHA-256 through your trusted release channel. Compare `sha256sum /absolute/path/to/inputs.tgz` with that expected hash before extracting it into a new directory:
+
+```sh
+export LEAN_BRIDGE_PHP_INPUT_WORK=$(mktemp -d)
+tar -xzf /absolute/path/to/inputs.tgz -C "$LEAN_BRIDGE_PHP_INPUT_WORK"
+export LEAN_BRIDGE_PHP_INPUTS="$LEAN_BRIDGE_PHP_INPUT_WORK/php-wasm-compiler-inputs"
+```
+
+`lean-bridge build` checks the bundle manifest, its hash sidecar, every file, runtime compatibility and configured header identity before compilation. The sidecar alone does not authenticate a publisher. Do not combine `LEAN_BRIDGE_PHP_INPUTS` with `LEAN_BRIDGE_PHP_SOURCE`, `LEAN_BRIDGE_PHP_COPIED_RUNTIME` or `LEAN_BRIDGE_PHP_LEAN_RUNTIME`. Explicit raw-input overrides select the [checkout-based contributor setup](../contributing/author-toolchain.md#php-wasm) when no bundle override is set.
+
+The [compiler-input acceptance record](../evidence/php-wasm-inputs-20260915.md) covers bundled and separate inputs, relocated builds and installed execution.
 
 Give the npm component and Composer API separate coordinates in `lean-bridge.exports.json`:
 
