@@ -137,7 +137,7 @@ LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
   node --test --test-reporter=spec tests/php-wasm-ordinary.test.mjs
 ```
 
-Willow and Aspen each compile 44 ordinary Lean exports twice. The suite compares relocated builds, hides their source and build directories, and executes the copied artifacts in one PHP-Wasm host without compiler commands on `PATH`. It checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated PHP requests, and one runtime initialization. The [ordinary PHP-Wasm compiler record](../evidence/php-wasm-ordinary-20260915.md) documents the receipt and binary identities. This is compiled-artifact acceptance; npm/Composer package installation and lazy loading remain separate work.
+Willow and Aspen each compile 44 ordinary Lean exports twice. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks bundled PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The [compiler record](../evidence/php-wasm-ordinary-20260915.md) documents the binary identities; the [installed package record](../evidence/php-wasm-packages-20260915.md) documents loading and receipt checks. Public CLI integration, browser-engine acceptance and lazy loading remain separate work.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 

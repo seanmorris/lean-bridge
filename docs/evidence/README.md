@@ -39,6 +39,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Browser package acceptance](browser-package-acceptance.md)
 - [Native PHP release](native-php-release-package.md)
 - [PHP-Wasm release](php-wasm-release-package.md)
+- [Installed ordinary PHP-Wasm packages, 15 September 2026](php-wasm-packages-20260915.md)
 - [PHP release gate](php-release-gate.md)
 - [.NET, JVM, and Ruby acceptance](managed-consumer-acceptance.md)
 - [PyPI package](pypi-package.md)

@@ -43,4 +43,4 @@ Native regression checks pass through the extracted source pipeline. The Clover 
 
 This milestone tests compiled artifacts loaded at PHP startup. It does not add ordinary PHP-Wasm to the public build CLI, create npm or Composer archives, or implement lazy loading. It rejects Lake native C inputs, resources, callbacks and other non-copied signatures. The existing Alpha package and native PHP paths remain separate.
 
-Next, package these artifacts with automatic shared-runtime loading, closed release receipts and startup/lazy entry points. Acceptance must install unrelated packages from their archives before the consumer documentation or installed type-coverage claims change. Installed-tested coverage remains 656 cells; VO1216 remains open.
+The [following package milestone](php-wasm-packages-20260915.md) adds automatic shared-runtime loading, closed release receipts and installed npm/Composer startup acceptance. Public CLI integration and lazy loading remain open. Installed-tested coverage remains 656 cells; VO1216 remains open.

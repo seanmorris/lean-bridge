@@ -251,7 +251,7 @@ jobs:
         run: |
           bash scripts/bootstrap-php-wasm-ci.sh
           node --test tests/php-copied-zend.test.mjs
-      - name: Compile ordinary Lean APIs and execute relocated PHP-Wasm artifacts
+      - name: Compile ordinary Lean APIs and execute installed PHP-Wasm packages
         id: ordinary_php_wasm
         continue-on-error: true
         env:

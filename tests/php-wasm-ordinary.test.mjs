@@ -18,6 +18,8 @@ import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { createPhpWasmOrdinaryProject, phpWasmOrdinaryConsumer } from "./helpers/php-wasm-ordinary.mjs";
+import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from "../src/release/php-wasm-copied-package.mjs";
+import { exerciseInstalledPhpWasmPackages } from "./helpers/php-wasm-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -55,7 +57,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		? { root: cachedRuntime, ...await readVerifiedPhpWasmCopiedRuntime(cachedRuntime) }
 		: await buildPhpWasmCopiedRuntime({ outputRoot: join(working, "runtime"), leanRuntimeRoot, emsdkRoot });
 	t.diagnostic(`runtime ${runtime.identity}`);
-	const components = [];
+	const components = [], releases = [];
 	for(const name of ["Willow", "Aspen"])
 	{
 		const project = join(working, name), outputRoot = join(working, `${name}-compiled`);
@@ -78,6 +80,15 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		assert.deepEqual(result.receipt, repeated.receipt);
 		assert.deepEqual(await readFile(join(outputRoot, "artifacts.json")), await readFile(join(repeated.root, "artifacts.json")));
 		t.diagnostic(`${name} extension ${result.receipt.wasmLibrary.sha256}`);
+		const coordinates = { npmSettings: { name: `@example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" }, composerSettings: { name: `example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" } };
+		const release = await buildPhpWasmCopiedPackages({ componentRoot: outputRoot, runtimeRoot: runtime.root, leanPrefix, outputRoot: join(working, `${name}-packages`), ...coordinates });
+		const repeatRelease = await buildPhpWasmCopiedPackages({ componentRoot: repeated.root, runtimeRoot: repeatedRuntime, leanPrefix, outputRoot: join(working, `${name}-packages-repeat`), ...coordinates });
+		assert.deepEqual(release.report, repeatRelease.report);
+		await readVerifiedPhpWasmCopiedPackageSet(release.output);
+		if(releases.length) assert.deepEqual(release.report.archives[0], releases[0].report.archives[0], "Both packages must depend on the same runtime archive");
+		await rm(repeatRelease.output, { recursive: true });
+		releases.push(release);
+		t.diagnostic(`${name} package archives ${JSON.stringify(release.report.archives.map(({ role, sha256 }) => ({ role, sha256 })))}`);
 		const relocated = join(working, "installed", name);
 		await cp(outputRoot, relocated, { recursive: true });
 		await rename(project, `${project}-source-unavailable`);
@@ -158,6 +169,23 @@ console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 
 		, args: ["host.mjs"], cwd: working, timeoutMs: 120000
 		, env: { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" } });
 	assert.deepEqual(JSON.parse(host.stdout.trim()), { status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20 });
+	// Resealing a receipt cannot authorize changed generated loaders or a new
+	// install hook. The reader reconstructs the sources and deterministic archives.
+	const packageVictim = releases[0];
+	await assert.rejects(buildPhpWasmCopiedPackages({ componentRoot: components[0].root, runtimeRoot: relocatedRuntime, leanPrefix, outputRoot: join(components[0].root, "nested-package-output") }), /inside its compiled inputs/);
+	for(const path of ["component/package/index.mjs", "composer/src/Api.php", `archives/${packageVictim.report.archives[0].archive}`])
+	{
+		const absolute = join(packageVictim.output, path), original = await readFile(absolute);
+		const changed = Buffer.concat([original, Buffer.from("\n// substituted\n")]);
+		await saveLakeFile(packageVictim.output, path, changed);
+		const receipt = structuredClone(packageVictim.report);
+		receipt.files[path] = { bytes: changed.length, sha256: sha256(changed) };
+		await saveLakeFile(packageVictim.output, "php-wasm-package-set.json", canonicalJson(receipt));
+		await assert.rejects(readVerifiedPhpWasmCopiedPackageSet(packageVictim.output), /drift|differs/);
+		await saveLakeFile(packageVictim.output, path, original);
+		await saveLakeFile(packageVictim.output, "php-wasm-package-set.json", canonicalJson(packageVictim.report));
+	}
+	await exerciseInstalledPhpWasmPackages({ working, releases, phpHost, probe: join(working, "probe.so"), t });
 	const victim = components[0];
 	await assert.rejects(readVerifiedPhpWasmCopiedComponent(victim.root, "0".repeat(64)), /differs/);
 	for(const [label, changes, pattern] of [
