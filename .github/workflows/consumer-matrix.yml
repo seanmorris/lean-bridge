@@ -229,13 +229,17 @@ jobs:
           key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Install native PHP and PHP-Wasm host build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-common composer zstd
+          bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
       - name: Build ordinary PHP packages and execute relocated Composer installations
         id: ordinary_php
         continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_PHP_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential php-cli php-common composer zstd
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           node --test tests/native-php.test.mjs

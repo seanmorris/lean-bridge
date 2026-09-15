@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [[ $# -gt 0 && ( $# -ne 1 || "$1" != --check-prerequisites ) ]]; then
+  echo 'Usage: bootstrap-php-wasm-ci.sh [--check-prerequisites]' >&2
+  exit 2
+fi
+
 LEAN_BRIDGE_PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 LEAN_BRIDGE_PHP_WASM_EMSDK="$LEAN_BRIDGE_PROJECT_ROOT/.toolchains/emsdk-php-wasm"
 LEAN_BRIDGE_PHP_WASM_SDK="$LEAN_BRIDGE_PROJECT_ROOT/build/php-wasm-sdk"
@@ -21,6 +26,11 @@ for command in autoconf automake bison flex git gperf libtoolize make npm re2c; 
     exit 1
   fi
 done
+
+if [[ ${1:-} == --check-prerequisites ]]; then
+  echo 'PHP-Wasm bootstrap prerequisites are available.'
+  exit 0
+fi
 
 mkdir -p "$LEAN_BRIDGE_PROJECT_ROOT/.toolchains" "$LEAN_BRIDGE_PHP_WASM_SDK"
 

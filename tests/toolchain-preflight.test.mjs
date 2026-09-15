@@ -5,13 +5,40 @@
  */
 
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm, symlink } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 
 import { collectToolchainPreflight, renderToolchainPreflight, toolchainPreflightProfiles } from "../src/adoption/toolchain-preflight.mjs";
 
 const commandFor = async command => `/tools/${command}`;
 const absent = new Set();
 const versions = new Map();
+
+test("PHP-Wasm host bootstrap checks prerequisites before modifying compiler inputs", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-php-prerequisites-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const bootstrap = resolve("scripts/bootstrap-php-wasm-ci.sh");
+	const source = await readFile(bootstrap, "utf8");
+	const commands = source.match(/for command in ([^;]+); do/)[1].split(" ");
+	await symlink("/usr/bin/dirname", join(scratch, "dirname"));
+	for(const command of commands.filter(name => name !== "gperf")) await symlink("/usr/bin/true", join(scratch, command));
+	const execute = promisify(execFile), env = { PATH: scratch };
+	await assert.rejects(execute("/bin/bash", [bootstrap, "--check-prerequisites"], { env }), error => error.code === 1 && error.stderr.trim() === "bootstrap-php-wasm-ci requires gperf");
+	await symlink("/usr/bin/true", join(scratch, "gperf"));
+	assert.match((await execute("/bin/bash", [bootstrap, "--check-prerequisites"], { env })).stdout, /prerequisites are available/);
+	await assert.rejects(execute("/bin/bash", [bootstrap, "--unknown"], { env }), error => error.code === 2);
+	assert.deepEqual((await readdir(scratch)).sort(), [...commands, "dirname"].sort());
+	const workflow = (await readFile(".github/workflows/consumer-matrix.yml", "utf8")).split("    name: Native PHP and PHP-Wasm\n")[1].split("\n  native-consumers:")[0];
+	const preparation = workflow.split("      - name: Install native PHP and PHP-Wasm host build tools\n")[1].split("      - name:")[0];
+	assert.match(preparation, /bootstrap-php-wasm-ci\.sh --check-prerequisites/);
+	for(const command of commands.filter(name => !["git", "npm", "make"].includes(name)))
+		assert.ok(preparation.includes(command === "libtoolize" ? "libtool" : command), command);
+	assert.ok(workflow.indexOf("--check-prerequisites") < workflow.indexOf("id: ordinary_php"));
+});
 const runner = Object.freeze({
 	/**
 	 * Returns deterministic probe output or a configured absence.
