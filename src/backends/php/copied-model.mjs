@@ -22,8 +22,11 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * Bind source names and PHP types to the shared copied C surface.
  *
  * @param ir - Authoritative compiler-derived Binding IR.
+ * @param options - Explicit PHP integer width for the compiled transport.
+ * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
-export const compileCopiedPhpModel = ir => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64 } = {}) => {
+	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
 	const surface = compilePrimitiveCSurface(ir);
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {
@@ -41,6 +44,7 @@ export const compileCopiedPhpModel = ir => {
 			for(const field of copy.fields) if(reserved.has(field.name.toLowerCase())) fail(ir.declarations[0], `PHP field name is reserved: ${field.name}`);
 		}
 		copy.publicType = copy.record ? copy.publicName : copy.element ? "array" : primitives[copy.ref.name];
+		if(integerBits === 32 && ["uint32", "int64"].includes(copy.ref.name)) copy.publicType = "BigInteger";
 		copy.docType = copy.element ? `list<${copy.element.docType}>` : copy.publicType;
 		copy.ctype = copy.aggregate ? copy.name : copy.ref.name === "unit" ? "uint8_t" : copy.name;
 	}

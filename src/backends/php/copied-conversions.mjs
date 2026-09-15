@@ -26,16 +26,18 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 	const lines = [], name = copy.ref.name, publicType = `\\${model.namespace}\\${copy.publicType}`;
 	if(name === "unit") lines.push("if ($value !== null) throw new \\TypeError('Unit requires null');");
 	else if(name === "bool") lines.push("if (!is_bool($value)) throw new \\TypeError('Bool requires bool');");
-	else if(/^(?:u?int)(?:8|16|32|64)$/.test(name) && name !== "uint64")
+	else if(/^(?:u?int)(?:8|16|32|64)$/.test(name) && copy.publicType !== "BigInteger")
 	{
 		const bits = Number(name.match(/\d+/)[0]), signed = name.startsWith("int");
 		lines.push("if (!is_int($value)) throw new \\TypeError('Expected an int without numeric coercion');");
 		if(bits !== 64) lines.push(`if ($value < ${signed ? -(2 ** (bits-1)) : 0} || $value > ${2 ** (signed ? bits-1 : bits) - 1}) throw new \\ValueError('Integer is outside the declared Lean range');`);
-	} else if(name === "uint64" || name === "nat" || name === "int")
+	} else if(copy.publicType === "BigInteger")
 	{
 		lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected BigInteger');`, "$decimal = (string) $value;", `${publicType}::fromDecimal($decimal);`, "$budget->charge(strlen($decimal));");
-		if(name !== "int") lines.push("if ($decimal[0] === '-') throw new \\ValueError('Expected an unsigned integer');");
+		if(name !== "int" && name !== "int64") lines.push("if ($decimal[0] === '-') throw new \\ValueError('Expected an unsigned integer');");
 		if(name === "uint64") lines.push("if (strlen($decimal) > 20 || (strlen($decimal) === 20 && strcmp($decimal, '18446744073709551615') > 0)) throw new \\ValueError('Integer is outside the UInt64 range');");
+		if(name === "uint32") lines.push("if (strlen($decimal) > 10 || (strlen($decimal) === 10 && strcmp($decimal, '4294967295') > 0)) throw new \\ValueError('Integer is outside the UInt32 range');");
+		if(name === "int64") lines.push("$magnitude = ltrim($decimal, '-');", "$limit = $decimal[0] === '-' ? '9223372036854775808' : '9223372036854775807';", "if (strlen($magnitude) > 19 || (strlen($magnitude) === 19 && strcmp($magnitude, $limit) > 0)) throw new \\ValueError('Integer is outside the Int64 range');");
 	} else if(name === "float32" || name === "float64") lines.push("if (!is_float($value)) throw new \\TypeError('Expected a float without numeric coercion');");
 	else if(name === "string") lines.push("if (!is_string($value)) throw new \\TypeError('Expected a UTF-8 string');", "$budget->charge(strlen($value));", "if (preg_match('//u', $value) !== 1) throw new \\ValueError('String requires valid UTF-8');");
 	else if(name === "bytes") lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected Bytes');`, "$budget->charge(strlen($value->toString()));");

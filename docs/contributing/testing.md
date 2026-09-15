@@ -112,7 +112,16 @@ source scripts/env.sh
 LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs
 ```
 
-This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires both this suite and the Alpha transport checks below.
+This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires this suite, the Alpha transport checks below, and the copied Zend boundary check.
+
+The generic Zend adapter has a separate real PHP-Wasm check:
+
+```sh
+bash scripts/bootstrap-php-wasm-ci.sh
+LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs
+```
+
+This compiles two synthetic C providers and executes their generated APIs inside 32-bit PHP-Wasm. It checks exact integer conversion, nested copied values, relocated builds, allocation failures and Zend bailout cleanup. It does not run Lean or establish installed ordinary PHP-Wasm support. The [Zend boundary record](../evidence/php-wasm-copied-zend-20260915.md) lists the tested scope and remaining compiler/package integration.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 

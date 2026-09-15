@@ -10,7 +10,12 @@ import { copiedPhpAssets, copiedPhpLoader } from "./copied-assets.mjs";
 import { copiedPhpValues, copiedPhpHelpers } from "./copied-support.mjs";
 import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
 
-const publicSource = model => `<?php
+/**
+ * Render the public value API shared by the FFI and Zend transports.
+ *
+ * @param model - Admitted copied PHP projection.
+ */
+export const copiedPhpPublicSource = model => `<?php
 declare(strict_types=1);
 namespace ${model.namespace};
 
@@ -91,7 +96,7 @@ ${fn.declaration.parameters.map((site, i) => { const copy = model.surface.copy(s
  * @param evidence - Optional verified compiled library identities.
  */
 export const renderCopiedPhpPackage = (model, evidence = null) => {
-	const files = { "src/Api.php": publicSource(model)
+	const files = { "src/Api.php": copiedPhpPublicSource(model)
 		, "src/Internal/Native.php": nativeSource(model, evidence)
 		, "src/Internal/Runtime.php": copiedPhpLoader
 		, "README.md": `# ${model.namespace}\n\nInstall the prepared Composer archive and require vendor/autoload.php. Call the generated ${model.namespace} functions. The package includes the compiled Lean libraries and loads its runtime automatically. Consumers do not compile Lean or configure a package-specific Zend extension.\n\nRequires PHP 8.2+ (below 9), NTS CLI, Linux x86-64, the packaged glibc floor, and FFI enabled. This copied-value profile does not cover FPM, Apache, cli-server, ZTS or PHP-Wasm. Compatible packages share one process runtime; post-fork calls and an already loaded foreign Lean runtime are rejected. No per-package or shared runtime files are written during use.\n\nUnit is null. Fixed-width integers use range-checked PHP int except UInt64, which uses BigInteger. Nat and Int also use BigInteger::fromDecimal with canonical decimal text (up to 16384 digits). String requires UTF-8, including NUL. ByteArray uses Bytes::fromString. Floats require PHP float; Float32 rounds to binary32 and preserves NaN classification, infinities and signed zero. Arrays are consecutive-key lists; records are final readonly value classes.\n\nInput parameters deliberately use mixed with precise PHPDoc: generated checks reject coercion even if the caller omits strict_types. Records and lists have independent copied results. Only pure, acyclic types up to 32 levels deep are admitted. Validation, FFI scratch/output conversion, and native input/output copies each have a 16 MiB limit; PHP lists account for at least 32 bytes per element. These budgets do not bound the Lean algorithm's working memory. Native output owners are released in finally.\n\n${model.surface.functions.map(fn => `- ${model.namespace}\\${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };

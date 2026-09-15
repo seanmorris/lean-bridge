@@ -243,6 +243,14 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:php
+      - name: Exercise generic copied Zend conversions in 32-bit PHP-Wasm
+        id: copied_zend
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_PHP_WASM_ZEND_TEST: "1"
+        run: |
+          bash scripts/bootstrap-php-wasm-ci.sh
+          node --test tests/php-copied-zend.test.mjs
       - name: Record PHP observations
         if: always()
         shell: bash
@@ -267,7 +275,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success' || steps.copied_zend.outcome != 'success'
         run: exit 1
 
   native-consumers:
