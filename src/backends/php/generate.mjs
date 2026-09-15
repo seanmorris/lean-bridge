@@ -10,6 +10,8 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { auditPhpPackage } from "./package-audit.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { compileCopiedPhpModel } from "./copied-model.mjs";
+import { renderCopiedPhpPackage } from "./copied-values.mjs";
 
 /**
  * Reports PHP binding generation failures with stable machine-readable codes and structured diagnostic context.
@@ -1127,6 +1129,8 @@ const publicExports = (projection, support) => [
  */
 export const compilePhpPackageModel = ir => {
 	validateBindingIr(ir);
+	if(ir.declarations.every(declaration => declaration.kind === "function") && ir.types.every(type => type.kind === "record"))
+		return Object.freeze({ ir, copied: compileCopiedPhpModel(ir) });
 	validateCoverage(ir);
 	const projection = compilePhpProjection(ir);
 	const support = supportProfile(projection);
@@ -1139,6 +1143,7 @@ export const compilePhpPackageModel = ir => {
  * @param model - Validated PHP package projection model.
  */
 export const renderPhpPackageLayout = model => {
+	if(model.copied) return renderCopiedPhpPackage(model.copied);
 	const { ir, projection, support } = model;
 	const root = projection.package.namespace;
 	const files = {};

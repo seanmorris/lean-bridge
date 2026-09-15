@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { generateCopiedPhpPackage } from "./copied-values.mjs";
 
 /**
  * Reports PHP package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -107,6 +108,20 @@ export const auditPhpPackage = (ir, files) => {
 	if(files === null || typeof files !== "object" || Array.isArray(files))
 	{
 		fail("invalid-package", "generated PHP package must be a file map");
+	}
+	if(parseJson(files, "binding-manifest.json").generator?.id === "lean-wasm/php-copied")
+	{
+		const expected = generateCopiedPhpPackage(ir), manifest = parseJson(files, "binding-manifest.json");
+		const reference = parseJson(expected, "binding-manifest.json");
+		if(files["src/Api.php"] !== expected["src/Api.php"]
+			|| ["schemaVersion", "generator", "component", "bindingIrSha256", "namespace", "publicFiles", "exports", "files"].some(key => JSON.stringify(manifest[key]) !== JSON.stringify(reference[key]))
+			|| JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
+			|| JSON.stringify(sorted(Object.keys(manifest.filesSha256 ?? {}))) !== JSON.stringify(sorted(Object.keys(expected).filter(path => path !== "binding-manifest.json"))))
+			fail("copied-surface-drift", "PHP copied package differs from the admitted source API");
+		for(const [path, digest] of Object.entries(manifest.filesSha256))
+			if(sha256(requireFile(files, path)) !== digest) fail("generated-file-drift", `${path} differs from its generated hash`);
+		assertCleanPublicSurface(files["src/Api.php"], "src/Api.php");
+		return true;
 	}
 	const projection = compilePhpProjection(ir);
 	const manifest = parseJson(files, "binding-manifest.json");

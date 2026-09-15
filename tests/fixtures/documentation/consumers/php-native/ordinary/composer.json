@@ -1,0 +1,8 @@
+{
+  "name": "example/lean-php-consumer",
+  "repositories": [
+    { "packagist.org": false },
+    { "type": "artifact", "url": "./releases" }
+  ],
+  "require": { "example/clover-api": "2.0.0-RC.1" }
+}

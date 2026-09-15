@@ -143,7 +143,7 @@
     {"id":"browser-javascript","consumer":"browser-javascript","language":"javascript","context":"Browser main thread","wordBits":32},
     {"id":"browser-react","consumer":"browser-javascript","language":"javascript","context":"React lifecycle on the browser main thread","wordBits":32},
     {"id":"browser-worker","consumer":"browser-javascript","language":"javascript","context":"Dedicated browser worker","wordBits":32},
-    {"id":"php-native","consumer":"php-native","language":"php","context":"Native Zend extension; PHP_INT_SIZE = 8","wordBits":64},
+    {"id":"php-native","consumer":"php-native","language":"php","context":"Ordinary NTS CLI with FFI; reviewed Alpha Zend extension; PHP_INT_SIZE = 8","wordBits":64},
     {"id":"php-wasm","consumer":"php-wasm","language":"php","context":"Node-hosted PHP-Wasm; PHP_INT_SIZE = 4; lazy and startup adapters","wordBits":32},
     {"id":"dotnet","consumer":"dotnet","language":"csharp","context":"C# over generated native interop","wordBits":64},
     {"id":"java","consumer":"jvm","language":"java","context":"Java over finalized FFM","wordBits":64},
@@ -156,6 +156,105 @@
     {"id":"wit-wasi","consumer":"wit-wasi","language":"wit","context":"Wasmtime Component Model wrapper over an x86-64 native Lean host","wordBits":64}
   ],
   "evidence": [
+    {
+      "id": "native-php-installed-copied",
+      "kind": "installed",
+      "revision": "0413a9d241574326e663112bcbe87cdcc25c318e",
+      "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
+      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/native-php-copied-20260915.md",
+          "sha256": "b87970d09b69ab987d6293d1726939d9f5aceff3359a01eaeca00367ddaabb3f"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "0ff019aea786262b585d9e5d305521231847f8094153d946b0f437348953093c"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
+        },
+        {
+          "path": "src/build/native-php-artifacts.mjs",
+          "sha256": "2ac46808118537df1b347d4d947812dca3e6aeddbdd17613c5534e909c0860c9"
+        },
+        {
+          "path": "src/release/native-composer.mjs",
+          "sha256": "341995f9ff8268a976bffae7822218393ebfb0b8946aeaed4270d7ff25040805"
+        },
+        {
+          "path": "src/backends/php/generate.mjs",
+          "sha256": "a6dccee24b0a7869b756b50a7ae60b8d105208deb9c7a95d634b29294ed8f367"
+        },
+        {
+          "path": "src/backends/php/package-audit.mjs",
+          "sha256": "0729a7b3169f8057970a72547ca8fda2f1e5cc7d9aecb0d2e6a2222396c85402"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "302bd75b6b8befbfe00d18f761bbf15d683cba3d2bb0ca8f0bd1553cdfb26dec"
+        },
+        {
+          "path": "src/backends/php/copied-assets.mjs",
+          "sha256": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1"
+        },
+        {
+          "path": "src/backends/php/copied-support.mjs",
+          "sha256": "1a903db0da76b4b8067e39527deb4ddc5ba882879cab2822253def4bf08ae1de"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "4de266c6eddaa411c865a8153a7250f1cfc42a395047f00a4df049c6425944e4"
+        },
+        {
+          "path": "src/backends/php/copied-values.mjs",
+          "sha256": "ae4fbcb735207584efd14772357e4b8b887ca0523866265fe0b02df8f90031c9"
+        },
+        {
+          "path": "tests/native-php.test.mjs",
+          "sha256": "d16aa31e44b2cd5e705e36a513587a4f16caf93889cfea37c07ea84a947cf7e4"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/php-native/ordinary/composer.json",
+          "sha256": "96c39ba510530c16ada9d35f461b8c20518d22e58d24c6d8f2610bcb21e03006"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/php-native/ordinary/main.php",
+          "sha256": "6bded0344e96ffd64c9a9c4ca2f7e4fe655f75d6219f6948409daf37e6304d3f"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "example-clover-api-2.0.0-RC.1-linux-x86_64.zip",
+          "sha256": "7414aec6f6865a84bd292f227c104604971118438f9d2940dda7d05ba53b03df"
+        },
+        {
+          "path": "example-juniper-api-2.0.0-RC.1-linux-x86_64.zip",
+          "sha256": "f21694c55a51decfe6e0edaab9be9ade03f839d03ea04b21d9c68365aa5255d2"
+        }
+      ]
+    },
     {
       "id": "native-rust-installed-copied",
       "kind": "installed",
@@ -213,11 +312,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -229,7 +328,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -316,11 +415,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -328,7 +427,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -403,11 +502,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -419,7 +518,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -498,11 +597,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -510,7 +609,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -526,7 +625,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
+          "sha256": "36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"
         }
       ],
       "artifacts": [
@@ -593,11 +692,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -609,7 +708,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -625,7 +724,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
+          "sha256": "36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"
         }
       ],
       "artifacts": [
@@ -696,11 +795,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -712,7 +811,7 @@
         },
         {
           "path": "src/build/canonical-build.mjs",
-          "sha256": "6ff6e58cf339f7bd7141bf2a56be6430fb5d239344182c72724eedd8e0ad46b7"
+          "sha256": "b6fd93aaebff13f80ca8f04cfe58ffa7d1ab23775d6782192dd2b3c64c56f507"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -728,7 +827,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
+          "sha256": "36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"
         }
       ],
       "artifacts": [
@@ -795,7 +894,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -807,7 +906,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -819,7 +918,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
+          "sha256": "36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -878,11 +977,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "92ff1660f9a05909070f957b7ff50ab2d7a597be414971e4a388a68358c856eb"
+          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -918,7 +1017,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"
+          "sha256": "36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -963,7 +1062,7 @@
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
         {"path":"src/build/multi-profile-project.mjs","sha256":"cb90cfc32fc21180f58a7dd5d920e7eb537e0a136fed4045cdf883517b683f98"},
         {"path":"tests/semantic-model.test.mjs","sha256":"d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"},
-        {"path":"tests/multi-profile-project.test.mjs","sha256":"acef74a11cc1ea3315a3e7831187a33ee342eba59b9d139c98aed5c36f431f1f"},
+        {"path":"tests/multi-profile-project.test.mjs","sha256":"36709b6cf375ef0bb70600293e9ad6b8b930834d03431c8cd658e9aae94ff735"},
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
           "sha256": "9ff2b317a0163d6c41136a4f829369587deab02a9dc14d13445bcffff6d2e52d"
@@ -1011,7 +1110,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "302b1118a1dcf68c3f34dee0840786a0e6ea6f2aa0cc2ee51a79038886189b5f"
+          "sha256": "396573268e7ee5d0077104ea71e1f3165876de5a7b97e12a9f48789998c222f0"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1219,7 +1318,7 @@
       "scope": "Shared PHP syntax and coverage guards. Unit is return-only; nullable Option cannot preserve nested Option or Option Unit; result generation rejects.",
       "files": [
         {"path":"src/backends/php/projection.mjs","sha256":"087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"},
-        {"path":"src/backends/php/generate.mjs","sha256":"4ab8a7552d9a19f47ef26bf900aa1f7a7f43ba3b1c774c90baab8a7ac4c329f6"}
+        {"path":"src/backends/php/generate.mjs","sha256":"a6dccee24b0a7869b756b50a7ae60b8d105208deb9c7a95d634b29294ed8f367"}
       ],
       "artifacts": []
     },
@@ -1321,6 +1420,186 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-php-copied",
+      "profiles": [
+        "php-native"
+      ],
+      "path": "ordinary-source",
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "scope": "Relocated Composer installations exercise copied primitives, nested arrays and acyclic records from two unrelated ordinary Lean projects, without compilers or runtime paths.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "null",
+          "result": "null",
+          "field": "null"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "uint64": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "int64": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        },
+        "nat": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "int": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "float64": {
+          "parameter": "float",
+          "result": "float",
+          "field": "float"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        },
+        "bytes": {
+          "parameter": "Bytes",
+          "result": "Bytes",
+          "field": "Bytes"
+        },
+        "array": {
+          "parameter": "list<T>",
+          "result": "list<T>",
+          "field": "list<T>"
+        },
+        "record": {
+          "parameter": "Generated readonly class",
+          "result": "Generated readonly class",
+          "field": "Generated readonly class"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-php-installed-copied"
+          ],
+          "note": "Compiler metadata, byte-identical relocated Composer ZIPs and offline installed PHP execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-php-installed-copied"
+          ],
+          "note": "Compiler metadata, byte-identical relocated Composer ZIPs and offline installed PHP execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-php-installed-copied"
+          ],
+          "note": "Compiler metadata, byte-identical relocated Composer ZIPs and offline installed PHP execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-php-installed-copied"
+          ],
+          "note": "Compiler metadata, byte-identical relocated Composer ZIPs and offline installed PHP execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-php-installed-copied"
+          ],
+          "note": "Compiler metadata, byte-identical relocated Composer ZIPs and offline installed PHP execution."
+        }
+      },
+      "limitations": [
+        "PHP 8.2+ below 9, NTS CLI on Linux x86-64, FFI enabled and readable /proc/self/maps. Local glibc 2.36 acceptance; production floor 2.38. Server SAPIs, ZTS and PHP-Wasm are separate work.",
+        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "Validation, FFI conversions and native copying have separate 16 MiB accounting budgets. PHP list accounting includes at least 32 bytes per element. BigInteger decimal text is limited to 16384 digits. Lean working memory is not bounded by these conversions."
+      ],
+      "conversionNotes": {
+        "unit": "Unit is null in arguments, results and fields.",
+        "bool": "Exact bool, including when the caller has strict_types disabled.",
+        "uint64": "BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float.",
+        "nat": "BigInteger stores canonical unsigned decimal text up to 16384 digits.",
+        "int": "BigInteger stores canonical signed decimal text up to 16384 digits.",
+        "float32": "PHP float input rounds to binary32. NaN classification, infinities and signed zero are preserved.",
+        "float64": "Exact PHP float inputs preserve NaN classification, infinities and signed zero.",
+        "string": "Validated UTF-8 PHP strings preserve embedded NUL.",
+        "bytes": "Bytes::fromString and toString preserve arbitrary binary bytes.",
+        "array": "Consecutive-key PHP lists with recursive element validation; nested results own independent copies.",
+        "record": "Final readonly typed classes, including empty and scalar-represented records. Input checks also validate objects made without their constructors."
+      }
+    },
     {
       "id": "native-rust-copied",
       "profiles": [
@@ -3813,7 +4092,7 @@
         "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."}
       },
       "limitations": ["BigInteger projection does not establish installed arbitrary-precision runtime support.","Float width validation and special values need compiled round-trip tests."],
-      "conversionNotes": {"nat":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded.","int":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded."}
+      "conversionNotes": {"nat":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."}
     },
     {
       "id": "rust-arbitrary-integers-rejected",
@@ -4005,7 +4284,7 @@
         "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
       },
       "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint32":"Native 64-bit PHP represents the full 0..4294967295 range.","uint64":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded.","int64":"The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range."}
+      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint32":"Native 64-bit PHP represents the full 0..4294967295 range.","uint64":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int64":"The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range."}
     },
     {
       "id": "php-primitives-php-native-2",
@@ -4028,7 +4307,7 @@
         "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
       },
       "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"nat":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded.","int":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded."}
+      "conversionNotes": {"nat":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."}
     },
     {
       "id": "php-primitives-php-wasm-1",
@@ -4058,7 +4337,7 @@
         "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
       },
       "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint64":"BigInteger is a generator projection; no installed full-range transport acceptance is recorded.","int64":"The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range."}
+      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint64":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int64":"The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range."}
     },
     {
       "id": "php-values-php-native-1",

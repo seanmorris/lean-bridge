@@ -1,15 +1,64 @@
 # PHP
 
-Install a published package for the PHP runtime that executes your application. Both profiles expose the generated `LeanAlpha` API. Neither installation builds Lean.
+Install the package for the PHP runtime that executes your application. Ordinary native packages load their bundled Lean runtime automatically. The separate Alpha examples use a Zend extension or PHP-Wasm. Consumers do not build Lean.
 
 ## Use a prepared release
 
 | Application | Installation | Tested runtime |
 | --- | --- | --- |
+| Ordinary native PHP CLI package | [Composer archive](#ordinary-project-packages) | PHP 8.2+ NTS CLI, Linux x86-64, FFI enabled, glibc 2.38 or newer |
 | Native PHP CLI or deployment | [Native PHP](#native-php) | PHP 8.2 NTS, x86-64 Linux, glibc 2.38 or newer |
 | PHP hosted by Node | [PHP-Wasm](#php-wasm) | Node 22, PHP 8.4, `php-wasm` 0.1.0 |
 
-The native package includes an extension, Lean runtime, and Composer library. PHP-Wasm uses an npm archive containing side modules and loader metadata. The Wasm consumer profile covers Node hosting, not browser-hosted PHP.
+The Alpha native package includes an extension, Lean runtime, and Composer library. PHP-Wasm uses an npm archive containing side modules and loader metadata. The Wasm consumer profile covers Node hosting, not browser-hosted PHP.
+
+### Ordinary project packages
+
+Use PHP 8.2 or newer (below 9), NTS CLI on Linux x86-64 with glibc 2.38 or newer. PHP's FFI extension must be installed and enabled. The default `ffi.enable=preload` permits CLI use. This package path does not yet cover FPM, Apache, PHP's development server, ZTS or PHP-Wasm. [PHP FFI configuration](https://www.php.net/manual/en/ffi.configuration.php).
+
+Authenticate your publisher's archive using [Use a prepared release](consume/receive-package.md). This example uses the Clover acceptance package. Put `example-clover-api-2.0.0-RC.1-linux-x86_64.zip` in a `releases/` directory. Use Composer 2 with its ZIP extension for the local artifact repository. Save this as `composer.json`:
+
+```json file=php-native/ordinary/composer.json
+{
+  "name": "example/lean-php-consumer",
+  "repositories": [
+    { "packagist.org": false },
+    { "type": "artifact", "url": "./releases" }
+  ],
+  "require": { "example/clover-api": "2.0.0-RC.1" }
+}
+```
+
+Run `composer install --no-plugins --no-scripts --prefer-dist`. Composer reads the package metadata from the ZIP and installs the PHP files and native libraries together. A registry installation uses your publisher's repository and exact package version instead. [Composer artifact repositories](https://getcomposer.org/doc/05-repositories.md#artifact).
+
+Save this as `main.php`:
+
+```php file=php-native/ordinary/main.php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use LeanClover\BigInteger;
+use function LeanClover\{array_u32, echo_nat, echo_text, echo_u32};
+
+$large = BigInteger::fromDecimal('184467440737095516160000000001');
+if (echo_u32(42) !== 42
+    || (string) echo_nat($large) !== (string) $large
+    || echo_text("Lean λ\0") !== "Lean λ\0"
+    || array_u32([0, 4294967295]) !== [0, 4294967295]) {
+    throw new RuntimeException('Lean returned an unexpected result');
+}
+echo '42; exact integers and copied arrays', PHP_EOL;
+```
+
+Run `php main.php`. Expected output is `42; exact integers and copied arrays`. You do not need Lean, C headers, a package-specific extension or runtime paths. Keep the installed package directory intact; it can move with your application.
+
+Ordinary packages support pure functions over 16 primitive types, arrays and acyclic records. `Unit` is `null`. Fixed-width integers use PHP `int`, except `UInt64`, which uses `BigInteger`; `Nat` and `Int` use it too. `BigInteger::fromDecimal` accepts canonical decimal text up to 16,384 digits. `Bytes::fromString` preserves arbitrary binary data. Arrays are consecutive-key lists, and records are final readonly classes. Results own independent copied values.
+
+Parameters use `mixed` with precise PHPDoc so generated checks can reject numeric coercion even in weak caller mode. Invalid types raise `TypeError`; range and conversion limits raise `ValueError`; native failures raise the package's `LeanBridgeError`. `Float32` rounds PHP floats to binary32; floating-point conversions preserve NaN classification, infinities and signed zero.
+
+Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
 
 ## Native PHP
 
@@ -309,27 +358,27 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `void` (result) | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping (input, field, callback input, callback result); Generator inspected (result) | PHP void is return-only; there is no valid void parameter or property representation. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full 0..4294967295 range.; PHP-Wasm: PHP-Wasm accepts only 0..2147483647 as positive PHP integers; VO1206 tracks exact upper-half conversion. A result above PHP_INT_MAX fails. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `LeanAlpha\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | BigInteger is a generator projection; no installed full-range transport acceptance is recorded. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | BigInteger is a generator projection; no installed full-range transport acceptance is recorded. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | BigInteger is a generator projection; no installed full-range transport acceptance is recorded. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `LeanAlpha\Bytes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `array; list<T>` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | Native PHP: `null` (input, result, field); `void` (result); PHP-Wasm: `void` (result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Inspected: no host mapping (input, field, callback input, callback result); Generator inspected (result) | Native PHP: Unit is null in arguments, results and fields. PHP void is return-only; there is no valid void parameter or property representation.; PHP-Wasm: PHP void is return-only; there is no valid void parameter or property representation. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Exact bool, including when the caller has strict_types disabled. Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full 0..4294967295 range.; PHP-Wasm: PHP-Wasm accepts only 0..2147483647 as positive PHP integers; VO1206 tracks exact upper-half conversion. A result above PHP_INT_MAX fails. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | Native PHP: `BigInteger` (input, result, field); `LeanAlpha\BigInteger` (input, result, field, callback input, callback result); PHP-Wasm: `LeanAlpha\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.; PHP-Wasm: The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | The generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | Native PHP: `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result); PHP-Wasm: `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: BigInteger stores canonical unsigned decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.; PHP-Wasm: The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | Native PHP: `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result); PHP-Wasm: `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: BigInteger stores canonical signed decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.; PHP-Wasm: The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: PHP float input rounds to binary32. NaN classification, infinities and signed zero are preserved. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Exact PHP float inputs preserve NaN classification, infinities and signed zero. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Validated UTF-8 PHP strings preserve embedded NUL. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | Native PHP: `Bytes` (input, result, field); `LeanAlpha\Bytes` (input, result, field, callback input, callback result); PHP-Wasm: `LeanAlpha\Bytes` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Bytes::fromString and toString preserve arbitrary binary bytes. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | Native PHP: `list<T>` (input, result, field); `array; list<T>` (input, result, field, callback input, callback result); PHP-Wasm: `array; list<T>` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Consecutive-key PHP lists with recursive element validation; nested results own independent copies. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | `T\|null (non-null payload only)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Generation rejects nested Option and Option Unit with ambiguous-nullable-option. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `array with fixed positions` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated value class (Alpha: LeanAlpha\Payload)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | Native PHP: `Generated readonly class` (input, result, field); `Generated value class (Alpha: LeanAlpha\Payload)` (input, result, field, callback input, callback result); PHP-Wasm: `Generated value class (Alpha: LeanAlpha\Payload)` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Final readonly typed classes, including empty and scalar-represented records. Input checks also validate objects made without their constructors. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `LeanAlpha\Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

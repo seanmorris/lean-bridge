@@ -5,6 +5,13 @@
 		"src/adoption/toolchain-preflight.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/php/copied-assets.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/php/copied-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/php/copied-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/php/copied-support.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/php/copied-values.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-php-artifacts.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/native-composer.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-assets.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-conversions.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-model.mjs", "classification": "strict-migration-backlog" },

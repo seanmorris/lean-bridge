@@ -102,7 +102,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
 	config.targets.npm = { name: `@example/${variant}`, version: "2.0.0" };
-	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo"] : ["cpan"];
+	const nativeTargets = variant === "shop" ? ["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"] : ["cpan"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
 	const moved = join(context.directory, "relocated");
 	await cp(context.workspace, moved, { recursive: true });
@@ -217,6 +217,17 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		await rename(join(install, "target/debug/shop-consumer"), moved);
 		await rename(join(install, "vendor"), join(install, "vendor-hidden"));
 		assert.equal((await processBuildRunner.capture({ command: moved, args: [], cwd: consumer, env: { PATH: "/usr/bin:/bin" } })).stdout.trim(), expected);
+	}
+	if(nativeTargets.includes("php-native"))
+	{
+		const pkg = builds[0].packages.find(pkg => pkg.target === "php-native"), install = join(consumer, "php");
+		const metadata = await json(join(builds[0].output, "profiles/native/packages/php-native/composer/composer.json"));
+		metadata.dist = { type: "zip", url: `file://${join(builds[0].output, pkg.archives[0].path)}` };
+		await saveLakeFile(install, "composer.json", canonicalJson({ name: "test/shop-consumer", repositories: [{ "packagist.org": false }, { type: "package", package: metadata }], require: { [metadata.name]: metadata.version } }));
+		const env = { PATH: "/usr/bin:/bin", COMPOSER_HOME: join(install, "composer-config"), COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1" };
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_COMPOSER ?? "composer", args: ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], cwd: install, env });
+		await saveLakeFile(install, "main.php", "<?php require 'vendor/autoload.php'; echo LeanShop\\quote(20), PHP_EOL;");
+		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_PHP ?? "php", args: ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "main.php"], cwd: install, env })).stdout.trim(), expected);
 	}
 	for(const target of nativeTargets.filter(target => ["c", "cpp"].includes(target)))
 	{

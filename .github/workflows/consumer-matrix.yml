@@ -89,13 +89,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
-      - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT, PyPI and Cargo and execute installations
+      - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT, PyPI, Cargo and PHP and execute installations
         env:
           LEAN_BRIDGE_MULTI_PROFILE_TEST: "1"
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv zstd
+          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           bash scripts/bootstrap-rust-ci.sh
@@ -229,6 +229,16 @@ jobs:
           key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Build ordinary PHP packages and execute relocated Composer installations
+        id: ordinary_php
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_NATIVE_PHP_TEST: "1"
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential php-cli php-common composer zstd
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          source scripts/env.sh
+          node --test tests/native-php.test.mjs
       - name: Build twice, install, and execute every PHP transport
         id: consumer
         continue-on-error: true
@@ -239,7 +249,13 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
+          native_result="$test_result"
+          native_executed="$executed"
+          if [ "${{ steps.ordinary_php.outcome }}" != success ]; then
+            native_result=failed
+            native_executed=false
+          fi
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs"
           node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:php"
       - name: Upload PHP observations
         if: always()
@@ -251,7 +267,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: steps.consumer.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success'
         run: exit 1
 
   native-consumers:

@@ -13,7 +13,7 @@ Choose the package backend before installing its build tools. All current source
 | C# / .NET | The C author tools plus .NET SDK 8; see [NuGet](../publish/nuget.md#build-an-ordinary-lean-project) | The package includes the matching native library and runtime. |
 | Java and Kotlin | The C author tools plus JDK 22; Maven and Kotlin tooling for their examples; see [Maven](../publish/maven.md#build-an-ordinary-lean-project) | The JAR includes the matching native library and runtime. |
 | Ruby | The C author tools plus Ruby 3.3 and RubyGems; see [RubyGems](../publish/rubygems.md#build-an-ordinary-lean-project) | The gem includes the matching native library and runtime. |
-| Native PHP | PHP headers, the native compiler inputs, and Composer; see [PHP](../publish/php.md#native-php-with-composer) | Build the extension for the selected PHP ABI. |
+| Native PHP | The C author tools and PHP 8.2+; see [PHP](../publish/php.md#build-an-ordinary-lean-project). Composer and FFI for installed acceptance. | Ordinary CLI packages bundle native libraries and load them automatically. The Alpha Zend recipe additionally needs PHP headers. |
 | PHP-Wasm | The PHP-Wasm compiler inputs and npm; see [PHP](../publish/php.md#php-wasm-with-npm) | Use the matching PHP-Wasm transport and runtime. |
 | WIT / WASI | The C author tools, wasm-tools 1.245.1 and Wasmtime C API 42.0.1; see [WIT / WASI](../publish/wit-wasi.md#build-an-ordinary-lean-project) | The archive includes the executable adapter, native host and runtime. |
 

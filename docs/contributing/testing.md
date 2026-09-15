@@ -71,7 +71,7 @@ LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs
 
 This builds Cedar and Hazel twice, installs exact crates, exercises all primitive and nested copied values, injects conversion failures and unwinding, and runs moved binaries without their Cargo source trees. It checks shared-runtime composition, post-fork rejection, package drift and atomic build failure. Cargo dependencies must be cached for offline consumer checks; the author build fetches the pinned dependencies. The [Rust evidence](../evidence/native-rust-20260915.md) lists the local toolchain and archive hashes.
 
-The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI and Cargo from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3, Python 3.11+ with venv, Rust 1.90+ with Cargo and the pinned Wasmtime C API.
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI, Cargo and native PHP from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3, Python 3.11+ with venv, Rust 1.90+ with Cargo, PHP CLI with FFI, Composer and the pinned Wasmtime C API.
 
 ### Ordinary-source Maven packages
 
@@ -104,6 +104,15 @@ LEAN_BRIDGE_NATIVE_RUBY_TEST=1 \
 Willow and Aspen each build from two relocated source trees. Their gems must match byte-for-byte. The suite hides both source locations, installs with RubyGems offline, and calls generated APIs without Lean or a C compiler. It covers all primitive values, arrays and record fields, nested values, strict rejection, allocation-failure cleanup, concurrent calls, GC compaction, tampering and two installed gems sharing one runtime. See the [Ruby acceptance record](../evidence/native-ruby-20260914.md).
 
 ## Native PHP package
+
+For ordinary Composer packages, install the C author tools, PHP 8.2+ CLI with FFI, and Composer 2 with ZIP support:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs
+```
+
+This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires both this suite and the Alpha transport checks below.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 

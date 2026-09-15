@@ -58,6 +58,7 @@ const profileManifest = Object.freeze({
 		, "native-jvm"
 		, "native-ruby"
 		, "native-python"
+		, "native-php"
 		, "native-rust"
 		, "native-wit"
 		, "public-surface-conformance"

@@ -1,13 +1,43 @@
 # Build and publish PHP packages
 
-Choose the PHP host before preparing its package. Both profiles use the same generated PHP API, but require different compiled artifacts and distribution tools.
+Build an ordinary Lake project with `--target php-native` for a self-contained Composer package. The separate Alpha recipes below build a Zend extension or Node-hosted PHP-Wasm package.
 
 | Host | Build inputs | Package manager |
 | --- | --- | --- |
+| Ordinary PHP 8.2+ NTS CLI | Ordinary Lean source, the C author toolchain and PHP for syntax checks | Composer ZIP with bundled native libraries and automatic FFI loading |
 | Native PHP 8.2 NTS | Reviewed PHP package manifest, generated bindings, Zend extension and native Lean toolchain | Composer, plus the matching native extension/runtime |
 | Node-hosted PHP 8.4 Wasm | Reviewed profile manifest, pinned PHP source and Emscripten toolchain | npm, with Composer files installed inside PHP's virtual filesystem |
 
-These Alpha recipes use repository-specific inputs. An ordinary Lake project's npm build does not produce a PHP extension. Check the [source preparation and target boundaries](../lean/existing-package.md) before adapting another library. Neither PHP profile is a universal registry-publisher target.
+The Alpha recipes use repository-specific inputs. An ordinary Lake project's npm build does not produce a PHP package unless you also select `--target php-native`. Check the [source preparation and target boundaries](../lean/existing-package.md). Neither PHP profile is a universal registry-publisher target.
+
+## Build an ordinary Lean project
+
+Install the [C author toolchain](c.md#build-an-ordinary-lean-project) and PHP 8.2 or newer. Set `LEAN_BRIDGE_PHP` only if PHP is not on `PATH`. The package targets NTS CLI on Linux x86-64 with glibc 2.38 or newer and FFI enabled. PHP headers, `phpize` and a package-specific Zend extension are not required for this path.
+
+Configure the project in `lean-bridge.exports.json`, using your own modules, exports and Composer coordinate:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Clover"],
+  "exports": ["Clover.echo_u32", "Clover.echo_nat", "Clover.echo_text", "Clover.array_u32"],
+  "targets": { "php-native": { "name": "example/clover-api", "version": "2.0.0-RC.1" } }
+}
+```
+
+Build into a new directory:
+
+```sh
+lean-bridge build --project ./clover --target php-native --output ./release-php
+```
+
+The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
+
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts pure copied primitives, arrays and acyclic records. It does not add FPM, ZTS, ordinary resources, callbacks or PHP-Wasm support. The [acceptance record](../evidence/native-php-copied-20260915.md) records the installed checks and hashes.
+
+Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Preserve the SHA-256 inventory and supply it through your authenticated handoff. This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
+
+Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
 
 ## Native PHP with Composer
 

@@ -306,6 +306,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_RUST_TEST: "1"/);
   assert.match(workflow, /id: ordinary_rust/);
   assert.match(workflow, /steps\.ordinary_rust\.outcome != 'success'/);
+  assert.match(workflow, /LEAN_BRIDGE_NATIVE_PHP_TEST: "1"/);
+  assert.match(workflow, /id: ordinary_php/);
+  assert.match(workflow, /steps\.ordinary_php\.outcome != 'success'/);
+  assert.match(workflow, /php-cli php-common composer/);
   assert.match(packageDocument.scripts["test:consumer:browser"], /\.\#npm-package/);
   assert.match(packageDocument.scripts["test:consumer:php-native"], /\.\#php-native-package/);
   assert.match(packageDocument.scripts["test:consumer:managed"], /\.\#nuget-package/);

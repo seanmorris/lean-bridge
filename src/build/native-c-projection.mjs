@@ -19,6 +19,7 @@ import { packageOrdinaryRuby } from "../release/native-rubygems.mjs";
 import { projectOrdinaryWasi } from "./native-wit-projection.mjs";
 import { packageOrdinaryPython } from "../release/native-pypi.mjs";
 import { projectOrdinaryRust } from "./native-rust-projection.mjs";
+import { packageOrdinaryPhp } from "../release/native-composer.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -88,6 +89,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 				: target === "wit-wasi" ? await projectOrdinaryWasi({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
 					: target === "pypi" ? await packageOrdinaryPython({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
 						: target === "cargo" ? await projectOrdinaryRust({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
-							: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
+							: target === "php-native" ? await packageOrdinaryPhp({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })
+								: await packageNativeCFamily({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
 	return projections;
 };
