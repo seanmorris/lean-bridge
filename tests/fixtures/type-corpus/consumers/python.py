@@ -3,11 +3,17 @@
 import dataclasses
 import importlib
 import json
+import math
 import pathlib
+import struct
 import sys
 
 
 def decode(value, api):
+    for kind, width, code in [("float32", 4, "<f"), ("float64", 8, "<d")]:
+        if kind in value:
+            return (float("nan") if value[kind] == "nan" else
+                    struct.unpack(code, int(value[kind]).to_bytes(width, "little"))[0])
     if "integer" in value:
         return int(value["integer"])
     if "string" in value:
@@ -27,7 +33,12 @@ def decode(value, api):
     raise ValueError("Unknown corpus wire value")
 
 
-def encode(value):
+def encode(value, encoding="value"):
+    if encoding in ("float32", "float64"):
+        assert type(value) is float
+        code = "<f" if encoding == "float32" else "<d"
+        bits = "nan" if math.isnan(value) else str(int.from_bytes(struct.pack(code, value), "little"))
+        return {encoding: bits}
     if value is None:
         return {"unit": True}
     if type(value) is bool:
@@ -89,7 +100,7 @@ def main():
                             "exception": exception, "recovered": True})
             continue
         result = operation(*args)
-        observed = encode(result)
+        observed = encode(result, case["resultEncoding"])
         assert observed == request["oracle"][case["oracleKey"]], case["id"]
         if case["checkIndependentCopy"]:
             assert result is not args[0]
@@ -105,7 +116,7 @@ def main():
         results.append({"id": case["id"], "status": "matched", "observed": observed,
                         "independentCopy": case["checkIndependentCopy"]})
     print(json.dumps({"schemaVersion": 1, "profile": "python", "module": request["module"],
-                      "python": sys.version.split()[0], "results": results}, sort_keys=True))
+                      "hostVersion": sys.version.split()[0], "results": results}, sort_keys=True))
 
 
 if __name__ == "__main__":

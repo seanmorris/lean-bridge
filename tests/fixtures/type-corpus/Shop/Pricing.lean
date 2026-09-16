@@ -24,6 +24,13 @@ def previousBalance (balance : Int64) : Int64 := balance - 1
 def enabled (flag : Bool) : Bool := !flag
 def keepMarker (marker : Unit) : Unit := marker
 def reverseBlob (bytes : ByteArray) : ByteArray := ⟨bytes.data.reverse⟩
+def nextTag (tag : UInt8) : UInt8 := tag + 1
+def nextBatch (batch : UInt16) : UInt16 := batch + 1
+def reduceGrade (grade : Int8) : Int8 := grade - 1
+def reduceStock (stock : Int16) : Int16 := stock - 1
+def reduceOffset (offset : Int32) : Int32 := offset - 1
+def reverseRate (rate : Float32) : Float32 := -rate
+def reversePrice (price : Float) : Float := -price
 
 theorem basketTotal_zero (price : Nat) : basketTotal price 0 = 0 := by
   simp [basketTotal]

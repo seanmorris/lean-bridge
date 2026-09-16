@@ -10,7 +10,7 @@ def basketJson (value : Basket) : Json := record "Basket" [
   ("batches", array (array (natural ∘ UInt32.toNat)) value.batches),
   ("active", boolean value.active)]
 
-def main : IO Unit := IO.println <| (Json.mkObj [
+def main : IO Unit := IO.println <| (Json.mkObj ([
   ("dependency", natural (quoteUnits 7).toNat),
   ("exact-large", natural (basketTotal (2^4096 + 1) 3)),
   ("zero", natural (basketTotal 0 0)),
@@ -26,4 +26,15 @@ def main : IO Unit := IO.println <| (Json.mkObj [
   ("bool", boolean (enabled false)),
   ("unit", marker (keepMarker ())),
   ("bytes", bytes (reverseBlob ⟨#[0, 255, 128, 65]⟩)),
-  ("empty-bytes", bytes (reverseBlob ⟨#[]⟩))]).compress
+  ("empty-bytes", bytes (reverseBlob ⟨#[]⟩)),
+  ("uint8-wrap", natural (nextTag 255).toNat),
+  ("uint8-zero", natural (nextTag 0).toNat),
+  ("uint16-wrap", natural (nextBatch 65535).toNat),
+  ("uint16-zero", natural (nextBatch 0).toNat),
+  ("int8-wrap", integer (reduceGrade (-128)).toInt),
+  ("int8-zero", integer (reduceGrade 0).toInt),
+  ("int16-wrap", integer (reduceStock (-32768)).toInt),
+  ("int16-zero", integer (reduceStock 0).toInt),
+  ("int32-wrap", integer (reduceOffset (-2147483648)).toInt),
+  ("int32-zero", integer (reduceOffset 0).toInt)]
+  ++ float32Cases reverseRate ++ float64Cases reversePrice)).compress

@@ -1,5 +1,5 @@
 /**
- * Build two ordinary libraries, run Lean oracles and consume exact relocated wheels.
+ * Run Lean oracles and consume exact relocated native packages without sources.
  *
  * @file
  */
@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { cp, lstat, mkdir, mkdtemp, readFile, rm, statfs } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
@@ -26,7 +26,9 @@ const clean = { PATH: "/unavailable", CC: "/unavailable/compiler"
 	, LEAN_BRIDGE_NATIVE_ROOT: "/unavailable/runtime" };
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 
-const prepare = async (t, library) => {
+const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, { name: `${library.id}-${suffix}`, version: "1.0.0" }]));
+
+const prepare = async (t, library, profiles) => {
 	const context = await lakeWorkspaceFixture(t, library.id);
 	const modules = [library.module, library.pendingModule];
 	for(const module of modules)
@@ -37,7 +39,7 @@ const prepare = async (t, library) => {
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.module]
 		, exports: library.operations.map(operation => `${library.module}.${operation}`)
-		, targets: { pypi: { name: `${library.id}-corpus`, version: "1.0.0" } } }));
+		, targets: targetSettings(library, profiles) }));
 	return context;
 };
 
@@ -73,19 +75,56 @@ const leanOracle = async (context, library, leanPrefix) => {
 		, version: (await run(lean, ["--version"], root, env)).stdout.trim() };
 };
 
+const installedObservation = async ({ profile, library, consumer, handoff, pkg, cases, oracle, environment }) => {
+	const root = join(consumer, profile), archive = pkg.artifacts[0];
+	const extension = profile === "python" ? "py" : "rb";
+	const source = `consumer.${extension}`;
+	const operations = Object.fromEntries(library.operations.map((name, index) => [name, library.snakeOperations[index]]));
+	await saveLakeFile(root, source, await readFile(join(fixtures, `consumers/${profile}.${extension}`)));
+	const request = { module: library[`${profile}Module`], operations, cases
+		, oracle, errors: corpusProfiles[profile].errors
+		, recordFields: library.recordFields
+		, ...(profile === "ruby" ? { require: library.rubyRequire, distribution: pkg.name, version: pkg.version } : {}) };
+	await saveLakeFile(root, "request.json", canonicalJson(request));
+	let executed;
+	if(profile === "python")
+	{
+		const python = environment.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3";
+		const venv = join(root, "venv"), interpreter = join(venv, "bin/python");
+		await run(python, ["-I", "-m", "venv", venv], root, clean);
+		await run(interpreter, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", join(handoff, archive.path)], root, clean);
+		executed = await run(interpreter, ["-I", source, "request.json"], root, clean);
+	}
+	else
+	{
+		const ruby = (await run(environment.LEAN_BRIDGE_RUBY ?? "ruby", ["--disable-gems", "-rrbconfig", "-e", "print RbConfig.ruby"], root, { PATH: environment.PATH })).stdout;
+		const gem = environment.LEAN_BRIDGE_GEM ?? join(dirname(ruby), "gem");
+		const gemRoot = join(root, "gems"), env = { ...clean, GEM_HOME: gemRoot, GEM_PATH: gemRoot };
+		await run(ruby, [gem, "install", "--norc", join(handoff, archive.path), "--local", "--install-dir", gemRoot, "--no-document"], root, env);
+		executed = await run(ruby, [source, "request.json"], root, env);
+	}
+	const observation = JSON.parse(executed.stdout);
+	validateCorpusObservation(library, cases, oracle, observation);
+	assert.equal(observation.profile, profile);
+	return observation;
+};
+
 /**
  * Execute one source library and preserve only identities and observed results.
  *
  * @param t - Test context owning both author and consumer scratch directories.
  * @param library - Closed corpus library definition.
+ * @param profiles - Validated consumer profiles sharing this native build.
  */
-export const runPythonCorpusLibrary = async (t, library) => {
+export const runNativeCorpusLibrary = async (t, library, profiles) => {
+	assert.ok(profiles.length > 0 && profiles.every(profile => Object.hasOwn(corpusProfiles, profile)));
+	assert.equal(new Set(profiles).size, profiles.length);
 	const space = await statfs(tmpdir());
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
-	const python = process.env.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3";
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
-	const context = await prepare(t, library);
+	const targets = profiles.map(profile => corpusProfiles[profile].target);
+	const context = await prepare(t, library, profiles);
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling Lean oracle`);
 	const oracle = await leanOracle(context, library, leanPrefix);
@@ -94,8 +133,8 @@ export const runPythonCorpusLibrary = async (t, library) => {
 	const builds = [];
 	for(const [index, projectRoot] of [context.root, join(relocated, "project")].entries())
 	{
-		t.diagnostic(`${library.id}: building exact wheel ${index + 1}/2`);
-		builds.push(await buildCanonicalProject({ projectRoot, outputRoot: join(context.directory, `release-${index}`), targets: ["pypi"], environment }));
+		t.diagnostic(`${library.id}: building ${targets.join("/")} archives ${index + 1}/2`);
+		builds.push(await buildCanonicalProject({ projectRoot, outputRoot: join(context.directory, `release-${index}`), targets, environment }));
 	}
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	assert.deepEqual(builds[0].packages, builds[1].packages);
@@ -114,11 +153,11 @@ export const runPythonCorpusLibrary = async (t, library) => {
 	await cp(context.workspace, pendingWorkspace, { recursive: true });
 	await saveLakeFile(join(pendingWorkspace, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.pendingModule], exports: [library.pendingExport]
-		, targets: { pypi: { name: `${library.id}-pending`, version: "1.0.0" } } }));
+		, targets: targetSettings(library, profiles, "pending") }));
 	let rejection;
 	try
 	{
-		await buildCanonicalProject({ projectRoot: join(pendingWorkspace, "project"), outputRoot: join(context.directory, "pending-release"), targets: ["pypi"], environment });
+		await buildCanonicalProject({ projectRoot: join(pendingWorkspace, "project"), outputRoot: join(context.directory, "pending-release"), targets, environment });
 	}
 	catch(error)
 	{
@@ -137,35 +176,33 @@ export const runPythonCorpusLibrary = async (t, library) => {
 	const receipt = await copyPackageSetHandoff(builds[0].output, handoff);
 	const receiptBytes = await readFile(join(handoff, "package-set-receipt.json"));
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
-	const pkg = receipt.packages.find(pkg => pkg.target === "pypi");
-	assert.equal(pkg.artifacts.length, 1);
-	const archive = pkg.artifacts[0];
 	const cases = corpusCases(library);
-	await saveLakeFile(consumer, "consumer.py", await readFile(join(fixtures, "consumers/python.py")));
-	const operations = Object.fromEntries(library.operations.map((name, index) => [name, library.pythonOperations[index]]));
-	await saveLakeFile(consumer, "request.json", canonicalJson({ module: library.pythonModule
-		, operations, cases, oracle: oracle.result
-		, errors: corpusProfiles.python.errors }));
 	// Nothing from the author workspace or unpacked release survives installation.
 	await rm(context.directory, { recursive: true, force: true });
 	const verified = await run(process.execPath, [join(repository, "scripts/lean-bridge.mjs"), "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"], consumer, { PATH: "/unavailable", LEAN_BRIDGE_PROJECT: "/unavailable" });
 	assert.equal(JSON.parse(verified.stdout).result.verificationType, "local-package-set");
-	const venv = join(consumer, "venv"), interpreter = join(venv, "bin/python");
-	await run(python, ["-I", "-m", "venv", venv], consumer, clean);
-	await run(interpreter, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", join(handoff, archive.path)], consumer, clean);
-	const observation = JSON.parse((await run(interpreter, ["-I", "consumer.py", "request.json"], consumer, clean)).stdout);
-	validateCorpusObservation(library, cases, oracle.result, observation);
 	const { result, ...oracleEvidence } = oracle;
-	return { library: library.id, profile: "python", path: "ordinary-source"
-		, archiveSha256: archive.sha256
-		, archive: { ...archive, name: pkg.name, version: pkg.version }
-		, runtimeIdentity: pkg.runtimeIdentity
-		, bindingIrSha256: builds[0].bindingIrSha256
-		, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
-		, lakeSnapshotSha256: model.sourceIdentity.lakeDependencies.snapshotSha256
-		, dependency: { name: context.names.remote, revision: context.manifest.packages[1].rev }
-		, receiptSha256: sha256(receiptBytes), independentBuilds: 2
-		, oracle: result, oracleEvidence
-		, isolation: { sourcesRemovedBeforeInstall: true, compilerPathDisabled: true, offlineInstall: true }
-		, observation, rejection };
+	const runs = [];
+	for(const profile of profiles)
+	{
+		const pkg = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target);
+		assert.equal(pkg.artifacts.length, 1);
+		const archive = pkg.artifacts[0];
+		t.diagnostic(`${library.id}: installing and executing ${profile} without sources or compilers`);
+		const observation = await installedObservation({ profile, library, consumer, handoff, pkg, cases, oracle: result, environment });
+		runs.push({ library: library.id, profile, path: "ordinary-source"
+			, archiveSha256: archive.sha256
+			, archive: { ...archive, target: pkg.target, name: pkg.name, version: pkg.version }
+			, runtimeIdentity: pkg.runtimeIdentity
+			, bindingIrSha256: builds[0].bindingIrSha256
+			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
+			, lakeSnapshotSha256: model.sourceIdentity.lakeDependencies.snapshotSha256
+			, dependency: { name: context.names.remote, revision: context.manifest.packages[1].rev }
+			, receiptSha256: sha256(receiptBytes), independentBuilds: 2
+			, oracle: result, oracleEvidence
+			, isolation: { sourcesRemovedBeforeInstall: true, compilerPathDisabled: true, offlineInstall: true }
+			, observation, rejection });
+	}
+	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+	return runs;
 };

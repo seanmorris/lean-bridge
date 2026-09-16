@@ -2,6 +2,8 @@
 
 VO 1217. This milestone adds a shared input catalog, fresh Lean oracles, an installed Python adapter and a report that retains untested profiles and positions as gaps. It does not change generated APIs or promote entries in the type-support inventory.
 
+This record describes the foundation at commit `4bcf240`. The [next milestone](type-corpus-primitives-ruby-20260916.md) expands the primitives and adds Ruby; its case counts and archive identities differ.
+
 ## Executed libraries
 
 [Shop.Pricing](../../tests/fixtures/type-corpus/Shop/Pricing.lean) and [Telemetry.Readings](../../tests/fixtures/type-corpus/Telemetry/Readings.lean) each expose 12 functions. Their names, calculations, record layouts and collection transformations differ. Shop reverses the outer array; Telemetry reverses each inner array. Dependency calls return different values, which the harness checks.
@@ -12,7 +14,7 @@ The [input catalog](../../tests/fixtures/type-corpus/cases.mjs) uses tagged JSON
 
 ## Differential and installation checks
 
-For each library, the [harness](../../tests/helpers/type-corpus-python.mjs):
+For each library, the [harness](../../tests/helpers/type-corpus-native.mjs):
 
 1. Compiles fresh Lean interfaces and runs a Lean oracle that evaluates the source functions. No mock supplies expected results.
 2. Builds a wheel from each of two relocated workspaces. Archive records and binding IR identities must match. The original source workspace must remain unchanged.

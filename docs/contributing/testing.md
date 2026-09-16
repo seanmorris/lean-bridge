@@ -206,7 +206,7 @@ LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 \
 
 Iris and Lotus each expose 42 functions and reproduce their wheels from relocated source trees. The suite hides those trees, installs original wheels with pip offline, and runs typed APIs with no Lean or C compiler available. It checks primitives, nested arrays and records, rejected inputs, allocation-failure cleanup, concurrent calls, tampering, post-fork rejection and two installed packages sharing a runtime. Uninstalling one distribution must leave the other usable. See the [Python acceptance record](../evidence/native-python-20260915.md).
 
-### Shared real-Lean type corpus
+## Shared real-Lean type corpus
 
 The shared corpus adds differential tests: a fresh Lean run computes expected results, then an installed consumer package must return those results. Run its fast report checks without a compiler:
 
@@ -214,20 +214,29 @@ The shared corpus adds differential tests: a fresh Lean run computes expected re
 npm run test:type-corpus
 ```
 
-Run the Python adapter with the same prerequisites as the ordinary-source suite above, plus Git and at least 3 GiB of free scratch space:
+Python needs the same prerequisites as the ordinary-source suite above. Ruby needs MRI Ruby 3.3 with RubyGems, the pinned Lean compiler and a native C compiler. Both adapters run on Linux x86-64 and need Git and at least 3 GiB of free scratch space. Run an adapter separately:
 
 ```sh
 source scripts/env.sh
 npm run test:type-corpus:python
+npm run test:type-corpus:ruby
 ```
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness compiles the same source files for the Lean oracle and the package, builds each wheel from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel with pip offline. The consumer calls public Python functions with compiler paths disabled.
+To build both package formats together and compare both consumers against the same Lean run:
 
-The first adapter checks 48 cases: exact integers, fixed-width wraparound, embedded NUL and Unicode strings, bytes, nested arrays, copied records, invalid inputs and recovery after rejection. Separate modules compile in Lean but must fail Python package admission for `Option Nat` and `Except String Nat`.
+```sh
+npm run test:type-corpus:native
+```
 
-The report at `build/type-corpus/python.json` records archive, runtime, binding IR, dependency, source and oracle identities. It lists all 17 consumer profiles and both source paths. Missing adapters, unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md). CI uploads the report as `type-corpus-python-<commit>` and requires the Python run to pass.
+Set `LEAN_BRIDGE_PYTHON`, `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to absolute executable paths when selecting alternate host installations.
 
-The [foundation acceptance record](../evidence/type-corpus-foundation-20260916.md) lists the executed cases, local archive identities and remaining adapter work.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel or gem offline. Consumers call public functions and records with compiler paths disabled.
+
+Each adapter checks 124 cases across both libraries. They cover all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. Separate modules compile in Lean but fail native source admission for `Option Nat` and `Except String Nat`.
+
+Reports appear at `build/type-corpus/python.json`, `ruby.json` or `python-ruby.json`, according to the selected adapters. They record the input catalog, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Every report lists all 17 consumer profiles and both source paths. Missing adapters, unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md). CI requires both adapter runs and uploads `type-corpus-python-<commit>` and `type-corpus-ruby-<commit>`.
+
+The [Python/Ruby acceptance record](../evidence/type-corpus-primitives-ruby-20260916.md) lists the executed cases, local archive identities and remaining adapter work. The [foundation record](../evidence/type-corpus-foundation-20260916.md) preserves the earlier Python-only results.
 
 ## WASI package
 

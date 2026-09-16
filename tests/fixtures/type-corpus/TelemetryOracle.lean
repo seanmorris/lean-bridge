@@ -9,7 +9,7 @@ def frameJson (value : Frame) : Json := record "Frame" [
   ("counter", natural value.counter), ("bias", integer value.bias),
   ("title", text value.title), ("valid", boolean value.valid)]
 
-def main : IO Unit := IO.println <| (Json.mkObj [
+def main : IO Unit := IO.println <| (Json.mkObj ([
   ("dependency", natural (measureTick 7).toNat),
   ("exact-large", natural (accumulate (2^4096 + 1) 3)),
   ("zero", natural (accumulate 0 0)),
@@ -25,4 +25,15 @@ def main : IO Unit := IO.println <| (Json.mkObj [
   ("bool", boolean (invertStatus false)),
   ("unit", marker (acknowledge ())),
   ("bytes", bytes (mirrorPayload ⟨#[0, 255, 128, 65]⟩)),
-  ("empty-bytes", bytes (mirrorPayload ⟨#[]⟩))]).compress
+  ("empty-bytes", bytes (mirrorPayload ⟨#[]⟩)),
+  ("uint8-wrap", natural (advanceTag 255).toNat),
+  ("uint8-zero", natural (advanceTag 0).toNat),
+  ("uint16-wrap", natural (advanceSequence 65535).toNat),
+  ("uint16-zero", natural (advanceSequence 0).toNat),
+  ("int8-wrap", integer (raiseGrade 127).toInt),
+  ("int8-zero", integer (raiseGrade 0).toInt),
+  ("int16-wrap", integer (raiseLevel 32767).toInt),
+  ("int16-zero", integer (raiseLevel 0).toInt),
+  ("int32-wrap", integer (raiseBaseline 2147483647).toInt),
+  ("int32-zero", integer (raiseBaseline 0).toInt)]
+  ++ float32Cases halveSample ++ float64Cases halveMeasure)).compress

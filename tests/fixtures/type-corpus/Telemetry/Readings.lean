@@ -25,6 +25,13 @@ def nextOffset (offset : Int64) : Int64 := offset + 1
 def invertStatus (flag : Bool) : Bool := !flag
 def acknowledge (marker : Unit) : Unit := marker
 def mirrorPayload (bytes : ByteArray) : ByteArray := ⟨bytes.data.reverse⟩
+def advanceTag (tag : UInt8) : UInt8 := tag + 2
+def advanceSequence (sequence : UInt16) : UInt16 := sequence + 2
+def raiseGrade (grade : Int8) : Int8 := grade + 1
+def raiseLevel (level : Int16) : Int16 := level + 1
+def raiseBaseline (baseline : Int32) : Int32 := baseline + 1
+def halveSample (sample : Float32) : Float32 := sample / 2
+def halveMeasure (measure : Float) : Float := measure / 2
 
 theorem accumulate_zero (total : Nat) : accumulate total 0 = total := by
   simp [accumulate]

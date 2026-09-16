@@ -509,6 +509,23 @@ jobs:
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           source scripts/env.sh
           node --test tests/native-ruby.test.mjs
+      - name: Compare installed Ruby corpus packages with fresh Lean results
+        id: type_corpus_ruby
+        continue-on-error: true
+        run: |
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          source scripts/env.sh
+          npm run test:type-corpus:ruby
+      - name: Upload the Ruby real-Lean type corpus report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-ruby-${{ github.sha }}
+          path: build/type-corpus/ruby.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Record managed consumer observations
         if: always()
         shell: bash
@@ -532,8 +549,8 @@ jobs:
               fi
             fi
             if [ "$consumer" = ruby ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs"
-              if [ "${{ steps.ordinary_ruby.outcome }}" != success ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby"
+              if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -550,7 +567,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: steps.consumer.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
         run: exit 1
 
   wasi-consumer:

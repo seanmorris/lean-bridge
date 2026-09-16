@@ -14,16 +14,20 @@ export const corpusLibraries = [
 	{
 		id: "shop", module: "Shop.Pricing", oracle: "ShopOracle.lean"
 		, pythonModule: "lean_shop", pendingModule: "Shop.Pending"
+		, rubyModule: "LeanBridge::Shop", rubyRequire: "lean_bridge/shop"
+		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
-		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob"]
-		, pythonOperations: ["quote_units", "basket_total", "refund", "receipt_label", "restock", "regroup", "revise", "next_serial", "previous_balance", "enabled", "keep_marker", "reverse_blob"]
+		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
+		, snakeOperations: ["quote_units", "basket_total", "refund", "receipt_label", "restock", "regroup", "revise", "next_serial", "previous_balance", "enabled", "keep_marker", "reverse_blob", "next_tag", "next_batch", "reduce_grade", "reduce_stock", "reduce_offset", "reverse_rate", "reverse_price"]
 	}
 	, {
 		id: "telemetry", module: "Telemetry.Readings", oracle: "TelemetryOracle.lean"
 		, pythonModule: "lean_telemetry", pendingModule: "Telemetry.Pending"
+		, rubyModule: "LeanBridge::Telemetry", rubyRequire: "lean_bridge/telemetry"
+		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
-		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload"]
-		, pythonOperations: ["measure_tick", "accumulate", "calibrate", "channel_label", "offset_samples", "rotate_rows", "advance_frame", "wrap_clock", "next_offset", "invert_status", "acknowledge", "mirror_payload"]
+		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
+		, snakeOperations: ["measure_tick", "accumulate", "calibrate", "channel_label", "offset_samples", "rotate_rows", "advance_frame", "wrap_clock", "next_offset", "invert_status", "acknowledge", "mirror_payload", "advance_tag", "advance_sequence", "raise_grade", "raise_level", "raise_baseline", "halve_sample", "halve_measure"]
 	}
 ];
 
@@ -72,14 +76,37 @@ export const corpusCases = library => {
 		, ["bool-as-number", dependency, [{ bool: true }], [coverage("uint32", ["parameter"])], "type"]
 		, ["bad-nested", matrix, [array([array([{ unit: true }])])], [coverage("array", ["parameter"])], "type"]
 		, ["bad-record", revise, [badRecord], [coverage("nat", ["field"])], "range"]
-		, ["wrong-bytes", bytes, [{ string: "raw" }], [coverage("bytes", ["parameter"])], "type"]
+		, ["wrong-bytes", bytes, [integer(0)], [coverage("bytes", ["parameter"])], "type"]
 		, ["wrong-boolean", bool, [integer(1)], [coverage("bool", ["parameter"])], "type"]
 		, ["overflow-u64", u64, [integer(2n ** 64n)], [coverage("uint64", ["parameter"])], "range"]
 	];
-	return entries.map(([id, operation, args, cells, rejection]) => ({
+	for(const [index, [shape, bits, signed]] of [["uint8", 8, false], ["uint16", 16, false], ["int8", 8, true], ["int16", 16, true], ["int32", 32, true]].entries())
+	{
+		const operation = library.operations[12 + index];
+		const low = signed ? -(2n ** BigInt(bits - 1)) : 0n;
+		const high = 2n ** BigInt(signed ? bits - 1 : bits) - 1n;
+		entries.push([`${shape}-wrap`, operation, [integer(signed && shop ? low : high)], [coverage(shape)]]
+			, [`${shape}-zero`, operation, [integer(0)], [coverage(shape)]]
+			, [`${shape}-below`, operation, [integer(low - 1n)], [coverage(shape, ["parameter"])], "range"]
+			, [`${shape}-above`, operation, [integer(high + 1n)], [coverage(shape, ["parameter"])], "range"]);
+	}
+	const floating = [
+		["float32", [0x3fc00000n, 0n, 0x80000000n, 1n, 0x7f7fffffn, 0x7f800000n, 0xff800000n, "nan"]]
+		, ["float64", [0x3ff8000000000000n, 0n, 0x8000000000000000n, 1n, 0x7fefffffffffffffn, 0x7ff0000000000000n, 0xfff0000000000000n, "nan"]]
+	];
+	for(const [index, [shape, values]] of floating.entries())
+	{
+		const operation = library.operations[17 + index];
+		const labels = ["finite", "zero", "negative-zero", "subnormal", "largest", "positive-infinity", "negative-infinity", "nan"];
+		for(const [valueIndex, value] of values.entries())
+			entries.push([`${shape}-${labels[valueIndex]}`, operation, [{ [shape]: String(value) }], [coverage(shape)], null, shape]);
+		entries.push([`${shape}-wrong-type`, operation, [integer(1)], [coverage(shape, ["parameter"])], "type"]);
+	}
+	return entries.map(([id, operation, args, cells, rejection, encoding]) => ({
 		id: `${library.id}/${id}`, library: library.id
 		, oracleKey: rejection ? null : id
 		, operation, arguments: args, coverage: cells
+		, resultEncoding: encoding ?? "value"
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
 		, checkIndependentCopy: id === "record"
 	}));

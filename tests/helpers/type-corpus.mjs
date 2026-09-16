@@ -10,10 +10,26 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { corpusCases, corpusLibraries } from "../fixtures/type-corpus/cases.mjs";
 
-export const corpusProfiles = Object.freeze({ python: Object.freeze({
-	adapter: "prepared-wheel-v1"
-	, errors: Object.freeze({ type: "TypeError", range: "ValueError" })
-}) });
+export const corpusProfiles = Object.freeze({
+	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
+		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
+	, ruby: Object.freeze({ adapter: "prepared-gem-v1", target: "rubygems"
+		, errors: Object.freeze({ type: "TypeError", range: "RangeError" }) })
+});
+
+/**
+ * Reject misspelled, empty or duplicate requested adapters instead of skipping them.
+ *
+ * @param value - Explicit comma-separated profiles; undefined selects fast checks.
+ */
+export const corpusSelection = value => {
+	if(value === undefined) return [];
+	assert.equal(typeof value, "string");
+	const profiles = value.split(",").map(profile => profile.trim()).sort();
+	assert.ok(profiles.every(profile => Object.hasOwn(corpusProfiles, profile)), "Unknown or empty corpus adapter");
+	assert.equal(new Set(profiles).size, profiles.length, "Duplicate corpus adapter");
+	return profiles;
+};
 
 /**
  * Validate case ids and positions against the independently maintained inventory.
@@ -26,14 +42,19 @@ export const corpusCatalog = inventory => {
 	assert.deepEqual(corpusLibraries.map(library => library.id), ["shop", "telemetry"]);
 	for(const library of corpusLibraries)
 	{
-		assert.equal(library.pythonOperations.length, library.operations.length);
-		assert.equal(new Set(library.pythonOperations).size, library.operations.length);
-		assert.ok(library.pythonOperations.every(name => /^[a-z][a-z0-9_]*$/.test(name)));
+		assert.equal(library.snakeOperations.length, library.operations.length);
+		assert.equal(new Set(library.snakeOperations).size, library.operations.length);
+		assert.ok(library.snakeOperations.every(name => /^[a-z][a-z0-9_]*$/.test(name)));
+		for(const profile of Object.keys(corpusProfiles)) assert.equal(typeof library[`${profile}Module`], "string");
+		for(const entry of cases.filter(entry => entry.library === library.id))
+			for(const argument of entry.arguments.filter(value => value.record))
+				assert.deepEqual(Object.keys(argument.fields).sort(), [...library.recordFields[argument.record]].sort());
 	}
 	for(const entry of cases)
 	{
 		assert.ok(entry.coverage.length);
 		assert.ok(/^[A-Za-z][A-Za-z0-9_]*$/.test(entry.operation));
+		assert.ok(["value", "float32", "float64"].includes(entry.resultEncoding));
 		assert.ok(entry.expectation.kind === "lean-oracle"
 			|| entry.expectation.kind === "host-rejection" && ["type", "range"].includes(entry.expectation.category));
 		for(const claim of entry.coverage)
@@ -58,9 +79,9 @@ export const corpusCatalog = inventory => {
  */
 export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	assert.equal(actual.schemaVersion, 1);
-	assert.equal(actual.profile, "python");
-	assert.equal(actual.module, library.pythonModule);
-	assert.match(actual.python, /^3\.[0-9]+\.[0-9]+$/);
+	assert.ok(Object.hasOwn(corpusProfiles, actual.profile), "Unknown consumer adapter");
+	assert.equal(actual.module, library[`${actual.profile}Module`]);
+	assert.match(actual.hostVersion, actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
 	assert.deepEqual(Object.keys(oracle).sort(), cases.filter(entry => entry.oracleKey !== null).map(entry => entry.oracleKey).sort());
 	assert.equal(actual.results.length, cases.length);
 	assert.deepEqual(actual.results.map(entry => entry.id).sort(), cases.map(entry => entry.id).sort());
@@ -76,7 +97,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		else
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
-			assert.equal(observed.exception, corpusProfiles.python.errors[entry.expectation.category], entry.id);
+			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
 			assert.equal(observed.recovered, true, entry.id);
 		}
 	}
@@ -90,9 +111,10 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
  */
 export const corpusIdentity = async (repository, catalog) => {
 	const paths = ["cases.mjs", "Corpus/Wire.lean", "consumers/python.py"
+		, "consumers/ruby.rb"
 		, ...catalog.libraries.flatMap(library => [library.oracle, `${library.module.replaceAll(".", "/")}.lean`, `${library.pendingModule.replaceAll(".", "/")}.lean`])]
 		.map(path => `tests/fixtures/type-corpus/${path}`);
-	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-python.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
+	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
 	const files = [];
 	for(const path of paths)
 	{
@@ -126,6 +148,8 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		assert.match(run.runtimeIdentity, /^[a-f0-9]{64}$/);
 		assert.match(run.bindingIrSha256, /^[a-f0-9]{64}$/);
 		assert.equal(run.archive.sha256, run.archiveSha256);
+		assert.equal(run.archive.target, corpusProfiles[run.profile].target);
+		assert.equal(run.observation.profile, run.profile);
 		const cases = catalog.cases.filter(entry => entry.library === run.library);
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
 		for(const entry of cases)
