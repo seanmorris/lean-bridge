@@ -19,7 +19,7 @@ The repository's [flake](../../flake.nix) declares these useful distribution out
 
 The default package is `capsule-graph`, which validates capsule graph profiles. Specify the release output explicitly. The flake also declares `aarch64-linux`, but that system exposes the capsule graph package and its default alias, not the compiled release outputs above. Python, Rust, C, and C++ archives are included in `release-rehearsal`; they have no standalone `pypi-package`, `cargo-package`, `c-package`, or `cpp-package` attributes.
 
-Use an x86-64 Linux publisher with Nix, Bash, Git, curl, SSH, rsync, and enough disk space for the build and copied closure. These commands use the `nix-command` and `flakes` features and match the repository builder's Nix 2.24 CLI. Run the publisher snippets in one Bash session from a clean, reviewed checkout. Keep the committed `flake.lock` unchanged.
+Use an x86-64 Linux publisher with Nix, Node 22, Bash, Git, curl, SSH, rsync, and enough disk space for the build and copied closure. These commands use the `nix-command` and `flakes` features and match the repository builder's Nix 2.24 CLI. Node encodes local paths as store URLs. Run the publisher snippets in one Bash session from a clean, reviewed checkout. Keep the committed `flake.lock` unchanged.
 
 ## Build and record the candidate
 
@@ -60,6 +60,11 @@ Have the cache administrator provide a private parent directory outside the chec
 ```sh
 LEAN_BRIDGE_SIGNING_DIR=/absolute/private/lean-bridge-cache-keys
 LEAN_BRIDGE_CACHE_KEY_NAME=cache.example.org-1
+```
+
+Generate the key pair in that new directory:
+
+```sh
 (
   umask 077
   mkdir "$LEAN_BRIDGE_SIGNING_DIR"
@@ -71,7 +76,7 @@ LEAN_BRIDGE_CACHE_PUBLIC_KEY=$(< "$LEAN_BRIDGE_SIGNING_DIR/cache.public")
 sha256sum "$LEAN_BRIDGE_SIGNING_DIR/cache.public"
 ```
 
-`mkdir` deliberately fails if that key directory already exists. For later releases, load the existing key through the approved secret provider. Keep its file readable only by the signing account, retain an encrypted recovery copy, and disable shell tracing around secret-provider operations. Do not place a private key in a Nix expression, derivation, CI artifact, command argument, or cache directory. Distribute the public key and its authenticated fingerprint through the release team's trusted channel. [Nix binary-cache key generation](https://nix.dev/manual/nix/2.33/command-ref/nix-store/generate-binary-cache-key).
+`mkdir` deliberately fails if that key directory already exists. For later releases, load the existing key through the approved secret provider. Keep its file readable only by the signing account, retain an encrypted recovery copy, and disable shell tracing around secret-provider operations. Do not place a private key in a Nix expression, derivation, CI artifact, command argument, or cache directory. Distribute the public key and its authenticated fingerprint through the release team's trusted channel. [Nix binary-cache key generation](https://nix.dev/manual/nix/2.24/command-ref/nix-store/generate-binary-cache-key).
 
 ## Sign the closure and publish a file cache
 
@@ -87,17 +92,18 @@ nix --extra-experimental-features nix-command path-info --recursive --json --sig
   > "$LEAN_BRIDGE_NIX_RECORDS/closure-signed.json"
 
 LEAN_BRIDGE_CACHE_DIR=$(mktemp -d "$PWD/build/nix-binary-cache.XXXXXX")
+LEAN_BRIDGE_CACHE_URI=$(node -p 'require("node:url").pathToFileURL(process.argv[1]).href' "$LEAN_BRIDGE_CACHE_DIR")
 nix --extra-experimental-features nix-command copy \
-  --to "file://$LEAN_BRIDGE_CACHE_DIR" \
+  --to "$LEAN_BRIDGE_CACHE_URI" \
   "$LEAN_BRIDGE_BUNDLE_STORE" "$LEAN_BRIDGE_PACKAGES_STORE"
 nix --extra-experimental-features nix-command store verify \
-  --store "file://$LEAN_BRIDGE_CACHE_DIR" --recursive --sigs-needed 1 \
+  --store "$LEAN_BRIDGE_CACHE_URI" --recursive --sigs-needed 1 \
   --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
   --option secret-key-files '' \
   "$LEAN_BRIDGE_BUNDLE_STORE" "$LEAN_BRIDGE_PACKAGES_STORE"
 ```
 
-`nix store sign --recursive` attaches signatures to the closure. `nix copy` already copies the closure, including its signatures; it does not take `--recursive`. The `file://` prefix selects a binary cache, while a bare directory selects a local Nix store. [Store signing](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-sign), [Nix copy](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-copy).
+`nix store sign --recursive` attaches signatures to the closure. `nix copy` already copies the closure, including its signatures; it does not take `--recursive`. The `file://` prefix selects a binary cache, while a bare directory selects a local Nix store. Node's `pathToFileURL` encodes spaces, `#` and other reserved characters in the cache path. [Store signing](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-sign), [Nix copy](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-copy), [file URLs](https://nodejs.org/docs/latest-v22.x/api/url.html#urlpathtofileurlpath-options).
 
 The file cache contains `nix-cache-info`, `.narinfo` metadata, and compressed NAR files. The administrator must configure the HTTPS host to serve `/srv/www/nix-cache` read-only, and permit the publisher account to create release subdirectories there. Keep signing keys and private publication records outside that root.
 
@@ -120,7 +126,7 @@ ssh "$LEAN_BRIDGE_CACHE_HOST" \
 LEAN_BRIDGE_CACHE_URL="https://cache.example.org/$LEAN_BRIDGE_CACHE_RELEASE"
 ```
 
-Only the cache directory enters the upload. The new endpoint contains a complete cache tree; existing release endpoints remain unchanged. The rsync flags preserve the copied permissions while granting the web server read access. [rsync remote copying and permissions](https://download.samba.org/pub/rsync/rsync.1). For a local sandbox, consumers can use `file://$LEAN_BRIDGE_CACHE_DIR`. Verify the actual deployed endpoint before announcing it:
+Only the cache directory enters the upload. The new endpoint contains a complete cache tree; existing release endpoints remain unchanged. The rsync flags preserve the copied permissions while granting the web server read access. [rsync remote copying and permissions](https://download.samba.org/pub/rsync/rsync.1). For a local sandbox, consumers can use `$LEAN_BRIDGE_CACHE_URI`. Verify the actual deployed endpoint before announcing it:
 
 ```sh
 curl --fail --show-error "$LEAN_BRIDGE_CACHE_URL/nix-cache-info"

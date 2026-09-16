@@ -33,7 +33,7 @@ The crate retains the library's and captured Lake dependencies' [source notices]
 
 This path supports pure copied primitives, nested arrays and acyclic records. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages) and [installed acceptance](../evidence/native-rust-20260915.md).
 
-Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. Ordinary crates do not contain `.cargo_vcs_info.json`, so skip that fixture-specific move. Preserve their supplied lockfile rather than generating a new one. Their unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
+Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
 ## Package identity and publisher prerequisites
 
@@ -68,23 +68,31 @@ If you need to distribute the original approved archive now, give consumers the 
 
 ## Prepare a separate Cargo publisher source
 
-For an operator-approved Cargo CLI release, authenticate the original archive first, then extract a copy into a new review directory. These example coordinates match the fixture and are suitable only for an owned sandbox:
+For an operator-approved Cargo CLI release, authenticate the original archive first, then extract a copy into a new review directory. Set the path and exact coordinates from your prepared release:
 
 ```sh
-export LEAN_BRIDGE_CARGO_ARCHIVE=/absolute/path/to/lean_bridge_alpha-0.0.0.crate
-export LEAN_BRIDGE_CARGO_NAME=lean_bridge_alpha
-export LEAN_BRIDGE_CARGO_VERSION=0.0.0
+export LEAN_BRIDGE_CARGO_ARCHIVE=/absolute/path/to/cedar-api-2.0.0-rc.1.crate
+export LEAN_BRIDGE_CARGO_NAME=cedar-api
+export LEAN_BRIDGE_CARGO_VERSION=2.0.0-rc.1
 export LEAN_BRIDGE_CARGO_REGISTRY=lean_sandbox
 export LEAN_BRIDGE_CARGO_REVIEW="$(pwd)/build/cargo-publisher-review"
+```
+
+For the Alpha fixture, use its archive path, `lean_bridge_alpha` and `0.0.0` instead. Run the remaining snippets in the same Bash session:
+
+```sh
+set -euo pipefail
 mkdir -p build
 mkdir "$LEAN_BRIDGE_CARGO_REVIEW"
 tar -xzf "$LEAN_BRIDGE_CARGO_ARCHIVE" -C "$LEAN_BRIDGE_CARGO_REVIEW"
 cd "$LEAN_BRIDGE_CARGO_REVIEW/$LEAN_BRIDGE_CARGO_NAME-$LEAN_BRIDGE_CARGO_VERSION"
-mv .cargo_vcs_info.json ../original-cargo-vcs-info.json
+if [ -f .cargo_vcs_info.json ]; then
+  mv .cargo_vcs_info.json ../original-cargo-vcs-info.json
+fi
 mkdir .cargo
 ```
 
-The generated archive includes `.cargo_vcs_info.json`. Cargo rejects that reserved filename when it appears in the source it is about to package. Retain the original beside the extracted source, as above, and let Cargo manage its own archive metadata. Do not alter the approved input archive. This preparation starts a new packaging review.
+Alpha includes `.cargo_vcs_info.json`; ordinary-source crates do not. Cargo rejects that reserved filename when it appears in the source it is about to package. When present, retain the original beside the extracted source, as above, and let Cargo manage its own archive metadata. Do not alter the approved input archive. This preparation starts a new packaging review.
 
 Create `.cargo/config.toml` in this publisher source, replacing the deliberately invalid example URL with your registry's approved sparse-index URL:
 
@@ -104,7 +112,9 @@ Have the secret provider supply `CARGO_REGISTRIES_LEAN_SANDBOX_TOKEN`. The `carg
 Run from the extracted publisher source:
 
 ```sh
-cargo generate-lockfile --offline
+if [ ! -f Cargo.lock ]; then
+  cargo generate-lockfile --offline
+fi
 cargo package --locked --offline --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 cargo publish --dry-run --locked --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 sha256sum "$LEAN_BRIDGE_CARGO_ARCHIVE" \
@@ -113,7 +123,7 @@ cp "target/package/$LEAN_BRIDGE_CARGO_NAME-$LEAN_BRIDGE_CARGO_VERSION.crate" \
   "$LEAN_BRIDGE_CARGO_REVIEW/reviewed-cargo-archive.crate"
 ```
 
-Alpha has no external Rust dependencies, so its lockfile and local package check can run offline. The publishing dry run may inspect the registry, but does not upload. Keep Cargo's build verification enabled. `--locked` checks dependency resolution; it does not promise equality with Lean Bridge's original archive. Cargo normalizes packaging metadata and includes its lockfile. [cargo package](https://doc.rust-lang.org/cargo/commands/cargo-package.html), [cargo publish options](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
+Ordinary crates keep their supplied lockfile and need its dependencies in the local Cargo cache for this offline check. Alpha has no external Rust dependencies, so its missing lockfile can be generated offline. The publishing dry run may inspect the registry, but does not upload. Keep Cargo's build verification enabled. `--locked` checks dependency resolution; it does not promise equality with Lean Bridge's original archive. Cargo normalizes packaging metadata and includes its lockfile. [cargo package](https://doc.rust-lang.org/cargo/commands/cargo-package.html), [cargo publish options](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
 
 Install `reviewed-cargo-archive.crate` into a fresh vendor directory and run the complete [Rust consumer](../consume/rust.md). Review the new archive contents, platform requirements, version, and SHA-256. Preserve both the original Lean Bridge hash and the newly approved Cargo hash. The original signed receipt cannot authenticate these changed archive bytes.
 

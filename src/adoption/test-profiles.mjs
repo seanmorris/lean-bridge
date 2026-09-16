@@ -27,6 +27,8 @@ const profileManifest = Object.freeze({
 		, "component-runtime"
 		, "publish-configuration"
 		, "consumer-guide-docs"
+		, "nix-publication"
+		, "publishing-recipes"
 		, "consumer-checks"
 		, "contributing-docs"
 		, "credential-boundary"

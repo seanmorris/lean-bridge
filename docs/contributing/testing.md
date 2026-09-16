@@ -32,6 +32,30 @@ Each projection output directory must be absent or empty. The commands produce l
 
 To obtain approved flake outputs from a binary cache, use [signed Nix package consumption](../publish/nix.md). Authenticate the cache's public key and check substitution. Its cache signature and a Lean Bridge archive receipt cover different records.
 
+### Signed Nix cache recipes
+
+With Nix 2.24+, Node 22, Bash and curl on PATH, run:
+
+```sh
+npm run test:nix-cache
+```
+
+The suite executes the signing, endpoint-verification and clean-fetch blocks from the publishing and consumer guides. It registers a two-path input-addressed fixture in a private store, generates temporary signing keys, and checks full-closure downloads through a file cache and a loopback HTTP server. Unsigned packages or dependencies, unrelated keys, modified references, corrupt archives and missing runtime archives must fail. It also checks key rotation and paths containing reserved URL characters. Each run removes its stores, keys and caches.
+
+No Lean compilation, registry upload, public cache, active-store mutation or privileged daemon configuration is involved. These checks cover cache transport and trust; the separate consumer jobs build and execute the actual Lean packages. The downstream workflow runs this suite with Nix 2.24.11.
+
+### Publication shell recipes
+
+Run the prepared-archive shell checks with Node 22, Bash and GNU tar/coreutils:
+
+```sh
+node --test tests/publishing-recipes.test.mjs
+```
+
+These checks execute the npm, PyPI, NuGet, Maven, RubyGems and GitHub archive-upload snippets with recording clients. They check exact argument boundaries for unrelated package filenames, paths containing spaces, credential guards, unchanged input bytes and failed-command propagation. The Cargo checks preserve an ordinary package's lockfile and handle Alpha's optional VCS metadata. PATH contains only the recorders and the required filesystem tools; the suite makes no registry requests.
+
+The recorders test shell behavior, not registry acceptance or archive validity. Installed-consumer suites cover generated package contents. PAUSE's web upload and Composer repository administration still need the operator checks in their publishing guides. The [publication recipe acceptance record](../evidence/publication-recipes-20260916.md) records the fixes, toolchain and executed checks.
+
 ## Managed packages
 
 Build the NuGet package, Maven repository, and Ruby gem from the same pinned Alpha bundle:

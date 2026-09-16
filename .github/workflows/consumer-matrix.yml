@@ -17,6 +17,26 @@ env:
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
 
 jobs:
+  nix-cache:
+    name: Signed Nix cache recipes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install the documented Nix CLI
+        uses: cachix/install-nix-action@v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.24.11/install
+      - name: Execute the offline signing and loopback fetch acceptance
+        run: npm run test:nix-cache
+
   documentation:
     name: Documentation contract
     runs-on: ubuntu-24.04
@@ -616,6 +636,7 @@ jobs:
     if: always()
     needs:
       - documentation
+      - nix-cache
       - node-consumers
       - browser-consumer
       - php-consumers

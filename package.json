@@ -427,6 +427,7 @@
     "test:cargo-package": "node --test tests/cargo-package.test.mjs",
     "test:c-family-package": "node --test tests/c-family-package.test.mjs",
     "test:nix": "nix --extra-experimental-features 'nix-command flakes' build .#wasm-poc --no-link",
+    "test:nix-cache": "LEAN_BRIDGE_NIX_CACHE_TEST=1 node --test tests/nix-publication.test.mjs",
     "test:php-native-package": "node --test tests/php-native-package.test.mjs",
     "test:php-wasm-adapter": "node --test tests/php-wasm-adapter.test.mjs",
     "test:php-wasm-package": "node --test tests/php-wasm-package.test.mjs",

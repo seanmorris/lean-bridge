@@ -164,11 +164,12 @@ nix --extra-experimental-features nix-command store verify \
 
 This reads the remote cache and verifies NAR contents and trust without installing the package in the active store. Success exits `0`; a nonzero result identifies corruption, untrusted content, or a verification error. These audit commands temporarily accept only the selected public key and clear implicit trust from configured secret-key files; they do not edit system settings. Keep `--sigs-needed 1`: the default verification mode also accepts locally built paths without requiring signatures. Nix can authenticate content-addressed dependencies through their content addresses. Listing signatures with `path-info --sigs` alone does not verify them. [Store verification](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-verify), [Nix trusted-key loading](https://raw.githubusercontent.com/NixOS/nix/2.24.11/src/libstore/keys.cc).
 
-A fresh temporary store proves that the closure can be fetched without using an already installed copy. It leaves the machine's active store intact:
+A fresh temporary store proves that the closure can be fetched without using an already installed copy. It leaves the machine's active store intact. Run this block in Bash with Nix 2.24+ and Node 22 available; Node encodes reserved characters in the temporary path:
 
 ```sh
-LEAN_BRIDGE_FETCH_ROOT=$(mktemp -d /tmp/lean-bridge-nix-fetch.XXXXXX)
-LEAN_BRIDGE_FETCH_STORE="local?root=$LEAN_BRIDGE_FETCH_ROOT&require-sigs=true"
+set -euo pipefail
+LEAN_BRIDGE_FETCH_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/lean-bridge-nix-fetch.XXXXXX")
+LEAN_BRIDGE_FETCH_STORE=$(node -p '"local?root=" + encodeURIComponent(process.argv[1]) + "&require-sigs=true"' "$LEAN_BRIDGE_FETCH_ROOT")
 nix --extra-experimental-features nix-command copy \
   --from "$LEAN_BRIDGE_CACHE_URL" --to "$LEAN_BRIDGE_FETCH_STORE" \
   --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
