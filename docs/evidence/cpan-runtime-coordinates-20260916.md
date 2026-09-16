@@ -28,6 +28,8 @@ CPAN accepts string-valued decimal versions and exact prerequisite ranges. Its m
 
 Local native checks use the explicit glibc 2.36 test override. The production profile retains 2.38. Mixed-profile tests use real compilers through the existing injected Nix command transport; Nix itself is not installed locally. Type coverage remains 656 installed-tested cells. Seven Perl evidence hashes were refreshed for packaging and acceptance changes, without promoting type-support claims.
 
+CI on `61b0e71` exposed a test-fixture permissions error: the helper and notice corruption cases tried to overwrite mode-0444 copies. Root's permission bypass hid the error locally. Running the contract as `nobody` reproduced both failures. The corruption helper now makes only its disposable copy writable; the source templates remain unchanged. All 44 Perl contract checks pass as `nobody`, and the nine coordinate checks also pass as root. No package implementation changed in this correction.
+
 ## Remaining work
 
 No registry publication occurred. npm and PHP-Wasm retain their existing content-derived runtime versions, but their identities do not explicitly bind host Node/zlib/ICU versions. That cross-host archive-coordinate policy needs the next audit. Registry recipe rehearsal and signed Nix publication/consumption review also remain in VO1240; the broader type-corpus work follows in VO1217.

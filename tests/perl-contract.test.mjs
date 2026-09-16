@@ -455,9 +455,15 @@ test("CPAN stages a versioned runtime from read-only Nix-style templates", async
 	await stageCpanPackage({ outputRoot: repeat, runtimeRoot });
 	const reproduced = await archiveCpanPackage({ packageRoot: repeat, outputRoot: join(scratch, "reproduced") });
 	assert.equal(reproduced.receipt.sha256, archive.receipt.sha256);
+	const overwriteCopy = async (path, bytes) => {
+		// Copied Nix templates retain mode 0444. Corrupt only the task-owned copy;
+		// the immutable source template must remain read-only and unchanged.
+		await chmod(path, 0o644);
+		await writeFile(path, bytes);
+	};
 	for(const [label, mutate] of [
-		["helper", async (directory) => writeFile(join(directory, "LeanBridgeBuild.pm"), "# changed helper\n")]
-		, ["notice", async (directory) => writeFile(join(directory, "notices/lean.txt"), "changed notice\n")]
+		["helper", async (directory) => overwriteCopy(join(directory, "LeanBridgeBuild.pm"), "# changed helper\n")]
+		, ["notice", async (directory) => overwriteCopy(join(directory, "notices/lean.txt"), "changed notice\n")]
 		, ["metadata", async directory => {
 			const path = join(directory, "META.json"), value = JSON.parse(await readFile(path));
 			value.abstract = "changed runtime description"; await writeFile(path, canonicalJson(value));
