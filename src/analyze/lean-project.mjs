@@ -5,7 +5,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { readFile, readdir } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
@@ -13,6 +13,7 @@ import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentSignatureProblem } from "../abi/component-scalars.mjs";
 import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations, selectSourceModules } from "./export-configuration.mjs";
 import { isSourceNotice } from "../release/source-notices.mjs";
+import { componentLicense } from "./package-license.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -527,11 +528,20 @@ export const inspectLeanProject = async (projectRoot, { signal = undefined } = {
 		throw error;
 	}
 	const configurationRecord = await readExportConfiguration(root, { signal });
+	const packageMetadata = configurationRecord.configuration.package ?? {};
+	if(packageMetadata.license && files.includes(join(root, "package.json"))) componentLicense(packageMetadata, JSON.parse(await readFile(join(root, "package.json"), "utf8")));
+	for(const path of packageMetadata.licenseFiles ?? [])
+	{
+		const absolute = join(root, path);
+		if(!files.includes(absolute) || !(await lstat(absolute)).isFile() || await realpath(absolute) !== absolute)
+			fail("invalid-license-file", `Declared license file is missing, excluded or symlinked: ${path}`);
+		if(!(await readFile(absolute, "utf8")).trim()) fail("invalid-license-file", `Declared license file is empty: ${path}`);
+	}
 	const relevant = files.filter(path =>
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
     || relevantProjectFiles.has(basename(path))
-    || isSourceNotice(relative(root, path).replaceAll("\\", "/"))
+    || isSourceNotice(relative(root, path).replaceAll("\\", "/"), packageMetadata)
 	);
 	const inputs = [];
 	for(const absolute of relevant)

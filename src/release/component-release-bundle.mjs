@@ -11,6 +11,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readLakeDependencySnapshot, writeLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
 import { readLakeGeneratedSources } from "../build/lake-generated-workspace.mjs";
 import { isSourceNotice } from "./source-notices.mjs";
+import { componentLicense } from "../analyze/package-license.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
 
 /**
  * Reports component release bundle failures with stable machine-readable codes and structured diagnostic context.
@@ -225,8 +227,9 @@ export const buildComponentReleaseBundle = async ({
 		await write(staging, "README.md", readme(componentPlan.document.component));
 		const packageInput = componentPlan.document.source.inputs.find(item => item.path === "package.json");
 		const metadata = packageInput ? JSON.parse(await readFile(join(staging, "source/package.json"), "utf8")) : {};
-		const license = typeof metadata.license === "string" && metadata.license.trim() ? metadata.license : "UNLICENSED";
-		const notices = componentPlan.document.source.inputs.filter(item => isSourceNotice(item.path));
+		const declared = (await readExportConfiguration(join(staging, "source"))).configuration.package ?? {};
+		const license = componentLicense(declared, metadata);
+		const notices = componentPlan.document.source.inputs.filter(item => isSourceNotice(item.path, declared));
 		await write(staging, "metadata/sbom.json", canonicalJson({
 			schemaVersion: 1
 			, kind: "lean-bridge-component-sbom"

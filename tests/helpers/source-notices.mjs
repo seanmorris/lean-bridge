@@ -35,19 +35,19 @@ export const assertPackagedSourceNotices = async (t, root, expected, metadataDec
 		const zip = /\.(?:zip|jar|nupkg|whl)$/.test(archive);
 		const paths = (await run(zip ? "unzip" : "tar", zip ? ["-Z1", archive] : ["-tzf", archive])).trim().split("\n");
 		const read = path => run(zip ? "unzip" : "tar", zip ? ["-p", archive, path] : ["-xOzf", archive, path]);
-		const notices = paths.filter(path => isSourceNotice(path) || /\/source-notices\/[a-f0-9]{64}\.txt$/.test(path));
+		const notices = paths.filter(path => isSourceNotice(path) || /\/source-notices\/[a-f0-9]{64}\.txt$/.test(path) || path.endsWith("/legal/distribution terms.txt"));
 		const contents = await Promise.all(notices.map(read));
 		for(const text of expected) assert.equal(contents.includes(text), pkg.role !== "runtime", `${pkg.target} ${pkg.role} ${artifact.path}: ${text.trim()}`);
 		if(pkg.target === "cpan" && pkg.role === "component")
 		{
 			const metadata = JSON.parse(await read(paths.find(path => path.endsWith("/META.json"))));
-			assert.deepEqual(metadata.license, ["unknown"]);
 			if(!metadataDeclared)
 			{
+				assert.deepEqual(metadata.license, ["unknown"]);
 				assert.deepEqual(metadata.author, ["Author not declared"]);
 				assert.equal(metadata.resources, undefined);
 			}
 		}
-		if(pkg.target === "cargo") assert.doesNotMatch(await read(paths.find(path => path.endsWith("/Cargo.toml"))), /^license(?:-file)?\s*=/m);
+		if(pkg.target === "cargo" && !metadataDeclared) assert.doesNotMatch(await read(paths.find(path => path.endsWith("/Cargo.toml"))), /^license(?:-file)?\s*=/m);
 	}
 };

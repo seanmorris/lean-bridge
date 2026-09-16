@@ -141,8 +141,8 @@ export const stageCpanPackage = async ({ outputRoot
 		, version
 		, abstract: "Generated native Lean bindings"
 		, author: [componentRoot ? "Author not declared" : "Lean Bridge contributors"]
-		, ...cpanPackageMetadata(packageMetadata)
 		, license: [componentRoot ? "unknown" : "mit"]
+		, ...cpanPackageMetadata(packageMetadata)
 		, dynamic_config: true
 		, release_status: version.includes("_") ? "testing" : "stable"
 		, generated_by: "lean-bridge cpan-package-v1"

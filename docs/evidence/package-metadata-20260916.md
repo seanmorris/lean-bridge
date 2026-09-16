@@ -28,4 +28,4 @@ Core checks pass 684 tests with 52 gated skips. Documentation passes 65 checks, 
 
 ## Remaining work
 
-Shared license-expression declarations and custom license-file paths are not implemented. The existing notice capture remains in place. Immutable shared-runtime coordinates, CPAN runtime-version resolution, and the remaining publication-recipe audit remain VO1240 work. No registry upload, production branch push, GitHub release or Pages publication was performed.
+At this milestone, shared license-expression declarations and custom license-file paths remained unimplemented. The [license follow-up](package-licenses-20260916.md) adds them. Immutable shared-runtime coordinates, CPAN runtime-version resolution, and the remaining publication-recipe audit remain VO1240 work. No registry upload, production branch push, GitHub release or Pages publication was performed.

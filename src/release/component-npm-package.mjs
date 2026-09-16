@@ -22,7 +22,7 @@ import { assertComponentSignature, componentScalarAbi } from "../abi/component-s
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
-import { isSourceNotice } from "./source-notices.mjs";
+import { isSourceNotice, sourceNoticeMetadata } from "./source-notices.mjs";
 import { npmPackageMetadata } from "../analyze/package-metadata.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -170,13 +170,22 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	for(const notice of sbom.notices)
 	{
 		const path = notice.path.slice("source/".length);
-		if(!notice.path.startsWith("source/") || !isSourceNotice(path)) throw new Error("Invalid source notice path in component SBOM");
-		await copy(join(bundle.root, notice.path), join(componentPackage, path.includes("/") ? `notices/source/${path}` : path));
+		if(!notice.path.startsWith("source/") || !isSourceNotice(path, record.configuration.package ?? {})) throw new Error("Invalid source notice path in component SBOM");
+		await copy(join(bundle.root, notice.path), join(componentPackage, path.includes("/") || !isSourceNotice(path) ? `notices/source/${path}` : path));
 	}
-	const dependencyNotices = bundle.manifest.files.filter(file => file.role === "source" && file.path.startsWith("lake/packages/")
-		&& isSourceNotice(file.path));
-	for(const notice of dependencyNotices)
-		await copy(join(bundle.root, notice.path), join(componentPackage, "notices/lake", notice.path.slice("lake/packages/".length)));
+	const dependencies = bundle.manifest.files.filter(file => file.role === "source" && file.path.startsWith("lake/packages/"));
+	for(const prefix of new Set(dependencies.map(file => file.path.split("/").slice(0, 3).join("/") + "/")))
+	{
+		const files = dependencies.filter(file => file.path.startsWith(prefix)).map(file => ({ ...file, path: file.path.slice(prefix.length) }));
+		const configuration = files.some(file => file.path === "lean-bridge.exports.json") ? await readFile(join(bundle.root, prefix, "lean-bridge.exports.json"), "utf8") : null;
+		const metadata = sourceNoticeMetadata(configuration, files);
+		for(const notice of files.filter(file => isSourceNotice(file.path, metadata)))
+		{
+			const bytes = await readFile(join(bundle.root, prefix, notice.path));
+			if(metadata.licenseFiles?.includes(notice.path) && !bytes.toString("utf8").trim()) throw new Error(`Declared license file is empty: ${notice.path}`);
+			await copy(join(bundle.root, prefix, notice.path), join(componentPackage, "notices/lake", prefix.slice("lake/packages/".length), notice.path));
+		}
+	}
 	const componentExports = componentPackageJson.exports?.["."] ?? {};
 	await writeFile(join(componentPackage, "package.json"), json({
 		...componentPackageJson

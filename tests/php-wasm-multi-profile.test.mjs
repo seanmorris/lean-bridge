@@ -26,7 +26,8 @@ test("PHP-Wasm combines atomically with either or both native PHP and JavaScript
 	const context = await lakeWorkspaceFixture(t, "telemetry"), engineRoot = process.cwd();
 	await elaboratedLakeApi(context, await customLakeRoot(context));
 	const config = await json(join(context.root, "lean-bridge.exports.json"));
-	config.package = packageMetadataFixture("telemetry");
+	config.package = { ...packageMetadataFixture("telemetry"), license: "Apache-2.0", licenseFiles: ["legal/distribution terms.txt"] };
+	await saveLakeFile(context.root, "legal/distribution terms.txt", "Custom PHP-Wasm terms\n");
 	config.targets.npm = { name: "@example/telemetry", version: "2.0.0" };
 	config.targets["php-native"] = { name: "example/telemetry-native", version: "2.0.0" };
 	config.targets["php-wasm"] = { npm: { name: "@example/telemetry-php-wasm", version: "2.0.0" }, composer: { name: "example/telemetry-wasm", version: "2.0.0" } };

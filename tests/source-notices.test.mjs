@@ -28,8 +28,13 @@ test("license-file discovery accepts conventional terms but not attribution alon
 		assert.equal(isSourceLicense(path), false, String(path));
 });
 
-const prepared = async t => {
+const prepared = async (t, custom = false) => {
 	const context = await lakeWorkspaceFixture(t);
+	if(custom) for(const root of [context.root, context.local])
+	{
+		await saveLakeFile(root, "legal/distribution terms.txt", `Declared terms for ${root === context.root ? "root" : "dependency"}.\n`);
+		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, package: { license: "MIT", licenseFiles: ["legal/distribution terms.txt"] } }));
+	}
 	await saveLakeFile(context.root, "licence.md", "A separate root notice.\n");
 	await saveLakeFile(context.root, "LICENSES/custom terms.txt", "Custom terms fixture.\n");
 	const analysis = await inspectLeanProject(context.root);
@@ -66,7 +71,7 @@ test("missing notices stay explicit and do not borrow Lean Bridge's license", as
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const sourceTreeSha256 = sha256("");
 	const result = await captureSourceNotices({ projectRoot: root, projectName: "private-library", inputs: [], sourceTreeSha256 });
-	assert.deepEqual(result.document.packages, [{ name: "private-library", source: { kind: "root", sourceTreeSha256, inputs: [] }, notices: [] }]);
+	assert.deepEqual(result.document.packages, [{ name: "private-library", source: { kind: "root", sourceTreeSha256, inputs: [] }, configurationSource: null, notices: [] }]);
 	for(const [path, bytes] of result.files) await saveLakeFile(root, path, bytes);
 	await readVerifiedSourceNotices(root, { sourceTreeSha256, sourceNoticesSha256: result.sha256 });
 });
@@ -123,4 +128,46 @@ test("resealing a notice inventory cannot omit root or dependency notices, chang
 		await saveLakeFile(context.root, "source-notices.json", bytes);
 		await assert.rejects(readVerifiedSourceNotices(context.root, { ...context.sourceIdentity, sourceNoticesSha256: sha256(bytes) }));
 	}
+});
+
+test("declared root and dependency terms remain source-bound after relocation", async t => {
+	const context = await prepared(t, true);
+	assert.equal(context.notices.document.schemaVersion, 2);
+	assert.ok(context.analysis.inputs.some(file => file.path === "legal/distribution terms.txt"));
+	for(const pkg of context.notices.document.packages.slice(0, 2))
+		assert.ok(pkg.notices.some(file => file.path === "legal/distribution terms.txt"));
+	await rename(context.workspace, join(context.directory, "hidden-source"));
+	await readVerifiedSourceNotices(context.root, context.sourceIdentity);
+	for(const mutate of [
+		doc => { doc.packages[0].configurationSource = null; }
+		, doc => { doc.packages[1].configurationSource = canonicalJson({ schemaVersion: 1, package: { license: "Apache-2.0" } }); }
+		, doc => { doc.packages[1].notices = doc.packages[1].notices.filter(file => file.path !== "legal/distribution terms.txt"); }
+	]) {
+		const changed = structuredClone(context.notices.document); mutate(changed);
+		const bytes = canonicalJson(changed);
+		await saveLakeFile(context.root, "source-notices.json", bytes);
+		await assert.rejects(readVerifiedSourceNotices(context.root, { ...context.sourceIdentity, sourceNoticesSha256: sha256(bytes) }));
+	}
+});
+
+test("version-one conventional notice inventories remain readable", async t => {
+	const context = await prepared(t), document = structuredClone(context.notices.document);
+	document.schemaVersion = 1;
+	for(const pkg of document.packages) delete pkg.configurationSource;
+	const bytes = canonicalJson(document);
+	await saveLakeFile(context.root, "source-notices.json", bytes);
+	assert.deepEqual((await readVerifiedSourceNotices(context.root, { ...context.sourceIdentity, sourceNoticesSha256: sha256(bytes) })).document, document);
+});
+
+test("custom terms must be existing nonempty regular files before analysis succeeds", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-custom-terms-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, package: { licenseFiles: ["legal/terms.txt"] } }));
+	await assert.rejects(inspectLeanProject(root), /missing, excluded or symlinked/);
+	await saveLakeFile(root, "legal/terms.txt", " \n");
+	await assert.rejects(inspectLeanProject(root), /empty/);
+	await rm(join(root, "legal/terms.txt"));
+	await saveLakeFile(root, "actual.txt", "Terms\n");
+	await symlink(join(root, "actual.txt"), join(root, "legal/terms.txt"));
+	await assert.rejects(inspectLeanProject(root), /missing, excluded or symlinked/);
 });

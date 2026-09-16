@@ -29,7 +29,7 @@ lean-bridge build --project ./cedar --target cargo --output ./release-cargo
 
 The build compiles Lean and its C adapter, checks the generated Rust with a pinned dependency lock, then archives those files without further compiler access. `release-cargo/archives/cedar-api-2.0.0-rc.1.crate` contains Rust sources, native libraries, licenses, source identities and package receipts. Repeat `--target c`, `--target nuget` or another supported ordinary target to share the native compilation. Name and version come from the export configuration, not an archive rename.
 
-The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). It does not declare Lean Bridge's MIT license as the library's license. Author-supplied license metadata is still required before registry publication; the ordinary generator currently leaves Cargo's license fields unset.
+The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
 This path supports pure copied primitives, nested arrays and acyclic records. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages) and [installed acceptance](../evidence/native-rust-20260915.md).
 

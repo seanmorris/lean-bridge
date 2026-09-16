@@ -79,8 +79,14 @@
   "$defs": {
     "metadata": {
       "type": "object", "additionalProperties": false,
-      "description": "Author-owned package metadata. Limits are UTF-8 byte counts; URLs must be HTTPS without credentials, queries or fragments. License declarations are separate.",
+      "description": "Author-owned package metadata. Limits are UTF-8 byte counts; URLs must be HTTPS without credentials, queries or fragments. License expressions use listed SPDX 3.28 identifiers.",
       "properties": {
+        "license": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[A-Za-z0-9(][A-Za-z0-9.()+ -]*[A-Za-z0-9)+]$(?![\\s\\S])", "description": "Validated against SPDX 3.28 nondeprecated identifiers and exceptions, including AND, OR, WITH and parentheses. No LicenseRef."},
+        "licenseFiles": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {
+          "type": "string", "maxLength": 512,
+          "pattern": "^[A-Za-z0-9_-][A-Za-z0-9._ -]*(?:/[A-Za-z0-9_-][A-Za-z0-9._ -]*){0,15}$(?![\\s\\S])",
+          "not": {"pattern": "[ .](?:/|$)|(?:^|/)(?:build|dist|target|node_modules|vendor|result)(?:/|$)"}
+        }},
         "description": {"$ref": "#/$defs/metadataText", "maxLength": 512},
         "homepage": {"$ref": "#/$defs/metadataUrl"},
         "repository": {"$ref": "#/$defs/metadataUrl"},

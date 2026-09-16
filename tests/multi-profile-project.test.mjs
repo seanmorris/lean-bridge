@@ -141,7 +141,10 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const path = await customLakeRoot(context);
 	await elaboratedLakeApi(context, path);
 	const config = await json(join(context.root, "lean-bridge.exports.json"));
-	config.package = packageMetadataFixture(variant);
+	config.package = { ...packageMetadataFixture(variant), license: variant === "shop" ? "MIT OR Apache-2.0" : "MIT", licenseFiles: ["legal/distribution terms.txt"] };
+	await saveLakeFile(context.root, "legal/distribution terms.txt", `Custom root terms: ${variant}\n`);
+	await saveLakeFile(context.local, "legal/distribution terms.txt", `Custom dependency terms: ${variant}\n`);
+	await saveLakeFile(context.local, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, package: { licenseFiles: ["legal/distribution terms.txt"] } }));
 	const operation = `${context.names.root}.${context.names.operation}`;
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
@@ -189,6 +192,8 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		, `Nested source notice fixture: ${context.names.root}\n`
 		, `Source notice fixture: ${context.names.local}\n`
 		, `Source notice fixture: ${context.names.remote}\n`
+		, `Custom root terms: ${variant}\n`
+		, `Custom dependency terms: ${variant}\n`
 	], true);
 	await assertPackagedMetadata(builds[0].output, config.package);
 	await assertRelocatedPackageSet(t, builds[0].output);

@@ -67,9 +67,10 @@ test("sealed npm settings and export selection reach the exact installed public 
 	await cp("tests/fixtures/onboarding/small", projectRoot, { recursive: true });
 	await writeFile(join(projectRoot, "lean-bridge.exports.json"), JSON.stringify({
 		schemaVersion: 1, exports: ["OnboardingSmall.add"]
-		, package: packageMetadataFixture("small")
+		, package: { ...packageMetadataFixture("small"), license: "MIT", licenseFiles: ["TERMS.txt"] }
 		, targets: { npm: { name: "@example/_math", version: "2.3.4-beta.1" } }
 	}));
+	await writeFile(join(projectRoot, "TERMS.txt"), "Custom package terms fixture\n");
 	const config = await readFile(join(projectRoot, "lean-bridge.exports.json"));
 	const bundleRoot = await buildBundle(scratch, projectRoot);
 	await rm(projectRoot, { recursive: true });
@@ -93,6 +94,8 @@ test("sealed npm settings and export selection reach the exact installed public 
 	assert.deepEqual([metadata.author, ...metadata.contributors], declared.authors);
 	assert.equal(metadata.homepage, declared.homepage);
 	assert.equal(metadata.repository.url, declared.repository);
+	assert.equal(metadata.license, "MIT");
+	assert.equal(await readFile(join(prepared.output, "component/package/notices/source/TERMS.txt"), "utf8"), "Custom package terms fixture\n");
 	const runtimeMetadata = JSON.parse(await readFile(join(prepared.output, "runtime/package/package.json"), "utf8"));
 	assert.notEqual(runtimeMetadata.description, declared.description);
 	assert.equal(runtimeMetadata.author, undefined);

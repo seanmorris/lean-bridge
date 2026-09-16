@@ -11,6 +11,7 @@ import { cargoPackageMetadata, compiledPackageMetadata, composerPackageMetadata,
 	, npmPackageMetadata, pythonPackageMetadata, verifyPackageMetadataSource } from "../src/analyze/package-metadata.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { packageMetadataFixture } from "./helpers/package-metadata.mjs";
+import { componentLicense, cpanPackageLicense, parsePackageLicense, rubyPackageLicense } from "../src/analyze/package-license.mjs";
 
 test("shared package metadata is optional, closed and schema-checked", async () => {
 	for(const metadata of [{}, packageMetadataFixture("shop"), { authors: [{ name: "Independent library team" }] }])
@@ -24,7 +25,7 @@ test("shared package metadata is optional, closed and schema-checked", async () 
 
 test("metadata rejects header injection, malformed text, credentials and undeclared fields", async () => {
 	for(const metadata of [
-		null, [], { name: "not a coordinate" }, { license: "MIT" }
+		null, [], { name: "not a coordinate" }
 		, { description: "" }, { description: " padded" }
 		, { description: "newline\nHeader: value" }
 		, { description: "null\u0000" }, { description: "c1\u0085" }
@@ -82,4 +83,39 @@ test("ecosystem projections preserve author data and escape generated syntax", (
 	assert.ok(pythonPackageMetadata(metadata).includes(`Summary: ${metadata.description}\n`));
 	assert.equal(metadataXml('<&>"\''), "&lt;&amp;&gt;&quot;&apos;");
 	for(const project of [npmPackageMetadata, composerPackageMetadata, cpanPackageMetadata]) assert.deepEqual(project({}), {});
+});
+
+test("shared licenses admit bounded SPDX expressions and preserve Boolean semantics", async () => {
+	for(const license of ["MIT", "0BSD", "MIT OR Apache-2.0", "(MIT AND BSD-3-Clause) OR Apache-2.0", "Apache-2.0 WITH LLVM-exception", "MPL-2.0+"])
+	{
+		const configuration = { schemaVersion: 1, package: { license, licenseFiles: ["legal/terms.txt", "Other terms.md"] } };
+		validateExportConfiguration(configuration);
+		await assertJsonSchema("lean-export-configuration", configuration);
+		assert.equal(npmPackageMetadata(configuration.package).license, license);
+		assert.equal(composerPackageMetadata(configuration.package).license, license);
+		assert.equal(cpanPackageMetadata(configuration.package).x_spdx_expression, license);
+	}
+	const tree = parsePackageLicense("MIT OR Apache-2.0 AND BSD-3-Clause");
+	assert.equal(tree.operator, "OR"); assert.equal(tree.right.operator, "AND");
+	assert.equal(rubyPackageLicense("MIT OR Apache-2.0"), "Nonstandard");
+	assert.equal(rubyPackageLicense("(MIT)"), "MIT");
+	assert.equal(rubyPackageLicense("Apache-2.0 WITH LLVM-exception"), "Apache-2.0 WITH LLVM-exception");
+	assert.equal(cpanPackageLicense("MIT"), "mit");
+	assert.equal(cpanPackageLicense("Apache-2.0"), "apache_2_0");
+	assert.equal(cpanPackageLicense("MIT OR Apache-2.0"), "unknown");
+	assert.equal(componentLicense({ license: "MIT" }), "MIT");
+	assert.equal(componentLicense({}, { license: "Apache-2.0" }), "Apache-2.0");
+	assert.equal(componentLicense({}), "UNLICENSED");
+	assert.throws(() => componentLicense({ license: "MIT" }, { license: "Apache-2.0" }), /conflicts/);
+});
+
+test("invalid SPDX, ambiguous syntax and unsafe custom license paths fail before compilation", async () => {
+	for(const license of [null, "", " MIT", "MIT\n", "mit", "MIT or Apache-2.0", "Bogus-1.0", "GPL-2.0", "LicenseRef-custom", "MIT OR", "MIT Apache-2.0", "(MIT", "MIT)", "()", "MIT +", "MIT+WITH LLVM-exception", "MIT+AND BSD-3-Clause", "MIT WITH MIT", "(MIT OR Apache-2.0) WITH LLVM-exception", "MIT WITH LLVM-exception WITH LLVM-exception", "(".repeat(34) + "MIT" + ")".repeat(34), "MIT OR ".repeat(80) + "MIT"])
+		assert.throws(() => validateExportConfiguration({ schemaVersion: 1, package: { license } }), { code: "invalid-export-configuration" }, String(license));
+	for(const licenseFiles of [[], ["a", "a"], ["/LICENSE"], ["../LICENSE"], ["legal/../terms"], ["legal\\terms"], [".env"], ["legal/.private/terms"], ["legal/*"], ["build/terms.txt"], ["node_modules/a/terms"], ["legal/terms\n"], ["legal/ terms"], ["terms "], ["terms."], ["x".repeat(513)], ["a/".repeat(17) + "b"]])
+	{
+		const configuration = { schemaVersion: 1, package: { licenseFiles } };
+		assert.throws(() => validateExportConfiguration(configuration), { code: "invalid-export-configuration" });
+		await assert.rejects(assertJsonSchema("lean-export-configuration", configuration));
+	}
 });

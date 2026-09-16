@@ -35,7 +35,9 @@ Set `package` once in the source project's `lean-bridge.exports.json`. It applie
       { "name": "Your library team", "email": "packages@example.org", "url": "https://example.org/team" }
     ],
     "homepage": "https://example.org/library",
-    "repository": "https://github.com/your-org/your-library"
+    "repository": "https://github.com/your-org/your-library",
+    "license": "MIT OR Apache-2.0",
+    "licenseFiles": ["legal/mit-terms.txt", "legal/apache-terms.txt"]
   },
   "targets": {
     "npm": { "name": "@your-org/your-library", "version": "1.0.0" },
@@ -44,7 +46,7 @@ Set `package` once in the source project's `lean-bridge.exports.json`. It applie
 }
 ```
 
-All four fields are optional. `description` is a single line of at most 512 UTF-8 bytes. `authors` contains one to 32 people or organizations, each with a required `name` of at most 128 bytes and optional `email` and `url`. URLs must use HTTPS, contain no credentials, query or fragment, and fit within 1024 bytes. `repository` is the public HTTPS URL of the Git repository. Unknown fields, duplicate authors, control characters and malformed values stop the build. The [configuration schema](../schema/lean-export-configuration.schema.json) describes the structure; validation also checks UTF-8 byte limits.
+All package fields are optional. `description` is a single line of at most 512 UTF-8 bytes. `authors` contains one to 32 people or organizations, each with a required `name` of at most 128 bytes and optional `email` and `url`. URLs must use HTTPS, contain no credentials, query or fragment, and fit within 1024 bytes. `repository` is the public HTTPS URL of the Git repository. Unknown fields, duplicate authors, control characters and malformed values stop the build. The [configuration schema](../schema/lean-export-configuration.schema.json) describes the structure; validation also checks UTF-8 byte limits.
 
 | Target | Generated fields |
 | --- | --- |
@@ -66,6 +68,26 @@ The [metadata acceptance record](evidence/package-metadata-20260916.md) covers i
 
 The field mappings follow the registry specifications: [npm package.json](https://docs.npmjs.com/cli/v11/configuring-npm/package-json), [Python core metadata](https://packaging.python.org/en/latest/specifications/core-metadata/), [Cargo manifests](https://doc.rust-lang.org/cargo/reference/manifest.html), [NuGet nuspec](https://learn.microsoft.com/en-us/nuget/reference/nuspec), [Maven POM](https://maven.apache.org/pom.html), [RubyGems gemspec](https://guides.rubygems.org/specification-reference/), [CPAN metadata](https://metacpan.org/pod/CPAN::Meta::Spec), and [Composer schema](https://getcomposer.org/doc/04-schema.md).
 
+## Declare license terms
+
+`package.license` sets the publisher's license expression for the generated component packages. Use canonical, nondeprecated identifiers and exceptions from SPDX 3.28, combined with `AND`, `OR`, `WITH`, `+` and parentheses. The offline validator limits expressions to 512 ASCII characters and 32 nested groups. `LicenseRef` and deprecated identifiers are not admitted. Each registry can enforce its own, older license list. The pinned identifier data and upstream hashes are in [spdx-data.json](../src/analyze/spdx-data.json). [SPDX expression syntax](https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/).
+
+`package.licenseFiles` adds exact source-relative filenames to automatic notice discovery. In the example above, create both files under `legal/` with the applicable terms. Up to 32 unique paths are allowed, each at most 512 characters and 16 path segments. Use ASCII letters, digits, spaces, `_`, `-` and `.` within names. Absolute paths, traversal, globs, hidden files, build/dependency directories, symlinks, missing files and empty terms fail the build. Lake dependencies can declare their own paths in their own `lean-bridge.exports.json`; those declarations are checked against the captured dependency bytes.
+
+| Target | License declaration |
+| --- | --- |
+| npm, including PHP-Wasm; Composer; Cargo | `license` contains the exact expression |
+| PyPI | Core metadata 2.4 `License-Expression`, plus `License-File` entries for bundled terms and notices |
+| NuGet | `<license type="expression">` |
+| Maven | One `licenses/license/name` containing the complete expression; Boolean terms are not split into unrelated licenses |
+| RubyGems | A single supported term in `license`; compound or overlong terms use `Nonstandard`. `metadata.spdx_expression` always retains the declared expression |
+| CPAN | An exact mapping where its vocabulary permits one, otherwise `unknown`. `x_spdx_expression` retains the expression in `META.json` and installation's `MYMETA.json` |
+| C, C++, WIT/WASI | `license` and `licenseFiles` in `package-metadata.json` |
+
+RubyGems' license array does not distinguish `AND` from `OR`; CPAN has a smaller fixed vocabulary. The extra metadata preserves the publisher's expression without changing those semantics. [RubyGems license fields](https://guides.rubygems.org/specification-reference/#license), [CPAN license vocabulary](https://metacpan.org/pod/CPAN::Meta::Spec#license), [Python license metadata](https://packaging.python.org/en/latest/specifications/core-metadata/#license-expression).
+
+Ordinary JavaScript npm builds still accept a license from the source `package.json` when `package.license` is absent. If both declarations exist, they must match exactly. Native and PHP-Wasm builds do not infer a license from npm metadata. Without a shared declaration they retain notices but leave the ecosystem license absent or unspecified. Shared-runtime packages keep their own terms. Choose an expression appropriate to the files you distribute, including bundled dependencies; the build does not infer licensing rights from file contents.
+
 ## Retain library and dependency licenses
 
 Keep your library's license and redistribution notices in its source tree, and retain those supplied by its Lake dependencies. Lean Bridge captures files named `LICENSE`, `LICENCE`, `LICENSES`, `NOTICE`, `NOTICES`, `COPYING` or `COPYRIGHT`, including case variations, suffixed filenames and nested paths. It also captures files inside `LICENSES/` directories. Lean source and other code files do not become notices merely because they are named `Notice.lean` or `License.js`.
@@ -83,9 +105,9 @@ Native and PHP-Wasm compilation writes `source-notices.json` with each package's
 
 Each inventory points to `source-notices/<sha256>.txt` beside it. The payload retains the original file bytes; the inventory retains its original filename. Identical notice bytes share a payload. Lean and Lean Bridge licenses remain separately named files. Shared runtime packages do not receive the consuming library's notices.
 
-Ordinary JavaScript npm packages retain root notice filenames, nested root notices under `notices/source/`, and dependency notices under `notices/lake/`. Their `sbom.json` records the root notices, and `package.json` takes its license declaration from the source project's `package.json`.
+Ordinary JavaScript npm packages retain root notice filenames, nested root notices under `notices/source/`, and dependency notices under `notices/lake/`. Their `sbom.json` records the root notices, and `package.json` takes its license from the shared declaration, with the source `package.json` as the npm-only fallback. Custom root filenames that are not conventional notice names go under `notices/source/`, avoiding generated-file collisions.
 
-Native and PHP-Wasm metadata does not yet project a library-wide license expression. CPAN uses `unknown` for the component license; Cargo leaves its license field unset. `package` does not accept a `license` field yet. Complete that license review before a registry release. Capturing notice files does not determine which license terms apply to a combined package.
+Native and PHP-Wasm source-notice inventories use version two to retain each package's source-bound configuration alongside its notice inventory. Version-one inventories remain readable. License text, declarations and paths are checked before archives are assembled, including after the source directory has been removed. The [license acceptance record](evidence/package-licenses-20260916.md) lists archive inspections, installed consumers and integrity regressions.
 
 ## Build and approve the same artifacts
 

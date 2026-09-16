@@ -60,9 +60,9 @@ The selected exports must fit both profiles. Today that means npm's pure primiti
 
 ## Publish an ordinary component
 
-Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Declare its license in `package.json` and commit a nonempty license file. The publication check accepts `LICENSE`, `LICENCE`, `COPYING` and files under `LICENSES/`, including nested paths and case variations. A `NOTICE` or `COPYRIGHT` file alone does not satisfy this check.
+Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Set [shared license terms](../publishing.md#declare-license-terms) in `lean-bridge.exports.json` and commit the nonempty terms files. The publication check accepts declared `package.licenseFiles` paths, or conventional `LICENSE`, `LICENCE`, `COPYING` and `LICENSES/` files, including nested paths and case variations. A `NOTICE` or `COPYRIGHT` filename alone does not identify license terms. The source `package.json` remains an npm-only license fallback; if both declarations exist, they must match exactly.
 
-The publication check matches every root notice and its bytes to the captured source inventory. It also checks the license declaration against the captured `package.json`. Commit license changes and rebuild the candidate; editing the SBOM or release files invalidates the evidence.
+The publication check matches every root notice and its bytes to the captured source inventory. It also binds the shared configuration and any source `package.json` license declaration to their captured bytes. Commit license changes and rebuild the candidate; editing the SBOM or release files invalidates the evidence.
 
 The runtime is published centrally by Lean Bridge. Your publisher checks that its exact dependency coordinate and tarball hash already exist in the selected registry. It does not upload the runtime under your credentials. A missing or different runtime blocks publication before the component upload.
 

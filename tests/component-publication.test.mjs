@@ -232,7 +232,7 @@ test("ordinary component evidence signs, publishes, resumes, and rejects byte or
 	await assert.rejects(verifyPublishManifest({ manifestPath: result.publishManifest }), { code: "invalid-component-publication" });
 });
 
-for(const [label, path, license, contents, permitted] of [
+for(const [label, path, license, contents, permitted, shared] of [
 	["COPYING terms", "legal/COPYING", "MIT", null, true]
 	, ["REUSE terms", "LICENSES/MIT.txt", "MIT", null, true]
 	, ["attribution without terms", "NOTICE", "MIT", null, false]
@@ -240,6 +240,7 @@ for(const [label, path, license, contents, permitted] of [
 	, ["empty terms", "LICENSE", "MIT", "", false]
 	, ["undeclared license", "LICENSE", null, null, false]
 	, ["blank license declaration", "LICENSE", "  ", null, false]
+	, ["shared declaration and custom terms", "legal/distribution terms.txt", null, null, true, true]
 ]) test(`component publication ${permitted ? "accepts" : "rejects"} ${label}`, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-publication-license-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
@@ -250,6 +251,7 @@ for(const [label, path, license, contents, permitted] of [
 	await mkdir(dirname(join(project, path)), { recursive: true });
 	await writeFile(join(project, path), contents ?? terms);
 	await writeFile(join(project, "package.json"), canonicalJson(license === null ? {} : { license }));
+	if(shared) await writeFile(join(project, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, package: { license: "MIT", licenseFiles: [path] } }));
 	await execute("git", ["init", "--quiet"], { cwd: project });
 	await execute("git", ["add", "."], { cwd: project });
 	await execute("git", ["-c", "user.name=Test author", "-c", "user.email=test@example.invalid", "commit", "--quiet", "-m", "License fixture"], { cwd: project });

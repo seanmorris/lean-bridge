@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
+import { rubyPackageLicense } from "../analyze/package-license.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -66,13 +67,13 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
   spec.authors = ${rubyLiteral(metadata.authors?.map(author => author.name) ?? ["Author not declared"])}
   spec.email = ${rubyLiteral(metadata.authors?.flatMap(author => author.email ? [author.email] : []) ?? [])}
 ${metadata.homepage ? `  spec.homepage = ${rubyLiteral(metadata.homepage)}\n` : ""}\
-  spec.license = "Nonstandard"
+  spec.license = ${rubyLiteral(rubyPackageLicense(metadata.license))}
   spec.date = "1970-01-01"
   spec.platform = Gem::Platform.new("x86_64-linux")
   spec.required_ruby_version = "~> 3.3.0"
   spec.files = ${rubyLiteral(entries)}
   spec.require_paths = ["lib"]
-  spec.metadata = { "lean_bridge_component" => ${rubyLiteral(model.component.id)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(model.bindingIrSha256)}${metadata.repository ? `, "source_code_uri" => ${rubyLiteral(metadata.repository)}` : ""} }
+  spec.metadata = { ${metadata.license ? `"spdx_expression" => ${rubyLiteral(metadata.license)}, ` : ""}"lean_bridge_component" => ${rubyLiteral(model.component.id)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(model.bindingIrSha256)}${metadata.repository ? `, "source_code_uri" => ${rubyLiteral(metadata.repository)}` : ""} }
 end
 `);
 	const env = { ...environment, SOURCE_DATE_EPOCH: "1" };

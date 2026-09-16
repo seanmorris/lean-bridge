@@ -14,6 +14,7 @@ import { validateComponentReleaseBundleManifest } from "./component-release-bund
 import { collectReleaseInventory, hashReleaseInventory } from "./reproducibility.mjs";
 import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { isSourceLicense, isSourceNotice } from "./source-notices.mjs";
+import { componentLicense } from "../analyze/package-license.mjs";
 
 const kind = "lean-bridge-component-publish-plan";
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-component-publication" }); };
@@ -93,7 +94,8 @@ const evidenceFor = async root => {
 	equal(sbom.runtime, JSON.parse(inventory.get("bundle/metadata/runtime-requirement.json").bytes), "SBOM runtime differs from the bundle");
 	if(sbom.kind !== "lean-bridge-component-sbom" || sbom.schemaVersion !== 1
 		|| sbom.sourceTreeSha256 !== receipt.source.treeSha256 || buildPlan.source.treeSha256 !== receipt.source.treeSha256) fail("Component source evidence differs from the receipt");
-	const notices = buildPlan.source.inputs.filter(item => isSourceNotice(item.path));
+	const declared = configuration.package ?? {};
+	const notices = buildPlan.source.inputs.filter(item => isSourceNotice(item.path, declared));
 	equal(sbom.notices, notices.map(({ path, sha256 }) => ({ path: `source/${path}`, sha256 })), "Component notices differ from the captured source inventory");
 	for(const notice of notices)
 	{
@@ -105,10 +107,12 @@ const evidenceFor = async root => {
 	if(metadataInput ? !metadataBytes || metadataBytes.length !== metadataInput.bytes || sha256(metadataBytes) !== metadataInput.sha256 : metadataBytes)
 		fail("Component package.json differs from the captured source bytes");
 	const metadata = metadataBytes ? JSON.parse(metadataBytes) : {};
-	const license = typeof metadata.license === "string" && metadata.license.trim() ? metadata.license : "UNLICENSED";
-	equal(sbom.license, license, "Component license differs from the captured package.json");
-	if(license === "UNLICENSED" || !notices.some(item => isSourceLicense(item.path) && inventory.get(`bundle/source/${item.path}`).bytes.toString().trim()))
-		fail("Declare the component license in package.json and include a nonempty LICENSE, LICENCE, COPYING or LICENSES/ file before publishing");
+	const license = componentLicense(declared, metadata);
+	equal(sbom.license, license, "Component license differs from the captured package.json or shared declaration");
+	if(license === "UNLICENSED" || !notices.some(item => isSourceLicense(item.path, declared) && inventory.get(`bundle/source/${item.path}`).bytes.toString().trim()))
+		fail("Declare the component license in lean-bridge.exports.json (package.license) or package.json and include nonempty license terms before publishing");
+	for(const path of declared.licenseFiles ?? [])
+		if(!notices.some(item => item.path === path && inventory.get(`bundle/source/${path}`).bytes.toString().trim())) fail(`Declared license file is missing or empty: ${path}`);
 	for(const build of report.builds)
 	{
 		if(build.receiptSha256 !== checked.receiptSha256 || build.componentIdentitySha256 !== checked.componentIdentitySha256

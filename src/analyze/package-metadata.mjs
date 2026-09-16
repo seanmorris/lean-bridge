@@ -4,6 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { cpanPackageLicense, isLicenseFilePath, parsePackageLicense } from "./package-license.mjs";
 
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 const fail = message => { throw new TypeError(`Invalid package metadata: ${message}`); };
@@ -27,7 +28,10 @@ const webUrl = value => {
  * @param metadata - Validated shared package declaration.
  */
 export const validatePackageMetadata = metadata => {
-	if(!closed(metadata, ["description", "authors", "homepage", "repository"])) fail("use description, authors, homepage and repository");
+	if(!closed(metadata, ["description", "authors", "homepage", "repository", "license", "licenseFiles"])) fail("use description, authors, homepage, repository, license and licenseFiles");
+	if(metadata.license !== undefined) parsePackageLicense(metadata.license);
+	if(metadata.licenseFiles !== undefined && (!Array.isArray(metadata.licenseFiles) || !metadata.licenseFiles.length || metadata.licenseFiles.length > 32
+		|| metadata.licenseFiles.some(path => !isLicenseFilePath(path)) || new Set(metadata.licenseFiles).size !== metadata.licenseFiles.length)) fail("licenseFiles must contain one to 32 unique, nonhidden relative file paths, without globs or build directories");
 	if(metadata.description !== undefined && !text(metadata.description, 512)) fail("description must be a single line of at most 512 UTF-8 bytes");
 	for(const field of ["homepage", "repository"])
 		if(metadata[field] !== undefined && !webUrl(metadata[field])) fail(`${field} must be an HTTPS URL without credentials, query or fragment`);
@@ -80,6 +84,7 @@ export const verifyPackageMetadataSource = (sourceIdentity, inputs) => {
  * @param metadata - Validated shared package declaration.
  */
 export const npmPackageMetadata = metadata => ({
+	...(metadata.license ? { license: metadata.license } : {}),
 	...(metadata.description ? { description: metadata.description } : {}),
 	...(metadata.authors ? { author: metadata.authors[0], ...(metadata.authors.length > 1 ? { contributors: metadata.authors.slice(1) } : {}) } : {}),
 	...(metadata.homepage ? { homepage: metadata.homepage } : {}),
@@ -92,6 +97,7 @@ export const npmPackageMetadata = metadata => ({
  * @param metadata - Validated shared package declaration.
  */
 export const composerPackageMetadata = metadata => ({
+	...(metadata.license ? { license: metadata.license } : {}),
 	...(metadata.description ? { description: metadata.description } : {}),
 	...(metadata.authors ? { authors: metadata.authors.map(({ name, email, url }) => ({ name, ...(email ? { email } : {}), ...(url ? { homepage: url } : {}) })) } : {}),
 	...(metadata.homepage ? { homepage: metadata.homepage } : {}),
@@ -119,6 +125,7 @@ export const metadataAuthor = author => `${author.name}${author.email ? ` <${aut
  */
 export const cargoPackageMetadata = metadata => [
 	...(metadata.description ? [`description = ${JSON.stringify(metadata.description)}`] : [])
+	, ...(metadata.license ? [`license = ${JSON.stringify(metadata.license)}`] : [])
 	, ...(metadata.authors ? [`authors = ${JSON.stringify(metadata.authors.map(metadataAuthor))}`] : [])
 	, ...(["homepage", "repository"].filter(key => metadata[key]).map(key => `${key} = ${JSON.stringify(metadata[key])}`))
 ].join("\n");
@@ -130,6 +137,7 @@ export const cargoPackageMetadata = metadata => [
  */
 export const pythonPackageMetadata = metadata => [
 	...(metadata.description ? [`Summary: ${metadata.description}`] : [])
+	, ...(metadata.license ? [`License-Expression: ${metadata.license}`] : [])
 	, ...(metadata.authors?.some(author => !author.email) ? [`Author: ${metadata.authors.filter(author => !author.email).map(author => author.name).join(", ")}`] : [])
 	, ...(metadata.authors?.some(author => author.email) ? [`Author-email: ${metadata.authors.filter(author => author.email).map(author => `${JSON.stringify(author.name)} <${author.email}>`).join(", ")}`] : [])
 	, ...(metadata.homepage ? [`Home-page: ${metadata.homepage}`] : [])
@@ -141,14 +149,14 @@ export const pythonPackageMetadata = metadata => [
  *
  * @param metadata - Validated shared package declaration.
  */
-export const nugetPackageMetadata = metadata => `<authors>${metadataXml(metadata.authors?.map(author => author.name).join(", ") ?? "Author not declared")}</authors><description>${metadataXml(metadata.description ?? "Compiled Lean API with generated C# conversions and native runtime.")}</description>${metadata.homepage ? `<projectUrl>${metadataXml(metadata.homepage)}</projectUrl>` : ""}${metadata.repository ? `<repository type="git" url="${metadataXml(metadata.repository)}" />` : ""}`;
+export const nugetPackageMetadata = metadata => `${metadata.license ? `<license type="expression">${metadataXml(metadata.license)}</license>` : ""}<authors>${metadataXml(metadata.authors?.map(author => author.name).join(", ") ?? "Author not declared")}</authors><description>${metadataXml(metadata.description ?? "Compiled Lean API with generated C# conversions and native runtime.")}</description>${metadata.homepage ? `<projectUrl>${metadataXml(metadata.homepage)}</projectUrl>` : ""}${metadata.repository ? `<repository type="git" url="${metadataXml(metadata.repository)}" />` : ""}`;
 
 /**
  * Emit Maven developer and SCM metadata using escaped XML values.
  *
  * @param metadata - Validated shared package declaration.
  */
-export const mavenPackageMetadata = metadata => `<description>${metadataXml(metadata.description ?? "Compiled Lean API with generated Java conversions and native runtime.")}</description>${metadata.homepage ? `<url>${metadataXml(metadata.homepage)}</url>` : ""}${metadata.repository ? `<scm><url>${metadataXml(metadata.repository)}</url><connection>scm:git:${metadataXml(metadata.repository)}</connection></scm>` : ""}${metadata.authors ? `<developers>${metadata.authors.map(author => `<developer><name>${metadataXml(author.name)}</name>${author.email ? `<email>${metadataXml(author.email)}</email>` : ""}${author.url ? `<url>${metadataXml(author.url)}</url>` : ""}</developer>`).join("")}</developers>` : ""}`;
+export const mavenPackageMetadata = metadata => `${metadata.license ? `<licenses><license><name>${metadataXml(metadata.license)}</name><distribution>repo</distribution></license></licenses>` : ""}<description>${metadataXml(metadata.description ?? "Compiled Lean API with generated Java conversions and native runtime.")}</description>${metadata.homepage ? `<url>${metadataXml(metadata.homepage)}</url>` : ""}${metadata.repository ? `<scm><url>${metadataXml(metadata.repository)}</url><connection>scm:git:${metadataXml(metadata.repository)}</connection></scm>` : ""}${metadata.authors ? `<developers>${metadata.authors.map(author => `<developer><name>${metadataXml(author.name)}</name>${author.email ? `<email>${metadataXml(author.email)}</email>` : ""}${author.url ? `<url>${metadataXml(author.url)}</url>` : ""}</developer>`).join("")}</developers>` : ""}`;
 
 /**
  * CPAN author and resource fields belong to the component, not Lean Bridge.
@@ -156,6 +164,7 @@ export const mavenPackageMetadata = metadata => `<description>${metadataXml(meta
  * @param metadata - Validated shared package declaration.
  */
 export const cpanPackageMetadata = metadata => ({
+	...(metadata.license ? { license: [cpanPackageLicense(metadata.license)], x_spdx_expression: metadata.license } : {}),
 	...(metadata.description ? { abstract: metadata.description } : {}),
 	...(metadata.authors ? { author: metadata.authors.map(metadataAuthor) } : {}),
 	...(metadata.homepage || metadata.repository ? { resources: {

@@ -147,6 +147,7 @@ sub configure {
     ABSTRACT => $metadata->{abstract}, AUTHOR => join(', ', @{$metadata->{author}}),
     LICENSE => $metadata->{license}[0], MIN_PERL_VERSION => '5.036',
     META_MERGE => { 'meta-spec' => { version => 2 },
+      (exists $metadata->{x_spdx_expression} ? (x_spdx_expression => $metadata->{x_spdx_expression}) : ()),
       (exists $metadata->{resources} ? (resources => $metadata->{resources}) : ()) },
     PREREQ_PM => { 'Math::BigInt' => 0, 'JSON::PP' => 0, 'Digest::SHA' => 0,
       ($manifest->{module} eq 'LeanBridge::Runtime' ? () : ('LeanBridge::Runtime' => $manifest->{runtimeVersion})) },

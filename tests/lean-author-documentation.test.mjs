@@ -28,12 +28,14 @@ test("shared publisher metadata is documented for every ordinary package format"
 	const metadata = source.split("## Declare package metadata\n")[1].split("## Retain library and dependency licenses\n")[0];
 	const configuration = JSON.parse(fences(metadata).find(block => block.language === "json").source);
 	validateExportConfiguration(configuration);
-	assert.deepEqual(Object.keys(configuration.package).sort(), ["authors", "description", "homepage", "repository"]);
+	assert.deepEqual(Object.keys(configuration.package).sort(), ["authors", "description", "homepage", "license", "licenseFiles", "repository"]);
 	for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "CPAN", "Composer", "native PHP", "PHP-Wasm", "C, C++, WIT/WASI"])
 		assert.ok(metadata.includes(name), name);
 	assert.match(metadata, /sourceIdentity.exportConfigurationSource/);
 	assert.match(metadata, /Shared-runtime packages keep their own metadata/);
-	assert.match(source, /`package` does not accept a `license` field yet/);
+	for(const field of ["License-Expression", "License-File", "spdx_expression", "x_spdx_expression", "licenseFiles"])
+		assert.ok(source.includes(field), field);
+	assert.match(source, /Version-one inventories remain readable/);
 	assert.match(await readFile("docs/lean/existing-package.md", "utf8"), /publishing.md#declare-package-metadata/);
 });
 
