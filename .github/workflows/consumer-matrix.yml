@@ -73,6 +73,7 @@ jobs:
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
         run: |
           nix build .#component-build-engine --out-link build/locked-lake-engine
+          node --test tests/component-publication.test.mjs
           node --test tests/lake-wasm.test.mjs
           node --test tests/unlocked-component.test.mjs
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs

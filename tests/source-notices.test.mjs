@@ -11,7 +11,7 @@ import test from "node:test";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { captureSourceNotices, isSourceNotice, readVerifiedSourceNotices } from "../src/release/source-notices.mjs";
+import { captureSourceNotices, isSourceLicense, isSourceNotice, readVerifiedSourceNotices } from "../src/release/source-notices.mjs";
 import { lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 test("notice discovery includes nested, case-insensitive and REUSE notices without matching source code", () => {
@@ -19,6 +19,13 @@ test("notice discovery includes nested, case-insensitive and REUSE notices witho
 		assert.equal(isSourceNotice(path), true, path);
 	for(const path of ["Licenses.lean", "NOTICEBOARD.md", "src/Notice.lean", "/LICENSE", "../LICENSE", "foo/../LICENSE", "foo\\LICENSE", "COPYRIGHT\n", "secrets.txt", "LICENSES/.env", "LICENSES/.npmrc", ".secrets/LICENSE"])
 		assert.equal(isSourceNotice(path), false, path);
+});
+
+test("license-file discovery accepts conventional terms but not attribution alone", () => {
+	for(const path of ["LICENSE", "legal/licence.md", "COPYING.LESSER", "license-apache", "LICENSES/MIT.txt", "nested/licenses/custom terms.txt"])
+		assert.equal(isSourceLicense(path), true, path);
+	for(const path of ["NOTICE", "legal/COPYRIGHT.txt", "NOTICES.md", "LICENSES/NOTICE", "licenses/copyright.txt", "Licenses.lean", "../LICENSE", "LICENSES/.env", "/LICENSE", "legal\\LICENSE", null])
+		assert.equal(isSourceLicense(path), false, String(path));
 });
 
 const prepared = async t => {

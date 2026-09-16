@@ -300,6 +300,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:node"], /\.\#npm-package/);
+  assert.match(workflow, /LEAN_BRIDGE_LAKE_ENGINE: build\/locked-lake-engine\/bin\/lean-bridge-component-engine/);
+  assert.match(workflow, /node --test tests\/component-publication\.test\.mjs/);
   assert.equal(packageDocument.scripts["test:consumer:docker-ci"], "bash scripts/test-docker-consumer-ci.sh");
   assert.match(workflow, /npm run test:consumer:docker-ci/);
   assert.match(workflow, /bootstrap-rust-ci\.sh/);

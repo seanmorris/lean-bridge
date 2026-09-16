@@ -26,6 +26,15 @@ export const isSourceNotice = path => safePath(path) && (path.split("/").slice(0
 	|| (!/\.(?:lean|mjs|js|ts|c|h|rs|py|rb|java|cs|php)$/i.test(path) && /^(?:licen[cs]es?|notices?|copying|copyright)(?:[._-].+)?$/i.test(path.split("/").at(-1))))
 	&& !path.split("/").some(part => part.startsWith("."));
 
+/**
+ * Recognize license-file locations without treating attribution alone as terms.
+ *
+ * @param path - Package-relative source path.
+ */
+export const isSourceLicense = path => isSourceNotice(path) && !/^(?:notices?|copyright)(?:[._-].+)?$/i.test(path.split("/").at(-1))
+	&& (path.split("/").slice(0, -1).some(part => /^licenses$/i.test(part))
+	|| /^(?:licen[cs]es?|copying)(?:[._-].+)?$/i.test(path.split("/").at(-1)));
+
 const regularBytes = async path => {
 	if(!(await lstat(path)).isFile() || await realpath(path) !== resolve(path)) throw new Error("Source notices must be regular files without symlinks");
 	return readFile(path);
