@@ -356,6 +356,14 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 	}
 	for(const target of ["composer", "php-native", "php-wasm", "nix"])
 		assert.throws(() => publicationDestinationFor(target), { code: "unsupported-publication-target" });
+	for(const slug of ["pypi", "wit-wasi"])
+	{
+		const source = await readFile(`docs/publish/${slug}.md`, "utf8");
+		assert.match(source, /lean-bridge verify --receipt .*package-set-receipt\.json/);
+		assert.match(source, /\.json\.sha256/);
+		assert.match(source, /receive-package\.md#verify-a-local-package-set/);
+		assert.doesNotMatch(source, /package-set verification remains/);
+	}
 	assert.match(overview, /Only npm has an installed adapter/u);
 	assert.match(overview, /does not produce Lean Bridge's signed transaction or completion receipt/u);
 });

@@ -11,7 +11,7 @@ import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, verifyPhpWasmCopiedFiles } from "../build/php-wasm-copied-artifacts.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
-import { createDeterministicTarGz } from "./deterministic-archive.mjs";
+import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata, composerPackageMetadata, npmPackageMetadata } from "../analyze/package-metadata.mjs";
@@ -29,7 +29,8 @@ const settings = (value, label) => {
 	if(!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).some(key => !["name", "version"].includes(key))) throw new TypeError(`Unknown ${label} package setting`);
 };
 
-const sources = async ({ model, receipt, runtime, npmSettings, composerSettings, notices, sourceNotices }) => {
+const runtimePayload = async (root, runtime) => ({ ...runtime.manifest.files, "runtime.json": identity(await readFile(join(root, "runtime.json"))) });
+const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSettings, composerSettings, notices, sourceNotices }) => {
 	const metadata = compiledPackageMetadata(model.sourceIdentity);
 	settings(npmSettings, "npm"); settings(composerSettings, "Composer");
 	const localVersion = model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version;
@@ -38,7 +39,14 @@ const sources = async ({ model, receipt, runtime, npmSettings, composerSettings,
 	const composer = { name: composerSettings.name ?? `lean-bridge/${model.component.name.replaceAll("_", "-")}-php-wasm`, version: composerSettings.version ?? localVersion };
 	validateOrdinaryPhpSettings(composer);
 	const host = await readFile(new URL("../backends/php/php-wasm-copied-host.mjs", import.meta.url));
-	const loaderIdentity = sha256(json({ profile, runtimeIdentity: runtime.identity, host: identity(host), phpLoader: identity(await readFile(new URL("../backends/php/php-wasm-copied-loader.mjs", import.meta.url))), packaging: identity(await readFile(new URL(import.meta.url))), archive: identity(await readFile(new URL("./deterministic-archive.mjs", import.meta.url))), notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) }));
+	const identityBasis = { schemaVersion: 1, profile
+		, runtimeIdentity: runtime.identity
+		, runtimeFiles, packing
+		, host: identity(host)
+		, phpLoader: identity(await readFile(new URL("../backends/php/php-wasm-copied-loader.mjs", import.meta.url)))
+		, packaging: identity(await readFile(new URL(import.meta.url)))
+		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
+	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
 	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
@@ -56,7 +64,7 @@ const descriptor = createDescriptor(${JSON.stringify(definition)}, {
 export const { getLibs, getFiles, extensions, autoload, lazy } = descriptor;
 export default descriptor;
 `;
-	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
+	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses", "runtime-identity.json"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
 	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, ...npmPackageMetadata(metadata), exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
 	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
 	const readme = `# ${model.component.name} for PHP-Wasm
@@ -83,6 +91,7 @@ This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node
 		npm, composer, definition, loaderIdentity, runtimeVersion
 		, files: {
 			"runtime/package/index.mjs": runtimeIndex
+			, "runtime/package/runtime-identity.json": json(identityBasis)
 			, "runtime/package/host.mjs": host
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
@@ -102,9 +111,15 @@ const archiveSpecs = generated => [
 	, { ecosystem: "npm", role: "component", name: generated.npm.name, version: generated.npm.version, directory: "component/package", archive: `${generated.npm.name.replace(/^@/, "").replaceAll("/", "-")}-${generated.npm.version}.tgz` }
 	, { ecosystem: "composer", role: "api", name: generated.composer.name, version: generated.composer.version, directory: "composer", archive: `${generated.composer.name.replace("/", "-")}-${generated.composer.version}-php-wasm.zip` }
 ];
-const archiveBytes = async (root, spec) => spec.ecosystem === "npm"
-	? createDeterministicTarGz({ directory: join(root, spec.directory), archiveRoot: "package", sourceDateEpoch: 1 })
-	: createDeterministicZip({ directory: join(root, spec.directory), sourceDateEpoch: 315532800 });
+const archiveBytes = async (root, spec) => {
+	const directory = join(root, spec.directory);
+	if(spec.ecosystem !== "npm") return createDeterministicZip({ directory, sourceDateEpoch: 315532800 });
+	const files = await Promise.all((await nativeArtifactPaths(directory)).map(async path => ({
+		path: `package/${path}`
+		, bytes: await readFile(join(directory, path)), mode: 0o644
+	})));
+	return createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 });
+};
 
 /**
  * Verify generated metadata and exact archives against their compiled inputs.
@@ -113,15 +128,18 @@ const archiveBytes = async (root, spec) => spec.ecosystem === "npm"
  */
 export const readVerifiedPhpWasmCopiedPackageSet = async root => {
 	const report = JSON.parse(await readFile(join(root, receiptPath), "utf8"));
-	if(!closed(report, ["schemaVersion", "kind", "profile", "component", "componentIdentity", "runtimeIdentity", "loaderIdentity", "npmSettings", "composerSettings", "archives", "files"])
+	if(!closed(report, ["schemaVersion", "kind", "profile", "component", "componentIdentity", "runtimeIdentity", "loaderIdentity", "packing", "npmSettings", "composerSettings", "archives", "files"])
 		|| report.schemaVersion !== 1 || report.kind !== "lean-bridge-php-wasm-copied-package-set" || report.profile !== profile) throw new Error("Invalid PHP-Wasm package set");
+	const packing = { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() };
+	if(!same(report.packing, packing)) throw new Error("PHP-Wasm archive packing environment differs; use the recorded producer environment to reconstruct archives or the portable package-set receipt to verify downloaded bytes");
 	await verifyPhpWasmCopiedFiles(root, report.files, receiptPath);
 	const runtime = await readVerifiedPhpWasmCopiedRuntime(join(root, "runtime/package/compiled"));
 	const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(join(root, "component/package/compiled"), runtime.identity);
 	const noticePaths = ["Lean-LICENSE", "Lean-LICENSES", "LeanBridge-LICENSE", ...(await nativeArtifactPaths(fileURLToPath(new URL("../../notices/runtime/", import.meta.url)))).map(path => `runtime/${path}`)];
 	const notices = Object.fromEntries(await Promise.all(noticePaths.map(async path => [path, await readFile(join(root, "runtime/package/licenses", path))])));
 	const { files: sourceNotices } = await readVerifiedSourceNotices(join(root, "component/package/compiled"), receipt.sourceIdentity);
-	const generated = await sources({ model, receipt, runtime, npmSettings: report.npmSettings, composerSettings: report.composerSettings, notices, sourceNotices });
+	const runtimeFiles = await runtimePayload(join(root, "runtime/package/compiled"), runtime);
+	const generated = await sources({ model, receipt, runtime, runtimeFiles, packing, npmSettings: report.npmSettings, composerSettings: report.composerSettings, notices, sourceNotices });
 	if(!same(report.component, model.component) || report.componentIdentity !== generated.definition.identity || report.runtimeIdentity !== runtime.identity || report.loaderIdentity !== generated.loaderIdentity) throw new Error("PHP-Wasm package identities differ from compiled artifacts");
 	for(const [path, bytes] of Object.entries(generated.files))
 		if(!Buffer.from(bytes).equals(await readFile(join(root, path)))) throw new Error(`Generated PHP-Wasm package drift: ${path}`);
@@ -162,7 +180,9 @@ export const buildPhpWasmCopiedPackages = async ({ componentRoot, runtimeRoot, o
 	const notices = { "Lean-LICENSE": await readFile(join(leanPrefix, "LICENSE")), "Lean-LICENSES": await readFile(join(leanPrefix, "LICENSES")), "LeanBridge-LICENSE": await readFile(new URL("../../LICENSE", import.meta.url)) };
 	for(const path of await nativeArtifactPaths(fileURLToPath(new URL("../../notices/runtime/", import.meta.url)))) notices[`runtime/${path}`] = await readFile(new URL(`../../notices/runtime/${path}`, import.meta.url));
 	const { files: sourceNotices } = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
-	const generated = await sources({ model, receipt, runtime, npmSettings, composerSettings, notices, sourceNotices });
+	const packing = { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() };
+	const runtimeFiles = await runtimePayload(runtimeRoot, runtime);
+	const generated = await sources({ model, receipt, runtime, runtimeFiles, packing, npmSettings, composerSettings, notices, sourceNotices });
 	const output = resolve(outputRoot);
 	if(await lstat(output).then(() => true, error => { if(error.code === "ENOENT") return false; throw error; })) throw new Error("PHP-Wasm package output already exists");
 	await mkdir(dirname(output), { recursive: true });
@@ -186,7 +206,7 @@ export const buildPhpWasmCopiedPackages = async ({ componentRoot, runtimeRoot, o
 			await save(staging, `archives/${spec.archive}`, bytes);
 			archives.push({ ...spec, ...identity(bytes) });
 		}
-		const report = { schemaVersion: 1, kind: "lean-bridge-php-wasm-copied-package-set", profile, component: model.component, componentIdentity: generated.definition.identity, runtimeIdentity: runtime.identity, loaderIdentity: generated.loaderIdentity, npmSettings: { name: generated.npm.name, version: generated.npm.version }, composerSettings: generated.composer, archives, files: await inventory(staging) };
+		const report = { schemaVersion: 1, kind: "lean-bridge-php-wasm-copied-package-set", profile, component: model.component, componentIdentity: generated.definition.identity, runtimeIdentity: runtime.identity, loaderIdentity: generated.loaderIdentity, packing, npmSettings: { name: generated.npm.name, version: generated.npm.version }, composerSettings: generated.composer, archives, files: await inventory(staging) };
 		await save(staging, receiptPath, json(report));
 		await readVerifiedPhpWasmCopiedPackageSet(staging);
 		await rename(staging, output);

@@ -24,14 +24,17 @@ jobs:
         run: nix run .#perl-build-engine -- --project tests/fixtures/perl/ordinary --output build/perl-nix
       - name: Install the prepared archives with the pinned Perl
         run: |
+          LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE=$(node -p 'require("./build/perl-nix/native-release.json").packages[0].archive')
+          LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE=$(node -p 'require("./build/perl-nix/native-release.json").packages[1].archive')
+          export LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE
           # Expand PWD inside the Nix shell.
           # shellcheck disable=SC2016
           nix shell --inputs-from . nixpkgs#perl nixpkgs#gnumake --command bash -eu -c '
             node scripts/test-perl-package-consumer.mjs \
-              --archive build/perl-nix/archives/LeanBridge-Runtime-0.001.tar.gz \
+              --archive "build/perl-nix/archives/$LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE" \
               --prefix build/perl-nix-installed --mode prebuilt-only
             node scripts/test-perl-package-consumer.mjs \
-              --archive build/perl-nix/archives/LeanBridge-Workshop-0.001.tar.gz \
+              --archive "build/perl-nix/archives/$LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE" \
               --prefix build/perl-nix-installed --mode prebuilt-only
             export PERL5LIB="$PWD/build/perl-nix-installed/lib/perl5"
             perl tests/fixtures/perl/consumer.t

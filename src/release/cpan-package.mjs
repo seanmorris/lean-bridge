@@ -8,7 +8,7 @@ import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
-import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
+import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { createNativeModel } from "../build/native-model.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -22,11 +22,7 @@ const componentVersionPattern = /^\d+\.\d{3}(?:_\d{2})?$/;
 const save = async (path, value) => { await mkdir(dirname(path), { recursive: true }); await writeFile(path, value); };
 const copy = async (from, to) => { await mkdir(dirname(to), { recursive: true }); await copyFile(from, to); };
 const json = canonicalJson;
-const runtimePacking = async () => ({ sourceDateEpoch: 1
-	, implementationSha256: sha256(await readFile(new URL("./deterministic-archive.mjs", import.meta.url)))
-	, nodeVersion: process.versions.node
-	, zlibVersion: process.versions.zlib
-	, icuVersion: process.versions.icu ?? null });
+const runtimePacking = async () => ({ sourceDateEpoch: 1, ...await tarGzipPackingIdentity() });
 const paths = async (directory, prefix = "") => {
 	const files = [];
 	for(const entry of await readdir(join(directory, prefix), { withFileTypes: true }))

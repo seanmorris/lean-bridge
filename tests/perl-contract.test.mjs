@@ -13,7 +13,7 @@ import { validateExportConfiguration } from "../src/analyze/export-configuration
 import { createNativeModel, validateNativeType, generateNativeLeanAdapters, nativeCallbackDefault } from "../src/build/native-model.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { validateNativeElf } from "../src/build/native-artifacts.mjs";
-import { createDeterministicTarGzFromFiles } from "../src/release/deterministic-archive.mjs";
+import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { auditGeneratedPublicSurface, generateNativeBindingPackages } from "../src/binding-ir/package-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -217,6 +217,24 @@ test("Perl CI runs four independent ABI jobs and gates its single observation on
 	assert.match(summary, /name: perl-benchmarks-\$\{\{ github\.sha \}\}/);
 });
 
+test("the pinned Perl CI installs the runtime and component archives named by its build receipt", async t => {
+	const workflow = await readFile(".github/workflows/perl-consumer.yml", "utf8");
+	const step = workflow.split("      - name: Install the prepared archives with the pinned Perl\n")[1].split("\n  compiler-checks:")[0];
+	const root = await mkdtemp(join(tmpdir(), "lean-perl-ci-receipt-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, "build/perl-nix"), { recursive: true });
+	const runtime = `LeanBridge-Runtime-0.002${"1".repeat(79)}.tar.gz`;
+	const component = "LeanBridge-Custom-2.034.tar.gz";
+	await writeFile(join(root, "build/perl-nix/native-release.json"), JSON.stringify({ packages: [{ archive: runtime }, { archive: component }] }));
+	const queries = [...step.matchAll(/node -p '([^']+)'/g)].map(match => match[1]);
+	assert.equal(queries.length, 2);
+	assert.deepEqual(queries.map(query => execFileSync(process.execPath, ["-p", query], { cwd: root, encoding: "utf8" }).trim()), [runtime, component]);
+	for(const role of ["RUNTIME", "COMPONENT"])
+		assert.ok(step.includes(`--archive "build/perl-nix/archives/$LEAN_BRIDGE_NIX_${role}_ARCHIVE"`));
+	assert.ok(step.includes("export LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE"));
+	assert.doesNotMatch(step, /LeanBridge-[\w-]+-[0-9.]+\.tar\.gz/);
+});
+
 test("native projection retains compiler documentation and theorem references without granting assurance", async () => {
 	const input = nativeMetadataFixture(), model = fixture();
 	await assertJsonSchema("elaborated-export-metadata", input.metadata);
@@ -398,6 +416,33 @@ test("CPAN archive assembly uses verified byte snapshots", () => {
   assert.deepEqual(createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }), createDeterministicTarGzFromFiles({ files, sourceDateEpoch: 1 }));
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [...files, ...files], sourceDateEpoch: 1 }), /entry/);
   assert.throws(() => createDeterministicTarGzFromFiles({ files: [{ ...files[0], path: "../escape" }], sourceDateEpoch: 1 }), /entry/);
+});
+
+test("runtime packing identity binds each host tool and default collation", async () => {
+	const first = await tarGzipPackingIdentity();
+	assert.deepEqual(await tarGzipPackingIdentity(), first);
+	assert.equal(first.implementationSha256, sha256(await readFile("src/release/deterministic-archive.mjs")));
+	for(const [object, key, field] of [
+		[process.versions, "node", "nodeVersion"]
+		, [process.versions, "zlib", "zlibVersion"]
+		, [process.versions, "icu", "icuVersion"]
+		, [process, "platform", "platform"], [process, "arch", "architecture"]
+	]) {
+		const descriptor = Object.getOwnPropertyDescriptor(object, key);
+		try
+		{
+			Object.defineProperty(object, key, { value: "changed-packing-test", configurable: true });
+			const changed = await tarGzipPackingIdentity();
+			assert.equal(changed[field], "changed-packing-test");
+			assert.notEqual(sha256(canonicalJson(changed)), sha256(canonicalJson(first)));
+		} finally
+		{ if(descriptor) Object.defineProperty(object, key, descriptor); else delete object[key]; }
+	}
+	const script = 'import {tarGzipPackingIdentity} from "./src/release/deterministic-archive.mjs"; console.log(JSON.stringify(await tarGzipPackingIdentity()));';
+	const locale = name => JSON.parse(execFileSync(process.execPath, ["--input-type=module", "-e", script], {
+		env: { ...process.env, LANG: name, LC_ALL: name }, encoding: "utf8"
+	}));
+	assert.notEqual(locale("en_US.UTF-8").collationLocale, locale("sv_SE.UTF-8").collationLocale);
 });
 
 test("binary archive assertions reject changed bytes without an unbounded text diff", () => {

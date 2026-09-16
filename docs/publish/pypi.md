@@ -33,7 +33,7 @@ Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if Python is not availa
 
 Repeat `--target` to combine PyPI with npm, CPAN, C, C++, NuGet, Maven, RubyGems or WIT/WASI when their type profiles all accept the exports. Lean compiles once per required native/Wasm profile. A failed projection leaves no partial release directory.
 
-Compare the wheel hash with `native-release.json` and run the [installed Python example](../consume/python.md#ordinary-project-packages) before upload. Compiled inventories detect artifact drift; they do not authenticate the publisher. Generic cross-ecosystem package-set verification remains tracked in VO1240. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
+Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
 

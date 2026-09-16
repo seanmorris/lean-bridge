@@ -9,6 +9,7 @@ import { execFile } from "node:child_process";
 import { access, copyFile, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import test from "node:test";
 
@@ -25,6 +26,8 @@ import { buildComponentNpmPackages } from "../src/release/component-npm-package.
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { packageMetadataFixture } from "./helpers/package-metadata.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 
 const execute = promisify(execFile);
 
@@ -97,6 +100,23 @@ test("sealed npm settings and export selection reach the exact installed public 
 	assert.equal(metadata.license, "MIT");
 	assert.equal(await readFile(join(prepared.output, "component/package/notices/source/TERMS.txt"), "utf8"), "Custom package terms fixture\n");
 	const runtimeMetadata = JSON.parse(await readFile(join(prepared.output, "runtime/package/package.json"), "utf8"));
+	const runtimeIdentity = JSON.parse(await readFile(join(prepared.output, "runtime/package/runtime-identity.json"), "utf8"));
+	assert.deepEqual(runtimeIdentity.packing, { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() });
+	assert.equal(runtimeIdentity.packagingImplementationSha256, sha256(await readFile("src/release/component-npm-package.mjs")));
+	assert.equal(runtimeMetadata.leanBridge.runtimeIdentity, sha256(canonicalJson(runtimeIdentity)));
+	assert.ok(runtimeIdentity.files.every(file => file.mode === 0o644));
+	assert.equal(metadata.dependencies["@lean-bridge/runtime"], runtimeMetadata.version);
+	const changedOutput = join(scratch, "changed-packer");
+	await execute(process.execPath, ["--input-type=module", "-e"
+		, `
+Object.defineProperty(process.versions, 'zlib', { value: 'changed-packing-test' });
+const { buildComponentNpmPackages } = await import(${JSON.stringify(pathToFileURL(resolve("src/release/component-npm-package.mjs")).href)});
+await buildComponentNpmPackages(${JSON.stringify({ bundleRoot, runtimeRoot: resolve("build/lean-link-spike/lazy"), outputRoot: changedOutput })});
+`]);
+	const changed = JSON.parse(await readFile(join(changedOutput, "component-package-receipt.json"), "utf8"));
+	assert.notEqual(changed.runtime.package, prepared.report.runtime.package);
+	assert.notEqual(changed.runtime.sha256, prepared.report.runtime.sha256);
+	await verifyComponentPackageReceipt({ receiptPath: join(changedOutput, "component-package-receipt.json") });
 	assert.notEqual(runtimeMetadata.description, declared.description);
 	assert.equal(runtimeMetadata.author, undefined);
 	assert.equal(metadata.leanBridge.component, "onboarding-small@1.0.0");

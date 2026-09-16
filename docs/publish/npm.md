@@ -66,6 +66,8 @@ The publication check matches every root notice and its bytes to the captured so
 
 The runtime is published centrally by Lean Bridge. Your publisher checks that its exact dependency coordinate and tarball hash already exist in the selected registry. It does not upload the runtime under your credentials. A missing or different runtime blocks publication before the component upload.
 
+The generated runtime version binds its payload, package generator and packing environment. `runtime/package/runtime-identity.json` records the file hashes, fixed modes and timestamp, archive implementation, Node/zlib/ICU versions, platform, architecture and default collation locale. Reproduce archives in that recorded environment. A different environment selects a different runtime version, which must also exist in the chosen registry before component publication. Installing or verifying downloaded packages does not require the producer's packing environment. See the [runtime packing audit](../evidence/runtime-packing-identities-20260916.md).
+
 ### Choose the npm name and version
 
 Set the npm coordinate in `lean-bridge.exports.json` at the Lean project root. Use a name or scope you own:

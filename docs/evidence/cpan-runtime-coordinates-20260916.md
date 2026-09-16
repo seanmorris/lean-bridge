@@ -32,4 +32,4 @@ CI on `61b0e71` exposed a test-fixture permissions error: the helper and notice 
 
 ## Remaining work
 
-No registry publication occurred. npm and PHP-Wasm retain their existing content-derived runtime versions, but their identities do not explicitly bind host Node/zlib/ICU versions. That cross-host archive-coordinate policy needs the next audit. Registry recipe rehearsal and signed Nix publication/consumption review also remain in VO1240; the broader type-corpus work follows in VO1217.
+No registry publication occurred. The [shared runtime packing follow-up](runtime-packing-identities-20260916.md) extends environment identities to npm and PHP-Wasm, adds platform/architecture/locale to CPAN, and fixes CI's stale runtime archive filename. Registry recipe rehearsal and signed Nix publication/consumption review remain in VO1240; the broader type-corpus work follows in VO1217.

@@ -35,7 +35,7 @@ The archive is `archives/cobalt-api-2.0.0-rc.1-wit-wasi.tar.gz`. Its WIT world i
 
 Repeat `--target` to add C, C++, CPAN, NuGet, Maven, RubyGems or npm. Native targets reuse one Lean compilation; npm adds one Wasm compilation. No release directory appears unless every selected target succeeds. Unsupported signatures fail with the source declaration instead of being omitted.
 
-Run the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks. Generic local package-set verification remains under VO1240; the existing npm receipt command does not verify these archives.
+Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-receipt.json`, then the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). The receipt checks unsigned local consistency, not publisher identity. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks.
 
 ## Check the build inputs
 

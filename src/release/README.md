@@ -43,6 +43,8 @@ The canonical input boundary requires the manifest file to equal its canonical n
 
 [`deterministic-archive.mjs`](deterministic-archive.mjs) and [`deterministic-zip.mjs`](deterministic-zip.mjs) normalize entry order, paths, modes, and timestamps. [`install-trace.mjs`](install-trace.mjs) records what a clean package installation selected. [`backend-policy.mjs`](backend-policy.mjs) verifies that an ecosystem package uses an authorized generated backend.
 
+Shared npm, PHP-Wasm and CPAN runtime coordinates also bind the tar/gzip implementation and its host environment through `tarGzipPackingIdentity`. These runtime archives normalize file modes to `0644`. Reconstructing archives requires the recorded producer environment. Portable package receipts verify downloaded bytes without reproducing the archives. See the [packing acceptance record](../../docs/evidence/runtime-packing-identities-20260916.md).
+
 ### Ecosystem projections
 
 | Modules | Output family |

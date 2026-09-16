@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -25,6 +25,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { buildPhpWasmCompilerInputs, readVerifiedPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
 import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
+import { tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -150,6 +151,16 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const release = result.release, repeatRelease = repeated.release;
 		assert.deepEqual(release.report, repeatRelease.report);
 		await readVerifiedPhpWasmCopiedPackageSet(release.output);
+		const runtimeIdentity = JSON.parse(await readFile(join(release.output, "runtime/package/runtime-identity.json")));
+		const packing = { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() };
+		assert.deepEqual(release.report.packing, packing);
+		assert.deepEqual(runtimeIdentity.packing, packing);
+		assert.equal(sha256(canonicalJson(runtimeIdentity)), release.report.loaderIdentity);
+		const manifestBytes = await readFile(join(release.output, "runtime/package/compiled/runtime.json"));
+		assert.deepEqual(runtimeIdentity.runtimeFiles["runtime.json"], { bytes: manifestBytes.length, sha256: sha256(manifestBytes) });
+		const runtimeArchive = release.report.archives[0];
+		const componentMetadata = JSON.parse(await readFile(join(release.output, "component/package/package.json")));
+		assert.equal(componentMetadata.dependencies[runtimeArchive.name], runtimeArchive.version);
 		if(releases.length) assert.deepEqual(release.report.archives[0], releases[0].report.archives[0], "Both packages must depend on the same runtime archive");
 		const releaseRoot = join(working, `${name}-packages`);
 		await rename(release.output, releaseRoot);
@@ -239,7 +250,38 @@ console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 
 	// install hook. The reader reconstructs the sources and deterministic archives.
 	const packageVictim = releases[0];
 	await assert.rejects(buildPhpWasmCopiedPackages({ componentRoot: components[0].root, runtimeRoot: relocatedRuntime, leanPrefix, outputRoot: join(components[0].root, "nested-package-output") }), /inside its compiled inputs/);
-	for(const path of ["component/package/index.mjs", "component/package/lazy-library.txt", "runtime/package/host.mjs", "composer/src/Api.php", `archives/${packageVictim.report.archives[0].archive}`])
+	const differentPacking = structuredClone(packageVictim.report);
+	differentPacking.packing.zlibVersion = "changed-packing-test";
+	await saveLakeFile(packageVictim.output, "php-wasm-package-set.json", canonicalJson(differentPacking));
+	await assert.rejects(readVerifiedPhpWasmCopiedPackageSet(packageVictim.output), /packing environment differs.*portable package-set receipt/);
+	await saveLakeFile(packageVictim.output, "php-wasm-package-set.json", canonicalJson(packageVictim.report));
+	const hostPath = join(packageVictim.output, "runtime/package/host.mjs");
+	await chmod(hostPath, 0o755);
+	try
+	{ await readVerifiedPhpWasmCopiedPackageSet(packageVictim.output); }
+	finally
+	{ await chmod(hostPath, 0o644); }
+	const rawManifest = await readFile(join(relocatedRuntime, "runtime.json"));
+	const reformattedManifest = Buffer.from(`${JSON.stringify(JSON.parse(rawManifest))}\n`);
+	assert.notDeepEqual(rawManifest, reformattedManifest);
+	await saveLakeFile(relocatedRuntime, "runtime.json", reformattedManifest);
+	try
+	{
+		assert.equal((await readVerifiedPhpWasmCopiedRuntime(relocatedRuntime)).identity, runtime.identity);
+		const reformatted = await buildPhpWasmCopiedPackages({
+			componentRoot: components[0].root, runtimeRoot: relocatedRuntime, leanPrefix
+			, outputRoot: join(working, "reformatted-runtime-packages")
+			, npmSettings: packageVictim.report.npmSettings
+			, composerSettings: packageVictim.report.composerSettings });
+		const archive = reformatted.report.archives[0];
+		assert.notEqual(archive.version, packageVictim.report.archives[0].version);
+		assert.notEqual(archive.sha256, packageVictim.report.archives[0].sha256);
+		assert.equal(reformatted.report.runtimeIdentity, runtime.identity);
+		const basis = JSON.parse(await readFile(join(reformatted.output, "runtime/package/runtime-identity.json")));
+		assert.deepEqual(basis.runtimeFiles["runtime.json"], { bytes: reformattedManifest.length, sha256: sha256(reformattedManifest) });
+	} finally
+	{ await saveLakeFile(relocatedRuntime, "runtime.json", rawManifest); }
+	for(const path of ["component/package/index.mjs", "component/package/lazy-library.txt", "runtime/package/host.mjs", "runtime/package/runtime-identity.json", "composer/src/Api.php", `archives/${packageVictim.report.archives[0].archive}`])
 	{
 		const absolute = join(packageVictim.output, path), original = await readFile(absolute);
 		const changed = Buffer.concat([original, Buffer.from("\n// substituted\n")]);

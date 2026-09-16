@@ -17,7 +17,7 @@ import { basename, dirname, join, resolve } from "node:path";
 import { generateJavaScriptPackage } from "../backends/javascript/generate.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { validateComponentReleaseBundleManifest } from "./component-release-bundle.mjs";
-import { createDeterministicTarGz } from "./deterministic-archive.mjs";
+import { createDeterministicTarGz, createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { assertComponentSignature, componentScalarAbi } from "../abi/component-scalars.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
@@ -142,8 +142,9 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	};
 	const identityBasis = {
 		schemaVersion: 1, metadata: runtimeMetadata
-		, packing: { archiveRoot: "package", sourceDateEpoch: 1, implementationSha256: sha256(await readFile(new URL("./deterministic-archive.mjs", import.meta.url))) }
-		, files: [...runtimeFiles].map(([path, bytes]) => ({ path, sha256: sha256(bytes) })).sort((a, b) => a.path.localeCompare(b.path))
+		, packagingImplementationSha256: sha256(await readFile(new URL(import.meta.url)))
+		, packing: { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() }
+		, files: [...runtimeFiles].map(([path, bytes]) => ({ path, mode: 0o644, sha256: sha256(bytes) })).sort((a, b) => a.path.localeCompare(b.path))
 	};
 	const runtimeIdentity = sha256(canonicalJson(identityBasis));
 	const version = `0.0.0-abi${componentScalarAbi}.${runtimeIdentity}`;
@@ -232,7 +233,10 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	if(record.path !== null) await copy(join(bundle.root, "source", record.path), join(componentPackage, "metadata", record.path));
 
 	const sourceDateEpoch = 1;
-	const runtimeArchive = await createDeterministicTarGz({ directory: runtimePackage, archiveRoot: "package", sourceDateEpoch });
+	const runtimeArchive = createDeterministicTarGzFromFiles({
+		files: [...runtimeFiles].map(([path, bytes]) => ({ path: `package/${path}`, bytes: Buffer.from(bytes), mode: 0o644 }))
+		, sourceDateEpoch
+	});
 	const componentArchive = await createDeterministicTarGz({ directory: componentPackage, archiveRoot: "package", sourceDateEpoch });
 	const runtimeArchiveName = `lean-bridge-runtime-${version}.tgz`;
 	const componentArchiveName = `${packageIdentity.name.replaceAll("/", "-")}-${packageIdentity.version}.tgz`;

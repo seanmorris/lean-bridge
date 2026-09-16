@@ -5,8 +5,24 @@
  */
 
 import { gzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
+
+/**
+ * Bind runtime coordinates to the archive implementation and its host tools.
+ * The default collation affects entry ordering; zlib also emits a host OS byte.
+ * This is a producer constraint, not a requirement for installing an archive.
+ */
+export const tarGzipPackingIdentity = async () => ({
+	implementationSha256: createHash("sha256").update(await readFile(new URL(import.meta.url))).digest("hex")
+	, nodeVersion: process.versions.node
+	, zlibVersion: process.versions.zlib
+	, icuVersion: process.versions.icu ?? null
+	, platform: process.platform
+	, architecture: process.arch
+	, collationLocale: new Intl.Collator().resolvedOptions().locale
+});
 
 const splitTarPath = path => {
 	if(Buffer.byteLength(path) <= 100) return { name: path, prefix: "" };
