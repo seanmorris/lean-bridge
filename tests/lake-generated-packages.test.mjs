@@ -103,7 +103,7 @@ const nativeAcceptance = (profile, fixture) => test(`generated native ${profile}
 				}
 				assert.ok(built.receipt.nativeCompilation.objects[0].inputs.some(file => file.path.endsWith("/root/native/generated.h")));
 				assert.equal(canonicalJson(built.receipt).includes(context.directory), false);
-				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot: nativeRuntime, componentRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
+				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot: nativeRuntime, runtimePackageRoot: runtimePackage, componentRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
 				assert.equal(sha256(await readFile(join(packageRoot, "lake-generated-sources.json"))), sha256(canonicalJson(handoff)));
 				await compileCpanXsVariant({ packageRoot, perl, environment: { ...process.env, PERL5LIB: buildRuntime.perl5lib } });
 				const archive = await archiveCpanPackage({ packageRoot, outputRoot: join(context.directory, `${label}-archives`) });

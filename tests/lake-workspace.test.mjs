@@ -249,7 +249,7 @@ test("locked native builds relocate identically and run through installed Perl p
 				catch(error)
 				{ throw new Error(errorText(error), { cause: error }); }
 				const packageRoot = join(context.directory, `${label}-package`);
-				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot, componentRoot: outputRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
+				await stageCpanPackage({ outputRoot: packageRoot, runtimeRoot, runtimePackageRoot: runtimePackage, componentRoot: outputRoot, leanPrefix, version: "1.000", glibcMinimumVersion: floor });
 				await compileCpanXsVariant({ packageRoot, perl, environment: { ...process.env, PERL5LIB: buildRuntime.perl5lib } });
 				const archive = await archiveCpanPackage({ packageRoot, outputRoot: join(context.directory, `${label}-archives`) });
 				outputs.push({ built, archive, packageRoot });

@@ -12,13 +12,14 @@ import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/nat
 import { buildNativeProject } from "../src/build/native-project.mjs";
 import { readExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
-import { stageCpanPackage, archiveCpanPackage } from "../src/release/cpan-package.mjs";
+import { stageCpanPackage, archiveCpanPackage, readVerifiedCpanPackage } from "../src/release/cpan-package.mjs";
 import { compileCpanXsVariant } from "../src/build/perl-xs.mjs";
 import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { benchmarkPerl } from "../scripts/benchmark-perl.mjs";
 import { traceCpanInstall } from "../src/release/cpan-install-trace.mjs";
+import { projectCpanPackages } from "../src/build/cpan-projection.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -499,6 +500,53 @@ test("shared configuration drives a compiled and installed native package", { sk
 	assert.deepEqual(await readExportConfiguration(projectRoot), before);
 });
 
+test("CPAN completes every runtime ABI before pinning components and reproduces reversed selections", {
+	skip: !enabled || !process.env.LEAN_BRIDGE_CPAN_MATRIX_PERLS, timeout: 600_000
+}, async t => {
+  const perls = JSON.parse(process.env.LEAN_BRIDGE_CPAN_MATRIX_PERLS);
+  assert.ok(Array.isArray(perls) && perls.length >= 2);
+  const context = await metadataProject(t);
+  await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
+  const nativeRoot = join(context.working, "native");
+  await buildNativeComponent({ ...context, outputRoot: nativeRoot });
+  const reports = [];
+  for(const [label, selected] of [["forward", perls], ["reverse", [...perls].reverse()]])
+  {
+    const working = join(context.working, label);
+    const report = await projectCpanPackages({ ...context, nativeRoot, working
+      , environment: { ...process.env, LEAN_BRIDGE_PERLS: JSON.stringify(selected), LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: floor } });
+    const runtime = await readVerifiedCpanPackage(join(working, "packages/runtime"));
+    const component = await readVerifiedCpanPackage(join(working, "packages/component"));
+    assert.equal(runtime.manifest.prebuilt.length, perls.length);
+    assert.equal(component.manifest.runtimeVersion, runtime.manifest.version);
+    reports.push(report);
+  }
+  assert.deepEqual(reports[1], reports[0], "ABI discovery order does not change runtime or component archives");
+  const working = join(context.working, "forward");
+  for(const [index, executable] of perls.entries())
+  {
+    const prefix = join(context.working, `installed-${index}`);
+    for(const item of reports[0].packages)
+      await installCpanArchive({ archive: join(working, "archives", item.archive), workingRoot: context.working, prefix, perl: executable, mode: "prebuilt-only" });
+    const result = await run(executable, ["-MLeanBridge::Sample", "-e", "print LeanBridge::Sample::increment(41)"], context.working,
+      { ...process.env, PERL5LIB: join(prefix, "lib/perl5") });
+    assert.equal(result.stdout, "42");
+  }
+  await writeFile(join(working, "native-release.json"), canonicalJson(reports[0]));
+  const stricter = join(context.working, "stricter");
+  await run(process.execPath, [join(root, "scripts/prepare-perl-platform-packages.mjs")
+    , "--release", working
+    , "--output", stricter
+    , "--glibc-minimum", "2.999"], root);
+  const original = await readVerifiedCpanPackage(join(working, "packages/runtime"));
+  const changed = await readVerifiedCpanPackage(join(stricter, "packages/runtime"));
+  const changedComponent = await readVerifiedCpanPackage(join(stricter, "packages/component"));
+  assert.notEqual(changed.manifest.version, original.manifest.version);
+  assert.equal(changedComponent.manifest.runtimeVersion, changed.manifest.version);
+  for(const [path, hash] of Object.entries(original.manifest.files))
+    if(path.endsWith(".so")) assert.equal(changed.manifest.files[path], hash, "changing the platform floor does not rebuild binaries");
+});
+
 test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", { skip: !enabled, timeout: 600_000 }, async t => {
   await mkdir("build", { recursive: true });
   const working = await mkdtemp(join(root, "build/.perl-native-test-"));
@@ -514,11 +562,35 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
       , arities: { "Workshop.makeAdder": 1, "Workshop.keepCallback": 1, "Workshop.newRunner": 1 } });
     assert.equal(built.model.exports.length, 50);
     const runtimePackage = join(packages, "runtime"), componentPackage = join(packages, "component");
-    await stageCpanPackage({ outputRoot: runtimePackage, runtimeRoot, leanPrefix, glibcMinimumVersion: floor });
+    const sourceOnlyRuntime = await stageCpanPackage({ outputRoot: runtimePackage, runtimeRoot, leanPrefix, glibcMinimumVersion: floor });
+    const sourceOnlyVersion = sourceOnlyRuntime.manifest.version;
     const runtimeVariant = await compileCpanXsVariant({ packageRoot: runtimePackage, perl });
     const runtimeXsReceipt = JSON.parse(await readFile(join(runtimePackage, "prebuilt", runtimeVariant.abiKey, "receipt.json"), "utf8"));
     assert.equal(runtimeXsReceipt.commands.find(command => command.includes("-c")).filter(flag => /^-g/.test(flag)).at(-1), "-g0");
     const runtimeArchive = await archiveCpanPackage({ packageRoot: runtimePackage, outputRoot: join(working, "archives") });
+    const { manifest: runtimeManifest } = await readVerifiedCpanPackage(runtimePackage);
+    assert.notEqual(runtimeManifest.version, sourceOnlyVersion, "prebuilt XS changes the runtime coordinate");
+    const versionCheck = await run(perl, ["-MCPAN::Meta"
+    , "-MCPAN::Meta::Requirements"
+    , "-MModule::Metadata"
+    , "-e"
+    , `
+      my ($file, $pm, $expected) = @ARGV;
+      my $meta = CPAN::Meta->load_file($file);
+      die "metadata version" unless $meta->version eq $expected;
+      die "module version" unless Module::Metadata->new_from_file($pm)->version eq $expected;
+      my $req = CPAN::Meta::Requirements->new;
+      $req->add_string_requirement('LeanBridge::Runtime', "== $expected");
+      die "matching version rejected" unless $req->accepts_module('LeanBridge::Runtime', $expected);
+      for my $other ('0.001', '9.999', $expected . '1') {
+        die "different version accepted" if $req->accepts_module('LeanBridge::Runtime', $other);
+      }
+      print "exact";
+    `
+    , join(runtimePackage, "META.json")
+    , join(runtimePackage, "lib/LeanBridge/Runtime.pm")
+    , runtimeManifest.version], working);
+    assert.equal(versionCheck.stdout, "exact");
     const noCompiler = join(working, "no-compiler"); await mkdir(noCompiler);
     for(const name of ["cc", "c++", "gcc", "g++", "clang", "clang++", "x86_64-linux-gnu-gcc", "lean", "lake", "node"])
 {
@@ -526,12 +598,12 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
 }
     const prebuiltEnv = { ...env, PATH: `${noCompiler}:${process.env.PATH}` };
     await installCpanArchive({ archive: runtimeArchive.path, workingRoot: working, prefix, perl, mode: "prebuilt-only", environment: prebuiltEnv });
-    await stageCpanPackage({ outputRoot: componentPackage, runtimeRoot, componentRoot: nativeRoot, leanPrefix, version: "0.002", glibcMinimumVersion: floor });
+    await stageCpanPackage({ outputRoot: componentPackage, runtimeRoot, runtimePackageRoot: runtimePackage, componentRoot: nativeRoot, leanPrefix, version: "0.002", glibcMinimumVersion: floor });
     const metadata = JSON.parse(await readFile(join(componentPackage, "META.json"), "utf8"));
     assert.deepEqual(metadata.license, ["unknown"]);
     assert.deepEqual(metadata.author, ["Author not declared"]);
     assert.equal(metadata.resources, undefined);
-    assert.equal(metadata.prereqs.runtime.requires["LeanBridge::Runtime"], "0.001", "component releases do not advance the shared runtime version");
+    for(const phase of ["configure", "runtime"]) assert.equal(metadata.prereqs[phase].requires["LeanBridge::Runtime"], `== ${runtimeManifest.version}`);
     await compileCpanXsVariant({ packageRoot: componentPackage, perl, environment: env });
     const archive = await archiveCpanPackage({ packageRoot: componentPackage, outputRoot: join(working, "archives") });
     const metadataCheck = join(working, "metadata-check");
@@ -540,7 +612,10 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
     const configuredMetadata = JSON.parse(await readFile(join(metadataCheck, "MYMETA.json"), "utf8"));
     assert.deepEqual(configuredMetadata.license, ["unknown"]);
     assert.deepEqual(configuredMetadata.author, ["Author not declared"]);
+    for(const phase of ["configure", "runtime"]) assert.equal(configuredMetadata.prereqs[phase].requires["LeanBridge::Runtime"], `== ${runtimeManifest.version}`);
     await installCpanArchive({ archive: archive.path, workingRoot: working, prefix, perl, mode: "prebuilt-only", environment: prebuiltEnv });
+    for(const wrongVersion of ["0.001", "9.999"])
+      await assert.rejects(run(perl, ["-MLeanBridge::Runtime", "-e", `$LeanBridge::Runtime::VERSION = '${wrongVersion}'; require LeanBridge::Workshop;`], working, env), error => /runtime package version/.test(errorText(error)));
     const otherProject = join(working, "other-source");
     await cp(join(root, "tests/fixtures/perl/other"), otherProject, { recursive: true });
     await copyFile(join(root, "tests/fixtures/perl/ordinary/Workshop.lean"), join(otherProject, "Workshop.lean"));
@@ -550,7 +625,8 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
     , runtimeRoot
     , leanPrefix
       , modules: ["Other"], resources: ["Workshop.Counter"] });
-    await stageCpanPackage({ outputRoot: otherPackage, runtimeRoot, componentRoot: otherNative, leanPrefix, glibcMinimumVersion: floor });
+    await stageCpanPackage({ outputRoot: otherPackage, runtimeRoot, runtimePackageRoot: runtimePackage, componentRoot: otherNative, leanPrefix, glibcMinimumVersion: floor });
+    assert.equal((await readVerifiedCpanPackage(otherPackage)).manifest.runtimeVersion, runtimeManifest.version, "unrelated components share the completed runtime");
     await compileCpanXsVariant({ packageRoot: otherPackage, perl, environment: env });
     const otherArchive = await archiveCpanPackage({ packageRoot: otherPackage, outputRoot: join(working, "archives") });
     await installCpanArchive({ archive: otherArchive.path, workingRoot: working, prefix, perl, mode: "prebuilt-only", environment: prebuiltEnv });
@@ -607,6 +683,7 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
       , ["incompatible-platform", manifest => { manifest.glibcMinimumVersion = "2.999"; }, "auto", /requires glibc/, env]
       , ["incompatible-abi", manifest => { manifest.prebuilt[0].abiKey = "0".repeat(64); }, "prebuilt-only", /No compatible prebuilt/, env]
       , ["incompatible-runtime", manifest => { manifest.runtimeIdentity = "0".repeat(64); }, "auto", /Incompatible shared Lean runtime/, env]
+      , ["incompatible-runtime-package", manifest => { manifest.runtimeVersion = "9.999"; }, "auto", /runtime package version/, env]
     ]) {
       const directory = join(working, label); await cp(componentPackage, directory, { recursive: true });
       const manifest = JSON.parse(await readFile(join(directory, "lean-bridge-package.json"), "utf8"));

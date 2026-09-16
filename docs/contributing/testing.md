@@ -444,6 +444,15 @@ npm run test:consumer:perl -- --configuration 5.38.2-unthreaded
 
 The accepted configurations are `5.36.3-threaded`, `5.36.3-unthreaded`, `5.38.2-threaded`, and `5.38.2-unthreaded`. A single-configuration run writes its observation to `build/consumer-ci/perl/<configuration>/perl.json`; only a complete four-configuration run writes the aggregate observation. Each run removes the previous aggregate observation before testing.
 
+To check one runtime containing multiple prebuilt ABIs, set `LEAN_BRIDGE_CPAN_MATRIX_PERLS` to a JSON array of at least two absolute interpreter paths from that matrix, then run:
+
+```sh
+LEAN_BRIDGE_PERL_NATIVE_TEST=1 node --test \
+  --test-name-pattern='CPAN completes every' tests/perl-native.test.mjs
+```
+
+This check prepares the complete runtime before pinning its component, reproduces both archives with the interpreter order reversed, and installs and calls the same component on every selected interpreter. The ordinary installed suite also checks exact `META.json` and `MYMETA.json` runtime requirements, version parsing without numeric rounding, and rejection of both lower and higher runtime versions. Pure contract tests reject resealed payload changes under an unchanged runtime coordinate.
+
 CI runs these four configurations in parallel, with separate toolchain caches and evidence artifacts. The shared compiler/Lake checks and pinned Nix installation run in their own jobs. The combined Perl observation requires every job to pass and retains the warmed Perl 5.38.2 threaded measurement with the CPU information from that configuration's runner.
 
 For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` lowers only the test package's declared floor. Do not publish those development packages as the production profile. `LEAN_BRIDGE_KEEP_PERL_TEST=1` preserves a suite's task-local build directory for inspection; otherwise it is removed after the run.

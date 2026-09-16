@@ -50,6 +50,7 @@ The canonical input boundary requires the manifest file to equal its canonical n
 | [`npm-package.mjs`](npm-package.mjs), [`component-npm-package.mjs`](component-npm-package.mjs) | JavaScript runtime and component archives. |
 | [`pypi-package.mjs`](pypi-package.mjs), [`python-wheel-preflight.mjs`](python-wheel-preflight.mjs) | Python wheel and source package layout, plus the repository-free host compatibility preflight. |
 | [`cargo-package.mjs`](cargo-package.mjs) | Rust crate layout. |
+| [`cpan-package.mjs`](cpan-package.mjs) | Native Perl archives, payload-derived shared-runtime versions and exact configure/runtime dependencies. |
 | [`c-family-package.mjs`](c-family-package.mjs) | C and C++ archives, headers, and metadata. |
 | [`nuget-package.mjs`](nuget-package.mjs), [`maven-package.mjs`](maven-package.mjs), [`rubygems-package.mjs`](rubygems-package.mjs) | .NET, JVM, and Ruby registry layouts. |
 | [`wasi-package.mjs`](wasi-package.mjs) | WIT, component, native host source, and WASI consumer metadata. |

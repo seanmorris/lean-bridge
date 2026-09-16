@@ -9,7 +9,7 @@ use File::Path qw(make_path);
 use File::Copy qw(copy);
 use File::Spec;
 use Cwd qw(abs_path);
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker 6.64;
 use lib 'inc';
 use LeanBridge::Runtime::Platform;
 
@@ -61,6 +61,7 @@ sub compile_xs {
   my @include = ('.', $manifest->{include});
   if ($manifest->{module} ne 'LeanBridge::Runtime') {
     require LeanBridge::Runtime;
+    die "Incompatible shared Lean runtime package version\n" unless $LeanBridge::Runtime::VERSION eq $manifest->{runtimeVersion};
     die "Incompatible shared Lean runtime\n" unless LeanBridge::Runtime::_identity() eq $manifest->{runtimeIdentity};
     my $root = $INC{'LeanBridge/Runtime.pm'}; $root =~ s/\.pm\z//;
     push @include, "$root/include";
@@ -106,7 +107,7 @@ sub configure {
       unless sha256_hex(read_bytes('lib/LeanBridge/Runtime/binding.json')) eq $manifest->{runtimeIdentity};
   } else {
     require LeanBridge::Runtime;
-    LeanBridge::Runtime->VERSION($manifest->{runtimeVersion});
+    die "Incompatible shared Lean runtime package version\n" unless $LeanBridge::Runtime::VERSION eq $manifest->{runtimeVersion};
     die "Incompatible shared Lean runtime\n" unless LeanBridge::Runtime::_identity() eq $manifest->{runtimeIdentity};
   }
   my $mode = $ENV{LEAN_BRIDGE_PERL_INSTALL_MODE} // 'auto';
@@ -149,8 +150,9 @@ sub configure {
     META_MERGE => { 'meta-spec' => { version => 2 },
       (exists $metadata->{x_spdx_expression} ? (x_spdx_expression => $metadata->{x_spdx_expression}) : ()),
       (exists $metadata->{resources} ? (resources => $metadata->{resources}) : ()) },
+    CONFIGURE_REQUIRES => $metadata->{prereqs}{configure}{requires},
     PREREQ_PM => { 'Math::BigInt' => 0, 'JSON::PP' => 0, 'Digest::SHA' => 0,
-      ($manifest->{module} eq 'LeanBridge::Runtime' ? () : ('LeanBridge::Runtime' => $manifest->{runtimeVersion})) },
+      ($manifest->{module} eq 'LeanBridge::Runtime' ? () : ('LeanBridge::Runtime' => '== ' . $manifest->{runtimeVersion})) },
     PM => \%pm, XS => {}, C => [], OBJECT => '', NO_META => 1,
     clean => { FILES => '_xs-build' });
 }

@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, copyFile, cp, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve, dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -438,14 +438,51 @@ test("CPAN stages a versioned runtime from read-only Nix-style templates", async
 		files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
 	}
 	await writeFile(join(runtimeRoot, "runtime.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", pointerBits: 64, leanCommit: "a".repeat(40), files }));
-	const { stageCpanPackage } = await import(pathToFileURL(join(source, "src/release/cpan-package.mjs")));
+	const { stageCpanPackage, archiveCpanPackage, readVerifiedCpanPackage, refreshCpanInventory } = await import(pathToFileURL(join(source, "src/release/cpan-package.mjs")));
 	const outputRoot = join(scratch, "output");
-	await stageCpanPackage({ outputRoot, runtimeRoot, version: "0.009" });
+	const { manifest } = await stageCpanPackage({ outputRoot, runtimeRoot });
+	assert.match(manifest.version, /^0\.002[0-9]{78}1$/);
+	assert.equal(BigInt(manifest.version.slice(5, -1)), BigInt(`0x${manifest.runtimePackageIdentity}`));
 	const rendered = join(outputRoot, "lib/LeanBridge/Runtime.pm");
-	assert.match(await readFile(rendered, "utf8"), /our \$VERSION = '0\.009';/);
+	assert.ok((await readFile(rendered, "utf8")).includes(`our $VERSION = '${manifest.version}';`));
 	assert.ok((await stat(rendered)).mode & 0o200);
 	assert.deepEqual(await readFile(template), before);
 	assert.equal((await stat(template)).mode & 0o777, 0o444);
+	await assert.rejects(() => stageCpanPackage({ outputRoot: join(scratch, "override"), runtimeRoot, version: "0.009" }), /version is derived/);
+	const archive = await archiveCpanPackage({ packageRoot: outputRoot, outputRoot: join(scratch, "archives") });
+	await assert.rejects(() => archiveCpanPackage({ packageRoot: outputRoot, outputRoot: join(scratch, "archives"), sourceDateEpoch: 2 }), /timestamp/);
+	const repeat = join(scratch, "repeat");
+	await stageCpanPackage({ outputRoot: repeat, runtimeRoot });
+	const reproduced = await archiveCpanPackage({ packageRoot: repeat, outputRoot: join(scratch, "reproduced") });
+	assert.equal(reproduced.receipt.sha256, archive.receipt.sha256);
+	for(const [label, mutate] of [
+		["helper", async (directory) => writeFile(join(directory, "LeanBridgeBuild.pm"), "# changed helper\n")]
+		, ["notice", async (directory) => writeFile(join(directory, "notices/lean.txt"), "changed notice\n")]
+		, ["metadata", async directory => {
+			const path = join(directory, "META.json"), value = JSON.parse(await readFile(path));
+			value.abstract = "changed runtime description"; await writeFile(path, canonicalJson(value));
+		}]
+		, ["library", async (directory) => writeFile(join(directory, "lib/LeanBridge/Runtime/native/libleanshared.so"), "changed binary")]
+		, ["platform", async (_directory, value) => { value.glibcMinimumVersion = "2.99"; }]
+		, ["packer", async (_directory, value) => { value.runtimePacking.zlibVersion = "different"; }]
+		, ["prebuilt-selection", async (_directory, value) => { value.prebuilt.push({ abiKey: "f".repeat(64), abi: {}, path: "prebuilt/fixture.so" }); }]
+		, ["prebuilt-bytes", async directory => { await mkdir(join(directory, "prebuilt")); await writeFile(join(directory, "prebuilt/fixture.so"), "fixture XS"); }]
+	]) await t.test(label, async () => {
+		const directory = join(scratch, label); await cp(outputRoot, directory, { recursive: true });
+		const value = JSON.parse(canonicalJson(manifest));
+		await mutate(directory, value);
+		// Re-sealing file hashes must not let changed bytes keep an old coordinate.
+		for(const path of Object.keys(value.files)) value.files[path] = sha256(await readFile(join(directory, path)));
+		await writeFile(join(directory, "lean-bridge-package.json"), canonicalJson(value));
+		await assert.rejects(() => archiveCpanPackage({ packageRoot: directory, outputRoot: join(scratch, "invalid") }), /coordinate differs|unrecorded/);
+		await refreshCpanInventory(directory, value);
+		assert.notEqual(value.version, manifest.version);
+		assert.equal((await readVerifiedCpanPackage(directory)).manifest.version, value.version);
+		const version = value.version;
+		await refreshCpanInventory(directory, value);
+		assert.equal(value.version, version, "finalization is idempotent");
+		if(label === "packer") await assert.rejects(() => archiveCpanPackage({ packageRoot: directory, outputRoot: join(scratch, "invalid") }), /archive implementation/);
+	});
 });
 
 test("the Nix Perl source boundary includes the complete import and template closure", async () => {

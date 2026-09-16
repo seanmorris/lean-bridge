@@ -129,21 +129,31 @@ Before publication:
 
 The repository's [Perl acceptance matrix](../contributing/testing.md#perl-packages) uses checksummed Perl source releases. The compatibility versions do not replace your organization's supported-Perl security policy.
 
-For a local handoff, distribute both archives and the authenticated receipt. No registry account or namespace reservation is needed to test installation. See [Perl consumption](../consume/perl.md).
+For a local handoff, distribute both archives and `package-set-receipt.json` with its SHA-256 sidecar. That receipt checks local consistency; authenticate the publisher's bytes separately. No registry account or namespace reservation is needed to test installation. See [Perl consumption](../consume/perl.md).
+
+## Shared runtime versions
+
+The builder finishes every selected runtime XS variant before preparing components. It derives the runtime's version from the complete prepared payload: native libraries and headers, Perl modules, XS sources and binaries, build helper, platform floor, notices, metadata, and archive implementation. The packing identity also records Node, zlib and ICU versions; archive assembly requires those same versions and the fixed timestamp. Unchanged payloads produce the same version and archive bytes. Changing a component's API, name, license or version does not change the shared runtime.
+
+The generated runtime version uses `0.002`, a fixed-width decimal encoding of its SHA-256 identity, and a final `1`. Treat the whole value as a string and copy it from the package receipt. Do not shorten it, convert it to a floating-point number, or choose it manually. `lib/LeanBridge/Runtime.pm`, `META.json`, the payload manifest and the archive filename contain the same version.
+
+Each component requires `== <runtime version>` in both the configure and runtime phases. `MYMETA.json` retains those exact requirements. Configuration, XS compilation and module loading reject a different installed runtime version; the native/binding identity checks remain in place. Libraries used together must select the same completed runtime package. Rebuilding only XS during installation does not change that package version. [CPAN version requirements](https://metacpan.org/pod/CPAN::Meta::Spec#Version-Ranges)
+
+Runtime versions identify content, not release chronology. PAUSE's main index requires non-decreasing module versions, so a new payload can be absent from that index even after a successful upload. Publish the exact runtime archive's author path and checksum with each component release. Retain that archive, and test installation by its exact URL or local filename before the component. Clients can query historical versions, but a latest-only mirror is insufficient. [PAUSE indexing rules](https://pause.perl.org/pause/query?ACTION=pause_operating_model), [cpanm version selection](https://metacpan.org/pod/cpanm)
 
 ## Publish to CPAN
 
 Create a [PAUSE account](https://pause.perl.org/pause/query?ACTION=request_id) and verify ownership or co-maintainer permission for **every public package namespace** in the distributions. Do not upload the example names as your own product. New namespaces acquire an owner on first upload; existing ones require permission. Review the [PAUSE operating model](https://pause.perl.org/pause/query?ACTION=pause_operating_model) before selecting names.
 
-Upload the reviewed runtime archive first through PAUSE's **Upload a file to CPAN** form. Wait for its indexing report, then upload the component archive. Use the exact candidate bytes; do not run another build during upload. PAUSE distributes uploaded files to CPAN mirrors and checks indexing permissions. [PAUSE publication guide](https://pause.perl.org/pause/query?ACTION=pause_04about)
+Upload the reviewed runtime archive first through PAUSE's **Upload a file to CPAN** form. Review its indexing report and confirm the exact archive is available, then upload the component archive. Reuse an already published runtime only after verifying its archive digest. Use the exact candidate bytes; do not run another build during upload. PAUSE distributes uploaded files to CPAN mirrors and checks indexing permissions. [PAUSE publication guide](https://pause.perl.org/pause/query?ACTION=pause_04about)
 
-Use a new version for every release. A decimal version such as `0.001` is a normal release; an underscore version such as `0.001_01` marks a developer release. PM, XS, metadata and archive filenames must agree on the component version. The shared runtime has its own version and compatibility identity; a component-only release does not advance it. The generated metadata distinguishes testing from stable releases. [Perl version documentation](https://perldoc.perl.org/version)
+Choose a new component version for every component release. A decimal version such as `0.001` is a normal release; an underscore version such as `0.001_01` marks a developer release. The generated module, metadata and archive filename must agree on the component version. The shared runtime uses the content-derived version above. The generated metadata distinguishes testing from stable releases. [Perl version documentation](https://perldoc.perl.org/version)
 
 This backend creates archives; `lean-bridge publish` does not currently upload to PAUSE. A CI upload job needs a separately approved PAUSE credential and destination. Keep credentials out of source files, build receipts and logs. No publication is performed by the build or consumer CI.
 
 ## Download and consume the published bytes
 
-After PAUSE confirms indexing, download each archive from the exact author path reported by PAUSE. Compare its SHA-256 digest with the reviewed receipt, then install in a clean local Perl library using `cpanm`. Confirm that the component's dependency resolves to the intended runtime and run the documented application.
+Download each archive from the exact author path reported by PAUSE. Compare its SHA-256 digest with the reviewed receipt, then install the runtime followed by the component in a clean local Perl library using `cpanm`. Confirm that the installed runtime satisfies the component's exact requirement and run the documented application.
 
 If a CPAN client finds no compatible prebuilt XS, it may compile the supplied XS using the consumer's Perl development environment. It may not replace or rebuild the Lean runtime or component library. A failed hash or runtime check is a release problem, not a reason to bypass verification.
 

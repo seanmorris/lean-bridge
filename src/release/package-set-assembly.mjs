@@ -49,6 +49,7 @@ export const writeNativePackageSet = async options => {
 			const runtime = await read(join(root, "packages/runtime/lean-bridge-package.json"));
 			const component = await read(join(root, "packages/component/lean-bridge-package.json"));
 			if([runtime, component].some(item => item.nativeRuntimeIdentity !== runtimeIdentity || item.runtimeIdentity !== projection.runtimeIdentity)) throw new Error("CPAN runtime differs from native package set");
+			if(component.runtimeVersion !== runtime.version) throw new Error("CPAN component dependency differs from runtime package version");
 			const runtimeRef = { ecosystem: "cpan", name: runtime.distribution, version: runtime.version };
 			for(const [index, item] of [runtime, component].entries())
 				packages.push(pkg("cpan", "cpan", { name: item.distribution, version: item.version }, abi, index ? "component" : "runtime", index ? "dependency" : "provided", index ? [runtimeRef] : [], [artifact("archives", projection.packages[index])]));

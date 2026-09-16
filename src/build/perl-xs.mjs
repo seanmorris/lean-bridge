@@ -3,10 +3,10 @@
  *
  * @file
  */
-import { readFile, readdir, unlink } from "node:fs/promises";
+import { readdir, unlink } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { processBuildRunner } from "./process-runner.mjs";
-import { refreshCpanInventory } from "../release/cpan-package.mjs";
+import { readVerifiedCpanPackage, refreshCpanInventory } from "../release/cpan-package.mjs";
 
 /**
  * Add an ABI-specific XS binary without recompiling native Lean artifacts.
@@ -18,12 +18,12 @@ import { refreshCpanInventory } from "../release/cpan-package.mjs";
  */
 export const compileCpanXsVariant = async ({ packageRoot, perl = "perl", environment = process.env }) => {
 	const directory = resolve(packageRoot);
+	const { manifest } = await readVerifiedCpanPackage(directory);
 	const probe = await processBuildRunner.capture({ command: perl
 		, args: ["-I.", "-MLeanBridgeBuild", "-e"
 			, "print JSON::PP->new->canonical->encode({key => LeanBridgeBuild::abi_key(), abi => LeanBridgeBuild::abi()})"]
 		, cwd: directory, env: environment });
 	const { key, abi } = JSON.parse(probe.stdout);
-	const manifest = JSON.parse(await readFile(join(directory, "lean-bridge-package.json"), "utf8"));
 	if(manifest.prebuilt.some(item => item.abiKey === key)) throw new Error("duplicate Perl ABI variant");
 	await processBuildRunner.capture({ command: perl
 		, args: ["-I.", "-MLeanBridgeBuild", "-e"

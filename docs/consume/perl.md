@@ -12,7 +12,7 @@ The installer matches Perl's API and `Config` fingerprint, including threading, 
 
 ## Install the release
 
-A published component declares `LeanBridge::Runtime` as a dependency. Your CPAN client installs it automatically:
+A published component declares an exact `LeanBridge::Runtime` dependency. Your CPAN client resolves that version when it is available from its configured sources:
 
 ```sh
 cpanm "$LEAN_BRIDGE_PERL_MODULE"
@@ -20,13 +20,15 @@ cpanm "$LEAN_BRIDGE_PERL_MODULE"
 
 Set that variable to the module name supplied by your publisher. No CPAN publication of the example below is assumed.
 
-For an archive handoff, obtain and authenticate both archives using the publisher's checksums or signed release manifest. Install the runtime first, then the component:
+For an archive handoff, obtain and authenticate both archives using the publisher's checksums or signed release manifest. Set `LEAN_BRIDGE_PERL_RUNTIME_ARCHIVE` and `LEAN_BRIDGE_PERL_COMPONENT_ARCHIVE` to their absolute paths. Install the runtime first, then the component:
 
 ```sh
-cpanm --local-lib-contained "$PWD/.perl5" ./LeanBridge-Runtime-0.001.tar.gz
-cpanm --local-lib-contained "$PWD/.perl5" ./LeanBridge-Workshop-0.001.tar.gz
+cpanm --local-lib-contained "$PWD/.perl5" "$LEAN_BRIDGE_PERL_RUNTIME_ARCHIVE"
+cpanm --local-lib-contained "$PWD/.perl5" "$LEAN_BRIDGE_PERL_COMPONENT_ARCHIVE"
 export PERL5LIB="$PWD/.perl5/lib/perl5"
 ```
+
+The runtime's long decimal version identifies its complete package contents. A numerically higher version is not a substitute. If a mirror cannot resolve the pinned version, install the exact runtime archive supplied by the publisher first. Packages used together must require the same runtime version; loading and initialization remain automatic.
 
 `auto`, the default install mode, uses compatible prebuilt XS when available. Otherwise it compiles only the supplied XS with a C compiler and headers matching this Perl. It never invokes Lean, Lake, Node, or a Lean runtime build.
 
