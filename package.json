@@ -473,6 +473,8 @@
     "acceptance:docs:consumer": "node scripts/check-component-browser-consumer.mjs --release build/documentation-author-acceptance/release/packages/npm",
     "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
     "test:type-surface": "node --test tests/type-surface.test.mjs",
+    "test:type-corpus": "node --test tests/type-corpus.test.mjs",
+    "test:type-corpus:python": "LEAN_BRIDGE_TYPE_CORPUS_PYTHON=1 node --test tests/type-corpus.test.mjs",
     "types:check": "node scripts/type-surface.mjs",
     "types:report": "node scripts/type-surface.mjs --json",
     "test:contracts": "bash scripts/run-test-profile.sh contract",

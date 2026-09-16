@@ -192,7 +192,7 @@ export LEAN_ALPHA_PHP_PACKAGE=$(readlink -f build/consumer-php-native)
 
 The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../php.md#native-php) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
 
-## WASI package
+## Python packages
 
 ### Ordinary-source Python packages
 
@@ -205,6 +205,31 @@ LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 \
 ```
 
 Iris and Lotus each expose 42 functions and reproduce their wheels from relocated source trees. The suite hides those trees, installs original wheels with pip offline, and runs typed APIs with no Lean or C compiler available. It checks primitives, nested arrays and records, rejected inputs, allocation-failure cleanup, concurrent calls, tampering, post-fork rejection and two installed packages sharing a runtime. Uninstalling one distribution must leave the other usable. See the [Python acceptance record](../evidence/native-python-20260915.md).
+
+### Shared real-Lean type corpus
+
+The shared corpus adds differential tests: a fresh Lean run computes expected results, then an installed consumer package must return those results. Run its fast report checks without a compiler:
+
+```sh
+npm run test:type-corpus
+```
+
+Run the Python adapter with the same prerequisites as the ordinary-source suite above, plus Git and at least 3 GiB of free scratch space:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:python
+```
+
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness compiles the same source files for the Lean oracle and the package, builds each wheel from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel with pip offline. The consumer calls public Python functions with compiler paths disabled.
+
+The first adapter checks 48 cases: exact integers, fixed-width wraparound, embedded NUL and Unicode strings, bytes, nested arrays, copied records, invalid inputs and recovery after rejection. Separate modules compile in Lean but must fail Python package admission for `Option Nat` and `Except String Nat`.
+
+The report at `build/type-corpus/python.json` records archive, runtime, binding IR, dependency, source and oracle identities. It lists all 17 consumer profiles and both source paths. Missing adapters, unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md). CI uploads the report as `type-corpus-python-<commit>` and requires the Python run to pass.
+
+The [foundation acceptance record](../evidence/type-corpus-foundation-20260916.md) lists the executed cases, local archive identities and remaining adapter work.
+
+## WASI package
 
 ### Ordinary-source WIT packages
 

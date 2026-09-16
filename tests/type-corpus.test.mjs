@@ -1,0 +1,156 @@
+/**
+ * Differential real-Lean corpus, exact installed archives and explicit gaps.
+ *
+ * @file
+ */
+
+import assert from "node:assert/strict";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import test from "node:test";
+import { readTypeSurface } from "../src/adoption/type-surface.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, validateCorpusObservation } from "./helpers/type-corpus.mjs";
+import { runPythonCorpusLibrary } from "./helpers/type-corpus-python.mjs";
+
+const repository = resolve(import.meta.dirname, "..");
+const inventory = await readTypeSurface();
+const catalog = corpusCatalog(inventory.document);
+const enabled = process.env.LEAN_BRIDGE_TYPE_CORPUS_PYTHON === "1";
+
+// Synthetic observations exercise the report validator only. They never become
+// installed evidence, and only the real compiler test writes the corpus report.
+const validationFixture = () => {
+	const library = catalog.libraries[0];
+	const cases = catalog.cases.filter(entry => entry.library === library.id);
+	const oracle = Object.fromEntries(cases.filter(entry => entry.oracleKey !== null)
+		.map(entry => [entry.oracleKey, { string: `validator-only:${entry.id}` }]));
+	const observation = { schemaVersion: 1, profile: "python"
+		, module: library.pythonModule, python: "3.11.2"
+		, results: cases.map(entry => entry.expectation.kind === "lean-oracle"
+			? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
+			: { id: entry.id, status: "rejected-as-expected", exception: corpusProfiles.python.errors[entry.expectation.category], recovered: true }) };
+	return { library: library.id, profile: "python", path: "ordinary-source"
+		, archiveSha256: "a".repeat(64), archive: { sha256: "a".repeat(64) }
+		, runtimeIdentity: "b".repeat(64), bindingIrSha256: "c".repeat(64)
+		, oracle, observation };
+};
+
+test("corpus cases cover two renamed nested libraries, valid positions and explicit host errors", () => {
+	assert.equal(catalog.cases.length, 48);
+	assert.equal(catalog.cases.filter(entry => entry.expectation.kind === "lean-oracle").length, 32);
+	assert.equal(catalog.cases.filter(entry => entry.expectation.kind === "host-rejection").length, 16);
+	assert.equal(new Set(catalog.libraries.flatMap(library => library.operations)).size, 24);
+	assert.ok(catalog.libraries.every(library => library.module.includes(".")));
+	assert.deepEqual(catalog.libraries.map(library => library.pendingShape), ["option", "result"]);
+	assert.ok(catalog.cases.every(entry => entry.coverage.every(claim => !claim.positions.includes("signature"))));
+	const changed = structuredClone(inventory.document);
+	changed.shapes = changed.shapes.filter(shape => shape.id !== "nat");
+	assert.throws(() => corpusCatalog(changed), /Unknown corpus shape: nat/);
+});
+
+test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
+	const identity = await corpusIdentity(repository, catalog);
+	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
+	assert.equal(identity.files.length, 13);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 13);
+	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
+	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
+	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
+	assert.deepEqual(identity.catalog, catalog);
+	assert.deepEqual(await corpusIdentity(repository, catalog), identity);
+	const changed = structuredClone(catalog);
+	changed.cases[0].arguments[0].integer = "8";
+	assert.notEqual((await corpusIdentity(repository, changed)).sha256, identity.sha256);
+});
+
+test("every inventoried profile and position remains a gap without executed cases", () => {
+	const before = canonicalJson(inventory);
+	const cells = corpusCoverage(inventory, catalog);
+	assert.equal(cells.length, 6562);
+	assert.equal(new Set(cells.map(cell => cell.profile)).size, 17);
+	assert.equal(new Set(cells.map(cell => cell.shape)).size, 48);
+	assert.ok(cells.every(cell => cell.status === "gap" && cell.cases.length === 0 && cell.owner > 0));
+	assert.ok(cells.some(cell => cell.reason === "adapter-not-implemented"));
+	assert.ok(cells.some(cell => cell.reason === "source-path-not-implemented"));
+	assert.ok(cells.some(cell => cell.reason === "case-not-executed"));
+	assert.equal(canonicalJson(inventory), before);
+});
+
+test("validator-only observations cannot cross source paths, profiles or uncovered positions", () => {
+	const cells = corpusCoverage(inventory, catalog, [validationFixture()]);
+	const observed = cells.filter(cell => cell.status === "observed");
+	assert.equal(observed.length, 27);
+	assert.ok(observed.every(cell => cell.profile === "python" && cell.path === "ordinary-source"));
+	assert.ok(observed.every(cell => cell.reason === "scoped-cases-only" && cell.cases.every(id => id.startsWith("shop/"))));
+	assert.ok(cells.filter(cell => cell.position.startsWith("callback") || cell.shape === "proof" || cell.shape === "option")
+		.every(cell => cell.status === "gap"));
+});
+
+for(const [label, change] of [
+	["missing case", run => run.observation.results.pop()]
+	, ["duplicate case", run => { run.observation.results[0] = run.observation.results[1]; }]
+	, ["extra case", run => run.observation.results.push({ id: "unknown" })]
+	, ["wrong value", run => { run.observation.results[0].observed = { integer: "0" }; }]
+	, ["wrong consumer profile", run => { run.observation.profile = "perl"; }]
+	, ["wrong module", run => { run.observation.module = "lean_alpha"; }]
+	, ["unverified copy", run => { run.observation.results.find(entry => entry.id === "shop/record").independentCopy = false; }]
+	, ["wrong host error", run => { run.observation.results.at(-1).exception = "TypeError"; }]
+	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
+	, ["missing oracle result", run => { delete run.oracle.dependency; }]
+	, ["extra oracle result", run => { run.oracle.extra = {}; }]
+	, ["unimplemented adapter", run => { run.profile = "perl"; }]
+	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
+	, ["unknown library", run => { run.library = "unknown"; }]
+	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
+	, ["invalid archive hash", run => { run.archiveSha256 = "not-a-hash"; }]
+	, ["different archive hash", run => { run.archive.sha256 = "d".repeat(64); }]
+]) test(`corpus report rejects ${label}`, () => {
+	const run = validationFixture();
+	change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
+test("the corpus rejects duplicate runs and accepts only complete observations", () => {
+	const run = validationFixture();
+	validateCorpusObservation(catalog.libraries[0], catalog.cases.filter(entry => entry.library === "shop"), run.oracle, run.observation);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run, structuredClone(run)]), /Duplicate corpus run/);
+});
+
+test("real Lean corpus matches two independently rebuilt wheels in source-free Python consumers", {
+	skip: !enabled, timeout: 900_000
+}, async t => {
+	const reportPath = resolve(repository, "build/type-corpus/python.json");
+	await rm(reportPath, { force: true });
+	const identity = await corpusIdentity(repository, catalog);
+	const runs = [];
+	try
+	{
+		for(const library of catalog.libraries) runs.push(await runPythonCorpusLibrary(t, library));
+	}
+	catch(error)
+	{
+		if(error.details) t.diagnostic(JSON.stringify(error.details));
+		throw error;
+	}
+	assert.notDeepEqual(runs[0].oracle.dependency, runs[1].oracle.dependency);
+	assert.deepEqual(await corpusIdentity(repository, catalog), identity, "Corpus inputs changed during execution");
+	const cells = corpusCoverage(inventory, catalog, runs);
+	const observed = cells.filter(cell => cell.status === "observed").length;
+	const report = { schemaVersion: 1, kind: "real-lean-type-corpus"
+		, scope: "scoped-cases-not-full-type-support"
+		, host: { platform: process.platform, architecture: process.arch
+			, node: process.version
+			, nativeGlibcFloor: process.env.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38" }
+		, corpus: identity
+		, inventorySha256: sha256(canonicalJson(inventory.document))
+		, summary: { libraries: runs.length
+			, profiles: inventory.document.profiles.length
+			, cases: runs.reduce((count, run) => count + run.observation.results.length, 0)
+			, observedCells: observed, gapCells: cells.length - observed
+			, rejectedBuilds: runs.length }
+		, runs, cells };
+	await mkdir(resolve(reportPath, ".."), { recursive: true });
+	await writeFile(reportPath, canonicalJson(report));
+	t.diagnostic(`Corpus report: build/type-corpus/python.json (${report.summary.cases} cases, ${observed} scoped cells, ${report.summary.gapCells} gaps)`);
+});
