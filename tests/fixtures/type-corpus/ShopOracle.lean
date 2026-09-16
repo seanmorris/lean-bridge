@@ -12,6 +12,9 @@ def basketJson (value : Basket) : Json := record "Basket" [
 
 def main : IO Unit := IO.println <| (Json.mkObj ([
   ("dependency", natural (quoteUnits 7).toNat),
+  ("bool-as-number", natural (quoteUnits 1).toNat),
+  ("float32-wrong-type", floating32 (reverseRate 1)),
+  ("float64-wrong-type", floating64 (reversePrice 1)),
   ("exact-large", natural (basketTotal (2^4096 + 1) 3)),
   ("zero", natural (basketTotal 0 0)),
   ("signed-large", integer (refund (-(2^4096)) 7)),

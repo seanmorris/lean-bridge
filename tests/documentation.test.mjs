@@ -350,6 +350,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /npm ci --ignore-scripts/);
   assert.match(perlWorkflow, /bootstrap-toolchains\.sh --lean-only/);
   assert.match(perlWorkflow, /npm run test:consumer:perl/);
+  assert.equal(packageDocument.scripts["test:type-corpus:perl"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=perl node --test tests/type-corpus.test.mjs");
+  assert.match(perlWorkflow, /npm run test:type-corpus:perl/);
+  assert.match(perlWorkflow, /LEAN_BRIDGE_CORPUS_PERL="\$PWD\/\.toolchains\/perl\/\$CORPUS_PERL_CONFIGURATION\/bin\/perl"/);
+  assert.match(perlWorkflow, /name: type-corpus-perl-\$\{\{ matrix\.configuration \}\}-\$\{\{ github\.sha \}\}/);
+  assert.match(perlWorkflow, /path: build\/type-corpus\/perl\.json\n\s*if-no-files-found: error/);
+  assert.match(perlWorkflow, /needs\.perl\.result == 'success'/);
   assert.match(perlWorkflow, /nix run \.#perl-build-engine/);
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;

@@ -132,6 +132,22 @@ jobs:
           key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
       - name: Test both install paths on this Perl configuration
         run: npm run test:consumer:perl -- --configuration "${{ matrix.configuration }}"
+      - name: Compare installed Perl corpus packages with fresh Lean results
+        env:
+          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          npm run test:type-corpus:perl
+      - name: Upload this configuration's real-Lean corpus report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-perl-${{ matrix.configuration }}-${{ github.sha }}
+          path: build/type-corpus/perl.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Upload this configuration's acceptance and benchmark evidence
         if: always()
         uses: actions/upload-artifact@v7

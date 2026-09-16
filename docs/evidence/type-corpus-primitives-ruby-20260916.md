@@ -2,6 +2,8 @@
 
 VO 1217. This milestone expands the [corpus foundation](type-corpus-foundation-20260916.md) to all 16 primitive parameter/result types and adds an installed Ruby adapter. The combined run passes **248 cases** across Python and Ruby. Each profile executes 84 differential results and 40 host-input rejections against two independently compiled Lean libraries.
 
+This record describes commit `a43404e`. The [following milestone](type-corpus-perl-20260916.md) adds Perl and separate compiler-declaration checks.
+
 ## Cases and public APIs
 
 [Shop.Pricing](../../tests/fixtures/type-corpus/Shop/Pricing.lean) and [Telemetry.Readings](../../tests/fixtures/type-corpus/Telemetry/Readings.lean) now expose 19 functions each. Their APIs, record layouts and calculations differ. Each retains three proved lemmas, a local Lake dependency and a pinned Git dependency created in the test's offline cache.

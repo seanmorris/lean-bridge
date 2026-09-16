@@ -15,6 +15,7 @@ export const corpusLibraries = [
 		id: "shop", module: "Shop.Pricing", oracle: "ShopOracle.lean"
 		, pythonModule: "lean_shop", pendingModule: "Shop.Pending"
 		, rubyModule: "LeanBridge::Shop", rubyRequire: "lean_bridge/shop"
+		, perlModule: "LeanBridge::Shop"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -24,12 +25,57 @@ export const corpusLibraries = [
 		id: "telemetry", module: "Telemetry.Readings", oracle: "TelemetryOracle.lean"
 		, pythonModule: "lean_telemetry", pendingModule: "Telemetry.Pending"
 		, rubyModule: "LeanBridge::Telemetry", rubyRequire: "lean_bridge/telemetry"
+		, perlModule: "LeanBridge::Telemetry"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
 		, snakeOperations: ["measure_tick", "accumulate", "calibrate", "channel_label", "offset_samples", "rotate_rows", "advance_frame", "wrap_clock", "next_offset", "invert_status", "acknowledge", "mirror_payload", "advance_tag", "advance_sequence", "raise_grade", "raise_level", "raise_baseline", "halve_sample", "halve_measure"]
 	}
 ];
+
+/**
+ * Independent expected declarations, checked against compiler metadata before use.
+ *
+ * @param library - One of the two source libraries.
+ */
+export const corpusSignatures = library => {
+	const vector = { array: "uint32" }, matrix = { array: vector };
+	const fields = library.id === "shop"
+		? { label: "string", units: "nat", credit: "int", batches: matrix, active: "bool" }
+		: { samples: matrix, counter: "nat", bias: "int", title: "string", valid: "bool" };
+	const record = { record: `${library.module}.${Object.keys(library.recordFields)[0]}`, fields };
+	const signatures = [
+		[["uint32"], "uint32"], [["nat", "uint32"], "nat"], [["int", "int"], "int"]
+		, [["string", "string"], "string"], [[vector, "uint32"], vector]
+		, [[matrix], matrix], [[record], record]
+		, ...["uint64", "int64", "bool", "unit", "bytes", "uint8", "uint16", "int8", "int16", "int32", "float32", "float64"].map(type => [[type], type])
+	];
+	return library.operations.map((operation, index) => ({ name: `${library.module}.${operation}`
+		, parameters: signatures[index][0], result: signatures[index][1] }));
+};
+
+/**
+ * Apply a documented host policy while retaining the same input and Lean oracle.
+ *
+ * @param entry - Shared case with optional per-profile expectations.
+ * @param profile - Consumer profile whose public API is called.
+ */
+export const corpusHostCase = (entry, profile) => ({ ...entry, ...entry.hostExpectations[profile] });
+
+/**
+ * Every positive oracle result, including host-specific numeric acceptance.
+ *
+ * @param cases - Unmodified library catalog cases.
+ */
+export const corpusOracleKeys = cases => [...new Set(cases.flatMap(entry => [entry.oracleKey, ...Object.values(entry.hostExpectations).map(policy => policy.oracleKey)]).filter(key => key != null))].sort();
+
+const perlRejection = id => {
+	if(["negative-nat", "bad-record"].includes(id)) return "Nat cannot be negative";
+	if(id === "wrong-bytes") return "ByteArray requires an octet string, not Unicode text";
+	if(id === "wrong-boolean") return "Bool requires true() or false()";
+	if(id.startsWith("int")) return "signed integer is out of range or not an exact integer scalar";
+	return "unsigned integer is out of range or not an exact integer scalar";
+};
 
 /**
  * Return immutable-by-convention JSON inputs; consumers receive a serialized copy.
@@ -108,6 +154,9 @@ export const corpusCases = library => {
 		, operation, arguments: args, coverage: cells
 		, resultEncoding: encoding ?? "value"
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
+		, hostExpectations: ["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
+			? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }
+			: rejection ? { perl: { rejectionMessage: perlRejection(id) } } : {}
 		, checkIndependentCopy: id === "record"
 	}));
 };

@@ -214,29 +214,33 @@ The shared corpus adds differential tests: a fresh Lean run computes expected re
 npm run test:type-corpus
 ```
 
-Python needs the same prerequisites as the ordinary-source suite above. Ruby needs MRI Ruby 3.3 with RubyGems, the pinned Lean compiler and a native C compiler. Both adapters run on Linux x86-64 and need Git and at least 3 GiB of free scratch space. Run an adapter separately:
+Python needs the same prerequisites as the ordinary-source suite above. Ruby needs MRI Ruby 3.3 with RubyGems. Perl needs a 64-bit Perl 5.36 or newer with matching headers, MakeMaker, make and tar. All three adapters run on Linux x86-64 and need the pinned Lean compiler, a native C compiler, Git and at least 3 GiB of free scratch space. Run an adapter separately:
 
 ```sh
 source scripts/env.sh
 npm run test:type-corpus:python
 npm run test:type-corpus:ruby
+npm run test:type-corpus:perl
 ```
 
-To build both package formats together and compare both consumers against the same Lean run:
+To build Python and Ruby together, or all three formats, and compare the consumers against the same Lean run:
 
 ```sh
 npm run test:type-corpus:native
+npm run test:type-corpus:all-native
 ```
 
-Set `LEAN_BRIDGE_PYTHON`, `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to absolute executable paths when selecting alternate host installations.
+Set `LEAN_BRIDGE_PYTHON`, `LEAN_BRIDGE_RUBY`, `LEAN_BRIDGE_GEM` and `LEAN_BRIDGE_CORPUS_PERL` to absolute executable paths when selecting alternate host installations. The Perl build compiles XS only for that interpreter's ABI. Its consumer installs both runtime and component archives in `prebuilt-only` mode and checks the selected XS hashes and ABI.
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel or gem offline. Consumers call public functions and records with compiler paths disabled.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem or CPAN archive offline. Consumers call public functions and records with compiler paths disabled.
 
 Each adapter checks 124 cases across both libraries. They cover all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. Separate modules compile in Lean but fail native source admission for `Option Nat` and `Except String Nat`.
 
-Reports appear at `build/type-corpus/python.json`, `ruby.json` or `python-ruby.json`, according to the selected adapters. They record the input catalog, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Every report lists all 17 consumer profiles and both source paths. Missing adapters, unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md). CI requires both adapter runs and uploads `type-corpus-python-<commit>` and `type-corpus-ruby-<commit>`.
+Host expectations remain explicit. Perl accepts native boolean scalars as integer inputs and integer scalars as floats; those calls must match fresh Lean results. Python and Ruby must reject the same inputs. Perl uses `Math::BigInt` for `Nat`/`Int` and native scalars for fixed-width integers. Rejected Perl inputs must produce the expected diagnostic and leave the next call usable.
 
-The [Python/Ruby acceptance record](../evidence/type-corpus-primitives-ruby-20260916.md) lists the executed cases, local archive identities and remaining adapter work. The [foundation record](../evidence/type-corpus-foundation-20260916.md) preserves the earlier Python-only results.
+Reports appear at `build/type-corpus/python.json`, `ruby.json`, `perl.json`, `python-ruby.json` or `perl-python-ruby.json`, according to the selected adapters. They record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Every report lists all 17 consumer profiles and both source paths. Missing adapters, unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md). CI requires Python, Ruby and all four Perl configuration runs. It uploads `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>` and `type-corpus-perl-<configuration>-<commit>`.
+
+The [Perl and declaration-check record](../evidence/type-corpus-perl-20260916.md) lists the installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
 
 ## WASI package
 

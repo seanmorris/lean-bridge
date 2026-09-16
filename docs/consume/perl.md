@@ -145,6 +145,8 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 Fixed-width signed and unsigned integers use Perl's 64-bit integer representation, never an intermediate floating-point value. `Float32` rounds to binary32; `Float` uses binary64. NaN classification, infinities and signed zero are supported; NaN payload bits are not preserved as a contract.
 
+Float parameters accept integer or floating-point scalars. Native boolean scalars also carry integer values and are accepted in fixed-width integer parameters. Numeric text such as `'12'` is rejected. `Bool` parameters still require native booleans, not arbitrary numbers or strings.
+
 ## Ownership and failures
 
 Arrays and finite acyclic records are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.

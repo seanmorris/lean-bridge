@@ -8,14 +8,38 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
-import { corpusCases, corpusLibraries } from "../fixtures/type-corpus/cases.mjs";
+import { corpusCases, corpusHostCase, corpusLibraries, corpusOracleKeys, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
 
 export const corpusProfiles = Object.freeze({
 	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
 		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
 	, ruby: Object.freeze({ adapter: "prepared-gem-v1", target: "rubygems"
 		, errors: Object.freeze({ type: "TypeError", range: "RangeError" }) })
+	, perl: Object.freeze({ adapter: "prepared-cpan-prebuilt-v1", target: "cpan"
+		, errors: Object.freeze({ type: "croak", range: "croak" }) })
 });
+
+const declaredType = type => {
+	if(type.kind === "primitive") return type.name;
+	if(type.kind === "array") return { array: declaredType(type.element) };
+	assert.equal(type.kind, "record");
+	return { record: type.name, fields: Object.fromEntries(type.fields.map(field => [field.name, declaredType(field.type)])) };
+};
+
+/**
+ * Check named types and positions independently of installed transport results.
+ *
+ * @param library - Expected catalog API.
+ * @param model - Fresh compiler-owned native model, not consumer observations.
+ */
+export const validateCorpusDeclarations = (library, model) => {
+	const declarations = model.exports.map(entry => ({ name: entry.name
+		, parameters: entry.parameters.map(parameter => declaredType(parameter.type))
+		, result: declaredType(entry.result) }));
+	const sorted = items => [...items].sort((a, b) => a.name.localeCompare(b.name));
+	assert.deepEqual(sorted(declarations), sorted(corpusSignatures(library)), "Compiler declarations differ from the independent corpus signatures");
+	return declarations;
+};
 
 /**
  * Reject misspelled, empty or duplicate requested adapters instead of skipping them.
@@ -46,9 +70,14 @@ export const corpusCatalog = inventory => {
 		assert.equal(new Set(library.snakeOperations).size, library.operations.length);
 		assert.ok(library.snakeOperations.every(name => /^[a-z][a-z0-9_]*$/.test(name)));
 		for(const profile of Object.keys(corpusProfiles)) assert.equal(typeof library[`${profile}Module`], "string");
+		assert.equal(corpusSignatures(library).length, library.operations.length);
 		for(const entry of cases.filter(entry => entry.library === library.id))
+		{
+			assert.ok(library.operations.includes(entry.operation));
+			assert.equal(entry.arguments.length, corpusSignatures(library).find(signature => signature.name === `${library.module}.${entry.operation}`).parameters.length);
 			for(const argument of entry.arguments.filter(value => value.record))
 				assert.deepEqual(Object.keys(argument.fields).sort(), [...library.recordFields[argument.record]].sort());
+		}
 	}
 	for(const entry of cases)
 	{
@@ -57,6 +86,14 @@ export const corpusCatalog = inventory => {
 		assert.ok(["value", "float32", "float64"].includes(entry.resultEncoding));
 		assert.ok(entry.expectation.kind === "lean-oracle"
 			|| entry.expectation.kind === "host-rejection" && ["type", "range"].includes(entry.expectation.category));
+		for(const [profile, policy] of Object.entries(entry.hostExpectations))
+		{
+			assert.ok(Object.hasOwn(corpusProfiles, profile));
+			assert.ok(Object.keys(policy).every(key => ["expectation", "oracleKey", "resultEncoding", "rejectionMessage"].includes(key)));
+			const selected = corpusHostCase(entry, profile);
+			if(selected.expectation.kind === "lean-oracle") assert.equal(typeof selected.oracleKey, "string");
+			else assert.ok(typeof selected.rejectionMessage === "string" && selected.rejectionMessage.length > 0);
+		}
 		for(const claim of entry.coverage)
 		{
 			const shape = inventory.shapes.find(shape => shape.id === claim.shape);
@@ -81,11 +118,18 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	assert.equal(actual.schemaVersion, 1);
 	assert.ok(Object.hasOwn(corpusProfiles, actual.profile), "Unknown consumer adapter");
 	assert.equal(actual.module, library[`${actual.profile}Module`]);
-	assert.match(actual.hostVersion, actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
-	assert.deepEqual(Object.keys(oracle).sort(), cases.filter(entry => entry.oracleKey !== null).map(entry => entry.oracleKey).sort());
+	assert.match(actual.hostVersion, actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	if(actual.profile === "perl")
+	{
+		assert.ok(Number(actual.hostVersion.split(".")[1]) >= 36);
+		assert.equal(actual.abi.ptrsize, "8");
+		assert.equal(actual.abi.ivsize, "8");
+		assert.equal(actual.abiKey, sha256(JSON.stringify(JSON.parse(canonicalJson(actual.abi)))));
+	}
+	assert.deepEqual(Object.keys(oracle).sort(), corpusOracleKeys(cases));
 	assert.equal(actual.results.length, cases.length);
 	assert.deepEqual(actual.results.map(entry => entry.id).sort(), cases.map(entry => entry.id).sort());
-	for(const entry of cases)
+	for(const entry of cases.map(entry => corpusHostCase(entry, actual.profile)))
 	{
 		const observed = actual.results.find(result => result.id === entry.id);
 		if(entry.expectation.kind === "lean-oracle")
@@ -98,6 +142,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(`${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
 		}
 	}
@@ -111,7 +156,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
  */
 export const corpusIdentity = async (repository, catalog) => {
 	const paths = ["cases.mjs", "Corpus/Wire.lean", "consumers/python.py"
-		, "consumers/ruby.rb"
+		, "consumers/ruby.rb", "consumers/perl.pl"
 		, ...catalog.libraries.flatMap(library => [library.oracle, `${library.module.replaceAll(".", "/")}.lean`, `${library.pendingModule.replaceAll(".", "/")}.lean`])]
 		.map(path => `tests/fixtures/type-corpus/${path}`);
 	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
@@ -150,6 +195,17 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		assert.equal(run.archive.sha256, run.archiveSha256);
 		assert.equal(run.archive.target, corpusProfiles[run.profile].target);
 		assert.equal(run.observation.profile, run.profile);
+		assert.match(run.declarationEvidence.modelSha256, /^[a-f0-9]{64}$/);
+		const sorted = items => [...items].sort((a, b) => a.name.localeCompare(b.name));
+		assert.deepEqual(sorted(run.declarationEvidence.signatures), sorted(corpusSignatures(library)));
+		if(run.profile === "perl")
+		{
+			assert.equal(run.runtimeArchive.target, "cpan");
+			assert.match(run.runtimeArchive.sha256, /^[a-f0-9]{64}$/);
+			assert.notEqual(run.runtimeArchive.sha256, run.archiveSha256);
+			assert.deepEqual(run.observation.abi, run.perlAbi.abi);
+			assert.equal(run.observation.abiKey, run.perlAbi.abiKey);
+		}
 		const cases = catalog.cases.filter(entry => entry.library === run.library);
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
 		for(const entry of cases)
