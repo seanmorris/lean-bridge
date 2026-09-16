@@ -19,6 +19,7 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
+import { assertPackagedMetadata, packageMetadataFixture } from "./helpers/package-metadata.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_MULTI_PROFILE_TEST === "1";
 const engineRoot = process.cwd(), json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -140,6 +141,7 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	const path = await customLakeRoot(context);
 	await elaboratedLakeApi(context, path);
 	const config = await json(join(context.root, "lean-bridge.exports.json"));
+	config.package = packageMetadataFixture(variant);
 	const operation = `${context.names.root}.${context.names.operation}`;
 	const copy = { ownership: "copy", lifetime: null };
 	config.contracts = { [operation]: { parameters: [copy], result: copy, effects: [] } };
@@ -187,7 +189,8 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		, `Nested source notice fixture: ${context.names.root}\n`
 		, `Source notice fixture: ${context.names.local}\n`
 		, `Source notice fixture: ${context.names.remote}\n`
-	]);
+	], true);
+	await assertPackagedMetadata(builds[0].output, config.package);
 	await assertRelocatedPackageSet(t, builds[0].output);
 	await assertRelocatedPackageSet(t, join(builds[0].output, "profiles/native"));
 	await assertRelocatedPackageSet(t, join(builds[0].output, "packages/npm"));

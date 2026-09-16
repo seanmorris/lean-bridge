@@ -24,6 +24,7 @@ import { buildComponentReleaseBundle } from "../src/release/component-release-bu
 import { buildComponentNpmPackages } from "../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { packageMetadataFixture } from "./helpers/package-metadata.mjs";
 
 const execute = promisify(execFile);
 
@@ -66,6 +67,7 @@ test("sealed npm settings and export selection reach the exact installed public 
 	await cp("tests/fixtures/onboarding/small", projectRoot, { recursive: true });
 	await writeFile(join(projectRoot, "lean-bridge.exports.json"), JSON.stringify({
 		schemaVersion: 1, exports: ["OnboardingSmall.add"]
+		, package: packageMetadataFixture("small")
 		, targets: { npm: { name: "@example/_math", version: "2.3.4-beta.1" } }
 	}));
 	const config = await readFile(join(projectRoot, "lean-bridge.exports.json"));
@@ -86,6 +88,14 @@ test("sealed npm settings and export selection reach the exact installed public 
 	const metadata = JSON.parse(await readFile(join(prepared.output, "component/package/package.json"), "utf8"));
 	assert.equal(metadata.name, "@example/_math");
 	assert.equal(metadata.version, "2.3.4-beta.1");
+	const declared = packageMetadataFixture("small");
+	assert.equal(metadata.description, declared.description);
+	assert.deepEqual([metadata.author, ...metadata.contributors], declared.authors);
+	assert.equal(metadata.homepage, declared.homepage);
+	assert.equal(metadata.repository.url, declared.repository);
+	const runtimeMetadata = JSON.parse(await readFile(join(prepared.output, "runtime/package/package.json"), "utf8"));
+	assert.notEqual(runtimeMetadata.description, declared.description);
+	assert.equal(runtimeMetadata.author, undefined);
 	assert.equal(metadata.leanBridge.component, "onboarding-small@1.0.0");
 	assert.equal(metadata.leanBridge.sharedRuntime, true);
 	assert.deepEqual(await readFile(join(prepared.output, "component/package/metadata/lean-bridge.exports.json")), config);

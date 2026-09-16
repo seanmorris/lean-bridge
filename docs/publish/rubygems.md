@@ -2,6 +2,8 @@
 
 Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all 16 primitive types, nested arrays and acyclic copied records. Consumers install the package without compiling Lean or writing native conversions.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
 ## Build an ordinary Lean project

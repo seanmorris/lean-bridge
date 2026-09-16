@@ -70,7 +70,7 @@ const evidenceFor = async root => {
 	equal(bundle.component, receipt.component, "Bundle and package name different components");
 	const configBytes = inventory.get(`bundle/source/${exportConfigurationFile}`)?.bytes;
 	const configuration = configBytes ? JSON.parse(configBytes) : { schemaVersion: 1 };
-	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
 	equal(receipt.package.package, componentNpmIdentity(bundle.component, configuration.targets?.npm).coordinate,
 		"npm package coordinate differs from the bundled author configuration");
 	equal(bundle.files.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })).sort((left, right) => left.path.localeCompare(right.path)),
@@ -85,6 +85,9 @@ const evidenceFor = async root => {
 	])
 		if(sha256(inventory.get(`bundle/${path}`).bytes) !== expected) fail("Package receipt differs from the bundled evidence");
 	const buildPlan = JSON.parse(inventory.get("bundle/locks/component-build-plan.json").bytes);
+	const configurationInput = buildPlan.source.inputs.find(item => item.path === exportConfigurationFile);
+	if(configurationInput ? !configBytes || configBytes.length !== configurationInput.bytes || sha256(configBytes) !== configurationInput.sha256 : configBytes)
+		fail("Component export configuration differs from the captured source bytes");
 	const sbom = JSON.parse(inventory.get("bundle/metadata/sbom.json").bytes);
 	equal(sbom.component, bundle.component, "SBOM names a different component");
 	equal(sbom.runtime, JSON.parse(inventory.get("bundle/metadata/runtime-requirement.json").bytes), "SBOM runtime differs from the bundle");

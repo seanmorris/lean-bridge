@@ -38,6 +38,7 @@ Analysis leaves the author checkout unchanged. Compilation and configured genera
 | [`native-types.mjs`](native-types.mjs) | Validates native structural types, compiler representations and copied-value restrictions. |
 | [`native-metadata.mjs`](native-metadata.mjs) | Binds the shared native report to retained compiler/source evidence and projects the selected API for CPAN. |
 | [`export-configuration.mjs`](export-configuration.mjs) | Validates shared source configuration, canonicalizes compiler selections, and checks declared contracts against implemented adapter rules. |
+| [`package-metadata.mjs`](package-metadata.mjs) | Validates shared publisher metadata, binds retained declarations to captured source bytes, and projects registry fields. |
 | [`project-elaborated.mjs`](project-elaborated.mjs) | Copies structural compiler types into Binding IR, retaining documentation and theorem references without adding assurance claims. |
 | [`policy.mjs`](policy.mjs) | Validates built-in or supplied policy, normalizes it, computes identity, and evaluates a result. |
 | [`output.mjs`](output.mjs) | Writes machine-readable files to an explicitly selected output directory. |

@@ -13,6 +13,7 @@ import { generateCopiedJvmPackage } from "../backends/jvm/copied-values.mjs";
 import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { compiledPackageMetadata, mavenPackageMetadata } from "../analyze/package-metadata.mjs";
 
 /**
  * Assemble reproducible Maven JAR and POM files from verified compiled inputs.
@@ -62,7 +63,7 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`META-INF/lean-bridge/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "META-INF/lean-bridge/licenses/LeanBridge-LICENSE");
 	await save("README.md", `# ${name}:${version}\n\nRequires glibc ${glibcMinimumVersion} or newer.\n\n${await readFile(join(jvmRoot, "README.md"), "utf8")}`);
-	const pom = `<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version><description>Compiled Lean API with generated Java conversions and native runtime.</description><properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties></project>\n`;
+	const pom = `<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(compiledPackageMetadata(model.sourceIdentity))}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties></project>\n`;
 	await save(`META-INF/maven/${group}/${artifact}/pom.xml`, pom);
 	await save("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n\n");
 	const inventory = {};

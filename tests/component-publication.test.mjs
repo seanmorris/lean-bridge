@@ -24,6 +24,7 @@ import { parseCliArguments } from "../src/cli/contract.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { collectReleaseInventory, hashReleaseInventory } from "../src/release/reproducibility.mjs";
 import { verifyComponentPublication } from "../src/release/component-publication.mjs";
+import { packageMetadataFixture } from "./helpers/package-metadata.mjs";
 
 const execute = promisify(execFile);
 const externalEngine = process.env.LEAN_BRIDGE_LAKE_ENGINE;
@@ -84,6 +85,7 @@ test("ordinary component evidence signs, publishes, resumes, and rejects byte or
 	await writeFile(join(project, "copyright.txt"), "Library attribution fixture.\n");
 	await writeFile(join(project, "lean-bridge.exports.json"), canonicalJson({
 		schemaVersion: 1
+		, package: packageMetadataFixture("signed")
 		, targets: { npm: { name: "@example/verified-math", version: "2.3.4-beta.1" } }
 	}));
 	await execute("git", ["init", "--quiet"], { cwd: project });
@@ -106,6 +108,9 @@ test("ordinary component evidence signs, publishes, resumes, and rejects byte or
 	assert.equal(verified.manifest.targets[0].name, "@example/verified-math");
 	assert.equal(verified.manifest.targets[0].version, "2.3.4-beta.1");
 	assert.equal(verified.manifest.targets[0].coordinate, "@example/verified-math@2.3.4-beta.1");
+	const publishedMetadata = JSON.parse((await execute("tar", ["-xOf", result.packages.component, "package/package.json"])).stdout);
+	assert.equal(publishedMetadata.description, packageMetadataFixture("signed").description);
+	assert.deepEqual(publishedMetadata.author, packageMetadataFixture("signed").authors[0]);
 	for(const [source, packaged] of [["legal/licence.md", "notices/source/legal/licence.md"], ["legal/NOTICE.txt", "notices/source/legal/NOTICE.txt"], ["copyright.txt", "copyright.txt"]])
 		assert.equal((await execute("tar", ["-xOf", result.packages.component, `package/${packaged}`])).stdout, await readFile(join(project, source), "utf8"));
 	// Even self-consistent unsigned evidence cannot substitute a different npm name.
@@ -134,9 +139,11 @@ test("ordinary component evidence signs, publishes, resumes, and rejects byte or
 	const emptyNoticePath = join(gate, "release/bundle/source/legal/NOTICE.txt");
 	const sourceLicensePath = join(gate, "release/bundle/source/legal/licence.md");
 	const metadataPath = join(gate, "release/bundle/source/package.json");
+	const configurationPath = join(gate, "release/bundle/source/lean-bridge.exports.json");
 	const retained = new Map(await Promise.all([
 		receiptPath, reportPath, sbomPath, emptyNoticePath, sourceLicensePath
-		, metadataPath, join(gate, "release/bundle/component-release-bundle.json")
+		, metadataPath, configurationPath
+		, join(gate, "release/bundle/component-release-bundle.json")
 	].map(async path => [path, await readFile(path)])));
 	for(const [label, mutate, expected] of [
 		["omitted notice", sbom => { sbom.notices.pop(); }, /notices differ from the captured source inventory/]
@@ -147,6 +154,14 @@ test("ordinary component evidence signs, publishes, resumes, and rejects byte or
 		, ["missing empty notice", () => rm(emptyNoticePath), /notice differs from the captured source bytes/]
 		, ["changed license bytes", () => writeFile(sourceLicensePath, "changed"), /notice differs from the captured source bytes/]
 		, ["changed license declaration", () => writeFile(metadataPath, canonicalJson({ license: "Apache-2.0" })), /package.json differs from the captured source bytes/]
+		, ["changed publisher declaration"
+			, () => {
+			const configuration = JSON.parse(retained.get(configurationPath));
+			configuration.package.description = "Substituted description";
+			return writeFile(configurationPath, canonicalJson(configuration));
+			}
+			, /export configuration differs from the captured source bytes/]
+		, ["missing publisher declaration", () => rm(configurationPath), /npm package coordinate differs|export configuration differs/]
 	]) await t.test(`resealed evidence rejects ${label}`, async () => {
 		try
 		{

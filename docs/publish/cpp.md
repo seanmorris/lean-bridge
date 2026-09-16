@@ -2,6 +2,8 @@
 
 Prepare C++20 wrappers, C bindings, native libraries, and CMake metadata, then distribute the original archive through a release page or artifact server.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 ## Build an ordinary Lean project
 
 Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. Select `--target c --target cpp` to produce both archives from one native compilation. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.

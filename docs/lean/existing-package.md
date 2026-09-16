@@ -48,6 +48,10 @@ Native CPAN uses the same [compiler report](../architecture/elaborated-export-me
 
 The npm builder accepts shared module/export selection, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors or contracts currently produces an explicit error.
 
+### Describe the downstream packages
+
+Add a shared `package` object for the library's description, authors, homepage and repository. Ordinary npm, native and PHP-Wasm builds all use it. The [package metadata guide](../publishing.md#declare-package-metadata) lists the fields and their mapping to each ecosystem. Keep target names and versions under `targets`; descriptive metadata does not select build targets or replace export decisions.
+
 ### Export concrete specializations
 
 For npm, CPAN, C or C++, select concrete versions of a generic function without adding wrappers to the Lean library. Given this definition in `Library.lean`:

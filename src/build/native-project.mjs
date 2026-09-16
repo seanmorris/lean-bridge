@@ -43,7 +43,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	const config = record.configuration;
 	for(const target of targets)
 	{
-		assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 		if(target === "nuget") validateOrdinaryNugetSettings(config.targets?.[target]);
 		else if(target === "maven") validateOrdinaryMavenSettings(config.targets?.[target]);
 		else if(target === "rubygems") validateOrdinaryRubySettings(config.targets?.[target]);

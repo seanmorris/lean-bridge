@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
+import { validatePackageMetadata } from "./package-metadata.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -58,8 +59,14 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
+	if(configuration.package !== undefined)
+	{
+		try
+		{ validatePackageMetadata(configuration.package); } catch(error)
+		{ fail("invalid-export-configuration", error.message); }
+	}
 	if(configuration.generators !== undefined) validateGeneratorConfiguration(configuration.generators);
 	if(configuration.contracts !== undefined)
 	{

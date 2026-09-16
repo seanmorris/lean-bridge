@@ -12,6 +12,7 @@ import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryRustEvidence } from "./native-rust-artifacts.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOrdinaryCargo } from "../release/native-cargo.mjs";
+import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 
 /**
  * Compile-check Rust only. Lean and the C adapter are already compiled.
@@ -31,7 +32,7 @@ export const projectOrdinaryRust = async ({ working, nativeRoot, runtimeRoot, ad
 	const { model, projection, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const name = settings.name ?? `lean_bridge_${projection.surface.prefix}`, version = settings.version ?? model.component.version;
 	const root = join(working, "native/rust"), scratch = join(working, "rust-compiler");
-	const files = generateCopiedRustPackage(model.bindingIr, evidence, { name, version });
+	const files = generateCopiedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) });
 	auditRustPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	for(const [path, contents] of Object.entries(files)) await save(path, contents);

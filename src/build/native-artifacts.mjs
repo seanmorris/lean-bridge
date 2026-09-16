@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
+import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 
 /**
  * List regular payload files and reject symlinks and special filesystem entries.
@@ -108,6 +109,7 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity)
 	const bytes = await readFile(join(root, receipt.library));
 	validateNativeElf(bytes);
 	if(receipt.nativeLibrary.sha256 !== sha256(bytes) || receipt.nativeLibrary.bytes !== bytes.length) throw new Error("native component binary drift");
-	await readVerifiedSourceNotices(root, receipt.sourceIdentity);
+	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
+	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	return { model, receipt };
 }

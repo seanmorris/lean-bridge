@@ -14,6 +14,7 @@ import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { compiledPackageMetadata, composerPackageMetadata, npmPackageMetadata } from "../analyze/package-metadata.mjs";
 
 const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
@@ -29,6 +30,7 @@ const settings = (value, label) => {
 };
 
 const sources = async ({ model, receipt, runtime, npmSettings, composerSettings, notices, sourceNotices }) => {
+	const metadata = compiledPackageMetadata(model.sourceIdentity);
 	settings(npmSettings, "npm"); settings(composerSettings, "Composer");
 	const localVersion = model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version;
 	const npm = componentNpmIdentity({ name: `php-wasm-${model.component.name}`, version: localVersion }, npmSettings);
@@ -55,8 +57,8 @@ export const { getLibs, getFiles, extensions, autoload, lazy } = descriptor;
 export default descriptor;
 `;
 	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
-	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
-	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, require: { php: ">=8.4 <8.5" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
+	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, ...npmPackageMetadata(metadata), exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
+	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
 	const readme = `# ${model.component.name} for PHP-Wasm
 
 Import this package's default descriptor and include it in PHP-Wasm's \`sharedLibs\` array. npm installs the matching Lean runtime dependency. The descriptor registers that runtime once per PHP host and mounts the generated PHP files.
@@ -88,7 +90,7 @@ This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node
 			, "component/package/README.md": readme
 			, "component/package/lazy-library.txt": definition.library
 			, "composer/composer.json": json(composerPackage)
-			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256 })
+			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity })
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

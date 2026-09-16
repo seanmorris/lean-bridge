@@ -2,6 +2,8 @@
 
 Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. The separate Alpha projection remains available for its resource and callback fixture.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 Upload the generated platform wheel with Twine, then download and verify that same file before running the Python consumer. Twine uploads existing distribution files without rebuilding them. This guide uses TestPyPI for the operator-authorized registry exercise. [Twine documentation](https://twine.readthedocs.io/en/stable/).
 
 ## Build an ordinary Lean project

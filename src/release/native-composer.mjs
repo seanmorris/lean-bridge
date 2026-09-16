@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { compiledPackageMetadata, composerPackageMetadata } from "../analyze/package-metadata.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryPhpEvidence } from "../build/native-php-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -46,7 +47,7 @@ export const packageOrdinaryPhp = async options => {
 	await copy(join(leanPrefix, "LICENSES"), "licenses/Lean-LICENSES");
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "licenses/LeanBridge-LICENSE");
-	const composer = { name, version, type: "library", description: "Compiled Lean API with generated PHP copied-value conversions", require: { php: ">=8.2 <9", "ext-ffi": "*" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile: "ordinary-php-cli-ffi-v1", platform: "linux-x86_64", glibcMinimumVersion, namespace: projection.namespace, licenses: "licenses/" } } };
+	const composer = { name, version, type: "library", description: "Compiled Lean API with generated PHP copied-value conversions", ...composerPackageMetadata(compiledPackageMetadata(model.sourceIdentity)), require: { php: ">=8.2 <9", "ext-ffi": "*" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile: "ordinary-php-cli-ffi-v1", platform: "linux-x86_64", glibcMinimumVersion, namespace: projection.namespace, licenses: "licenses/" } } };
 	await save("composer.json", canonicalJson(composer));
 	for(const path of Object.keys(files).filter(path => path.endsWith(".php")))
 		await processBuildRunner.capture({ command: environment.LEAN_BRIDGE_PHP ?? "php", args: ["-n", "-l", path], cwd: root, env: environment, signal });

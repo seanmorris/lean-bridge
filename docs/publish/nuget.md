@@ -2,6 +2,8 @@
 
 Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 16 primitive types, nested arrays, and acyclic copied records. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 Build the NuGet projection, test the installed C# API, and upload the approved `.nupkg` to a feed controlled by your organization. Use a sandbox feed and sandbox credentials for the first external run.
 
 ## Build an ordinary Lean project

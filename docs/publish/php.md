@@ -2,6 +2,8 @@
 
 Build an ordinary Lake project with `--target php-native` for native PHP, or `--target php-wasm` for PHP hosted by Node or Chromium. The Alpha recipes below retain their separate Zend and loading profiles.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 | Host | Build inputs | Package manager |
 | --- | --- | --- |
 | Ordinary PHP 8.2+ NTS CLI | Ordinary Lean source, the C author toolchain and PHP for syntax checks | Composer ZIP with bundled native libraries and automatic FFI loading |

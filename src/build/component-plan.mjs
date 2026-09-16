@@ -162,7 +162,7 @@ export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targe
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const selected = (targets.length ? targets : ["npm"]).map(target => target === "javascript" ? "npm" : target);
 	for(const target of selected)
-		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["modules", "exports", "generators", "specializations", "contracts"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["package", "modules", "exports", "generators", "specializations", "contracts"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)

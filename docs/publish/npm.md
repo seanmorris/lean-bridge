@@ -2,6 +2,8 @@
 
 An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and upload its exact npm archive. Consumers install the component; npm resolves its shared runtime automatically.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 ## Build with locked Lake dependencies
 
 Keep the project's reviewed `lake-manifest.json` and exact `lean-toolchain` in source control. Populate its dependency cache during normal Lean development before invoking the bridge. Git entries must identify full commits, and cached checkouts must match those pins without modified or untracked source files. Local path dependencies must be relative and available when you start the build.

@@ -15,6 +15,7 @@ import { buildPhpWasmCopiedRuntime } from "../src/build/php-wasm-copied-componen
 import { phpWasmCopiedPins as pins } from "../src/build/php-wasm-copied-artifacts.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
+import { assertPackagedMetadata, packageMetadataFixture } from "./helpers/package-metadata.mjs";
 import { buildPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST === "1";
@@ -25,6 +26,7 @@ test("PHP-Wasm combines atomically with either or both native PHP and JavaScript
 	const context = await lakeWorkspaceFixture(t, "telemetry"), engineRoot = process.cwd();
 	await elaboratedLakeApi(context, await customLakeRoot(context));
 	const config = await json(join(context.root, "lean-bridge.exports.json"));
+	config.package = packageMetadataFixture("telemetry");
 	config.targets.npm = { name: "@example/telemetry", version: "2.0.0" };
 	config.targets["php-native"] = { name: "example/telemetry-native", version: "2.0.0" };
 	config.targets["php-wasm"] = { npm: { name: "@example/telemetry-php-wasm", version: "2.0.0" }, composer: { name: "example/telemetry-wasm", version: "2.0.0" } };
@@ -81,6 +83,7 @@ test("PHP-Wasm combines atomically with either or both native PHP and JavaScript
 	assert.deepEqual(await json(join(builds[0].output, "package-set-receipt.json")), await json(join(builds[1].output, "package-set-receipt.json")));
 	assert.deepEqual(await lakeInputState(context.workspace), before); assert.deepEqual(await lakeInputState(relocated), movedBefore);
 	await rename(context.workspace, `${context.workspace}-hidden`); await rename(relocated, `${relocated}-hidden`);
+	await assertPackagedMetadata(builds[0].output, config.package);
 	for(const [index, built] of builds.entries())
 	{
 		await assertRelocatedPackageSet(t, built.output);

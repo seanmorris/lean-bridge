@@ -23,6 +23,20 @@ const documents = [
 const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/gm)]
 	.map(match => ({ language: match[1], source: match[2] }));
 
+test("shared publisher metadata is documented for every ordinary package format", async () => {
+	const source = await readFile("docs/publishing.md", "utf8");
+	const metadata = source.split("## Declare package metadata\n")[1].split("## Retain library and dependency licenses\n")[0];
+	const configuration = JSON.parse(fences(metadata).find(block => block.language === "json").source);
+	validateExportConfiguration(configuration);
+	assert.deepEqual(Object.keys(configuration.package).sort(), ["authors", "description", "homepage", "repository"]);
+	for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "CPAN", "Composer", "native PHP", "PHP-Wasm", "C, C++, WIT/WASI"])
+		assert.ok(metadata.includes(name), name);
+	assert.match(metadata, /sourceIdentity.exportConfigurationSource/);
+	assert.match(metadata, /Shared-runtime packages keep their own metadata/);
+	assert.match(source, /`package` does not accept a `license` field yet/);
+	assert.match(await readFile("docs/lean/existing-package.md", "utf8"), /publishing.md#declare-package-metadata/);
+});
+
 test("the npm author guide uses validated shared settings without renaming the Lean component", async () => {
 	const source = await readFile("docs/publish/npm.md", "utf8");
 	const settings = JSON.parse(fences(source.split("### Choose the npm name and version\n")[1]).find(block => block.language === "json").source);

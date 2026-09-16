@@ -22,6 +22,50 @@ Ordinary source builds and package projections are different stages. The Alpha r
 
 Repeat `--target` to build from one captured source tree. Lean compiles once per required ABI: native for CPAN/C/C++/NuGet/Maven/RubyGems/WIT/PyPI/Cargo/native PHP, JavaScript-Wasm for npm, and separately for PHP-Wasm. Every selected target must admit the API and succeed before the release directory appears. Keep package settings in the same [source export configuration](lean/existing-package.md#configure-exports).
 
+## Declare package metadata
+
+Set `package` once in the source project's `lean-bridge.exports.json`. It applies to every selected ordinary-source target; names and versions stay under `targets`.
+
+```json
+{
+  "schemaVersion": 1,
+  "package": {
+    "description": "Checked inventory and pricing calculations.",
+    "authors": [
+      { "name": "Your library team", "email": "packages@example.org", "url": "https://example.org/team" }
+    ],
+    "homepage": "https://example.org/library",
+    "repository": "https://github.com/your-org/your-library"
+  },
+  "targets": {
+    "npm": { "name": "@your-org/your-library", "version": "1.0.0" },
+    "pypi": { "name": "your-library", "version": "1.0.0" }
+  }
+}
+```
+
+All four fields are optional. `description` is a single line of at most 512 UTF-8 bytes. `authors` contains one to 32 people or organizations, each with a required `name` of at most 128 bytes and optional `email` and `url`. URLs must use HTTPS, contain no credentials, query or fragment, and fit within 1024 bytes. `repository` is the public HTTPS URL of the Git repository. Unknown fields, duplicate authors, control characters and malformed values stop the build. The [configuration schema](../schema/lean-export-configuration.schema.json) describes the structure; validation also checks UTF-8 byte limits.
+
+| Target | Generated fields |
+| --- | --- |
+| npm, including PHP-Wasm | `description`, first author in `author`, remaining authors in `contributors`, `homepage`, `repository` |
+| PyPI | `Summary`, `Author` for names without email, `Author-email` for mailboxes, `Home-page`, `Project-URL: Source` |
+| Cargo | `description`, `authors`, `homepage`, `repository` |
+| NuGet | `description`, author names in `authors`, `projectUrl`, `repository` |
+| Maven | `description`, `developers`, `url`, `scm` |
+| RubyGems | `summary`, `authors`, `email`, `homepage`, `metadata.source_code_uri` |
+| CPAN | `abstract`, `author`, `resources.homepage`, `resources.repository`; installation retains these in `MYMETA` |
+| Composer, native PHP and PHP-Wasm | `description`, `authors` with author URLs in `homepage`, package `homepage`, `support.source` |
+| C, C++, WIT/WASI | Root `package-metadata.json` with the complete shared declaration |
+
+The npm bundle retains the source configuration. Native and PHP-Wasm receipts retain its exact text in `sourceIdentity.exportConfigurationSource`, checked against the captured source hash and configuration hash before packaging. Formats with fewer author fields still retain the original declaration in their compiled provenance. Package assembly needs no live source checkout. Shared-runtime packages keep their own metadata.
+
+These values come from `lean-bridge.exports.json`, not from Git settings, a developer's environment, or Lake's descriptive fields. When omitted, optional fields stay absent; required author fields use `Author not declared`. The separate reviewed Alpha recipes keep their existing metadata.
+
+The [metadata acceptance record](evidence/package-metadata-20260916.md) covers independent archive inspection, relocated installations, exact source checks and shared-runtime ownership.
+
+The field mappings follow the registry specifications: [npm package.json](https://docs.npmjs.com/cli/v11/configuring-npm/package-json), [Python core metadata](https://packaging.python.org/en/latest/specifications/core-metadata/), [Cargo manifests](https://doc.rust-lang.org/cargo/reference/manifest.html), [NuGet nuspec](https://learn.microsoft.com/en-us/nuget/reference/nuspec), [Maven POM](https://maven.apache.org/pom.html), [RubyGems gemspec](https://guides.rubygems.org/specification-reference/), [CPAN metadata](https://metacpan.org/pod/CPAN::Meta::Spec), and [Composer schema](https://getcomposer.org/doc/04-schema.md).
+
 ## Retain library and dependency licenses
 
 Keep your library's license and redistribution notices in its source tree, and retain those supplied by its Lake dependencies. Lean Bridge captures files named `LICENSE`, `LICENCE`, `LICENSES`, `NOTICE`, `NOTICES`, `COPYING` or `COPYRIGHT`, including case variations, suffixed filenames and nested paths. It also captures files inside `LICENSES/` directories. Lean source and other code files do not become notices merely because they are named `Notice.lean` or `License.js`.
@@ -41,7 +85,7 @@ Each inventory points to `source-notices/<sha256>.txt` beside it. The payload re
 
 Ordinary JavaScript npm packages retain root notice filenames, nested root notices under `notices/source/`, and dependency notices under `notices/lake/`. Their `sbom.json` records the root notices, and `package.json` takes its license declaration from the source project's `package.json`.
 
-Native and PHP-Wasm metadata does not yet project a library-wide license expression, author or repository declaration. CPAN uses `unknown` for the component license; Cargo leaves its license field unset. Required author fields use `Author not declared`. Complete that publisher-metadata review before a registry release. Capturing notice files does not determine which license terms apply to a combined package.
+Native and PHP-Wasm metadata does not yet project a library-wide license expression. CPAN uses `unknown` for the component license; Cargo leaves its license field unset. `package` does not accept a `license` field yet. Complete that license review before a registry release. Capturing notice files does not determine which license terms apply to a combined package.
 
 ## Build and approve the same artifacts
 

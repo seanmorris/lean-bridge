@@ -12,6 +12,7 @@ import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { createNativeModel } from "../build/native-model.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -77,6 +78,7 @@ export const stageCpanPackage = async ({ outputRoot
 	const runtimeIdentity = sha256(canonicalJson(binding));
 	void leanPrefix;
 	let moduleName = "LeanBridge::Runtime", xs = "Runtime.xs", include = "lib/LeanBridge/Runtime/include";
+	let packageMetadata = {};
 	if(componentRoot)
 	{
 		const model = JSON.parse(await readFile(join(componentRoot, "model.json"), "utf8"));
@@ -94,7 +96,9 @@ export const stageCpanPackage = async ({ outputRoot
 		if(!/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("invalid native component library path");
 		if(receipt.runtimeIdentity !== nativeRuntimeIdentity) throw new Error("component and runtime identities differ");
 		if(sha256(await readFile(join(componentRoot, receipt.library))) !== receipt.nativeLibrary.sha256) throw new Error("corrupt native component");
-		for(const [path, bytes] of (await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity)).files)
+		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
+		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
+		for(const [path, bytes] of sourceNotices.files)
 			await save(join(directory, "notices", path), bytes);
 		moduleName = model.moduleName; xs = "Component.xs"; include = ".";
 		const files = generatePerlBindingPackage(model, { ...receipt, runtimeIdentity }), relative = moduleName.replaceAll("::", "/");
@@ -137,6 +141,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, version
 		, abstract: "Generated native Lean bindings"
 		, author: [componentRoot ? "Author not declared" : "Lean Bridge contributors"]
+		, ...cpanPackageMetadata(packageMetadata)
 		, license: [componentRoot ? "unknown" : "mit"]
 		, dynamic_config: true
 		, release_status: version.includes("_") ? "testing" : "stable"

@@ -138,8 +138,8 @@ export const buildMultiProfileProject = async ({
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
 	for(const target of nativeTargets)
-		assertExportConfigurationCapabilities(record.configuration, { target, fields: ["modules", "exports", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
-	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["modules", "exports", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: ["package", "modules", "exports", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected ? "build" : "analysis" });
 	const runtimeRoot = npmSelected ? await resolveComponentRuntimeRoot({ engineRoot, environment }) : null;
 	await mkdir(dirname(output), { recursive: true });

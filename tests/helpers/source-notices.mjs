@@ -16,8 +16,9 @@ import { isSourceNotice } from "../../src/release/source-notices.mjs";
  * @param t - Cleanup and diagnostic context.
  * @param root - Completed release root containing a package-set receipt.
  * @param expected - Distinct exact notice texts from the fixture's inputs.
+ * @param metadataDeclared - Whether the fixture declares its own authors and URLs.
  */
-export const assertPackagedSourceNotices = async (t, root, expected) => {
+export const assertPackagedSourceNotices = async (t, root, expected, metadataDeclared = false) => {
 	const receipt = JSON.parse(await readFile(join(root, "package-set-receipt.json"), "utf8"));
 	const run = async (command, args) => (await processBuildRunner.capture({ command, args })).stdout;
 	for(const pkg of receipt.packages) for(const artifact of pkg.artifacts)
@@ -41,8 +42,11 @@ export const assertPackagedSourceNotices = async (t, root, expected) => {
 		{
 			const metadata = JSON.parse(await read(paths.find(path => path.endsWith("/META.json"))));
 			assert.deepEqual(metadata.license, ["unknown"]);
-			assert.deepEqual(metadata.author, ["Author not declared"]);
-			assert.equal(metadata.resources, undefined);
+			if(!metadataDeclared)
+			{
+				assert.deepEqual(metadata.author, ["Author not declared"]);
+				assert.equal(metadata.resources, undefined);
+			}
 		}
 		if(pkg.target === "cargo") assert.doesNotMatch(await read(paths.find(path => path.endsWith("/Cargo.toml"))), /^license(?:-file)?\s*=/m);
 	}

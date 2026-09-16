@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -57,18 +58,21 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
 	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, kind: "lean-bridge-ordinary-rubygems-package", ecosystem: "rubygems", name, version, component: model.component, namespace: projection.namespace, requirePath: projection.requirePath, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, files: inventory }));
 	const entries = await nativeArtifactPaths(root), spec = `${name}.gemspec`, archive = `${name}-${version}-x86_64-linux.gem`;
+	const metadata = compiledPackageMetadata(model.sourceIdentity);
 	await save(spec, `Gem::Specification.new do |spec|
   spec.name = ${rubyLiteral(name)}
   spec.version = ${rubyLiteral(version)}
-  spec.summary = "Compiled Lean API with generated Ruby copied-value conversions"
-  spec.authors = ["Author not declared"]
+  spec.summary = ${rubyLiteral(metadata.description ?? "Compiled Lean API with generated Ruby copied-value conversions")}
+  spec.authors = ${rubyLiteral(metadata.authors?.map(author => author.name) ?? ["Author not declared"])}
+  spec.email = ${rubyLiteral(metadata.authors?.flatMap(author => author.email ? [author.email] : []) ?? [])}
+${metadata.homepage ? `  spec.homepage = ${rubyLiteral(metadata.homepage)}\n` : ""}\
   spec.license = "Nonstandard"
   spec.date = "1970-01-01"
   spec.platform = Gem::Platform.new("x86_64-linux")
   spec.required_ruby_version = "~> 3.3.0"
   spec.files = ${rubyLiteral(entries)}
   spec.require_paths = ["lib"]
-  spec.metadata = { "lean_bridge_component" => ${rubyLiteral(model.component.id)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(model.bindingIrSha256)} }
+  spec.metadata = { "lean_bridge_component" => ${rubyLiteral(model.component.id)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(model.bindingIrSha256)}${metadata.repository ? `, "source_code_uri" => ${rubyLiteral(metadata.repository)}` : ""} }
 end
 `);
 	const env = { ...environment, SOURCE_DATE_EPOCH: "1" };

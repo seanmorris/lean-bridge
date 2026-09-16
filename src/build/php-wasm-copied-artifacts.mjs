@@ -10,6 +10,7 @@ import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
 import { generateCopiedPhpZendAdapter } from "../backends/php/copied-zend.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
+import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 
 export const phpWasmCopiedProfile = "php-wasm-copied-v1";
 export const phpWasmCopiedCompilerFiles = Object.freeze(["upstream/emscripten/emcc", "upstream/emscripten/em++.py", "upstream/emscripten/emcc.py", "upstream/emscripten/tools/link.py", "upstream/bin/clang", "upstream/bin/wasm-ld"]);
@@ -126,6 +127,7 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	const bytes = await readFile(join(root, receipt.library));
 	if(!same(receipt.wasmLibrary, file(bytes))) throw new Error("PHP-Wasm component binary drift");
 	await validatePhpWasmCopiedBinary(bytes, true);
-	await readVerifiedSourceNotices(root, receipt.sourceIdentity);
+	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
+	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	return { model, receipt };
 };

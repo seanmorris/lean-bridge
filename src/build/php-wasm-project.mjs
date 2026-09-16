@@ -44,7 +44,7 @@ export const buildPhpWasmProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "PHP-Wasm output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["modules", "exports", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
+	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
 	const config = record.configuration.targets?.["php-wasm"] ?? {};
 	// Source-only capture admits declarations; the wasm32 compiler admits types.
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis" });

@@ -7,6 +7,7 @@
 	],
 	"deferred": [
 		{ "path": "src/release/source-notices.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/analyze/package-metadata.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/php-wasm-compiler-inputs.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/package-set-assembly.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/package-set-receipt.mjs", "classification": "strict-migration-backlog" },

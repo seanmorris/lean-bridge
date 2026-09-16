@@ -146,6 +146,8 @@ sub configure {
   WriteMakefile(NAME => $manifest->{module}, VERSION => $manifest->{version},
     ABSTRACT => $metadata->{abstract}, AUTHOR => join(', ', @{$metadata->{author}}),
     LICENSE => $metadata->{license}[0], MIN_PERL_VERSION => '5.036',
+    META_MERGE => { 'meta-spec' => { version => 2 },
+      (exists $metadata->{resources} ? (resources => $metadata->{resources}) : ()) },
     PREREQ_PM => { 'Math::BigInt' => 0, 'JSON::PP' => 0, 'Digest::SHA' => 0,
       ($manifest->{module} eq 'LeanBridge::Runtime' ? () : ('LeanBridge::Runtime' => $manifest->{runtimeVersion})) },
     PM => \%pm, XS => {}, C => [], OBJECT => '', NO_META => 1,

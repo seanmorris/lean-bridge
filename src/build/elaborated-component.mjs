@@ -88,7 +88,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
 		for(const target of targets)
-			assertExportConfigurationCapabilities(config, { target, fields: ["modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : ["name", "version"] });
+			assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : ["name", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
@@ -215,6 +215,8 @@ export const buildElaboratedComponent = async ({ projectRoot
 			}
 		};
 		const metadata = await extractMetadata();
+		const exportConfigurationSource = record.path === null ? null : await readFile(join(project, record.path), "utf8");
+		if(exportConfigurationSource !== null && sha256(exportConfigurationSource) !== record.sourceSha256) throw new Error("Package metadata declaration changed after capture");
 		const notices = await captureSourceNotices({ projectRoot: project
 			, projectName: analysis.project.name, inputs: analysis.inputs
 			, sourceTreeSha256: analysis.sourceTreeSha256, snapshot: lakeSnapshot
@@ -225,6 +227,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 			, sourceTreeSha256: analysis.sourceTreeSha256
 			, sourceNoticesSha256: notices.sha256
 			, exportConfigurationSha256: record.sha256
+			, exportConfigurationSource
 			, extractorSha256
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };

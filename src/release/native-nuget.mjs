@@ -13,6 +13,7 @@ import { generateCopiedDotnetPackage } from "../backends/dotnet/copied-values.mj
 import { validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
+import { compiledPackageMetadata, nugetPackageMetadata } from "../analyze/package-metadata.mjs";
 
 /**
  * Package exact managed/native artifacts, provenance, and dependency licenses.
@@ -63,7 +64,7 @@ export const packageOrdinaryNuget = async ({ working, dotnetRoot, nativeRoot, ru
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`lean-bridge/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "lean-bridge/licenses/LeanBridge-LICENSE");
 	await save("README.md", `# ${name} ${version}\n\nInstall this prepared NuGet archive and call ${projection.namespace}.Api. Requires .NET 8 and Linux x86-64 with glibc ${glibcMinimumVersion} or newer. The native component and compatible shared runtime are included and loaded automatically. Consumers do not need Lean, Node, a C compiler or handwritten marshalling.\n\n${await readFile(join(dotnetRoot, "README.md"), "utf8")}\n`);
-	await save(`${name}.nuspec`, `<?xml version="1.0" encoding="utf-8"?>\n<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd"><metadata><id>${name}</id><version>${version}</version><authors>Author not declared</authors><description>Compiled Lean API with generated C# conversions and native runtime.</description><readme>README.md</readme><requireLicenseAcceptance>false</requireLicenseAcceptance><dependencies><group targetFramework="net8.0" /></dependencies></metadata></package>\n`);
+	await save(`${name}.nuspec`, `<?xml version="1.0" encoding="utf-8"?>\n<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd"><metadata><id>${name}</id><version>${version}</version>${nugetPackageMetadata(compiledPackageMetadata(model.sourceIdentity))}<readme>README.md</readme><requireLicenseAcceptance>false</requireLicenseAcceptance><dependencies><group targetFramework="net8.0" /></dependencies></metadata></package>\n`);
 	await save("_rels/.rels", `<?xml version="1.0" encoding="utf-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/${name}.nuspec" Id="R1" /></Relationships>\n`);
 	await save("[Content_Types].xml", `<?xml version="1.0" encoding="utf-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">${["rels", "dll", "so", "xml", "json", "md", "txt", "nuspec", "cs", "csproj", "lean", "h"].map(extension => `<Default Extension="${extension}" ContentType="${extension === "rels" ? "application/vnd.openxmlformats-package.relationships+xml" : "application/octet-stream"}"/>`).join("")}</Types>\n`);
 	const inventory = {};

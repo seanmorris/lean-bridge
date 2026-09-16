@@ -2,6 +2,8 @@
 
 Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all 16 primitive types, nested arrays and acyclic copied records. Consumers install the artifacts without compiling Lean or writing native conversions.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 Deploy the reviewed JAR and POM to an organization-controlled Maven repository. Java and Kotlin consumers use the same artifact.
 
 ## Build an ordinary Lean project

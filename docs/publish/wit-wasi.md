@@ -2,6 +2,8 @@
 
 Prepare WIT declarations, a Component Model adapter, a Wasmtime host, and native Lean libraries, then distribute the original archive through a release page or artifact server.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 ## Build an ordinary Lean project
 
 The `wit-wasi` target accepts pure copied primitives, arrays and acyclic records from an ordinary Lake project. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.

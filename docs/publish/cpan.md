@@ -2,7 +2,9 @@
 
 Prepare a `LeanBridge::Runtime` distribution and one generated distribution per Lean component. Each component declares the runtime dependency and checks its exact native identity when loaded.
 
-Component archives retain [source-library and dependency notices](../publishing.md#retain-library-and-dependency-licenses) separately from Lean Bridge's MIT license. Until author metadata is configured, their `META.json` uses license `unknown`, author `Author not declared`, and no repository URL. CPAN defines `unknown` as a missing metadata declaration. Review these fields before uploading; they do not identify the library as MIT. [CPAN metadata specification](https://perldoc.perl.org/CPAN::Meta::Spec#license).
+Set the library's description, authors and URLs in the shared [package metadata](../publishing.md#declare-package-metadata). CPAN emits them in `META.json` and retains them in the installation's `MYMETA` files. Without a declaration, the component uses `Author not declared` and no repository URL.
+
+Component archives retain [source-library and dependency notices](../publishing.md#retain-library-and-dependency-licenses) separately from Lean Bridge's MIT license. The component license field remains `unknown`; shared license-expression configuration is not implemented yet. CPAN defines `unknown` as a missing metadata declaration. Review the license before uploading. [CPAN metadata specification](https://perldoc.perl.org/CPAN::Meta::Spec#license).
 
 ## Build an ordinary Lean project
 

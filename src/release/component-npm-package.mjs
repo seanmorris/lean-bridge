@@ -23,6 +23,7 @@ import { assertExportConfigurationCapabilities, assertExportConfigurationSnapsho
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
 import { isSourceNotice } from "./source-notices.mjs";
+import { npmPackageMetadata } from "../analyze/package-metadata.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -92,7 +93,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	assertExportConfigurationSnapshot(record, bundle.manifest.files
 		.filter(item => item.path.startsWith("source/"))
 		.map(item => ({ ...item, path: item.path.slice("source/".length) })));
-	assertExportConfigurationCapabilities(record.configuration, { target: "npm", fields: ["modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	assertExportConfigurationCapabilities(record.configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
 	const packageIdentity = componentNpmIdentity(bundle.manifest.component, record.configuration.targets?.npm);
 	const runtime = resolve(runtimeRoot);
 	const [ir, abi, artifactManifest, mainModule, mainWasm] = await Promise.all([
@@ -184,6 +185,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, version: packageIdentity.version
 		, license: sbom.license
 		, description: ir.documentation.summary
+		, ...npmPackageMetadata(record.configuration.package ?? {})
 		, engines: { node: ">=22" }
 		, exports: {
 			...componentPackageJson.exports,

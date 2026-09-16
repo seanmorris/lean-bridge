@@ -2,6 +2,8 @@
 
 Build an ordinary Lake project with `--target cargo` to produce a typed Rust crate with compiled native libraries. Consumers use Cargo without Lean or handwritten FFI. The separate Alpha recipe below exercises resource and callback APIs.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
 Lean Bridge creates a deterministic `.crate` for direct installation. Cargo's publishing command creates another archive from a source directory before uploading it. It has no option that uploads an existing `.crate` unchanged. A Cargo CLI publication therefore needs its own reviewed archive and verification record. [cargo publish](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
 
 ## Build an ordinary Lean project
