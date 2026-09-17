@@ -18,6 +18,7 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { prepareCorpusSources, leanCorpusOracle } from "./type-corpus-source.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
+import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus");
@@ -105,6 +106,11 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
+	if(profiles.includes("rust"))
+	{
+		environment.LEAN_BRIDGE_CARGO ??= resolve(".toolchains/rust-1.90.0/bin/cargo");
+		environment.LEAN_BRIDGE_RUSTC ??= resolve(".toolchains/rust-1.90.0/bin/rustc");
+	}
 	if(profiles.includes("perl"))
 	{
 		const perl = (await run(environment.LEAN_BRIDGE_CORPUS_PERL ?? "/usr/bin/perl", ["-e", "print $^X"], repository, { PATH: environment.PATH })).stdout;
@@ -179,6 +185,10 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const receipt = await copyPackageSetHandoff(builds[0].output, handoff);
 	const receiptBytes = await readFile(join(handoff, "package-set-receipt.json"));
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+	const rustDependencies = profiles.includes("rust") ? await prepareRustCorpusDependencies({
+		rustRoot: join(builds[0].output, "native/rust"), directory: context.directory
+		, handoff: join(consumer, "rust-dependencies"), environment
+	}) : undefined;
 	const cases = corpusCases(library);
 	// Nothing from the author workspace or unpacked release survives installation.
 	await rm(context.directory, { recursive: true, force: true });
@@ -192,8 +202,11 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const runtimePackage = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "runtime");
 		assert.equal(pkg.artifacts.length, 1);
 		const archive = pkg.artifacts[0];
-		t.diagnostic(`${library.id}: installing and executing ${profile} without sources or compilers`);
-		const observation = await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment });
+		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${profile === "rust" ? "; Cargo compiles Rust with a link-only driver" : " or compilers"}`);
+		const observed = profile === "rust"
+			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
+			: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
+		validateCorpusObservation(library, cases, result, observed.observation);
 		runs.push({ library: library.id, profile, path: "ordinary-source"
 			, archiveSha256: archive.sha256
 			, archive: { ...archive, target: pkg.target, name: pkg.name, version: pkg.version }
@@ -206,8 +219,12 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 			, dependency: { name: context.names.remote, revision: context.manifest.packages[1].rev }
 			, receiptSha256: sha256(receiptBytes), independentBuilds: 2
 			, oracle: result, oracleEvidence
-			, isolation: { sourcesRemovedBeforeInstall: true, compilerPathDisabled: true, offlineInstall: true }
-			, observation, rejection });
+			, isolation: { sourcesRemovedBeforeInstall: true
+				, compilerPathDisabled: true, offlineInstall: true
+				, ...(profile === "rust" ? { rustCompilerDuringInstall: true
+					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {}) }
+			, ...observed
+			, rejection });
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	return runs;

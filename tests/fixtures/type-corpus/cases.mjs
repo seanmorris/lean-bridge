@@ -16,6 +16,7 @@ export const corpusLibraries = [
 		, pythonModule: "lean_shop", pendingModule: "Shop.Pending"
 		, rubyModule: "LeanBridge::Shop", rubyRequire: "lean_bridge/shop"
 		, perlModule: "LeanBridge::Shop", npmModule: "shop-corpus"
+		, rustModule: "shop_corpus"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -26,6 +27,7 @@ export const corpusLibraries = [
 		, pythonModule: "lean_telemetry", pendingModule: "Telemetry.Pending"
 		, rubyModule: "LeanBridge::Telemetry", rubyRequire: "lean_bridge/telemetry"
 		, perlModule: "LeanBridge::Telemetry", npmModule: "telemetry-corpus"
+		, rustModule: "telemetry_corpus"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
@@ -83,6 +85,11 @@ const javascriptFloatExpectation = id => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	return Object.fromEntries(profiles.map(profile => [profile, policy]));
 };
+
+const rustRejection = (id, category) => ({ expectation: { kind: "compile-rejection"
+	, category
+	, diagnostic: ["uint8-below", "uint16-below"].includes(id) ? "E0600"
+		: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "overflowing_literals" : "E0308" } });
 
 /**
  * Return immutable-by-convention JSON inputs; consumers receive a serialized copy.
@@ -162,7 +169,8 @@ export const corpusCases = library => {
 		, resultEncoding: encoding ?? "value"
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
 		, hostExpectations: {
-			...(["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
+			...(rejection ? { rust: rustRejection(id, rejection) } : {})
+			, ...(["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
 				? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }
 				: rejection ? { perl: { rejectionMessage: perlRejection(id) } } : {})
 			, ...(["float32-wrong-type", "float64-wrong-type"].includes(id)

@@ -223,7 +223,7 @@ npm run test:type-corpus:ruby
 npm run test:type-corpus:perl
 ```
 
-To build Python and Ruby together, or all three formats, and compare the consumers against the same Lean run:
+To build Python and Ruby together, or all four native formats including Rust, and compare the consumers against the same Lean run:
 
 ```sh
 npm run test:type-corpus:native
@@ -231,6 +231,16 @@ npm run test:type-corpus:all-native
 ```
 
 Set `LEAN_BRIDGE_PYTHON`, `LEAN_BRIDGE_RUBY`, `LEAN_BRIDGE_GEM` and `LEAN_BRIDGE_CORPUS_PERL` to absolute executable paths when selecting alternate host installations. The Perl build compiles XS only for that interpreter's ABI. Its consumer installs both runtime and component archives in `prebuilt-only` mode and checks the selected XS hashes and ABI.
+
+Rust runs on Linux x86-64 and needs Rust/Cargo 1.90 or newer, a system linker, tar, gzip and 3 GiB of free scratch space. The author build also needs the pinned Lean and native C toolchains. Install the pinned Rust toolchain and run its corpus:
+
+```sh
+bash scripts/bootstrap-rust-ci.sh
+source scripts/env.sh
+npm run test:type-corpus:rust
+```
+
+`LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` select absolute tool paths; the corpus defaults to `.toolchains/rust-1.90.0/bin/`. The author build resolves the crate's locked Cargo dependencies. The consumer receives those dependencies as a hashed vendor archive and builds offline with an empty Cargo home. Only Rust compilation and linking are allowed during installation. The harness removes the entire consumer build tree, then executes the relocated binary twice with compiler and Cargo paths disabled. Normal exit must remove the runtime loader's temporary assets and registry files.
 
 For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
 
@@ -251,9 +261,11 @@ npm run test:type-corpus:npm
 
 All three engines run by default. For a focused local check, set `LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium`, `firefox`, `webkit` or a comma-separated subset. Missing engines and invalid selections fail; the harness never skips a requested browser. CI requires all three. `PLAYWRIGHT_BROWSERS_PATH` selects an alternate Playwright installation.
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN or npm archive offline. Consumers call public exports with Lean and C compiler paths disabled.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo or npm archive offline. Consumers call public exports with Lean and C compiler paths disabled.
 
-The catalog contains 124 cases across both libraries. Native adapters execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. Each npm adapter executes 112 cases and records 12 unsupported array/record cases as gaps. Its ordinary-source WASM projection currently accepts only pure primitive signatures. The harness requires explicit source-admission rejections for arrays, records, `Option Nat` and `Except String Nat`; Lean itself checks all these source modules. Native admission also rejects the separate `Option` and `Except` exports.
+The catalog contains 124 cases across both libraries. Python, Ruby and Perl execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm adapter executes 112 cases and records 12 unsupported array/record cases as gaps. Its ordinary-source WASM projection currently accepts only pure primitive signatures. The harness requires explicit source-admission rejections for arrays, records, `Option Nat` and `Except String Nat`; Lean itself checks all these source modules. Native admission also rejects the separate `Option` and `Except` exports.
+
+Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. The TypeScript consumer compiles with `strict`, `noEmitOnError` and `skipLibCheck: false`. It checks each public function's complete type against independently specified signatures, exercises compile-time invalid inputs with `@ts-expect-error`, then executes the emitted JavaScript against the same Lean oracle.
 
@@ -265,11 +277,11 @@ Each browser profile gets a separate offline npm installation. React dependencie
 
 Browser checks cover repeated calls, recovery after a missing WASM asset, production React and development StrictMode effects, unmount/remount and unmount while WASM loads, and dedicated-worker reuse, termination and restart. Worker results must come from the worker realm. Reports retain each engine/variant's observations and lifecycle checks separately; extra engine runs do not multiply type-position coverage.
 
-Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. Missing adapters, unsupported or unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md).
+Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. Missing adapters, unsupported or unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md).
 
-CI requires Python, Ruby, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+CI requires Python, Ruby, Rust, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
 
-The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
+The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
 
 ## WASI package
 

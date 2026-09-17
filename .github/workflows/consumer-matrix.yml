@@ -419,6 +419,23 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
           node --test tests/native-rust.test.mjs
+      - name: Compare isolated Cargo corpus consumers with fresh Lean
+        id: type_corpus_rust
+        continue-on-error: true
+        run: |
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          source scripts/env.sh
+          npm run test:type-corpus:rust
+      - name: Upload installed Rust corpus observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-rust-${{ github.sha }}
+          path: build/type-corpus/rust.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Record native consumer observations
         if: always()
         shell: bash
@@ -437,8 +454,8 @@ jobs:
               fi
             fi
             if [ "$consumer" = rust ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs"
-              if [ "${{ steps.ordinary_rust.outcome }}" != success ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs && npm run test:type-corpus:rust"
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -455,7 +472,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.ordinary_rust.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success'
         run: exit 1
 
   managed-consumers:

@@ -13,6 +13,8 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { corpusBrowserSelection, corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
 import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
 import { corpusTypeScript, runNpmCorpusLibrary } from "./helpers/type-corpus-node.mjs";
+import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./helpers/type-corpus-rust-source.mjs";
+import { captureRustCompiler } from "./helpers/type-corpus-rust.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -33,17 +35,22 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const browser = corpusProfiles[profile].browser;
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
-		, hostVersion: wasm ? "22.23.2" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
+		, hostVersion: wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
 		, ...(browser ? { realm: profile === "browser-worker" ? "dedicated-worker" : "window" } : {})
 		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
 			? { id: entry.id, status: "unsupported", export: `${library.module}.${entry.operation}` }
 			: entry.expectation.kind === "lean-oracle"
 				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
-				: { id: entry.id, status: "rejected-as-expected"
-					, exception: corpusProfiles[profile].errors[entry.expectation.category]
-					, recovered: true
-					, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) }) };
+				: entry.expectation.kind === "compile-rejection" ? { id: entry.id
+					, status: "rejected-at-compile-time"
+					, sourceSha256: sha256(corpusRustRejection(library, entry))
+					, diagnostics: [{ code: entry.expectation.diagnostic, file: `src/bin/reject-${entry.id.split("/")[1]}.rs`, line: 7, column: 1 }] }
+					: { id: entry.id, status: "rejected-as-expected"
+						, exception: corpusProfiles[profile].errors[entry.expectation.category]
+						, recovered: true
+						, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+		, ...(profile === "rust" ? { limits: Array.from({ length: 3 }, () => ({ exception: "Limit", recovery: oracle.dependency })) } : {}) };
 	return { library: library.id, profile, path: "ordinary-source"
 		, archiveSha256: "a".repeat(64)
 		, archive: { sha256: "a".repeat(64), target: corpusProfiles[profile].target }
@@ -60,8 +67,21 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 			, sourceSha256: "f".repeat(64), declarationsSha256: "f".repeat(64)
 			, compilerSha256: "f".repeat(64) } } : {})
 		, ...(browser ? { browser: browserValidationFixture(profile, library, observation) } : {})
+		, ...(profile === "rust" ? { rust: rustValidationFixture(library) } : {})
 		, oracle, observation };
 };
+
+const rustValidationFixture = library => ({ rustcVersion: "rustc 1.90.0 (validator-only)"
+	, cargoVersion: "cargo 1.90.0 (validator-only)"
+	, ...Object.fromEntries(["compilerSha256", "cargoSha256", "declarationsSha256", "packageReceiptSha256", "compiledProjectionSha256", "lockSha256", "metadataSha256", "linkerSha256", "executableSha256"].map(key => [key, "e".repeat(64)]))
+	, bindingIrSha256: "c".repeat(64)
+	, consumerSourceSha256: sha256(corpusRustSource(library))
+	, signaturesSha256: sha256(corpusRustSignatures(library))
+	, dependencies: { archive: "rust-dependencies.tar.gz"
+		, sha256: "f".repeat(64), lockSha256: "f".repeat(64)
+		, packages: ["num-bigint-0.4.6", "sha2-0.10.9"].map(directory => ({ directory, checksum: "f".repeat(64), files: 1, manifestSha256: "f".repeat(64) })) }
+	, installedSourcesRemoved: true, emptyCargoHome: true, offline: true
+	, linkOnly: true, normalExitCleanup: true, repeatExecution: true });
 
 const browserValidationFixture = (profile, library, observation) => {
 	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
@@ -106,8 +126,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 25);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 25);
+	assert.equal(identity.files.length, 28);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 28);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -156,7 +176,7 @@ for(const [label, change] of [
 	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
 	, ["missing oracle result", run => { delete run.oracle.dependency; }]
 	, ["extra oracle result", run => { run.oracle.extra = {}; }]
-	, ["unimplemented adapter", run => { run.profile = "rust"; }]
+	, ["unimplemented adapter", run => { run.profile = "java"; }]
 	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
 	, ["unknown library", run => { run.library = "unknown"; }]
 	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
@@ -183,7 +203,7 @@ test("explicit corpus selections reject absent, misspelled and duplicate adapter
 	assert.deepEqual(corpusSelection(undefined), []);
 	assert.deepEqual(corpusSelection("ruby, python"), ["python", "ruby"]);
 	assert.deepEqual(corpusSelection("ruby,perl,python"), ["perl", "python", "ruby"]);
-	for(const selection of ["", "python,", "PYTHON", "python,python", "rust", null, []])
+	for(const selection of ["", "python,", "PYTHON", "python,python", "java", null, []])
 		assert.throws(() => corpusSelection(selection));
 });
 
@@ -366,6 +386,74 @@ for(const [label, profile, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+test("Rust records compiler rejection separately from executed public calls", () => {
+	const runs = catalog.libraries.map(library => validationFixture("rust", library.id));
+	const observed = corpusCoverage(inventory, catalog, runs).filter(cell => cell.status === "observed");
+	assert.equal(observed.length, 41);
+	assert.equal(runs.flatMap(run => run.observation.results).filter(entry => entry.status === "matched").length, 84);
+	assert.equal(runs.flatMap(run => run.observation.results).filter(entry => entry.status === "rejected-at-compile-time").length, 40);
+	assert.ok(observed.every(cell => cell.cases.every(id => corpusHostCase(catalog.cases.find(entry => entry.id === id), "rust").expectation.kind === "lean-oracle")));
+	assert.deepEqual(corpusSelection("rust,python"), ["python", "rust"]);
+});
+
+test("Rust compile-rejection evidence retains JSON beyond the display-tail limit", async () => {
+	const lines = Array.from({ length: 100 }, (_, index) => JSON.stringify({ index, message: "validator-only".repeat(20) }));
+	const source = `process.stdout.write(${JSON.stringify(`${lines.join("\n")}\n`)}, () => { process.exitCode = 101; });`;
+	const result = await captureRustCompiler(process.execPath, ["-e", source], repository, { PATH: "/unavailable" });
+	assert.equal(result.code, 101);
+	assert.ok(result.stdout.length > 8_000);
+	assert.deepEqual(result.stdout.trim().split("\n").map(JSON.parse), lines.map(JSON.parse));
+	await assert.rejects(() => captureRustCompiler("/unavailable/compiler", [], repository, {}), { code: "ENOENT" });
+});
+
+test("Rust callers use independent typed signatures, borrowed inputs and owned results", () => {
+	for(const library of catalog.libraries)
+	{
+		const source = corpusRustSource(library), signatures = corpusRustSignatures(library);
+		assert.equal((signatures.match(/let _: fn\(/g) ?? []).length, 19);
+		assert.match(signatures, /fn\(&api::BigUint, u32\) -> Result<api::BigUint, api::Error>/);
+		assert.match(signatures, /fn\(&\[Vec<u32>\]\) -> Result<Vec<Vec<u32>>, api::Error>/);
+		assert.match(source, /Err\(api::Error::Limit\)/);
+		assert.match(source, /for row in &mut arg0\./);
+		assert.match(source, /for row in &mut result\./);
+		assert.equal((source.match(/replace_range\(0\.\.1, "X"\)/g) ?? []).length, 2);
+		assert.match(source, /#!\[forbid\(unsafe_code\)\]/);
+		assert.doesNotMatch(source, /extern "C"|__runtime|validator-only|include_bytes!/);
+		const cases = catalog.cases.filter(entry => entry.library === library.id);
+		const wrongFloat = cases.find(entry => entry.id.endsWith("/float32-wrong-type"));
+		assert.match(corpusRustRejection(library, wrongFloat), /let mut arg0 = 1i32;/);
+		assert.throws(() => corpusRustRejection(library, cases[0]));
+	}
+});
+
+for(const [label, change] of [
+	["missing compiler evidence", run => { delete run.rust; }]
+	, ["wrong compiler version", run => { run.observation.hostVersion = "1.89.0"; }]
+	, ["unbound consumer source", run => { run.rust.consumerSourceSha256 = "0".repeat(64); }]
+	, ["unchecked signatures", run => { run.rust.signaturesSha256 = "0".repeat(64); }]
+	, ["wrong binding IR", run => { run.rust.bindingIrSha256 = "0".repeat(64); }]
+	, ["warm global cache", run => { run.rust.emptyCargoHome = false; }]
+	, ["online installation", run => { run.rust.offline = false; }]
+	, ["remaining source tree", run => { run.rust.installedSourcesRemoved = false; }]
+	, ["missing exact integers", run => { run.rust.dependencies.packages.shift(); }]
+	, ["duplicate dependency", run => { run.rust.dependencies.packages.push(run.rust.dependencies.packages[0]); }]
+	, ["unhashed executable", run => { delete run.rust.executableSha256; }]
+	, ["missing cleanup", run => { run.rust.normalExitCleanup = false; }]
+	, ["unverified copies", run => { run.observation.results.find(entry => entry.id.endsWith("/record")).independentCopy = false; }]
+	, ["compiler failure counted as runtime", run => { run.observation.results.at(-1).status = "rejected-as-expected"; }]
+	, ["unrelated compiler failure", run => { run.observation.results.at(-1).diagnostics[0].code = "E0432"; }]
+	, ["dependency compiler failure", run => { run.observation.results.at(-1).diagnostics[0].file = "vendor/broken.rs"; }]
+	, ["missing compiler diagnostic", run => { run.observation.results.at(-1).diagnostics = []; }]
+	, ["changed rejected source", run => { run.observation.results.at(-1).sourceSha256 = "0".repeat(64); }]
+	, ["wrong runtime error", run => { run.observation.limits[0].exception = "Load"; }]
+	, ["missing limit rejection", run => { run.observation.limits.pop(); }]
+	, ["failed limit recovery", run => { run.observation.limits[0].recovery = { integer: "0" }; }]
+]) test(`Rust corpus rejects ${label}`, () => {
+	const run = validationFixture("rust");
+	change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0, timeout: 900_000
 }, async t => {
@@ -418,7 +506,9 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 		, summary: { libraries: catalog.libraries.length, profileRuns: runs.length
 			, profiles: inventory.document.profiles.length
 			, cases: runs.reduce((count, run) => count + run.observation.results.length, 0)
-			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status !== "unsupported").length, 0)
+			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => ["matched", "rejected-as-expected"].includes(entry.status)).length, 0)
+			, compileRejectedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 0)
+			, rustRuntimeRejections: runs.reduce((count, run) => count + (run.observation.limits?.length ?? 0), 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)

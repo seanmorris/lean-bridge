@@ -1,6 +1,6 @@
 # Shared browser, React and worker corpus, 2026-09-17
 
-VO 1217. The shared corpus adds `browser-javascript`, `browser-react` and `browser-worker` adapters for prepared npm releases. They use the same two independent Lean libraries, host-neutral cases and fresh Lean oracles as the [Node adapters](type-corpus-node-20260917.md). Production generators and the type-support inventory are unchanged.
+VO 1217, commit `3056c75`. This record describes the browser milestone at that revision. The shared corpus adds `browser-javascript`, `browser-react` and `browser-worker` adapters for prepared npm releases. They use the same two independent Lean libraries, host-neutral cases and fresh Lean oracles as the [Node adapters](type-corpus-node-20260917.md). Production generators and the type-support inventory are unchanged.
 
 ## Installed packages and static deployments
 

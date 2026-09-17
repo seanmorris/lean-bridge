@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { corpusCases, corpusHostCase, corpusLibraries, corpusOracleKeys, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
+import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./type-corpus-rust-source.mjs";
 
 export const corpusProfiles = Object.freeze({
 	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
@@ -20,6 +21,8 @@ export const corpusProfiles = Object.freeze({
 	, perl: Object.freeze({ adapter: "prepared-cpan-prebuilt-v1", target: "cpan"
 		, transport: "native", moduleKey: "perlModule"
 		, errors: Object.freeze({ type: "croak", range: "croak" }) })
+	, rust: Object.freeze({ adapter: "prepared-cargo-v1", target: "cargo"
+		, transport: "native", moduleKey: "rustModule", errors: Object.freeze({}) })
 	, "node-javascript": Object.freeze({ adapter: "prepared-npm-v1", target: "npm"
 		, transport: "wasm", moduleKey: "npmModule"
 		, errors: Object.freeze({ type: "TypeError", range: "TypeError" }) })
@@ -140,6 +143,11 @@ export const corpusCatalog = inventory => {
 			assert.ok(Object.keys(policy).every(key => ["expectation", "oracleKey", "resultEncoding", "rejectionMessage"].includes(key)));
 			const selected = corpusHostCase(entry, profile);
 			if(selected.expectation.kind === "lean-oracle") assert.equal(typeof selected.oracleKey, "string");
+			else if(selected.expectation.kind === "compile-rejection")
+			{
+				assert.equal(profile, "rust");
+				assert.ok(["E0308", "E0600", "overflowing_literals"].includes(selected.expectation.diagnostic));
+			}
 			else assert.ok(typeof selected.rejectionMessage === "string" && selected.rejectionMessage.length > 0);
 		}
 		for(const claim of entry.coverage)
@@ -168,7 +176,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const wasm = corpusProfiles[actual.profile].transport === "wasm";
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
-	assert.match(actual.hostVersion, browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	assert.match(actual.hostVersion, browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
 	if(wasm && !browser) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
 	if(browser) assert.equal(actual.realm, actual.profile === "browser-worker" ? "dedicated-worker" : "window");
 	if(actual.profile === "perl")
@@ -195,6 +203,20 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 			assert.deepEqual(observed.observed, oracle[entry.oracleKey], entry.id);
 			assert.equal(observed.independentCopy, entry.checkIndependentCopy, entry.id);
 		}
+		else if(entry.expectation.kind === "compile-rejection")
+		{
+			assert.equal(actual.profile, "rust");
+			assert.equal(observed.status, "rejected-at-compile-time");
+			assert.equal(observed.sourceSha256, sha256(corpusRustRejection(library, entry)));
+			assert.ok(observed.diagnostics.length > 0);
+			for(const diagnostic of observed.diagnostics)
+			{
+				assert.equal(diagnostic.code, entry.expectation.diagnostic);
+				assert.equal(diagnostic.file, `src/bin/reject-${entry.id.split("/")[1]}.rs`);
+				assert.ok(Number.isSafeInteger(diagnostic.line) && diagnostic.line > 0);
+				assert.ok(Number.isSafeInteger(diagnostic.column) && diagnostic.column > 0);
+			}
+		}
 		else
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
@@ -202,6 +224,37 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(`${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
 		}
+	}
+};
+
+const validateRustEvidence = (run, library) => {
+	const evidence = run.rust;
+	assert.ok(evidence.rustcVersion.startsWith(`rustc ${run.observation.hostVersion} (`));
+	assert.match(evidence.cargoVersion, /^cargo 1\.(?:9\d|[1-9]\d{2,})\.\d+ /);
+	for(const key of ["compilerSha256", "cargoSha256", "consumerSourceSha256", "signaturesSha256", "declarationsSha256", "packageReceiptSha256", "compiledProjectionSha256", "bindingIrSha256", "lockSha256", "metadataSha256", "linkerSha256", "executableSha256"])
+		assert.match(evidence[key], /^[a-f0-9]{64}$/);
+	assert.equal(evidence.bindingIrSha256, run.bindingIrSha256);
+	assert.equal(evidence.consumerSourceSha256, sha256(corpusRustSource(library)));
+	assert.equal(evidence.signaturesSha256, sha256(corpusRustSignatures(library)));
+	for(const key of ["installedSourcesRemoved", "emptyCargoHome", "offline", "linkOnly", "normalExitCleanup", "repeatExecution"]) assert.equal(evidence[key], true);
+	assert.equal(evidence.dependencies.archive, "rust-dependencies.tar.gz");
+	assert.match(evidence.dependencies.sha256, /^[a-f0-9]{64}$/);
+	assert.match(evidence.dependencies.lockSha256, /^[a-f0-9]{64}$/);
+	const packages = evidence.dependencies.packages;
+	assert.equal(new Set(packages.map(pkg => pkg.directory)).size, packages.length);
+	for(const name of ["num-bigint-0.4.6", "sha2-0.10.9"]) assert.ok(packages.some(pkg => pkg.directory === name));
+	for(const pkg of packages)
+	{
+		assert.match(pkg.directory, /^[A-Za-z0-9_-]+-[0-9]+\.[0-9]+\.[0-9]+$/);
+		assert.match(pkg.checksum, /^[a-f0-9]{64}$/);
+		assert.match(pkg.manifestSha256, /^[a-f0-9]{64}$/);
+		assert.ok(Number.isSafeInteger(pkg.files) && pkg.files > 0);
+	}
+	assert.equal(run.observation.limits.length, 3);
+	for(const limit of run.observation.limits)
+	{
+		assert.equal(limit.exception, "Limit");
+		assert.deepEqual(limit.recovery, run.oracle.dependency);
 	}
 };
 
@@ -285,12 +338,13 @@ const validateBrowserEvidence = (run, library, cases) => {
 export const corpusIdentity = async (repository, catalog) => {
 	const paths = ["cases.mjs", "Corpus/Wire.lean", "consumers/python.py"
 		, "consumers/ruby.rb", "consumers/perl.pl", "consumers/node.mjs"
-		, "consumers/javascript.mjs"
+		, "consumers/javascript.mjs", "consumers/rust.rs"
 		, ...["plain", "react", "worker", "worker-main"].map(name => `consumers/browser/${name}.mjs`)
 		, ...catalog.libraries.flatMap(library => [library.oracle, `${library.module.replaceAll(".", "/")}.lean`, `${library.pendingModule.replaceAll(".", "/")}.lean`])]
 		.map(path => `tests/fixtures/type-corpus/${path}`);
 	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/type-corpus-source.mjs", "tests/helpers/type-corpus-node.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
 	paths.push("tests/helpers/type-corpus-browser.mjs", "tests/helpers/type-corpus-browser-build.mjs");
+	paths.push("tests/helpers/type-corpus-rust.mjs", "tests/helpers/type-corpus-rust-source.mjs");
 	const files = [];
 	for(const path of paths)
 	{
@@ -357,9 +411,11 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		const cases = catalog.cases.filter(entry => entry.library === run.library);
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
 		if(corpusProfiles[run.profile].browser) validateBrowserEvidence(run, library, cases);
+		if(run.profile === "rust") validateRustEvidence(run, library);
 		for(const entry of cases)
 		{
 			if(!corpusCaseSupported(library, entry, run.profile)) continue;
+			if(corpusHostCase(entry, run.profile).expectation.kind === "compile-rejection") continue;
 			for(const claim of entry.coverage)
 			{
 				for(const position of claim.positions)
