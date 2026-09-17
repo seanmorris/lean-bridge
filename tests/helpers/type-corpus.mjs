@@ -15,9 +15,14 @@ import { corpusDotnetRejection, corpusDotnetSignatures, corpusDotnetSource, dotn
 import { dotnetCompilerOptions } from "./type-corpus-dotnet.mjs";
 import { corpusJvmSource, corpusJvmSignatures, corpusJvmRejection, jvmRuntimeCases } from "./type-corpus-jvm-source.mjs";
 import { javaCompilerOptions, kotlinCompilerOptions, mavenSettings } from "./type-corpus-jvm-tools.mjs";
+import { validatePhpEvidence } from "./type-corpus-php.mjs";
 
 export const corpusProfiles = Object.freeze({
-	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
+	"php-native": Object.freeze({ adapter: "prepared-composer-v1"
+		, target: "php-native"
+		, transport: "native", moduleKey: "phpModule"
+		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
+	, python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
 		, transport: "native", moduleKey: "pythonModule"
 		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
 	, ruby: Object.freeze({ adapter: "prepared-gem-v1", target: "rubygems"
@@ -197,6 +202,8 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
 	const cFamily = ["c", "cpp"].includes(actual.profile);
+	if(actual.profile === "php-native") assert.match(actual.hostVersion, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/);
+	else
 	assert.match(actual.hostVersion, actual.profile === "java" ? /^22\.\d+\.\d+$/ : actual.profile === "kotlin" ? /^2\.2\.0$/ : actual.profile === "dotnet" ? /^8\.0\.\d+$/ : cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
 	if(cFamily) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 12);
 	if(wasm && !browser) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
@@ -244,9 +251,10 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
-			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["dotnet", "java", "kotlin"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "dotnet", "java", "kotlin"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
-			if(["dotnet", "java", "kotlin"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
+			if(["php-native", "dotnet", "java", "kotlin"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
+			if(actual.profile === "php-native") assert.equal(observed.stage, entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", entry.id);
 		}
 	}
 };
@@ -498,6 +506,7 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus-c-source.mjs", "tests/helpers/type-corpus-c-family.mjs", "tests/helpers/type-corpus-compiler.mjs", "tests/fixtures/type-corpus/consumers/c-family.h");
 	paths.push("tests/helpers/type-corpus-dotnet-source.mjs", "tests/helpers/type-corpus-dotnet.mjs", "tests/fixtures/type-corpus/consumers/dotnet.cs");
 	paths.push("tests/helpers/type-corpus-jvm-source.mjs", "tests/helpers/type-corpus-jvm.mjs", "tests/helpers/type-corpus-jvm-tools.mjs", "tests/fixtures/type-corpus/consumers/Wire.java");
+	paths.push("tests/helpers/type-corpus-php-source.mjs", "tests/helpers/type-corpus-php.mjs", "tests/fixtures/type-corpus/consumers/php.php");
 	const files = [];
 	for(const path of paths)
 	{
@@ -567,6 +576,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		if(run.profile === "rust") validateRustEvidence(run, library);
 		if(["c", "cpp"].includes(run.profile)) validateCFamilyEvidence(run, library);
 		if(run.profile === "dotnet") validateDotnetEvidence(run, library);
+		if(run.profile === "php-native") validatePhpEvidence(run, library, observation => validateCorpusObservation(library, cases, run.oracle, observation));
 		if(["java", "kotlin"].includes(run.profile)) validateJvmEvidence(run, library);
 		for(const entry of cases)
 		{

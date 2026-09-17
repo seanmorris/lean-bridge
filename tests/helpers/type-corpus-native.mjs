@@ -21,6 +21,7 @@ import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation }
 import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { installedCFamilyCorpus } from "./type-corpus-c-family.mjs";
 import { installedDotnetCorpus } from "./type-corpus-dotnet.mjs";
+import { installedPhpCorpus } from "./type-corpus-php.mjs";
 import { installedJvmCorpus } from "./type-corpus-jvm.mjs";
 import { prepareJvmCorpusDependencies } from "./type-corpus-jvm-tools.mjs";
 
@@ -33,7 +34,7 @@ const clean = { PATH: "/unavailable", CC: "/unavailable/compiler"
 	, LEAN_BRIDGE_NATIVE_ROOT: "/unavailable/runtime" };
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 
-const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, profile === "perl" ? { module: library.perlModule, version: "1.000" } : { name: `${["java", "kotlin"].includes(profile) ? "org.leanbridge.corpus:" : ""}${library.id}-${suffix}`, version: "1.0.0" }]));
+const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, profile === "perl" ? { module: library.perlModule, version: "1.000" } : { name: `${["java", "kotlin"].includes(profile) ? "org.leanbridge.corpus:" : profile === "php-native" ? "lean-bridge-corpus/" : ""}${library.id}-${suffix}`, version: "1.0.0" }]));
 
 const installedObservation = async ({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle, environment }) => {
 	const root = join(consumer, profile), archive = pkg.artifacts[0];
@@ -111,6 +112,11 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
 	if(profiles.includes("dotnet")) environment.LEAN_BRIDGE_DOTNET ??= resolve(".toolchains/dotnet/dotnet");
+	if(profiles.includes("php-native"))
+	{
+		environment.LEAN_BRIDGE_PHP ??= "/usr/bin/php";
+		environment.LEAN_BRIDGE_COMPOSER ??= "/usr/bin/composer";
+	}
 	if(profiles.some(profile => ["java", "kotlin"].includes(profile)))
 	{
 		environment.LEAN_BRIDGE_JAVA ??= resolve(".toolchains/jdk22/bin/java");
@@ -219,9 +225,10 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const observed = profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
 			: profile === "dotnet" ? await installedDotnetCorpus({ library, consumer, handoff, pkg, environment, clean })
-				: ["java", "kotlin"].includes(profile) ? await installedJvmCorpus({ library, profile, consumer, handoff, pkg, dependencies: jvmDependencies, environment, clean })
-					: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
-						: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
+				: profile === "php-native" ? await installedPhpCorpus({ library, consumer, handoff, pkg, environment, clean })
+					: ["java", "kotlin"].includes(profile) ? await installedJvmCorpus({ library, profile, consumer, handoff, pkg, dependencies: jvmDependencies, environment, clean })
+						: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
+							: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
 		validateCorpusObservation(library, cases, result, observed.observation);
 		runs.push({ library: library.id, profile, path: "ordinary-source"
 			, archiveSha256: archive.sha256

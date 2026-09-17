@@ -223,7 +223,7 @@ npm run test:type-corpus:ruby
 npm run test:type-corpus:perl
 ```
 
-To build Python and Ruby together, or all nine native adapters including C, C++, Rust, .NET, Java and Kotlin, and compare the consumers against the same Lean run:
+To build Python and Ruby together, or all ten native adapters including C, C++, Rust, .NET, Java, Kotlin and native PHP, and compare the consumers against the same Lean run:
 
 ```sh
 npm run test:type-corpus:native
@@ -280,6 +280,19 @@ Local defaults are `.toolchains/jdk22/`, `.toolchains/apache-maven-3.9.11/` and 
 
 After compiling the caller, the harness removes its sources, Maven installation tree, repository and cache. It moves the original package JAR and caller classes into a separate deployment and runs them twice with a `jlink` image containing only `java.base`. No Maven, Java compiler or Kotlin compiler is available in that runtime image. Kotlin includes its separately hashed standard-library JAR. The original package JAR retains its shipped source provenance; the harness does not strip or repack it. Native assets must load from the package, match their recorded hashes, and be removed from the private temporary directory on normal exit.
 
+Native PHP runs on Linux x86-64 with non-threaded PHP 8.2 or newer (below PHP 9), Composer 2, unzip and the pinned Lean/native author tools. PHP needs FFI; the selected Composer interpreter also needs ctype, iconv, mbstring, Phar and ZIP. Select absolute executable paths, then run:
+
+```sh
+export LEAN_BRIDGE_PHP=/usr/bin/php
+export LEAN_BRIDGE_COMPOSER=/usr/bin/composer
+source scripts/env.sh
+npm run test:type-corpus:php-native
+```
+
+Each Composer consumer starts with empty private home/cache directories, disables Packagist, network access, plugins and scripts, and installs only the original prepared ZIP. A second install checks the lock file and unchanged installed bytes. The harness moves the installed application, removes the installation tree and executes separate weak and strict PHP caller files twice each. Public reflection checks function signatures, PHPDoc types and readonly records against the independent corpus catalog. Both caller modes compare exact values with fresh Lean results and check rejected inputs, copied records and recovery. PHP runs with INI files disabled, explicitly selected FFI, and no compiler or Composer commands on PATH. The installed PHP API and its shipped provenance remain in the deployment.
+
+The report records the actual Composer implementation files, interpreter/extensions, included PHP files, loaded native libraries and package receipts. It is written to `build/type-corpus/php-native.json`. The [native PHP corpus record](../evidence/type-corpus-php-native-20260917.md) lists the executed scope and artifact identities. These are native PHP checks; PHP-Wasm has a separate runtime and remains a shared-corpus adapter gap.
+
 For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
 
 ```sh
@@ -299,11 +312,11 @@ npm run test:type-corpus:npm
 
 All three engines run by default. For a focused local check, set `LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium`, `firefox`, `webkit` or a comma-separated subset. Missing engines and invalid selections fail; the harness never skips a requested browser. CI requires all three. `PLAYWRIGHT_BROWSERS_PATH` selects an alternate Playwright installation.
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet, Maven or npm archive offline. Consumers call public exports with compiler paths disabled.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet, Maven, Composer or npm archive offline. Consumers call public exports with compiler paths disabled.
 
 After validating a library's observations and rechecking its receipts, the harness removes that transport's consumer directory before starting another library. Failure hooks also clean incomplete runs. This keeps completed installations from consuming the next build's scratch-space allowance.
 
-The catalog contains 124 cases across both libraries. Python, Ruby and Perl execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm adapter executes 112 cases and records 12 unsupported array/record cases as gaps. Its ordinary-source WASM projection currently accepts only pure primitive signatures. The harness requires explicit source-admission rejections for arrays, records, `Option Nat` and `Except String Nat`; Lean itself checks all these source modules. Native admission also rejects the separate `Option` and `Except` exports.
+The catalog contains 124 cases across both libraries. Python, Ruby, Perl and native PHP execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. PHP repeats the catalog in weak and strict caller modes. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm adapter executes 112 cases and records 12 unsupported array/record cases as gaps. Its ordinary-source WASM projection currently accepts only pure primitive signatures. The harness requires explicit source-admission rejections for arrays, records, `Option Nat` and `Except String Nat`; Lean itself checks all these source modules. Native admission also rejects the separate `Option` and `Except` exports.
 
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 

@@ -1,5 +1,7 @@
 # Shared Java and Kotlin corpus, 2026-09-17
 
+This record captures milestone `753d536`. The subsequent [native PHP corpus record](type-corpus-php-native-20260917.md) documents the expanded adapter set; the results and identities below belong to the JVM milestone.
+
 VO 1217. Java and Kotlin consumers install prepared Maven packages for `Shop.Pricing` and `Telemetry.Readings`. Both call the public generated API and compare observations with fresh Lean results. Production generators and the type-support inventory are unchanged.
 
 ## Public signatures and host rules

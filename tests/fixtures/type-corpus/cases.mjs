@@ -19,6 +19,7 @@ export const corpusLibraries = [
 		, rustModule: "shop_corpus", cModule: "shop"
 		, dotnetModule: "LeanBridge.Shop"
 		, jvmModule: "org.leanbridge.shop"
+		, phpModule: "LeanShop"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -32,6 +33,7 @@ export const corpusLibraries = [
 		, rustModule: "telemetry_corpus", cModule: "telemetry"
 		, dotnetModule: "LeanBridge.Telemetry"
 		, jvmModule: "org.leanbridge.telemetry"
+		, phpModule: "LeanTelemetry"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
@@ -81,6 +83,15 @@ const perlRejection = id => {
 	if(id === "wrong-boolean") return "Bool requires true() or false()";
 	if(id.startsWith("int")) return "signed integer is out of range or not an exact integer scalar";
 	return "unsigned integer is out of range or not an exact integer scalar";
+};
+
+const phpRejection = id => {
+	if(["negative-nat", "bad-record"].includes(id)) return "Expected an unsigned integer";
+	if(id === "wrong-bytes") return "Expected Bytes";
+	if(id === "wrong-boolean") return "Bool requires bool";
+	if(id.startsWith("float")) return "Expected a float without numeric coercion";
+	if(["bool-as-number", "bad-nested"].includes(id)) return "Expected an int without numeric coercion";
+	return id === "overflow-u64" ? "Integer is outside the UInt64 range" : "Integer is outside the declared Lean range";
 };
 
 const javascriptFloatExpectation = id => {
@@ -203,6 +214,7 @@ export const corpusCases = library => {
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
 		, hostExpectations: {
 			...(rejection ? { rust: rustRejection(id, rejection) } : {})
+			, ...(rejection ? { "php-native": { rejectionMessage: phpRejection(id) } } : {})
 			, ...(rejection ? { dotnet: dotnetExpectation(id, rejection) } : {})
 			, ...(rejection ? Object.fromEntries(["java", "kotlin"].map(profile => [profile, jvmExpectation(id, rejection, profile)])) : {})
 			, ...(rejection ? Object.fromEntries(["c", "cpp"].map(profile => [profile, cFamilyExpectation(id, rejection, profile)])) : {})

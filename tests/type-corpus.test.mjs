@@ -20,6 +20,8 @@ import { corpusDotnetRejection, corpusDotnetSignatures, corpusDotnetSource, dotn
 import { dotnetCompilerOptions, dotnetDiagnostics } from "./helpers/type-corpus-dotnet.mjs";
 import { corpusJvmRejection, corpusJvmSignatures, corpusJvmSource, jvmRuntimeCases } from "./helpers/type-corpus-jvm-source.mjs";
 import { javaCompilerOptions, kotlinCompilerOptions, jvmDiagnostics, mavenSettings } from "./helpers/type-corpus-jvm-tools.mjs";
+import { corpusPhpRequestJson, corpusPhpSource, phpRuntimeCases } from "./helpers/type-corpus-php-source.mjs";
+import { composerProbe, phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -39,7 +41,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const wasm = corpusProfiles[profile].transport === "wasm";
 	const browser = corpusProfiles[profile].browser;
 	const cFamily = ["c", "cpp"].includes(profile);
-	const jvm = ["java", "kotlin"].includes(profile);
+	const jvm = ["java", "kotlin"].includes(profile), php = profile === "php-native";
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
 		, hostVersion: jvm ? profile === "java" ? "22.0.2" : "2.2.0" : profile === "dotnet" ? "8.0.30" : cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
@@ -59,7 +61,8 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 					: { id: entry.id, status: "rejected-as-expected"
 						, exception: corpusProfiles[profile].errors[entry.expectation.category]
 						, recovered: true
-						, ...(profile === "dotnet" || jvm ? { recovery: oracle.dependency } : {})
+						, ...(profile === "dotnet" || jvm || php ? { recovery: oracle.dependency } : {})
+						, ...(php ? { stage: entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", message: entry.rejectionMessage } : {})
 						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
 		, ...(jvm ? { jvmVersion: "22.0.2"
 			, apiLocation: "/validator/relocated/package.jar"
@@ -91,7 +94,65 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(cFamily ? { cFamily: cFamilyValidationFixture(library, profile) } : {})
 		, ...(profile === "dotnet" ? { dotnet: dotnetValidationFixture(library) } : {})
 		, ...(jvm ? { jvm: jvmValidationFixture(library, profile), pomArchive: { target: "maven", sha256: "e".repeat(64) } } : {})
+		, ...(php ? phpValidationFixture(library, observation, oracle) : {})
 		, oracle, observation };
+};
+
+const phpValidationFixture = (library, observation, oracle) => {
+	const hash = "e".repeat(64), name = "lean-bridge-corpus/" + library.id + "-corpus";
+	const prefix = "vendor/" + name + "/", root = "/validator/relocated/";
+	const files = paths => Object.fromEntries(paths.map(path => [path, { bytes: 100, sha256: hash }]));
+	const native = ["lib" + library.cModule + ".so", "libleanshared.so", "liblean_bridge_native.so", "libcomponent_" + "f".repeat(20) + ".so"].map(name => "native/linux-x64/" + name);
+	const receipt = { schemaVersion: 1, kind: "lean-bridge-ordinary-php-package"
+		, ecosystem: "composer", name, version: "1.0.0"
+		, namespace: library.phpModule, bindingIrSha256: "c".repeat(64)
+		, runtimeIdentity: "b".repeat(64)
+		, files: files(["src/Api.php", "src/Internal/Native.php", "src/Internal/Runtime.php", ...native]) };
+	const packageReceiptSha256 = sha256(canonicalJson(receipt));
+	const deployment = { ...Object.fromEntries(Object.entries(receipt.files).map(([path, identity]) => [prefix + path, identity]))
+		, ...files(["vendor/autoload.php", "vendor/composer/installed.json", "vendor/composer/autoload_classmap.php"])
+		, [prefix + "lean-bridge/package-receipt.json"]: { bytes: 100, sha256: packageReceiptSha256 }
+		, "request.json": { bytes: 100, sha256: sha256(corpusPhpRequestJson(library)) }
+		, ...Object.fromEntries(["weak", "strict"].map(mode => [mode + ".php", { bytes: 100, sha256: sha256(corpusPhpSource(mode)) }])) };
+	Object.assign(observation, { hostVersion: "8.2.33", callerMode: "weak"
+		, integerBytes: 8, threadSafe: 0, sapi: "cli", iniDisabled: true
+		, copiedValuesCollected: true, apiLocation: root + prefix + "src/Api.php"
+		, nativeLibraries: Object.fromEntries(native.map(path => [root + prefix + path, hash]))
+		, includedFiles: Object.fromEntries(["weak.php", "vendor/autoload.php", ...Object.keys(receipt.files).filter(path => path.endsWith(".php")).map(path => prefix + path)].map(path => [path, deployment[path].sha256]))
+		, errors: Object.entries(phpRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception, recovery: oracle.dependency }))) });
+	// The generic fixture's Perl-style message is not a PHP exception message.
+	for(const result of observation.results.filter(result => result.status === "rejected-as-expected"))
+		result.message = corpusHostCase(catalog.cases.find(entry => entry.id === result.id), "php-native").rejectionMessage;
+	const strict = structuredClone(observation); strict.callerMode = "strict";
+	delete strict.includedFiles["weak.php"]; strict.includedFiles["strict.php"] = deployment["strict.php"].sha256;
+	const selected = { name, version: "1.0.0"
+		, require: { php: ">=8.2 <9", "ext-ffi": "*" }
+		, autoload: { files: ["src/Api.php"] }
+		, dist: { type: "zip", url: "file:///validator/project/feed/package.zip", shasum: "a".repeat(40) } };
+	const manifest = { require: { [name]: "1.0.0" }
+		, config: { "allow-plugins": false }
+		, repositories: [{ "packagist.org": false }, { type: "package", package: selected }] };
+	return { archive: { sha256: "a".repeat(64), target: "php-native", name, version: "1.0.0" }
+		, php: {
+			version: "8.2.33", composerVersion: "Composer version 2.5.5"
+			, ...Object.fromEntries(["hostSha256", "composerSha256", "lockSha256", "installedSha256", "declarationsSha256"].map(key => [key, hash]))
+			, composerProbeSha256: sha256(composerProbe)
+			, requestSha256: sha256(corpusPhpRequestJson(library))
+			, archiveSha256: "a".repeat(64), bindingIrSha256: "c".repeat(64)
+			, manifest, manifestSha256: sha256(canonicalJson(manifest))
+			, lock: { packages: [selected], "packages-dev": [] }
+			, installed: { packages: [selected] }
+			, composerFiles: { "/usr/bin/composer": { bytes: 100, sha256: hash } }
+			, composerGeneratedFiles: files(["vendor/composer/autoload_classmap.php"])
+			, extensions: {}
+			, runtimeOptions: ["-n", "-d", "ffi.enable=1", "-d", "memory_limit=512M"]
+			, composerOptions: ["-n", "-d", "ffi.enable=1", "-d", "memory_limit=512M", "-d", "auto_prepend_file=/validator/project/tool-probe.php"]
+			, packageReceipt: receipt, packageReceiptSha256, deployment
+			, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode))]))
+			, ...Object.fromEntries(phpIsolationFlags.map(key => [key, true]))
+			, executions: [{ mode: "weak", observation }, { mode: "strict", observation: strict }]
+		}
+	};
 };
 
 const rustValidationFixture = library => ({ rustcVersion: "rustc 1.90.0 (validator-only)"
@@ -211,8 +272,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 39);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 39);
+	assert.equal(identity.files.length, 42);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 42);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -261,7 +322,7 @@ for(const [label, change] of [
 	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
 	, ["missing oracle result", run => { delete run.oracle.dependency; }]
 	, ["extra oracle result", run => { run.oracle.extra = {}; }]
-	, ["unimplemented adapter", run => { run.profile = "php-native"; }]
+	, ["unimplemented adapter", run => { run.profile = "php-wasm"; }]
 	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
 	, ["unknown library", run => { run.library = "unknown"; }]
 	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
@@ -288,7 +349,7 @@ test("explicit corpus selections reject absent, misspelled and duplicate adapter
 	assert.deepEqual(corpusSelection(undefined), []);
 	assert.deepEqual(corpusSelection("ruby, python"), ["python", "ruby"]);
 	assert.deepEqual(corpusSelection("ruby,perl,python"), ["perl", "python", "ruby"]);
-	for(const selection of ["", "python,", "PYTHON", "python,python", "php-native", null, []])
+	for(const selection of ["", "python,", "PYTHON", "python,python", "php-wasm", null, []])
 		assert.throws(() => corpusSelection(selection));
 });
 
@@ -780,9 +841,82 @@ for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+test("PHP corpus binds separate weak and strict public callers to the same fresh oracle", () => {
+	const runs = catalog.libraries.map(library => validationFixture("php-native", library.id));
+	const cells = corpusCoverage(inventory, catalog, runs);
+	assert.equal(cells.filter(cell => cell.status === "observed").length, 41);
+	assert.equal(runs.flatMap(run => run.php.executions).length, 4);
+	assert.equal(runs.flatMap(run => run.php.executions.flatMap(execution => execution.observation.errors)).length, 264);
+	for(const library of catalog.libraries)
+	{
+		const request = JSON.parse(corpusPhpRequestJson(library));
+		assert.equal(request.signatures.length, 19); assert.equal(request.cases.length, 62);
+		assert.ok(!Object.hasOwn(request, "oracle"));
+		assert.deepEqual(Object.keys(request.operations), library.operations);
+		assert.deepEqual(Object.keys(request.signatures[6].result.fields), Object.values(library.recordFields)[0]);
+	}
+	for(const mode of ["weak", "strict"])
+	{
+		const source = corpusPhpSource(mode);
+		assert.ok(source.includes("declare(strict_types=" + (mode === "strict" ? 1 : 0) + ");"));
+		assert.ok(source.includes('const MODE = "' + mode + '";'));
+		assert.ok(source.includes("$result = $call(...$args);"));
+		assert.ok(source.includes("bitsFromDecimal(") && source.includes("bitsToDecimal("));
+		assert.ok(!source.includes("Internal\\Native") && !source.includes("$request['oracle']"));
+	}
+	assert.notEqual(corpusPhpSource("weak"), corpusPhpSource("strict"));
+	assert.throws(() => corpusPhpSource("unknown"));
+});
+
+for(const [label, change] of [
+	["missing evidence", run => { delete run.php; }]
+	, ["unsupported PHP", run => { run.observation.hostVersion = "8.1.33"; }]
+	, ["wrong Composer", run => { run.php.composerVersion = "Composer version 1.0.0"; }]
+	, ["unhashed host", run => { delete run.php.hostSha256; }]
+	, ["unidentified Composer", run => { run.php.composerFiles = {}; }]
+	, ["project tool code", run => { run.php.composerFiles["/root/project/plugin.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
+	, ["unbound Composer maps", run => { run.php.composerGeneratedFiles = {}; }]
+	, ["unrelated Composer-loaded file", run => { run.php.composerGeneratedFiles["vendor/extra.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
+	, ["changed Composer map", run => { run.php.composerGeneratedFiles["vendor/composer/autoload_classmap.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
+	, ["unbound probe", run => { run.php.composerProbeSha256 = "0".repeat(64); }]
+	, ["changed request", run => { run.php.requestSha256 = "0".repeat(64); }]
+	, ["changed source", run => { run.php.consumerSources.strict = "0".repeat(64); }]
+	, ["wrong binding IR", run => { run.php.bindingIrSha256 = "0".repeat(64); }]
+	, ["wrong archive", run => { run.php.archiveSha256 = "0".repeat(64); }]
+	, ["ambient INI", run => { run.php.runtimeOptions.shift(); }]
+	, ["runtime auto prepend", run => { run.php.runtimeOptions.push("-d", "auto_prepend_file=/ambient.php"); }]
+	, ["extra extension", run => { run.php.extensions.xdebug = { path: "/usr/lib/xdebug.so", sha256: "f".repeat(64) }; }]
+	, ["unbound receipt", run => { run.php.packageReceipt.version = "9.9.9"; }]
+	, ["extra locked package", run => { run.php.lock.packages.push(structuredClone(run.php.lock.packages[0])); }]
+	, ["extra dev package", run => { run.php.lock["packages-dev"].push({ name: "other/plugin" }); }]
+	, ["wrong installed package", run => { run.php.installed.packages[0] = { name: "wrong" }; }]
+	, ["extra deployed payload", run => { run.php.deployment["vendor/lean-bridge-corpus/shop-corpus/extra.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
+	, ["changed API", run => { run.php.deployment["vendor/lean-bridge-corpus/shop-corpus/src/Api.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
+	, ["single caller", run => { run.php.executions.pop(); }]
+	, ["mislabeled caller", run => { run.php.executions[1].observation.callerMode = "weak"; }]
+	, ["32-bit host", run => { run.observation.integerBytes = 4; }]
+	, ["threaded host", run => { run.observation.threadSafe = 1; }]
+	, ["web SAPI", run => { run.observation.sapi = "fpm-fcgi"; }]
+	, ["retained records", run => { run.observation.copiedValuesCollected = false; }]
+	, ["outside API", run => { run.observation.apiLocation = "/author/src/Api.php"; }]
+	, ["missing native runtime", run => { delete run.observation.nativeLibraries["/validator/relocated/vendor/lean-bridge-corpus/shop-corpus/native/linux-x64/libleanshared.so"]; }]
+	, ["ambient PHP file", run => { run.observation.includedFiles["/ambient/plugin.php"] = "f".repeat(64); }]
+	, ["strict calls in weak file", run => { run.php.executions[1].observation.includedFiles["weak.php"] = sha256(corpusPhpSource("weak")); }]
+	, ["strict result drift", run => { run.php.executions[1].observation.results[0].observed = null; }]
+	, ["missing strict error", run => { run.php.executions[1].observation.errors.pop(); }]
+	, ["wrong error recovery", run => { run.observation.errors[0].recovery = null; }]
+	, ["wrong rejection stage", run => { run.observation.results.find(entry => entry.id === "shop/bad-record").stage = "public-call"; }]
+	, ["wrong rejection message", run => { run.observation.results.find(entry => entry.id === "shop/negative-nat").message = "unrelated failure"; }]
+	, ["wrong base recovery", run => { run.observation.results.find(entry => entry.id === "shop/negative-nat").recovery = null; }]
+	, ...phpIsolationFlags.map(key => ["missing " + key, run => { run.php[key] = false; }])
+]) test("PHP corpus rejects " + label, () => {
+	const run = validationFixture("php-native"); change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0
-	, timeout: Math.max(900_000, profiles.length * 90_000)
+	, timeout: Math.max(900_000, profiles.length * 120_000)
 }, async t => {
 	const reportName = `${profiles.join("-")}.json`;
 	const reportPath = resolve(repository, "build/type-corpus", reportName);
@@ -821,6 +955,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 	const cells = corpusCoverage(inventory, catalog, runs);
 	const observed = cells.filter(cell => cell.status === "observed").length;
 	const browserExecutions = runs.flatMap(run => run.browser?.executions ?? []);
+	const phpExecutions = runs.flatMap(run => run.php?.executions ?? []);
 	const report = { schemaVersion: 1, kind: "real-lean-type-corpus"
 		, scope: "scoped-cases-not-full-type-support"
 		, host: { platform: process.platform, architecture: process.arch
@@ -839,6 +974,9 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, cFamilyRuntimeRejections: runs.filter(run => ["c", "cpp"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
 			, dotnetRuntimeRejections: runs.filter(run => run.profile === "dotnet").reduce((count, run) => count + run.observation.errors.length, 0)
 			, jvmRuntimeRejections: runs.filter(run => ["java", "kotlin"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
+			, phpExecutions: phpExecutions.length
+			, phpExecutedCases: phpExecutions.reduce((count, execution) => count + execution.observation.results.length, 0)
+			, phpRuntimeRejections: phpExecutions.reduce((count, execution) => count + execution.observation.errors.length, 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)
