@@ -12,12 +12,39 @@ import { corpusCases, corpusHostCase, corpusLibraries, corpusOracleKeys, corpusS
 
 export const corpusProfiles = Object.freeze({
 	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
+		, transport: "native", moduleKey: "pythonModule"
 		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
 	, ruby: Object.freeze({ adapter: "prepared-gem-v1", target: "rubygems"
+		, transport: "native", moduleKey: "rubyModule"
 		, errors: Object.freeze({ type: "TypeError", range: "RangeError" }) })
 	, perl: Object.freeze({ adapter: "prepared-cpan-prebuilt-v1", target: "cpan"
+		, transport: "native", moduleKey: "perlModule"
 		, errors: Object.freeze({ type: "croak", range: "croak" }) })
+	, "node-javascript": Object.freeze({ adapter: "prepared-npm-v1", target: "npm"
+		, transport: "wasm", moduleKey: "npmModule"
+		, errors: Object.freeze({ type: "TypeError", range: "TypeError" }) })
+	, "node-typescript": Object.freeze({ adapter: "prepared-npm-ts-v1"
+		, target: "npm", transport: "wasm", moduleKey: "npmModule"
+		, errors: Object.freeze({ type: "TypeError", range: "TypeError" }) })
 });
+
+/**
+ * Select the independently specified corpus API supported by a transport.
+ *
+ * @param library - Catalog library.
+ * @param profile - Host profile, or undefined for the complete native API.
+ */
+export const corpusProfileSignatures = (library, profile) => corpusSignatures(library).filter(signature =>
+	corpusProfiles[profile]?.transport !== "wasm" || [...signature.parameters, signature.result].every(type => typeof type === "string"));
+
+/**
+ * A missing source projection is a gap, not a passed host rejection.
+ *
+ * @param library - Catalog library.
+ * @param entry - Shared input case.
+ * @param profile - Selected consumer.
+ */
+export const corpusCaseSupported = (library, entry, profile) => corpusProfileSignatures(library, profile).some(signature => signature.name === `${library.module}.${entry.operation}`);
 
 const declaredType = type => {
 	if(type.kind === "primitive") return type.name;
@@ -31,13 +58,14 @@ const declaredType = type => {
  *
  * @param library - Expected catalog API.
  * @param model - Fresh compiler-owned native model, not consumer observations.
+ * @param profile - Optional transport-specific API selection.
  */
-export const validateCorpusDeclarations = (library, model) => {
+export const validateCorpusDeclarations = (library, model, profile) => {
 	const declarations = model.exports.map(entry => ({ name: entry.name
 		, parameters: entry.parameters.map(parameter => declaredType(parameter.type))
 		, result: declaredType(entry.result) }));
 	const sorted = items => [...items].sort((a, b) => a.name.localeCompare(b.name));
-	assert.deepEqual(sorted(declarations), sorted(corpusSignatures(library)), "Compiler declarations differ from the independent corpus signatures");
+	assert.deepEqual(sorted(declarations), sorted(corpusProfileSignatures(library, profile)), "Compiler declarations differ from the independent corpus signatures");
 	return declarations;
 };
 
@@ -69,7 +97,7 @@ export const corpusCatalog = inventory => {
 		assert.equal(library.snakeOperations.length, library.operations.length);
 		assert.equal(new Set(library.snakeOperations).size, library.operations.length);
 		assert.ok(library.snakeOperations.every(name => /^[a-z][a-z0-9_]*$/.test(name)));
-		for(const profile of Object.keys(corpusProfiles)) assert.equal(typeof library[`${profile}Module`], "string");
+		for(const profile of Object.values(corpusProfiles)) assert.equal(typeof library[profile.moduleKey], "string");
 		assert.equal(corpusSignatures(library).length, library.operations.length);
 		for(const entry of cases.filter(entry => entry.library === library.id))
 		{
@@ -117,8 +145,10 @@ export const corpusCatalog = inventory => {
 export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	assert.equal(actual.schemaVersion, 1);
 	assert.ok(Object.hasOwn(corpusProfiles, actual.profile), "Unknown consumer adapter");
-	assert.equal(actual.module, library[`${actual.profile}Module`]);
-	assert.match(actual.hostVersion, actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	const wasm = corpusProfiles[actual.profile].transport === "wasm";
+	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
+	assert.match(actual.hostVersion, wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	if(wasm) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
 	if(actual.profile === "perl")
 	{
 		assert.ok(Number(actual.hostVersion.split(".")[1]) >= 36);
@@ -132,6 +162,11 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	for(const entry of cases.map(entry => corpusHostCase(entry, actual.profile)))
 	{
 		const observed = actual.results.find(result => result.id === entry.id);
+		if(!corpusCaseSupported(library, entry, actual.profile))
+		{
+			assert.deepEqual(observed, { id: entry.id, status: "unsupported", export: `${library.module}.${entry.operation}` });
+			continue;
+		}
 		if(entry.expectation.kind === "lean-oracle")
 		{
 			assert.equal(observed.status, "matched", entry.id);
@@ -156,10 +191,10 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
  */
 export const corpusIdentity = async (repository, catalog) => {
 	const paths = ["cases.mjs", "Corpus/Wire.lean", "consumers/python.py"
-		, "consumers/ruby.rb", "consumers/perl.pl"
+		, "consumers/ruby.rb", "consumers/perl.pl", "consumers/node.mjs"
 		, ...catalog.libraries.flatMap(library => [library.oracle, `${library.module.replaceAll(".", "/")}.lean`, `${library.pendingModule.replaceAll(".", "/")}.lean`])]
 		.map(path => `tests/fixtures/type-corpus/${path}`);
-	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
+	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/type-corpus-source.mjs", "tests/helpers/type-corpus-node.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
 	const files = [];
 	for(const path of paths)
 	{
@@ -197,7 +232,24 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		assert.equal(run.observation.profile, run.profile);
 		assert.match(run.declarationEvidence.modelSha256, /^[a-f0-9]{64}$/);
 		const sorted = items => [...items].sort((a, b) => a.name.localeCompare(b.name));
-		assert.deepEqual(sorted(run.declarationEvidence.signatures), sorted(corpusSignatures(library)));
+		assert.deepEqual(sorted(run.declarationEvidence.signatures), sorted(corpusProfileSignatures(library, run.profile)));
+		if(corpusProfiles[run.profile].transport === "wasm")
+		{
+			assert.equal(run.runtimeArchive.target, "npm");
+			assert.match(run.runtimeArchive.sha256, /^[a-f0-9]{64}$/);
+			assert.notEqual(run.runtimeArchive.sha256, run.archiveSha256);
+			const unsupported = corpusSignatures(library).filter(signature => !corpusProfileSignatures(library, run.profile).some(item => item.name === signature.name)).map(signature => signature.name);
+			assert.deepEqual(run.rejection.exports, [...unsupported, library.pendingExport]);
+			assert.equal(run.rejection.code, "component-adapter-hints-required");
+			assert.deepEqual(run.rejection.hints, run.rejection.exports.map(name => `hint:${name}:unsupported-${name === library.pendingExport ? "result" : "parameter"}-type`).sort());
+			if(run.profile === "node-typescript")
+			{
+				assert.equal(run.typescript.strict, true);
+				assert.equal(run.typescript.skipLibCheck, false);
+				assert.match(run.typescript.version, /^Version [0-9]+\.[0-9]+\.[0-9]+$/);
+				for(const key of ["sourceSha256", "declarationsSha256", "compilerSha256"]) assert.match(run.typescript[key], /^[a-f0-9]{64}$/);
+			}
+		}
 		if(run.profile === "perl")
 		{
 			assert.equal(run.runtimeArchive.target, "cpan");
@@ -210,6 +262,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
 		for(const entry of cases)
 		{
+			if(!corpusCaseSupported(library, entry, run.profile)) continue;
 			for(const claim of entry.coverage)
 			{
 				for(const position of claim.positions)

@@ -15,7 +15,7 @@ export const corpusLibraries = [
 		id: "shop", module: "Shop.Pricing", oracle: "ShopOracle.lean"
 		, pythonModule: "lean_shop", pendingModule: "Shop.Pending"
 		, rubyModule: "LeanBridge::Shop", rubyRequire: "lean_bridge/shop"
-		, perlModule: "LeanBridge::Shop"
+		, perlModule: "LeanBridge::Shop", npmModule: "shop-corpus"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -25,7 +25,7 @@ export const corpusLibraries = [
 		id: "telemetry", module: "Telemetry.Readings", oracle: "TelemetryOracle.lean"
 		, pythonModule: "lean_telemetry", pendingModule: "Telemetry.Pending"
 		, rubyModule: "LeanBridge::Telemetry", rubyRequire: "lean_bridge/telemetry"
-		, perlModule: "LeanBridge::Telemetry"
+		, perlModule: "LeanBridge::Telemetry", npmModule: "telemetry-corpus"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
@@ -75,6 +75,12 @@ const perlRejection = id => {
 	if(id === "wrong-boolean") return "Bool requires true() or false()";
 	if(id.startsWith("int")) return "signed integer is out of range or not an exact integer scalar";
 	return "unsigned integer is out of range or not an exact integer scalar";
+};
+
+const nodeFloatExpectation = id => {
+	const policy = { expectation: { kind: "lean-oracle" }, oracleKey: id
+		, resultEncoding: id.split("-")[0] };
+	return Object.fromEntries(["node-javascript", "node-typescript"].map(profile => [profile, policy]));
 };
 
 /**
@@ -154,9 +160,13 @@ export const corpusCases = library => {
 		, operation, arguments: args, coverage: cells
 		, resultEncoding: encoding ?? "value"
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
-		, hostExpectations: ["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
-			? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }
-			: rejection ? { perl: { rejectionMessage: perlRejection(id) } } : {}
+		, hostExpectations: {
+			...(["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
+				? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }
+				: rejection ? { perl: { rejectionMessage: perlRejection(id) } } : {})
+			, ...(["float32-wrong-type", "float64-wrong-type"].includes(id)
+				? nodeFloatExpectation(id) : {})
+		}
 		, checkIndependentCopy: id === "record"
 	}));
 };

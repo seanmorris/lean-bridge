@@ -14,7 +14,8 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { installCpanArchive } from "../../src/release/cpan-install.mjs";
 import { corpusCases, corpusHostCase, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
-import { lakeInputState, lakeWorkspaceFixture, saveLakeFile } from "./lake-workspace.mjs";
+import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { prepareCorpusSources, leanCorpusOracle } from "./type-corpus-source.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
 
@@ -28,53 +29,6 @@ const clean = { PATH: "/unavailable", CC: "/unavailable/compiler"
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 
 const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, profile === "perl" ? { module: library.perlModule, version: "1.000" } : { name: `${library.id}-${suffix}`, version: "1.0.0" }]));
-
-const prepare = async (t, library, profiles) => {
-	const context = await lakeWorkspaceFixture(t, library.id);
-	const modules = [library.module, library.pendingModule];
-	for(const module of modules)
-	{
-		const path = `${module.replaceAll(".", "/")}.lean`;
-		await saveLakeFile(context.root, path, await readFile(join(fixtures, path)));
-	}
-	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
-		, modules: [library.module]
-		, exports: library.operations.map(operation => `${library.module}.${operation}`)
-		, targets: targetSettings(library, profiles) }));
-	return context;
-};
-
-const leanOracle = async (context, library, leanPrefix) => {
-	const root = join(context.directory, "oracle");
-	const sources = [
-		[context.names.remote, join(context.cached, `lib/${context.names.remote}.lean`)]
-		, [context.names.local, join(context.local, `${context.names.local}.lean`)]
-		, [library.module, join(context.root, `${library.module.replaceAll(".", "/")}.lean`)]
-		, [library.pendingModule, join(context.root, `${library.pendingModule.replaceAll(".", "/")}.lean`)]
-		, ["Corpus.Wire", join(fixtures, "Corpus/Wire.lean")]
-	];
-	const lean = join(leanPrefix, "bin/lean");
-	const env = { PATH: "/usr/bin:/bin", LEAN_SYSROOT: leanPrefix, LEAN_PATH: join(root, "olean") };
-	const modules = [];
-	for(const [module, source] of sources)
-	{
-		const path = `${module.replaceAll(".", "/")}.lean`;
-		const bytes = await readFile(source);
-		await saveLakeFile(join(root, "source"), path, bytes);
-		const olean = join(root, "olean", `${path.slice(0, -5)}.olean`);
-		await mkdir(resolve(olean, ".."), { recursive: true });
-		await run(lean, ["-R", join(root, "source"), "-o", olean, join(root, "source", path)], root, env);
-		modules.push({ module, sha256: sha256(bytes) });
-	}
-	const source = await readFile(join(fixtures, library.oracle));
-	await saveLakeFile(root, "Oracle.lean", source);
-	const executed = await run(lean, ["--run", "Oracle.lean"], root, env);
-	const result = JSON.parse(executed.stdout);
-	return { result, modules, sourceSha256: sha256(source)
-		, resultSha256: sha256(canonicalJson(result))
-		, leanCompilerSha256: sha256(await readFile(lean))
-		, version: (await run(lean, ["--version"], root, env)).stdout.trim() };
-};
 
 const installedObservation = async ({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle, environment }) => {
 	const root = join(consumer, profile), archive = pkg.artifacts[0];
@@ -145,7 +99,7 @@ const installedObservation = async ({ profile, library, consumer, handoff, pkg, 
  * @param profiles - Validated consumer profiles sharing this native build.
  */
 export const runNativeCorpusLibrary = async (t, library, profiles) => {
-	assert.ok(profiles.length > 0 && profiles.every(profile => Object.hasOwn(corpusProfiles, profile)));
+	assert.ok(profiles.length > 0 && profiles.every(profile => corpusProfiles[profile]?.transport === "native"));
 	assert.equal(new Set(profiles).size, profiles.length);
 	const space = await statfs(tmpdir());
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");
@@ -159,10 +113,10 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		environment.LEAN_BRIDGE_PERLS = JSON.stringify([perl]);
 	}
 	const targets = profiles.map(profile => corpusProfiles[profile].target);
-	const context = await prepare(t, library, profiles);
+	const context = await prepareCorpusSources(t, library, library.operations.map(operation => `${library.module}.${operation}`), targetSettings(library, profiles));
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling Lean oracle`);
-	const oracle = await leanOracle(context, library, leanPrefix);
+	const oracle = await leanCorpusOracle(context, library, leanPrefix);
 	const relocated = join(context.directory, "relocated");
 	await cp(context.workspace, relocated, { recursive: true });
 	const builds = [];

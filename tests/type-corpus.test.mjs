@@ -10,8 +10,9 @@ import { resolve } from "node:path";
 import test from "node:test";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
+import { corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
 import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
+import { corpusTypeScript, runNodeCorpusLibrary } from "./helpers/type-corpus-node.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -28,22 +29,34 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const selectedCases = cases.map(entry => corpusHostCase(entry, profile));
 	const abi = { ptrsize: "8", ivsize: "8", useithreads: "define" };
 	const abiKey = sha256(JSON.stringify(JSON.parse(canonicalJson(abi))));
+	const wasm = corpusProfiles[profile].transport === "wasm";
 	const observation = { schemaVersion: 1, profile
-		, module: library[`${profile}Module`]
-		, hostVersion: profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
+		, module: library[corpusProfiles[profile].moduleKey]
+		, hostVersion: wasm ? "22.23.2" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
-		, results: selectedCases.map(entry => entry.expectation.kind === "lean-oracle"
-			? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
-			: { id: entry.id, status: "rejected-as-expected"
-				, exception: corpusProfiles[profile].errors[entry.expectation.category]
-				, recovered: true
-				, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) }) };
+		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
+			? { id: entry.id, status: "unsupported", export: `${library.module}.${entry.operation}` }
+			: entry.expectation.kind === "lean-oracle"
+				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
+				: { id: entry.id, status: "rejected-as-expected"
+					, exception: corpusProfiles[profile].errors[entry.expectation.category]
+					, recovered: true
+					, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) }) };
 	return { library: library.id, profile, path: "ordinary-source"
 		, archiveSha256: "a".repeat(64)
 		, archive: { sha256: "a".repeat(64), target: corpusProfiles[profile].target }
 		, runtimeIdentity: "b".repeat(64), bindingIrSha256: "c".repeat(64)
-		, declarationEvidence: { modelSha256: "d".repeat(64), signatures: corpusSignatures(library) }
+		, declarationEvidence: { modelSha256: "d".repeat(64), signatures: corpusProfileSignatures(library, profile) }
 		, ...(profile === "perl" ? { perlAbi: { abi, abiKey }, runtimeArchive: { target: "cpan", sha256: "e".repeat(64) } } : {})
+		, ...(wasm ? { runtimeArchive: { target: "npm", sha256: "e".repeat(64) }
+			, rejection: { code: "component-adapter-hints-required"
+				, exports: [...corpusSignatures(library).filter(signature => !corpusProfileSignatures(library, profile).some(item => item.name === signature.name)).map(signature => signature.name), library.pendingExport]
+				, hints: [...library.operations.slice(4, 7).map(name => `hint:${library.module}.${name}:unsupported-parameter-type`), `hint:${library.pendingExport}:unsupported-result-type`].sort() }
+		} : {})
+		, ...(profile === "node-typescript" ? { typescript: { strict: true
+			, skipLibCheck: false, version: "Version 5.9.3"
+			, sourceSha256: "f".repeat(64), declarationsSha256: "f".repeat(64)
+			, compilerSha256: "f".repeat(64) } } : {})
 		, oracle, observation };
 };
 
@@ -63,13 +76,14 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 15);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 15);
+	assert.equal(identity.files.length, 18);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 18);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/ruby.rb")));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/perl.pl")));
+	assert.ok(identity.files.some(file => file.path.endsWith("consumers/node.mjs")));
 	assert.deepEqual(identity.catalog, catalog);
 	assert.deepEqual(await corpusIdentity(repository, catalog), identity);
 	const changed = structuredClone(catalog);
@@ -225,6 +239,54 @@ test("profile-specific host errors cannot be borrowed from another adapter", () 
 	assert.throws(() => corpusCoverage(inventory, catalog, [unsupported]));
 });
 
+test("Node profiles keep unsupported array and record cases as gaps", () => {
+	for(const profile of ["node-javascript", "node-typescript"])
+	{
+		const run = validationFixture(profile);
+		assert.equal(run.observation.results.filter(entry => entry.status === "unsupported").length, 6);
+		assert.equal(run.observation.results.filter(entry => entry.status === "matched").length, 40);
+		assert.equal(run.observation.results.filter(entry => entry.status === "rejected-as-expected").length, 16);
+		const cells = corpusCoverage(inventory, catalog, [run]);
+		assert.equal(cells.filter(cell => cell.status === "observed").length, 32);
+		assert.ok(cells.filter(cell => cell.shape === "array" || cell.shape === "record" || cell.position === "field").every(cell => cell.status === "gap"));
+		for(const change of [
+			run => { run.observation.results[0] = { id: "shop/dependency", status: "unsupported", export: "Shop.Pricing.quoteUnits" }; }
+			, run => { run.observation.results.find(entry => entry.id === "shop/array").status = "matched"; }
+			, run => { run.rejection.hints.pop(); }
+			, run => { run.rejection.code = "build-command-failed"; }
+			, run => { delete run.runtimeArchive; }
+			, run => { run.observation.hostVersion = "20.0.0"; }
+		]) {
+			const changed = structuredClone(run);
+			change(changed);
+			assert.throws(() => corpusCoverage(inventory, catalog, [changed]));
+		}
+	}
+});
+
+test("strict TypeScript uses the installed public API and independent exact signatures", () => {
+	for(const library of catalog.libraries)
+	{
+		const source = corpusTypeScript(library);
+		assert.match(source, /type Equal<A, B>/);
+		assert.equal((source.match(/export type Signature/g) ?? []).length, 16);
+		assert.equal((source.match(/@ts-expect-error/g) ?? []).length, 3);
+		assert.doesNotMatch(source, /\bany\b|@ts-ignore|api\.undefined/);
+		assert.match(source, /new Uint8Array/);
+		assert.match(source, /floatFromBits/);
+	}
+	for(const change of [
+		run => { delete run.typescript; }
+		, run => { run.typescript.strict = false; }
+		, run => { run.typescript.skipLibCheck = true; }
+		, run => { run.typescript.compilerSha256 = "unknown"; }
+	]) {
+		const run = validationFixture("node-typescript");
+		change(run);
+		assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+	}
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0, timeout: 900_000
 }, async t => {
@@ -235,7 +297,13 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 	const runs = [];
 	try
 	{
-		for(const library of catalog.libraries) runs.push(...await runNativeCorpusLibrary(t, library, profiles));
+		for(const library of catalog.libraries)
+		{
+			const native = profiles.filter(profile => corpusProfiles[profile].transport === "native");
+			const wasm = profiles.filter(profile => corpusProfiles[profile].transport === "wasm");
+			if(native.length) runs.push(...await runNativeCorpusLibrary(t, library, native));
+			if(wasm.length) runs.push(...await runNodeCorpusLibrary(t, library, wasm));
+		}
 	}
 	catch(error)
 	{
@@ -246,12 +314,13 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 	for(const library of catalog.libraries)
 	{
 		const selected = runs.filter(run => run.library === library.id);
-		assert.deepEqual(selected.map(run => run.profile), profiles);
+		assert.deepEqual(selected.map(run => run.profile).sort(), profiles);
 		for(const run of selected)
 		{
 			assert.deepEqual(run.oracle, selected[0].oracle);
-			assert.equal(run.bindingIrSha256, selected[0].bindingIrSha256);
-			assert.equal(run.runtimeIdentity, selected[0].runtimeIdentity);
+			const sameTransport = selected.find(other => corpusProfiles[other.profile].transport === corpusProfiles[run.profile].transport);
+			assert.equal(run.bindingIrSha256, sameTransport.bindingIrSha256);
+			assert.equal(run.runtimeIdentity, sameTransport.runtimeIdentity);
 		}
 	}
 	assert.deepEqual(await corpusIdentity(repository, catalog), identity, "Corpus inputs changed during execution");
@@ -269,8 +338,10 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 		, summary: { libraries: catalog.libraries.length, profileRuns: runs.length
 			, profiles: inventory.document.profiles.length
 			, cases: runs.reduce((count, run) => count + run.observation.results.length, 0)
+			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status !== "unsupported").length, 0)
+			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, observedCells: observed, gapCells: cells.length - observed
-			, rejectedBuilds: catalog.libraries.length }
+			, rejectedBuilds: new Set(runs.map(run => `${run.library}/${corpusProfiles[run.profile].transport}`)).size }
 		, runs, cells };
 	await mkdir(resolve(reportPath, ".."), { recursive: true });
 	await writeFile(reportPath, canonicalJson(report));

@@ -310,6 +310,13 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.ordinary_rust\.outcome != 'success'/);
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:ruby"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
+  assert.match(workflow, /id: type_corpus_node/);
+  assert.match(workflow, /npm run test:consumer:node && npm run test:type-corpus:node/);
+  assert.match(workflow, /steps\.type_corpus_node\.outcome != 'success'/);
+  assert.match(workflow, /steps\.consumer\.outcome == 'success' && steps\.type_corpus_node\.outcome == 'success'/);
+  assert.match(workflow, /name: type-corpus-node-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /path: build\/type-corpus\/node-javascript-node-typescript\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_python/);
   assert.match(workflow, /npm run test:type-corpus:python/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);

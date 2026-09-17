@@ -2,6 +2,8 @@
 
 VO 1217. The shared corpus now includes a Perl adapter that installs prepared runtime and component CPAN archives. It uses the same two Lean libraries and 124 inputs as the [Python/Ruby milestone](type-corpus-primitives-ruby-20260916.md), with explicit host-specific expectations. This milestone does not change the production generators or promote type-support inventory entries.
 
+This record describes commit `34b2610`. The [Node milestone](type-corpus-node-20260917.md) adds JavaScript/TypeScript adapters and updates the shared harness identity.
+
 ## Declarations and execution
 
 The [catalog](../../tests/fixtures/type-corpus/cases.mjs) independently specifies all 38 function signatures, including nested array elements and named record fields. Before installing packages, the [harness](../../tests/helpers/type-corpus-native.mjs) compares those signatures with fresh compiler-produced native models from both relocated builds. Reports keep the declaration evidence and model hash separate from installed API observations.
