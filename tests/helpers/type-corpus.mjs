@@ -17,9 +17,14 @@ import { corpusJvmSource, corpusJvmSignatures, corpusJvmRejection, jvmRuntimeCas
 import { javaCompilerOptions, kotlinCompilerOptions, mavenSettings } from "./type-corpus-jvm-tools.mjs";
 import { validatePhpEvidence } from "./type-corpus-php.mjs";
 import { validatePhpWasmEvidence } from "./type-corpus-php-wasm-evidence.mjs";
+import { validateWitEvidence } from "./type-corpus-wit-evidence.mjs";
+import { corpusWitRejection } from "./type-corpus-wit-source.mjs";
 
 export const corpusProfiles = Object.freeze({
-	"php-native": Object.freeze({ adapter: "prepared-composer-v1"
+	"wit-wasi": Object.freeze({ adapter: "prepared-wit-wasmtime-v1"
+		, target: "wit-wasi", transport: "native", moduleKey: "cModule"
+		, errors: Object.freeze({ type: "WasmtimeError", range: "WasmtimeError" }) })
+	, "php-native": Object.freeze({ adapter: "prepared-composer-v1"
 		, target: "php-native"
 		, transport: "native", moduleKey: "phpModule"
 		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
@@ -174,7 +179,7 @@ export const corpusCatalog = inventory => {
 			if(selected.expectation.kind === "lean-oracle") assert.equal(typeof selected.oracleKey, "string");
 			else if(selected.expectation.kind === "compile-rejection")
 			{
-				assert.ok(["rust", "c", "cpp", "dotnet", "java", "kotlin"].includes(profile));
+				assert.ok(["rust", "c", "cpp", "dotnet", "java", "kotlin", "wit-wasi"].includes(profile));
 				assert.ok((profile === "java" ? ["compiler.err.cant.apply.symbol", "compiler.err.prob.found.req"] : profile === "kotlin" ? ["ARGUMENT_TYPE_MISMATCH"] : profile === "dotnet" ? ["CS0029", "CS0220", "CS0221", "CS1503"] : profile === "rust" ? ["E0308", "E0600", "overflowing_literals"] : ["narrowing", "incompatible-type"]).includes(selected.expectation.diagnostic));
 			}
 			else assert.ok(typeof selected.rejectionMessage === "string" && selected.rejectionMessage.length > 0);
@@ -206,7 +211,9 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
 	const cFamily = ["c", "cpp"].includes(actual.profile);
-	if(actual.profile === "php-wasm") assert.match(actual.hostVersion, /^8\.4\.\d+$/);
+	const wit = actual.profile === "wit-wasi";
+	if(wit) assert.equal(actual.hostVersion, "42.0.1");
+	else if(actual.profile === "php-wasm") assert.match(actual.hostVersion, /^8\.4\.\d+$/);
 	else if(actual.profile === "php-native") assert.match(actual.hostVersion, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/);
 	else
 	assert.match(actual.hostVersion, actual.profile === "java" ? /^22\.\d+\.\d+$/ : actual.profile === "kotlin" ? /^2\.2\.0$/ : actual.profile === "dotnet" ? /^8\.0\.\d+$/ : cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
@@ -239,15 +246,15 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		}
 		else if(entry.expectation.kind === "compile-rejection")
 		{
-			assert.ok(["rust", "dotnet", "java", "kotlin"].includes(actual.profile) || cFamily);
+			assert.ok(["rust", "dotnet", "java", "kotlin"].includes(actual.profile) || cFamily || wit);
 			assert.equal(observed.status, "rejected-at-compile-time");
-			assert.equal(observed.sourceSha256, sha256(["java", "kotlin"].includes(actual.profile) ? corpusJvmRejection(library, entry, actual.profile) : actual.profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, actual.profile) : corpusRustRejection(library, entry)));
+			assert.equal(observed.sourceSha256, sha256(wit ? corpusWitRejection(library, entry) : ["java", "kotlin"].includes(actual.profile) ? corpusJvmRejection(library, entry, actual.profile) : actual.profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, actual.profile) : corpusRustRejection(library, entry)));
 			assert.ok(observed.diagnostics.length > 0);
 			for(const diagnostic of observed.diagnostics)
 			{
 				assert.equal(diagnostic.code, entry.expectation.diagnostic);
-				assert.equal(diagnostic.file, ["java", "kotlin"].includes(actual.profile) ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "java" ? "java" : "kt"}` : actual.profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`);
-				if(cFamily) validateCFamilyDiagnostic(diagnostic, actual.profile, entry.expectation.diagnostic);
+				assert.equal(diagnostic.file, ["java", "kotlin"].includes(actual.profile) ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "java" ? "java" : "kt"}` : actual.profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily || wit ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`);
+				if(cFamily || wit) validateCFamilyDiagnostic(diagnostic, wit ? "c" : actual.profile, entry.expectation.diagnostic);
 				assert.ok(Number.isSafeInteger(diagnostic.line) && diagnostic.line > 0);
 				assert.ok(Number.isSafeInteger(diagnostic.column) && diagnostic.column > 0);
 			}
@@ -256,9 +263,11 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
-			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "php-wasm", "dotnet", "java", "kotlin"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "php-wasm", "dotnet", "java", "kotlin", "wit-wasi"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
-			if(["php-native", "php-wasm", "dotnet", "java", "kotlin"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
+			if(["php-native", "php-wasm", "dotnet", "java", "kotlin", "wit-wasi"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
+			if(wit)
+			{ assert.equal(observed.message, entry.rejectionMessage); assert.equal(observed.stage, "public-call"); assert.equal(observed.outputUnchanged, true); }
 			if(["php-native", "php-wasm"].includes(actual.profile)) assert.equal(observed.stage, entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", entry.id);
 		}
 	}
@@ -514,6 +523,7 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus-php-source.mjs", "tests/helpers/type-corpus-php.mjs", "tests/fixtures/type-corpus/consumers/php.php");
 	paths.push(...["php-wasm", "php-wasm-node", "php-wasm-browser"].map(name => "tests/fixtures/type-corpus/consumers/" + name + ".mjs"));
 	paths.push(...["php-wasm", "php-wasm-install", "php-wasm-browser", "php-wasm-evidence", "php-wasm-fixture"].map(name => "tests/helpers/type-corpus-" + name + ".mjs"));
+	paths.push("tests/fixtures/type-corpus/consumers/wit.h", "tests/fixtures/type-corpus/wasmtime-c-api-files.json", ...["wit", "wit-source", "wit-evidence", "wit-fixture"].map(name => "tests/helpers/type-corpus-" + name + ".mjs"));
 	const files = [];
 	for(const path of paths)
 	{
@@ -585,6 +595,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		if(run.profile === "dotnet") validateDotnetEvidence(run, library);
 		if(run.profile === "php-native") validatePhpEvidence(run, library, observation => validateCorpusObservation(library, cases, run.oracle, observation));
 		if(run.profile === "php-wasm") validatePhpWasmEvidence(run, library, observation => validateCorpusObservation(library, cases, run.oracle, observation));
+		if(run.profile === "wit-wasi") validateWitEvidence(run, library);
 		if(["java", "kotlin"].includes(run.profile)) validateJvmEvidence(run, library);
 		for(const entry of cases)
 		{

@@ -1,5 +1,7 @@
 # Shared PHP-Wasm corpus, 2026-09-17
 
+Historical record for commit `c08bf78`. The [WIT/WASI corpus record](type-corpus-wit-wasi-20260917.md) documents the subsequent seventeenth adapter.
+
 VO 1217. The shared `Shop.Pricing` and `Telemetry.Readings` libraries now run through installed PHP-Wasm packages in Node and Chromium. Each exports 19 functions. Fresh Lean runs supply the expected results outside the consumers; PHP callers receive only inputs and independent signature/error expectations. Production generators and the type-support inventory are unchanged.
 
 ## Public types and values
@@ -60,4 +62,4 @@ Core checks pass with 1,062 tests and 54 toolchain-gated skips. Documentation te
 
 The PHP consumer job requires `npm run test:type-corpus:php-wasm` and uploads `type-corpus-php-wasm-<commit>`. Failure or a missing report fails the gate. The [testing guide](../contributing/testing.md#shared-real-lean-type-corpus) lists prerequisites and tool selectors.
 
-Sixteen of seventeen shared-corpus adapters are implemented. WIT/WASI remains the adapter gap. Reviewed-IR execution and further type families, positions and semantics remain open. The inventory stays at 656 installed-tested cells and 29,530 required gaps. This record does not promote scoped corpus observations to full type support or publish a registry package.
+At this milestone, sixteen of seventeen shared-corpus adapters were implemented and WIT/WASI remained the adapter gap. Reviewed-IR execution and further type families, positions and semantics remain open. The inventory stays at 656 installed-tested cells and 29,530 required gaps. This record does not promote scoped corpus observations to full type support or publish a registry package.

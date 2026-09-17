@@ -22,6 +22,7 @@ import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpu
 import { installedCFamilyCorpus } from "./type-corpus-c-family.mjs";
 import { installedDotnetCorpus } from "./type-corpus-dotnet.mjs";
 import { installedPhpCorpus } from "./type-corpus-php.mjs";
+import { installedWitCorpus } from "./type-corpus-wit.mjs";
 import { installedJvmCorpus } from "./type-corpus-jvm.mjs";
 import { prepareJvmCorpusDependencies } from "./type-corpus-jvm-tools.mjs";
 
@@ -112,6 +113,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
 	if(profiles.includes("dotnet")) environment.LEAN_BRIDGE_DOTNET ??= resolve(".toolchains/dotnet/dotnet");
+	if(profiles.includes("wit-wasi")) environment.LEAN_BRIDGE_WASMTIME_C_API ??= resolve(".toolchains/wasmtime42");
 	if(profiles.includes("php-native"))
 	{
 		environment.LEAN_BRIDGE_PHP ??= "/usr/bin/php";
@@ -156,6 +158,11 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const declarationEvidence = { modelSha256: sha256(await readFile(join(builds[0].output, "native/component/model.json")))
 		, signatures: validateCorpusDeclarations(library, model) };
 	validateCorpusDeclarations(library, await json(join(builds[1].output, "native/component/model.json")));
+	// The reproduced archives and declarations have been compared. Only the first
+	// release supplies consumers; retaining the duplicate during handoff can fill
+	// scratch space when all native targets are selected together.
+	await rm(builds[1].output, { recursive: true, force: true });
+	await assert.rejects(lstat(builds[1].output), { code: "ENOENT" });
 	let perlAbi;
 	if(profiles.includes("perl"))
 	{
@@ -221,8 +228,8 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const runtimePackage = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "runtime");
 		assert.equal(pkg.artifacts.length, pkg.target === "maven" ? 2 : 1);
 		const archive = pkg.target === "maven" ? pkg.artifacts.find(file => file.path.endsWith(".jar")) : pkg.artifacts[0];
-		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp", "dotnet", "java", "kotlin"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
-		const observed = profile === "rust"
+		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp", "dotnet", "java", "kotlin", "wit-wasi"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
+		const observed = profile === "wit-wasi" ? await installedWitCorpus({ library, consumer, handoff, pkg, environment, clean }) : profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
 			: profile === "dotnet" ? await installedDotnetCorpus({ library, consumer, handoff, pkg, environment, clean })
 				: profile === "php-native" ? await installedPhpCorpus({ library, consumer, handoff, pkg, environment, clean })
@@ -247,7 +254,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 				, compilerPathDisabled: true, offlineInstall: true
 				, ...(profile === "rust" ? { rustCompilerDuringInstall: true
 					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {})
-				, ...(["c", "cpp", "dotnet", "java", "kotlin"].includes(profile) ? { consumerCompilerDuringInstall: true
+				, ...(["c", "cpp", "dotnet", "java", "kotlin", "wit-wasi"].includes(profile) ? { consumerCompilerDuringInstall: true
 					, compilerFreeExecution: true } : {}) }
 			, ...observed
 			, rejection });

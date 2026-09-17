@@ -311,7 +311,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:ruby"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:rust"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=rust node --test tests/type-corpus.test.mjs");
-  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust,wit-wasi node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:wit-wasi"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=wit-wasi node --test tests/type-corpus.test.mjs");
+  assert.match(workflow, /id: ordinary_wit\n\s*continue-on-error: true/);
+  assert.match(workflow, /id: type_corpus_wit\n\s*continue-on-error: true/);
+  assert.match(workflow, /node --test tests\/native-wit\.test\.mjs && npm run test:type-corpus:wit-wasi/);
+  assert.match(workflow, /steps\.type_corpus_wit\.outcome != 'success'/);
+  assert.match(workflow, /steps\.type_corpus_wit\.outcome == 'success'/);
+  assert.match(workflow, /name: type-corpus-wit-wasi-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /path: build\/type-corpus\/wit-wasi\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:php-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=php-native node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: type_corpus_php_native\n\s*continue-on-error: true/);
   assert.match(workflow, /node --test tests\/native-php\.test\.mjs && npm run test:type-corpus:php-native/);
@@ -406,7 +414,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 14);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 15);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);

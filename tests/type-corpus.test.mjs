@@ -25,6 +25,9 @@ import { corpusPhpRequestJson, corpusPhpSource, phpRuntimeCases } from "./helper
 import { composerProbe, phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 import { phpWasmValidationFixture } from "./helpers/type-corpus-php-wasm-fixture.mjs";
 import { phpWasmIsolationFlags } from "./helpers/type-corpus-php-wasm-evidence.mjs";
+import { corpusWitRejection, corpusWitSource, corpusWitSignatures, validateWitSignatures, witRuntimeCases } from "./helpers/type-corpus-wit-source.mjs";
+import { witValidationFixture, witDocumentFixture } from "./helpers/type-corpus-wit-fixture.mjs";
+import { witIsolationFlags } from "./helpers/type-corpus-wit-evidence.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -44,6 +47,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const wasm = corpusProfiles[profile].transport === "wasm";
 	const browser = corpusProfiles[profile].browser;
 	const cFamily = ["c", "cpp"].includes(profile);
+	const wit = profile === "wit-wasi";
 	const jvm = ["java", "kotlin"].includes(profile), php = ["php-native", "php-wasm"].includes(profile);
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
@@ -56,17 +60,18 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
 				: entry.expectation.kind === "compile-rejection" ? { id: entry.id
 					, status: "rejected-at-compile-time"
-					, sourceSha256: sha256(jvm ? corpusJvmRejection(library, entry, profile) : profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
+					, sourceSha256: sha256(wit ? corpusWitRejection(library, entry) : jvm ? corpusJvmRejection(library, entry, profile) : profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
 					, diagnostics: [{ code: entry.expectation.diagnostic
-						, file: jvm ? `src/reject-${entry.id.split("/")[1]}.${profile === "java" ? "java" : "kt"}` : profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
+						, file: jvm ? `src/reject-${entry.id.split("/")[1]}.${profile === "java" ? "java" : "kt"}` : profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily || wit ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
 						, line: 7, column: 1
-						, ...(cFamily ? { message: entry.expectation.diagnostic === "narrowing" ? "conversion from value changes the value" : "incompatible types", option: entry.expectation.diagnostic === "narrowing" ? profile === "c" ? "-Werror=overflow" : "-Wnarrowing" : null } : {}) }] }
+						, ...(cFamily || wit ? { message: entry.expectation.diagnostic === "narrowing" ? "conversion from value changes the value" : "incompatible types", option: entry.expectation.diagnostic === "narrowing" ? profile === "c" || wit ? "-Werror=overflow" : "-Wnarrowing" : null } : {}) }] }
 					: { id: entry.id, status: "rejected-as-expected"
 						, exception: corpusProfiles[profile].errors[entry.expectation.category]
 						, recovered: true
-						, ...(profile === "dotnet" || jvm || php ? { recovery: oracle.dependency } : {})
+						, ...(profile === "dotnet" || jvm || php || wit ? { recovery: oracle.dependency } : {})
+						, ...(wit ? { stage: "public-call", outputUnchanged: true } : {})
 						, ...(php ? { stage: entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", message: entry.rejectionMessage } : {})
-						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm || php ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm || php || wit ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
 		, ...(jvm ? { jvmVersion: "22.0.2"
 			, apiLocation: "/validator/relocated/package.jar"
 			, nativeRootCount: 1, nativeLibraries: jvmNativeLibraries(library)
@@ -98,6 +103,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(profile === "dotnet" ? { dotnet: dotnetValidationFixture(library) } : {})
 		, ...(jvm ? { jvm: jvmValidationFixture(library, profile), pomArchive: { target: "maven", sha256: "e".repeat(64) } } : {})
 		, ...(php ? profile === "php-native" ? phpValidationFixture(library, observation, oracle) : phpWasmValidationFixture(library, observation, oracle) : {})
+		, ...(wit ? witValidationFixture(library, observation, oracle) : {})
 		, oracle, observation };
 };
 
@@ -275,8 +281,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 50);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 50);
+	assert.equal(identity.files.length, 56);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 56);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -297,7 +303,8 @@ test("every inventoried profile and position remains a gap without executed case
 	assert.equal(new Set(cells.map(cell => cell.profile)).size, 17);
 	assert.equal(new Set(cells.map(cell => cell.shape)).size, 48);
 	assert.ok(cells.every(cell => cell.status === "gap" && cell.cases.length === 0 && cell.owner > 0));
-	assert.ok(cells.some(cell => cell.reason === "adapter-not-implemented"));
+	assert.ok(cells.every(cell => cell.reason !== "adapter-not-implemented"));
+	assert.deepEqual(Object.keys(corpusProfiles).sort(), inventory.document.profiles.map(profile => profile.id).sort());
 	assert.ok(cells.some(cell => cell.reason === "source-path-not-implemented"));
 	assert.ok(cells.some(cell => cell.reason === "case-not-executed"));
 	assert.equal(canonicalJson(inventory), before);
@@ -325,7 +332,7 @@ for(const [label, change] of [
 	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
 	, ["missing oracle result", run => { delete run.oracle.dependency; }]
 	, ["extra oracle result", run => { run.oracle.extra = {}; }]
-	, ["unimplemented adapter", run => { run.profile = "wit-wasi"; }]
+	, ["unknown adapter", run => { run.profile = "not-a-profile"; }]
 	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
 	, ["unknown library", run => { run.library = "unknown"; }]
 	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
@@ -352,7 +359,7 @@ test("explicit corpus selections reject absent, misspelled and duplicate adapter
 	assert.deepEqual(corpusSelection(undefined), []);
 	assert.deepEqual(corpusSelection("ruby, python"), ["python", "ruby"]);
 	assert.deepEqual(corpusSelection("ruby,perl,python"), ["perl", "python", "ruby"]);
-	for(const selection of ["", "python,", "PYTHON", "python,python", "wit-wasi", null, []])
+	for(const selection of ["", "python,", "PYTHON", "python,python", "not-a-profile", null, []])
 		assert.throws(() => corpusSelection(selection));
 });
 
@@ -999,6 +1006,85 @@ for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+test("WIT corpus distinguishes public calls, typed-field range failures and recovery", () => {
+	const runs = catalog.libraries.map(library => validationFixture("wit-wasi", library.id));
+	assert.deepEqual(corpusSelection("wit-wasi"), ["wit-wasi"]);
+	assert.equal(corpusCoverage(inventory, catalog, runs).filter(cell => cell.status === "observed").length, 41);
+	for(const [index, run] of runs.entries())
+	{
+		const library = catalog.libraries[index], source = corpusWitSource(library);
+		assert.equal(run.observation.results.filter(entry => entry.status === "matched").length, 42);
+		assert.equal(run.observation.results.filter(entry => entry.status === "rejected-as-expected").length, 8);
+		assert.equal(run.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 12);
+		assert.equal(run.observation.errors.length, Object.keys(witRuntimeCases).length * 3);
+		assert.deepEqual(validateWitSignatures(witDocumentFixture(library), library), corpusWitSignatures(library));
+		assert.match(source, /_wasmtime_call\(session/);
+		assert.match(source, /wit_mutate\(&args\[0\]\); wit_mutate\(&out\)/);
+		assert.match(source, /_wasmtime_close\(session\); session = NULL/);
+		assert.doesNotMatch(source, /Alpha|validator-only|lean_bridge_native_|#include ".*\.lean"/);
+	}
+});
+
+for(const [label, change] of [
+	["missing evidence", run => { delete run.wit; }]
+	, ["wrong Wasmtime version", run => { run.observation.hostVersion = "41.0.0"; }]
+	, ["missing package receipt", run => { delete run.wit.packageReceipt; }]
+	, ["different package receipt", run => { run.wit.packageReceiptSha256 = "a".repeat(64); }]
+	, ["different archive", run => { run.wit.archiveSha256 = "b".repeat(64); }]
+	, ["different compiler", run => { run.wit.compilerSha256 = "invalid"; }]
+	, ["disabled conversion diagnostics", run => { run.wit.negativeCompilerOptions = []; }]
+	, ["disabled assertions", run => { run.wit.compilerOptions.pop(); }]
+	, ["different caller", run => { run.wit.sourceSha256 = "b".repeat(64); }]
+	, ["missing executable identity", run => { delete run.wit.executableSha256; }]
+	, ["different wasm-tools", run => { run.wit.wasmToolsVersion = "wasm-tools 1.0.0"; }]
+	, ["missing parser identity", run => { delete run.wit.wasmToolsSha256; }]
+	, ["different component receipt", run => { run.wit.componentReceipt.bindingIrSha256 = "e".repeat(64); }]
+	, ["different native adapter", run => { run.wit.adapterReceipt.runtimeIdentity = "e".repeat(64); }]
+	, ["different runtime", run => { run.wit.runtimeReceipt.files["lib/libleanshared.so"].sha256 = "a".repeat(64); }]
+	, ["changed public header", run => { run.wit.packageReceipt.files["include/shop_wasmtime.h"].sha256 = "a".repeat(64); }]
+	, ["changed engine payload", run => { run.wit.compiled.wasmtime.files["lib/libwasmtime.so"].sha256 = "a".repeat(64); }]
+	, ["different engine pin", run => { run.wit.compiled.wasmtime.filesSha256 = "a".repeat(64); }]
+	, ["different component binary", run => { run.wit.declarations.component.inputSha256 = "a".repeat(64); }]
+	, ["different WIT source", run => { run.wit.declarations.wit.inputSha256 = "a".repeat(64); }]
+	, ["missing binary declarations", run => { delete run.wit.declarations.component; }]
+	, ["missing WIT declarations", run => { delete run.wit.declarations.wit; }]
+	, ["different binary signature", run => { Object.values(run.wit.declarations.component.document.interfaces[0].functions)[0].result = "bool"; }]
+	, ["different WIT signature", run => { Object.values(run.wit.declarations.wit.document.interfaces[0].functions)[0].result = "bool"; }]
+	, ["different nested field type", run => { run.wit.declarations.wit.document.types.find(type => type.kind.record).kind.record.fields[0].type = "string"; }]
+	, ["reordered record fields", run => { run.wit.declarations.component.document.types.find(type => type.kind.record).kind.record.fields.reverse(); }]
+	, ["changed Unit enum", run => { run.wit.declarations.wit.document.types.find(type => type.kind.enum).kind.enum.cases[0].name = "empty"; }]
+	, ["missing public interface export", run => { run.wit.declarations.component.document.worlds[0].exports = {}; }]
+	, ["unexpected world import", run => { run.wit.declarations.wit.document.worlds[0].imports.extra = { function: {} }; }]
+	, ["changed WIT package identity", run => { run.wit.declarations.wit.document.packages[0].name = "lean-bridge:other@1.0.0"; }]
+	, ["cyclic type alias", run => {
+		const document = run.wit.declarations.wit.document, index = document.types.length;
+		document.types.push({ kind: { type: index } });
+		Object.values(document.interfaces[0].functions)[0].result = index;
+	}]
+	, ["missing loaded engine", run => { run.observation.loadedLibraries = run.observation.loadedLibraries.filter(path => !path.endsWith("/libwasmtime.so")); }]
+	, ["unexpected local library", run => { run.observation.loadedLibraries.push("/validator/relocated/lib/other.so"); }]
+	, ["external engine override", run => { run.observation.loadedLibraries.push("/external/libwasmtime.so"); }]
+	, ["changed loaded engine", run => { run.wit.libraries["lib/libwasmtime.so"] = { bytes: 1, sha256: "a".repeat(64) }; }]
+	, ["missing pkg-config identity", run => { delete run.wit.pkgConfig.manifestSha256; }]
+	, ["external pkg-config flags", run => { run.wit.pkgConfig.flags[1] = "-L/external"; }]
+	, ["missing repeat run", run => { run.wit.repeatExecutions = 1; }]
+	, ["unproved session ownership", run => { run.observation.copiesSurviveSessionClose = false; }]
+	, ["changed failed output", run => { run.observation.results.find(entry => entry.status === "rejected-as-expected").outputUnchanged = false; }]
+	, ["wrong rejection stage", run => { run.observation.results.find(entry => entry.status === "rejected-as-expected").stage = "raw-abi"; }]
+	, ["wrong rejection message", run => { run.observation.results.find(entry => entry.status === "rejected-as-expected").message = "unrelated failure"; }]
+	, ["different negative caller", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").sourceSha256 = "a".repeat(64); }]
+	, ["unrelated compiler error", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].message = "header missing"; }]
+	, ["missing runtime error", run => { run.observation.errors.pop(); }]
+	, ["duplicated runtime error", run => { run.observation.errors[1] = run.observation.errors[0]; }]
+	, ["wrong supplemental message", run => { run.observation.errors[0].message = "compiler missing"; }]
+	, ["failed trap recovery", run => { run.observation.errors.at(-1).recovery = null; }]
+	, ["failed supplemental output preservation", run => { run.observation.errors[0].outputUnchanged = false; }]
+	, ...witIsolationFlags.map(flag => ["missing " + flag, run => { run.wit[flag] = false; }])
+]) test("WIT corpus rejects " + label, () => {
+	const run = validationFixture("wit-wasi"); change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0
 	, timeout: Math.max(900_000, profiles.length * 120_000)
@@ -1061,6 +1147,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, cFamilyRuntimeRejections: runs.filter(run => ["c", "cpp"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
 			, dotnetRuntimeRejections: runs.filter(run => run.profile === "dotnet").reduce((count, run) => count + run.observation.errors.length, 0)
 			, jvmRuntimeRejections: runs.filter(run => ["java", "kotlin"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
+			, witRuntimeRejections: runs.filter(run => run.profile === "wit-wasi").reduce((count, run) => count + run.observation.errors.length, 0)
 			, phpExecutions: phpExecutions.length
 			, phpExecutedCases: phpExecutions.reduce((count, execution) => count + execution.observation.results.length, 0)
 			, phpRuntimeRejections: phpExecutions.reduce((count, execution) => count + execution.observation.errors.length, 0)

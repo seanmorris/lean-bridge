@@ -122,6 +122,11 @@ const cFamilyExpectation = (id, category, profile) => {
 		, diagnostic: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "narrowing" : "incompatible-type" } };
 };
 
+const witExpectation = (id, category) => id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id)
+	? { expectation: { kind: "compile-rejection", category, diagnostic: "narrowing" } }
+	: { expectation: { kind: "host-rejection", category: "type" }
+		, rejectionMessage: "Unknown export, invalid WIT input or 16 MiB conversion limit" };
+
 const dotnetExpectation = (id, category) => {
 	if(["float32-wrong-type", "float64-wrong-type"].includes(id))
 		return { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.split("-")[0] };
@@ -224,6 +229,7 @@ export const corpusCases = library => {
 			...(rejection ? { rust: rustRejection(id, rejection) } : {})
 			, ...(rejection ? { "php-native": { rejectionMessage: phpRejection(id) } } : {})
 			, ...(rejection ? { "php-wasm": phpWasmExpectation(id) } : {})
+			, ...(rejection ? { "wit-wasi": witExpectation(id, rejection) } : {})
 			, ...(rejection ? { dotnet: dotnetExpectation(id, rejection) } : {})
 			, ...(rejection ? Object.fromEntries(["java", "kotlin"].map(profile => [profile, jvmExpectation(id, rejection, profile)])) : {})
 			, ...(rejection ? Object.fromEntries(["c", "cpp"].map(profile => [profile, cFamilyExpectation(id, rejection, profile)])) : {})
