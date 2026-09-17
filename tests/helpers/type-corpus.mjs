@@ -16,11 +16,15 @@ import { dotnetCompilerOptions } from "./type-corpus-dotnet.mjs";
 import { corpusJvmSource, corpusJvmSignatures, corpusJvmRejection, jvmRuntimeCases } from "./type-corpus-jvm-source.mjs";
 import { javaCompilerOptions, kotlinCompilerOptions, mavenSettings } from "./type-corpus-jvm-tools.mjs";
 import { validatePhpEvidence } from "./type-corpus-php.mjs";
+import { validatePhpWasmEvidence } from "./type-corpus-php-wasm-evidence.mjs";
 
 export const corpusProfiles = Object.freeze({
 	"php-native": Object.freeze({ adapter: "prepared-composer-v1"
 		, target: "php-native"
 		, transport: "native", moduleKey: "phpModule"
+		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
+	, "php-wasm": Object.freeze({ adapter: "prepared-php-wasm-v1"
+		, target: "php-wasm", transport: "php-wasm", moduleKey: "phpModule"
 		, errors: Object.freeze({ type: "TypeError", range: "ValueError" }) })
 	, python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
 		, transport: "native", moduleKey: "pythonModule"
@@ -202,7 +206,8 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
 	const cFamily = ["c", "cpp"].includes(actual.profile);
-	if(actual.profile === "php-native") assert.match(actual.hostVersion, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/);
+	if(actual.profile === "php-wasm") assert.match(actual.hostVersion, /^8\.4\.\d+$/);
+	else if(actual.profile === "php-native") assert.match(actual.hostVersion, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/);
 	else
 	assert.match(actual.hostVersion, actual.profile === "java" ? /^22\.\d+\.\d+$/ : actual.profile === "kotlin" ? /^2\.2\.0$/ : actual.profile === "dotnet" ? /^8\.0\.\d+$/ : cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
 	if(cFamily) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 12);
@@ -251,10 +256,10 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
-			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "dotnet", "java", "kotlin"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "php-wasm", "dotnet", "java", "kotlin"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
-			if(["php-native", "dotnet", "java", "kotlin"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
-			if(actual.profile === "php-native") assert.equal(observed.stage, entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", entry.id);
+			if(["php-native", "php-wasm", "dotnet", "java", "kotlin"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
+			if(["php-native", "php-wasm"].includes(actual.profile)) assert.equal(observed.stage, entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", entry.id);
 		}
 	}
 };
@@ -507,6 +512,8 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus-dotnet-source.mjs", "tests/helpers/type-corpus-dotnet.mjs", "tests/fixtures/type-corpus/consumers/dotnet.cs");
 	paths.push("tests/helpers/type-corpus-jvm-source.mjs", "tests/helpers/type-corpus-jvm.mjs", "tests/helpers/type-corpus-jvm-tools.mjs", "tests/fixtures/type-corpus/consumers/Wire.java");
 	paths.push("tests/helpers/type-corpus-php-source.mjs", "tests/helpers/type-corpus-php.mjs", "tests/fixtures/type-corpus/consumers/php.php");
+	paths.push(...["php-wasm", "php-wasm-node", "php-wasm-browser"].map(name => "tests/fixtures/type-corpus/consumers/" + name + ".mjs"));
+	paths.push(...["php-wasm", "php-wasm-install", "php-wasm-browser", "php-wasm-evidence", "php-wasm-fixture"].map(name => "tests/helpers/type-corpus-" + name + ".mjs"));
 	const files = [];
 	for(const path of paths)
 	{
@@ -577,6 +584,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		if(["c", "cpp"].includes(run.profile)) validateCFamilyEvidence(run, library);
 		if(run.profile === "dotnet") validateDotnetEvidence(run, library);
 		if(run.profile === "php-native") validatePhpEvidence(run, library, observation => validateCorpusObservation(library, cases, run.oracle, observation));
+		if(run.profile === "php-wasm") validatePhpWasmEvidence(run, library, observation => validateCorpusObservation(library, cases, run.oracle, observation));
 		if(["java", "kotlin"].includes(run.profile)) validateJvmEvidence(run, library);
 		for(const entry of cases)
 		{

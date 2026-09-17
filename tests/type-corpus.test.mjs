@@ -12,6 +12,7 @@ import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { corpusBrowserSelection, corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
 import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
+import { runPhpWasmCorpusLibrary } from "./helpers/type-corpus-php-wasm.mjs";
 import { corpusTypeScript, runNpmCorpusLibrary } from "./helpers/type-corpus-node.mjs";
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./helpers/type-corpus-rust-source.mjs";
 import { captureRustCompiler } from "./helpers/type-corpus-rust.mjs";
@@ -22,6 +23,8 @@ import { corpusJvmRejection, corpusJvmSignatures, corpusJvmSource, jvmRuntimeCas
 import { javaCompilerOptions, kotlinCompilerOptions, jvmDiagnostics, mavenSettings } from "./helpers/type-corpus-jvm-tools.mjs";
 import { corpusPhpRequestJson, corpusPhpSource, phpRuntimeCases } from "./helpers/type-corpus-php-source.mjs";
 import { composerProbe, phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
+import { phpWasmValidationFixture } from "./helpers/type-corpus-php-wasm-fixture.mjs";
+import { phpWasmIsolationFlags } from "./helpers/type-corpus-php-wasm-evidence.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -41,7 +44,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const wasm = corpusProfiles[profile].transport === "wasm";
 	const browser = corpusProfiles[profile].browser;
 	const cFamily = ["c", "cpp"].includes(profile);
-	const jvm = ["java", "kotlin"].includes(profile), php = profile === "php-native";
+	const jvm = ["java", "kotlin"].includes(profile), php = ["php-native", "php-wasm"].includes(profile);
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
 		, hostVersion: jvm ? profile === "java" ? "22.0.2" : "2.2.0" : profile === "dotnet" ? "8.0.30" : cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
@@ -63,7 +66,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 						, recovered: true
 						, ...(profile === "dotnet" || jvm || php ? { recovery: oracle.dependency } : {})
 						, ...(php ? { stage: entry.id.endsWith("/bad-record") ? "public-constructor" : "public-call", message: entry.rejectionMessage } : {})
-						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm || php ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
 		, ...(jvm ? { jvmVersion: "22.0.2"
 			, apiLocation: "/validator/relocated/package.jar"
 			, nativeRootCount: 1, nativeLibraries: jvmNativeLibraries(library)
@@ -94,7 +97,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(cFamily ? { cFamily: cFamilyValidationFixture(library, profile) } : {})
 		, ...(profile === "dotnet" ? { dotnet: dotnetValidationFixture(library) } : {})
 		, ...(jvm ? { jvm: jvmValidationFixture(library, profile), pomArchive: { target: "maven", sha256: "e".repeat(64) } } : {})
-		, ...(php ? phpValidationFixture(library, observation, oracle) : {})
+		, ...(php ? profile === "php-native" ? phpValidationFixture(library, observation, oracle) : phpWasmValidationFixture(library, observation, oracle) : {})
 		, oracle, observation };
 };
 
@@ -272,8 +275,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 42);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 42);
+	assert.equal(identity.files.length, 50);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 50);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -322,7 +325,7 @@ for(const [label, change] of [
 	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
 	, ["missing oracle result", run => { delete run.oracle.dependency; }]
 	, ["extra oracle result", run => { run.oracle.extra = {}; }]
-	, ["unimplemented adapter", run => { run.profile = "php-wasm"; }]
+	, ["unimplemented adapter", run => { run.profile = "wit-wasi"; }]
 	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
 	, ["unknown library", run => { run.library = "unknown"; }]
 	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
@@ -349,7 +352,7 @@ test("explicit corpus selections reject absent, misspelled and duplicate adapter
 	assert.deepEqual(corpusSelection(undefined), []);
 	assert.deepEqual(corpusSelection("ruby, python"), ["python", "ruby"]);
 	assert.deepEqual(corpusSelection("ruby,perl,python"), ["perl", "python", "ruby"]);
-	for(const selection of ["", "python,", "PYTHON", "python,python", "php-wasm", null, []])
+	for(const selection of ["", "python,", "PYTHON", "python,python", "wit-wasi", null, []])
 		assert.throws(() => corpusSelection(selection));
 });
 
@@ -914,6 +917,88 @@ for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+test("native PHP corpus accepts the PHP 8.4 boolean NTS constant", () => {
+	const run = validationFixture("php-native");
+	run.php.version = "8.4.1";
+	for(const observation of [run.observation, ...run.php.executions.map(execution => execution.observation)])
+	{
+		observation.hostVersion = "8.4.1"; observation.threadSafe = false;
+	}
+	assert.equal(corpusCoverage(inventory, catalog, [run]).filter(cell => cell.status === "observed").length, 41);
+	for(const unsupported of [true, 1, null, "0"])
+	{
+		const changed = structuredClone(run); changed.observation.threadSafe = unsupported;
+		assert.throws(() => corpusCoverage(inventory, catalog, [changed]));
+	}
+});
+
+test("PHP-Wasm corpus requires all installed loading routes and 32-bit callers", () => {
+	const runs = catalog.libraries.map(library => validationFixture("php-wasm", library.id));
+	assert.equal(corpusCoverage(inventory, catalog, runs).filter(cell => cell.status === "observed").length, 41);
+	assert.equal(runs.flatMap(run => run.phpWasm.executions).length, 24);
+	assert.equal(runs.flatMap(run => run.phpWasm.executions.flatMap(execution => execution.observation.errors)).length, 1728);
+	assert.deepEqual(corpusSelection("php-wasm"), ["php-wasm"]);
+	for(const library of catalog.libraries)
+	{
+		const request = JSON.parse(corpusPhpRequestJson(library, "php-wasm"));
+		assert.equal(request.signatures.length, 19); assert.equal(request.cases.length, 62);
+		assert.ok(!Object.hasOwn(request, "oracle"));
+		for(const suffix of ["int32-below", "int32-above"])
+		{
+			const entry = request.cases.find(entry => entry.id === library.id + "/" + suffix);
+			assert.equal(entry.expectation.category, "type");
+			assert.equal(entry.rejectionMessage, "Expected an int without numeric coercion");
+		}
+	}
+	for(const mode of ["weak", "strict"]) assert.ok(corpusPhpSource(mode, "php-wasm").includes('const PROFILE = "php-wasm";'));
+	assert.throws(() => corpusPhpSource("weak", "unknown"));
+});
+
+for(const [label, change] of [
+	["missing evidence", run => { delete run.phpWasm; }]
+	, ["missing runtime archive", run => { delete run.runtimeArchive; }]
+	, ["wrong Composer archive", run => { run.composerArchive.sha256 = "0".repeat(64); }]
+	, ["wrong runtime identity", run => { run.phpWasm.packageSet.runtimeIdentity = "0".repeat(64); }]
+	, ["wrong PHP host", run => { run.phpWasm.host.version = "0.2.0"; }]
+	, ["unidentified host files", run => { run.phpWasm.host.files = {}; }]
+	, ["changed host", run => { run.phpWasm.deployment["node_modules/php-wasm/PhpWeb.mjs"] = { bytes: 1, sha256: "0".repeat(64) }; }]
+	, ["wrong word size", run => { run.observation.integerBytes = 8; }]
+	, ["native SAPI", run => { run.observation.sapi = "cli"; }]
+	, ["wrong PHP version", run => { run.observation.hostVersion = "8.2.33"; }]
+	, ["threaded host", run => { run.observation.threadSafe = true; }]
+	, ["retained record", run => { run.observation.copiedValuesCollected = false; }]
+	, ["wrong API location", run => { run.observation.apiLocation = "/author/Api.php"; }]
+	, ["foreign PHP include", run => { run.observation.includedFiles["evil.php"] = "f".repeat(64); }]
+	, ["changed caller", run => { run.phpWasm.consumerSources.strict = "0".repeat(64); }]
+	, ["changed request", run => { run.phpWasm.requests.embedded = "0".repeat(64); }]
+	, ["missing route", run => { run.phpWasm.executions.pop(); }]
+	, ["duplicate route", run => { run.phpWasm.executions[11] = structuredClone(run.phpWasm.executions[10]); }]
+	, ["wrong caller mode", run => { run.phpWasm.executions[1].observation.callerMode = "weak"; }]
+	, ["cold eager fetch", run => { run.phpWasm.executions[2].phases[0].libraries = [...run.phpWasm.executions[2].phases[3].libraries]; }]
+	, ["invalid input fetch", run => { run.phpWasm.executions[2].phases[2].libraries = [...run.phpWasm.executions[2].phases[3].libraries]; }]
+	, ["missing library fetch", run => { run.phpWasm.executions[0].phases[3].libraries.pop(); }]
+	, ["wrong browser result", run => { run.phpWasm.executions[8].observation.results[0].observed = null; }]
+	, ["missing browser asset", run => { run.phpWasm.executions[8].requests.pop(); }]
+	, ["unbound browser request", run => { run.phpWasm.executions[8].requests[0].sha256 = "0".repeat(64); }]
+	, ["external browser asset", run => { run.phpWasm.executions[8].requests[0].path = "https://example.com/host.wasm"; }]
+	, ["missing supplemental error", run => { run.phpWasm.executions[5].observation.errors.pop(); }]
+	, ["wrong supplemental recovery", run => { run.observation.errors[0].recovery = null; }]
+	, ["wrong primary recovery", run => { run.observation.results.find(entry => entry.id.endsWith("/negative-nat")).recovery = null; }]
+	, ["wrong rejection stage", run => { run.observation.results.find(entry => entry.id.endsWith("/bad-record")).stage = "public-call"; }]
+	, ["unbound npm lock", run => { run.phpWasm.npm.lock.packages.extra = {}; }]
+	, ["unbound Composer lock", run => { run.phpWasm.composer.lock.packages.push({ name: "extra" }); }]
+	, ["unidentified Composer", run => { run.phpWasm.composer.toolFiles = {}; }]
+	, ["ambient Composer plugin", run => { run.phpWasm.composer.manifest.config["allow-plugins"] = true; }]
+	, ["ambient PHP extension", run => { run.phpWasm.composer.extensions.xdebug = { path: "/usr/lib/xdebug.so", sha256: "f".repeat(64) }; }]
+	, ["unbound compiled receipt", run => { run.phpWasm.component.bindingIrSha256 = "0".repeat(64); }]
+	, ["unbound declarations", run => { run.declarationEvidence.modelSha256 = "0".repeat(64); }]
+	, ["wrong pending type rejection", run => { run.rejection.code = "missing-compiler"; }]
+	, ...phpWasmIsolationFlags.map(key => ["missing " + key, run => { run.phpWasm[key] = false; }])
+]) test("PHP-Wasm corpus rejects " + label, () => {
+	const run = validationFixture("php-wasm"); change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0
 	, timeout: Math.max(900_000, profiles.length * 120_000)
@@ -931,6 +1016,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			const wasm = profiles.filter(profile => corpusProfiles[profile].transport === "wasm");
 			if(native.length) runs.push(...await runNativeCorpusLibrary(t, library, native));
 			if(wasm.length) runs.push(...await runNpmCorpusLibrary(t, library, wasm));
+			if(profiles.includes("php-wasm")) runs.push(...await runPhpWasmCorpusLibrary(t, library));
 		}
 	}
 	catch(error)
@@ -956,6 +1042,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 	const observed = cells.filter(cell => cell.status === "observed").length;
 	const browserExecutions = runs.flatMap(run => run.browser?.executions ?? []);
 	const phpExecutions = runs.flatMap(run => run.php?.executions ?? []);
+	const phpWasmExecutions = runs.flatMap(run => run.phpWasm?.executions ?? []);
 	const report = { schemaVersion: 1, kind: "real-lean-type-corpus"
 		, scope: "scoped-cases-not-full-type-support"
 		, host: { platform: process.platform, architecture: process.arch
@@ -977,6 +1064,9 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, phpExecutions: phpExecutions.length
 			, phpExecutedCases: phpExecutions.reduce((count, execution) => count + execution.observation.results.length, 0)
 			, phpRuntimeRejections: phpExecutions.reduce((count, execution) => count + execution.observation.errors.length, 0)
+			, phpWasmExecutions: phpWasmExecutions.length
+			, phpWasmExecutedCases: phpWasmExecutions.reduce((count, execution) => count + execution.observation.results.length, 0)
+			, phpWasmRuntimeRejections: phpWasmExecutions.reduce((count, execution) => count + execution.observation.errors.length, 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)

@@ -13,10 +13,13 @@ const fixture = await readFile(new URL("../fixtures/type-corpus/consumers/php.ph
  * Put every public call in the selected PHP lexical caller mode.
  *
  * @param mode - Weak or strict caller typing.
+ * @param profile - Native or wasm32 PHP transport.
  */
-export const corpusPhpSource = mode => {
+export const corpusPhpSource = (mode, profile = "php-native") => {
 	assert.ok(["weak", "strict"].includes(mode));
-	return fixture.replace("declare(strict_types=0);", `declare(strict_types=${mode === "strict" ? 1 : 0});`).replace('const MODE = "weak";', `const MODE = "${mode}";`);
+	assert.ok(["php-native", "php-wasm"].includes(profile));
+	const source = fixture.replace('const PROFILE = "php-native";', 'const PROFILE = "' + profile + '";');
+	return source.replace("declare(strict_types=0);", `declare(strict_types=${mode === "strict" ? 1 : 0});`).replace('const MODE = "weak";', `const MODE = "${mode}";`);
 };
 
 export const phpRuntimeCases = Object.freeze({
@@ -33,22 +36,40 @@ export const phpRuntimeCases = Object.freeze({
 	, "array-limit": "ValueError", "output-limit": "LeanBridgeError"
 });
 
+export const phpWasmRuntimeCases = Object.freeze({ ...phpRuntimeCases
+	, "wrong-u32-wrapper": "TypeError", "wrong-i64-wrapper": "TypeError" });
+
+/**
+ * Independent coordinates for the two matching PHP-Wasm package ecosystems.
+ *
+ * @param library - Renamed corpus library.
+ */
+export const corpusPhpWasmSettings = library => ({
+	npm: { name: library.id + "-php-wasm-corpus", version: "1.0.0" }
+	, composer: { name: "lean-bridge-corpus/" + library.id + "-php-wasm", version: "1.0.0" }
+});
+
 /**
  * Give callers independent declarations and inputs, never oracle answers.
  *
  * @param library - Renamed shared corpus library.
+ * @param profile - Native or wasm32 PHP transport.
+ * @param arrangement - Composer installation or descriptor-mounted PHP sources.
  */
-export const corpusPhpRequest = library => ({
-	module: library.phpModule
+export const corpusPhpRequest = (library, profile = "php-native", arrangement = "composer") => ({
+	module: library.phpModule, profile
+	, autoload: arrangement === "composer" ? "vendor/autoload.php" : "vendor/" + corpusPhpWasmSettings(library).composer.name + "/src/Api.php"
 	, operations: Object.fromEntries(library.operations.map((name, i) => [name, library.snakeOperations[i]]))
 	, signatures: corpusSignatures(library)
-	, cases: corpusCases(library).map(entry => corpusHostCase(entry, "php-native"))
-	, runtimeCases: phpRuntimeCases
+	, cases: corpusCases(library).map(entry => corpusHostCase(entry, profile))
+	, runtimeCases: profile === "php-native" ? phpRuntimeCases : phpWasmRuntimeCases
 });
 
 /**
  * Preserve declaration field order for reflection and named constructor calls.
  *
  * @param library - Renamed corpus library.
+ * @param profile - Native or wasm32 PHP transport.
+ * @param arrangement - Composer or descriptor-mounted API.
  */
-export const corpusPhpRequestJson = library => JSON.stringify(corpusPhpRequest(library), null, 2) + "\n";
+export const corpusPhpRequestJson = (library, profile = "php-native", arrangement = "composer") => JSON.stringify(corpusPhpRequest(library, profile, arrangement), null, 2) + "\n";

@@ -94,6 +94,14 @@ const phpRejection = id => {
 	return id === "overflow-u64" ? "Integer is outside the UInt64 range" : "Integer is outside the declared Lean range";
 };
 
+const phpWasmExpectation = id => {
+	if(["bool-as-number", "bad-nested"].includes(id)) return { rejectionMessage: "Expected BigInteger" };
+	if(id === "overflow-u32") return { rejectionMessage: "Integer is outside the UInt32 range" };
+	if(["int32-below", "int32-above"].includes(id))
+		return { expectation: { kind: "host-rejection", category: "type" }, rejectionMessage: "Expected an int without numeric coercion" };
+	return { rejectionMessage: phpRejection(id) };
+};
+
 const javascriptFloatExpectation = id => {
 	const policy = { expectation: { kind: "lean-oracle" }, oracleKey: id
 		, resultEncoding: id.split("-")[0] };
@@ -215,6 +223,7 @@ export const corpusCases = library => {
 		, hostExpectations: {
 			...(rejection ? { rust: rustRejection(id, rejection) } : {})
 			, ...(rejection ? { "php-native": { rejectionMessage: phpRejection(id) } } : {})
+			, ...(rejection ? { "php-wasm": phpWasmExpectation(id) } : {})
 			, ...(rejection ? { dotnet: dotnetExpectation(id, rejection) } : {})
 			, ...(rejection ? Object.fromEntries(["java", "kotlin"].map(profile => [profile, jvmExpectation(id, rejection, profile)])) : {})
 			, ...(rejection ? Object.fromEntries(["c", "cpp"].map(profile => [profile, cFamilyExpectation(id, rejection, profile)])) : {})

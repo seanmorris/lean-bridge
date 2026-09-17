@@ -4,6 +4,14 @@ namespace Corpus;
 
 // Generated packages are the only API implementation used by this caller.
 const MODE = "weak";
+const PROFILE = "php-native";
+function exactTypes(): array {
+    return PHP_INT_SIZE === 4 ? ['nat', 'int', 'uint64', 'uint32', 'int64'] : ['nat', 'int', 'uint64'];
+}
+function u32(int $value, string $module): mixed {
+    $class = $module . '\BigInteger';
+    return PHP_INT_SIZE === 4 ? $class::fromDecimal((string) $value) : $value;
+}
 function check(bool $condition, string $message = 'Corpus assertion failed'): void {
     if (!$condition) throw new \RuntimeException($message);
 }
@@ -39,10 +47,13 @@ function bitsToDecimal(string $bytes): string {
 }
 function decode(array $value, mixed $type, string $module): mixed {
     if (isset($value['integer'])) {
-        if (in_array($type, ['nat', 'int', 'uint64'], true)) {
+        if (in_array($type, exactTypes(), true)) {
             $class = $module . '\BigInteger'; return $class::fromDecimal($value['integer']);
         }
         $integer = (int) $value['integer'];
+        // On wasm32, out-of-range Int32 literals become PHP floats. Present that
+        // host value to the public API; do not truncate it into a valid integer.
+        if (PHP_INT_SIZE === 4 && (string) $integer !== $value['integer']) return (float) $value['integer'];
         check((string) $integer === $value['integer'], 'Caller integer is outside the PHP range');
         return $integer;
     }
@@ -85,13 +96,13 @@ function encode(mixed $value, mixed $type, string $module): array {
         check(is_float($value));
         return [$type => is_nan($value) ? 'nan' : bitsToDecimal(pack($type === 'float32' ? 'g' : 'e', $value))];
     }
-    check(in_array($type, ['nat', 'int', 'uint64'], true) ? $value::class === $module . '\BigInteger' : is_int($value));
+    check(in_array($type, exactTypes(), true) ? $value::class === $module . '\BigInteger' : is_int($value));
     return ['integer' => (string) $value];
 }
 function publicType(mixed $type, string $module, bool $doc = false): string {
     if (is_array($type)) return isset($type['array']) ? ($doc ? 'list<' . publicType($type['array'], $module, true) . '>' : 'array')
         : ($doc ? '' : $module . '\\') . substr($type['record'], strrpos($type['record'], '.') + 1);
-    $name = match ($type) {
+    $name = in_array($type, exactTypes(), true) ? 'BigInteger' : match ($type) {
         'unit' => 'null', 'bool' => 'bool', 'string' => 'string', 'bytes' => 'Bytes',
         'nat', 'int', 'uint64' => 'BigInteger', 'float32', 'float64' => 'float', default => 'int'
     };
@@ -174,15 +185,24 @@ function observe(array $entry, array $signature, array $request, callable $recov
     return [['id' => $entry['id'], 'status' => 'matched', 'observed' => $observed, 'independentCopy' => $entry['checkIndependentCopy']], $references];
 }
 
-$request = json_decode(file_get_contents(__DIR__ . '/request.json'), true, 512, JSON_THROW_ON_ERROR);
-require __DIR__ . '/vendor/autoload.php';
-check(PHP_INT_SIZE === 8 && PHP_ZTS === 0 && PHP_SAPI === 'cli' && PHP_OS_FAMILY === 'Linux');
-check(php_ini_loaded_file() === false && php_ini_scanned_files() === false);
-check(ini_get('ffi.enable') === '1' && ini_get('auto_prepend_file') === '' && ini_get('auto_append_file') === '');
+$root = rtrim(__DIR__, '/') . '/';
+$request = json_decode(file_get_contents($root . 'request.json'), true, 512, JSON_THROW_ON_ERROR);
+check($request['profile'] === PROFILE);
+require_once $root . $request['autoload'];
+if (PROFILE === 'php-native') {
+    check(!PHP_ZTS && PHP_SAPI === 'cli');
+    check(PHP_INT_SIZE === 8 && PHP_OS_FAMILY === 'Linux');
+    check(php_ini_loaded_file() === false && php_ini_scanned_files() === false);
+    check(ini_get('ffi.enable') === '1' && ini_get('auto_prepend_file') === '' && ini_get('auto_append_file') === '');
+} else {
+    check(PROFILE === 'php-wasm' && PHP_INT_SIZE === 4 && str_starts_with(PHP_VERSION, '8.4.'));
+    check(!PHP_ZTS && PHP_SAPI === 'embed');
+    check(!extension_loaded('ffi'));
+}
 declarations($request);
 $module = $request['module']; $operations = array_values($request['operations']);
 $functions = array_map(fn($name) => $module . '\\' . $name, $operations);
-$recover = fn() => encode($functions[0](7), 'uint32', $module);
+$recover = fn() => encode($functions[0](u32(7, $module)), 'uint32', $module);
 $results = []; $errors = []; $signatures = $request['signatures'];
 foreach ($request['cases'] as $entry) {
     $signature = $signatures[array_search($entry['operation'], array_keys($request['operations']), true)];
@@ -203,26 +223,30 @@ $forgedRecord = function() use ($recordCase, $recordType, $module, $matrix, $fun
     foreach ($recordType['fields'] as $field => $type) (new \ReflectionProperty($valid::class, $field))->setValue($forged, $field === $matrix ? [[null]] : $valid->$field);
     return $functions[6]($forged);
 };
-$forgedNat = function() use ($integer, $functions) {
+$forgedNat = function() use ($integer, $functions, $module) {
     $forged = (new \ReflectionClass($integer))->newInstanceWithoutConstructor();
     (new \ReflectionProperty($integer, 'decimal'))->setValue($forged, 'invalid');
-    return $functions[1]($forged, 0);
+    return $functions[1]($forged, u32(0, $module));
 };
 $invalid = [
     'null-string' => fn() => $functions[3](null, ''), 'null-bytes' => fn() => $functions[11](null),
-    'null-array' => fn() => $functions[4](null, 0), 'null-record' => fn() => $functions[6](null),
-    'null-nat' => fn() => $functions[1](null, 0), 'null-bool' => fn() => $functions[9](null),
+    'null-array' => fn() => $functions[4](null, u32(0, $module)), 'null-record' => fn() => $functions[6](null),
+    'null-nat' => fn() => $functions[1](null, u32(0, $module)), 'null-bool' => fn() => $functions[9](null),
     'numeric-string' => fn() => $functions[0]('1'), 'float-as-int' => fn() => $functions[0](1.0),
-    'wrong-nat-wrapper' => fn() => $functions[1](1, 0), 'wrong-u64-wrapper' => fn() => $functions[7](1),
+    'wrong-nat-wrapper' => fn() => $functions[1](1, u32(0, $module)), 'wrong-u64-wrapper' => fn() => $functions[7](1),
     'raw-bytes' => fn() => $functions[11]('abc'), 'negative-u64' => fn() => $functions[7]($integer::fromDecimal('-1')),
-    'non-list' => fn() => $functions[4]([1 => 1], 0), 'nested-non-list' => fn() => $functions[5]([[1 => 1]]),
+    'non-list' => fn() => $functions[4]([1 => u32(1, $module)], u32(0, $module)), 'nested-non-list' => fn() => $functions[5]([[1 => u32(1, $module)]]),
     'malformed-utf8' => fn() => $functions[3]("\xff", ''), 'record-utf8' => $badText,
     'forged-record' => $forgedRecord, 'forged-nat' => $forgedNat,
     'bytes-limit' => fn() => $functions[11]($bytes::fromString(str_repeat('x', 16 * 1024 * 1024 + 1))),
     'string-limit' => fn() => $functions[3](str_repeat('x', 16 * 1024 * 1024 + 1), ''),
-    'array-limit' => fn() => $functions[4](array_fill(0, 600000, 0), 0),
+    'array-limit' => fn() => $functions[4](array_fill(0, 600000, u32(0, $module)), u32(0, $module)),
     'output-limit' => fn() => $functions[3](str_repeat('x', 4 * 1024 * 1024), str_repeat('y', 4 * 1024 * 1024))
 ];
+if (PROFILE === 'php-wasm') {
+    $invalid['wrong-u32-wrapper'] = fn() => $functions[0](1);
+    $invalid['wrong-i64-wrapper'] = fn() => $functions[8](1);
+}
 check(array_keys($invalid) === array_keys($request['runtimeCases']));
 foreach ($request['runtimeCases'] as $id => $exception) {
     for ($iteration = 0; $iteration < 3; ++$iteration) {
@@ -232,14 +256,14 @@ foreach ($request['runtimeCases'] as $id => $exception) {
     }
 }
 $api = (new \ReflectionFunction($functions[0]))->getFileName(); $native = [];
-foreach (file('/proc/self/maps', FILE_IGNORE_NEW_LINES) as $line) {
+foreach (PROFILE === 'php-native' ? file('/proc/self/maps', FILE_IGNORE_NEW_LINES) : [] as $line) {
     $parts = preg_split('/\s+/', trim($line), 6); $path = $parts[5] ?? '';
     if (str_ends_with($path, '.so') && str_starts_with($path, __DIR__ . '/vendor/')) $native[$path] = hash_file('sha256', $path);
 }
 ksort($native); $included = [];
-foreach (get_included_files() as $path) { check(str_starts_with($path, __DIR__ . '/')); $included[substr($path, strlen(__DIR__) + 1)] = hash_file('sha256', $path); }
+foreach (get_included_files() as $path) { check(str_starts_with($path, $root)); $included[substr($path, strlen($root))] = hash_file('sha256', $path); }
 ksort($included);
-echo json_encode(['schemaVersion' => 1, 'profile' => 'php-native', 'module' => $module, 'hostVersion' => PHP_VERSION,
+echo json_encode(['schemaVersion' => 1, 'profile' => PROFILE, 'module' => $module, 'hostVersion' => PHP_VERSION,
     'callerMode' => MODE, 'integerBytes' => PHP_INT_SIZE, 'threadSafe' => PHP_ZTS, 'sapi' => PHP_SAPI,
-    'iniDisabled' => true, 'copiedValuesCollected' => true, 'apiLocation' => $api,
+    'iniDisabled' => PROFILE === 'php-native', 'copiedValuesCollected' => true, 'apiLocation' => $api,
     'nativeLibraries' => $native, 'includedFiles' => $included, 'results' => $results, 'errors' => $errors], JSON_THROW_ON_ERROR), "\n";

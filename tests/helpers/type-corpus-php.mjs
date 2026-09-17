@@ -55,7 +55,7 @@ export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, envi
 	const php = await realpath(environment.LEAN_BRIDGE_PHP), composer = await realpath(environment.LEAN_BRIDGE_COMPOSER);
 	const probe = JSON.parse((await run(php, ["-n", "-r", "echo json_encode([PHP_VERSION, PHP_INT_SIZE, PHP_ZTS, PHP_SAPI, ini_get('extension_dir'), get_loaded_extensions()]);"], project, clean)).stdout);
 	const [version, width, zts, sapi, extensionDirectory, builtins] = probe;
-	assert.match(version, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/); assert.equal(width, 8); assert.equal(zts, 0); assert.equal(sapi, "cli");
+	assert.match(version, /^8\.(?:[2-9]|[1-9]\d+)\.\d+$/); assert.equal(width, 8); assert.ok(zts === 0 || zts === false); assert.equal(sapi, "cli");
 	const modules = ["ffi", "ctype", "iconv", "mbstring", "phar", "zip"];
 	const extensions = Object.fromEntries(await Promise.all(modules.filter(name => !builtins.map(name => name.toLowerCase()).includes(name)).map(async name => {
 		const path = await realpath(join(extensionDirectory, name + ".so"));
@@ -261,7 +261,7 @@ export const validatePhpEvidence = (run, library, validate) => {
 		validate(observation);
 		assert.equal(observation.hostVersion, evidence.version); assert.equal(observation.profile, "php-native");
 		assert.equal(observation.callerMode, mode); assert.equal(observation.integerBytes, 8);
-		assert.equal(observation.threadSafe, 0); assert.equal(observation.sapi, "cli");
+		assert.ok(observation.threadSafe === 0 || observation.threadSafe === false); assert.equal(observation.sapi, "cli");
 		assert.equal(observation.iniDisabled, true); assert.equal(observation.copiedValuesCollected, true);
 		assert.equal(evidence.consumerSources[mode], sha256(corpusPhpSource(mode)));
 		assert.equal(evidence.deployment[mode + ".php"].sha256, evidence.consumerSources[mode]);

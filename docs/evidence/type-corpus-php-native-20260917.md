@@ -1,5 +1,7 @@
 # Shared native PHP corpus, 2026-09-17
 
+Historical record for commit `68b934d45781a474cc19b4bfa42e5eac438c3bd5`. Later corpus adapters change the shared harness identity; the counts below describe this milestone.
+
 VO 1217. Native PHP consumers install prepared Composer packages for `Shop.Pricing` and `Telemetry.Readings`. Separate weak and strict caller files use their public APIs. The harness compares their observations with fresh Lean results; neither caller receives those expected results. Production generators and the type-support inventory are unchanged.
 
 ## Public signatures and values

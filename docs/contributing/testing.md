@@ -291,7 +291,22 @@ npm run test:type-corpus:php-native
 
 Each Composer consumer starts with empty private home/cache directories, disables Packagist, network access, plugins and scripts, and installs only the original prepared ZIP. A second install checks the lock file and unchanged installed bytes. The harness moves the installed application, removes the installation tree and executes separate weak and strict PHP caller files twice each. Public reflection checks function signatures, PHPDoc types and readonly records against the independent corpus catalog. Both caller modes compare exact values with fresh Lean results and check rejected inputs, copied records and recovery. PHP runs with INI files disabled, explicitly selected FFI, and no compiler or Composer commands on PATH. The installed PHP API and its shipped provenance remain in the deployment.
 
-The report records the actual Composer implementation files, interpreter/extensions, included PHP files, loaded native libraries and package receipts. It is written to `build/type-corpus/php-native.json`. The [native PHP corpus record](../evidence/type-corpus-php-native-20260917.md) lists the executed scope and artifact identities. These are native PHP checks; PHP-Wasm has a separate runtime and remains a shared-corpus adapter gap.
+The report records the actual Composer implementation files, interpreter/extensions, included PHP files, loaded native libraries and package receipts. It is written to `build/type-corpus/php-native.json`. The [native PHP corpus record](../evidence/type-corpus-php-native-20260917.md) lists the executed scope and artifact identities.
+
+PHP-Wasm runs the same libraries in the 32-bit PHP 8.4.1 embedded host. Prepare the [PHP-Wasm author toolchain](author-toolchain.md#php-wasm), the pinned `php-wasm` 0.1.0 host and Chromium, then run:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:php-wasm
+```
+
+`LEAN_BRIDGE_PHP_WASM_HOST` selects the host package directory; its default is `build/php-wasm-host/node_modules/php-wasm`. `CHROMIUM_PATH` selects a browser executable; otherwise the harness uses the local Chromium binary or Playwright's Chromium. Composer 2, unzip and the native PHP extensions listed above are needed to install the companion PHP package, but FFI is not used by the PHP-Wasm interpreter. Native PHP runs Composer with INI disabled; its target platform is set to PHP 8.4.1. The actual calls execute in PHP-Wasm, not that native interpreter.
+
+The harness builds each library twice, verifies the npm runtime/component and matching Composer archives, and removes the author trees. Offline npm installs include a locally repacked copy of the pinned host, with no external symlink. Composer installs the prepared API ZIP. Empty caches, locked repeat installs and complete file inventories check the installed dependency closure. All hosts use a relocated deployment; Node runs with no Lean or C compiler on PATH.
+
+Each library runs 12 combinations: Node with descriptor-mounted or Composer-loaded PHP, plus a bundled Chromium page; each uses startup or lazy loading and weak or strict lexical PHP callers. Every combination runs twice in a fresh host. Chromium serves a nested application URL with external requests blocked and records the exact bytes served. Lazy hosts must fetch no Lean libraries during autoload or invalid-input checks, then load the runtime and component once on the first valid call.
+
+On this 32-bit host, `UInt32` and `Int64` use `BigInteger`, alongside `Nat`, `Int` and `UInt64`. The independent signature checks enforce those mappings. Out-of-range native `Int32` literals become PHP floats and must be rejected as wrong types, without truncation. Both caller modes compare the full value corpus with fresh Lean results and test copied values, invalid inputs and recovery. The report is `build/type-corpus/php-wasm.json`; Node/browser routes and supplemental rejections have separate counts. The [PHP-Wasm corpus record](../evidence/type-corpus-php-wasm-20260917.md) lists the executed scope and archive identities.
 
 For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
 
