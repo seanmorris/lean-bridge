@@ -18,6 +18,7 @@ import { corpusCases, corpusHostCase, corpusSignatures } from "../fixtures/type-
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { leanCorpusOracle, prepareCorpusSources } from "./type-corpus-source.mjs";
 import { corpusCaseSupported, corpusProfiles, corpusProfileSignatures, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
+import { browserFrameworkArchives, installedBrowserCorpus } from "./type-corpus-browser.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -87,6 +88,8 @@ const installed = async (library, profile, consumer, handoff, receipt, oracle) =
 	await symlink(process.execPath, join(bin, "node"));
 	await saveLakeFile(root, "package.json", canonicalJson({ private: true, type: "module" }));
 	await saveLakeFile(root, "consumer.mjs", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/node.mjs")));
+	await saveLakeFile(root, "javascript.mjs", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/javascript.mjs")));
+	const framework = profile === "browser-react" ? await browserFrameworkArchives(root) : [];
 	const npm = await realpath(join(process.execPath, "../../bin/npm"));
 	await saveLakeFile(root, "user.npmrc", "");
 	await saveLakeFile(root, "global.npmrc", "");
@@ -95,7 +98,8 @@ const installed = async (library, profile, consumer, handoff, receipt, oracle) =
 		, "--globalconfig", join(root, "global.npmrc")
 		, "--cache", join(root, "empty-cache")
 		, join(handoff, receipt.runtime.archive)
-		, join(handoff, receipt.package.archive)], root, { ...clean, PATH: bin });
+		, join(handoff, receipt.package.archive)
+		, ...framework.map(item => join(root, item.archive))], root, { ...clean, PATH: bin });
 	const signatures = corpusProfileSignatures(library, profile);
 	const cases = corpusCases(library);
 	await saveLakeFile(root, "request.json", canonicalJson({ profile
@@ -103,6 +107,7 @@ const installed = async (library, profile, consumer, handoff, receipt, oracle) =
 		, installRoot: root, oracle, errors: corpusProfiles[profile].errors
 		, cases: cases.map(entry => corpusHostCase(entry, profile))
 		, signatures: Object.fromEntries(signatures.map(signature => [signature.name.slice(library.module.length + 1), signature])) }));
+	if(corpusProfiles[profile].browser) return installedBrowserCorpus({ library, profile, root, oracle, framework, environment: clean });
 	let typescript;
 	let program = "consumer.mjs";
 	if(profile === "node-typescript")
@@ -137,9 +142,9 @@ const installed = async (library, profile, consumer, handoff, receipt, oracle) =
  *
  * @param t - Test context owning all disposable directories.
  * @param library - Independent catalog library.
- * @param profiles - Node JS and/or TS profiles sharing the same prepared release.
+ * @param profiles - Node and browser profiles sharing the same prepared release.
  */
-export const runNodeCorpusLibrary = async (t, library, profiles) => {
+export const runNpmCorpusLibrary = async (t, library, profiles) => {
 	assert.ok(profiles.length > 0 && profiles.every(profile => corpusProfiles[profile]?.transport === "wasm"));
 	const space = await statfs(tmpdir());
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");

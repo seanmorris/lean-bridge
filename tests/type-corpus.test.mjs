@@ -10,9 +10,9 @@ import { resolve } from "node:path";
 import test from "node:test";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
+import { corpusBrowserSelection, corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
 import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
-import { corpusTypeScript, runNodeCorpusLibrary } from "./helpers/type-corpus-node.mjs";
+import { corpusTypeScript, runNpmCorpusLibrary } from "./helpers/type-corpus-node.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -30,10 +30,12 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const abi = { ptrsize: "8", ivsize: "8", useithreads: "define" };
 	const abiKey = sha256(JSON.stringify(JSON.parse(canonicalJson(abi))));
 	const wasm = corpusProfiles[profile].transport === "wasm";
+	const browser = corpusProfiles[profile].browser;
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
 		, hostVersion: wasm ? "22.23.2" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
+		, ...(browser ? { realm: profile === "browser-worker" ? "dedicated-worker" : "window" } : {})
 		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
 			? { id: entry.id, status: "unsupported", export: `${library.module}.${entry.operation}` }
 			: entry.expectation.kind === "lean-oracle"
@@ -57,7 +59,35 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 			, skipLibCheck: false, version: "Version 5.9.3"
 			, sourceSha256: "f".repeat(64), declarationsSha256: "f".repeat(64)
 			, compilerSha256: "f".repeat(64) } } : {})
+		, ...(browser ? { browser: browserValidationFixture(profile, library, observation) } : {})
 		, oracle, observation };
+};
+
+const browserValidationFixture = (profile, library, observation) => {
+	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
+	const installedAssets = [
+		{ path: `node_modules/${library.npmModule}/internal/wasm/component.wasm`, bytes: 123, sha256: "1".repeat(64) }
+		, { path: "node_modules/@lean-bridge/runtime/internal/main.wasm", bytes: 234, sha256: "2".repeat(64) }
+	];
+	const assets = installedAssets.map((asset, index) => ({ ...asset, path: `/corpus/nested/assets/${index}.wasm`, status: 200, mime: "application/wasm" }));
+	const files = [{ path: "index.html", bytes: 345, sha256: "3".repeat(64) }
+		, ...assets.map(({ path, bytes, sha256 }) => ({ path: path.slice("/corpus/nested/".length), bytes, sha256 }))];
+	return { requestedEngines: ["chromium", "firefox", "webkit"], installedAssets
+		, framework: profile === "browser-react" ? ["react", "react-dom", "scheduler"].map(name => ({ name, version: "1.0.0", archive: `framework/${name}-1.0.0.tgz`, sha256: "4".repeat(64) })) : []
+		, deployments: variants.map(variant => ({ variant, viteVersion: "8.2.1"
+			, modulePaths: [`node_modules/${library.npmModule}/index.mjs`, "node_modules/@lean-bridge/runtime/index.mjs"]
+			, files, sha256: sha256(canonicalJson(files)) }))
+		, executions: ["chromium", "firefox", "webkit"].flatMap(engine => variants.map(variant => ({ engine
+			, variant
+			, observation: structuredClone(observation), assets: structuredClone(assets)
+			, failedAssetRecovery: true
+			, ...(profile === "browser-react" ? { pendingUnmount: true } : {})
+			, lifecycle: profile === "browser-react" ? variant === "strict"
+				? { effects: 6, cleanups: 5, ignored: 3, commits: 3 }
+				: { effects: 3, cleanups: 2, ignored: 0, commits: 3 }
+				: profile === "browser-worker" ? { created: 2, terminated: 2, live: 0 } : { rerun: true }
+		})))
+		, installedSourcesRemoved: true, externalNetworkBlocked: true };
 };
 
 test("corpus cases cover two renamed nested libraries, valid positions and explicit host errors", () => {
@@ -76,8 +106,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 18);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 18);
+	assert.equal(identity.files.length, 25);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 25);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -287,6 +317,55 @@ test("strict TypeScript uses the installed public API and independent exact sign
 	}
 });
 
+test("browser engine selections are explicit and never silently skipped", () => {
+	assert.deepEqual(corpusBrowserSelection(undefined), ["chromium", "firefox", "webkit"]);
+	assert.deepEqual(corpusBrowserSelection("webkit, chromium"), ["chromium", "webkit"]);
+	for(const selection of ["", "chromium,", "CHROMIUM", "chromium,chromium", "safari", null, []])
+		assert.throws(() => corpusBrowserSelection(selection));
+});
+
+test("browser profiles require every selected engine and retain unsupported projections as gaps", () => {
+	const runs = ["browser-javascript", "browser-react", "browser-worker"].map(profile => validationFixture(profile));
+	const cells = corpusCoverage(inventory, catalog, runs);
+	assert.equal(cells.filter(cell => cell.status === "observed").length, 96);
+	assert.ok(cells.filter(cell => ["array", "record"].includes(cell.shape)).every(cell => cell.status === "gap"));
+	for(const run of runs)
+	{
+		assert.equal(run.observation.results.filter(entry => entry.status === "unsupported").length, 6);
+		assert.equal(run.observation.results.filter(entry => entry.status === "matched").length, 40);
+		assert.equal(run.observation.results.filter(entry => entry.status === "rejected-as-expected").length, 16);
+	}
+});
+
+for(const [label, profile, change] of [
+	["missing evidence", "browser-javascript", run => { delete run.browser; }]
+	, ["duplicate engine", "browser-javascript", run => { run.browser.requestedEngines.push("chromium"); }]
+	, ["missing engine", "browser-javascript", run => { run.browser.executions.pop(); }]
+	, ["missing StrictMode", "browser-react", run => { run.browser.executions.splice(1, 1); }]
+	, ["duplicate execution", "browser-react", run => { run.browser.executions[1] = run.browser.executions[0]; }]
+	, ["wrong browser result", "browser-javascript", run => { run.browser.executions[1].observation.results[0].observed = { integer: "0" }; }]
+	, ["wrong profile", "browser-worker", run => { run.browser.executions[1].observation.profile = "browser-javascript"; }]
+	, ["window standing in for worker", "browser-worker", run => { run.browser.executions[1].observation.realm = "window"; }]
+	, ["mismatched primary result", "browser-javascript", run => { run.observation.hostVersion = "99.0.1"; }]
+	, ["wrong WASM digest", "browser-worker", run => { run.browser.executions[0].assets[0].sha256 = "f".repeat(64); }]
+	, ["wrong WASM MIME", "browser-javascript", run => { run.browser.executions[0].assets[0].mime = "text/html"; }]
+	, ["wrong deployment prefix", "browser-javascript", run => { run.browser.executions[0].assets[0].path = "/assets/0.wasm"; }]
+	, ["missing runtime fetch", "browser-react", run => { run.browser.executions[0].assets.pop(); }]
+	, ["unbound deployment", "browser-javascript", run => { run.browser.deployments[0].files[0].bytes++; }]
+	, ["source tree present", "browser-javascript", run => { run.browser.installedSourcesRemoved = false; }]
+	, ["network access", "browser-worker", run => { run.browser.externalNetworkBlocked = false; }]
+	, ["missing React framework", "browser-react", run => { run.browser.framework.pop(); }]
+	, ["missing public API import", "browser-javascript", run => { run.browser.deployments[0].modulePaths.pop(); }]
+	, ["missing asset recovery", "browser-worker", run => { run.browser.executions[0].failedAssetRecovery = false; }]
+	, ["stale React effect", "browser-react", run => { run.browser.executions[1].lifecycle.ignored = 0; }]
+	, ["pending React unmount", "browser-react", run => { run.browser.executions[0].pendingUnmount = false; }]
+	, ["leaked worker", "browser-worker", run => { run.browser.executions[0].lifecycle.live = 1; }]
+]) test(`browser corpus rejects ${label}`, () => {
+	const run = validationFixture(profile);
+	change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0, timeout: 900_000
 }, async t => {
@@ -302,7 +381,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			const native = profiles.filter(profile => corpusProfiles[profile].transport === "native");
 			const wasm = profiles.filter(profile => corpusProfiles[profile].transport === "wasm");
 			if(native.length) runs.push(...await runNativeCorpusLibrary(t, library, native));
-			if(wasm.length) runs.push(...await runNodeCorpusLibrary(t, library, wasm));
+			if(wasm.length) runs.push(...await runNpmCorpusLibrary(t, library, wasm));
 		}
 	}
 	catch(error)
@@ -326,6 +405,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 	assert.deepEqual(await corpusIdentity(repository, catalog), identity, "Corpus inputs changed during execution");
 	const cells = corpusCoverage(inventory, catalog, runs);
 	const observed = cells.filter(cell => cell.status === "observed").length;
+	const browserExecutions = runs.flatMap(run => run.browser?.executions ?? []);
 	const report = { schemaVersion: 1, kind: "real-lean-type-corpus"
 		, scope: "scoped-cases-not-full-type-support"
 		, host: { platform: process.platform, architecture: process.arch
@@ -340,6 +420,9 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, cases: runs.reduce((count, run) => count + run.observation.results.length, 0)
 			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status !== "unsupported").length, 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
+			, browserExecutions: browserExecutions.length
+			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)
+			, browserUnsupportedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, observedCells: observed, gapCells: cells.length - observed
 			, rejectedBuilds: new Set(runs.map(run => `${run.library}/${corpusProfiles[run.profile].transport}`)).size }
 		, runs, cells };

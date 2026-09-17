@@ -77,10 +77,11 @@ const perlRejection = id => {
 	return "unsigned integer is out of range or not an exact integer scalar";
 };
 
-const nodeFloatExpectation = id => {
+const javascriptFloatExpectation = id => {
 	const policy = { expectation: { kind: "lean-oracle" }, oracleKey: id
 		, resultEncoding: id.split("-")[0] };
-	return Object.fromEntries(["node-javascript", "node-typescript"].map(profile => [profile, policy]));
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	return Object.fromEntries(profiles.map(profile => [profile, policy]));
 };
 
 /**
@@ -165,7 +166,7 @@ export const corpusCases = library => {
 				? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }
 				: rejection ? { perl: { rejectionMessage: perlRejection(id) } } : {})
 			, ...(["float32-wrong-type", "float64-wrong-type"].includes(id)
-				? nodeFloatExpectation(id) : {})
+				? javascriptFloatExpectation(id) : {})
 		}
 		, checkIndependentCopy: id === "record"
 	}));

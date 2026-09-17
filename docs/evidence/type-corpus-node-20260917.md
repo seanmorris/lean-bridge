@@ -1,6 +1,6 @@
 # Shared JavaScript and TypeScript corpus, 2026-09-17
 
-VO 1217. The shared corpus now installs prepared npm archives into separate JavaScript and TypeScript consumers. Both use the same `Shop.Pricing` and `Telemetry.Readings` sources, inputs and fresh Lean oracle as the [native adapters](type-corpus-perl-20260916.md). This milestone changes test infrastructure and CI, not production generators or type-support claims.
+VO 1217, commit `fc1d17e`. This record describes the Node milestone at that revision. The shared corpus installs prepared npm archives into separate JavaScript and TypeScript consumers. Both use the same `Shop.Pricing` and `Telemetry.Readings` sources, inputs and fresh Lean oracle as the [native adapters](type-corpus-perl-20260916.md). This milestone changes test infrastructure and CI, not production generators or type-support claims.
 
 ## Executed cases and gaps
 

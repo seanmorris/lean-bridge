@@ -32,6 +32,8 @@ const browserFiles = [
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 	, 'tests/fixtures/documentation/consumers/browser/main.js'
+	, 'tests/fixtures/type-corpus/consumers/browser/*.mjs'
+	, 'tests/helpers/type-corpus-browser.mjs'
 ];
 const generatedSourceTemplateFiles = [
 	'scripts/test-managed-native-bindings.mjs'

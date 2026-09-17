@@ -26,7 +26,27 @@ export const corpusProfiles = Object.freeze({
 	, "node-typescript": Object.freeze({ adapter: "prepared-npm-ts-v1"
 		, target: "npm", transport: "wasm", moduleKey: "npmModule"
 		, errors: Object.freeze({ type: "TypeError", range: "TypeError" }) })
+	, ...Object.fromEntries(["browser-javascript", "browser-react", "browser-worker"].map(profile => [profile
+		, Object.freeze({
+			adapter: "prepared-npm-browser-v1", target: "npm", transport: "wasm"
+			, moduleKey: "npmModule", browser: true
+			, errors: Object.freeze({ type: "TypeError", range: "TypeError" })
+		})
+	]))
 });
+
+/**
+ * Require an explicit, unique list of actual browser engines; never skip one.
+ *
+ * @param value - Optional comma-separated selection, defaulting to all engines.
+ */
+export const corpusBrowserSelection = (value = "chromium,firefox,webkit") => {
+	assert.equal(typeof value, "string");
+	const engines = value.split(",").map(engine => engine.trim()).sort();
+	assert.ok(engines.every(engine => ["chromium", "firefox", "webkit"].includes(engine)), "Unknown or empty browser engine");
+	assert.equal(new Set(engines).size, engines.length, "Duplicate browser engine");
+	return engines;
+};
 
 /**
  * Select the independently specified corpus API supported by a transport.
@@ -146,9 +166,11 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	assert.equal(actual.schemaVersion, 1);
 	assert.ok(Object.hasOwn(corpusProfiles, actual.profile), "Unknown consumer adapter");
 	const wasm = corpusProfiles[actual.profile].transport === "wasm";
+	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
-	assert.match(actual.hostVersion, wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
-	if(wasm) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
+	assert.match(actual.hostVersion, browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	if(wasm && !browser) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
+	if(browser) assert.equal(actual.realm, actual.profile === "browser-worker" ? "dedicated-worker" : "window");
 	if(actual.profile === "perl")
 	{
 		assert.ok(Number(actual.hostVersion.split(".")[1]) >= 36);
@@ -183,6 +205,77 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	}
 };
 
+const validateBrowserEvidence = (run, library, cases) => {
+	const evidence = run.browser;
+	const variants = run.profile === "browser-react" ? ["production", "strict"] : ["production"];
+	assert.deepEqual(evidence.requestedEngines, corpusBrowserSelection(evidence.requestedEngines.join(",")));
+	assert.equal(evidence.installedSourcesRemoved, true);
+	assert.equal(evidence.externalNetworkBlocked, true);
+	assert.equal(evidence.installedAssets.length, 2);
+	assert.equal(new Set(evidence.installedAssets.map(asset => asset.path)).size, 2);
+	const hashes = evidence.installedAssets.map(asset => asset.sha256).sort();
+	assert.equal(new Set(hashes).size, 2);
+	for(const asset of evidence.installedAssets)
+	{
+		assert.match(asset.sha256, /^[a-f0-9]{64}$/);
+		assert.ok(Number.isSafeInteger(asset.bytes) && asset.bytes > 0);
+	}
+	assert.ok(evidence.installedAssets.some(asset => asset.path === "node_modules/@lean-bridge/runtime/internal/main.wasm"));
+	assert.ok(evidence.installedAssets.some(asset => asset.path.startsWith(`node_modules/${library.npmModule}/internal/wasm/`) && asset.path.endsWith(".wasm")));
+	assert.deepEqual(evidence.framework.map(item => item.name), run.profile === "browser-react" ? ["react", "react-dom", "scheduler"] : []);
+	for(const framework of evidence.framework)
+	{
+		assert.match(framework.version, /^[0-9]+\.[0-9]+\.[0-9]+$/);
+		assert.match(framework.sha256, /^[a-f0-9]{64}$/);
+		assert.equal(framework.archive, `framework/${framework.name}-${framework.version}.tgz`);
+	}
+	assert.deepEqual(evidence.deployments.map(deployment => deployment.variant).sort(), variants);
+	for(const deployment of evidence.deployments)
+	{
+		assert.match(deployment.viteVersion, /^[0-9]+\.[0-9]+\.[0-9]+$/);
+		assert.equal(deployment.sha256, sha256(canonicalJson(deployment.files)));
+		assert.equal(new Set(deployment.files.map(file => file.path)).size, deployment.files.length);
+		assert.ok(deployment.files.some(file => file.path === "index.html"));
+		for(const file of deployment.files)
+		{
+			assert.ok(/^[A-Za-z0-9_./-]+$/.test(file.path) && !file.path.startsWith("/") && !file.path.split("/").includes(".."));
+			assert.match(file.sha256, /^[a-f0-9]{64}$/);
+			assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
+		}
+		assert.deepEqual(deployment.files.filter(file => file.path.endsWith(".wasm")).map(file => file.sha256).sort(), hashes);
+		assert.ok(deployment.modulePaths.every(path => path.startsWith("node_modules/") && !path.split("/").includes("..")));
+		for(const name of [library.npmModule, "@lean-bridge/runtime"])
+			assert.ok(deployment.modulePaths.includes(`node_modules/${name}/index.mjs`));
+	}
+	assert.deepEqual(evidence.executions.map(execution => `${execution.engine}/${execution.variant}`).sort()
+		, evidence.requestedEngines.flatMap(engine => variants.map(variant => `${engine}/${variant}`)).sort());
+	assert.deepEqual(run.observation, evidence.executions[0].observation);
+	for(const execution of evidence.executions)
+	{
+		assert.equal(execution.observation.profile, run.profile);
+		validateCorpusObservation(library, cases, run.oracle, execution.observation);
+		assert.equal(execution.failedAssetRecovery, true);
+		assert.deepEqual([...new Set(execution.assets.map(asset => asset.sha256))].sort(), hashes);
+		const deployment = evidence.deployments.find(deployment => deployment.variant === execution.variant);
+		for(const asset of execution.assets)
+		{
+			assert.equal(asset.status, 200);
+			assert.match(asset.mime, /^application\/wasm(?:;|$)/);
+			assert.ok(deployment.files.some(file => asset.path === `/corpus/nested/${file.path}` && asset.sha256 === file.sha256 && asset.bytes === file.bytes));
+			assert.ok(evidence.installedAssets.some(file => asset.sha256 === file.sha256 && asset.bytes === file.bytes));
+		}
+		if(run.profile === "browser-react")
+		{
+			assert.equal(execution.pendingUnmount, true);
+			assert.deepEqual(execution.lifecycle, execution.variant === "strict"
+				? { effects: 6, cleanups: 5, ignored: 3, commits: 3 }
+				: { effects: 3, cleanups: 2, ignored: 0, commits: 3 });
+		}
+		else assert.deepEqual(execution.lifecycle, run.profile === "browser-worker"
+			? { created: 2, terminated: 2, live: 0 } : { rerun: true });
+	}
+};
+
 /**
  * Hash every checked-in corpus input, including consumer and Lean oracle sources.
  *
@@ -192,9 +285,12 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 export const corpusIdentity = async (repository, catalog) => {
 	const paths = ["cases.mjs", "Corpus/Wire.lean", "consumers/python.py"
 		, "consumers/ruby.rb", "consumers/perl.pl", "consumers/node.mjs"
+		, "consumers/javascript.mjs"
+		, ...["plain", "react", "worker", "worker-main"].map(name => `consumers/browser/${name}.mjs`)
 		, ...catalog.libraries.flatMap(library => [library.oracle, `${library.module.replaceAll(".", "/")}.lean`, `${library.pendingModule.replaceAll(".", "/")}.lean`])]
 		.map(path => `tests/fixtures/type-corpus/${path}`);
 	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/type-corpus-source.mjs", "tests/helpers/type-corpus-node.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
+	paths.push("tests/helpers/type-corpus-browser.mjs", "tests/helpers/type-corpus-browser-build.mjs");
 	const files = [];
 	for(const path of paths)
 	{
@@ -260,6 +356,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		}
 		const cases = catalog.cases.filter(entry => entry.library === run.library);
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
+		if(corpusProfiles[run.profile].browser) validateBrowserEvidence(run, library, cases);
 		for(const entry of cases)
 		{
 			if(!corpusCaseSupported(library, entry, run.profile)) continue;

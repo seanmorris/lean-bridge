@@ -57,7 +57,7 @@ jobs:
         run: npm run test:docs
 
   node-consumers:
-    name: Node JavaScript and TypeScript
+    name: Node and browser npm consumers
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -97,21 +97,22 @@ jobs:
           node --test tests/lake-wasm.test.mjs
           node --test tests/unlocked-component.test.mjs
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
-      - name: Compare installed JavaScript and TypeScript corpus packages with fresh Lean
-        id: type_corpus_node
+      - name: Compare installed Node, browser, React and worker corpus packages with fresh Lean
+        id: type_corpus_npm
         continue-on-error: true
         env:
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
-          npm run test:type-corpus:node
-      - name: Preserve installed Node corpus observations
+          npm run test:type-corpus:npm
+      - name: Preserve installed npm corpus observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: type-corpus-node-${{ github.sha }}
-          path: build/type-corpus/node-javascript-node-typescript.json
+          name: type-corpus-npm-${{ github.sha }}
+          path: build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
           if-no-files-found: error
           retention-days: 30
       - name: Install C# for the combined native projection
@@ -171,10 +172,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_node.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_node.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:node"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:node"
+          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -184,8 +185,8 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
-      - name: Enforce Node support
-        if: steps.consumer.outcome != 'success' || steps.type_corpus_node.outcome != 'success'
+      - name: Enforce Node support and the browser corpus
+        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success'
         run: exit 1
       - name: Preserve executable documentation observations
         if: always()
