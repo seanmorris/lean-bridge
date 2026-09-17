@@ -17,6 +17,37 @@ env:
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
 
 jobs:
+  reviewed-ir-admission:
+    name: Reviewed IR admission corpus
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Check reviewed analysis and blocked builds against fresh source oracles
+        run: |
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          source scripts/env.sh
+          npm run test:type-corpus:reviewed
+      - name: Preserve reviewed admission evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-reviewed-ir-${{ github.sha }}
+          path: build/type-corpus/reviewed-ir.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+
   nix-cache:
     name: Signed Nix cache recipes
     runs-on: ubuntu-24.04
@@ -813,6 +844,7 @@ jobs:
     if: always()
     needs:
       - documentation
+      - reviewed-ir-admission
       - nix-cache
       - node-consumers
       - browser-consumer

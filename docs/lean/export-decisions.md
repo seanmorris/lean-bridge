@@ -107,7 +107,7 @@ The compiler-backed analyzer projects:
 
 `IO`, `Task`, collections, records, callbacks, resources, and configured closure arities produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. This is an analysis-only path: ordinary builds reject supplied review documents. To build from source, use the [export configuration](existing-package.md#configure-exports) and a target that implements those choices. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 

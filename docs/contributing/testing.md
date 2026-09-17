@@ -385,6 +385,22 @@ The JVM report is `java-kotlin.json`, or `java.json`/`kotlin.json` for a single 
 
 The WIT report is `wit-wasi.json`. It binds the prepared archive, native component/adapter/runtime receipts, pinned Wasmtime file inventory, wasm-tools and GCC identities, parsed WIT and binary interfaces, public caller, compile diagnostics and loaded shared-library paths. It contains 100 executed catalog cases, 24 compile rejections and 84 supplemental error/recovery checks across both libraries. `witRuntimeRejections` counts those supplemental checks; repeat execution does not multiply coverage.
 
+### Reviewed-IR admission corpus
+
+Run the separate reviewed-contract checks with Node and the pinned host Lean compiler:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+source scripts/env.sh
+npm run test:type-corpus:reviewed
+```
+
+The two library contracts come from the independent corpus signatures, not generated compiler metadata or the Alpha fixture. The actual CLI validates all 19 declarations in each contract without a compiler. Builds for all 17 profiles, covering 12 package targets, must return `reviewed-ir-build-unsupported` before tool discovery and leave no release directory. Fast checks also cover combined targets, the Perl alias, direct native/PHP entry points, cached interface claims, conflicting source selectors and malformed review files.
+
+`build/type-corpus/reviewed-ir.json` records 38 analyzed declarations and 34 rejected build attempts. It records zero installed runs, executed consumer cases or observed cells. All 6,562 corpus cells remain gaps in this admission-only report; 697 carry the reviewed-build rejection reason. A separate fresh Lean oracle checks the source fixtures and their proofs. That oracle is not evidence that reviewed IR was compiled. The report binds the catalog, admission implementation, source/dependency snapshots and oracle identities, and rejects invented execution evidence.
+
+The consumer workflow's required `Reviewed IR admission corpus` job uploads `type-corpus-reviewed-ir-<commit>`. A failed command or missing report fails CI. See the [admission acceptance record](../evidence/type-corpus-reviewed-ir-20260917.md). Installed reviewed-IR execution remains planned work; these checks do not change the type-support inventory.
+
 CI requires all 17 adapters: C, C++, .NET, Java, Kotlin, Python, Ruby, Rust, native PHP, PHP-Wasm, WIT/WASI, all five npm adapters and all four Perl configurations. Jobs upload `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-jvm-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-php-native-<commit>`, `type-corpus-php-wasm-<commit>`, `type-corpus-wit-wasi-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
 
 The [JVM record](../evidence/type-corpus-jvm-20260917.md) lists Java/Kotlin host policies, offline Maven installation and runtime-only execution. The [.NET record](../evidence/type-corpus-dotnet-20260917.md) lists public signature checks and private NuGet restore. The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.

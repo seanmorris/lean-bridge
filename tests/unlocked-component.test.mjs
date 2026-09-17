@@ -163,7 +163,7 @@ test("reviewed IR retains its existing adapter gate instead of being promoted to
 	await saveLakeFile(root, "reviewed.binding-ir.json", canonicalJson(ir));
 	const before = await lakeInputState(root);
 	await assert.rejects(() => prepareLakeEntryIntent({ projectRoot: root }), /not a supplied Binding IR/);
-	await assert.rejects(() => build(root, join(directory, "result"), transport({ execute: () => assert.fail("Reviewed IR bypassed its adapter gate") })), { code: "compiler-adapter-ir-origin" });
+	await assert.rejects(() => build(root, join(directory, "result"), transport({ execute: () => assert.fail("Reviewed IR bypassed its adapter gate") })), { code: "reviewed-ir-build-unsupported" });
 	assert.deepEqual(await lakeInputState(root), before);
 	assert.deepEqual(await readdir(directory), ["project"]);
 });

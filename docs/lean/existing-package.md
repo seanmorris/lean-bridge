@@ -22,7 +22,7 @@ Read `proposedExports`, diagnostics, and adapter questions. The command uses the
 
 Analysis leaves the original checkout unchanged. A dependency-free Lake project needs no lockfile; dependencies and configured [generators](#generate-the-public-entry-module) require a reviewed `lake-manifest.json`. The engine runs declared generators against captured inputs before analyzing generated public modules. It does not build consumer adapters or packages.
 
-An explicit reviewed Binding IR takes a separate path: analysis validates that document without invoking Lean. Missing backends and compiler errors never fall back to source-scanned signatures.
+An explicit reviewed Binding IR takes a separate path: analysis validates that document without invoking Lean. Ordinary `build` commands reject supplied `.binding-ir.json` files with `reviewed-ir-build-unsupported`; they do not compile or ignore those decisions. Keep review documents outside a source-build project and express supported choices in `lean-bridge.exports.json`. Missing backends and compiler errors never fall back to source-scanned signatures.
 
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 

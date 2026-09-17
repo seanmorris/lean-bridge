@@ -474,6 +474,7 @@
     "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
     "test:type-surface": "node --test tests/type-surface.test.mjs",
     "test:type-corpus": "node --test tests/type-corpus.test.mjs",
+    "test:type-corpus:reviewed": "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs",
     "test:type-corpus:python": "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs",
     "test:type-corpus:ruby": "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs",
     "test:type-corpus:perl": "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=perl node --test tests/type-corpus.test.mjs",

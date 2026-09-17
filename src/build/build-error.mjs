@@ -27,3 +27,15 @@ export class CanonicalBuildError extends Error
 		this.details = details;
 	}
 }
+
+/**
+ * Keep reviewed declarations out of source-only compiler admission.
+ *
+ * @param inventory - Captured project inputs, before starting any build tools.
+ */
+export const assertSourceBuildInputs = inventory => {
+	const paths = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json")).map(input => input.path).sort();
+	if(paths.length) throw new CanonicalBuildError("reviewed-ir-build-unsupported"
+		, "Ordinary builds require fresh Lean metadata, not a supplied Binding IR; reviewed contracts currently support analysis only"
+		, { details: { paths }, hint: "Use analyze to validate the reviewed contract. To build from source, keep reviewed documents outside the source project and express supported export decisions in lean-bridge.exports.json." });
+};

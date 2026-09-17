@@ -1,0 +1,54 @@
+/**
+ * Independently specified reviewed contracts for the two corpus libraries.
+ * These documents are analysis inputs, never compiler or runtime evidence.
+ *
+ * @file
+ */
+import { corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
+
+const documentation = () => ({ summary: "Independent corpus contract.", details: "" });
+const source = declaration => ({ producer: "corpusReview", declaration, extensions: {} });
+const typeReference = type => typeof type === "string" ? { kind: "primitive", name: type }
+	: type.array ? { kind: "apply", constructor: "array", arguments: [typeReference(type.array)] }
+		: { kind: "named", id: `lean:${type.record}` };
+
+/**
+ * Describe the catalog API without importing a compiler model or Alpha fixture.
+ *
+ * @param library - Independent library and its expected signatures.
+ */
+export const corpusReviewedIr = library => {
+	const signatures = corpusSignatures(library);
+	const records = new Map(signatures.flatMap(signature => [...signature.parameters, signature.result])
+		.filter(type => type.record).map(type => [type.record, type]));
+	return { schemaVersion: 3
+		, component: { id: `${library.id}@1.0.0`, name: library.id, version: "1.0.0" }
+		, producers: [{ id: "corpusReview"
+			, adapter: "independent-corpus-contract", adapterVersion: 1
+			, tool: "Corpus contract review", toolVersion: "1", extensions: {} }]
+		, types: [...records.values()].map(type => ({ id: `lean:${type.record}`
+			, name: type.record.split(".").at(-1), kind: "record"
+			, representation: "copied", mutability: "immutable"
+			, typeParameters: []
+			, fields: Object.entries(type.fields).map(([name, field]) => ({ name
+				, type: typeReference(field), mutability: "immutable"
+				, documentation: documentation() }))
+			, target: null, resource: null, callable: null, cases: [], host: null
+			, documentation: documentation(), source: source(type.record)
+			, assurance: [] }))
+		, declarations: signatures.map(signature => ({ id: `lean:${signature.name}`
+			, name: signature.name.split(".").at(-1), kind: "function", owner: null
+			, overloadKey: signature.name, typeParameters: [], receiver: null
+			, parameters: signature.parameters.map((type, index) => ({ name: `value${index}`
+				, type: typeReference(type), ownership: "copy", lifetime: null
+				, mutability: "immutable"
+				, optional: false, default: null }))
+			, result: { type: typeReference(signature.result), ownership: "copy", lifetime: null }
+			, mutability: "immutable", effects: []
+			, failure: { mode: "none", errors: [], unexpected: "poison-runtime" }
+			, resultMode: "value", capabilities: [], assurance: []
+			, documentation: documentation()
+			, source: source(signature.name) }))
+		, errors: [], capabilities: [], assurance: []
+		, documentation: documentation() };
+};

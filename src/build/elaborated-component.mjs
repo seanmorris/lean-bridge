@@ -8,6 +8,7 @@ import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:f
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
+import { assertSourceBuildInputs } from "./build-error.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -100,6 +101,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		arities ??= config.arities ?? {};
 		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
+		assertSourceBuildInputs(inventory);
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
 		const analysis = inventory;
 		assertExportConfigurationSnapshot(record, analysis.inputs);

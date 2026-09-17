@@ -31,7 +31,7 @@ import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
-import { CanonicalBuildError } from "./build-error.mjs";
+import { assertSourceBuildInputs, CanonicalBuildError } from "./build-error.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
@@ -794,17 +794,17 @@ export const buildCanonicalProject = async ({
 	{
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "PHP-Wasm cannot be combined with an unsupported package target");
-		if(root === engine || (await inspectLeanProject(root, { signal })).inputs.some(input => input.path.endsWith(".binding-ir.json")))
+		if(root === engine)
 			fail("invalid-package-targets", "Ordinary PHP-Wasm builds require a source project with fresh Lean metadata, not the universal fixture or supplied Binding IR");
 		if(cache === null || typeof cache !== "object" || !["use", "refresh", "off"].includes(cache.policy)) fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
 		if(cache.directory !== null && cache.directory !== undefined) fail("cache-directory-unsupported", "PHP-Wasm builds do not implement --cache-directory; use a verified LEAN_BRIDGE_PHP_COPIED_RUNTIME input for shared runtime reuse");
 	}
-	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target))
-		&& !(await inspectLeanProject(root, { signal })).inputs.some(input => input.path.endsWith(".binding-ir.json"));
+	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target));
 	if(phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl"))
 	{
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
+		assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)
@@ -815,6 +815,7 @@ export const buildCanonicalProject = async ({
 			, wasmTargets: normalized.filter(target => ["npm", "php-wasm"].includes(target))
 			, buildWasm: buildCanonicalProject });
 	}
+	if(root !== engine) assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{
 		fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");

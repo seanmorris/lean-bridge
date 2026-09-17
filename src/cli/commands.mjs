@@ -97,6 +97,7 @@ const blockedBuildCodes = new Set([
 	"build-tools-unavailable", "docker-unavailable", "nix-unavailable"
 	, "cache-directory-unsupported"
 	, "php-wasm-toolchain-unavailable"
+	, "reviewed-ir-build-unsupported"
 	, "unknown-package-target"
 	, "package-target-ineligible"
 	, "component-binding-ir-required", "component-adapter-hints-required"

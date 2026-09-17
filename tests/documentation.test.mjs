@@ -309,6 +309,14 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /id: ordinary_rust/);
   assert.match(workflow, /steps\.ordinary_rust\.outcome != 'success'/);
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:reviewed"], "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs");
+  const reviewedJob = workflow.split("  reviewed-ir-admission:\n")[1].split("  nix-cache:\n")[0];
+  assert.match(reviewedJob, /bootstrap-toolchains\.sh --lean-only/);
+  assert.match(reviewedJob, /npm run test:type-corpus:reviewed/);
+  assert.doesNotMatch(reviewedJob, /continue-on-error/);
+  assert.match(reviewedJob, /name: type-corpus-reviewed-ir-\$\{\{ github\.sha \}\}/);
+  assert.match(reviewedJob, /path: build\/type-corpus\/reviewed-ir\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /needs:[\s\S]*- reviewed-ir-admission/);
   assert.equal(packageDocument.scripts["test:type-corpus:ruby"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:rust"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=rust node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust,wit-wasi node --test tests/type-corpus.test.mjs");
@@ -414,7 +422,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 15);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 16);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);

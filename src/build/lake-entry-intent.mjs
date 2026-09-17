@@ -11,6 +11,7 @@ import { assertExportConfigurationCapabilities } from "../analyze/export-configu
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
+import { assertSourceBuildInputs } from "./build-error.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-intent" }); };
 const freeze = value => {
@@ -67,6 +68,7 @@ const readIntent = async (inputRoot, signal) => {
 export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal, purpose = "build" }) => {
 	if(!["build", "analysis"].includes(purpose)) fail("Unknown public entry intent purpose");
 	const inventory = await inspectLeanProject(projectRoot, { signal });
+	assertSourceBuildInputs(inventory);
 	const configuration = inventory.configurationRecord.configuration;
 	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
 	if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
@@ -75,7 +77,6 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 		fail("Lake generators require a reviewed lake-manifest.json");
 	const modules = selectLakeEntryModules(configuration, inventory.inputs);
 	if(!modules.length) fail("Source-only intent requires a selected public entry module");
-	if(inventory.inputs.some(input => input.path.endsWith(".binding-ir.json"))) fail("Public entry signatures must come from fresh Lean metadata, not a supplied Binding IR");
 	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot, signal });
 	else lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot, includeProject: true, allowMissingLock: true, signal });
 	const files = new Map(lakeSnapshot.document.rootInputs.map(input => [input.path, input]));

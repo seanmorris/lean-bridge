@@ -82,6 +82,7 @@ const profileManifest = Object.freeze({
 		, "target-runtime-profiles"
 		, "type-surface"
 		, "type-corpus"
+		, "type-corpus-reviewed"
 		, "type-surface-docs"
 		, "test-profiles"
 		, "time-to-package"

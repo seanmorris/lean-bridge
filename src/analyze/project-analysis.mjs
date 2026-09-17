@@ -79,7 +79,7 @@ export const compilerProjectAnalysis = (inventory, entries, elaboration) => {
 export const reviewedProjectAnalysis = async (projectRoot, inventory, signal) => {
 	const paths = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json"));
 	if(!paths.length) fail("Reviewed analysis requires an explicit Binding IR document");
-	if(["modules", "exports", "resources", "arities", "specializations"].some(key => inventory.configurationRecord.configuration[key] !== undefined))
+	if(["modules", "exports", "resources", "arities", "specializations", "contracts"].some(key => inventory.configurationRecord.configuration[key] !== undefined))
 		throw Object.assign(new Error("Shared source selection cannot override a reviewed Binding IR"), { code: "export-configuration-reviewed-ir" });
 	let bindingIr = null;
 	if(paths.length === 1)
