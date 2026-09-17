@@ -40,7 +40,7 @@ The final C/C++ suite passes all 130 tests in 215.2 seconds. Eight archive build
 
 The run used GCC/G++ 12.2.0, CMake 3.25.1, pkg-config 1.8.1, Node 22.23.2 and Lean 4.32.2 (`f3b06c705e6c85f5314019d5d3baab0fec5b580c`) on x86-64 Debian 12. The local glibc floor override was 2.36; production and CI retain 2.38. Nix is unavailable locally, so these results do not claim local execution of the Nix-pinned engine.
 
-The catalog and 32 source/harness files bind corpus identity `7ed70abd0e85eacd86ceed123bbe3f5eead9ae1adde27df42ff6c93836e22f1c`. The report, `build/type-corpus/c-cpp.json`, revalidates against that identity and the current coverage rules.
+At commit `b93fc93`, the catalog and 32 source/harness files bind corpus identity `7ed70abd0e85eacd86ceed123bbe3f5eead9ae1adde27df42ff6c93836e22f1c`. The report, `build/type-corpus/c-cpp.json`, revalidated against that identity and that revision's coverage rules.
 
 | Prepared archive | SHA-256 |
 | --- | --- |
@@ -63,4 +63,4 @@ Core checks pass lint, checked-JavaScript types and 838 tests, with 54 compiler/
 
 The native consumer job requires both the existing ordinary C/C++ suites and `npm run test:type-corpus:c-family`. It uploads `type-corpus-c-family-<commit>` from `build/type-corpus/c-cpp.json`; a failed run or missing report fails the gate. Individual `test:type-corpus:c` and `test:type-corpus:cpp` commands are also available. `test:type-corpus:all-native` includes all six native adapters. The [testing guide](../contributing/testing.md#shared-real-lean-type-corpus) lists prerequisites.
 
-Eleven of the seventeen shared-corpus adapters are implemented. .NET, Java, Kotlin, PHP native, PHP-WASM and WIT/WASI remain, along with reviewed-IR execution and the remaining type families, positions and semantics. Synthetic validator observations never become installed evidence. This milestone does not promote the 656 installed-tested inventory cells or publish a registry package.
+At this milestone, eleven of the seventeen shared-corpus adapters were implemented. .NET, Java, Kotlin, PHP native, PHP-WASM and WIT/WASI remained, along with reviewed-IR execution and the remaining type families, positions and semantics. Synthetic validator observations never become installed evidence. This milestone does not promote the 656 installed-tested inventory cells or publish a registry package.

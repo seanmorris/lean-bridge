@@ -20,6 +20,7 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
 import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { installedCFamilyCorpus } from "./type-corpus-c-family.mjs";
+import { installedDotnetCorpus } from "./type-corpus-dotnet.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus");
@@ -107,6 +108,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
+	if(profiles.includes("dotnet")) environment.LEAN_BRIDGE_DOTNET ??= resolve(".toolchains/dotnet/dotnet");
 	if(profiles.includes("rust"))
 	{
 		environment.LEAN_BRIDGE_CARGO ??= resolve(".toolchains/rust-1.90.0/bin/cargo");
@@ -203,11 +205,12 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const runtimePackage = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "runtime");
 		assert.equal(pkg.artifacts.length, 1);
 		const archive = pkg.artifacts[0];
-		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
+		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp", "dotnet"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
 		const observed = profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
-			: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
-				: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
+			: profile === "dotnet" ? await installedDotnetCorpus({ library, consumer, handoff, pkg, environment, clean })
+				: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
+					: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
 		validateCorpusObservation(library, cases, result, observed.observation);
 		runs.push({ library: library.id, profile, path: "ordinary-source"
 			, archiveSha256: archive.sha256
@@ -225,7 +228,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 				, compilerPathDisabled: true, offlineInstall: true
 				, ...(profile === "rust" ? { rustCompilerDuringInstall: true
 					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {})
-				, ...(["c", "cpp"].includes(profile) ? { consumerCompilerDuringInstall: true
+				, ...(["c", "cpp", "dotnet"].includes(profile) ? { consumerCompilerDuringInstall: true
 					, compilerFreeExecution: true } : {}) }
 			, ...observed
 			, rejection });

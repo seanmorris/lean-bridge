@@ -528,6 +528,7 @@ jobs:
           dotnet-version: '8.0.424'
       - name: Compile ordinary Lean APIs and install relocated NuGet releases
         id: ordinary_dotnet
+        continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
         run: |
@@ -535,6 +536,22 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           node --test tests/native-dotnet.test.mjs
+      - name: Compare installed NuGet corpus packages with fresh Lean results
+        id: type_corpus_dotnet
+        continue-on-error: true
+        run: |
+          export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+          source scripts/env.sh
+          npm run test:type-corpus:dotnet
+      - name: Upload the .NET real-Lean type corpus report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-dotnet-${{ github.sha }}
+          path: build/type-corpus/dotnet.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Install the ordinary Java compiler
         uses: actions/setup-java@v4
         with:
@@ -594,8 +611,8 @@ jobs:
             test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
             executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
             if [ "$consumer" = dotnet ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs"
-              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet"
+              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -626,7 +643,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: steps.consumer.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
         run: exit 1
 
   wasi-consumer:

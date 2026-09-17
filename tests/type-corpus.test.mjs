@@ -16,6 +16,8 @@ import { corpusTypeScript, runNpmCorpusLibrary } from "./helpers/type-corpus-nod
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./helpers/type-corpus-rust-source.mjs";
 import { captureRustCompiler } from "./helpers/type-corpus-rust.mjs";
 import { corpusCFamilyRejection, corpusCFamilySignatures, corpusCFamilySource, corpusCFamilyRuntimeCases } from "./helpers/type-corpus-c-source.mjs";
+import { corpusDotnetRejection, corpusDotnetSignatures, corpusDotnetSource, dotnetRuntimeCases } from "./helpers/type-corpus-dotnet-source.mjs";
+import { dotnetCompilerOptions, dotnetDiagnostics } from "./helpers/type-corpus-dotnet.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -37,7 +39,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const cFamily = ["c", "cpp"].includes(profile);
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
-		, hostVersion: cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
+		, hostVersion: profile === "dotnet" ? "8.0.30" : cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
 		, ...(browser ? { realm: profile === "browser-worker" ? "dedicated-worker" : "window" } : {})
 		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
@@ -46,17 +48,22 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
 				: entry.expectation.kind === "compile-rejection" ? { id: entry.id
 					, status: "rejected-at-compile-time"
-					, sourceSha256: sha256(cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
+					, sourceSha256: sha256(profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
 					, diagnostics: [{ code: entry.expectation.diagnostic
-						, file: cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
+						, file: profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
 						, line: 7, column: 1
 						, ...(cFamily ? { message: entry.expectation.diagnostic === "narrowing" ? "conversion from value changes the value" : "incompatible types", option: entry.expectation.diagnostic === "narrowing" ? profile === "c" ? "-Werror=overflow" : "-Wnarrowing" : null } : {}) }] }
 					: { id: entry.id, status: "rejected-as-expected"
 						, exception: corpusProfiles[profile].errors[entry.expectation.category]
 						, recovered: true
-						, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+						, ...(profile === "dotnet" ? { recovery: oracle.dependency } : {})
+						, ...(entry.rejectionMessage ? { message: profile === "dotnet" ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
 		, ...(profile === "rust" ? { limits: Array.from({ length: 3 }, () => ({ exception: "Limit", recovery: oracle.dependency })) } : {})
-		, ...(cFamily ? { errors: corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: oracle.dependency }))) } : {}) };
+		, ...(cFamily ? { errors: corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: oracle.dependency }))) } : {})
+		, ...(profile === "dotnet" ? { collectibleCopies: true
+			, assembly: `/validator/relocated/${library.dotnetModule}.dll`
+			, nativeLibraries: dotnetNativePaths(library).map(path => `/validator/relocated/${path}`).sort()
+			, errors: Object.entries(dotnetRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception, recovery: oracle.dependency }))) } : {}) };
 	return { library: library.id, profile, path: "ordinary-source"
 		, archiveSha256: "a".repeat(64)
 		, archive: { sha256: "a".repeat(64), target: corpusProfiles[profile].target }
@@ -75,6 +82,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(browser ? { browser: browserValidationFixture(profile, library, observation) } : {})
 		, ...(profile === "rust" ? { rust: rustValidationFixture(library) } : {})
 		, ...(cFamily ? { cFamily: cFamilyValidationFixture(library, profile) } : {})
+		, ...(profile === "dotnet" ? { dotnet: dotnetValidationFixture(library) } : {})
 		, oracle, observation };
 };
 
@@ -105,6 +113,23 @@ const cFamilyValidationFixture = (library, profile) => ({
 	, executables: { "pkg-config": "f".repeat(64), cmake: "f".repeat(64) }
 	, integrationExecutions: { "pkg-config": 2, cmake: 2 }
 	, libraries: Object.fromEntries([`lib/lib${library.cModule}.so`, "lib/libleanshared.so", "lib/liblean_bridge_native.so"].map(path => [path, { sha256: "f".repeat(64), bytes: 100 }]))
+});
+
+const dotnetNativePaths = library => [`lib${library.cModule}.so`, "libleanshared.so", "liblean_bridge_native.so"].map(name => `runtimes/linux-x64/native/${name}`);
+const dotnetValidationFixture = library => ({
+	sdkVersion: "8.0.424", runtimeVersion: "8.0.30", compilerVersion: "4.11.0"
+	, ...Object.fromEntries(["hostSha256", "compilerSha256", "declarationsSha256", "packageReceiptSha256", "compiledProjectionSha256", "assemblySha256", "projectSourceSha256", "nugetConfigSha256", "assetsSha256", "lockSha256"].map(key => [key, "e".repeat(64)]))
+	, consumerSourceSha256: sha256(corpusDotnetSource(library))
+	, signaturesSha256: sha256(corpusDotnetSignatures(library))
+	, bindingIrSha256: "c".repeat(64)
+	, packageContentHash: Buffer.alloc(64).toString("base64")
+	, referenceVersion: "8.0.30"
+	, references: { "System.Runtime.dll": "f".repeat(64), "System.Runtime.Numerics.dll": "f".repeat(64) }
+	, compilerOptions: [...dotnetCompilerOptions]
+	, ...Object.fromEntries(["exactPublicSignatures", "emptyPackageCache", "emptyCliHome", "offline", "lockedRestore", "runtimeOverridesDisabled", "publicApiOnly", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "repeatExecution", "localLibraries"].map(key => [key, true]))
+	, deployment: Object.fromEntries(["Consumer.dll", "Consumer.deps.json", "Consumer.runtimeconfig.json", `${library.dotnetModule}.dll`, ...dotnetNativePaths(library)].map(path => [path, { sha256: "e".repeat(64), bytes: 100 }]))
+	, runtimeHost: { fxrVersion: "8.0.30"
+		, files: Object.fromEntries(["dotnet", "host/fxr/8.0.30/libhostfxr.so", "shared/Microsoft.NETCore.App/8.0.30/libcoreclr.so"].map(path => [path, { sha256: "e".repeat(64), bytes: 100 }])) }
 });
 
 const browserValidationFixture = (profile, library, observation) => {
@@ -150,8 +175,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 32);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 32);
+	assert.equal(identity.files.length, 35);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 35);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -532,6 +557,97 @@ for(const profile of ["c", "cpp"]) for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+test(".NET separates C# type errors from executed public calls and recovery", () => {
+	const runs = catalog.libraries.map(library => validationFixture("dotnet", library.id));
+	const cells = corpusCoverage(inventory, catalog, runs);
+	assert.equal(cells.filter(cell => cell.status === "observed").length, 41);
+	assert.equal(cells.filter(cell => cell.status === "gap").length, 6521);
+	const results = runs.flatMap(run => run.observation.results);
+	assert.equal(results.filter(entry => entry.status === "matched").length, 88);
+	assert.equal(results.filter(entry => entry.status === "rejected-as-expected").length, 4);
+	assert.equal(results.filter(entry => entry.status === "rejected-at-compile-time").length, 32);
+	assert.equal(runs.flatMap(run => run.observation.errors).length, 60);
+	for(const library of catalog.libraries)
+	{
+		const source = corpusDotnetSource(library), signatures = corpusDotnetSignatures(library);
+		assert.equal((signatures.match(/Wire.Method\(/g) ?? []).length, 19);
+		assert.match(signatures, /typeof\(BigInteger\), typeof\(BigInteger\), typeof\(uint\)/);
+		assert.match(signatures, /typeof\(uint\[\]\[\]\), typeof\(uint\[\]\[\]\)/);
+		assert.match(signatures, /Wire.Record/);
+		assert.match(source, /foreach \(var row in result\./);
+		assert.match(source, /if \(row.Length > 0\) row\[0\] \^= 31/);
+		assert.match(source, /GC.Collect\(\)/);
+		assert.match(source, /!copies.input.IsAlive && !copies.output.IsAlive/);
+		assert.match(source, /@(?:active|valid) = Wire.Boolean\(result\.(?:Active|Valid)\) } };/);
+		assert.doesNotMatch(source, /Interop|DllImport|unsafe|__runtime|validator-only/);
+		for(const id of ["float32-wrong-type", "float64-wrong-type"])
+			assert.equal(corpusHostCase(catalog.cases.find(entry => entry.id === `${library.id}/${id}`), "dotnet").oracleKey, id);
+		const overflow = catalog.cases.find(entry => entry.id === `${library.id}/overflow-u64`);
+		assert.match(corpusDotnetRejection(library, overflow), /checked\(ulong.MaxValue \+ 1UL\)/);
+		assert.throws(() => corpusDotnetRejection(library, catalog.cases.find(entry => entry.library === library.id)));
+	}
+});
+
+test(".NET requires source-located Roslyn diagnostics for the exact rejected input", () => {
+	const entry = corpusHostCase(catalog.cases.find(entry => entry.id === "shop/overflow-u64"), "dotnet");
+	const file = "src/reject-overflow-u64.cs", project = "/validator/project";
+	const diagnostic = { ruleId: "CS0220", level: "error"
+		, message: { text: "The operation overflows at compile time in checked mode" }
+		, locations: [{ physicalLocation: { artifactLocation: { uri: `${project}/${file}` }, region: { startLine: 10, startColumn: 12 } } }] };
+	const report = { version: "2.1.0", runs: [{ results: [diagnostic] }] };
+	assert.deepEqual(dotnetDiagnostics(report, entry, project, file), [{ code: "CS0220", file, line: 10, column: 12, message: diagnostic.message.text }]);
+	for(const change of [
+		report => { report.runs[0].results[0].ruleId = "CS0246"; }
+		, report => { report.runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri = "/package/Api.cs"; }
+		, report => { report.runs[0].results[0].locations[0].physicalLocation.region.startLine = 0; }
+		, report => { report.runs[0].results[0].locations = []; }
+		, report => { report.runs[0].results = []; }
+		, report => { report.runs.push(report.runs[0]); }
+	]) {
+		const invalid = structuredClone(report); change(invalid);
+		assert.throws(() => dotnetDiagnostics(invalid, entry, project, file));
+	}
+});
+
+for(const [label, change] of [
+	["missing compiler evidence", run => { delete run.dotnet; }]
+	, ["wrong SDK", run => { run.dotnet.sdkVersion = "9.0.100"; }]
+	, ["wrong runtime", run => { run.dotnet.runtimeVersion = "8.0.29"; }]
+	, ["wrong compiler", run => { run.dotnet.compilerVersion = "unknown"; }]
+	, ["unchecked compiler flags", run => { run.dotnet.compilerOptions = []; }]
+	, ["unbound source", run => { run.dotnet.consumerSourceSha256 = "0".repeat(64); }]
+	, ["unchecked signatures", run => { run.dotnet.signaturesSha256 = "0".repeat(64); }]
+	, ["wrong binding IR", run => { run.dotnet.bindingIrSha256 = "0".repeat(64); }]
+	, ["unhashed declarations", run => { delete run.dotnet.declarationsSha256; }]
+	, ["unhashed package", run => { run.dotnet.packageContentHash = "unknown"; }]
+	, ["missing reference assembly", run => { delete run.dotnet.references["System.Runtime.Numerics.dll"]; }]
+	, ["private API", run => { run.dotnet.publicApiOnly = false; }]
+	, ["remaining sources", run => { run.dotnet.installedSourcesRemoved = false; }]
+	, ["warm package cache", run => { run.dotnet.emptyPackageCache = false; }]
+	, ["warm CLI home", run => { run.dotnet.emptyCliHome = false; }]
+	, ["online restore", run => { run.dotnet.offline = false; }]
+	, ["unlocked restore", run => { run.dotnet.lockedRestore = false; }]
+	, ["compiler during execution", run => { run.dotnet.compilerFreeExecution = false; }]
+	, ["SDK at runtime", run => { run.dotnet.runtimeHost.files["sdk/8.0.424/Roslyn/bincore/csc.dll"] = { sha256: "f".repeat(64), bytes: 100 }; }]
+	, ["missing native runtime", run => { delete run.dotnet.deployment["runtimes/linux-x64/native/libleanshared.so"]; }]
+	, ["changed assembly", run => { run.dotnet.deployment["LeanBridge.Shop.dll"].sha256 = "0".repeat(64); }]
+	, ["wrong host binary", run => { run.dotnet.runtimeHost.files.dotnet.sha256 = "0".repeat(64); }]
+	, ["wrong loaded library", run => { run.observation.nativeLibraries[0] = "/global/libleanshared.so"; }]
+	, ["wrong assembly path", run => { run.observation.assembly = "/global/LeanBridge.Shop.dll"; }]
+	, ["retained copied records", run => { run.observation.collectibleCopies = false; }]
+	, ["missing runtime error", run => { run.observation.errors.pop(); }]
+	, ["wrong runtime error", run => { run.observation.errors[0].exception = "LoadException"; }]
+	, ["failed error recovery", run => { run.observation.errors[0].recovery = { integer: "0" }; }]
+	, ["failed Nat recovery", run => { run.observation.results.find(entry => entry.status === "rejected-as-expected").recovery = { integer: "0" }; }]
+	, ["unrelated compiler failure", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].code = "CS0246"; }]
+	, ["dependency compiler failure", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].file = "package/Api.cs"; }]
+	, ["missing diagnostic", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics = []; }]
+	, ["changed invalid source", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").sourceSha256 = "0".repeat(64); }]
+]) test(`.NET corpus rejects ${label}`, () => {
+	const run = validationFixture("dotnet"); change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0, timeout: 900_000
 }, async t => {
@@ -587,7 +703,8 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => ["matched", "rejected-as-expected"].includes(entry.status)).length, 0)
 			, compileRejectedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 0)
 			, rustRuntimeRejections: runs.reduce((count, run) => count + (run.observation.limits?.length ?? 0), 0)
-			, cFamilyRuntimeRejections: runs.reduce((count, run) => count + (run.observation.errors?.length ?? 0), 0)
+			, cFamilyRuntimeRejections: runs.filter(run => ["c", "cpp"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
+			, dotnetRuntimeRejections: runs.filter(run => run.profile === "dotnet").reduce((count, run) => count + run.observation.errors.length, 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)

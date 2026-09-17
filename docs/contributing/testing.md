@@ -223,7 +223,7 @@ npm run test:type-corpus:ruby
 npm run test:type-corpus:perl
 ```
 
-To build Python and Ruby together, or all six native formats including C, C++ and Rust, and compare the consumers against the same Lean run:
+To build Python and Ruby together, or all seven native adapters including C, C++, Rust and .NET, and compare the consumers against the same Lean run:
 
 ```sh
 npm run test:type-corpus:native
@@ -253,6 +253,16 @@ npm run test:type-corpus:c-family
 
 Each C/C++ installation builds two independent consumers: one uses the prepared pkg-config file, the other uses its CMake imported target. Only the downstream caller is compiled. The harness moves both executables and their packaged shared libraries, deletes the installed package and consumer build tree, then runs each executable twice without compiler paths or runtime overrides. All packaged libraries must resolve inside the moved deployment.
 
+.NET runs on Linux x86-64 and needs the .NET 8 SDK, the pinned Lean and native C toolchains, Git and 3 GiB of free scratch space. CI uses SDK 8.0.424. Select an absolute `dotnet` path and run:
+
+```sh
+export LEAN_BRIDGE_DOTNET=/absolute/path/to/dotnet
+source scripts/env.sh
+npm run test:type-corpus:dotnet
+```
+
+The local default is `.toolchains/dotnet/dotnet`. Each C# consumer restores only its prepared NuGet archive from a private feed, with empty package and CLI caches, a source mapping and an exact version. A second restore uses the lock file. The harness compiles the caller against the public assembly, then removes the entire installation and consumer build tree. It runs the relocated assembly twice with a copied .NET runtime containing no SDK, Roslyn or reference assemblies. Packaged native libraries must load from that deployment.
+
 For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
 
 ```sh
@@ -272,7 +282,7 @@ npm run test:type-corpus:npm
 
 All three engines run by default. For a focused local check, set `LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium`, `firefox`, `webkit` or a comma-separated subset. Missing engines and invalid selections fail; the harness never skips a requested browser. CI requires all three. `PLAYWRIGHT_BROWSERS_PATH` selects an alternate Playwright installation.
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++ or npm archive offline. Consumers call public exports with compiler paths disabled.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet or npm archive offline. Consumers call public exports with compiler paths disabled.
 
 After validating a library's observations and rechecking its receipts, the harness removes that transport's consumer directory before starting another library. Failure hooks also clean incomplete runs. This keeps completed installations from consuming the next build's scratch-space allowance.
 
@@ -283,6 +293,10 @@ Rust's generated callers independently check all 19 public function types per li
 C executes 94 catalog cases and rejects 30 invalid programs; C++ executes 92 and rejects 32. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.
 
 C/C++ `Nat` and `Int` currently use the public little-endian 32-bit limb representation. The callers check exact values beyond 4,096 bits, copied nested storage, and recovery after malformed UTF-8 or oversized strings. C also checks null spans, a null output pointer, invalid unit markers and nested null spans. C cleanup must release each owned result exactly once and tolerate a second clear. These supplemental runtime checks stay separate from the catalog and compiler-rejection counts.
+
+.NET checks all 19 public methods and each record's constructor and property types against independent C# signatures. `Nat` and `Int` use `BigInteger`. Negative `Nat` inputs must throw `ArgumentOutOfRangeException` and leave the next call usable. C# accepts the catalog's integer-to-float conversions; wrong aggregate/boolean types and checked fixed-width overflows must fail compilation with the expected source-located Roslyn diagnostic. These compiler rejections are not runtime range checks.
+
+The .NET consumers also check independent nested-array storage, garbage collection of copied records, null arguments, malformed UTF-16, input and output budgets, and recovery after every error. Garbage-collection checks cover the managed record copies, not native allocation counts or assembly unloading. The existing ordinary .NET suite retains its separate allocation, concurrency and multi-package checks.
 
 Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. The TypeScript consumer compiles with `strict`, `noEmitOnError` and `skipLibCheck: false`. It checks each public function's complete type against independently specified signatures, exercises compile-time invalid inputs with `@ts-expect-error`, then executes the emitted JavaScript against the same Lean oracle.
 
@@ -298,9 +312,11 @@ Reports appear in `build/type-corpus/`, named for the sorted selected profiles, 
 
 The C/C++ report is `c-cpp.json`. It records GCC identities, public signature and caller hashes, source-located compiler diagnostics, pkg-config and CMake integration, deployed library/executable hashes, and repeated source-free execution. `cFamilyRuntimeRejections` counts the additional 60 invalid-input/recovery checks across both libraries. The two build integrations and repeated executions do not multiply catalog or coverage counts.
 
-CI requires C, C++, Python, Ruby, Rust, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-c-family-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+The .NET report is `dotnet.json`. It binds the SDK, Roslyn compiler, reference assemblies, public assembly/declarations, exact package lock, installed receipt, consumer source, relocated deployment and runtime-only files. `dotnetRuntimeRejections` counts supplemental runtime error/recovery checks separately from catalog cases and compiler rejections. Repeated execution does not multiply coverage.
 
-The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
+CI requires C, C++, .NET, Python, Ruby, Rust, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+
+The [.NET record](../evidence/type-corpus-dotnet-20260917.md) lists public signature checks, private NuGet restore and runtime-only execution. The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
 
 ## WASI package
 

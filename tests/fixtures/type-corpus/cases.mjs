@@ -17,6 +17,7 @@ export const corpusLibraries = [
 		, rubyModule: "LeanBridge::Shop", rubyRequire: "lean_bridge/shop"
 		, perlModule: "LeanBridge::Shop", npmModule: "shop-corpus"
 		, rustModule: "shop_corpus", cModule: "shop"
+		, dotnetModule: "LeanBridge.Shop"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -28,6 +29,7 @@ export const corpusLibraries = [
 		, rubyModule: "LeanBridge::Telemetry", rubyRequire: "lean_bridge/telemetry"
 		, perlModule: "LeanBridge::Telemetry", npmModule: "telemetry-corpus"
 		, rustModule: "telemetry_corpus", cModule: "telemetry"
+		, dotnetModule: "LeanBridge.Telemetry"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
@@ -97,6 +99,16 @@ const cFamilyExpectation = (id, category, profile) => {
 			, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" };
 	return { expectation: { kind: "compile-rejection", category
 		, diagnostic: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "narrowing" : "incompatible-type" } };
+};
+
+const dotnetExpectation = (id, category) => {
+	if(["float32-wrong-type", "float64-wrong-type"].includes(id))
+		return { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.split("-")[0] };
+	if(["negative-nat", "bad-record"].includes(id)) return { rejectionMessage: "Lean Nat cannot be negative" };
+	return { expectation: { kind: "compile-rejection", category
+		, diagnostic: id === "overflow-u64" ? "CS0220"
+			: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "CS0221"
+				: id === "bad-nested" ? "CS0029" : "CS1503" } };
 };
 
 /**
@@ -178,6 +190,7 @@ export const corpusCases = library => {
 		, expectation: rejection ? { kind: "host-rejection", category: rejection } : { kind: "lean-oracle" }
 		, hostExpectations: {
 			...(rejection ? { rust: rustRejection(id, rejection) } : {})
+			, ...(rejection ? { dotnet: dotnetExpectation(id, rejection) } : {})
 			, ...(rejection ? Object.fromEntries(["c", "cpp"].map(profile => [profile, cFamilyExpectation(id, rejection, profile)])) : {})
 			, ...(["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
 				? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }

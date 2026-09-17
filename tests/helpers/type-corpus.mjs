@@ -11,6 +11,8 @@ import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { corpusCases, corpusHostCase, corpusLibraries, corpusOracleKeys, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./type-corpus-rust-source.mjs";
 import { corpusCFamilyRejection, corpusCFamilySignatures, corpusCFamilySource, corpusCFamilyRuntimeCases, validateCFamilyDiagnostic } from "./type-corpus-c-source.mjs";
+import { corpusDotnetRejection, corpusDotnetSignatures, corpusDotnetSource, dotnetRuntimeCases } from "./type-corpus-dotnet-source.mjs";
+import { dotnetCompilerOptions } from "./type-corpus-dotnet.mjs";
 
 export const corpusProfiles = Object.freeze({
 	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
@@ -24,6 +26,9 @@ export const corpusProfiles = Object.freeze({
 		, errors: Object.freeze({ type: "croak", range: "croak" }) })
 	, rust: Object.freeze({ adapter: "prepared-cargo-v1", target: "cargo"
 		, transport: "native", moduleKey: "rustModule", errors: Object.freeze({}) })
+	, dotnet: Object.freeze({ adapter: "prepared-nuget-v1", target: "nuget"
+		, transport: "native", moduleKey: "dotnetModule"
+		, errors: Object.freeze({ type: "ArgumentException", range: "ArgumentOutOfRangeException" }) })
 	, ...Object.fromEntries(["c", "cpp"].map(profile => [profile
 		, Object.freeze({
 			adapter: "prepared-c-family-v1", target: profile
@@ -153,8 +158,8 @@ export const corpusCatalog = inventory => {
 			if(selected.expectation.kind === "lean-oracle") assert.equal(typeof selected.oracleKey, "string");
 			else if(selected.expectation.kind === "compile-rejection")
 			{
-				assert.ok(["rust", "c", "cpp"].includes(profile));
-				assert.ok((profile === "rust" ? ["E0308", "E0600", "overflowing_literals"] : ["narrowing", "incompatible-type"]).includes(selected.expectation.diagnostic));
+				assert.ok(["rust", "c", "cpp", "dotnet"].includes(profile));
+				assert.ok((profile === "dotnet" ? ["CS0029", "CS0220", "CS0221", "CS1503"] : profile === "rust" ? ["E0308", "E0600", "overflowing_literals"] : ["narrowing", "incompatible-type"]).includes(selected.expectation.diagnostic));
 			}
 			else assert.ok(typeof selected.rejectionMessage === "string" && selected.rejectionMessage.length > 0);
 		}
@@ -185,7 +190,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
 	const cFamily = ["c", "cpp"].includes(actual.profile);
-	assert.match(actual.hostVersion, cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	assert.match(actual.hostVersion, actual.profile === "dotnet" ? /^8\.0\.\d+$/ : cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
 	if(cFamily) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 12);
 	if(wasm && !browser) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
 	if(browser) assert.equal(actual.realm, actual.profile === "browser-worker" ? "dedicated-worker" : "window");
@@ -215,14 +220,14 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		}
 		else if(entry.expectation.kind === "compile-rejection")
 		{
-			assert.ok(actual.profile === "rust" || cFamily);
+			assert.ok(["rust", "dotnet"].includes(actual.profile) || cFamily);
 			assert.equal(observed.status, "rejected-at-compile-time");
-			assert.equal(observed.sourceSha256, sha256(cFamily ? corpusCFamilyRejection(library, entry, actual.profile) : corpusRustRejection(library, entry)));
+			assert.equal(observed.sourceSha256, sha256(actual.profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, actual.profile) : corpusRustRejection(library, entry)));
 			assert.ok(observed.diagnostics.length > 0);
 			for(const diagnostic of observed.diagnostics)
 			{
 				assert.equal(diagnostic.code, entry.expectation.diagnostic);
-				assert.equal(diagnostic.file, cFamily ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`);
+				assert.equal(diagnostic.file, actual.profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`);
 				if(cFamily) validateCFamilyDiagnostic(diagnostic, actual.profile, entry.expectation.diagnostic);
 				assert.ok(Number.isSafeInteger(diagnostic.line) && diagnostic.line > 0);
 				assert.ok(Number.isSafeInteger(diagnostic.column) && diagnostic.column > 0);
@@ -232,8 +237,9 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
-			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(`${entry.rejectionMessage} at `), entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(actual.profile === "dotnet" ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
+			if(actual.profile === "dotnet") assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
 		}
 	}
 };
@@ -296,6 +302,46 @@ const validateCFamilyEvidence = (run, library) => {
 		assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
 	}
 	assert.deepEqual(run.observation.errors, corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: run.oracle.dependency }))));
+};
+
+const validateDotnetEvidence = (run, library) => {
+	const evidence = run.dotnet;
+	assert.match(evidence.sdkVersion, /^8\.0\.\d+$/);
+	assert.equal(evidence.runtimeVersion, run.observation.hostVersion);
+	assert.match(evidence.compilerVersion, /^4\.\d+\.\d+/);
+	for(const name of ["hostSha256", "compilerSha256", "consumerSourceSha256", "signaturesSha256", "declarationsSha256", "packageReceiptSha256", "compiledProjectionSha256", "bindingIrSha256", "assemblySha256", "projectSourceSha256", "nugetConfigSha256", "assetsSha256", "lockSha256"])
+		assert.match(evidence[name], /^[a-f0-9]{64}$/);
+	assert.equal(evidence.consumerSourceSha256, sha256(corpusDotnetSource(library)));
+	assert.equal(evidence.signaturesSha256, sha256(corpusDotnetSignatures(library)));
+	assert.equal(evidence.bindingIrSha256, run.bindingIrSha256);
+	assert.match(evidence.packageContentHash, /^[A-Za-z0-9+/]{86}==$/);
+	assert.match(evidence.referenceVersion, /^8\.0\.\d+$/);
+	for(const name of ["System.Runtime.dll", "System.Runtime.Numerics.dll"]) assert.ok(Object.hasOwn(evidence.references, name));
+	for(const [path, hash] of Object.entries(evidence.references))
+	{ assert.match(path, /^[A-Za-z0-9.]+\.dll$/); assert.match(hash, /^[a-f0-9]{64}$/); }
+	assert.deepEqual(evidence.compilerOptions, [...dotnetCompilerOptions]);
+	for(const name of ["exactPublicSignatures", "emptyPackageCache", "emptyCliHome", "offline", "lockedRestore", "runtimeOverridesDisabled", "publicApiOnly", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "repeatExecution", "localLibraries"]) assert.equal(evidence[name], true);
+	assert.equal(evidence.deployment[`${library.dotnetModule}.dll`].sha256, evidence.assemblySha256);
+	for(const path of ["Consumer.dll", "Consumer.deps.json", "Consumer.runtimeconfig.json", `runtimes/linux-x64/native/lib${library.cModule}.so`, "runtimes/linux-x64/native/libleanshared.so", "runtimes/linux-x64/native/liblean_bridge_native.so"]) assert.ok(Object.hasOwn(evidence.deployment, path));
+	for(const [path, file] of Object.entries(evidence.deployment))
+	{
+		assert.match(path, /^(?:[A-Za-z0-9_.-]+\.(?:dll|pdb|json|xml)|runtimes\/linux-x64\/native\/[A-Za-z0-9_.-]+\.so)$/);
+		assert.match(file.sha256, /^[a-f0-9]{64}$/); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
+	}
+	assert.match(evidence.runtimeHost.fxrVersion, /^8\.0\.\d+$/);
+	const runtimeFiles = evidence.runtimeHost.files;
+	for(const path of ["dotnet", `host/fxr/${evidence.runtimeHost.fxrVersion}/libhostfxr.so`, `shared/Microsoft.NETCore.App/${evidence.runtimeVersion}/libcoreclr.so`]) assert.ok(Object.hasOwn(runtimeFiles, path));
+	for(const [path, file] of Object.entries(runtimeFiles))
+	{
+		assert.match(path, /^(?:dotnet|host\/fxr\/8\.0\.\d+\/[A-Za-z0-9_.-]+|shared\/Microsoft.NETCore.App\/8\.0\.\d+\/[A-Za-z0-9_.-]+)$/);
+		assert.match(file.sha256, /^[a-f0-9]{64}$/); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
+	}
+	assert.equal(runtimeFiles.dotnet.sha256, evidence.hostSha256);
+	assert.equal(run.observation.collectibleCopies, true);
+	assert.ok(run.observation.assembly.endsWith(`/relocated/${library.dotnetModule}.dll`));
+	const root = run.observation.assembly.slice(0, -`${library.dotnetModule}.dll`.length);
+	assert.deepEqual(run.observation.nativeLibraries, Object.keys(evidence.deployment).filter(path => path.endsWith(".so")).map(path => `${root}${path}`).sort());
+	assert.deepEqual(run.observation.errors, Object.entries(dotnetRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, exception, iteration, recovery: run.oracle.dependency }))));
 };
 
 const validateBrowserEvidence = (run, library, cases) => {
@@ -386,6 +432,7 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus-browser.mjs", "tests/helpers/type-corpus-browser-build.mjs");
 	paths.push("tests/helpers/type-corpus-rust.mjs", "tests/helpers/type-corpus-rust-source.mjs");
 	paths.push("tests/helpers/type-corpus-c-source.mjs", "tests/helpers/type-corpus-c-family.mjs", "tests/helpers/type-corpus-compiler.mjs", "tests/fixtures/type-corpus/consumers/c-family.h");
+	paths.push("tests/helpers/type-corpus-dotnet-source.mjs", "tests/helpers/type-corpus-dotnet.mjs", "tests/fixtures/type-corpus/consumers/dotnet.cs");
 	const files = [];
 	for(const path of paths)
 	{
@@ -454,6 +501,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		if(corpusProfiles[run.profile].browser) validateBrowserEvidence(run, library, cases);
 		if(run.profile === "rust") validateRustEvidence(run, library);
 		if(["c", "cpp"].includes(run.profile)) validateCFamilyEvidence(run, library);
+		if(run.profile === "dotnet") validateDotnetEvidence(run, library);
 		for(const entry of cases)
 		{
 			if(!corpusCaseSupported(library, entry, run.profile)) continue;
