@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { corpusCases, corpusHostCase, corpusLibraries, corpusOracleKeys, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./type-corpus-rust-source.mjs";
+import { corpusCFamilyRejection, corpusCFamilySignatures, corpusCFamilySource, corpusCFamilyRuntimeCases, validateCFamilyDiagnostic } from "./type-corpus-c-source.mjs";
 
 export const corpusProfiles = Object.freeze({
 	python: Object.freeze({ adapter: "prepared-wheel-v1", target: "pypi"
@@ -23,6 +24,13 @@ export const corpusProfiles = Object.freeze({
 		, errors: Object.freeze({ type: "croak", range: "croak" }) })
 	, rust: Object.freeze({ adapter: "prepared-cargo-v1", target: "cargo"
 		, transport: "native", moduleKey: "rustModule", errors: Object.freeze({}) })
+	, ...Object.fromEntries(["c", "cpp"].map(profile => [profile
+		, Object.freeze({
+			adapter: "prepared-c-family-v1", target: profile
+			, transport: "native"
+			, moduleKey: "cModule", errors: Object.freeze({})
+		})
+	]))
 	, "node-javascript": Object.freeze({ adapter: "prepared-npm-v1", target: "npm"
 		, transport: "wasm", moduleKey: "npmModule"
 		, errors: Object.freeze({ type: "TypeError", range: "TypeError" }) })
@@ -145,8 +153,8 @@ export const corpusCatalog = inventory => {
 			if(selected.expectation.kind === "lean-oracle") assert.equal(typeof selected.oracleKey, "string");
 			else if(selected.expectation.kind === "compile-rejection")
 			{
-				assert.equal(profile, "rust");
-				assert.ok(["E0308", "E0600", "overflowing_literals"].includes(selected.expectation.diagnostic));
+				assert.ok(["rust", "c", "cpp"].includes(profile));
+				assert.ok((profile === "rust" ? ["E0308", "E0600", "overflowing_literals"] : ["narrowing", "incompatible-type"]).includes(selected.expectation.diagnostic));
 			}
 			else assert.ok(typeof selected.rejectionMessage === "string" && selected.rejectionMessage.length > 0);
 		}
@@ -176,7 +184,9 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 	const wasm = corpusProfiles[actual.profile].transport === "wasm";
 	const browser = corpusProfiles[actual.profile].browser;
 	assert.equal(actual.module, library[corpusProfiles[actual.profile].moduleKey]);
-	assert.match(actual.hostVersion, browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	const cFamily = ["c", "cpp"].includes(actual.profile);
+	assert.match(actual.hostVersion, cFamily ? /^\d+\.\d+(?:\.\d+)?$/ : browser ? /^[0-9]+(?:\.[0-9]+)+$/ : wasm ? /^[0-9]+\.[0-9]+\.[0-9]+$/ : actual.profile === "rust" ? /^1\.(?:9\d|[1-9]\d{2,})\.\d+$/ : actual.profile === "perl" ? /^5\.[0-9]+\.[0-9]+$/ : actual.profile === "ruby" ? /^3\.3\.[0-9]+$/ : /^3\.[0-9]+\.[0-9]+$/);
+	if(cFamily) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 12);
 	if(wasm && !browser) assert.ok(Number(actual.hostVersion.split(".")[0]) >= 22);
 	if(browser) assert.equal(actual.realm, actual.profile === "browser-worker" ? "dedicated-worker" : "window");
 	if(actual.profile === "perl")
@@ -205,14 +215,15 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		}
 		else if(entry.expectation.kind === "compile-rejection")
 		{
-			assert.equal(actual.profile, "rust");
+			assert.ok(actual.profile === "rust" || cFamily);
 			assert.equal(observed.status, "rejected-at-compile-time");
-			assert.equal(observed.sourceSha256, sha256(corpusRustRejection(library, entry)));
+			assert.equal(observed.sourceSha256, sha256(cFamily ? corpusCFamilyRejection(library, entry, actual.profile) : corpusRustRejection(library, entry)));
 			assert.ok(observed.diagnostics.length > 0);
 			for(const diagnostic of observed.diagnostics)
 			{
 				assert.equal(diagnostic.code, entry.expectation.diagnostic);
-				assert.equal(diagnostic.file, `src/bin/reject-${entry.id.split("/")[1]}.rs`);
+				assert.equal(diagnostic.file, cFamily ? `src/reject-${entry.id.split("/")[1]}.${actual.profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`);
+				if(cFamily) validateCFamilyDiagnostic(diagnostic, actual.profile, entry.expectation.diagnostic);
 				assert.ok(Number.isSafeInteger(diagnostic.line) && diagnostic.line > 0);
 				assert.ok(Number.isSafeInteger(diagnostic.column) && diagnostic.column > 0);
 			}
@@ -256,6 +267,35 @@ const validateRustEvidence = (run, library) => {
 		assert.equal(limit.exception, "Limit");
 		assert.deepEqual(limit.recovery, run.oracle.dependency);
 	}
+};
+
+const validateCFamilyEvidence = (run, library) => {
+	const evidence = run.cFamily, profile = run.profile;
+	assert.equal(evidence.compilerVersion, run.observation.hostVersion);
+	assert.equal(evidence.standard, profile === "cpp" ? "c++20" : "c11");
+	for(const name of ["compilerSha256", "compilerMacrosSha256", "consumerSourceSha256", "signaturesSha256", "declarationsSha256", "packageReceiptSha256", "bindingIrSha256"])
+		assert.match(evidence[name], /^[a-f0-9]{64}$/);
+	assert.equal(evidence.bindingIrSha256, run.bindingIrSha256);
+	assert.equal(evidence.consumerSourceSha256, sha256(corpusCFamilySource(library, profile)));
+	assert.equal(evidence.signaturesSha256, sha256(corpusCFamilySignatures(library, profile)));
+	for(const flag of ["gccDiagnostics", "installedSourcesRemoved", "offline", "runtimeOverridesDisabled", "publicHeadersOnly", "compilerFreeExecution", "repeatExecution", "localLibraries"]) assert.equal(evidence[flag], true);
+	assert.deepEqual(evidence.negativeCompilerOptions, [`-std=${evidence.standard}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", ...profile === "c" ? ["-Wconversion", "-Wsign-conversion"] : [], "-fsyntax-only", "-fdiagnostics-format=json"]);
+	assert.match(evidence.pkgConfig.version, /^\d+\.\d+(?:\.\d+)?$/);
+	assert.equal(evidence.pkgConfig.flags.length, 4);
+	assert.match(evidence.pkgConfig.manifestSha256, /^[a-f0-9]{64}$/);
+	assert.match(evidence.cmake.version, /^cmake version \d+\.\d+\.\d+/);
+	for(const key of ["manifestSha256", "consumerSourceSha256"]) assert.match(evidence.cmake[key], /^[a-f0-9]{64}$/);
+	assert.deepEqual(Object.keys(evidence.executables).sort(), ["cmake", "pkg-config"]);
+	for(const hash of Object.values(evidence.executables)) assert.match(hash, /^[a-f0-9]{64}$/);
+	assert.deepEqual(evidence.integrationExecutions, { "pkg-config": 2, cmake: 2 });
+	for(const path of [`lib/lib${library.cModule}.so`, "lib/libleanshared.so", "lib/liblean_bridge_native.so"]) assert.ok(Object.hasOwn(evidence.libraries, path));
+	for(const [path, file] of Object.entries(evidence.libraries))
+	{
+		assert.match(path, /^lib\/[^/]+\.so(?:\.[0-9]+)*$/);
+		assert.match(file.sha256, /^[a-f0-9]{64}$/);
+		assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
+	}
+	assert.deepEqual(run.observation.errors, corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: run.oracle.dependency }))));
 };
 
 const validateBrowserEvidence = (run, library, cases) => {
@@ -345,6 +385,7 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus.mjs", "tests/helpers/type-corpus-native.mjs", "tests/helpers/type-corpus-source.mjs", "tests/helpers/type-corpus-node.mjs", "tests/helpers/lake-workspace.mjs", "tests/type-corpus.test.mjs");
 	paths.push("tests/helpers/type-corpus-browser.mjs", "tests/helpers/type-corpus-browser-build.mjs");
 	paths.push("tests/helpers/type-corpus-rust.mjs", "tests/helpers/type-corpus-rust-source.mjs");
+	paths.push("tests/helpers/type-corpus-c-source.mjs", "tests/helpers/type-corpus-c-family.mjs", "tests/helpers/type-corpus-compiler.mjs", "tests/fixtures/type-corpus/consumers/c-family.h");
 	const files = [];
 	for(const path of paths)
 	{
@@ -412,6 +453,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		validateCorpusObservation(library, cases, run.oracle, run.observation);
 		if(corpusProfiles[run.profile].browser) validateBrowserEvidence(run, library, cases);
 		if(run.profile === "rust") validateRustEvidence(run, library);
+		if(["c", "cpp"].includes(run.profile)) validateCFamilyEvidence(run, library);
 		for(const entry of cases)
 		{
 			if(!corpusCaseSupported(library, entry, run.profile)) continue;

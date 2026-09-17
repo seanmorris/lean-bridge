@@ -15,6 +15,7 @@ import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
 import { corpusTypeScript, runNpmCorpusLibrary } from "./helpers/type-corpus-node.mjs";
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./helpers/type-corpus-rust-source.mjs";
 import { captureRustCompiler } from "./helpers/type-corpus-rust.mjs";
+import { corpusCFamilyRejection, corpusCFamilySignatures, corpusCFamilySource, corpusCFamilyRuntimeCases } from "./helpers/type-corpus-c-source.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -33,9 +34,10 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const abiKey = sha256(JSON.stringify(JSON.parse(canonicalJson(abi))));
 	const wasm = corpusProfiles[profile].transport === "wasm";
 	const browser = corpusProfiles[profile].browser;
+	const cFamily = ["c", "cpp"].includes(profile);
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
-		, hostVersion: wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
+		, hostVersion: cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
 		, ...(browser ? { realm: profile === "browser-worker" ? "dedicated-worker" : "window" } : {})
 		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
@@ -44,13 +46,17 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
 				: entry.expectation.kind === "compile-rejection" ? { id: entry.id
 					, status: "rejected-at-compile-time"
-					, sourceSha256: sha256(corpusRustRejection(library, entry))
-					, diagnostics: [{ code: entry.expectation.diagnostic, file: `src/bin/reject-${entry.id.split("/")[1]}.rs`, line: 7, column: 1 }] }
+					, sourceSha256: sha256(cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
+					, diagnostics: [{ code: entry.expectation.diagnostic
+						, file: cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
+						, line: 7, column: 1
+						, ...(cFamily ? { message: entry.expectation.diagnostic === "narrowing" ? "conversion from value changes the value" : "incompatible types", option: entry.expectation.diagnostic === "narrowing" ? profile === "c" ? "-Werror=overflow" : "-Wnarrowing" : null } : {}) }] }
 					: { id: entry.id, status: "rejected-as-expected"
 						, exception: corpusProfiles[profile].errors[entry.expectation.category]
 						, recovered: true
 						, ...(entry.rejectionMessage ? { message: `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
-		, ...(profile === "rust" ? { limits: Array.from({ length: 3 }, () => ({ exception: "Limit", recovery: oracle.dependency })) } : {}) };
+		, ...(profile === "rust" ? { limits: Array.from({ length: 3 }, () => ({ exception: "Limit", recovery: oracle.dependency })) } : {})
+		, ...(cFamily ? { errors: corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: oracle.dependency }))) } : {}) };
 	return { library: library.id, profile, path: "ordinary-source"
 		, archiveSha256: "a".repeat(64)
 		, archive: { sha256: "a".repeat(64), target: corpusProfiles[profile].target }
@@ -68,6 +74,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 			, compilerSha256: "f".repeat(64) } } : {})
 		, ...(browser ? { browser: browserValidationFixture(profile, library, observation) } : {})
 		, ...(profile === "rust" ? { rust: rustValidationFixture(library) } : {})
+		, ...(cFamily ? { cFamily: cFamilyValidationFixture(library, profile) } : {})
 		, oracle, observation };
 };
 
@@ -82,6 +89,23 @@ const rustValidationFixture = library => ({ rustcVersion: "rustc 1.90.0 (validat
 		, packages: ["num-bigint-0.4.6", "sha2-0.10.9"].map(directory => ({ directory, checksum: "f".repeat(64), files: 1, manifestSha256: "f".repeat(64) })) }
 	, installedSourcesRemoved: true, emptyCargoHome: true, offline: true
 	, linkOnly: true, normalExitCleanup: true, repeatExecution: true });
+
+const cFamilyValidationFixture = (library, profile) => ({
+	compilerVersion: "12.2.0", standard: profile === "cpp" ? "c++20" : "c11"
+	, ...Object.fromEntries(["compilerSha256", "compilerMacrosSha256", "declarationsSha256", "packageReceiptSha256"].map(key => [key, "e".repeat(64)]))
+	, bindingIrSha256: "c".repeat(64)
+	, consumerSourceSha256: sha256(corpusCFamilySource(library, profile))
+	, signaturesSha256: sha256(corpusCFamilySignatures(library, profile))
+	, negativeCompilerOptions: [`-std=${profile === "cpp" ? "c++20" : "c11"}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", ...profile === "c" ? ["-Wconversion", "-Wsign-conversion"] : [], "-fsyntax-only", "-fdiagnostics-format=json"]
+	, gccDiagnostics: true, installedSourcesRemoved: true, offline: true
+	, runtimeOverridesDisabled: true, publicHeadersOnly: true
+	, compilerFreeExecution: true, repeatExecution: true, localLibraries: true
+	, pkgConfig: { version: "1.8.1", flags: ["-I/validator", "-L/validator", "-Wl,-rpath,/validator", `-l${library.cModule}`], manifestSha256: "f".repeat(64) }
+	, cmake: { version: "cmake version 3.25.1", manifestSha256: "f".repeat(64), consumerSourceSha256: "f".repeat(64) }
+	, executables: { "pkg-config": "f".repeat(64), cmake: "f".repeat(64) }
+	, integrationExecutions: { "pkg-config": 2, cmake: 2 }
+	, libraries: Object.fromEntries([`lib/lib${library.cModule}.so`, "lib/libleanshared.so", "lib/liblean_bridge_native.so"].map(path => [path, { sha256: "f".repeat(64), bytes: 100 }]))
+});
 
 const browserValidationFixture = (profile, library, observation) => {
 	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
@@ -126,8 +150,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 28);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 28);
+	assert.equal(identity.files.length, 32);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 32);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -230,7 +254,7 @@ test("the shared inputs cover all sixteen primitive parameter/result positions",
 
 test("Perl numeric acceptance uses fresh Lean results without weakening other profiles", () => {
 	const cases = catalog.cases.filter(entry => entry.library === "shop");
-	assert.equal(corpusOracleKeys(cases).length, 45);
+	assert.equal(corpusOracleKeys(cases).length, 47);
 	for(const id of ["bool-as-number", "float32-wrong-type", "float64-wrong-type"])
 	{
 		const entry = cases.find(entry => entry.id === `shop/${id}`);
@@ -454,6 +478,60 @@ for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+for(const profile of ["c", "cpp"]) test(`${profile} corpus separates native numeric acceptance from compiler rejection`, () => {
+	const runs = catalog.libraries.map(library => validationFixture(profile, library.id));
+	const observed = corpusCoverage(inventory, catalog, runs).filter(cell => cell.status === "observed");
+	assert.equal(observed.length, 41);
+	const results = runs.flatMap(run => run.observation.results);
+	assert.equal(results.filter(entry => entry.status === "matched").length, profile === "c" ? 94 : 92);
+	assert.equal(results.filter(entry => entry.status === "rejected-at-compile-time").length, profile === "c" ? 30 : 32);
+	assert.equal(runs.flatMap(run => run.observation.errors).length, profile === "c" ? 42 : 18);
+	assert.ok(observed.every(cell => cell.cases.every(id => corpusHostCase(catalog.cases.find(entry => entry.id === id), profile).expectation.kind === "lean-oracle")));
+	for(const library of catalog.libraries)
+	{
+		const source = corpusCFamilySource(library, profile), signatures = corpusCFamilySignatures(library, profile);
+		assert.equal((signatures.match(profile === "c" ? /_Static_assert/g : /static_assert/g) ?? []).length, 19);
+		assert.match(source, /open_memstream/);
+		assert.match(source, /snapshot_(?:basket|frame)/);
+		assert.match(source, /INVALID_ARGUMENT/);
+		assert.doesNotMatch(source, /__runtime|api::detail|runtime_install|Alpha|validator-only/);
+		if(profile === "c") assert.match(source, /WIRE_WATCH\(result/);
+		else assert.match(source, /result\.(?:units|counter)\.limbs\[0\] \^= 17/);
+		for(const id of ["bool-as-number", "wrong-boolean", "float32-wrong-type", "float64-wrong-type"])
+			assert.equal(corpusHostCase(catalog.cases.find(entry => entry.id === `${library.id}/${id}`), profile).oracleKey, id);
+		assert.equal(corpusHostCase(catalog.cases.find(entry => entry.id === `${library.id}/bad-nested`), profile).expectation.kind, profile === "c" ? "lean-oracle" : "compile-rejection");
+	}
+});
+
+for(const profile of ["c", "cpp"]) for(const [label, change] of [
+	["missing compiler evidence", run => { delete run.cFamily; }]
+	, ["old compiler", run => { run.observation.hostVersion = "11.1.0"; }]
+	, ["wrong standard", run => { run.cFamily.standard = "c99"; }]
+	, ["unbound source", run => { run.cFamily.consumerSourceSha256 = "0".repeat(64); }]
+	, ["unchecked signatures", run => { run.cFamily.signaturesSha256 = "0".repeat(64); }]
+	, ["wrong binding IR", run => { run.cFamily.bindingIrSha256 = "0".repeat(64); }]
+	, ["remaining sources", run => { run.cFamily.installedSourcesRemoved = false; }]
+	, ["compiler during execution", run => { run.cFamily.compilerFreeExecution = false; }]
+	, ["runtime override", run => { run.cFamily.runtimeOverridesDisabled = false; }]
+	, ["private headers", run => { run.cFamily.publicHeadersOnly = false; }]
+	, ["unchecked narrowing", run => { run.cFamily.negativeCompilerOptions = []; }]
+	, ["missing CMake", run => { delete run.cFamily.executables.cmake; }]
+	, ["unexecuted integration", run => { run.cFamily.integrationExecutions.cmake = 0; }]
+	, ["nonlocal runtime", run => { run.cFamily.localLibraries = false; }]
+	, ["missing runtime library", run => { delete run.cFamily.libraries["lib/libleanshared.so"]; }]
+	, ["wrong runtime rejection", run => { run.observation.errors[0].exception = "LOAD_ERROR"; }]
+	, ["failed recovery", run => { run.observation.errors[0].recovery = { integer: "0" }; }]
+	, ["missing error check", run => { run.observation.errors.pop(); }]
+	, ["aliased record", run => { run.observation.results.find(entry => entry.id.endsWith("/record")).independentCopy = false; }]
+	, ["unrelated compiler failure", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].message = "unknown function"; }]
+	, ["header compiler failure", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].file = "package/include/broken.h"; }]
+	, ["changed rejected input", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").sourceSha256 = "0".repeat(64); }]
+]) test(`${profile} corpus rejects ${label}`, () => {
+	const run = validationFixture(profile);
+	change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
 	skip: profiles.length === 0, timeout: 900_000
 }, async t => {
@@ -509,6 +587,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, executedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => ["matched", "rejected-as-expected"].includes(entry.status)).length, 0)
 			, compileRejectedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 0)
 			, rustRuntimeRejections: runs.reduce((count, run) => count + (run.observation.limits?.length ?? 0), 0)
+			, cFamilyRuntimeRejections: runs.reduce((count, run) => count + (run.observation.errors?.length ?? 0), 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)

@@ -1,6 +1,6 @@
 # Shared Rust corpus, 2026-09-17
 
-VO 1217. The shared corpus adds an installed Cargo adapter for the same `Shop.Pricing` and `Telemetry.Readings` libraries used by Python, Ruby, Perl and the five npm profiles. Production generators and type-support claims are unchanged. The earlier [ordinary Rust acceptance](native-rust-20260915.md) retains its separate concurrency, injected-failure and runtime-composition checks.
+VO 1217, milestone commit `1dee0ca`. This record preserves that revision's corpus identity and results. The shared corpus adds an installed Cargo adapter for the same `Shop.Pricing` and `Telemetry.Readings` libraries used by Python, Ruby, Perl and the five npm profiles. Production generators and type-support claims are unchanged. The earlier [ordinary Rust acceptance](native-rust-20260915.md) retains its separate concurrency, injected-failure and runtime-composition checks.
 
 ## Typed calls and compiler rejections
 
@@ -34,7 +34,7 @@ The Rust-only suite passes all 84 tests in 217.5 seconds. Four archive builds re
 
 The run used Rust 1.90.0 (`1159e78c4`), Cargo 1.90.0 (`840b83a10`), Node 22.23.2 and Lean 4.32.2 (`f3b06c705e6c85f5314019d5d3baab0fec5b580c`) on x86-64 Debian 12. The local glibc floor override was 2.36; production and CI retain 2.38. Nix is unavailable locally, so these results do not claim local execution of the Nix-pinned engine.
 
-The catalog and 28 source/harness files bind corpus identity `2a8e8d8fc9e7cc65eca825f7b0bf834dde1050296125762db4727d77bb602145`. The completed report, `build/type-corpus/rust.json`, revalidates against that identity and the current coverage rules.
+The catalog and 28 source/harness files bind corpus identity `2a8e8d8fc9e7cc65eca825f7b0bf834dde1050296125762db4727d77bb602145`. The completed report, `build/type-corpus/rust.json`, revalidated against that identity and the coverage rules at `1dee0ca`.
 
 | Rust-only prepared archive | SHA-256 |
 | --- | --- |

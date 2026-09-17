@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
 import { chmod, mkdir, readFile, readdir, realpath, rename, rm, symlink } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -13,6 +12,8 @@ import { createDeterministicTarGz } from "../../src/release/deterministic-archiv
 import { corpusCases, corpusHostCase } from "../fixtures/type-corpus/cases.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { corpusRustRejection, corpusRustSignatures, corpusRustSource } from "./type-corpus-rust-source.mjs";
+export { captureCorpusCompiler as captureRustCompiler } from "./type-corpus-compiler.mjs";
+import { captureCorpusCompiler as captureRustCompiler } from "./type-corpus-compiler.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
@@ -25,35 +26,6 @@ for arg do
 done
 exec /usr/bin/cc "$@"
 `;
-
-/**
- * Preserve complete rustc JSON on nonzero exits; display-tail truncation is unsafe.
- *
- * @param command - Absolute compiler driver.
- * @param args - Cargo check arguments, including JSON diagnostics.
- * @param cwd - Isolated installed consumer project.
- * @param env - Restricted compiler environment.
- */
-export const captureRustCompiler = (command, args, cwd, env) => new Promise((accept, reject) => {
-	const child = spawn(command, args, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
-	const stdout = [], stderr = [];
-	let size = 0, failure;
-	const stop = reason => { failure ??= new Error(reason); child.kill("SIGKILL"); };
-	const timer = setTimeout(() => stop("Cargo compiler check exceeded 180 seconds"), 180_000);
-	const collect = output => bytes => {
-		size += bytes.length;
-		if(size > 8 * 1024 ** 2) stop("Cargo compiler diagnostics exceeded 8 MiB");
-		else output.push(bytes);
-	};
-	child.stdout.on("data", collect(stdout));
-	child.stderr.on("data", collect(stderr));
-	child.once("error", error => { clearTimeout(timer); reject(error); });
-	child.once("close", code => {
-		clearTimeout(timer);
-		if(failure) reject(failure);
-		else accept({ code, stdout: Buffer.concat(stdout).toString("utf8"), stderr: Buffer.concat(stderr).toString("utf8") });
-	});
-});
 
 /**
  * Copy the exact locked registry closure into a portable dependency handoff.

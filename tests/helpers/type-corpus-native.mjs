@@ -19,6 +19,7 @@ import { prepareCorpusSources, leanCorpusOracle } from "./type-corpus-source.mjs
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
 import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
+import { installedCFamilyCorpus } from "./type-corpus-c-family.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus");
@@ -202,10 +203,11 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const runtimePackage = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "runtime");
 		assert.equal(pkg.artifacts.length, 1);
 		const archive = pkg.artifacts[0];
-		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${profile === "rust" ? "; Cargo compiles Rust with a link-only driver" : " or compilers"}`);
+		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
 		const observed = profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
-			: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
+			: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
+				: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
 		validateCorpusObservation(library, cases, result, observed.observation);
 		runs.push({ library: library.id, profile, path: "ordinary-source"
 			, archiveSha256: archive.sha256
@@ -222,10 +224,16 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 			, isolation: { sourcesRemovedBeforeInstall: true
 				, compilerPathDisabled: true, offlineInstall: true
 				, ...(profile === "rust" ? { rustCompilerDuringInstall: true
-					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {}) }
+					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {})
+				, ...(["c", "cpp"].includes(profile) ? { consumerCompilerDuringInstall: true
+					, compilerFreeExecution: true } : {}) }
 			, ...observed
 			, rejection });
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+	// Observations are now self-contained. Do not retain this library's installed
+	// runtimes while subsequent libraries need scratch space for reproducible builds.
+	await rm(consumer, { recursive: true, force: true });
+	await assert.rejects(lstat(consumer), { code: "ENOENT" });
 	return runs;
 };

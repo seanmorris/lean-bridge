@@ -251,5 +251,9 @@ export const runNpmCorpusLibrary = async (t, library, profiles) => {
 			, ...observed });
 	}
 	await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+	// Keep only the verified observations between libraries; the failure hook
+	// remains responsible for cleanup if an earlier install or execution throws.
+	await rm(consumer, { recursive: true, force: true });
+	await assert.rejects(lstat(consumer), { code: "ENOENT" });
 	return runs;
 };

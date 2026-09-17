@@ -12,6 +12,8 @@ def frameJson (value : Frame) : Json := record "Frame" [
 def main : IO Unit := IO.println <| (Json.mkObj ([
   ("dependency", natural (measureTick 7).toNat),
   ("bool-as-number", natural (measureTick 1).toNat),
+  ("wrong-boolean", boolean (invertStatus true)),
+  ("bad-nested", array (array (natural ∘ UInt32.toNat)) (rotateRows #[#[0]])),
   ("float32-wrong-type", floating32 (halveSample 1)),
   ("float64-wrong-type", floating64 (halveMeasure 1)),
   ("exact-large", natural (accumulate (2^4096 + 1) 3)),

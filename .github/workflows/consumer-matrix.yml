@@ -377,6 +377,8 @@ jobs:
         continue-on-error: true
         run: npm run test:consumer:native
       - name: Compile ordinary Lean APIs once for relocated C and C++ consumers
+        id: ordinary_c
+        continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_C_TEST: "1"
         run: |
@@ -384,6 +386,21 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs
+      - name: Compare relocated C and C++ corpus consumers with fresh Lean
+        id: type_corpus_c_family
+        continue-on-error: true
+        run: |
+          source scripts/env.sh
+          npm run test:type-corpus:c-family
+      - name: Upload installed C and C++ corpus observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-c-family-${{ github.sha }}
+          path: build/type-corpus/c-cpp.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Build ordinary Lean APIs and install relocated Python wheels
         id: ordinary_python
         continue-on-error: true
@@ -446,6 +463,13 @@ jobs:
             result="$test_result"
             installed="$executed"
             consumer_command="npm run test:consumer:native"
+            if [ "$consumer" = c ] || [ "$consumer" = cpp ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family"
+              if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ]; then
+                result=failed
+                installed=false
+              fi
+            fi
             if [ "$consumer" = python ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
@@ -472,7 +496,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success'
         run: exit 1
 
   managed-consumers:

@@ -311,7 +311,18 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:ruby"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:rust"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=rust node --test tests/type-corpus.test.mjs");
-  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=perl,python,ruby,rust node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,perl,python,ruby,rust node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");
+  assert.match(workflow, /id: ordinary_c\n\s*continue-on-error: true/);
+  assert.match(workflow, /id: type_corpus_c_family/);
+  assert.match(workflow, /node --test tests\/native-c-family\.test\.mjs tests\/native-c-copied\.test\.mjs && npm run test:type-corpus:c-family/);
+  assert.match(workflow, /steps\.ordinary_c\.outcome != 'success'/);
+  assert.match(workflow, /steps\.type_corpus_c_family\.outcome != 'success'/);
+  assert.match(workflow, /steps\.type_corpus_c_family\.outcome }}" != success/);
+  assert.match(workflow, /name: type-corpus-c-family-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /path: build\/type-corpus\/c-cpp\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_rust/);
   assert.match(workflow, /node --test tests\/native-rust\.test\.mjs && npm run test:type-corpus:rust/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
@@ -361,7 +372,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 9);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 10);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);
