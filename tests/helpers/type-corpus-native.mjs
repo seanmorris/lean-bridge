@@ -21,6 +21,8 @@ import { corpusProfiles, validateCorpusDeclarations, validateCorpusObservation }
 import { installedRustCorpus, prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { installedCFamilyCorpus } from "./type-corpus-c-family.mjs";
 import { installedDotnetCorpus } from "./type-corpus-dotnet.mjs";
+import { installedJvmCorpus } from "./type-corpus-jvm.mjs";
+import { prepareJvmCorpusDependencies } from "./type-corpus-jvm-tools.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus");
@@ -31,7 +33,7 @@ const clean = { PATH: "/unavailable", CC: "/unavailable/compiler"
 	, LEAN_BRIDGE_NATIVE_ROOT: "/unavailable/runtime" };
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 
-const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, profile === "perl" ? { module: library.perlModule, version: "1.000" } : { name: `${library.id}-${suffix}`, version: "1.0.0" }]));
+const targetSettings = (library, profiles, suffix = "corpus") => Object.fromEntries(profiles.map(profile => [corpusProfiles[profile].target, profile === "perl" ? { module: library.perlModule, version: "1.000" } : { name: `${["java", "kotlin"].includes(profile) ? "org.leanbridge.corpus:" : ""}${library.id}-${suffix}`, version: "1.0.0" }]));
 
 const installedObservation = async ({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle, environment }) => {
 	const root = join(consumer, profile), archive = pkg.artifacts[0];
@@ -109,6 +111,13 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/unavailable/perl"]' };
 	if(profiles.includes("dotnet")) environment.LEAN_BRIDGE_DOTNET ??= resolve(".toolchains/dotnet/dotnet");
+	if(profiles.some(profile => ["java", "kotlin"].includes(profile)))
+	{
+		environment.LEAN_BRIDGE_JAVA ??= resolve(".toolchains/jdk22/bin/java");
+		environment.LEAN_BRIDGE_JAVAC ??= resolve(".toolchains/jdk22/bin/javac");
+		environment.LEAN_BRIDGE_MAVEN ??= resolve(".toolchains/apache-maven-3.9.11/bin/mvn");
+		environment.LEAN_BRIDGE_KOTLINC ??= resolve(".toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc");
+	}
 	if(profiles.includes("rust"))
 	{
 		environment.LEAN_BRIDGE_CARGO ??= resolve(".toolchains/rust-1.90.0/bin/cargo");
@@ -121,7 +130,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		environment.LEAN_BRIDGE_CORPUS_PERL = perl;
 		environment.LEAN_BRIDGE_PERLS = JSON.stringify([perl]);
 	}
-	const targets = profiles.map(profile => corpusProfiles[profile].target);
+	const targets = [...new Set(profiles.map(profile => corpusProfiles[profile].target))];
 	const context = await prepareCorpusSources(t, library, library.operations.map(operation => `${library.module}.${operation}`), targetSettings(library, profiles));
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling Lean oracle`);
@@ -193,6 +202,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		, handoff: join(consumer, "rust-dependencies"), environment
 	}) : undefined;
 	const cases = corpusCases(library);
+	const jvmDependencies = targets.includes("maven") ? await prepareJvmCorpusDependencies({ directory: context.directory, handoff, pkg: receipt.packages.find(pkg => pkg.target === "maven"), environment, clean }) : undefined;
 	// Nothing from the author workspace or unpacked release survives installation.
 	await rm(context.directory, { recursive: true, force: true });
 	const verified = await run(process.execPath, [join(repository, "scripts/lean-bridge.mjs"), "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"], consumer, { PATH: "/unavailable", LEAN_BRIDGE_PROJECT: "/unavailable" });
@@ -203,18 +213,20 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	{
 		const pkg = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "component");
 		const runtimePackage = receipt.packages.find(pkg => pkg.target === corpusProfiles[profile].target && pkg.role === "runtime");
-		assert.equal(pkg.artifacts.length, 1);
-		const archive = pkg.artifacts[0];
-		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp", "dotnet"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
+		assert.equal(pkg.artifacts.length, pkg.target === "maven" ? 2 : 1);
+		const archive = pkg.target === "maven" ? pkg.artifacts.find(file => file.path.endsWith(".jar")) : pkg.artifacts[0];
+		t.diagnostic(`${library.id}: installing and executing ${profile} without Lean sources${["rust", "c", "cpp", "dotnet", "java", "kotlin"].includes(profile) ? "; compiling only the downstream consumer" : " or compilers"}`);
 		const observed = profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
 			: profile === "dotnet" ? await installedDotnetCorpus({ library, consumer, handoff, pkg, environment, clean })
-				: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
-					: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
+				: ["java", "kotlin"].includes(profile) ? await installedJvmCorpus({ library, profile, consumer, handoff, pkg, dependencies: jvmDependencies, environment, clean })
+					: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
+						: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
 		validateCorpusObservation(library, cases, result, observed.observation);
 		runs.push({ library: library.id, profile, path: "ordinary-source"
 			, archiveSha256: archive.sha256
 			, archive: { ...archive, target: pkg.target, name: pkg.name, version: pkg.version }
+			, ...(pkg.target === "maven" ? { pomArchive: { ...pkg.artifacts.find(file => file.path.endsWith(".pom")), target: pkg.target, name: pkg.name, version: pkg.version } } : {})
 			, ...(profile === "perl" ? { runtimeArchive: { ...runtimePackage.artifacts[0], target: runtimePackage.target, name: runtimePackage.name, version: runtimePackage.version }, perlAbi } : {})
 			, declarationEvidence
 			, runtimeIdentity: pkg.runtimeIdentity
@@ -228,7 +240,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 				, compilerPathDisabled: true, offlineInstall: true
 				, ...(profile === "rust" ? { rustCompilerDuringInstall: true
 					, linkOnlyDuringInstall: true, compilerFreeExecution: true } : {})
-				, ...(["c", "cpp", "dotnet"].includes(profile) ? { consumerCompilerDuringInstall: true
+				, ...(["c", "cpp", "dotnet", "java", "kotlin"].includes(profile) ? { consumerCompilerDuringInstall: true
 					, compilerFreeExecution: true } : {}) }
 			, ...observed
 			, rejection });

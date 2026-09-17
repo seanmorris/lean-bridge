@@ -559,6 +559,7 @@ jobs:
           java-version: '22.0.2'
       - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin
         id: ordinary_jvm
+        continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
         run: |
@@ -572,6 +573,25 @@ jobs:
           export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
           source scripts/env.sh
           node --test tests/native-jvm.test.mjs
+      - name: Compare isolated Java and Kotlin corpus consumers with fresh Lean
+        id: type_corpus_jvm
+        continue-on-error: true
+        run: |
+          export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+          export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+          export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+          export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          source scripts/env.sh
+          npm run test:type-corpus:jvm
+      - name: Upload installed Java and Kotlin corpus observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-jvm-${{ github.sha }}
+          path: build/type-corpus/java-kotlin.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Install the ordinary Ruby runtime
         uses: ruby/setup-ruby@v1
         with:
@@ -618,8 +638,8 @@ jobs:
               fi
             fi
             if [ "$consumer" = jvm ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs"
-              if [ "${{ steps.ordinary_jvm.outcome }}" != success ]; then
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm"
+              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -643,7 +663,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
         run: exit 1
 
   wasi-consumer:

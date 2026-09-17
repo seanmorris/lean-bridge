@@ -18,6 +18,7 @@ export const corpusLibraries = [
 		, perlModule: "LeanBridge::Shop", npmModule: "shop-corpus"
 		, rustModule: "shop_corpus", cModule: "shop"
 		, dotnetModule: "LeanBridge.Shop"
+		, jvmModule: "org.leanbridge.shop"
 		, recordFields: { Basket: ["label", "units", "credit", "batches", "active"] }
 		, pendingExport: "Shop.Pending.discount", pendingShape: "option"
 		, operations: ["quoteUnits", "basketTotal", "refund", "receiptLabel", "restock", "regroup", "revise", "nextSerial", "previousBalance", "enabled", "keepMarker", "reverseBlob", "nextTag", "nextBatch", "reduceGrade", "reduceStock", "reduceOffset", "reverseRate", "reversePrice"]
@@ -30,6 +31,7 @@ export const corpusLibraries = [
 		, perlModule: "LeanBridge::Telemetry", npmModule: "telemetry-corpus"
 		, rustModule: "telemetry_corpus", cModule: "telemetry"
 		, dotnetModule: "LeanBridge.Telemetry"
+		, jvmModule: "org.leanbridge.telemetry"
 		, recordFields: { Frame: ["samples", "counter", "bias", "title", "valid"] }
 		, pendingExport: "Telemetry.Pending.checkedCount", pendingShape: "result"
 		, operations: ["measureTick", "accumulate", "calibrate", "channelLabel", "offsetSamples", "rotateRows", "advanceFrame", "wrapClock", "nextOffset", "invertStatus", "acknowledge", "mirrorPayload", "advanceTag", "advanceSequence", "raiseGrade", "raiseLevel", "raiseBaseline", "halveSample", "halveMeasure"]
@@ -109,6 +111,17 @@ const dotnetExpectation = (id, category) => {
 		, diagnostic: id === "overflow-u64" ? "CS0220"
 			: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "CS0221"
 				: id === "bad-nested" ? "CS0029" : "CS1503" } };
+};
+
+const jvmExpectation = (id, category, profile) => {
+	if(profile === "java" && ["float32-wrong-type", "float64-wrong-type"].includes(id))
+		return { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.split("-")[0] };
+	if(["negative-nat", "bad-record"].includes(id)) return { rejectionMessage: "Nat cannot be negative" };
+	if(id.startsWith("overflow-") || /^uint(?:8|16)-(?:below|above)$/.test(id))
+		return { rejectionMessage: `${id === "overflow-u32" ? "uint32" : id === "overflow-u64" ? "uint64" : id.split("-")[0]} is out of range` };
+	return { expectation: { kind: "compile-rejection", category
+		, diagnostic: profile === "kotlin" ? "ARGUMENT_TYPE_MISMATCH"
+			: id === "bad-nested" ? "compiler.err.prob.found.req" : "compiler.err.cant.apply.symbol" } };
 };
 
 /**
@@ -191,6 +204,7 @@ export const corpusCases = library => {
 		, hostExpectations: {
 			...(rejection ? { rust: rustRejection(id, rejection) } : {})
 			, ...(rejection ? { dotnet: dotnetExpectation(id, rejection) } : {})
+			, ...(rejection ? Object.fromEntries(["java", "kotlin"].map(profile => [profile, jvmExpectation(id, rejection, profile)])) : {})
 			, ...(rejection ? Object.fromEntries(["c", "cpp"].map(profile => [profile, cFamilyExpectation(id, rejection, profile)])) : {})
 			, ...(["bool-as-number", "float32-wrong-type", "float64-wrong-type"].includes(id)
 				? { perl: { expectation: { kind: "lean-oracle" }, oracleKey: id, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" } }

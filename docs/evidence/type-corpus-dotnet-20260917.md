@@ -1,5 +1,7 @@
 # Shared .NET corpus, 2026-09-17
 
+This records commit `0859ed1`. The [later JVM milestone](type-corpus-jvm-20260917.md) extends the shared catalog and harness identity.
+
 VO 1217. The shared corpus adds prepared NuGet consumers for `Shop.Pricing` and `Telemetry.Readings`. C# callers use the public generated API and the same input catalog and fresh Lean oracles as the other eleven adapters. Production generators and the type-support inventory are unchanged. The [ordinary .NET suite](../../tests/native-dotnet.test.mjs) retains its separate allocation-count, concurrency and multi-package checks.
 
 ## Public calls and host policies

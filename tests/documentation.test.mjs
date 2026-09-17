@@ -311,7 +311,18 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:ruby"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=ruby node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:rust"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=rust node --test tests/type-corpus.test.mjs");
-  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,dotnet,perl,python,ruby,rust node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:all-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp,dotnet,java,kotlin,perl,python,ruby,rust node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:java"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:kotlin"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=kotlin node --test tests/type-corpus.test.mjs");
+  assert.equal(packageDocument.scripts["test:type-corpus:jvm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java,kotlin node --test tests/type-corpus.test.mjs");
+  assert.match(workflow, /id: ordinary_jvm\n\s*continue-on-error: true/);
+  assert.match(workflow, /id: type_corpus_jvm/);
+  assert.match(workflow, /node --test tests\/native-jvm\.test\.mjs && npm run test:type-corpus:jvm/);
+  assert.match(workflow, /steps\.ordinary_jvm\.outcome != 'success'/);
+  assert.match(workflow, /steps\.type_corpus_jvm\.outcome != 'success'/);
+  assert.match(workflow, /steps\.type_corpus_jvm\.outcome }}" != success/);
+  assert.match(workflow, /name: type-corpus-jvm-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /path: build\/type-corpus\/java-kotlin\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:dotnet"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=dotnet node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: ordinary_dotnet\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_dotnet/);
@@ -381,7 +392,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 11);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 12);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);

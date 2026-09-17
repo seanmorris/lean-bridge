@@ -18,6 +18,8 @@ import { captureRustCompiler } from "./helpers/type-corpus-rust.mjs";
 import { corpusCFamilyRejection, corpusCFamilySignatures, corpusCFamilySource, corpusCFamilyRuntimeCases } from "./helpers/type-corpus-c-source.mjs";
 import { corpusDotnetRejection, corpusDotnetSignatures, corpusDotnetSource, dotnetRuntimeCases } from "./helpers/type-corpus-dotnet-source.mjs";
 import { dotnetCompilerOptions, dotnetDiagnostics } from "./helpers/type-corpus-dotnet.mjs";
+import { corpusJvmRejection, corpusJvmSignatures, corpusJvmSource, jvmRuntimeCases } from "./helpers/type-corpus-jvm-source.mjs";
+import { javaCompilerOptions, kotlinCompilerOptions, jvmDiagnostics, mavenSettings } from "./helpers/type-corpus-jvm-tools.mjs";
 import { corpusHostCase, corpusOracleKeys, corpusSignatures } from "./fixtures/type-corpus/cases.mjs";
 
 const repository = resolve(import.meta.dirname, "..");
@@ -37,9 +39,10 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 	const wasm = corpusProfiles[profile].transport === "wasm";
 	const browser = corpusProfiles[profile].browser;
 	const cFamily = ["c", "cpp"].includes(profile);
+	const jvm = ["java", "kotlin"].includes(profile);
 	const observation = { schemaVersion: 1, profile
 		, module: library[corpusProfiles[profile].moduleKey]
-		, hostVersion: profile === "dotnet" ? "8.0.30" : cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
+		, hostVersion: jvm ? profile === "java" ? "22.0.2" : "2.2.0" : profile === "dotnet" ? "8.0.30" : cFamily ? "12.2.0" : wasm ? "22.23.2" : profile === "rust" ? "1.90.0" : profile === "perl" ? "5.38.2" : profile === "ruby" ? "3.3.12" : "3.11.2"
 		, ...(profile === "perl" ? { abi, abiKey } : {})
 		, ...(browser ? { realm: profile === "browser-worker" ? "dedicated-worker" : "window" } : {})
 		, results: selectedCases.map(entry => !corpusCaseSupported(library, entry, profile)
@@ -48,16 +51,20 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 				? { id: entry.id, status: "matched", observed: oracle[entry.oracleKey], independentCopy: entry.checkIndependentCopy }
 				: entry.expectation.kind === "compile-rejection" ? { id: entry.id
 					, status: "rejected-at-compile-time"
-					, sourceSha256: sha256(profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
+					, sourceSha256: sha256(jvm ? corpusJvmRejection(library, entry, profile) : profile === "dotnet" ? corpusDotnetRejection(library, entry) : cFamily ? corpusCFamilyRejection(library, entry, profile) : corpusRustRejection(library, entry))
 					, diagnostics: [{ code: entry.expectation.diagnostic
-						, file: profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
+						, file: jvm ? `src/reject-${entry.id.split("/")[1]}.${profile === "java" ? "java" : "kt"}` : profile === "dotnet" ? `src/reject-${entry.id.split("/")[1]}.cs` : cFamily ? `src/reject-${entry.id.split("/")[1]}.${profile === "cpp" ? "cpp" : "c"}` : `src/bin/reject-${entry.id.split("/")[1]}.rs`
 						, line: 7, column: 1
 						, ...(cFamily ? { message: entry.expectation.diagnostic === "narrowing" ? "conversion from value changes the value" : "incompatible types", option: entry.expectation.diagnostic === "narrowing" ? profile === "c" ? "-Werror=overflow" : "-Wnarrowing" : null } : {}) }] }
 					: { id: entry.id, status: "rejected-as-expected"
 						, exception: corpusProfiles[profile].errors[entry.expectation.category]
 						, recovered: true
-						, ...(profile === "dotnet" ? { recovery: oracle.dependency } : {})
-						, ...(entry.rejectionMessage ? { message: profile === "dotnet" ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+						, ...(profile === "dotnet" || jvm ? { recovery: oracle.dependency } : {})
+						, ...(entry.rejectionMessage ? { message: profile === "dotnet" || jvm ? entry.rejectionMessage : `${entry.rejectionMessage} at consumer.pl line 1.` } : {}) })
+		, ...(jvm ? { jvmVersion: "22.0.2"
+			, apiLocation: "/validator/relocated/package.jar"
+			, nativeRootCount: 1, nativeLibraries: jvmNativeLibraries(library)
+			, errors: Object.entries(jvmRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception, recovery: oracle.dependency }))) } : {})
 		, ...(profile === "rust" ? { limits: Array.from({ length: 3 }, () => ({ exception: "Limit", recovery: oracle.dependency })) } : {})
 		, ...(cFamily ? { errors: corpusCFamilyRuntimeCases(profile).flatMap(id => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception: "INVALID_ARGUMENT", recovery: oracle.dependency }))) } : {})
 		, ...(profile === "dotnet" ? { collectibleCopies: true
@@ -83,6 +90,7 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(profile === "rust" ? { rust: rustValidationFixture(library) } : {})
 		, ...(cFamily ? { cFamily: cFamilyValidationFixture(library, profile) } : {})
 		, ...(profile === "dotnet" ? { dotnet: dotnetValidationFixture(library) } : {})
+		, ...(jvm ? { jvm: jvmValidationFixture(library, profile), pomArchive: { target: "maven", sha256: "e".repeat(64) } } : {})
 		, oracle, observation };
 };
 
@@ -132,6 +140,34 @@ const dotnetValidationFixture = library => ({
 		, files: Object.fromEntries(["dotnet", "host/fxr/8.0.30/libhostfxr.so", "shared/Microsoft.NETCore.App/8.0.30/libcoreclr.so"].map(path => [path, { sha256: "e".repeat(64), bytes: 100 }])) }
 });
 
+const jvmNativeLibraries = library => Object.fromEntries([`lib${library.cModule}.so`, "libleanshared.so", "liblean_bridge_native.so"].map(name => [name, "f".repeat(64)]));
+const jvmValidationFixture = (library, profile) => {
+	const files = paths => Object.fromEntries(paths.map(path => [path, { sha256: "e".repeat(64), bytes: 100 }]));
+	return {
+		javacVersion: "javac 22.0.2", javaVersion: 'openjdk version "22.0.2"'
+		, mavenVersion: "Apache Maven 3.9.11"
+		, ...Object.fromEntries(["compilerSha256", "javaSha256", "javaModulesSha256", "mavenBootSha256", "declarationsSha256", "packageReceiptSha256", "compiledProjectionSha256", "projectSourceSha256", "classpathSha256"].map(key => [key, "e".repeat(64)]))
+		, consumerSourceSha256: sha256(corpusJvmSource(library, profile))
+		, signaturesSha256: sha256(corpusJvmSignatures(library, profile))
+		, settingsSha256: sha256(mavenSettings)
+		, bindingIrSha256: "c".repeat(64), archiveSha256: "a".repeat(64)
+		, pomSha256: "e".repeat(64)
+		, mavenFiles: files(["maven-core-3.9.11.jar"])
+		, dependencies: { archive: "maven-plugin-closure.tar.gz"
+			, sha256: "f".repeat(64)
+			, files: files(["org/apache/maven/plugins/maven-install-plugin/3.1.4/maven-install-plugin-3.1.4.jar", "org/apache/maven/plugins/maven-dependency-plugin/3.8.1/maven-dependency-plugin-3.8.1.jar"]) }
+		, compilerOptions: [...profile === "java" ? javaCompilerOptions : kotlinCompilerOptions]
+		, ...Object.fromEntries(["exactPublicSignatures", "emptyRepository", "emptyUserHome", "offline", "resolvedClasspathOnly", "publicApiOnly", "runtimeOverridesDisabled", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "normalExitCleanup", "repeatExecution", "localLibraries"].map(key => [key, true]))
+		, deployment: { ...files(["classes/Wire.class", `classes/Consumer${profile === "java" ? "" : "Kt"}.class`, ...profile === "kotlin" ? ["kotlin-stdlib.jar"] : []]), "package.jar": { sha256: "a".repeat(64), bytes: 100 } }
+		, runtimeFiles: files(["bin/java", "lib/modules", "release"])
+		, runtimeModules: ["java.base@22.0.2"]
+		, nativeLibraries: jvmNativeLibraries(library)
+		, ...(profile === "kotlin" ? { kotlin: { version: "info: kotlinc-jvm 2.2.0 (JRE 22.0.2)"
+			, compilerFiles: Object.fromEntries(["kotlin-compiler.jar", "kotlin-stdlib.jar", "annotations-13.0.jar"].map(path => [path, "e".repeat(64)]))
+			, stdlibSha256: "e".repeat(64) } } : {})
+	};
+};
+
 const browserValidationFixture = (profile, library, observation) => {
 	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
 	const installedAssets = [
@@ -175,8 +211,8 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 35);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 35);
+	assert.equal(identity.files.length, 39);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 39);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
@@ -225,7 +261,7 @@ for(const [label, change] of [
 	, ["failed recovery", run => { run.observation.results.at(-1).recovered = false; }]
 	, ["missing oracle result", run => { delete run.oracle.dependency; }]
 	, ["extra oracle result", run => { run.oracle.extra = {}; }]
-	, ["unimplemented adapter", run => { run.profile = "java"; }]
+	, ["unimplemented adapter", run => { run.profile = "php-native"; }]
 	, ["unimplemented source path", run => { run.path = "reviewed-ir"; }]
 	, ["unknown library", run => { run.library = "unknown"; }]
 	, ["missing runtime identity", run => { delete run.runtimeIdentity; }]
@@ -252,7 +288,7 @@ test("explicit corpus selections reject absent, misspelled and duplicate adapter
 	assert.deepEqual(corpusSelection(undefined), []);
 	assert.deepEqual(corpusSelection("ruby, python"), ["python", "ruby"]);
 	assert.deepEqual(corpusSelection("ruby,perl,python"), ["perl", "python", "ruby"]);
-	for(const selection of ["", "python,", "PYTHON", "python,python", "java", null, []])
+	for(const selection of ["", "python,", "PYTHON", "python,python", "php-native", null, []])
 		assert.throws(() => corpusSelection(selection));
 });
 
@@ -648,8 +684,105 @@ for(const [label, change] of [
 	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
 });
 
+for(const profile of ["java", "kotlin"])
+{
+	test(`${profile} corpus separates compiler errors, unsigned range checks and Lean results`, () => {
+		assert.deepEqual(corpusSelection(`${profile},python`), [profile, "python"]);
+		const runs = catalog.libraries.map(library => validationFixture(profile, library.id));
+		assert.equal(corpusCoverage(inventory, catalog, runs).filter(cell => cell.status === "observed").length, 41);
+		assert.equal(runs.flatMap(run => run.observation.results).filter(entry => entry.status === "rejected-at-compile-time").length, profile === "java" ? 20 : 24);
+		assert.equal(runs.flatMap(run => run.observation.results).filter(entry => entry.status !== "rejected-at-compile-time").length, profile === "java" ? 104 : 100);
+		assert.equal(runs.flatMap(run => run.observation.errors).length, 72);
+		for(const library of catalog.libraries)
+		{
+			const source = corpusJvmSource(library, profile), signatures = corpusJvmSignatures(library, profile);
+			assert.ok(source.includes(`import ${library.jvmModule}.*`));
+			assert.equal(signatures.match(/Wire\.method\(/g).length, 19);
+			assert.match(signatures, /Wire\.record\(/);
+			if(profile === "kotlin") assert.equal(signatures.match(/= Api::/g).length, 19);
+			assert.doesNotMatch(source, /oracle|java\.lang\.foreign|System\.load|Runtime\./);
+			assert.match(source, /\[1\] = (?:new long\[\] \{|longArrayOf\()29L/);
+			assert.match(source, /Wire\.check\(saved\.equals/);
+			assert.match(source, /Wire\.check\(changed\.equals/);
+		}
+	});
+	test(`${profile} diagnostics bind rejection to the exact invalid call`, () => {
+		const entry = catalog.cases.map(entry => corpusHostCase(entry, profile)).find(entry => entry.expectation.kind === "compile-rejection");
+		const root = "/validator", file = `src/reject-${entry.id.split("/")[1]}.${profile === "java" ? "java" : "kt"}`;
+		const line = profile === "java" ? `${file.split("/").at(-1)}:7:5: ${entry.expectation.diagnostic}: incompatible types`
+			: `${root}/${file}:7:5: error: [${entry.expectation.diagnostic}] Argument type mismatch.`;
+		const result = { code: 1, stdout: "", stderr: line };
+		const [diagnostic] = jvmDiagnostics(result, entry, profile, root, file);
+		assert.deepEqual({ ...diagnostic, message: "" }, { code: entry.expectation.diagnostic, file, line: 7, column: 5, message: "" });
+		for(const invalid of [
+			{ ...result, code: 0 }, { ...result, code: 2 }
+			, { ...result, stderr: "" }
+			, { ...result, stderr: line.replace(entry.expectation.diagnostic, profile === "java" ? "compiler.err.cant.resolve" : "UNRESOLVED_REFERENCE") }
+			, { ...result, stderr: line.replace("reject-", "dependency-") }
+			, { ...result, stderr: line.replace(":7:5:", ":0:5:") }
+			, { ...result, stderr: `${line}\nerror: missing classpath` }
+		]) assert.throws(() => jvmDiagnostics(invalid, entry, profile, root, file));
+	});
+	for(const [label, change] of [
+		["missing evidence", run => { delete run.jvm; }]
+		, ["wrong JVM", run => { run.observation.jvmVersion = "21.0.2"; }]
+		, ["wrong compiler", run => { run.jvm.javacVersion = "javac 21.0.2"; }]
+		, ["wrong Maven", run => { run.jvm.mavenVersion = "Apache Maven 4.0.0"; }]
+		, ["missing compiler hash", run => { delete run.jvm.compilerSha256; }]
+		, ["wrong consumer source", run => { run.jvm.consumerSourceSha256 = "0".repeat(64); }]
+		, ["wrong public signatures", run => { run.jvm.signaturesSha256 = "0".repeat(64); }]
+		, ["wrong binding IR", run => { run.jvm.bindingIrSha256 = "0".repeat(64); }]
+		, ["wrong POM", run => { run.pomArchive.sha256 = "0".repeat(64); }]
+		, ["wrong JAR", run => { run.jvm.deployment["package.jar"].sha256 = "0".repeat(64); }]
+		, ["ambient settings", run => { run.jvm.settingsSha256 = "0".repeat(64); }]
+		, ["weakened compiler", run => { run.jvm.compilerOptions = []; }]
+		, ["ambient cache", run => { run.jvm.emptyRepository = false; }]
+		, ["ambient home", run => { run.jvm.emptyUserHome = false; }]
+		, ["online resolution", run => { run.jvm.offline = false; }]
+		, ["extra classpath", run => { run.jvm.resolvedClasspathOnly = false; }]
+		, ["runtime override", run => { run.jvm.runtimeOverridesDisabled = false; }]
+		, ["source tree present", run => { run.jvm.installedSourcesRemoved = false; }]
+		, ["compiler during execution", run => { run.jvm.compilerFreeExecution = false; }]
+		, ["uncleared native extraction", run => { run.jvm.normalExitCleanup = false; }]
+		, ["single execution", run => { run.jvm.repeatExecution = false; }]
+		, ["missing plugin", run => { run.jvm.dependencies.files = {}; }]
+		, ["mutable plugin", run => { run.jvm.dependencies.files["SNAPSHOT.jar"] = { sha256: "f".repeat(64), bytes: 1 }; }]
+		, ["unbound plugin", run => { delete run.jvm.dependencies.sha256; }]
+		, ["unsafe plugin path", run => { run.jvm.dependencies.files["../bad.jar"] = { sha256: "f".repeat(64), bytes: 1 }; }]
+		, ["compiler at runtime", run => { run.jvm.runtimeFiles["bin/javac"] = { sha256: "f".repeat(64), bytes: 1 }; }]
+		, ["extra runtime module", run => { run.jvm.runtimeModules.push("jdk.compiler@22.0.2"); }]
+		, ["author source at runtime", run => { run.jvm.deployment["Consumer.java"] = { sha256: "f".repeat(64), bytes: 1 }; }]
+		, ["wrong native binary", run => { run.observation.nativeLibraries["libleanshared.so"] = "0".repeat(64); }]
+		, ["missing native runtime", run => { delete run.jvm.nativeLibraries["libleanshared.so"]; }]
+		, ["multiple native roots", run => { run.observation.nativeRootCount = 2; }]
+		, ["wrong public API path", run => { run.observation.apiLocation = "/global/package.jar"; }]
+		, ["missing runtime error", run => { run.observation.errors.pop(); }]
+		, ["wrong runtime error", run => { run.observation.errors[0].exception = "LoadException"; }]
+		, ["failed recovery", run => { run.observation.errors[0].recovery = { integer: "0" }; }]
+		, ["failed Nat recovery", run => { run.observation.results.find(entry => entry.status === "rejected-as-expected").recovery = { integer: "0" }; }]
+		, ["unrelated compiler error", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].code = "UNRESOLVED_REFERENCE"; }]
+		, ["wrong diagnostic source", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics[0].file = "Api.java"; }]
+		, ["missing diagnostic", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").diagnostics = []; }]
+		, ["wrong invalid source", run => { run.observation.results.find(entry => entry.status === "rejected-at-compile-time").sourceSha256 = "0".repeat(64); }]
+	]) test(`${profile} corpus rejects ${label}`, () => {
+		const run = validationFixture(profile); change(run);
+		assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+	});
+}
+
+for(const [label, change] of [
+	["wrong Kotlin compiler", run => { run.jvm.kotlin.version = "kotlinc-jvm 1.9.0"; }]
+	, ["missing Kotlin compiler", run => { delete run.jvm.kotlin.compilerFiles["kotlin-compiler.jar"]; }]
+	, ["changed standard library", run => { run.jvm.deployment["kotlin-stdlib.jar"].sha256 = "0".repeat(64); }]
+	, ["wrong Kotlin version", run => { run.observation.hostVersion = "1.9.0"; }]
+]) test(`Kotlin corpus rejects ${label}`, () => {
+	const run = validationFixture("kotlin"); change(run);
+	assert.throws(() => corpusCoverage(inventory, catalog, [run]));
+});
+
 test("real Lean corpus matches independently rebuilt archives in source-free consumers", {
-	skip: profiles.length === 0, timeout: 900_000
+	skip: profiles.length === 0
+	, timeout: Math.max(900_000, profiles.length * 90_000)
 }, async t => {
 	const reportName = `${profiles.join("-")}.json`;
 	const reportPath = resolve(repository, "build/type-corpus", reportName);
@@ -705,6 +838,7 @@ test("real Lean corpus matches independently rebuilt archives in source-free con
 			, rustRuntimeRejections: runs.reduce((count, run) => count + (run.observation.limits?.length ?? 0), 0)
 			, cFamilyRuntimeRejections: runs.filter(run => ["c", "cpp"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
 			, dotnetRuntimeRejections: runs.filter(run => run.profile === "dotnet").reduce((count, run) => count + run.observation.errors.length, 0)
+			, jvmRuntimeRejections: runs.filter(run => ["java", "kotlin"].includes(run.profile)).reduce((count, run) => count + run.observation.errors.length, 0)
 			, unsupportedCases: runs.reduce((count, run) => count + run.observation.results.filter(entry => entry.status === "unsupported").length, 0)
 			, browserExecutions: browserExecutions.length
 			, browserExecutedCases: browserExecutions.reduce((count, execution) => count + execution.observation.results.filter(entry => entry.status !== "unsupported").length, 0)

@@ -223,7 +223,7 @@ npm run test:type-corpus:ruby
 npm run test:type-corpus:perl
 ```
 
-To build Python and Ruby together, or all seven native adapters including C, C++, Rust and .NET, and compare the consumers against the same Lean run:
+To build Python and Ruby together, or all nine native adapters including C, C++, Rust, .NET, Java and Kotlin, and compare the consumers against the same Lean run:
 
 ```sh
 npm run test:type-corpus:native
@@ -263,6 +263,23 @@ npm run test:type-corpus:dotnet
 
 The local default is `.toolchains/dotnet/dotnet`. Each C# consumer restores only its prepared NuGet archive from a private feed, with empty package and CLI caches, a source mapping and an exact version. A second restore uses the lock file. The harness compiles the caller against the public assembly, then removes the entire installation and consumer build tree. It runs the relocated assembly twice with a copied .NET runtime containing no SDK, Roslyn or reference assemblies. Packaged native libraries must load from that deployment.
 
+Java and Kotlin run on Linux x86-64 and need JDK 22.0.2, Maven 3.8 or 3.9, Kotlin 2.2.0, unzip, tar and gzip, plus the pinned Lean and native C toolchains. Select tools from the same JDK, then run either adapter or both:
+
+```sh
+export LEAN_BRIDGE_JAVA=/absolute/path/to/jdk-22/bin/java
+export LEAN_BRIDGE_JAVAC=/absolute/path/to/jdk-22/bin/javac
+export LEAN_BRIDGE_MAVEN=/absolute/path/to/maven/bin/mvn
+export LEAN_BRIDGE_KOTLINC=/absolute/path/to/kotlinc/bin/kotlinc
+source scripts/env.sh
+npm run test:type-corpus:java
+npm run test:type-corpus:kotlin
+npm run test:type-corpus:jvm
+```
+
+Local defaults are `.toolchains/jdk22/`, `.toolchains/apache-maven-3.9.11/` and `.toolchains/kotlin-2.2.0/kotlinc/`. Java alone does not need Kotlin. The author stage downloads pinned Maven install/dependency plugins and records their dependency files in a hashed archive. Each downstream consumer starts with an empty Maven repository and user home, imports that build-tool archive, and installs the exact prepared JAR and POM offline. Dependency resolution must return only that package's JAR.
+
+After compiling the caller, the harness removes its sources, Maven installation tree, repository and cache. It moves the original package JAR and caller classes into a separate deployment and runs them twice with a `jlink` image containing only `java.base`. No Maven, Java compiler or Kotlin compiler is available in that runtime image. Kotlin includes its separately hashed standard-library JAR. The original package JAR retains its shipped source provenance; the harness does not strip or repack it. Native assets must load from the package, match their recorded hashes, and be removed from the private temporary directory on normal exit.
+
 For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
 
 ```sh
@@ -282,7 +299,7 @@ npm run test:type-corpus:npm
 
 All three engines run by default. For a focused local check, set `LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium`, `firefox`, `webkit` or a comma-separated subset. Missing engines and invalid selections fail; the harness never skips a requested browser. CI requires all three. `PLAYWRIGHT_BROWSERS_PATH` selects an alternate Playwright installation.
 
-`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet or npm archive offline. Consumers call public exports with compiler paths disabled.
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet, Maven or npm archive offline. Consumers call public exports with compiler paths disabled.
 
 After validating a library's observations and rechecking its receipts, the harness removes that transport's consumer directory before starting another library. Failure hooks also clean incomplete runs. This keeps completed installations from consuming the next build's scratch-space allowance.
 
@@ -297,6 +314,10 @@ C/C++ `Nat` and `Int` currently use the public little-endian 32-bit limb represe
 .NET checks all 19 public methods and each record's constructor and property types against independent C# signatures. `Nat` and `Int` use `BigInteger`. Negative `Nat` inputs must throw `ArgumentOutOfRangeException` and leave the next call usable. C# accepts the catalog's integer-to-float conversions; wrong aggregate/boolean types and checked fixed-width overflows must fail compilation with the expected source-located Roslyn diagnostic. These compiler rejections are not runtime range checks.
 
 The .NET consumers also check independent nested-array storage, garbage collection of copied records, null arguments, malformed UTF-16, input and output budgets, and recovery after every error. Garbage-collection checks cover the managed record copies, not native allocation counts or assembly unloading. The existing ordinary .NET suite retains its separate allocation, concurrency and multi-package checks.
+
+Java and Kotlin check all 19 public method signatures and each record's constructor, accessor types and field order against the independent catalog. Kotlin also assigns every method to an explicitly typed function reference. Both use `BigInteger` for `Nat`, `Int` and `UInt64`; smaller unsigned integers use wider signed host types with runtime range checks. Negative `Nat` inputs and out-of-range unsigned values must throw `IllegalArgumentException`, then recover on a valid call. Invalid signed literals and wrong argument types must produce the expected source-located compiler error. Java accepts integer-to-float conversion; Kotlin requires an explicit conversion, so the same unconverted inputs must fail compilation.
+
+JVM consumers check independent copied rows, null arguments, malformed UTF-16, oversized inputs, combined input/output budgets and recovery after each error. These supplemental checks run three times each. The separate ordinary JVM suite retains its concurrency, class-loader and multi-package checks.
 
 Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. The TypeScript consumer compiles with `strict`, `noEmitOnError` and `skipLibCheck: false`. It checks each public function's complete type against independently specified signatures, exercises compile-time invalid inputs with `@ts-expect-error`, then executes the emitted JavaScript against the same Lean oracle.
 
@@ -314,9 +335,11 @@ The C/C++ report is `c-cpp.json`. It records GCC identities, public signature an
 
 The .NET report is `dotnet.json`. It binds the SDK, Roslyn compiler, reference assemblies, public assembly/declarations, exact package lock, installed receipt, consumer source, relocated deployment and runtime-only files. `dotnetRuntimeRejections` counts supplemental runtime error/recovery checks separately from catalog cases and compiler rejections. Repeated execution does not multiply coverage.
 
-CI requires C, C++, .NET, Python, Ruby, Rust, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+The JVM report is `java-kotlin.json`, or `java.json`/`kotlin.json` for a single adapter. It binds both package archives, public declarations, compiler inputs and diagnostics, JDK and Maven tool files, plugin dependency files, offline settings, resolved classpath, installed receipt, relocated classes and runtime image. Kotlin also records its compiler and standard-library files. `jvmRuntimeRejections` counts supplemental runtime error/recovery checks separately from catalog and compiler-rejection cases.
 
-The [.NET record](../evidence/type-corpus-dotnet-20260917.md) lists public signature checks, private NuGet restore and runtime-only execution. The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
+CI requires C, C++, .NET, Java, Kotlin, Python, Ruby, Rust, all five npm adapters and all four Perl configurations. Each job uploads its report as `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-jvm-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+
+The [JVM record](../evidence/type-corpus-jvm-20260917.md) lists Java/Kotlin host policies, offline Maven installation and runtime-only execution. The [.NET record](../evidence/type-corpus-dotnet-20260917.md) lists public signature checks and private NuGet restore. The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
 
 ## WASI package
 
