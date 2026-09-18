@@ -29,6 +29,8 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		{
 			if(type.name === "unit") check.push("if (*value != 0) return 0;");
 			if(type.name === "char") check.push("if (*value > 0x10ffff || (*value >= 0xd800 && *value <= 0xdfff)) return 0;");
+			if(type.name === "usize" && model.pointerBits === 32) check.push("if (*value > UINT32_MAX) return 0;");
+			if(type.name === "isize" && model.pointerBits === 32) check.push("if (*value < INT32_MIN || *value > INT32_MAX) return 0;");
 			if(dynamic(type))
 			{
 				const width = ["nat", "int"].includes(type.name) ? "sizeof(uint32_t)" : "1";
@@ -58,6 +60,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 					, `*out = (${c.name}){data, length, data, free${type.name === "int" ? ", negative" : ""}};`);
 			} else if(type.name === "char") output.push("if (value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) return -2;", "*out = value;");
 			else if(type.name === "unit") output.push("*out = 0;");
+			else if(type.name === "isize") output.push(`int${model.pointerBits}_t signed_value; memcpy(&signed_value, &value, sizeof(value));`, "*out = signed_value;");
 			else if(/^int\d/.test(type.name)) output.push("memcpy(out, &value, sizeof(value));");
 			else output.push(`*out = (${c.name})value;`);
 		} else if(type.kind === "array")

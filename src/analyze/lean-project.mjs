@@ -298,6 +298,7 @@ const primitiveTypes = new Map([
 	, ["String", "string"]
 	, ["ByteArray", "bytes"]
 	, ["Char", "char"]
+	, ["USize", "usize"], ["ISize", "isize"]
 ]);
 
 const splitTopLevel = value => {

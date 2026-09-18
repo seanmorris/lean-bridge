@@ -25,7 +25,7 @@ test("Char is a distinct IR primitive and an appended, stable wire tag", async (
 	const ir = charReviewedIr();
 	validateBindingIr(ir);
 	await assertJsonSchema("binding-ir", ir);
-	assert.deepEqual(componentScalarTypes, ["unit", "bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "nat", "int", "float32", "float64", "string", "bytes", "char"]);
+	assert.deepEqual(componentScalarTypes.slice(0, 17), ["unit", "bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "nat", "int", "float32", "float64", "string", "bytes", "char"]);
 	const type = { ...scalar, lean: "Char", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
 	validateNativeType(type);
 	await assertJsonSchema("native-metadata-type", type);

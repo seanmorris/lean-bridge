@@ -371,14 +371,15 @@ test("the shared inputs cover all sixteen primitive parameter/result positions",
 	assert.equal(cells.filter(cell => cell.status === "observed").length, 123);
 	for(const profile of ["python", "ruby", "perl"])
 	{
-		for(const shape of inventory.document.irFacets.primitive.filter(name => name !== "char"))
+		for(const shape of inventory.document.irFacets.primitive.filter(name => !["char", "usize", "isize"].includes(name)))
 		{
 			for(const position of ["parameter", "result"])
 				assert.equal(cells.find(cell => cell.profile === profile && cell.shape === shape && cell.path === "ordinary-source" && cell.position === position).status, "observed");
 		}
 	}
 	assert.ok(cells.filter(cell => cell.profile === "rust").every(cell => cell.status === "gap"));
-	assert.ok(cells.filter(cell => cell.shape === "char").every(cell => cell.status === "gap"), "Char has separate npm evidence; this corpus does not cover it yet");
+	for(const shape of ["char", "usize", "isize"])
+		assert.ok(cells.filter(cell => cell.shape === shape).every(cell => cell.status === "gap"), `${shape} has separate installed evidence; this corpus does not cover it yet`);
 	for(const shape of ["float32", "float64"])
 	{
 		const floating = catalog.cases.filter(entry => entry.resultEncoding === shape);

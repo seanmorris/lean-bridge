@@ -140,6 +140,7 @@ jobs:
           source scripts/env.sh
           npm run test:type-corpus:perl && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs
+          LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs
           test -s build/type-corpus/perl.json
           test -s build/type-corpus/reviewed-native-perl.json
       - name: Upload this configuration's real-Lean corpus report
@@ -151,6 +152,7 @@ jobs:
             build/type-corpus/perl.json
             build/type-corpus/reviewed-native-perl.json
             build/char-native/perl.json
+            build/word-native/perl.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

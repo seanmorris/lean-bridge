@@ -587,6 +587,8 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt8 = (value, path) => { if (!Number.isInteger(value) || value < -0x80 || value > 0x7f) invalid(path, \"int8\"); return value; };"
 		, "export const assertInt16 = (value, path) => { if (!Number.isInteger(value) || value < -0x8000 || value > 0x7fff) invalid(path, \"int16\"); return value; };"
 		, "export const assertInt32 = (value, path) => { if (!Number.isInteger(value) || value < -0x80000000 || value > 0x7fffffff) invalid(path, \"int32\"); return value; };"
+		, "export const assertUsize = assertUint32;"
+		, "export const assertIsize = assertInt32;"
 		, "const assertBigInt = (value, path) => { if (typeof value !== \"bigint\") invalid(path, \"bigint\"); return value; };"
 		, "export const assertUint64 = (value, path) => { assertBigInt(value, path); if (value < 0n || value > 0xffffffffffffffffn) invalid(path, \"uint64\"); return value; };"
 		, "export const assertInt64 = (value, path) => { assertBigInt(value, path); if (value < -0x8000000000000000n || value > 0x7fffffffffffffffn) invalid(path, \"int64\"); return value; };"

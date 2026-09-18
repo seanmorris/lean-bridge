@@ -54,6 +54,7 @@ export const nativeCType = type => {
 	if(/^u?int(?:8|16|32|64)$/.test(type.name)) return `uint${type.name.match(/\d+/)[0]}_t`;
 	if(type.name === "bool") return "uint8_t";
 	if(type.name === "char") return "uint32_t";
+	if(type.name === "usize" || type.name === "isize") return "size_t";
 	if(type.name === "float32") return "float";
 	if(type.name === "float64") return "double";
 	return "lean_object *";
@@ -184,7 +185,7 @@ export const generateNativeLeanAdapters = model => {
 	// elimination preserves the closure object's representation without copying.
 	for(const type of model.types.filter(type => type.kind === "callback"))
 	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${absoluteLeanType(type)}`, "");
-	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>"];
+	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>", `LEAN_CASSERT(sizeof(size_t) * 8 == ${model.pointerBits});`];
 	const emit = (symbol, parameters, result, body) => {
 		const ps = parameters.length ? parameters : [{ name: "unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
 		const callback = result.kind === "callback";

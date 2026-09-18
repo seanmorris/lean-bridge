@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 17 primitive types, nested arrays, and acyclic copied records. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, and acyclic copied records. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 

@@ -39,9 +39,9 @@ export const compileCopiedRustModel = ir => {
 			names.add(copy.publicName);
 			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Rust field is reserved: ${field.name}`);
 		}
-		copy.publicType = copy.record ? copy.publicName : copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.ref.name];
-		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.ref.name === "unit" ? "u8" : copy.ref.name === "char" ? "u32" : copy.publicType;
-		copy.inputType = copy.ref.name === "string" ? "&str" : copy.ref.name === "bytes" ? "&[u8]" : copy.element ? `&[${copy.element.publicType}]` : copy.aggregate ? `&${copy.publicType}` : copy.publicType;
+		copy.publicType = copy.record ? copy.publicName : copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
+		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.scalarName === "unit" ? "u8" : copy.scalarName === "char" ? "u32" : copy.publicType;
+		copy.inputType = copy.scalarName === "string" ? "&str" : copy.scalarName === "bytes" ? "&[u8]" : copy.element ? `&[${copy.element.publicType}]` : copy.aggregate ? `&${copy.publicType}` : copy.publicType;
 	}
 	for(const fn of surface.functions)
 	{
@@ -49,5 +49,5 @@ export const compileCopiedRustModel = ir => {
 		names.add(fn.field);
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name)) fail(fn.declaration, `Rust parameter is reserved: ${parameter.name}`);
 	}
-	return { ir, surface, hasBigints: surface.copies.some(copy => ["nat", "int"].includes(copy.ref.name)) };
+	return { ir, surface, hasBigints: surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)) };
 };

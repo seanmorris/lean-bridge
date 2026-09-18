@@ -43,8 +43,8 @@ export const compileCopiedWitModel = (ir, settings = {}) => {
 	};
 	for(const copy of surface.copies)
 	{
-		copy.witName = primitive[copy.ref.name] ? null : admit(copy.record?.name ?? `bridge-value-${copy.index}`, ir.declarations[0]);
-		copy.wit = copy.witName ?? primitive[copy.ref.name];
+		copy.witName = primitive[copy.scalarName] ? null : admit(copy.record?.name ?? `bridge-value-${copy.index}`, ir.declarations[0]);
+		copy.wit = copy.witName ?? primitive[copy.scalarName];
 		copy.wat = copy.witName ? `$t${copy.index}` : copy.wit;
 		const fields = new Set();
 		for(const field of copy.fields) field.witName = admit(field.name, ir.declarations[0], fields);
@@ -60,16 +60,16 @@ export const compileCopiedWitModel = (ir, settings = {}) => {
 	const witType = copy => {
 		if(copy.element) return `type ${copy.witName} = list<${copy.element.wit}>;`;
 		if(copy.record) return copy.fields.length ? `record ${copy.witName} { ${copy.fields.map(field => `${field.witName}: ${field.type.wit}`).join(", ")} }` : `enum ${copy.witName} { empty }`;
-		if(copy.ref.name === "unit") return `enum ${copy.witName} { unit }`;
-		if(copy.ref.name === "int") return `record ${copy.witName} { negative: bool, limbs: list<u32> }`;
-		return `type ${copy.witName} = list<${copy.ref.name === "nat" ? "u32" : "u8"}>;`;
+		if(copy.scalarName === "unit") return `enum ${copy.witName} { unit }`;
+		if(copy.scalarName === "int") return `record ${copy.witName} { negative: bool, limbs: list<u32> }`;
+		return `type ${copy.witName} = list<${copy.scalarName === "nat" ? "u32" : "u8"}>;`;
 	};
 	const watType = copy => {
 		if(copy.element) return `(list ${copy.element.wat})`;
 		if(copy.record) return copy.fields.length ? `(record ${copy.fields.map(field => `(field "${field.witName}" ${field.type.wat})`).join(" ")})` : '(enum "empty")';
-		if(copy.ref.name === "unit") return '(enum "unit")';
-		if(copy.ref.name === "int") return '(record (field "negative" bool) (field "limbs" $limbs))';
-		return `(list ${copy.ref.name === "nat" ? "u32" : "u8"})`;
+		if(copy.scalarName === "unit") return '(enum "unit")';
+		if(copy.scalarName === "int") return '(record (field "negative" bool) (field "limbs" $limbs))';
+		return `(list ${copy.scalarName === "nat" ? "u32" : "u8"})`;
 	};
 	const packageName = `lean-bridge:${name}@${version}`, exportName = `lean-bridge:${name}/api@${version}`, importName = `lean-bridge:${name}/native@${version}`;
 	const signatures = surface.functions.map(fn => `  ${fn.witName}: func(${fn.parameters.map(parameter => `${parameter.witName}: ${parameter.copy.wit}`).join(", ")}) -> ${surface.copy(fn.declaration.result.type).wit};`).join("\n");

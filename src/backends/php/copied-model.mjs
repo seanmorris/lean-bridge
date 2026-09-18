@@ -25,10 +25,11 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  * @param options - Explicit PHP integer width for the compiled transport.
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
+ * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
  */
-export const compileCopiedPhpModel = (ir, { integerBits = 64 } = {}) => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
-	const surface = compilePrimitiveCSurface(ir);
+	const surface = compilePrimitiveCSurface(ir, { wordBits });
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
@@ -44,10 +45,10 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64 } = {}) => {
 			names.add(copy.publicName.toLowerCase());
 			for(const field of copy.fields) if(reserved.has(field.name.toLowerCase())) fail(ir.declarations[0], `PHP field name is reserved: ${field.name}`);
 		}
-		copy.publicType = copy.record ? copy.publicName : copy.element ? "array" : primitives[copy.ref.name];
-		if(integerBits === 32 && ["uint32", "int64"].includes(copy.ref.name)) copy.publicType = bigInteger;
+		copy.publicType = copy.record ? copy.publicName : copy.element ? "array" : primitives[copy.scalarName];
+		if(integerBits === 32 && ["uint32", "int64"].includes(copy.scalarName)) copy.publicType = bigInteger;
 		copy.docType = copy.element ? `list<${copy.element.docType}>` : copy.publicType;
-		copy.ctype = copy.aggregate ? copy.name : copy.ref.name === "unit" ? "uint8_t" : copy.name;
+		copy.ctype = copy.aggregate ? copy.name : copy.scalarName === "unit" ? "uint8_t" : copy.name;
 	}
 	for(const fn of surface.functions)
 	{

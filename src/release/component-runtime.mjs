@@ -126,7 +126,8 @@ export const callComponentScalar = (module, operation, signature, args) => {
 		}
 		else
 		{
-			value = type.startsWith("int") ? view().getBigInt64(slot + 8, true) : view().getBigUint64(slot + 8, true);
+			if((type === "usize" || type === "isize") && view().getUint32(slot + 4, true) !== 0) throw new TypeError("Invalid component platform integer flags");
+			value = type.startsWith("int") || type === "isize" ? view().getBigInt64(slot + 8, true) : view().getBigUint64(slot + 8, true);
 			if(!type.endsWith("64")) value = Number(value);
 		}
 		return validateComponentScalar(type, value);

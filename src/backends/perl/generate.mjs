@@ -4,6 +4,7 @@
  * @file
  */
 import { nativeCType, nativeObjectType, nativeTypeKey, validateNativeType, nativeCallbackDefault } from "../../build/native-model.mjs";
+import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -37,7 +38,7 @@ const box = (type, value) => {
 };
 
 const fromPrimitive = type => {
-	const { name } = type;
+	const name = fixedPlatformInteger(type.name, 64);
 	if(name === "unit") return 'lbp_plain(aTHX_ value); if (SvOK(value)) croak("Unit requires undef"); return lean_box(0);';
 	if(name === "bool") return 'lbp_plain(aTHX_ value); if (!SvIsBOOL(value)) croak("Bool requires true() or false()"); return SvTRUE(value) ? 1 : 0;';
 	if(name === "char") return `
@@ -71,7 +72,7 @@ const fromPrimitive = type => {
 	throw new TypeError(`unsupported Perl scalar ${name}`);
 };
 const toPrimitive = type => {
-	const { name } = type;
+	const name = fixedPlatformInteger(type.name, 64);
 	if(name === "unit") return "return &PL_sv_undef;";
 	if(name === "bool") return "return boolSV(value != 0);";
 	if(name === "char") return `

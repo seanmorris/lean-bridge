@@ -50,7 +50,7 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
         var data = value.get(ADDRESS, 0).reinterpret((long)count * ${e.size});
         for (int index = 0; index < count; index++) result[index] = from${e.index}(${readJvmValue(e, "data", `(long)index * ${e.size}`)});
         return result;`;
-	} else switch(copy.ref.name)
+	} else switch(copy.scalarName)
 	{
 		case "unit": input = "Objects.requireNonNull(value); return (byte)0;"; output = "return Unit.INSTANCE;"; break;
 		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = "return value != 0;"; break;
@@ -58,8 +58,8 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
 			input = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Char requires a Unicode scalar code point"); return value;';
 			output = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Invalid native Unicode scalar"); return value;'; break;
 		case "uint8": case "uint16": case "uint32":
-			input = `if (value < 0 || value > ${copy.ref.name === "uint8" ? "255" : copy.ref.name === "uint16" ? "65535" : "0xffff_ffffL"}) throw new IllegalArgumentException("${copy.ref.name} is out of range"); return (${copy.nativeType})value;`;
-			output = `return ${copy.ref.name === "uint8" ? "Byte.toUnsignedInt" : copy.ref.name === "uint16" ? "Short.toUnsignedInt" : "Integer.toUnsignedLong"}(value);`; break;
+			input = `if (value < 0 || value > ${copy.scalarName === "uint8" ? "255" : copy.scalarName === "uint16" ? "65535" : "0xffff_ffffL"}) throw new IllegalArgumentException("${copy.scalarName} is out of range"); return (${copy.nativeType})value;`;
+			output = `return ${copy.scalarName === "uint8" ? "Byte.toUnsignedInt" : copy.scalarName === "uint16" ? "Short.toUnsignedInt" : "Integer.toUnsignedLong"}(value);`; break;
 		case "uint64": input = 'Objects.requireNonNull(value); if (value.signum() < 0 || value.bitLength() > 64) throw new IllegalArgumentException("uint64 is out of range"); return value.longValue();';
 			output = "return BigInteger.valueOf(value >>> 1).shiftLeft(1).add(BigInteger.valueOf(value & 1));"; break;
 		case "string": input = `Objects.requireNonNull(value);
@@ -81,20 +81,20 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
         return slice(scope, data, value.length, 32);`;
 			output = "return data(value).toArray(JAVA_BYTE);"; break;
 		case "nat": case "int": input = `Objects.requireNonNull(value);
-        ${copy.ref.name === "nat" ? 'if (value.signum() < 0) throw new IllegalArgumentException("Nat cannot be negative");' : ""}
+        ${copy.scalarName === "nat" ? 'if (value.signum() < 0) throw new IllegalArgumentException("Nat cannot be negative");' : ""}
         var magnitude = value.abs();
         long limbs = ((long)magnitude.bitLength() + 31) / 32;
         var data = scope.allocate(Math.max(1, limbs * 4), 4);
         byte[] bytes = magnitude.toByteArray();
         for (int index = 0; index < bytes.length && index < limbs * 4; index++) data.set(JAVA_BYTE, index, bytes[bytes.length - 1 - index]);
         var result = slice(scope, data, limbs, ${copy.size});
-        ${copy.ref.name === "int" ? "result.set(JAVA_BYTE, 32, (byte)(value.signum() < 0 ? 1 : 0));" : ""}
+        ${copy.scalarName === "int" ? "result.set(JAVA_BYTE, 32, (byte)(value.signum() < 0 ? 1 : 0));" : ""}
         return result;`;
 			output = `int length = Math.toIntExact(value.get(JAVA_LONG, 8) * 4);
         byte[] bytes = value.get(ADDRESS, 0).reinterpret(length).toArray(JAVA_BYTE);
         for (int left = 0, right = bytes.length - 1; left < right; left++, right--) { byte saved = bytes[left]; bytes[left] = bytes[right]; bytes[right] = saved; }
         var result = new BigInteger(1, bytes);
-        return ${copy.ref.name === "int" ? "value.get(JAVA_BYTE, 32) != 0 ? result.negate() : result" : "result"};`; break;
+        return ${copy.scalarName === "int" ? "value.get(JAVA_BYTE, 32) != 0 ? result.negate() : result" : "result"};`; break;
 		default: input = "return value;"; output = "return value;";
 	}
 	return `    private static ${copy.nativeType} to${i}(${type} value${copy.aggregate ? ", Scope scope" : ""}) {

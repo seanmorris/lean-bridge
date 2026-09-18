@@ -1,5 +1,5 @@
 /**
- * Check Char in offline installed PHP-Wasm packages in Node and Chromium.
+ * Exercise installed copied-value PHP-Wasm APIs in Node and Chromium.
  *
  * @file
  */
@@ -13,8 +13,7 @@ import { startSiteServer } from "../../site/serve.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { brickMathRepository } from "./brick-math.mjs";
 import { createDeterministicTarGz } from "../../src/release/deterministic-archive.mjs";
-import { charPoints } from "./native-char-fixture.mjs";
-import { charCleanEnvironment as clean, runChar as run } from "./native-char-install.mjs";
+import { copiedCleanEnvironment as clean, runCopied as run } from "./copied-fixture-install.mjs";
 
 /**
  * Install complete npm and Composer handoffs before executing PHP callers.
@@ -23,9 +22,10 @@ import { charCleanEnvironment as clean, runChar as run } from "./native-char-ins
  * @param root0.consumer - Task-owned consumer root.
  * @param root0.handoff - Verified archive directory.
  * @param root0.packages - Matching npm and Composer receipt entries.
+ * @param root0.fixture - Independent PHP consumer and invalid-input probe.
  * @param root0.environment - Explicit host and tool paths.
  */
-export const installCharPhpWasm = async ({ consumer, handoff, packages, environment }) => {
+export const installCopiedPhpWasm = async ({ consumer, handoff, packages, environment, fixture }) => {
 	const original = join(consumer, "php-wasm-original"), root = join(consumer, "php-wasm");
 	await mkdir(original);
 	const host = resolve(environment.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm");
@@ -46,14 +46,14 @@ export const installCharPhpWasm = async ({ consumer, handoff, packages, environm
 	const archive = join(handoff, pkg.artifacts[0].path);
 	await run("/usr/bin/unzip", ["-q", archive, "-d", inspection], original);
 	const metadata = JSON.parse(await readFile(join(inspection, "composer.json")));
-	await saveLakeFile(original, "composer.json", canonicalJson({ name: "char-check/php-wasm"
+	await saveLakeFile(original, "composer.json", canonicalJson({ name: "copied-check/php-wasm"
 		, require: { [pkg.name]: pkg.version }
 		, repositories: [{ "packagist.org": false }, await brickMathRepository(join(original, "feed")), { type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(archive).href } } }]
 		, config: { "allow-plugins": false, platform: { php: "8.4.1" } } }));
 	await run(environment.LEAN_BRIDGE_PHP ?? "/usr/bin/php", [environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer", "--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], original
 		, { ...clean, PATH: "/usr/bin:/bin", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(original, "composer-home"), COMPOSER_CACHE_DIR: join(original, "composer-cache") });
 	await rename(original, root);
-	const source = (await readFile("tests/fixtures/char-consumers/php-native.php", "utf8")).replaceAll("__POINTS__", charPoints.join(", ")).replace("require 'vendor/autoload.php';", "");
+	const source = (await fixture.source("php-native", "php", 32)).replace("require 'vendor/autoload.php';", "");
 	for(const mode of ["weak", "strict"]) await saveLakeFile(root, `${mode}.php`, source.replace("declare(strict_types=0);", `declare(strict_types=${mode === "strict" ? 1 : 0});`));
 	const name = npmPackages.find(pkg => pkg.role === "component").name;
 	await saveLakeFile(root, "entry.mjs", `export { default as api } from ${JSON.stringify(name)};\n`);
@@ -74,10 +74,10 @@ export const installCharPhpWasm = async ({ consumer, handoff, packages, environm
   const autoload = mount ? '/app-vendor/autoload.php' : api.autoload;
   if (await php.run("<?php require '" + autoload + "';") !== 0) throw new Error(stdout + stderr);
   const before = libraries.length;
-  if (await php.run("<?php try { LeanGlyphs\\\\keep('ab'); throw new Exception('Invalid Char accepted'); } catch (ValueError $error) {}") !== 0) throw new Error(stdout + stderr);
+  if (await php.run(${JSON.stringify("<?php " + fixture.phpInvalid)}) !== 0) throw new Error(stdout + stderr);
   if (libraries.length !== before || (loading === 'lazy' && before !== 0)) throw new Error('Invalid input loaded lazy code');
   await php.writeFile('/consumer.php', source);
-  if (await php.run("<?php require '/consumer.php';") !== 0 || stderr || !/^char-ok:[0-9]+\\n$/.test(stdout)) throw new Error(JSON.stringify({stdout,stderr}));
+  if (await php.run("<?php require '/consumer.php';") !== 0 || stderr || !/^${fixture.success}:[0-9]+\\n$/.test(stdout)) throw new Error(JSON.stringify({stdout,stderr}));
   if (libraries.length !== 2 || new Set(libraries).size !== 2) throw new Error('Expected one component and one runtime');
   return {checks: Number(stdout.trim().split(':')[1]), libraries: libraries.length, mode, loading};
 }\n`;
@@ -107,10 +107,10 @@ console.log(JSON.stringify(await checkPhp(PhpNode,api,mode,loading,await readFil
 import {api} from './bundled/consumer.mjs';
 import {checkPhp} from './driver.mjs';
 const params=new URLSearchParams(location.search), mode=params.get('mode'), loading=params.get('loading');
-try {globalThis.charResult=await checkPhp(PhpWeb,api,mode,loading,await(await fetch(mode+'.php')).text());} catch(error) {globalThis.charError=String(error);}
+try {globalThis.copiedResult=await checkPhp(PhpWeb,api,mode,loading,await(await fetch(mode+'.php')).text());} catch(error) {globalThis.copiedError=String(error);}
 `);
 	const { chromium } = await import("playwright");
-	const server = await startSiteServer({ root, base: "/char/" });
+	const server = await startSiteServer({ root, base: "/copied/" });
 	let browser;
 	try
 	{
@@ -124,9 +124,9 @@ try {globalThis.charResult=await checkPhp(PhpWeb,api,mode,loading,await(await fe
 				await context.route("**/*", route => route.request().url().startsWith(server.url) ? route.continue() : route.abort());
 				const page = await context.newPage(), errors = []; page.on("pageerror", error => errors.push(error.message));
 				await page.goto(`${server.url}?loading=${loading}&mode=${mode}`);
-				await page.waitForFunction(() => globalThis.charResult || globalThis.charError, null, { timeout: 90_000 });
-				assert.equal(await page.evaluate(() => globalThis.charError), undefined); assert.deepEqual(errors, []);
-				executions.push({ realm: "chromium", arrangement: "bundled", ...await page.evaluate(() => globalThis.charResult) });
+				await page.waitForFunction(() => globalThis.copiedResult || globalThis.copiedError, null, { timeout: 90_000 });
+				assert.equal(await page.evaluate(() => globalThis.copiedError), undefined); assert.deepEqual(errors, []);
+				executions.push({ realm: "chromium", arrangement: "bundled", ...await page.evaluate(() => globalThis.copiedResult) });
 			}
 			finally
 			{ await context.close(); }

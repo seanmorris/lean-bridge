@@ -20,6 +20,7 @@ extern "C" {
 #endif
 uint32_t bridge_scalar_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_scalar_slot_validate(bridge_scalar_slot const *, uint32_t);
+uint32_t bridge_scalar_word_bits(void);
 lean_object *bridge_scalar_decode_object(bridge_scalar_slot const *);
 uint32_t bridge_scalar_encode_object(bridge_scalar_slot *, uint32_t, lean_object *);
 uint32_t bridge_scalar_call(char const *, bridge_scalar_frame *);

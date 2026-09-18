@@ -43,7 +43,7 @@ The package exports the functions, not its commutativity theorem. [Proofs and as
 The [scalar fixture](../../tests/fixtures/onboarding/scalars/OnboardingScalars.lean) covers zero-argument functions, all supported primitive types, and a mixed four-argument function. Its generated declarations are:
 
 ```ts
-// Generated from Binding IR SHA-256 0ce10ba6d2133a31c315021a899c4c118d2b34361bc7759a1e8916c9e5662ef9.
+// Generated from Binding IR SHA-256 77664e0709528cd58af8650417ca25850cc159a038a45460f691082c59e59f92.
 /**
  * Add arbitrary-precision natural numbers.
  */
@@ -105,6 +105,11 @@ export declare function i8(arg0: number): number;
 export declare function integer(arg0: bigint): bigint;
 
 /**
+ * Preserve the compiled target's signed word.
+ */
+export declare function isize(arg0: number): number;
+
+/**
  * Exercise mixed types and more than two arguments.
  */
 export declare function mixed(arg0: boolean, arg1: number, arg2: string, arg3: bigint): bigint;
@@ -144,6 +149,11 @@ export declare function u8(arg0: number): number;
  */
 export declare function unit(arg0: void): void;
 
+/**
+ * Preserve the compiled target's unsigned word.
+ */
+export declare function usize(arg0: number): number;
+
 declare const bindings: Readonly<{
   readonly add: typeof add;
   readonly answer: typeof answer;
@@ -157,6 +167,7 @@ declare const bindings: Readonly<{
   readonly i64: typeof i64;
   readonly i8: typeof i8;
   readonly integer: typeof integer;
+  readonly isize: typeof isize;
   readonly mixed: typeof mixed;
   readonly negate: typeof negate;
   readonly text: typeof text;
@@ -165,6 +176,7 @@ declare const bindings: Readonly<{
   readonly u64: typeof u64;
   readonly u8: typeof u8;
   readonly unit: typeof unit;
+  readonly usize: typeof usize;
 }>;
 export default bindings;
 ```

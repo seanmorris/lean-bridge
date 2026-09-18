@@ -4,7 +4,7 @@
  * @file
  */
 import { cIdentifier, compileCProjectionModel, describeCFunction, describeCType } from "./generate.mjs";
-import { componentScalarTypes } from "../../abi/component-scalars.mjs";
+import { componentScalarTypes, fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
 const keywords = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq restrict _Alignas _Alignof _Atomic _Bool _Complex _Generic _Imaginary _Noreturn _Static_assert _Thread_local").split(" "));
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !keywords.has(name);
@@ -29,8 +29,11 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * Validate every selected function; never silently drop an export.
  *
  * @param ir - Authoritative canonical Binding IR.
+ * @param options - Fixed compiled Lean profile, independent of the consumer process.
+ * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
  */
-export const compilePrimitiveCSurface = ir => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64 } = {}) => {
+	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const visit = (ref, declaration, depth = 0) => {
 		const key = typeKey(ref);
@@ -53,7 +56,7 @@ export const compilePrimitiveCSurface = ir => {
 			});
 		} else rejectPrimitiveSurface(declaration, "ordinary C/C++ adapters require concrete, pure, copied primitives, arrays or acyclic records");
 		visiting.delete(key);
-		const copy = { ref, ...describeCType(ir, ref), fields, element, record, index: copies.size };
+		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, index: copies.size };
 		if(copy.aggregate)
 		{
 			if(cTypeNames.has(copy.name) || cTypeNames.has(`${copy.name}_clear`)) rejectPrimitiveSurface(declaration, "C/C++ copied type name collides with another generated type");

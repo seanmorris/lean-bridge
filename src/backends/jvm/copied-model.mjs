@@ -29,7 +29,7 @@ export const compileCopiedJvmModel = ir => {
 	const names = new Set(reserved);
 	for(const copy of surface.copies)
 	{
-		copy.nativeType = copy.aggregate ? "MemorySegment" : nativeTypes[copy.ref.name];
+		copy.nativeType = copy.aggregate ? "MemorySegment" : nativeTypes[copy.scalarName];
 		copy.layout = copy.aggregate ? "ADDRESS" : `JAVA_${copy.nativeType.toUpperCase()}`;
 		if(copy.record)
 		{
@@ -50,7 +50,7 @@ export const compileCopiedJvmModel = ir => {
 		} else
 		{
 			copy.alignment = copy.aggregate ? 8 : widths[copy.nativeType];
-			copy.size = copy.aggregate ? copy.ref.name === "int" ? 40 : 32 : copy.alignment;
+			copy.size = copy.aggregate ? copy.scalarName === "int" ? 40 : 32 : copy.alignment;
 		}
 	}
 	const functionNames = new Set();
@@ -60,7 +60,7 @@ export const compileCopiedJvmModel = ir => {
 		if(functionNames.has(fn.publicName) || reserved.has(fn.publicName) || keywords.has(fn.publicName)) fail(fn.declaration, `Java function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.ref.name];
+	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
 	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType };
 };
 

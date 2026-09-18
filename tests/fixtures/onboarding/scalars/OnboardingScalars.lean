@@ -24,6 +24,10 @@ def i16 (value : Int16) : Int16 := value
 def i32 (value : Int32) : Int32 := value
 /-- Preserve Int64. -/
 def i64 (value : Int64) : Int64 := value
+/-- Preserve the compiled target's unsigned word. -/
+def usize (value : USize) : USize := value
+/-- Preserve the compiled target's signed word. -/
+def isize (value : ISize) : ISize := value
 /-- Preserve arbitrary-precision signed integers. -/
 def integer (value : Int) : Int := value
 /-- Negate arbitrary-precision integers. -/

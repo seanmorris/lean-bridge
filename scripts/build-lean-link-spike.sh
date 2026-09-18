@@ -127,6 +127,7 @@ SIDE_FLAGS=(
 )
 
 BRIDGE_EXPORTS=(
+  _l_System_Platform_numBits
   _bridge_lean_runtime_init
   _bridge_lean_runtime_status
   _bridge_lean_runtime_init_runs
@@ -140,6 +141,7 @@ BRIDGE_EXPORTS=(
   _bridge_scalar_frame_clear
   _bridge_scalar_frame_validate
   _bridge_scalar_slot_validate
+  _bridge_scalar_word_bits
   _bridge_scalar_decode_object
   _bridge_scalar_encode_object
   _bridge_test_lean_runtime_force_init_error

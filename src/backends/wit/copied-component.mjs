@@ -30,10 +30,10 @@ const layout = (copy, cache) => {
 		cache.set(copy, result); return result;
 	}
 	if(copy.record) return { flat: ["i32"], size: 1, alignment: 1 };
-	if(copy.ref.name === "int") return { flat: ["i32", "i32", "i32"], size: 12, alignment: 4 };
-	if(leaf[copy.ref.name])
+	if(copy.scalarName === "int") return { flat: ["i32", "i32", "i32"], size: 12, alignment: 4 };
+	if(leaf[copy.scalarName])
 	{
-		const [type, size] = leaf[copy.ref.name];
+		const [type, size] = leaf[copy.scalarName];
 		return { flat: [type], size, alignment: size };
 	}
 	return { flat: ["i32", "i32"], size: 8, alignment: 4 };

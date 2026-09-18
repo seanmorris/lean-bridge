@@ -64,7 +64,7 @@ def _check(status, error):
  */
 export const copiedPythonTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => {
 	const fields = copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
-		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.ref.name === "int" ? [["negative", "_c.c_bool"]] : [])];
+		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.scalarName === "int" ? [["negative", "_c.c_bool"]] : [])];
 	return `class ${copy.ctype}(_c.Structure):\n    _fields_ = [${fields.map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]\n`;
 }).join("\n");
 
@@ -74,7 +74,7 @@ export const copiedPythonTypes = model => model.surface.copies.filter(copy => co
  * @param model - Canonical native descriptions and public record names.
  */
 export const copiedPythonConversions = model => model.surface.copies.map(copy => {
-	const input = [], output = [], name = copy.ref.name;
+	const input = [], output = [], name = copy.scalarName;
 	if(name === "unit")
 	{
 		input.push('if value is not None: raise TypeError("Unit requires None")', "return 0");

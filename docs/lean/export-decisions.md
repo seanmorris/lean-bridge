@@ -52,6 +52,7 @@ Ordinary npm components support pure functions with zero to 32 primitive argumen
 | `Unit`, `Bool` | `undefined`, `boolean` |
 | `UInt8`, `UInt16`, `UInt32`, `Int8`, `Int16`, `Int32` | Range-checked integer `number` |
 | `UInt64`, `Int64` | Range-checked `bigint` |
+| `USize`, `ISize` | Range-checked `number`, unsigned or signed 32-bit for the compiled Wasm target |
 | `Nat`, `Int` | Arbitrary-precision `bigint`; `Nat` must be nonnegative |
 | `Float32`, `Float` | `number`, including NaN, infinities, and negative zero |
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
@@ -61,6 +62,8 @@ Ordinary npm components support pure functions with zero to 32 primitive argumen
 Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
 
 `Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
+
+`USize` and `ISize` follow the compiled Lean target: 32 bits for npm and PHP-Wasm, 64 bits for native packages and native-backed WIT components. The consumer's architecture does not change that range. Adapters reject out-of-range inputs before narrowing; arithmetic inside Lean retains Lean's word-sized wraparound. Use a fixed-width integer when the same API must have the same range on both targets.
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
@@ -106,6 +109,7 @@ The compiler-backed analyzer projects:
 
 - `Unit`, `Bool`, `UInt8`, `UInt16`, `UInt32`, and `UInt64`;
 - `Int8`, `Int16`, `Int32`, `Int64`, `Nat`, and `Int`;
+- `USize` and `ISize`, with the compiled target's width;
 - `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
 `IO`, `Task`, collections, records, callbacks, resources, and configured closure arities produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.

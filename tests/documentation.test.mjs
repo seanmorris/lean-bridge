@@ -325,8 +325,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests\/type-corpus-reviewed-native\.test\.mjs/);
   assert.match(perlWorkflow, /test -s build\/type-corpus\/reviewed-native-perl\.json/);
   for(const profiles of ["c,cpp", "dotnet", "java,kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"])
+  {
     assert.ok(workflow.includes(`LEAN_BRIDGE_CHAR_PROFILES=${profiles} node --test tests/native-char.test.mjs`));
+    assert.ok(workflow.includes(`LEAN_BRIDGE_WORD_PROFILES=${profiles} node --test tests/native-words.test.mjs`));
+  }
   assert.ok(perlWorkflow.includes("LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs"));
+  assert.ok(perlWorkflow.includes("LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs"));
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
   {
@@ -345,21 +349,21 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_wit\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_wit\.outcome == 'success'/);
   assert.match(workflow, /name: type-corpus-wit-wasi-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/wit-wasi\.json\n\s*build\/type-corpus\/reviewed-native-wit-wasi\.json\n\s*build\/char-native\/wit-wasi\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/wit-wasi\.json\n\s*build\/type-corpus\/reviewed-native-wit-wasi\.json\n\s*build\/char-native\/wit-wasi\.json\n\s*build\/word-native\/wit-wasi\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:php-native"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=php-native node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: type_corpus_php_native\n\s*continue-on-error: true/);
   assert.match(workflow, /node --test tests\/native-php\.test\.mjs && npm run test:type-corpus:php-native/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:php-wasm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=php-wasm node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: type_corpus_php_wasm\n\s*continue-on-error: true/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome }}" != success/);
   assert.match(workflow, /node --test tests\/php-wasm-multi-profile\.test\.mjs && npm run test:type-corpus:php-wasm/);
   assert.match(workflow, /name: type-corpus-php-wasm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-wasm\.json\n\s*build\/type-corpus\/reviewed-wasm-php-wasm\.json\n\s*build\/char-native\/php-wasm\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-wasm\.json\n\s*build\/type-corpus\/reviewed-wasm-php-wasm\.json\n\s*build\/char-native\/php-wasm\.json\n\s*build\/word-native\/php-wasm\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:java"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:kotlin"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=kotlin node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:jvm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java,kotlin node --test tests/type-corpus.test.mjs");
@@ -370,7 +374,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-jvm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:dotnet"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=dotnet node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: ordinary_dotnet\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_dotnet/);
@@ -379,7 +383,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-dotnet-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*build\/word-native\/dotnet\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");
@@ -390,13 +394,13 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-c-family-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_rust/);
   assert.match(workflow, /node --test tests\/native-rust\.test\.mjs && npm run test:type-corpus:rust/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-rust-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:browser"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:npm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
@@ -407,19 +411,20 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.consumer\.outcome == 'success' && steps\.type_corpus_npm\.outcome == 'success'/);
   assert.match(workflow, /name: type-corpus-npm-\$\{\{ github\.sha \}\}/);
   assert.match(workflow, /node --test tests\/component-char\.test\.mjs/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /node --test tests\/component-words\.test\.mjs/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_python/);
   assert.match(workflow, /npm run test:type-corpus:python/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_ruby/);
   assert.match(workflow, /npm run test:type-corpus:ruby/);
   assert.match(workflow, /steps\.type_corpus_ruby\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_ruby\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-ruby-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/ruby\.json\n\s*build\/type-corpus\/reviewed-native-ruby\.json\n\s*build\/char-native\/ruby\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/ruby\.json\n\s*build\/type-corpus\/reviewed-native-ruby\.json\n\s*build\/char-native\/ruby\.json\n\s*build\/word-native\/ruby\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_PHP_TEST: "1"/);
   assert.match(workflow, /id: ordinary_php/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_ZEND_TEST: "1"/);
@@ -452,7 +457,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /npm run test:type-corpus:perl/);
   assert.match(perlWorkflow, /LEAN_BRIDGE_CORPUS_PERL="\$PWD\/\.toolchains\/perl\/\$CORPUS_PERL_CONFIGURATION\/bin\/perl"/);
   assert.match(perlWorkflow, /name: type-corpus-perl-\$\{\{ matrix\.configuration \}\}-\$\{\{ github\.sha \}\}/);
-  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*if-no-files-found: error/);
+  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*if-no-files-found: error/);
   assert.match(perlWorkflow, /needs\.perl\.result == 'success'/);
   assert.match(perlWorkflow, /nix run \.#perl-build-engine/);
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);

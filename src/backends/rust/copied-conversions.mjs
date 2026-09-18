@@ -92,10 +92,10 @@ export const copiedRustTypes = model => model.surface.copies.filter(copy => copy
 #[derive(Clone, Copy, Default)]
 struct ${copy.ctype} {
 ${copy.record ? copy.fields.length ? copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n") : "    empty: u8,"
-	: `    data: *const ${copy.element?.ctype ?? (copy.ref.name === "nat" || copy.ref.name === "int" ? "u32" : "u8")},
+	: `    data: *const ${copy.element?.ctype ?? (copy.scalarName === "nat" || copy.scalarName === "int" ? "u32" : "u8")},
     length: usize,
     owner: *mut std::ffi::c_void,
-    release: Option<unsafe extern "C" fn(*mut std::ffi::c_void)>,${copy.ref.name === "int" ? "\n    negative: bool," : ""}`}
+    release: Option<unsafe extern "C" fn(*mut std::ffi::c_void)>,${copy.scalarName === "int" ? "\n    negative: bool," : ""}`}
 }
 `).join("\n");
 
@@ -105,7 +105,7 @@ ${copy.record ? copy.fields.length ? copy.fields.map(field => `    ${field.name}
  * @param model - Admitted copied Rust projection.
  */
 export const copiedRustConversions = model => model.surface.copies.map(copy => {
-	const name = copy.ref.name, input = [], output = [];
+	const name = copy.scalarName, input = [], output = [];
 	if(name === "unit")
 	{ input.push("Ok(0)"); output.push("Ok(())"); }
 	else if(name === "char")

@@ -33,7 +33,7 @@ export const compileCopiedPythonModel = ir => {
 	const names = new Set(reserved);
 	for(const copy of surface.copies)
 	{
-		copy.ctype = copy.aggregate ? `_T${copy.index}` : `_c.${primitive[copy.ref.name][1]}`;
+		copy.ctype = copy.aggregate ? `_T${copy.index}` : `_c.${primitive[copy.scalarName][1]}`;
 		if(copy.record)
 		{
 			copy.publicName = copy.record.name;
@@ -41,7 +41,7 @@ export const compileCopiedPythonModel = ir => {
 			names.add(copy.publicName);
 			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Python field name is reserved: ${field.name}`);
 		}
-		copy.publicType = copy.record ? copy.publicName : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.ref.name][0];
+		copy.publicType = copy.record ? copy.publicName : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
 		copy.inputType = copy.element ? `_Array${copy.index}` : copy.publicType;
 		copy.inputExpression = copy.element ? `tuple[${copy.element.inputType}, ...] | list[${copy.element.inputType}]` : null;
 	}

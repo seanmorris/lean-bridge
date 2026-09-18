@@ -10,7 +10,7 @@
  * @param model - Copied PHP model with an explicit integer width.
  */
 export const copiedZendConversions = model => model.surface.copies.map(copy => {
-	const input = [], output = [], name = copy.ref.name;
+	const input = [], output = [], name = copy.scalarName;
 	if(name === "unit")
 	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push("(void)value; ZVAL_NULL(out);"); }
 	else if(name === "bool")

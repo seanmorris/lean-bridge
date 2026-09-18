@@ -183,7 +183,7 @@ test("the combined PHP guide owns both profiles and preserves their differences"
 test("conversion tables distinguish full-width integers and executable WASI support", async () => {
 	const javascript = conversionTable(await readFile("docs/javascript-typescript.md", "utf8"));
 	const scalarReference = await readFile("docs/reference/types.md", "utf8");
-	const leanNames = { unit: "Unit", bool: "Bool", nat: "Nat", int: "Int", float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray", char: "Char" };
+	const leanNames = { unit: "Unit", bool: "Bool", nat: "Nat", int: "Int", float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray", char: "Char", usize: "USize", isize: "ISize" };
 	const scalars = [...scalarReference.matchAll(/^\| `([a-z0-9]+)` \| `([^`]+)` \|/gmu)];
 	assert.equal(javascript.rows.size, scalars.length);
 	for(const [, primitive, host] of scalars)

@@ -131,14 +131,15 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
-	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => item.name));
+	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => `${item.kind}:${item.name}`));
 	for(const item of WebAssembly.Module.imports(side))
 	{
 		const provided = item.kind === "function" ? runtimeExports.has(`function:${item.name}`)
 			: item.kind === "memory" ? item.module === "env" && item.name === "memory"
 				: item.kind === "table" ? item.module === "env" && item.name === "__indirect_function_table"
-					: item.module === "GOT.func" ? sideExports.has(item.name) || runtimeExports.has(`function:${item.name}`)
-						: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
+					: item.module === "GOT.func" ? sideExports.has(`function:${item.name}`) || runtimeExports.has(`function:${item.name}`)
+						: item.module === "GOT.mem" ? sideExports.has(`global:${item.name}`) || runtimeExports.has(`global:${item.name}`)
+							: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
 		if(!provided) throw new Error(`Prepared runtime cannot resolve component import ${item.module}.${item.name}`);
 	}
 	const runtimeFiles = new Map([

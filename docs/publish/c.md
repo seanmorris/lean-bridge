@@ -8,7 +8,7 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Install Node 22, Lean 4.32.2, a C11 compiler, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied parameters and results. The C/C++ adapters accept all 17 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Resources, callbacks, effects and asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied parameters and results. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Resources, callbacks, effects and asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
 
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 

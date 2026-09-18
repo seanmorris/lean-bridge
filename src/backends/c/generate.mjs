@@ -61,6 +61,9 @@ const primitiveCType = name => {
 		, uint16: "uint16_t"
 		, uint32: "uint32_t"
 		, char: "uint32_t"
+		// Stable copied carriers; the compiled adapter enforces its target's word range.
+		, usize: "uint64_t"
+		, isize: "int64_t"
 		, uint64: "uint64_t"
 		, int8: "int8_t"
 		, int16: "int16_t"

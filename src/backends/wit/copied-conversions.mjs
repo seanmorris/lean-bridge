@@ -73,7 +73,7 @@ static inline bool lb_limbs_out(const uint32_t *data, size_t length, lb_scope *s
  * @param root0.surface - Shared C value layout and function descriptions.
  */
 export const renderWitConversions = ({ surface }) => surface.copies.map(copy => {
-	const input = [], output = [], name = copy.ref.name;
+	const input = [], output = [], name = copy.scalarName;
 	const data = "value->of.list";
 	if(scalar[name])
 	{

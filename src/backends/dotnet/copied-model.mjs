@@ -43,8 +43,8 @@ export const compileCopiedDotnetModel = ir => {
 		if(functionNames.has(fn.publicName)) fail(fn.declaration, `C# function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.ref.name];
-	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.ref.name) ? "byte" : copy.ref.name === "char" ? "uint" : scalar[copy.ref.name];
+	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
+	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.scalarName) ? "byte" : copy.scalarName === "char" ? "uint" : scalar[copy.scalarName];
 	return { ir, surface, componentName, namespace: `LeanBridge.${componentName}`, assembly: `LeanBridge.${componentName}`, publicType, nativeType };
 };
 

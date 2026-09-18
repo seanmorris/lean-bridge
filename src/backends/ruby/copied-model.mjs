@@ -26,8 +26,8 @@ export const compileCopiedRubyModel = ir => {
 	const names = new Set([...reserved, componentName]);
 	for(const copy of surface.copies)
 	{
-		copy.ffi = copy.aggregate ? "VOIDP" : types[copy.ref.name][0];
-		copy.pack = copy.aggregate ? null : types[copy.ref.name][1];
+		copy.ffi = copy.aggregate ? "VOIDP" : types[copy.scalarName][0];
+		copy.pack = copy.aggregate ? null : types[copy.scalarName][1];
 		if(copy.record)
 		{
 			copy.publicName = pascal(copy.record.name);
@@ -43,8 +43,8 @@ export const compileCopiedRubyModel = ir => {
 			copy.alignment = alignment; copy.size = Math.max(1, align(size, alignment));
 		} else
 		{
-			copy.alignment = copy.aggregate ? 8 : types[copy.ref.name][2];
-			copy.size = copy.aggregate ? copy.ref.name === "int" ? 40 : 32 : copy.alignment;
+			copy.alignment = copy.aggregate ? 8 : types[copy.scalarName][2];
+			copy.size = copy.aggregate ? copy.scalarName === "int" ? 40 : 32 : copy.alignment;
 		}
 	}
 	for(const fn of surface.functions)

@@ -7,11 +7,12 @@ import { assertComponentSignature, componentScalarTypes } from "../abi/component
 
 const objectType = type => new Set(["unit", "nat", "int", "string", "bytes"]).has(type);
 const cType = type => objectType(type) ? "lean_object *"
-	: type === "char" ? "uint32_t"
-		: type === "bool" ? "uint8_t"
-			: type === "float32" ? "float"
-				: type === "float64" ? "double"
-					: `${type.replace(/^int/, "uint")}_t`;
+	: type === "usize" || type === "isize" ? "size_t"
+		: type === "char" ? "uint32_t"
+			: type === "bool" ? "uint8_t"
+				: type === "float32" ? "float"
+					: type === "float64" ? "double"
+						: `${type.replace(/^int/, "uint")}_t`;
 
 /**
  * Generates direct typed calls to Lean's exported, owned-argument wrappers.
@@ -19,7 +20,7 @@ const cType = type => objectType(type) ? "lean_object *"
  * @param abi - Validated private scalar ABI containing one typed export per declaration.
  */
 export const generateComponentScalarAdapters = abi => {
-	const lines = ['#include "component_scalar.h"', "#include <string.h>", ""];
+	const lines = ['#include "component_scalar.h"', "#include <string.h>", '_Static_assert(sizeof(size_t) == 4, "scalar-frame-v2 requires wasm32 Lean");', ""];
 	for(const item of abi.exports)
 	{
 		assertComponentSignature(item);
@@ -29,6 +30,8 @@ export const generateComponentScalarAdapters = abi => {
 		lines.push(`extern ${cType(result)} ${item.symbol}_lean(${types.length ? types.map(cType).join(", ") : "lean_object *"});`);
 		lines.push(`LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`);
 		lines.push(`  uint32_t status = bridge_scalar_frame_validate(frame, ${types.length});`, "  if (status) return status;");
+		// This import also makes packaging reject prepared runtimes predating word slots.
+		if([...types, result].some(type => type === "usize" || type === "isize")) lines.push("  if (bridge_scalar_word_bits() != 32) return 6;");
 		for(const [index, type] of types.entries()) lines.push(`  if ((status = bridge_scalar_slot_validate(&frame->args[${index}], ${componentScalarTypes.indexOf(type)}))) return status;`);
 		for(const [index, type] of types.entries())
 		{
@@ -43,6 +46,7 @@ export const generateComponentScalarAdapters = abi => {
 		{
 			lines.push(`  frame->result.kind = ${componentScalarTypes.indexOf(result)};`);
 			if(result.startsWith("float")) lines.push("  memcpy(&frame->result.bits, &result, sizeof(result));");
+			else if(result === "isize") lines.push("  int32_t signed_result; memcpy(&signed_result, &result, sizeof(result));", "  frame->result.bits = (uint64_t)(int64_t)signed_result;");
 			else lines.push(`  frame->result.bits = ${result.startsWith("int") ? `(uint64_t)(int64_t)(${result}_t)` : "(uint64_t)"}result;`);
 			if(result === "char") lines.push("  if (result > 0x10ffff || (result >= 0xd800 && result <= 0xdfff)) return 6;");
 			lines.push("  return 0;");

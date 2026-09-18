@@ -12,7 +12,7 @@
 export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
-		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.record ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.ref.name === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
+		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.record ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
 		, ...surface.functions.map(fn => `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = surface.copy(site.type); return copy.ctype + (copy.aggregate ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [`${surface.copy(fn.declaration.result.type).ctype} *`]).concat("BridgeError *").join(", ")});`)
 	].join("\n");
 };
@@ -23,7 +23,7 @@ export const copiedPhpDefinitions = model => {
  * @param model - Admitted public type names and copied shapes.
  */
 export const copiedPhpChecks = model => model.surface.copies.map(copy => {
-	const lines = [], name = copy.ref.name, publicType = copy.publicType.startsWith("\\") ? copy.publicType : `\\${model.namespace}\\${copy.publicType}`;
+	const lines = [], name = copy.scalarName, publicType = copy.publicType.startsWith("\\") ? copy.publicType : `\\${model.namespace}\\${copy.publicType}`;
 	if(name === "unit") lines.push("if ($value !== null) throw new \\TypeError('Unit requires null');");
 	else if(name === "bool") lines.push("if (!is_bool($value)) throw new \\TypeError('Bool requires bool');");
 	else if(/^(?:u?int)(?:8|16|32|64)$/.test(name) && copy.publicType !== "\\Brick\\Math\\BigInteger")
@@ -54,7 +54,7 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
  * @param model - Admitted C and PHP types.
  */
 export const copiedPhpConversions = model => model.surface.copies.map(copy => {
-	const input = [], output = [], name = copy.ref.name, ns = `\\${model.namespace}\\`;
+	const input = [], output = [], name = copy.scalarName, ns = `\\${model.namespace}\\`;
 	input.push(`$out = $scope->allocate('${copy.ctype}');`);
 	if(name === "unit")
 	{ input.push("$out->cdata = 0;"); output.push("return null;"); }

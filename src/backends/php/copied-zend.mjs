@@ -14,7 +14,7 @@ import { copiedZendConversions } from "./copied-zend-conversions.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 
 const phpWire = model => model.surface.copies.map(copy => {
-	const name = copy.ref.name, ns = `\\${model.namespace}\\`;
+	const name = copy.scalarName, ns = `\\${model.namespace}\\`;
 	let input = "$value", output = "$value";
 	if(copy.publicType === "\\Brick\\Math\\BigInteger")
 	{ input = "(string) $value"; output = "\\Brick\\Math\\BigInteger::of($value)"; }

@@ -29,18 +29,20 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
 	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
-	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "float", "double"].includes(type.abi.cType)
-	  || !/^lean_box(?:_uint32|_uint64|_float32|_float)?$/.test(type.abi.box)
-	  || !/^lean_unbox(?:_uint32|_uint64|_float32|_float)?$/.test(type.abi.unbox)
+	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "size_t", "float", "double"].includes(type.abi.cType)
+	  || !/^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.box)
+	  || !/^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.unbox)
 	  || typeof type.abi.heap !== "boolean") fail("missing checked native representation");
-	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
+	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
 	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
 	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
 	const recurse = (child, copy = copied) => validateNativeType(child, depth + 1, copy);
 	if(type.kind === "primitive")
 	{
-		const spellings = ["Unit", "Bool", "UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "Nat", "Int", "Float32", "Float", "String", "ByteArray", "Char"];
+		const spellings = ["Unit", "Bool", "UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "Nat", "Int", "Float32", "Float", "String", "ByteArray", "Char", "USize", "ISize"];
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");
+		if(["usize", "isize"].includes(type.name) && (type.abi.cType !== "size_t" || type.abi.heap)) fail("platform integer requires the compiler's size_t representation");
+		if(type.abi.cType === "size_t" && !["usize", "isize"].includes(type.name)) fail("size_t is not a fixed-width primitive representation");
 	} else if(type.kind === "array") recurse(type.element, true);
 	else if(type.kind === "record")
 	{

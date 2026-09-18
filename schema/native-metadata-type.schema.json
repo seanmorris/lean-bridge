@@ -34,7 +34,9 @@
             "float64",
             "string",
             "bytes",
-            "char"
+            "char",
+            "usize",
+            "isize"
           ]
         },
         "lean": {
@@ -202,17 +204,18 @@
             "uint16_t",
             "uint32_t",
             "uint64_t",
+            "size_t",
             "float",
             "double"
           ]
         },
         "box": {
           "type": "string",
-          "pattern": "^lean_box(?:_uint32|_uint64|_float32|_float)?$"
+          "pattern": "^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$"
         },
         "unbox": {
           "type": "string",
-          "pattern": "^lean_unbox(?:_uint32|_uint64|_float32|_float)?$"
+          "pattern": "^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$"
         },
         "heap": {
           "type": "boolean"

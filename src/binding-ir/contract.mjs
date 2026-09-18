@@ -28,6 +28,8 @@ const PRIMITIVES = new Set([
 	, "string"
 	, "bytes"
 	, "char"
+	, "usize"
+	, "isize"
 ]);
 const TYPE_APPLICATIONS = new Set(["array", "option", "result", "tuple"]);
 const OWNERSHIP = new Set(["copy", "borrow", "lease", "transfer"]);

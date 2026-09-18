@@ -17,8 +17,6 @@ const validateSchema = new Ajv({ allErrors: true, strict: true }).compile(schema
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const sourceShapes = [
 	"list"
-	, "usize"
-	, "isize"
 	, "fin"
 	, "subtype"
 	, "dependent"

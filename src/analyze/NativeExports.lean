@@ -44,7 +44,7 @@ def primitives : List (Name × String) := [
   (``UInt32, "uint32"), (``UInt64, "uint64"), (``Int8, "int8"), (``Int16, "int16"),
   (``Int32, "int32"), (``Int64, "int64"), (``Nat, "nat"), (``Int, "int"),
   (``Float32, "float32"), (``Float, "float64"), (``String, "string"), (``ByteArray, "bytes"),
-  (``Char, "char")]
+  (``Char, "char"), (``USize, "usize"), (``ISize, "isize")]
 
 def reject (e : Expr) (reason : String) : MetaM α :=
   throwError "{reason}: {e}"
@@ -56,6 +56,7 @@ def abi (e : Expr) : MetaM Json := do
     else if lowered == Compiler.LCNF.ImpureType.uint16 then ("uint16_t", "")
     else if lowered == Compiler.LCNF.ImpureType.uint32 then ("uint32_t", "_uint32")
     else if lowered == Compiler.LCNF.ImpureType.uint64 then ("uint64_t", "_uint64")
+    else if lowered == Compiler.LCNF.ImpureType.usize then ("size_t", "_usize")
     else if lowered == Compiler.LCNF.ImpureType.float32 then ("float", "_float32")
     else if lowered == Compiler.LCNF.ImpureType.float then ("double", "_float")
     else if lowered == Compiler.LCNF.ImpureType.object ||

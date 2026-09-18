@@ -9,8 +9,13 @@
 
 static_assert(sizeof(bridge_scalar_slot) == 16, "scalar slot layout drift");
 static_assert(sizeof(bridge_scalar_frame) == 32, "scalar frame layout drift");
+static_assert(sizeof(size_t) == 4, "scalar-frame-v2 requires wasm32 Lean");
 static constexpr uint32_t copy_limit = 16 * 1024 * 1024;
 extern "C" uint32_t bridge_lean_runtime_status(void);
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_word_bits(void) {
+  return sizeof(size_t) * 8;
+}
 
 static bool in_heap(uintptr_t pointer, uint64_t bytes) {
   return pointer <= emscripten_get_heap_size() && bytes <= emscripten_get_heap_size() - pointer;
@@ -26,11 +31,13 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_frame_validate(bridge_sca
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_slot_validate(bridge_scalar_slot const *slot, uint32_t kind) {
-  if (slot->kind != kind || kind > 16 || (slot->flags & ~1u)) return 3;
+  if (slot->kind != kind || kind > 18 || (slot->flags & ~1u)) return 3;
   if (kind != 11 && slot->flags) return 3;
   if (kind == 0 && slot->bits) return 3;
   if (kind == 1 && slot->bits > 1) return 3;
   if (kind == 16 && (slot->bits > 0x10ffff || (slot->bits >= 0xd800 && slot->bits <= 0xdfff))) return 3;
+  if (kind == 17 && slot->bits > UINT32_MAX) return 3;
+  if (kind == 18 && ((int64_t)slot->bits < INT32_MIN || (int64_t)slot->bits > INT32_MAX)) return 3;
   if (kind >= 2 && kind <= 4 && slot->bits >= (1ull << (8u << (kind - 2)))) return 3;
   if (kind >= 6 && kind <= 8) {
     int64_t value = (int64_t)slot->bits;
