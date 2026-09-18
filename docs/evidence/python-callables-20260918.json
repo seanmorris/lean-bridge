@@ -1,0 +1,998 @@
+{
+  "schemaVersion": 1,
+  "profile": "native-library-v1",
+  "wordBits": 64,
+  "glibcFloor": "2.36",
+  "interpreter": "CPython 3.11.2",
+  "sources": [
+    {
+      "path": "tests/fixtures/onboarding/callables/Callables.lean",
+      "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+    },
+    {
+      "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+      "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+    },
+    {
+      "path": "tests/fixtures/callable-consumers/Python.lean",
+      "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
+    }
+  ],
+  "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
+  "signatures": [
+    {
+      "name": "Callables.callUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.twiceUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.makeUnit",
+      "parameters": [
+        "unit"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "unit"
+          ],
+          "result": "unit"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.twiceBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.makeBool",
+      "parameters": [
+        "bool"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bool"
+          ],
+          "result": "bool"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.twiceUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.makeUInt8",
+      "parameters": [
+        "uint8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint8"
+          ],
+          "result": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.twiceUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.makeUInt16",
+      "parameters": [
+        "uint16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint16"
+          ],
+          "result": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.twiceUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.makeUInt32",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.twiceUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.makeUInt64",
+      "parameters": [
+        "uint64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint64"
+          ],
+          "result": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.twiceInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.makeInt8",
+      "parameters": [
+        "int8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int8"
+          ],
+          "result": "int8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.twiceInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.makeInt16",
+      "parameters": [
+        "int16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int16"
+          ],
+          "result": "int16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.twiceInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.makeInt32",
+      "parameters": [
+        "int32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int32"
+          ],
+          "result": "int32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.twiceInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.makeInt64",
+      "parameters": [
+        "int64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int64"
+          ],
+          "result": "int64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.twiceNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.makeNat",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "nat"
+          ],
+          "result": "nat"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.twiceInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.makeInt",
+      "parameters": [
+        "int"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int"
+          ],
+          "result": "int"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.twiceFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.makeFloat32",
+      "parameters": [
+        "float32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float32"
+          ],
+          "result": "float32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.twiceFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.makeFloat",
+      "parameters": [
+        "float64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float64"
+          ],
+          "result": "float64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.twiceString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.makeString",
+      "parameters": [
+        "string"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "string"
+          ],
+          "result": "string"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.twiceBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.makeBytes",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bytes"
+          ],
+          "result": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Callables.callChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.twiceChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.makeChar",
+      "parameters": [
+        "char"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "char"
+          ],
+          "result": "char"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.twiceUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.makeUSize",
+      "parameters": [
+        "usize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "usize"
+          ],
+          "result": "usize"
+        }
+      }
+    },
+    {
+      "name": "Callables.callISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.twiceISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.makeISize",
+      "parameters": [
+        "isize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "isize"
+          ],
+          "result": "isize"
+        }
+      }
+    },
+    {
+      "name": "Callables.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.retainCallback",
+      "parameters": [
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.combine",
+      "parameters": [
+        "string",
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "string",
+              "uint64"
+            ],
+            "result": "string"
+          }
+        },
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "0024b533cb7b9282f52505051bf849a1324a5bd0be43f0075ab2a350f85c77e6",
+      "checks": 49933,
+      "compilerFreePath": true,
+      "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
+      "modelSha256": "34952f4f1ae08e25185d550c1311fb39e509d3bf77ac0619fe069cf9d0f7098d",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51490285,
+              "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "00e18f2d6b11b7b1d22fb7b6f400b5563cef57337b4e91cb7db0a1e73de64b29"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "callables-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "731a732e72fccf4bebf04f4c52e48db21dc646aeb909e068d779fdccbf7af4f0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "9b113e305b1192719c354075b5a6237d7e5488ac456c0dff9c7d88ab6b3ee93d"
+    },
+    {
+      "bindingIrSha256": "e214243b9fd7bf7f18d8f8d9c47b27e6bdc0381607aef616ceff3b94baef4a3d",
+      "checks": 49933,
+      "compilerFreePath": true,
+      "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
+      "modelSha256": "33eb0f8cc5f4ff31576a18089070e67486531be306e6538fc00789228c7b9aa7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51504320,
+              "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "cf461b9b249c343b1f3ffd6ada5fcc3184148dd4709cca64ddefe007b4f3f09e"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "callables-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "12360c829e9a5715ff1b7bc5f84390d1fd3b0861ab1a7b93b8743d143477ebd2",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "778cb30011bcd734195d53d85e069a0738857670d6226b73c72c1cabc7769d68"
+    }
+  ]
+}

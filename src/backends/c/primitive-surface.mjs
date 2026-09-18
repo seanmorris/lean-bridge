@@ -31,7 +31,7 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param ir - Authoritative canonical Binding IR.
  * @param options - Fixed compiled Lean profile, independent of the consumer process.
  * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
- * @param options.callables - Admit the C-only synchronous primitive callable adapter.
+ * @param options.callables - Admit the synchronous primitive callable adapter for implemented host projections.
  */
 export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");

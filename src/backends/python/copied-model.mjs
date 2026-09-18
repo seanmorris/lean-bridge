@@ -5,7 +5,7 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
-const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError invoke dispatch handle token".split(" "));
+const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure invoke dispatch handle token".split(" "));
 const primitive = { char: ["str", "c_uint32"], unit: ["None", "c_uint8"], bool: ["bool", "c_bool"], uint8: ["int", "c_uint8"], uint16: ["int", "c_uint16"], uint32: ["int", "c_uint32"], uint64: ["int", "c_uint64"], int8: ["int", "c_int8"], int16: ["int", "c_int16"], int32: ["int", "c_int32"], int64: ["int", "c_int64"], float32: ["float", "c_float"], float64: ["float", "c_double"], nat: ["int"], int: ["int"], string: ["str"], bytes: ["bytes"] };
 
 /**
@@ -25,7 +25,7 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  */
 export const compileCopiedPythonModel = ir => {
-	const surface = compilePrimitiveCSurface(ir), packageDir = `lean_${surface.prefix}`;
+	const surface = compilePrimitiveCSurface(ir, { callables: true }), packageDir = `lean_${surface.prefix}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -44,6 +44,14 @@ export const compileCopiedPythonModel = ir => {
 		copy.publicType = copy.record ? copy.publicName : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
 		copy.inputType = copy.element ? `_Array${copy.index}` : copy.publicType;
 		copy.inputExpression = copy.element ? `tuple[${copy.element.inputType}, ...] | list[${copy.element.inputType}]` : null;
+	}
+	for(const [index, callback] of [...surface.callbacks.values()].entries())
+	{
+		const signature = callback.type.callable;
+		callback.index = index;
+		callback.ctype = `_B${index}`;
+		callback.inputType = `_Callable[[${signature.parameters.map(site => surface.copy(site.type).inputType).join(", ")}], ${surface.copy(signature.result.type).publicType}]`;
+		callback.publicType = `LeanClosure[[${signature.parameters.map(site => surface.copy(site.type).inputType).join(", ")}], ${surface.copy(signature.result.type).publicType}]`;
 	}
 	for(const fn of surface.functions)
 	{

@@ -1,6 +1,6 @@
 # Build and publish Python packages
 
-Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. The separate Alpha projection remains available for its resource and callback fixture.
+Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. Ordinary wheels also support synchronous primitive callbacks and returned Lean closures. The separate Alpha projection remains available for its resource fixture.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over the 16 copied primitives, arrays and acyclic records. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays and acyclic records, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -36,6 +36,26 @@ Repeat `--target` to combine PyPI with npm, CPAN, C, C++, NuGet, Maven, RubyGems
 Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
+
+## Export callbacks and closures
+
+Callback arguments and results can use any of the nineteen primitives. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
+
+For example, add these definitions to your Lean module:
+
+```lean
+namespace Callables
+def callNat (value : Nat) (callback : Nat → Nat) : Nat := callback value
+def makeString (captured : String) : Bool → String → String :=
+  fun useCaptured value => if useCaptured then captured else value
+end Callables
+```
+
+Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-bridge.exports.json`. That arity leaves the final two arguments in the returned closure. For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`.
+
+Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. Combined callable builds can select C, CPAN and PyPI; the other targets still reject these signatures.
+
+Run the [installed callable example](../consume/python.md#callbacks-and-returned-lean-closures) before publishing. The [acceptance record](../evidence/python-callables-20260918.md) includes exact wheel identities, source-hidden offline installation and lifetime checks.
 
 ## Choose the package name and platform
 

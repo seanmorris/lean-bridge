@@ -37,7 +37,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity);
-	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: targets.every(target => target === "c") }), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: targets.every(target => ["c", "pypi"].includes(target)) }), p = surface.prefix;
 	const root = join(working, "native/c-binding");
 	const files = { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(targets.includes("cpp"))

@@ -9,6 +9,7 @@ export const copiedPythonHelpers = `class _Scope:
     def __init__(self):
         self.remaining = 16 * 1024 * 1024
         self.owners = []
+        self.failure = None
 
     def charge(self, count, width=1):
         if count < 0 or width < 1 or count > self.remaining // width:
@@ -23,6 +24,7 @@ export const copiedPythonHelpers = `class _Scope:
 
     def close(self):
         self.owners.clear()
+        self.failure = None
 
 def _integer(value, minimum, maximum):
     if type(value) is not int:
@@ -51,7 +53,9 @@ def _read(data, length, scope, width=1):
 class _Error(_c.Structure):
     _fields_ = [("code", _c.c_int), ("message", _c.c_void_p), ("message_length", _c.c_size_t)]
 
-def _check(status, error):
+def _check(status, error, scope=None):
+    if scope is not None and scope.failure is not None:
+        raise scope.failure
     if status:
         message = _c.string_at(error.message, min(error.message_length, 16384)).decode("utf-8", "replace") if error.message else "Native Lean call failed"
         raise LeanBridgeError(status, message)

@@ -1088,7 +1088,8 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
  */
 export const compilePythonPackageModel = ir => {
 	validateBindingIr(ir);
-	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+	const nativeCallables = ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback"));
+	if(ir.declarations.every(declaration => declaration.kind === "function" && (nativeCallables || [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))))
 		return Object.freeze({ ir, copied: compileCopiedPythonModel(ir) });
 	validateCoverage(ir);
 	const packageDir = packageName(ir);
