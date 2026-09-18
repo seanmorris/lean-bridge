@@ -28,7 +28,7 @@ const typeScriptType = (typeRef, typeMap) => {
 		if(typeRef.name === "unit") return "void";
 		if(typeRef.name === "bool") return "boolean";
 		if(new Set(["uint64", "int64", "nat", "int"]).has(typeRef.name)) return "bigint";
-		if(typeRef.name === "string") return "string";
+		if(typeRef.name === "string" || typeRef.name === "char") return "string";
 		if(typeRef.name === "bytes") return "Uint8Array";
 		return "number";
 	}
@@ -596,6 +596,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertFloat32 = assertNumber;"
 		, "export const assertFloat64 = assertNumber;"
 		, "export const assertString = (value, path) => { if (typeof value !== \"string\") invalid(path, \"string\"); return value; };"
+		, "export const assertChar = (value, path) => { if (typeof value !== \"string\" || value.length === 0 || value.length > 2) invalid(path, \"one Unicode scalar\"); const point = value.codePointAt(0); if ((point >= 0xd800 && point <= 0xdfff) || value.length !== (point > 0xffff ? 2 : 1)) invalid(path, \"one Unicode scalar\"); return value; };"
 		, "export const assertBytes = (value, path) => { if (!(value instanceof Uint8Array)) invalid(path, \"Uint8Array\"); return value; };"
 		, ""
 	];

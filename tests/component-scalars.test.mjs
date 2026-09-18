@@ -64,6 +64,8 @@ for(const bits of [8, 16, 32, 64]) {
 for(const name of ["f32", "f64"]) for(const value of [1.25, -0, Infinity, -Infinity, NaN]) assert.ok(Object.is(api[name](value), value));
 for(const value of ["", "🌱\\0end", "λ中文é"]) assert.equal(api.text(value), value);
 assert.throws(() => api.text("\\ud800"), /surrogate/);
+for(const value of ["a", "\\0", "🌱", "\\u{10ffff}"]) assert.equal(api.character(value), value);
+for(const value of ["", "ab", "e\\u0301", "\\ud800", "\\udfff", 65]) assert.throws(() => api.character(value), TypeError);
 const input = new Uint8Array([0, 128, 255]);
 const output = api.bytes(input); assert.deepEqual(output, input); assert.notEqual(output, input);
 input[0] = 9; assert.equal(output[0], 0);

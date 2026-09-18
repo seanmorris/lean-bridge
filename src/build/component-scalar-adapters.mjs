@@ -7,10 +7,11 @@ import { assertComponentSignature, componentScalarTypes } from "../abi/component
 
 const objectType = type => new Set(["unit", "nat", "int", "string", "bytes"]).has(type);
 const cType = type => objectType(type) ? "lean_object *"
-	: type === "bool" ? "uint8_t"
-		: type === "float32" ? "float"
-			: type === "float64" ? "double"
-				: `${type.replace(/^int/, "uint")}_t`;
+	: type === "char" ? "uint32_t"
+		: type === "bool" ? "uint8_t"
+			: type === "float32" ? "float"
+				: type === "float64" ? "double"
+					: `${type.replace(/^int/, "uint")}_t`;
 
 /**
  * Generates direct typed calls to Lean's exported, owned-argument wrappers.
@@ -43,6 +44,7 @@ export const generateComponentScalarAdapters = abi => {
 			lines.push(`  frame->result.kind = ${componentScalarTypes.indexOf(result)};`);
 			if(result.startsWith("float")) lines.push("  memcpy(&frame->result.bits, &result, sizeof(result));");
 			else lines.push(`  frame->result.bits = ${result.startsWith("int") ? `(uint64_t)(int64_t)(${result}_t)` : "(uint64_t)"}result;`);
+			if(result === "char") lines.push("  if (result > 0x10ffff || (result >= 0xd800 && result <= 0xdfff)) return 6;");
 			lines.push("  return 0;");
 		}
 		lines.push("}", "");

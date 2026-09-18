@@ -403,7 +403,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_npm\.outcome != 'success'/);
   assert.match(workflow, /steps\.consumer\.outcome == 'success' && steps\.type_corpus_npm\.outcome == 'success'/);
   assert.match(workflow, /name: type-corpus-npm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /node --test tests\/component-char\.test\.mjs/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_python/);
   assert.match(workflow, /npm run test:type-corpus:python/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);

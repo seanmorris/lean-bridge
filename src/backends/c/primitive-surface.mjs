@@ -38,6 +38,7 @@ export const compilePrimitiveCSurface = ir => {
 		if(copies.has(key)) return copies.get(key);
 		visiting.add(key);
 		let fields = [], element = null, record = null;
+		if(ref.kind === "primitive" && ref.name === "char") rejectPrimitiveSurface(declaration, "Char conversion is not yet implemented by the native copied-value adapters");
 		if(ref.kind === "primitive" && componentScalarTypes.includes(ref.name)) { /* Closed copied leaf. */ }
 		else if(ref.kind === "apply" && ref.constructor === "array" && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
 		else if(ref.kind === "named" && (record = ir.types.find(type => type.id === ref.id))?.kind === "record" && !record.typeParameters.length)

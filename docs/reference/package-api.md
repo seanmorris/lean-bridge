@@ -43,7 +43,7 @@ The package exports the functions, not its commutativity theorem. [Proofs and as
 The [scalar fixture](../../tests/fixtures/onboarding/scalars/OnboardingScalars.lean) covers zero-argument functions, all supported primitive types, and a mixed four-argument function. Its generated declarations are:
 
 ```ts
-// Generated from Binding IR SHA-256 6183f90d4f0887e12c60a7dc91918a92f8e1aa181a2e76efd9fcbab1eef6b50a.
+// Generated from Binding IR SHA-256 0ce10ba6d2133a31c315021a899c4c118d2b34361bc7759a1e8916c9e5662ef9.
 /**
  * Add arbitrary-precision natural numbers.
  */
@@ -63,6 +63,11 @@ export declare function boolean(arg0: boolean): boolean;
  * Copy a byte array.
  */
 export declare function bytes(arg0: Uint8Array): Uint8Array;
+
+/**
+ * Preserve one Unicode scalar value.
+ */
+export declare function character(arg0: string): string;
 
 /**
  * Preserve an IEEE single-precision value.
@@ -144,6 +149,7 @@ declare const bindings: Readonly<{
   readonly answer: typeof answer;
   readonly boolean: typeof boolean;
   readonly bytes: typeof bytes;
+  readonly character: typeof character;
   readonly f32: typeof f32;
   readonly f64: typeof f64;
   readonly i16: typeof i16;

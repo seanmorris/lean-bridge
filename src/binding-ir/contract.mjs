@@ -27,6 +27,7 @@ const PRIMITIVES = new Set([
 	, "float64"
 	, "string"
 	, "bytes"
+	, "char"
 ]);
 const TYPE_APPLICATIONS = new Set(["array", "option", "result", "tuple"]);
 const OWNERSHIP = new Set(["copy", "borrow", "lease", "transfer"]);

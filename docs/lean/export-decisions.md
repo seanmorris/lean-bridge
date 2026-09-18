@@ -55,9 +55,12 @@ Ordinary npm components support pure functions with zero to 32 primitive argumen
 | `Nat`, `Int` | Arbitrary-precision `bigint`; `Nat` must be nonnegative |
 | `Float32`, `Float` | `number`, including NaN, infinities, and negative zero |
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
+| `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
 
 Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
+
+`Char` is currently npm-only. The native and PHP-Wasm profiles below retain the original sixteen primitive mappings.
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
@@ -69,7 +72,7 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 ## Native C and C++ exports
 
-Ordinary `c` and `cpp` builds accept the same 16 pure primitive parameter/result types listed above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
+Ordinary `c` and `cpp` builds accept the 16 pure primitive parameter/result types above other than `Char`, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
 
 The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Resources, callbacks, effects and asynchronous functions remain unsupported on this path. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ still requires a primitive-only API.
 

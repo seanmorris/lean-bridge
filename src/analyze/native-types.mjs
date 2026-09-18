@@ -39,7 +39,7 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 	const recurse = (child, copy = copied) => validateNativeType(child, depth + 1, copy);
 	if(type.kind === "primitive")
 	{
-		const spellings = ["Unit", "Bool", "UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "Nat", "Int", "Float32", "Float", "String", "ByteArray"];
+		const spellings = ["Unit", "Bool", "UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "Nat", "Int", "Float32", "Float", "String", "ByteArray", "Char"];
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");
 	} else if(type.kind === "array") recurse(type.element, true);
 	else if(type.kind === "record")

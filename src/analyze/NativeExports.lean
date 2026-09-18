@@ -43,7 +43,8 @@ def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``UInt8, "uint8"), (``UInt16, "uint16"),
   (``UInt32, "uint32"), (``UInt64, "uint64"), (``Int8, "int8"), (``Int16, "int16"),
   (``Int32, "int32"), (``Int64, "int64"), (``Nat, "nat"), (``Int, "int"),
-  (``Float32, "float32"), (``Float, "float64"), (``String, "string"), (``ByteArray, "bytes")]
+  (``Float32, "float32"), (``Float, "float64"), (``String, "string"), (``ByteArray, "bytes"),
+  (``Char, "char")]
 
 def reject (e : Expr) (reason : String) : MetaM α :=
   throwError "{reason}: {e}"

@@ -18,8 +18,8 @@
     },
     {
       "path": "OnboardingScalars.lean",
-      "bytes": 1594,
-      "sha256": "720a371113fdf93ac16a2e54dd37af0ccba7760013c9f18e8c85c1e33940b3eb"
+      "bytes": 1681,
+      "sha256": "2ec444b0a5867919819ba54719522ed0ea752477d6027eb3aa43fdf8aa7bd2b8"
     },
     {
       "path": "package.json",
@@ -250,6 +250,58 @@
         "source": {
           "producer": "lean",
           "declaration": "OnboardingScalars.bytes",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingScalars.character",
+        "name": "character",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingScalars.character",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "char"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "char"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Preserve one Unicode scalar value. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingScalars.character",
           "extensions": {
             "lean-lang.org/theorem-references": []
           }

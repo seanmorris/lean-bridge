@@ -28,6 +28,10 @@ Construct large values as `bigint` before calling the package. `BigInt(900719925
 
 Strings accept Unicode scalar values and embedded NUL characters. Unpaired UTF-16 surrogates are rejected rather than silently replaced. String lengths and match offsets depend on the particular API: Aho–Corasick's local adapter works with bytes, not JavaScript character positions.
 
+`Char` accepts a JavaScript `string` containing exactly one Unicode scalar. `"a"`, `"🌱"`, `"\0"`, and a standalone combining character are valid. Empty strings, unpaired surrogates, and multi-scalar strings such as `"ab"` or `"e\u0301"` throw `TypeError`. The adapter preserves the scalar without normalization. A supplementary character occupies two UTF-16 code units but is still one `Char`.
+
+`Char` currently works in npm parameter and result positions, including compiler-checked reviewed contracts. Native and PHP-Wasm mappings, copied fields, arrays and callable positions remain tracked in VO1218.
+
 `ByteArray` accepts a `Uint8Array`. The call copies the input and returns an owned `Uint8Array`; the result is not a view into the Lean heap. Text, bytes, and integer payloads share the per-value {{COPY_LIMIT}} MiB copy limit. Total memory also includes runtime storage, all arguments, results, and temporary allocations.
 
 ## Collections and resource profiles

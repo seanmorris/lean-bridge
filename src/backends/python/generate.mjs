@@ -140,6 +140,9 @@ const isIdentity = (ir, ref) => {
 };
 
 const validateCoverage = ir => {
+	for(const ref of collectRefs(ir))
+		if(ref.kind === "primitive" && ref.name === "char")
+			fail("unsupported-primitive", "Python projection does not define char", { primitive: ref.name });
 	for(const error of ir.errors)
 	{
 		if(error.payload !== null)

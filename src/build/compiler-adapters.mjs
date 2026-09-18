@@ -21,6 +21,7 @@ const primitiveLeanTypes = new Map([
 	, ["float64", "Float"]
 	, ["string", "String"]
 	, ["bytes", "ByteArray"]
+	, ["char", "Char"]
 ]);
 
 /**

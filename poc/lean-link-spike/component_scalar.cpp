@@ -26,10 +26,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_frame_validate(bridge_sca
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_slot_validate(bridge_scalar_slot const *slot, uint32_t kind) {
-  if (slot->kind != kind || kind > 15 || (slot->flags & ~1u)) return 3;
+  if (slot->kind != kind || kind > 16 || (slot->flags & ~1u)) return 3;
   if (kind != 11 && slot->flags) return 3;
   if (kind == 0 && slot->bits) return 3;
   if (kind == 1 && slot->bits > 1) return 3;
+  if (kind == 16 && (slot->bits > 0x10ffff || (slot->bits >= 0xd800 && slot->bits <= 0xdfff))) return 3;
   if (kind >= 2 && kind <= 4 && slot->bits >= (1ull << (8u << (kind - 2)))) return 3;
   if (kind >= 6 && kind <= 8) {
     int64_t value = (int64_t)slot->bits;

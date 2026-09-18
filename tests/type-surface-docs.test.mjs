@@ -109,9 +109,11 @@ test("table generation rejects missing, overlapping and foreign conversion-note 
 	assert.throws(() => replaceTypeSection("No generated heading", "replacement"), /exactly one/u);
 	assert.throws(() => replaceTypeSection("### Type conversions\n### Type conversions\n", "replacement"), /exactly one/u);
 	const candidate = structuredClone(inventory);
-	candidate.document.observations[0].conversionNotes = { char: "Wrong shape's mapping." };
+	const observation = candidate.document.observations[0];
+	const foreign = candidate.document.shapes.find(shape => !observation.shapes.includes(shape.id));
+	observation.conversionNotes = { [foreign.id]: "Wrong shape's mapping." };
 	assert.throws(() => renderTypeTable(candidate, ["node-javascript"], "types.md"), /conversion note outside observed shapes/u);
-	candidate.document.observations[0].conversionNotes = undefined;
+	observation.conversionNotes = undefined;
 	candidate.document.shapes.pop();
 	assert.throws(() => renderTypeTable(candidate, ["node-javascript"], "types.md"));
 });

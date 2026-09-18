@@ -163,6 +163,8 @@ Run `npx tsc --project tsconfig.json` again, but do not execute `dist/typecheck.
 
 ## Values and cleanup
 
+For a Lean `Char` parameter, pass a string containing one Unicode scalar, such as `"a"`, `"🌱"`, or `"\0"`. A `Char` result uses the same representation. Empty strings, unpaired UTF-16 surrogates, and strings containing multiple scalars throw `TypeError`. TypeScript declares these values as `string`; the generated API checks the scalar constraint at runtime. See [characters and text](reference/types.md#floating-point-text-and-bytes).
+
 ### Type conversions
 
 Profiles: Node JavaScript, TypeScript, Browser, React, Worker. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -197,7 +199,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering. |
-| `Char` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
+| `Char` | `string` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
@@ -241,6 +243,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 | `Float32` | `number` | Rounds to IEEE single precision; NaN, infinities, and negative zero are accepted. |
 | `Float` | `number` | IEEE double precision; NaN, infinities, and negative zero are accepted. |
 | `String` | `string` | Copied as UTF-8. Embedded NUL is allowed; unpaired UTF-16 surrogates are rejected. |
+| `Char` | `string` | Exactly one Unicode scalar. Supplementary characters and NUL are allowed; empty strings, multiple scalars and unpaired surrogates are rejected. |
 | `ByteArray` | `Uint8Array` | Inputs and results are copied, not views into the Lean heap. |
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.

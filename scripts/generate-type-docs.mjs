@@ -192,7 +192,7 @@ export async function renderTypeDocuments({ root })
 			, ""
 			, table(["Lean type or source form", "Meaning", "Bounds and representation", "Ownership, absence and failure"], shapeRows)
 			, ""
-			, "Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. npm accepts sixteen primitive parameter/result types; native and PHP-Wasm also accept copied arrays and acyclic records."
+			, "Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. npm accepts seventeen primitive parameter/result types, including [Char](../evidence/char-npm-20260918.md). Native and PHP-Wasm accept the original sixteen primitives, copied arrays and acyclic records; their Char adapters remain unfinished."
 			, ""
 			, "The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json)."
 		].join("\n")

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.3.0",
+  "contractVersion": "0.4.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -14,7 +14,7 @@
   "states": {"unreviewed":"No type-specific audit has been recorded for this profile, position and path.","inspected":"Implementation was read; this is not an executed test.","passed":"The named check passed for the recorded scope and artifact.","limited":"The check covers only the explicitly recorded subset.","rejected":"The path explicitly rejects this shape. Required delivery remains outstanding."},
   "irFacets": {
     "typeReference": ["primitive","named","parameter","apply"],
-    "primitive": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","nat","int","float32","float64","string","bytes"],
+    "primitive": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","nat","int","float32","float64","string","bytes","char"],
     "constructor": ["array","option","result","tuple"],
     "namedKind": ["record","resource","alias","callback","variant"],
     "declaration": ["function","constructor","method","static-method","property"],
@@ -113,7 +113,7 @@
     {"id":"resource","lean":"Identity-bearing value","family":"identity","ir":"namedKind:resource","meaning":"A nominal value retained in the shared runtime.","bounds":"Preserve cross-component identity and explicit disposal; reject stale or foreign resources."},
     {"id":"callback","lean":"Host function passed to Lean","family":"identity","ir":"namedKind:callback","meaning":"A host callable with a declared signature and lifetime.","bounds":"Preserve argument/result types, re-entry, invocation count, self-disposal and errors."},
     {"id":"list","lean":"List α","family":"collection","ir":null,"meaning":"A finite ordered Lean list.","bounds":"Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering."},
-    {"id":"char","lean":"Char","family":"primitive","ir":null,"meaning":"A Unicode scalar value.","bounds":"0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string."},
+    {"id":"char","lean":"Char","family":"primitive","ir":"primitive:char","meaning":"A Unicode scalar value.","bounds":"0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string."},
     {"id":"usize","lean":"USize","family":"primitive","ir":null,"meaning":"An unsigned platform-sized Lean integer.","bounds":"Bind width to the compiled Lean target, not the consumer process; reject out-of-range values."},
     {"id":"isize","lean":"ISize","family":"primitive","ir":null,"meaning":"A signed platform-sized Lean integer.","bounds":"Bind signed width to the compiled Lean target and record architecture explicitly."},
     {"id":"fin","lean":"Fin n","family":"checked-value","ir":null,"meaning":"A natural value strictly below a bound.","bounds":"Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value."},
@@ -157,11 +157,138 @@
   ],
   "evidence": [
     {
+      "id": "npm-installed-char",
+      "kind": "installed",
+      "revision": "80a9846d1fa78a7198af257de6034c375a5cd9fa",
+      "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-char.test.mjs; node --test tests/component-char-contract.test.mjs tests/component-scalars.test.mjs",
+      "scope": "VO1218 Char npm milestone based on 80a9846, bound by source and archive hashes. Ordinary-source and compiler-checked reviewed contracts compile fresh Lean and install offline after relocating the source. Node JavaScript, strict TypeScript, plain browsers, React StrictMode and dedicated workers execute Char parameters and results. Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 each run 1,126 assertions per context and source path; Node runs the same checks and five strict TypeScript calls. Contract and real wasm32 slot validators exhaust the Unicode code-point range and reject surrogates, invalid flags and oversized slots. A reviewed UInt32-for-Char substitution is rejected. See docs/evidence/char-npm-20260918.md. No field, callback, closure, native or PHP-Wasm Char promotion.",
+      "files": [
+        {
+          "path": "docs/evidence/char-npm-20260918.md",
+          "sha256": "fb17e9f3d674fbb21498647802008cef3d19709ff4d70066c6835dd5ca67cbff"
+        },
+        {
+          "path": "src/abi/component-scalars.mjs",
+          "sha256": "6965892637586b8ea6681063c0e427b4b75289a43b36b88507727b860b427095"
+        },
+        {
+          "path": "src/binding-ir/contract.mjs",
+          "sha256": "f600e86467ef44262df89f22a0a089ec7e32fd3b3ecaeb2a55a17a834477d9d7"
+        },
+        {
+          "path": "schema/binding-ir.schema.json",
+          "sha256": "f5a881d3c576881083540ad3bcb2a5b9f75fc1ad56587669482b29634d7f9c6e"
+        },
+        {
+          "path": "schema/elaborated-export-metadata.schema.json",
+          "sha256": "0259e174880fcf01b1176f1cf17bd3ebc40c9176aa95d2bf75db106efcd51f24"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "2e6d78242f1ca999f3d8c49b3b3e2aed9140ee232e7644cd3085972916702658"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "93641b511a68af4d3d445d67f9edc4f5596e84ec79bac1bb35972087a89b574e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "544f496b26646e4bbf2bd10f4fc2f5f7602f7868c4f0e23c7a1f60b0cd871223"
+        },
+        {
+          "path": "src/analyze/lean-project.mjs",
+          "sha256": "84ccf4506eb4035bb9c5ee6162e35c5bb6bf51189723e0bd2cd02fd3c9c7b7a7"
+        },
+        {
+          "path": "src/build/compiler-adapters.mjs",
+          "sha256": "f58e4e2b47470d29ea27c3d2989b3e880adef38d3c91c45c6b32d060f6429865"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "0d50b682b5c3d5ae3e0aa8ad7db29bf65e228a07f64c1376cc80c03b40e0ac69"
+        },
+        {
+          "path": "src/release/component-runtime.mjs",
+          "sha256": "e00f35ab593d9216d09b3b88fcae4123d1defaa7e86155c833171c3d8161ef09"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "da777b6eb42154c11ea576348e9349061c53627537695b35845b24f22db58856"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.cpp",
+          "sha256": "f796d4b40e9c8d67ea1b2e2eedb69362e854e6ae9ba17efb355775f1f76cfbec"
+        },
+        {
+          "path": "tests/component-char.test.mjs",
+          "sha256": "9c58fa33a386fe09ac368b0abe77272dcf556b35875d487278797a91bdca6902"
+        },
+        {
+          "path": "tests/component-char-contract.test.mjs",
+          "sha256": "a4d2893c60ec267ec6f2b329b2847cedf58d1b6f91e7237c755d39014ce1cc16"
+        },
+        {
+          "path": "tests/helpers/char-fixture.mjs",
+          "sha256": "db7a12d180ee20c5a2390749d3094af8065333950472bb5a1caf6332acb9154a"
+        },
+        {
+          "path": "tests/fixtures/characters/consumer.mjs",
+          "sha256": "79958b02171b3a32e860cf1a96b6e3d013ac9c621817740cefc5e4ee48d2dc95"
+        },
+        {
+          "path": "tests/fixtures/onboarding/characters/Characters.lean",
+          "sha256": "65eb3d1c304ffe620f7f154dcc63a354ed70893360b81862ddd13a7231a5e792"
+        },
+        {
+          "path": "tests/fixtures/onboarding/characters/lakefile.toml",
+          "sha256": "c2ffeb07b50ba2ccd2eae7da78184b8f77753aa5bc5f61e846e15be7eb2944cc"
+        },
+        {
+          "path": "tests/fixtures/onboarding/characters/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/characters/package.json",
+          "sha256": "5be4677ceb81c204673adec19eea9c96842d211ef954cda1b5b8f1fa0162d9f9"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "build/char-npm/report.json",
+          "sha256": "361ae37e544c40ce33cafa36d12df89037a516087651df95f776bd310a62c172"
+        },
+        {
+          "path": "build/char-npm/ordinary-source/onboarding-characters-1.0.0.tgz",
+          "sha256": "1c7d8492cd82e5b9b52b95d023aafebe5fea04da883cfa7cf730126cf8eeab53"
+        },
+        {
+          "path": "build/char-npm/ordinary-source/lean-bridge-runtime-0.0.0-abi2.8dfe9efdd9d467fc17983f8e55d302f77e25d7b2a47effb99b2b60dcc512ae37.tgz",
+          "sha256": "ad1d647d69c3b0e857b2b4ff23c01edb101798eea99af9cb42d0fda4cf032a17"
+        },
+        {
+          "path": "build/char-npm/ordinary-source/component-package-receipt.json",
+          "sha256": "34d23754a14b3a3a51c78142a89d441cb58b96d3efb22040357b3e9085465a22"
+        },
+        {
+          "path": "build/char-npm/reviewed-ir/onboarding-characters-1.0.0.tgz",
+          "sha256": "dc5a49b790b08e977a9655d101d076b1c62d1c7fcf68b8daa5dec45710597262"
+        },
+        {
+          "path": "build/char-npm/reviewed-ir/lean-bridge-runtime-0.0.0-abi2.8dfe9efdd9d467fc17983f8e55d302f77e25d7b2a47effb99b2b60dcc512ae37.tgz",
+          "sha256": "ad1d647d69c3b0e857b2b4ff23c01edb101798eea99af9cb42d0fda4cf032a17"
+        },
+        {
+          "path": "build/char-npm/reviewed-ir/component-package-receipt.json",
+          "sha256": "ebfbcbf2c14040ee827ec6b2944c8eed21d62684dc4abb4502372b1cc9289d54"
+        }
+      ]
+    },
+    {
       "id": "php-wasm-installed-copied",
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -177,7 +304,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -316,7 +443,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -328,7 +455,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -435,7 +562,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -447,7 +574,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -542,7 +669,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -554,7 +681,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -582,7 +709,7 @@
         },
         {
           "path": "src/backends/python/generate.mjs",
-          "sha256": "3acf71b3b314004e16bf26f8a9746cad35ae8e7d04d8dfa4c77b41444f58fe51"
+          "sha256": "5800336ad2e9f7d99f25ebb5040622b689683aa75cfcac5a9741c629549e8acd"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -633,7 +760,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -645,7 +772,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -724,7 +851,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -736,7 +863,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -819,7 +946,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -831,7 +958,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -926,7 +1053,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -938,7 +1065,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -1021,7 +1148,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -1033,7 +1160,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"
+          "sha256": "87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1045,7 +1172,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -1132,7 +1259,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -1172,11 +1299,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"
+          "sha256": "87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -1239,7 +1366,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
       "files": [
         {"path":"src/analyze/semantic-model.mjs","sha256":"6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"},
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
@@ -1272,13 +1399,13 @@
         {"path":"scripts/check-perl-prepared-install.mjs","sha256":"f67c433bd1c037005332d61a91083a734db64d936d96c9453a5f80f199829f5c"},
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "85389b600e40db0abb1d5c34666b92a9054bf973c0403c2e68eefcd9189c93ce"
+          "sha256": "93641b511a68af4d3d445d67f9edc4f5596e84ec79bac1bb35972087a89b574e"
         },
         {"path":"src/analyze/native-metadata.mjs","sha256":"4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"},
-        {"path":"src/analyze/native-types.mjs","sha256":"70f5f9c4d080eddf778b4f34782d8135fefe45d3a921ab6e820f73aa475502c1"},
+        {"path":"src/analyze/native-types.mjs","sha256":"544f496b26646e4bbf2bd10f4fc2f5f7602f7868c4f0e23c7a1f60b0cd871223"},
         {"path":"src/analyze/elaborated-metadata.mjs","sha256":"14e6a8bd90bcc243bdb0b6f727822ed8365867022a2aaef6b408635abf8cb475"},
-        {"path":"schema/elaborated-export-metadata.schema.json","sha256":"94cb3b08ccb3df8df6b48c3216c32e1184c8295f7ee30a793cd785e493eab0af"},
-        {"path":"schema/native-metadata-type.schema.json","sha256":"06219659d15d0dda06f86c4664e6bf2f0f20af267a1085032633e4f875cb42d3"},
+        {"path":"schema/elaborated-export-metadata.schema.json","sha256":"0259e174880fcf01b1176f1cf17bd3ebc40c9176aa95d2bf75db106efcd51f24"},
+        {"path":"schema/native-metadata-type.schema.json","sha256":"2e6d78242f1ca999f3d8c49b3b3e2aed9140ee232e7644cd3085972916702658"},
         {
           "path": "src/build/elaborated-component.mjs",
           "sha256": "143ed30dc44cca981591deb5b01260e77c0fc3260771f0f396c0e052d9b1ff72"
@@ -1408,11 +1535,11 @@
       "kind": "installed",
       "revision": "2249a33163c5943f2ffb8dea0e61fce68e404c37",
       "command": "node scripts/check-reference-packages.mjs --tutorial PREPARED_TUTORIAL --scalars PREPARED_SCALARS --output NEW_DIRECTORY; node --test tests/component-scalars.test.mjs",
-      "scope": "Recorded installed scalar acceptance and exact archive identities from 9 September 2026. The scalar suite was also rerun successfully on 10 September while starting VO1213. These archives identify the recorded acceptance, not a newly published release.",
+      "scope": "Recorded installed scalar acceptance and exact archive identities from 9 September 2026. The scalar suite was also rerun successfully on 10 September while starting VO1213. These archives identify the recorded acceptance, not a newly published release. The Char milestone reruns the installed scalar suite, including all sixteen previous types and added Char examples. These historical archive identities remain unchanged; the new Char archives and context-specific checks are recorded separately in npm-installed-char.",
       "files": [
         {"path":"docs/evidence/reference-documentation-20260909.md","sha256":"319a3e136f3b409a51bf86d49e02057b48c43453573079fd77556e1f6450c889"},
-        {"path":"tests/component-scalars.test.mjs","sha256":"6a7f57432888857d49c0b9e7417c22a4bf2f357fa77847a54ea395b8e9056561"},
-        {"path":"tests/fixtures/onboarding/scalars/OnboardingScalars.lean","sha256":"720a371113fdf93ac16a2e54dd37af0ccba7760013c9f18e8c85c1e33940b3eb"}
+        {"path":"tests/component-scalars.test.mjs","sha256":"430e473ecd6038bd8d0b836c507d727e5218d2ef8ddd1cc50a631b55e8a81487"},
+        {"path":"tests/fixtures/onboarding/scalars/OnboardingScalars.lean","sha256":"2ec444b0a5867919819ba54719522ed0ea752477d6027eb3aa43fdf8aa7bd2b8"}
       ],
       "artifacts": [
         {"path":"onboarding-scalars-1.0.0.tgz","sha256":"1787339d72344b929821a93503e89fb3372c37d8d11cf2fe71bca4714175b85f"},
@@ -1424,18 +1551,18 @@
       "kind": "inspection",
       "revision": "445502a10f0ee7478c40e1d0ee8cbd29e09e0cbc",
       "command": "Inspect the source analyzer, scalar guard, generated declarations, compiled adapters and npm package builder; node --test tests/lean-project-analyzer.test.mjs.",
-      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md.",
+      "scope": "Ordinary pure primitive signatures and the compound-signature guard in the existing npm pipeline. The asymmetric Except regression checks parameter/result argument order while the guard still rejects compilation. The npm settings and locked Lake follow-ups preserve these guards and rerun analyzer and installed scalar tests. Locked dependency acceptance adds relocated offline npm builds and installed UInt32 calls without promoting type support. Analysis is source scanning, not the unfinished elaborator cutover. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The Char milestone adds an elaborated Char primitive and compiled npm conversion without widening this historical inspection's type claims. Compiler-backed installed Char evidence is recorded separately in npm-installed-char.",
       "files": [
         {"path":"docs/evidence/npm-author-configuration-20260911.md","sha256":"5e29bdd271ebbf7c2c887d8cc405bfb554d5bbf0c2749a1bf71ea1fe670687f7"},
-        {"path":"src/analyze/lean-project.mjs","sha256":"fe9f51efeaafa2593d1192f35dce3bc1232eb3a7c9b4f030628b6cfd519bc71a"},
+        {"path":"src/analyze/lean-project.mjs","sha256":"84ccf4506eb4035bb9c5ee6162e35c5bb6bf51189723e0bd2cd02fd3c9c7b7a7"},
         {"path":"src/build/component-plan.mjs","sha256":"f4696202faa4cba15e3086b2ed28bf49d98c7ba60e16ff4de6acddbb873eeb05"},
         {"path":"src/release/component-package-receipt.mjs","sha256":"76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"},
         {"path":"tests/lean-project-analyzer.test.mjs","sha256":"f55f8d21f20ac2182d0dbb1766427a435bf26bece6fa32d84cdc3a8441f683fb"},
         {"path":"docs/architecture/binding-ir.md","sha256":"0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"},
-        {"path":"src/backends/javascript/generate.mjs","sha256":"96054f9a60b536af64462c6a4173a161202b1032dc92c7e41ff70bbdb4462bdf"},
-        {"path":"src/abi/component-scalars.mjs","sha256":"c994113004181618980c7d7136ec94deb8c6d13785f7166b592e13ea42309000"},
-        {"path":"src/build/component-scalar-adapters.mjs","sha256":"0db485b6adfd17e88bc404f63efd5ac717be0c922a71f7fe3eea0562dec59410"},
-        {"path":"src/release/component-runtime.mjs","sha256":"daf91c4f1781e53cf321c2c07f2cb35883b52cb6d4db8ce52e2d2e0f1879f860"},
+        {"path":"src/backends/javascript/generate.mjs","sha256":"da777b6eb42154c11ea576348e9349061c53627537695b35845b24f22db58856"},
+        {"path":"src/abi/component-scalars.mjs","sha256":"6965892637586b8ea6681063c0e427b4b75289a43b36b88507727b860b427095"},
+        {"path":"src/build/component-scalar-adapters.mjs","sha256":"0d50b682b5c3d5ae3e0aa8ad7db29bf65e228a07f64c1376cc80c03b40e0ac69"},
+        {"path":"src/release/component-runtime.mjs","sha256":"e00f35ab593d9216d09b3b88fcae4123d1defaa7e86155c833171c3d8161ef09"},
         {"path":"src/release/component-npm-package.mjs","sha256":"21346398a811af7c1720da5aea63a762c2d29e9d31e83cf44222361850c44252"}
       ],
       "artifacts": []
@@ -1628,9 +1755,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "Reviewed IR projection. Array is the only admitted anonymous constructor; Option, result and tuple are rejected before rendering.",
+      "scope": "Reviewed IR projection. Array is the only admitted anonymous constructor; Option, result and tuple are rejected before rendering. The Char milestone adds string projection with single-Unicode-scalar runtime validation. Installed Char evidence is recorded separately in npm-installed-char.",
       "files": [
-        {"path":"src/backends/javascript/generate.mjs","sha256":"96054f9a60b536af64462c6a4173a161202b1032dc92c7e41ff70bbdb4462bdf"},
+        {"path":"src/backends/javascript/generate.mjs","sha256":"da777b6eb42154c11ea576348e9349061c53627537695b35845b24f22db58856"},
         {"path":"src/backends/javascript/coverage.mjs","sha256":"d8c382ff01b45226468254a24c484f189aa73f11c4c9761656e309b5d15c144e"}
       ],
       "artifacts": []
@@ -1658,9 +1785,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "Python generator type spellings and finite-specialization logic; no compiled or installed mapping is inferred.",
+      "scope": "Python generator type spellings and finite-specialization logic; no compiled or installed mapping is inferred. The Char milestone adds explicit rejection in the legacy resource generator instead of falling through to a numeric host mapping; no Python Char support is claimed.",
       "files": [
-        {"path":"src/backends/python/generate.mjs","sha256":"3acf71b3b314004e16bf26f8a9746cad35ae8e7d04d8dfa4c77b41444f58fe51"}
+        {"path":"src/backends/python/generate.mjs","sha256":"5800336ad2e9f7d99f25ebb5040622b689683aa75cfcac5a9741c629549e8acd"}
       ],
       "artifacts": []
     },
@@ -1680,9 +1807,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection.",
+      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"1654c62e363330948cc9a21b768c78b75f9efe0db9e89ccd4a009f045f84b801"}
+        {"path":"src/backends/c/generate.mjs","sha256":"87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"}
       ],
       "artifacts": []
     },
@@ -1751,6 +1878,144 @@
     }
   ],
   "observations": [
+    {
+      "id": "npm-char-ordinary",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Char parameters and results from fresh Lean; five npm host contexts and three browser engines.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        }
+      },
+      "limitations": [
+        "This observation covers pure function parameters and results only; fields, containers, callbacks and returned functions remain separate work.",
+        "Native and PHP-Wasm Char adapters are not implemented by this milestone."
+      ]
+    },
+    {
+      "id": "npm-char-reviewed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Char parameters and results from fresh Lean; five npm host contexts and three browser engines.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-installed-char"
+          ],
+          "note": "Fresh elaborated Lean and offline installed ordinary/reviewed npm packages; exact archives and host-specific checks are recorded in npm-installed-char."
+        }
+      },
+      "limitations": [
+        "This observation covers pure function parameters and results only; fields, containers, callbacks and returned functions remain separate work.",
+        "Native and PHP-Wasm Char adapters are not implemented by this milestone."
+      ]
+    },
     {
       "id": "php-wasm-copied",
       "profiles": [

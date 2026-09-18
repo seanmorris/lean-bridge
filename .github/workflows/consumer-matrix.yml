@@ -140,6 +140,8 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only
           npm run test:type-corpus:npm
           npm run test:type-corpus:reviewed-npm
+          node --test tests/component-char.test.mjs
+          test -s build/char-npm/report.json
           test -s build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
           test -s build/type-corpus/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
       - name: Preserve installed npm corpus observations
@@ -150,6 +152,7 @@ jobs:
           path: |
             build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
             build/type-corpus/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
+            build/char-npm/
           if-no-files-found: error
           retention-days: 30
       - name: Install C# for the combined native projection
@@ -211,8 +214,8 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7

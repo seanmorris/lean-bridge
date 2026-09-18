@@ -214,6 +214,8 @@ const validateCoverage = ir => {
 	for(const ref of collectUsedTypes(ir))
 	{
 		const resolved = resolveAlias(ir, ref);
+		if(resolved.kind === "primitive" && primitiveCType(resolved.name) === null && !isDynamicPrimitive(resolved.name))
+			fail("unsupported-primitive", `C projection does not define ${resolved.name}`, { primitive: resolved.name });
 		if(resolved.kind === "parameter")
 		{
 			fail("unresolved-generic", `C projection left ${resolved.id} unresolved`);

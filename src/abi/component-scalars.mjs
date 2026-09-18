@@ -4,10 +4,11 @@
  * @file
  */
 export const componentScalarAbi = 2;
+// Array positions are wire tags. Append new scalars without renumbering existing ones.
 export const componentScalarTypes = Object.freeze([
 	"unit", "bool", "uint8", "uint16", "uint32", "uint64"
 	, "int8", "int16", "int32", "int64", "nat", "int"
-	, "float32", "float64", "string", "bytes"
+	, "float32", "float64", "string", "bytes", "char"
 ]);
 export const scalarFrameHeaderBytes = 32;
 export const scalarSlotBytes = 16;
@@ -72,6 +73,12 @@ export const validateComponentScalar = (type, value) => {
 	}
 	else if(type === "float32" || type === "float64")
 	{ if(typeof value !== "number") invalid(); }
+	else if(type === "char")
+	{
+		if(typeof value !== "string" || value.length === 0 || value.length > 2) invalid();
+		const point = value.codePointAt(0);
+		if((point >= 0xd800 && point <= 0xdfff) || value.length !== (point > 0xffff ? 2 : 1)) invalid();
+	}
 	else if(type === "string")
 	{
 		if(typeof value !== "string") invalid();

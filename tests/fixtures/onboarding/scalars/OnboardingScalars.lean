@@ -34,6 +34,8 @@ def f32 (value : Float32) : Float32 := value
 def f64 (value : Float) : Float := value
 /-- Preserve Unicode text, including embedded NUL. -/
 def text (value : String) : String := value
+/-- Preserve one Unicode scalar value. -/
+def character (value : Char) : Char := value
 /-- Copy a byte array. -/
 def bytes (value : ByteArray) : ByteArray := value
 /-- Exercise mixed types and more than two arguments. -/

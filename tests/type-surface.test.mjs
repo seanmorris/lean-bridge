@@ -64,11 +64,30 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
+test("Char installed evidence covers only npm scalar parameters and results", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
+	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(observed.length, 20);
+	for(const cell of cells)
+	{
+		const covered = profiles.includes(cell.profile) && ["parameter", "result"].includes(cell.position);
+		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
+		if(!covered) continue;
+		assert.equal(cell.hostType, "string");
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, ["npm-installed-char"]);
+		}
+	}
+});
+
 test("Perl installed evidence stays scoped to ordinary-source types and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "perl");
 	const state = (shape, position, sourcePath = "ordinary-source") => cells.find(cell => cell.shape === shape
 		&& cell.position === position && cell.path === sourcePath).stages.installedExecution.state;
-	for(const scalar of document.irFacets.primitive)
+	for(const scalar of document.irFacets.primitive.filter(name => name !== "char"))
 		for(const position of document.families.primitive.positions)
 			assert.equal(state(scalar, position), "passed", `${scalar}/${position}`);
 	assert.equal(state("record", "field"), "limited");
@@ -86,7 +105,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed");
 	assert.equal(observed.length, 54);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record"].sort());
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive.filter(name => name !== "char"), "array", "record"].sort());
 	for(const cell of observed)
 	{
 		assert.ok(["parameter", "result", "field"].includes(cell.position));

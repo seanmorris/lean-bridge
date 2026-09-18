@@ -84,6 +84,7 @@ export const callComponentScalar = (module, operation, signature, args) => {
 			}
 			else if(type === "float32") view().setFloat32(slot + 8, value, true);
 			else if(type === "float64") view().setFloat64(slot + 8, value, true);
+			else if(type === "char") view().setBigUint64(slot + 8, BigInt(value.codePointAt(0)), true);
 			else view().setBigUint64(slot + 8, BigInt.asUintN(64, type === "unit" ? 0n : BigInt(value)), true);
 		}
 		const status = operation(frame);
@@ -101,6 +102,12 @@ export const callComponentScalar = (module, operation, signature, args) => {
 		}
 		else if(type === "float32") value = view().getFloat32(slot + 8, true);
 		else if(type === "float64") value = view().getFloat64(slot + 8, true);
+		else if(type === "char")
+		{
+			const point = view().getBigUint64(slot + 8, true);
+			if(view().getUint32(slot + 4, true) !== 0 || point > 0x10ffffn || (point >= 0xd800n && point <= 0xdfffn)) throw new TypeError("Invalid component Unicode scalar representation");
+			value = String.fromCodePoint(Number(point));
+		}
 		else if(type === "string" || type === "bytes" || type === "nat" || type === "int")
 		{
 			const pointer = view().getUint32(slot + 8, true);
