@@ -97,6 +97,10 @@ The contract requires a copied argument and a returned closure lease. An export 
 
 Specializations can also use named aliases for supported copied arrays, records, resources and callbacks. Existing ownership rules still apply: a resource inside a copied array or record requires an explicit ownership policy, and callbacks inside copied containers require a retention policy. Those shapes remain rejected. The metadata records the concrete application and its original declaration; native compilation reproduces that report after compiling the adapter and before linking.
 
+### Compile a reviewed callable API
+
+CPAN builds also accept a [reviewed Binding IR](../lean/existing-package.md#compile-a-reviewed-contract) containing synchronous primitive callbacks and returned closures. Put export signatures, call-scoped callback borrows and explicit closure leases in that document. A returned closure's outer parameter count supplies the compiler arity. Keep `exports`, `arities` and `contracts` out of `lean-bridge.exports.json` when a review is present. The builder checks the review against fresh Lean metadata before emitting native code.
+
 ### Build with locked Lake dependencies
 
 Keep the reviewed `lake-manifest.json` beside `lean-toolchain`. Supply each local path dependency at its recorded relative path and each Git checkout in the lock's package cache directory, normally `.lake/packages/<name>`. Git pins must contain the full commit hash. Install Git so the builder can verify the cached commit, tree, and file contents. The build does not fetch packages or update the lock.

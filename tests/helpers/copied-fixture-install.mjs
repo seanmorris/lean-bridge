@@ -169,7 +169,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
 	const result = await runCopied(command, args, root, env);
 	assert.equal(result.stderr, "");
-	assert.match(result.stdout.trim(), new RegExp(`^${fixture.success}:[0-9]+$`));
-	const checks = Number(result.stdout.trim().split(":")[1]); assert.ok(checks >= 100);
-	return { checks, consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };
+	const observation = fixture.parseResult?.(result.stdout);
+	if(!fixture.parseResult) assert.match(result.stdout.trim(), new RegExp(`^${fixture.success}:[0-9]+$`));
+	const checks = observation?.checks ?? Number(result.stdout.trim().split(":")[1]); assert.ok(checks >= 100);
+	return { checks, ...(observation ? { result: observation } : {}), consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };
 };

@@ -331,6 +331,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   }
   assert.ok(perlWorkflow.includes("LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs"));
   assert.ok(perlWorkflow.includes("LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs"));
+  assert.ok(perlWorkflow.includes("LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs"));
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
   {
@@ -457,7 +458,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /npm run test:type-corpus:perl/);
   assert.match(perlWorkflow, /LEAN_BRIDGE_CORPUS_PERL="\$PWD\/\.toolchains\/perl\/\$CORPUS_PERL_CONFIGURATION\/bin\/perl"/);
   assert.match(perlWorkflow, /name: type-corpus-perl-\$\{\{ matrix\.configuration \}\}-\$\{\{ github\.sha \}\}/);
-  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*if-no-files-found: error/);
+  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*build\/callables\/perl\.json\n\s*if-no-files-found: error/);
   assert.match(perlWorkflow, /needs\.perl\.result == 'success'/);
   assert.match(perlWorkflow, /nix run \.#perl-build-engine/);
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);

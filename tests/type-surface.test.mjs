@@ -69,18 +69,19 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 92);
+	assert.equal(observed.length, 96);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
-		const covered = (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
+		const callable = cell.profile === "perl" && cell.position.startsWith("callback-");
+		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
 		if(!covered) continue;
 		assert.equal(cell.hostType, npm ? "string" : hosts[cell.profile]);
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [npm ? "npm-installed-char" : "native-installed-char"]);
+			assert.deepEqual(stage.evidence, [callable ? "perl-callables-installed" : npm ? "npm-installed-char" : "native-installed-char"]);
 		}
 	}
 });
@@ -88,22 +89,23 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 184);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 192);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
-		const audited = ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
+		const callable = cell.profile === "perl" && cell.position.startsWith("callback-");
+		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
 		if(audited)
 		{
-			assert.deepEqual(cell.stages.installedExecution.evidence, ["platform-words-installed"]);
+			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? "perl-callables-installed" : "platform-words-installed"]);
 			assert.ok(cell.conversionNote.includes(`${cell.wordBits}-bit compiled Lean target`));
 		}
 	}
 });
 
-test("Perl installed evidence stays scoped to ordinary-source types and audited positions", () => {
+test("Perl installed evidence stays scoped to audited source paths and positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "perl");
 	const state = (shape, position, sourcePath = "ordinary-source") => cells.find(cell => cell.shape === shape
 		&& cell.position === position && cell.path === sourcePath).stages.installedExecution.state;
@@ -116,8 +118,24 @@ test("Perl installed evidence stays scoped to ordinary-source types and audited 
 	assert.equal(state("resource", "field"), "unreviewed");
 	assert.equal(state("callback", "parameter"), "passed");
 	assert.equal(state("closure", "result"), "passed");
-	assert.equal(state("nat", "parameter", "reviewed-ir"), "unreviewed");
+	assert.equal(state("nat", "parameter", "reviewed-ir"), "passed");
+	assert.equal(state("nat", "field", "reviewed-ir"), "unreviewed");
 	assert.equal(state("task", "signature"), "unreviewed");
+});
+
+test("Perl primitive callable evidence promotes no other profile or copied fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const covered = cells.filter(cell => cell.stages.installedExecution.evidence.includes("perl-callables-installed"));
+	assert.equal(covered.length, 110);
+	for(const cell of covered)
+	{
+		assert.equal(cell.profile, "perl");
+		assert.notEqual(cell.position, "field");
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+	for(const path of document.paths) for(const primitive of document.irFacets.primitive)
+		for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(covered.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
 });
 
 for(const [profile, evidence] of [["php-native", "native-php-installed-copied"], ["php-wasm", "php-wasm-installed-copied"], ["rust", "native-rust-installed-copied"], ["dotnet", "native-dotnet-installed-copied"], ["java", "native-jvm-installed-copied"], ["kotlin", "native-jvm-installed-copied"], ["ruby", "native-ruby-installed-copied"], ["wit-wasi", "native-wit-installed-copied"], ["python", "native-python-installed-copied"]]) test(`ordinary ${profile} installed evidence stays within copied-value positions`, () => {

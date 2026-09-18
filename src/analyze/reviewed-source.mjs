@@ -1,5 +1,6 @@
 /**
- * Reconcile a reviewed copied-value contract with fresh compiler-owned facts.
+ * Reconcile a reviewed copied-value or synchronous primitive callable contract
+ * with fresh compiler-owned facts.
  * Review documents select declarations, never native layouts or proof evidence.
  *
  * @file
@@ -17,6 +18,8 @@ const unsupported = (message, details) => fail("reviewed-ir-build-unsupported", 
 const mismatch = (message, details) => fail("reviewed-ir-source-mismatch", message, details);
 const leanName = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value);
 const ordered = values => values.toSorted();
+const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
+const pureFailure = { mode: "none", errors: [], unexpected: "poison-runtime" };
 
 /**
  * Modules authorize compilation roots; the review owns all export decisions.
@@ -32,20 +35,59 @@ const checkReview = document => {
 	const reject = (condition, path) => {
 		if(condition) unsupported(`Reviewed builds do not support this decision: ${path}`, { path });
 	};
-	for(const field of ["errors", "capabilities", "assurance"]) reject(document[field].length, field);
+	for(const field of ["capabilities", "assurance"]) reject(document[field].length, field);
+	const callbacks = new Map(document.types.filter(type => type.kind === "callback").map(type => [type.id, type]));
+	const isCallback = type => type.kind === "named" && callbacks.has(type.id);
+	reject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.size ? [{
+		id: "error:native-callback", name: "NativeCallbackFailure"
+		, category: "boundary", payload: null
+	}] : []), "errors");
 	for(const producer of document.producers) reject(Object.keys(producer.extensions).length, `producers.${producer.id}.extensions`);
-	const source = item => {
-		reject(!leanName(item.source.declaration) || item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
+	const source = (item, callbackName) => {
+		reject(callbackName ? item.id !== `bridge:${callbackName}` || item.source.declaration !== callbackName || item.name !== callbackName
+			: !leanName(item.source.declaration) || item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
 		reject(Object.keys(item.source.extensions).length, `${item.id}.source.extensions`);
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
-	const type = (value, path) => {
+	const type = (value, path, copied = true) => {
+		reject(copied && isCallback(value), path);
 		if(value.kind === "primitive" || value.kind === "named") return;
 		reject(value.kind !== "apply" || value.constructor !== "array" || value.arguments.length !== 1, path);
 		type(value.arguments[0], `${path}.element`);
 	};
+	const site = (value, path, result = false) => {
+		const identity = isCallback(value.type);
+		reject(value.ownership !== (identity ? result ? "lease" : "borrow" : "copy")
+			|| !same(value.lifetime, identity ? { scope: result ? "explicit" : "call", anchor: null } : null), path);
+		type(value.type, `${path}.type`, false);
+	};
+	const parameter = (value, path) => {
+		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
+		site(value, path);
+	};
 	for(const definition of document.types)
 	{
+		if(definition.kind === "callback")
+		{
+			const callable = definition.callable;
+			const signature = { parameters: callable.parameters.map(parameter => parameter.type), result: callable.result.type };
+			const name = `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
+			source(definition, name);
+			reject(definition.representation !== "identity" || definition.mutability !== "immutable"
+				|| definition.typeParameters.length || definition.fields.length || definition.target !== null
+				|| definition.resource !== null || definition.cases.length || definition.host !== null, definition.id);
+			reject(callable.invocation !== "many" || callable.reentry !== "same-agent" || callable.selfDisposal !== "defer"
+				|| callable.resultMode !== "value" || !same(callable.effects.toSorted(), ["fails", "host-call"])
+				|| !same(callable.failure, callbackFailure) || !callable.parameters.length || callable.parameters.length > 16, `${definition.id}.callable`);
+			for(const [index, value] of callable.parameters.entries())
+			{
+				reject(value.type.kind !== "primitive", `${definition.id}.parameters[${index}].type`);
+				parameter(value, `${definition.id}.parameters[${index}]`);
+			}
+			reject(callable.result.type.kind !== "primitive", `${definition.id}.result.type`);
+			site(callable.result, `${definition.id}.result`, true);
+			continue;
+		}
 		source(definition);
 		reject(definition.kind !== "record" || definition.representation !== "copied" || definition.mutability !== "immutable"
 			|| definition.typeParameters.length || definition.target !== null || definition.resource !== null
@@ -59,18 +101,13 @@ const checkReview = document => {
 	for(const declaration of document.declarations)
 	{
 		source(declaration);
+		const hasCallback = declaration.parameters.some(parameter => isCallback(parameter.type));
 		reject(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null
-			|| declaration.typeParameters.length || declaration.effects.length || declaration.capabilities.length
+			|| declaration.typeParameters.length || !same(declaration.effects.toSorted(), hasCallback ? ["fails", "host-call"] : []) || declaration.capabilities.length
 			|| declaration.mutability !== "immutable" || declaration.resultMode !== "value"
-			|| !same(declaration.failure, { mode: "none", errors: [], unexpected: "poison-runtime" }), declaration.id);
-		for(const [index, parameter] of declaration.parameters.entries())
-		{
-			reject(parameter.optional || parameter.default !== null || parameter.ownership !== "copy"
-				|| parameter.lifetime !== null || parameter.mutability !== "immutable", `${declaration.id}.parameters[${index}]`);
-			type(parameter.type, `${declaration.id}.parameters[${index}].type`);
-		}
-		reject(declaration.result.ownership !== "copy" || declaration.result.lifetime !== null, `${declaration.id}.result`);
-		type(declaration.result.type, `${declaration.id}.result.type`);
+			|| !same(declaration.failure, hasCallback ? callbackFailure : pureFailure), declaration.id);
+		for(const [index, value] of declaration.parameters.entries()) parameter(value, `${declaration.id}.parameters[${index}]`);
+		site(declaration.result, `${declaration.id}.result`, true);
 	}
 	return document;
 };
@@ -89,6 +126,20 @@ export const validateReviewedSource = review => {
 	const document = parseBindingIr(review.source);
 	if(hashBindingIr(document) !== review.semanticSha256) mismatch("Reviewed contract digest differs from its retained source");
 	return checkReview(document);
+};
+
+/**
+ * Derive the compiler selection from reviewed signatures. A returned callable
+ * fixes the outer export's arity; the compiler still verifies both signatures.
+ *
+ * @param review - Captured, independently reviewed contract.
+ */
+export const reviewedSourceSelection = review => {
+	const document = validateReviewedSource(review);
+	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
+	return { exports: document.declarations.map(item => item.source.declaration).sort()
+		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
+			.map(item => [item.source.declaration, item.parameters.length]).sort(([a], [b]) => a.localeCompare(b)) };
 };
 
 /**
@@ -157,10 +208,11 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	validateExportConfiguration(config);
 	assertReviewedSourceConfiguration(config);
 	const request = sourceIdentity.request;
+	const selection = reviewedSourceSelection(review);
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(ordered(config.modules), ordered(request.exportModules))
 		|| !same(ordered(request.exports), ordered(document.declarations.map(item => item.source.declaration)))
-		|| request.resources.length || request.arities.length || request.specializations !== undefined || request.contracts !== undefined)
+		|| request.resources.length || !same(request.arities, selection.arities) || request.specializations !== undefined || request.contracts !== undefined)
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = difference(contract(document), contract(compiled));
 	if(field)

@@ -12,7 +12,7 @@ import { verifyLakeEntryModules } from "./lake-entry-modules.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { projectElaboratedMetadata } from "../analyze/project-elaborated.mjs";
 import { compilerExportSelection } from "../analyze/export-configuration.mjs";
-import { validateReviewedSource, verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
+import { reviewedSourceSelection, verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-elaboration" }); };
 
@@ -63,9 +63,10 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 		const configuration = inventory.configurationRecord.configuration;
 		const selection = { modules: workspace.resolution.modules.map(module => module.module)
 			, exportModules: roots.map(entry => entry.module).sort()
-			, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? []
+			, exports: configuration.exports ?? []
 			, resources: [], arities: []
-			, ...compilerExportSelection(configuration) };
+			, ...compilerExportSelection(configuration)
+			, ...(reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr) : {}) };
 		const request = createMetadataRequest(selection, { toolchain: inventory.project.toolchain
 			, snapshotSha256: workspace.evidence.resolution.snapshotSha256
 			, generatedSourcesSha256: workspace.generatedSources?.sha256 ?? null

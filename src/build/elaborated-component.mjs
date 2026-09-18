@@ -8,7 +8,7 @@ import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:f
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readReviewedSource, validateReviewedSource } from "../analyze/reviewed-source.mjs";
+import { readReviewedSource, reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -106,7 +106,9 @@ export const buildElaboratedComponent = async ({ projectRoot
 		{
 			if(exports.length || resources.length || Object.keys(arities).length || canonicalJson(modules) !== canonicalJson(config.modules))
 				throw Object.assign(new Error("Reviewed builds cannot override the authorized modules or export decisions"), { code: "export-configuration-reviewed-ir" });
-			exports = validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort();
+			const selection = reviewedSourceSelection(reviewedBindingIr);
+			exports = selection.exports;
+			arities = Object.fromEntries(selection.arities);
 		}
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
 		const analysis = inventory;
