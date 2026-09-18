@@ -21,6 +21,29 @@ export const phpWasmOrdinaryScalars = [
 	, ["bytes", "ByteArray", 'Bytes::fromString("\\0\\xff\\x80")']
 ];
 const fields = name => name === "Willow" ? phpWasmOrdinaryScalars : [...phpWasmOrdinaryScalars].reverse();
+const big = value => `BigInteger::fromDecimal('${value}')`;
+const integerEdges = [31n, 32n, 53n, 63n].flatMap(bits => {
+	const value = 1n << bits;
+	return [value - 1n, value, value + 1n];
+});
+export const phpWasmPrimitiveVectors = [
+	["unit", ["null"]], ["bool", ["false", "true"]]
+	, ["u8", ["0", "1", "127", "128", "255"]]
+	, ["u16", ["0", "1", "32767", "32768", "65535"]]
+	, ["u32", [0n, 1n, 2147483647n, 2147483648n, 2147483649n, 4294967295n].map(big)]
+	, ["u64", [0n, 1n, ...integerEdges, (1n << 64n) - 1n].map(big)]
+	, ["i8", ["-128", "-1", "0", "127"]]
+	, ["i16", ["-32768", "-1", "0", "32767"]]
+	, ["i32", ["-2147483647 - 1", "-1", "0", "2147483647"]]
+	, ["i64", [-(1n << 63n), -9007199254740993n, -2147483649n, -1n, 0n, 1n, 2147483648n, 9007199254740993n, (1n << 63n) - 1n].map(big)]
+	, ["nat", [0n, 1n, ...integerEdges, (1n << 64n) - 1n, 1n << 64n, (1n << 64n) + 1n, (1n << 4096n) + 1n].map(big)]
+	, ["integer", [-(1n << 4096n), -(1n << 64n) - 1n, -9007199254740993n, -1n, 0n, 1n, ...integerEdges, (1n << 64n) + 1n, (1n << 4096n) + 1n].map(big)]
+	, ["f32", ["NAN", "INF", "-INF", "0.0", "-0.0", "1 / 3", "2.0 ** -149", "-(2.0 ** -149)"]]
+	, ["f64", ["NAN", "INF", "-INF", "0.0", "-0.0", "1 / 3", "2.0 ** -1074", "-(2.0 ** -1074)"]]
+	, ["text", ['""', '"\\0"', '"a\\0λ🌿"']]
+	, ["bytes", ["Bytes::fromString('')", 'Bytes::fromString("\\0\\xff\\x80")', "Bytes::fromString(implode('', array_map('chr', range(0, 255))))"]]
+].flatMap(([label, values]) => values.map(value => ({ label, value
+	, expected: label === "f32" ? `unpack('f', pack('f', ${value}))[1]` : value })));
 /**
  * Create a pure Lean API with no hand-written native implementation.
  *
@@ -61,21 +84,60 @@ end SharedApi
 };
 
 /**
- * Exercise compiled copied values and strict boundaries from weak-mode PHP.
+ * Exercise exact copied values through weak and strict PHP callers.
  *
  * @param name - Component discriminator and public namespace suffix.
+ * @param options - Caller strictness; generated validation must not depend on it.
+ * @param options.strict - Enable PHP strict_types in the consumer file.
  */
-export const phpWasmOrdinaryConsumer = name => `<?php
+export const phpWasmOrdinaryConsumer = (name, { strict = false } = {}) => `<?php
+declare(strict_types=${strict ? 1 : 0});
 namespace Test${name};
 require_once '/${name}/src/Api.php';
 use Lean${name}\\{BigInteger, Bytes, Leaf, Packet, Word, EmptyValue};
 function check($condition, $message = 'Check failed') { if (!$condition) throw new \\RuntimeException($message); }
-function same($a, $b) { check(get_debug_type($a) === get_debug_type($b) && $a == $b, 'Values differ'); }
+function same($a, $b) {
+    check(get_debug_type($a) === get_debug_type($b), 'Value types differ');
+    if (is_float($a)) { check(is_nan($a) ? is_nan($b) : pack('d', $a) === pack('d', $b), 'Float bits differ'); return; }
+    if ($a instanceof BigInteger || $a instanceof Bytes) { check((string) $a === (string) $b, 'Copied contents differ'); return; }
+    if (is_object($a)) { same(get_object_vars($a), get_object_vars($b)); return; }
+    if (is_array($a)) {
+        check(array_keys($a) === array_keys($b), 'Array keys differ');
+        foreach ($a as $key => $value) same($value, $b[$key]);
+        return;
+    }
+    check($a === $b, 'Values differ');
+}
 function rejects($call, $class = \\Throwable::class) {
     try { $call(); } catch (\\Throwable $error) { check($error instanceof $class, get_class($error) . ': ' . $error->getMessage()); return; }
     throw new \\RuntimeException('Expected rejection');
 }
 check(PHP_INT_SIZE === 4);
+rejects(fn() => same([BigInteger::fromDecimal('1')], [BigInteger::fromDecimal('2')]));
+rejects(fn() => same(Bytes::fromString('a'), Bytes::fromString('b')));
+rejects(fn() => same([-0.0], [0.0]));
+same([NAN], [NAN]);
+function leafValue($label, $value) {
+    $fields = [${fields(name).map(([label, , value]) => `'v_${label}' => ${value}`).join(", ")}];
+    $fields['v_' . $label] = $value;
+    return new Leaf(...$fields);
+}
+function exactValue($label, $value, $expected) {
+    $call = 'Lean${name}\\\\echo_' . $label;
+    $array = 'Lean${name}\\\\array_' . $label;
+    same($call($value), $expected);
+    same($array([$value, $value]), [$expected, $expected]);
+    $leaf = leafValue($label, $value); $expectedLeaf = leafValue($label, $expected);
+    same(\\Lean${name}\\echo_rows([[$leaf], []]), [[$expectedLeaf], []]);
+    same(\\Lean${name}\\echo_record(new Packet(title: 'boundary', leaf: $leaf, rows: [[$leaf]])),
+        new Packet(title: 'boundary', leaf: $expectedLeaf, rows: [[$expectedLeaf]]));
+}
+${phpWasmPrimitiveVectors.map(({ label, value, expected }) => `exactValue('${label}', ${value}, ${expected});`).join("\n")}
+foreach ([str_repeat('9', 16384), '-' . str_repeat('9', 16384)] as $text) {
+    $value = BigInteger::fromDecimal($text);
+    exactValue('integer', $value, $value);
+    if ($text[0] !== '-') exactValue('nat', $value, $value);
+}
 ${phpWasmOrdinaryScalars.map(([label, , value]) => `$value = ${value};
 same(\\Lean${name}\\echo_${label}($value), $value);
 same(\\Lean${name}\\array_${label}([$value, $value]), [$value, $value]);
@@ -107,6 +169,33 @@ foreach (['f32', 'f64'] as $label) {
     same(pack('d', $call(-0.0)), pack('d', -0.0));
 }
 same(\\Lean${name}\\echo_f32(1 / 3), unpack('f', pack('f', 1 / 3))[1]);
+foreach ([
+    ['unit', 0, \\TypeError::class], ['bool', 1, \\TypeError::class],
+    ['u8', -1, \\ValueError::class], ['u8', 256, \\ValueError::class],
+    ['u16', -1, \\ValueError::class], ['u16', 65536, \\ValueError::class],
+    ['u32', 1, \\TypeError::class], ['u32', 2147483648.0, \\TypeError::class],
+    ['u32', BigInteger::fromDecimal('-1'), \\ValueError::class],
+    ['u32', BigInteger::fromDecimal('4294967296'), \\ValueError::class],
+    ['u64', BigInteger::fromDecimal('-1'), \\ValueError::class],
+    ['u64', BigInteger::fromDecimal('18446744073709551616'), \\ValueError::class],
+    ['i8', -129, \\ValueError::class], ['i8', 128, \\ValueError::class],
+    ['i16', -32769, \\ValueError::class], ['i16', 32768, \\ValueError::class],
+    ['i32', 2147483648.0, \\TypeError::class], ['i32', -2147483649.0, \\TypeError::class],
+    ['i64', BigInteger::fromDecimal('-9223372036854775809'), \\ValueError::class],
+    ['i64', BigInteger::fromDecimal('9223372036854775808'), \\ValueError::class],
+    ['nat', BigInteger::fromDecimal('-1'), \\ValueError::class], ['integer', '1', \\TypeError::class],
+    ['f32', 1, \\TypeError::class], ['f64', '1.0', \\TypeError::class],
+    ['text', "\\xff", \\ValueError::class], ['text', "\\xc0\\x80", \\ValueError::class],
+    ['text', "\\xed\\xa0\\x80", \\ValueError::class], ['bytes', 'bytes', \\TypeError::class]
+] as [$label, $value, $class]) {
+    $call = 'Lean${name}\\\\echo_' . $label; $array = 'Lean${name}\\\\array_' . $label;
+    rejects(fn() => $call($value), $class);
+    rejects(fn() => $array([$value]), $class);
+    rejects(fn() => leafValue($label, $value), $class);
+    same(\\Lean${name}\\answer(), ${name === "Willow" ? 17 : 29});
+}
+rejects(fn() => BigInteger::fromDecimal(str_repeat('9', 16385)), \\ValueError::class);
+foreach (['01', '-0', '+1', '1e3', ' 1'] as $text) rejects(fn() => BigInteger::fromDecimal($text), \\ValueError::class);
 rejects(fn() => \\Lean${name}\\echo_u32(1), \\TypeError::class);
 rejects(fn() => \\Lean${name}\\echo_u32(BigInteger::fromDecimal('4294967296')), \\ValueError::class);
 rejects(fn() => \\Lean${name}\\echo_i64(BigInteger::fromDecimal('-9223372036854775809')), \\ValueError::class);

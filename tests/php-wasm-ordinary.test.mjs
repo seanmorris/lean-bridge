@@ -17,7 +17,7 @@ import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs"
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { createPhpWasmOrdinaryProject, phpWasmOrdinaryConsumer } from "./helpers/php-wasm-ordinary.mjs";
+import { createPhpWasmOrdinaryProject, phpWasmOrdinaryConsumer, phpWasmOrdinaryScalars, phpWasmPrimitiveVectors } from "./helpers/php-wasm-ordinary.mjs";
 import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from "../src/release/php-wasm-copied-package.mjs";
 import { exerciseInstalledPhpWasmPackages } from "./helpers/php-wasm-packages.mjs";
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
@@ -33,6 +33,21 @@ const emsdkRoot = process.env.LEAN_BRIDGE_PHP_EMSDK ?? join(process.cwd(), ".too
 const phpSource = process.env.LEAN_BRIDGE_PHP_SOURCE ?? join(process.cwd(), "build/php-wasm-sdk/php8.4-src");
 const leanRuntimeRoot = process.env.LEAN_BRIDGE_PHP_LEAN_RUNTIME ?? join(process.cwd(), `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser-php-wasm-3.1.68`);
 const phpHost = process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? join(process.cwd(), "build/php-wasm-host/node_modules/php-wasm");
+
+test("PHP-Wasm boundary fixtures cover every primitive in weak and strict callers", () => {
+	assert.deepEqual(new Set(phpWasmPrimitiveVectors.map(item => item.label)), new Set(phpWasmOrdinaryScalars.map(([label]) => label)));
+	for(const strict of [false, true])
+	{
+		const consumer = phpWasmOrdinaryConsumer("Willow", { strict });
+		assert.ok(consumer.startsWith(`<?php\ndeclare(strict_types=${strict ? 1 : 0});\nnamespace`));
+		for(const { label, value, expected } of phpWasmPrimitiveVectors)
+			assert.ok(consumer.includes(`exactValue('${label}', ${value}, ${expected});`));
+		assert.match(consumer, /pack\('d', \$a\) === pack\('d', \$b\)/u);
+		assert.match(consumer, /\(string\) \$a === \(string\) \$b/u);
+	}
+	for(const boundary of ["2147483647", "2147483648", "4294967295", "9007199254740993", "18446744073709551615"])
+		assert.ok(phpWasmPrimitiveVectors.some(item => item.value.includes(`'${boundary}'`)));
+});
 
 test("PHP-Wasm uses a fixed wasm32 model without changing native compilation", () => {
 	const options = { ...nativeMetadataFixture(), component: { id: "example@1.0.0", name: "example", version: "1.0.0" } };
@@ -80,6 +95,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		? { root: cachedRuntime, ...await readVerifiedPhpWasmCopiedRuntime(cachedRuntime) }
 		: await buildPhpWasmCopiedRuntime({ outputRoot: join(working, "runtime"), leanRuntimeRoot, emsdkRoot });
 	t.diagnostic(`runtime ${runtime.identity}`);
+	t.diagnostic(`${phpWasmPrimitiveVectors.length} primitive boundary vectors through scalars, arrays, record fields and nested record arrays; weak and strict installed callers`);
 	const compilerInputs = await buildPhpWasmCompilerInputs({ runtimeRoot: runtime.root, phpSource, outputRoot: join(working, "compiler-inputs") });
 	t.diagnostic(`compiler inputs ${compilerInputs.identity}, archive ${compilerInputs.archiveSha256}`);
 	const inputCopy = join(working, "relocated-compiler-source");
@@ -165,7 +181,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		const releaseRoot = join(working, `${name}-packages`);
 		await rename(release.output, releaseRoot);
 		releases.push({ output: releaseRoot, report: release.report });
-		t.diagnostic(`${name} package archives ${JSON.stringify(release.report.archives.map(({ role, sha256 }) => ({ role, sha256 })))}`);
+		t.diagnostic(`${name} package archives ${JSON.stringify(release.report.archives.map(({ role, archive, sha256 }) => ({ role, archive, sha256 })))}`);
 		const relocated = join(working, "installed", name);
 		await cp(outputRoot, relocated, { recursive: true });
 		await rename(project, `${project}-source-unavailable`);
@@ -244,7 +260,8 @@ console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 
 `);
 	const host = await processBuildRunner.capture({ command: process.execPath
 		, args: ["host.mjs"], cwd: working, timeoutMs: 120000
-		, env: { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" } });
+		, env: { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" } })
+		.catch(error => { t.diagnostic(error.details?.stderr ?? error.message); throw error; });
 	assert.deepEqual(JSON.parse(host.stdout.trim()), { status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20 });
 	// Resealing a receipt cannot authorize changed generated loaders or a new
 	// install hook. The reader reconstructs the sources and deterministic archives.

@@ -45,15 +45,20 @@ test("every consumer table is generated and includes all 48 source forms exactly
 	}
 });
 
-test("the PHP overview includes both transports and their actual integer limit", async () => {
+test("the PHP overview separates exact copied values from the Alpha integer limit", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	assert.match(row(source, "UInt32"), /Native PHP.*PHP-Wasm|PHP-Wasm.*Native PHP/u);
 	assert.match(row(source, "UInt32"), /0\.\.2147483647.*PHP_INT_MAX/u);
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
+	assert.match(row(source, "UInt32"), /PHP-Wasm: `BigInteger`/u);
+	assert.match(row(source, "UInt32"), /Ordinary source: Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "UInt32"), /Alpha.*0\.\.2147483647/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
 	assert.match(row(source, "Except ε α"), /Generation rejected/u);
 	const wasm = source;
 	assert.match(row(wasm, "Int64"), /32-bit int does not provide this full range/u);
+	assert.match(row(wasm, "Int64"), /compiled copied API uses BigInteger for the full/u);
+	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 
 test("Java and Kotlin keep their own host representations without widening Alpha coverage", async () => {

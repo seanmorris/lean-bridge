@@ -28,6 +28,7 @@ export const exerciseBrowserPhpWasmPackages = async options => {
 	await saveLakeFile(consumer, "bundled/browser.mjs", `import { PhpWeb } from '/php-host/PhpWeb.mjs';
 import { api0, api1 } from './consumer.mjs';
 const loading = new URL(location.href).searchParams.get('loading') ?? 'startup';
+const strict = new URL(location.href).searchParams.get('caller') === 'strict';
 const failure = new URL(location.href).searchParams.get('failure');
 const apis = [api0, api1, api0];
 const php = new PhpWeb({version: '8.4', autoTransaction: false, ini: 'memory_limit=512M' + (failure === 'disabled' ? '\\nenable_dl=0' : ''), sharedLibs: loading === 'startup' ? apis : [], dynamicLibs: [{name: 'probe.so', url: new URL('/probe.so', location.href), ini: false}, ...(loading === 'lazy' ? apis.map(api => api.lazy) : [])]});
@@ -49,10 +50,12 @@ try {
   await run("<?php try { LeanWillow\\\\echo_u32(1); throw new Exception('Expected TypeError'); } catch (TypeError $error) {}");
   await stage('invalid');
   const ticksBefore = window.ticks;
-  await run(${JSON.stringify(phpWasmOrdinaryConsumer("Willow").replace("require_once '/Willow/src/Api.php';", ""))});
+  await php.writeFile('/Willow-consumer.php', strict ? ${JSON.stringify(phpWasmOrdinaryConsumer("Willow", { strict: true }).replace("require_once '/Willow/src/Api.php';", ""))} : ${JSON.stringify(phpWasmOrdinaryConsumer("Willow").replace("require_once '/Willow/src/Api.php';", ""))});
+  await run("<?php require '/Willow-consumer.php';");
   window.loadTicks = window.ticks - ticksBefore;
   await stage('willow');
-  await run(${JSON.stringify(phpWasmOrdinaryConsumer("Aspen").replace("require_once '/Aspen/src/Api.php';", ""))});
+  await php.writeFile('/Aspen-consumer.php', strict ? ${JSON.stringify(phpWasmOrdinaryConsumer("Aspen", { strict: true }).replace("require_once '/Aspen/src/Api.php';", ""))} : ${JSON.stringify(phpWasmOrdinaryConsumer("Aspen").replace("require_once '/Aspen/src/Api.php';", ""))});
+  await run("<?php require '/Aspen-consumer.php';");
   await stage('aspen');
   if (stdout !== 'Willow:okAspen:ok') throw new Error('Copied value checks: ' + stdout);
   stdout = '';
@@ -60,7 +63,7 @@ try {
   if (stdout !== '17:29;'.repeat(20)) throw new Error('Repeated calls: ' + stdout);
   stdout = '';
   await run("<?php if (!dl('probe.so')) throw new Exception('Probe failed'); echo json_encode(lean_bridge_test_snapshot());");
-  window.result = {exports: 88, repeatedRequests: 20, counters: JSON.parse(stdout)};
+  window.result = {strict, exports: 88, repeatedRequests: 20, counters: JSON.parse(stdout)};
 } catch(error) { window.result = {error: error.stack}; }
 finally { clearInterval(timer); }
 `);
@@ -122,10 +125,11 @@ finally { clearInterval(timer); }
 			assert.equal(await page.evaluate(() => globalThis.stage), expected);
 		};
 		for(const loading of ["startup", "lazy"])
+		for(const strict of [false, true])
 		{
 			const start = requests.length;
 			const libraries = () => requests.slice(start).filter(path => path.endsWith(".so") && path !== "/probe.so");
-			await page.goto(`${origin}/nested/app/?loading=${loading}`);
+			await page.goto(`${origin}/nested/app/?loading=${loading}&caller=${strict ? "strict" : "weak"}`);
 			await stage("ready");
 			assert.equal(libraries().length, loading === "lazy" ? 0 : 3, "Import and autoload must not fetch lazy libraries");
 			await page.evaluate(() => globalThis.advance()); await stage("invalid");
@@ -140,11 +144,11 @@ finally { clearInterval(timer); }
 			await page.evaluate(() => globalThis.advance());
 			await page.waitForFunction(() => globalThis.result !== undefined, undefined, { timeout: 120000 });
 			const result = await page.evaluate(() => globalThis.result);
-			assert.deepEqual(result, { exports: 88, repeatedRequests: 20, counters: [1, 2, 1, 2, 2, 0] });
+			assert.deepEqual(result, { strict, exports: 88, repeatedRequests: 20, counters: [1, 2, 1, 2, 2, 0] });
 			assert.deepEqual(errors, []);
 			assert.equal(libraries().length, 3); assert.equal(new Set(libraries()).size, 3);
 			assert.equal(libraries().filter(path => path.includes("liblean_bridge_php_wasm_copied_")).length, 1);
-			t.diagnostic(`Chromium ${browser.version()} ${loading}: 88 exports, 20 requests, one runtime and two extensions fetched once under /nested/app/`);
+			t.diagnostic(`Chromium ${browser.version()} ${loading}/${strict ? "strict" : "weak"}: 88 exports, 20 requests, one runtime and two extensions fetched once under /nested/app/`);
 		}
 		for(const failure of ["disabled", "corrupt-runtime"])
 		{
