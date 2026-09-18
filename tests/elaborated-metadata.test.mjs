@@ -79,6 +79,25 @@ test("Binding IR uses structural compiler types and never parses rendered expres
 	assert.deepEqual(analysis().bindingIr.document.assurance, []);
 });
 
+for(const reason of ["unsupported-effect", "missing-declaration"])
+	test(`analysis preserves ${reason} when no usable declarations remain`, () => {
+		const { request, report } = sample();
+		if(reason === "missing-declaration") report.modules[0].declarations = [];
+		else report.modules[0].declarations[0].projection = { status: "unsupported", reason, expression: "IO UInt32" };
+		report.diagnostics = [{ category: "unsupported-meaning"
+			, code: reason, severity: "error"
+			, module: "Sample", declaration: "Sample.keep"
+			, message: "Compiler rejected the selected declaration." }];
+		const project = { name: "sample", version: "1.0.0", toolchain: request.metadata.toolchain };
+		const analysis = projectElaboratedMetadata({ project, inputs: [], sourceTreeSha256: "e".repeat(64) }
+			, [{ module: "Sample", path: "Sample.lean" }], { request, metadata: report });
+		assert.equal(analysis.bindingIr, null);
+		assert.deepEqual(analysis.proposedExports, []);
+		assert.ok(analysis.adapterHints.some(hint => hint.reason === reason && hint.required));
+		assert.ok(analysis.diagnostics.some(item => item.code === reason && item.severity === "error"));
+		assert.ok(analysis.diagnostics.some(item => item.code === "binding-ir-unavailable"));
+	});
+
 test("supported metadata must honor contracts and report every unused contract", () => {
 	const { request, report } = sample();
 	request.contracts = { "Sample.keep": { parameters: [{ ownership: "copy", lifetime: null }], effects: [] } };

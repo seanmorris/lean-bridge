@@ -34,6 +34,7 @@ A first interrupt cancels the active process and returns 130.
 | `reviewed-ir-source-mismatch` | The reviewed API or retained review identity differs from fresh compiler evidence. | Compare the review's declaration names and types with the selected source. Correct the contract or source, then rebuild from stable inputs. |
 | `export-configuration-drift` | Configuration changed during analysis. | Keep the selected input revision stable and rerun analysis. |
 | `component-adapter-hints-required` | The public boundary needs a decision. | Read the JSON analysis and [resolve its adapter questions](export-decisions.md#resolve-required-decisions). |
+| `binding-ir-unavailable` | No selected declaration has a usable compiler-checked mapping. | Read the accompanying compiler diagnostics. An unsupported or missing export remains a diagnostic; the builder does not emit an empty Binding IR or package. |
 | `analysis-output-exists` or `build-output-exists` | The chosen output path already exists. | Choose an absent path. The CLI never merges an existing output. |
 | `build-tools-unavailable`, `nix-unavailable`, or `docker-unavailable` | Compiler-backed analysis or building has no usable pinned backend. | Complete [backend setup](setup.md#select-the-build-backend). Analysis does not fall back to scanned signatures. |
 | `invalid-compiler-analysis` | Engine output, invocation identity, or source inputs changed. | Keep inputs stable and rerun. Preserve the diagnostic if it repeats. |

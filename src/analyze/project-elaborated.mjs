@@ -66,10 +66,9 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 		, include: candidates.filter(item => item.status === "exportable").map(item => item.declaration)
 	});
 	const document = adapterHints.length ? semantic.document : reconcileReviewedElaboration(inventory, elaboration, semantic.document);
-	const semanticSha256 = hashBindingIr(document);
 	const declarations = document.declarations;
 	const bindingIr = declarations.length && !diagnostics.some(item => item.category === "extractor-failure" || item.category === "stale-metadata")
-		? { origin: "lean-elaborated", path: null, semanticSha256, document } : null;
+		? { origin: "lean-elaborated", path: null, semanticSha256: hashBindingIr(document), document } : null;
 	if(!bindingIr) diagnostics.push({ code: "binding-ir-unavailable", severity: "error", message: "No supported compiler-checked API is available", path: null, hint: "Resolve the compiler diagnostics or select a supported public API." });
 	for(const item of candidates.filter(item => item.documentation === null))
 		diagnostics.push({ code: "documentation-missing", severity: "warning", message: `${item.declaration} has no documentation comment`, path: item.path, hint: null });
