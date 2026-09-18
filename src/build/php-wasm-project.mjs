@@ -105,6 +105,7 @@ export const buildPhpWasmProject = async options => {
 			, component: built.model.component
 			, runtimeIdentity: built.receipt.runtimeIdentity
 			, bindingIrSha256: built.model.bindingIrSha256
+			, ...(built.model.sourceIdentity.reviewedBindingIr ? { reviewedBindingIrSha256: built.model.sourceIdentity.reviewedBindingIr.semanticSha256 } : {})
 			, configurationSha256: record.sha256
 			, source: { treeSha256: intent.document.source.treeSha256, lakeSnapshotSha256: intent.lakeSnapshot.sha256, toolchain: intent.document.source.toolchain }
 			, packageSet: "packages/php-wasm/php-wasm-package-set.json"

@@ -16,9 +16,9 @@ const typeReference = type => typeof type === "string" ? { kind: "primitive", na
  * Describe the catalog API without importing a compiler model or Alpha fixture.
  *
  * @param library - Independent library and its expected signatures.
+ * @param signatures - Optional independently selected signatures for a narrower ABI.
  */
-export const corpusReviewedIr = library => {
-	const signatures = corpusSignatures(library);
+export const corpusReviewedIr = (library, signatures = corpusSignatures(library)) => {
 	const records = new Map(signatures.flatMap(signature => [...signature.parameters, signature.result])
 		.filter(type => type.record).map(type => [type.record, type]));
 	return { schemaVersion: 3

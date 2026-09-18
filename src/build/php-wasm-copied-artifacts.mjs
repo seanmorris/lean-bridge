@@ -11,6 +11,7 @@ import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-m
 import { generateCopiedPhpZendAdapter } from "../backends/php/copied-zend.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
+import { verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
 
 export const phpWasmCopiedProfile = "php-wasm-copied-v1";
 export const phpWasmCopiedCompilerFiles = Object.freeze(["upstream/emscripten/emcc", "upstream/emscripten/em++.py", "upstream/emscripten/emcc.py", "upstream/emscripten/tools/link.py", "upstream/bin/clang", "upstream/bin/wasm-ld"]);
@@ -129,5 +130,6 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	await validatePhpWasmCopiedBinary(bytes, true);
 	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
 	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
+	verifyReviewedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	return { model, receipt };
 };

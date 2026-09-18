@@ -112,7 +112,7 @@ const composerInstall = async ({ project, handoff, pkg, environment, clean }) =>
  * @param options - Prepared handoff, captured payload identities and explicit tools.
  */
 export const installedPhpWasmCorpus = async options => {
-	const { t, library, consumer, handoff, receipt, packageSet, environment, clean } = options;
+	const { t, library, consumer, handoff, receipt, packageSet, environment, clean, sourcePath = "ordinary-source" } = options;
 	const project = join(consumer, "project"), deployment = join(consumer, "relocated");
 	const bin = join(project, "bin"), cache = join(project, "npm-cache");
 	for(const directory of [bin, cache])
@@ -175,7 +175,7 @@ export const installedPhpWasmCorpus = async options => {
 	for(const [fixture, path] of [["php-wasm", "driver"], ["php-wasm-node", "node"], ["php-wasm-browser", "browser"]])
 		await cp(join(repository, "tests/fixtures/type-corpus/consumers", fixture + ".mjs"), join(deployment, path + ".mjs"));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
-	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode, "php-wasm"));
+	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode, "php-wasm", sourcePath));
 	for(const arrangement of ["embedded", "composer"]) await saveLakeFile(deployment, "request-" + arrangement + ".json", corpusPhpRequestJson(library, "php-wasm", arrangement));
 	await rm(project, { recursive: true, force: true });
 	const evidence = { packageSet
@@ -190,7 +190,7 @@ export const installedPhpWasmCorpus = async options => {
 		, offlineInstall: true, emptyCaches: true, lockedInstall: true
 		, relocated: true, publicApiOnly: true, repeatExecution: true
 		, unchangedDeployment: true, compilerFreeExecution: true
-		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode, "php-wasm"))]))
+		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode, "php-wasm", sourcePath))]))
 		, requests: Object.fromEntries(["embedded", "composer"].map(arrangement => [arrangement, sha256(corpusPhpRequestJson(library, "php-wasm", arrangement))]))
 		, deployment: await phpWasmInventory(deployment), executions: [] };
 	for(const arrangement of ["embedded", "composer"])

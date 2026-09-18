@@ -6,6 +6,8 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
 import { createElaboratedSemanticModel, elaboratedComponent } from "./semantic-model.mjs";
+import { reconcileReviewedElaboration, verifyReviewedSourceInputs } from "./reviewed-source.mjs";
+import { hashBindingIr } from "../binding-ir/canonical.mjs";
 
 /**
  * Build a reviewable report using structural types supplied by Lean itself.
@@ -18,6 +20,7 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 	const { metadata, request } = elaboration;
 	if(metadata.profile !== "component-scalars-v1") throw new Error("Ordinary component projection requires the scalar metadata profile");
 	validateElaboratedMetadata(metadata, request);
+	verifyReviewedSourceInputs(elaboration, inventory.inputs);
 	const elaborationSha256 = sha256(canonicalJson(elaboration));
 	const all = metadata.modules.flatMap(module => module.declarations.map(declaration => ({ ...declaration, module: module.name })));
 	const byIdentity = new Map(all.map(item => [item.identity, item]));
@@ -58,10 +61,12 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 			, question: item.code === "unused-export-contract" ? `Which selected public export should contract ${item.declaration} describe?` : `Which existing public declaration should replace ${item.declaration}?`
 			, choices: ["correct-export-selection"] });
 	const facts = inventory.project;
-	const { document, semanticSha256 } = createElaboratedSemanticModel({
+	const semantic = createElaboratedSemanticModel({
 		metadata, request, component: elaboratedComponent(facts), elaborationSha256
 		, include: candidates.filter(item => item.status === "exportable").map(item => item.declaration)
 	});
+	const document = adapterHints.length ? semantic.document : reconcileReviewedElaboration(inventory, elaboration, semantic.document);
+	const semanticSha256 = hashBindingIr(document);
 	const declarations = document.declarations;
 	const bindingIr = declarations.length && !diagnostics.some(item => item.category === "extractor-failure" || item.category === "stale-metadata")
 		? { origin: "lean-elaborated", path: null, semanticSha256, document } : null;

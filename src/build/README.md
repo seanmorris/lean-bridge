@@ -25,6 +25,8 @@ project analysis + Binding IR + compiler adapter
 
 The build layer owns compilation, linking, and structural validation. It does not choose registry layouts or publication destinations. [`../release`](../release/README.md) consumes completed artifacts without compiler access.
 
+[Reviewed contracts](../../docs/lean/existing-package.md#compile-a-reviewed-contract) follow the same compiler-owned path. An explicit module selection authorizes Lean source roots; the reviewed document selects declarations. Fresh metadata must agree with the review before adapter generation. npm retains the review in its version-3 source intent and elaboration report. Native and PHP-Wasm retain it in their compiled models. Combined releases require the same reviewed input and source API across every selected ABI.
+
 ## Module map
 
 | Modules | Responsibility |

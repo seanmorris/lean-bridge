@@ -2,6 +2,8 @@
 
 This milestone covers VO 1216 and 1217. Two independent reviewed contracts now compile into native packages after reconciliation with fresh Lean metadata. The packages execute without the author workspace or Lean compiler.
 
+The subsequent [reviewed Wasm milestone](reviewed-wasm-20260918.md) extends this path to npm, PHP-Wasm and combined releases. The results below preserve the preceding native-only checkpoint.
+
 ## Source admission
 
 [`reviewed-source.mjs`](../../src/analyze/reviewed-source.mjs) requires one schema-3 `.binding-ir.json` document and explicit source modules in `lean-bridge.exports.json`. The review selects exact declarations. Lake resolves module ownership and dependencies; declaration namespaces do not determine source paths.

@@ -10,7 +10,7 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { projectElaboratedMetadata } from "./project-elaborated.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { compilerExportSelection } from "./export-configuration.mjs";
-import { assertReviewedSourceConfiguration } from "./reviewed-source.mjs";
+import { assertReviewedSourceConfiguration, validateReviewedSource } from "./reviewed-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-compiler-analysis" }); };
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
@@ -139,7 +139,7 @@ export const reviewedProjectAnalysis = async (projectRoot, inventory, signal) =>
  */
 export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => {
 	const elaboration = analysis?.elaboration;
-	closed(elaboration, ["schemaVersion", "kind", "snapshotSha256", "generatedSourcesSha256", "leanCompilerSha256", "extractorSha256", "request", "interfaces", "metadata"]);
+	closed(elaboration, ["schemaVersion", "kind", "snapshotSha256", "generatedSourcesSha256", "leanCompilerSha256", "extractorSha256", "request", "interfaces", "metadata", ...(elaboration.reviewedBindingIr === undefined ? [] : ["reviewedBindingIr"])]);
 	const { request } = elaboration;
 	const selectionFields = compilerExportSelection(inventory.configurationRecord.configuration);
 	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields)]);
@@ -152,7 +152,8 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 		|| !same(request.resources, []) || !same(request.arities, [])) fail("Invalid compiler analysis invocation");
 	if(elaboration.snapshotSha256 !== intent.lakeSnapshot.sha256 || request.metadata.toolchain !== inventory.project.toolchain
 		|| !same(request.exportModules, intent.document.modules.map(item => item.module).sort())
-		|| !same(request.exports, inventory.configurationRecord.configuration.exports ?? [])
+		|| !same(request.exports, elaboration.reviewedBindingIr ? validateReviewedSource(elaboration.reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : inventory.configurationRecord.configuration.exports ?? [])
+		|| !same(elaboration.reviewedBindingIr ?? null, intent.document.reviewedBindingIr ?? null)
 		|| !same(request.specializations ?? [], selectionFields.specializations ?? [])
 		|| !same(request.contracts ?? {}, selectionFields.contracts ?? {})
 		|| !request.exportModules.every(name => request.modules.includes(name)))
@@ -182,6 +183,7 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 		, generatedSourcesSha256: elaboration.generatedSourcesSha256
 		, leanCompilerSha256: elaboration.leanCompilerSha256
 		, extractorSha256: elaboration.extractorSha256
+		, ...(elaboration.reviewedBindingIr ? { reviewedBindingIrSha256: sha256(canonicalJson(elaboration.reviewedBindingIr)) } : {})
 		, modules: metadata.modules });
 	if(!same(reconstructed, request)) fail("Compiler analysis invocation identity is invalid");
 	const expected = compilerProjectAnalysis(inventory, intent.document.modules, elaboration);

@@ -20,7 +20,7 @@ import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { homedir, tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { ComponentBuildPlanError, createComponentBuildPlan, prepareComponentBuildPlan } from "./component-plan.mjs";
+import { ComponentBuildPlanError, createComponentBuildPlan } from "./component-plan.mjs";
 import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
 import { generateCompilerAdapters } from "./compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
@@ -31,7 +31,8 @@ import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
-import { assertSourceBuildInputs, CanonicalBuildError } from "./build-error.mjs";
+import { CanonicalBuildError } from "./build-error.mjs";
+import { readReviewedSource } from "../analyze/reviewed-source.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
@@ -61,6 +62,13 @@ const componentEngineInstallable = async engineRoot => {
 
 const fail = (code, message, options) => {
 	throw new CanonicalBuildError(code, message, options);
+};
+
+const preflightReview = async (root, signal) => {
+	try
+	{ await readReviewedSource(root, await inspectLeanProject(root, { signal }), signal); }
+	catch(error)
+	{ fail(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 };
 
 const exactKeys = (value, keys, label) => {
@@ -795,7 +803,7 @@ export const buildCanonicalProject = async ({
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "PHP-Wasm cannot be combined with an unsupported package target");
 		if(root === engine)
-			fail("invalid-package-targets", "Ordinary PHP-Wasm builds require a source project with fresh Lean metadata, not the universal fixture or supplied Binding IR");
+			fail("invalid-package-targets", "Ordinary PHP-Wasm builds require a source project with fresh Lean metadata, not the universal fixture");
 		if(cache === null || typeof cache !== "object" || !["use", "refresh", "off"].includes(cache.policy)) fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
 		if(cache.directory !== null && cache.directory !== undefined) fail("cache-directory-unsupported", "PHP-Wasm builds do not implement --cache-directory; use a verified LEAN_BRIDGE_PHP_COPIED_RUNTIME input for shared runtime reuse");
 	}
@@ -804,7 +812,7 @@ export const buildCanonicalProject = async ({
 	{
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
-		if(normalized.includes("npm") || phpWasm) assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
+		if(normalized.includes("npm") || phpWasm) await preflightReview(root, signal);
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)
@@ -815,7 +823,7 @@ export const buildCanonicalProject = async ({
 			, wasmTargets: normalized.filter(target => ["npm", "php-wasm"].includes(target))
 			, buildWasm: buildCanonicalProject });
 	}
-	if(root !== engine) assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
+	if(root !== engine) await preflightReview(root, signal);
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{
 		fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
@@ -846,10 +854,7 @@ export const buildCanonicalProject = async ({
 		}
 		else
 		{
-			const inventory = await inspectLeanProject(root, { signal });
-			if(!inventory.inputs.some(input => input.path.endsWith(".binding-ir.json")))
-				entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
-			if(!entryIntent) componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal, lakeSnapshot });
+			entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
 		}
 	} catch(error)
 	{

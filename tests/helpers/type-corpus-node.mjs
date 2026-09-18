@@ -19,6 +19,8 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { leanCorpusOracle, prepareCorpusSources } from "./type-corpus-source.mjs";
 import { corpusCaseSupported, corpusProfiles, corpusProfileSignatures, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
 import { browserFrameworkArchives, installedBrowserCorpus } from "./type-corpus-browser.mjs";
+import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
+import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -143,8 +145,11 @@ const installed = async (library, profile, consumer, handoff, receipt, oracle) =
  * @param t - Test context owning all disposable directories.
  * @param library - Independent catalog library.
  * @param profiles - Node and browser profiles sharing the same prepared release.
+ * @param options - Explicit ordinary-source or reviewed-IR path.
+ * @param options.path - Source path counted by the installed corpus.
  */
-export const runNpmCorpusLibrary = async (t, library, profiles) => {
+export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordinary-source" } = {}) => {
+	assert.ok(["ordinary-source", "reviewed-ir"].includes(path));
 	assert.ok(profiles.length > 0 && profiles.every(profile => corpusProfiles[profile]?.transport === "wasm"));
 	const space = await statfs(tmpdir());
 	assert.ok(Number(space.bavail) * Number(space.bsize) >= 3 * 1024 ** 3, "Corpus builds need 3 GiB of free scratch space");
@@ -154,6 +159,11 @@ export const runNpmCorpusLibrary = async (t, library, profiles) => {
 	const signatures = corpusProfileSignatures(library, profiles[0]);
 	const targets = { npm: { name: library.npmModule, version: "1.0.0" } };
 	const context = await prepareCorpusSources(t, library, signatures.map(signature => signature.name), targets);
+	if(path === "reviewed-ir")
+	{
+		await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [library.module], targets }));
+		await saveLakeFile(context.root, "reviewed.binding-ir.json", canonicalJson(corpusReviewedIr(library, signatures)));
+	}
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling independent Lean oracle for npm`);
 	const oracle = await leanCorpusOracle(context, library, leanPrefix);
@@ -183,7 +193,13 @@ export const runNpmCorpusLibrary = async (t, library, profiles) => {
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(context.directory, `npm-${index}`) });
 		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
 		const runtime = await json(join(release.output, "runtime/package/package.json"));
+		const reviewed = path === "reviewed-ir" ? { elaboration
+			, inventory: await inspectLeanProject(join(bundleRoot, "source"))
+			, intent: { document: input.entryIntent.document, lakeSnapshot: { sha256: input.entryIntent.lakeSnapshot.sha256, document: input.entryIntent.lakeSnapshot.document } }
+			, ir: await json(join(bundleRoot, "binding/binding-ir.json"))
+			, receipt: release.report } : undefined;
 		releases.push({ ...release, declarationEvidence
+			, ...(reviewed ? { reviewed } : {})
 			, runtimeIdentity: runtime.leanBridge.runtimeIdentity
 			, compilerSha256: elaboration.leanCompilerSha256
 			, lakeSnapshotSha256: input.entryIntent.lakeSnapshot.sha256 });
@@ -202,7 +218,17 @@ export const runNpmCorpusLibrary = async (t, library, profiles) => {
 	await cp(context.workspace, pending, { recursive: true });
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.module, library.pendingModule]
-		, exports: [signatures[0].name, ...rejectedExports], targets }));
+		, ...(path === "ordinary-source" ? { exports: [signatures[0].name, ...rejectedExports] } : {}), targets }));
+	if(path === "reviewed-ir")
+	{
+		const document = corpusReviewedIr(library, [signatures[0], ...corpusSignatures(library).filter(signature => unsupported.includes(signature.name))]);
+		const template = document.declarations[0];
+		document.declarations.push({ ...template, id: `lean:${library.pendingExport}`
+			, name: library.pendingExport.split(".").at(-1)
+			, overloadKey: library.pendingExport
+			, source: { ...template.source, declaration: library.pendingExport } });
+		await saveLakeFile(join(pending, "project"), "reviewed.binding-ir.json", canonicalJson(document));
+	}
 	const rejectedInput = await capture(join(pending, "project"), join(context.directory, "rejected-input"));
 	const rejectedOutput = join(context.directory, "rejected-output");
 	let rejection;
@@ -234,7 +260,8 @@ export const runNpmCorpusLibrary = async (t, library, profiles) => {
 	{
 		t.diagnostic(`${library.id}: installing and executing ${profile} offline without Lean or C compilers`);
 		const observed = await installed(library, profile, consumer, handoff, receipt, result);
-		runs.push({ library: library.id, profile, path: "ordinary-source"
+		runs.push({ library: library.id, profile, path
+			, ...(release.reviewed ? { reviewed: release.reviewed } : {})
 			, archiveSha256: receipt.package.sha256
 			, archive: { ...receipt.package, target: "npm" }
 			, runtimeArchive: { ...receipt.runtime, target: "npm" }

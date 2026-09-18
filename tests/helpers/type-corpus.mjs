@@ -556,7 +556,6 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		assert.ok(library, "Unknown corpus library");
 		if(run.path === "reviewed-ir")
 		{
-			assert.equal(corpusProfiles[run.profile].transport, "native");
 			validateReviewedCorpusBuild(run, library);
 		}
 		else assert.equal(run.reviewed, undefined, "Ordinary evidence cannot be relabeled reviewed execution");
@@ -625,7 +624,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 			, position: cell.position
 			, status: caseIds.length ? "observed" : "gap", cases: caseIds
 			, reason: caseIds.length ? "scoped-cases-only" : !Object.hasOwn(corpusProfiles, cell.profile) ? "adapter-not-implemented"
-				: cell.path === "reviewed-ir" && corpusProfiles[cell.profile].transport !== "native" ? "source-path-not-implemented" : "case-not-executed"
+				: "case-not-executed"
 			, owner: cell.owner };
 	});
 };

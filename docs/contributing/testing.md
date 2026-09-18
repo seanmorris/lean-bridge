@@ -375,7 +375,7 @@ Each browser profile gets a separate offline npm installation. React dependencie
 
 Browser checks cover repeated calls, recovery after a missing WASM asset, production React and development StrictMode effects, unmount/remount and unmount while WASM loads, and dedicated-worker reuse, termination and restart. Worker results must come from the worker realm. Reports retain each engine/variant's observations and lifecycle checks separately; extra engine runs do not multiply type-position coverage.
 
-Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. All 17 ordinary-source adapters are implemented. Unsupported or unexecuted cases remain gaps. A separate report covers compiler-checked reviewed native builds. These scoped cases do not change the [type-support inventory](../reference/types.md).
+Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. All 17 ordinary-source adapters are implemented. Unsupported or unexecuted cases remain gaps. Separate reports cover compiler-checked reviewed native and Wasm builds. These scoped cases do not change the [type-support inventory](../reference/types.md).
 
 The C/C++ report is `c-cpp.json`. It records GCC identities, public signature and caller hashes, source-located compiler diagnostics, pkg-config and CMake integration, deployed library/executable hashes, and repeated source-free execution. `cFamilyRuntimeRejections` counts the additional 60 invalid-input/recovery checks across both libraries. The two build integrations and repeated executions do not multiply catalog or coverage counts.
 
@@ -425,11 +425,42 @@ LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 \
   node --test tests/reviewed-source-build.test.mjs
 ```
 
-These checks cover a namespace that differs from its source module, changed signatures, record field order and nominal identity, exports outside the selected roots, and review-file changes during compilation. Invalid inputs must stop before native linking and leave no component output.
+These checks cover a namespace that differs from its source module, changed signatures, record field order and nominal identity, exports outside the selected roots, and review-file changes during compilation. Scalar checks also reject changed public names, missing retained reviews and altered invocation evidence. Invalid inputs must stop before native linking or scalar adapter generation and leave no component output.
 
-Reports use `reviewed-native-<sorted-profiles>.json` in `build/type-corpus/`. Each native CI corpus step runs both source paths and uploads both reports in its existing artifact. npm and PHP-Wasm reviewed paths remain gaps. Observed reviewed cells cover the executed copied-value cases only; they do not promote the full type-support inventory.
+Reports use `reviewed-native-<sorted-profiles>.json` in `build/type-corpus/`. Each native CI corpus step runs both source paths and uploads both reports in its existing artifact. Observed reviewed cells cover the executed copied-value cases only; they do not promote the full type-support inventory.
 
 The [reviewed native acceptance record](../evidence/reviewed-native-20260918.md) lists the eleven-profile results, compiler rejections and retained identities.
+
+### Compiler-checked reviewed Wasm corpus
+
+Use the npm and PHP-Wasm toolchains from the ordinary-source corpus instructions above. The reviewed corpus uses independently specified contracts for the same two libraries:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:reviewed-wasm
+```
+
+Run npm or PHP-Wasm separately with `npm run test:type-corpus:reviewed-npm` and `npm run test:type-corpus:reviewed-php-wasm`. To select individual profiles:
+
+```sh
+LEAN_BRIDGE_REVIEWED_WASM_PROFILES=node-javascript,browser-worker \
+  node --test tests/type-corpus-reviewed-wasm.test.mjs
+```
+
+Each library builds twice from relocated locked sources. Consumers install the reproduced archives offline after the harness removes the author and build directories. npm checks JavaScript, strict TypeScript, browser JavaScript, React and dedicated workers. PHP-Wasm checks weak/strict callers through Node and Chromium, embedded/Composer APIs, and startup/lazy loading. npm's review selects only primitive signatures; its aggregate cases remain unsupported. PHP-Wasm also checks copied arrays and records.
+
+Reports use `reviewed-wasm-<sorted-profiles>.json`. They retain the reviewed bytes, compiler invocation, source inventory and generated API separately from consumer results. Validators reject changed or missing review evidence, inconsistent receipts and attempts to label ordinary-source results as reviewed execution. CI requires both ordinary and reviewed reports in each existing npm/PHP-Wasm artifact.
+
+Check combined reviewed releases with:
+
+```sh
+LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 \
+  node --test tests/php-wasm-multi-profile.test.mjs
+```
+
+This checks all three ABIs together, reversed target order, native/PHP-Wasm, and npm/PHP-Wasm. It requires one compilation per selected ABI, identical relocated archives, agreement on the reviewed input and source API, and execution from relocated installed packages. The PHP CI job runs both ordinary and reviewed variants.
+
+The [reviewed Wasm acceptance record](../evidence/reviewed-wasm-20260918.md) lists the six-profile results, combined releases, rejection checks and retained identities.
 
 CI requires all 17 adapters: C, C++, .NET, Java, Kotlin, Python, Ruby, Rust, native PHP, PHP-Wasm, WIT/WASI, all five npm adapters and all four Perl configurations. Jobs upload `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-jvm-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-php-native-<commit>`, `type-corpus-php-wasm-<commit>`, `type-corpus-wit-wasi-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
 

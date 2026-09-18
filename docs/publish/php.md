@@ -105,6 +105,8 @@ The npm component declares its exact shared-runtime dependency. Its default desc
 
 Pure copied primitives, arrays and acyclic records are supported. On this 32-bit PHP host, `UInt32` and `Int64` use `BigInteger`, as do `UInt64`, `Nat` and `Int`. Startup and first-call loading execute in Node 22 and Chromium with `php-wasm` 0.1.0. The [browser example](../php.md#run-in-a-browser) bundles Lean assets with Vite and serves the PHP host unchanged. The [acceptance record](../evidence/php-wasm-lazy-20260915.md) covers deferred downloads, runtime sharing and loading failures.
 
+Both native PHP and PHP-Wasm can compile an [explicit reviewed copied-value contract](../lean/existing-package.md#compile-a-reviewed-contract). Keep one `.binding-ir.json` file, select its source `modules`, and remove `exports` from the shared configuration. The builder compares the reviewed API with fresh Lean metadata before generating PHP. Receipts retain the review alongside the compiler evidence. The prepared Composer/npm packages and consumer loading steps remain the same.
+
 ### Combine PHP-Wasm with other targets
 
 For an API accepted by every selected target:

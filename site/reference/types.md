@@ -1,6 +1,6 @@
 # Types and values
 
-Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below document the ordinary pure-function path.
+Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below apply to compiler-backed pure-function packages, with or without a reviewed contract.
 
 ## Full type surface
 

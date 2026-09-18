@@ -192,9 +192,9 @@ export async function renderTypeDocuments({ root })
 			, ""
 			, table(["Lean type or source form", "Meaning", "Bounds and representation", "Ownership, absence and failure"], shapeRows)
 			, ""
-			, "The ordinary npm, C and C++ paths have installed acceptance for their 16 primitive input/result types. C/C++ also supports nested copied arrays and acyclic records, including primitive fields. Alpha's reviewed profiles exercise a fixed selection of records, arrays, resources and callables. C#, Java, Kotlin and Ruby currently use fixed Alpha projections; they do not implement general mappings for all the rows above."
+			, "Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. npm accepts sixteen primitive parameter/result types; native and PHP-Wasm also accept copied arrays and acyclic records."
 			, ""
-			, "PHP's numeric and async declarations, Python's rich annotations and WIT's declarations extend beyond their installed transport coverage. Rust rejects arbitrary-precision integers. JavaScript rejects anonymous Option, result and tuple applications. Missing implementations remain assigned work in the [type inventory](../type-surface.v1.json)."
+			, "The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json)."
 		].join("\n")
 	};
 }

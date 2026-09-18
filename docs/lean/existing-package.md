@@ -22,7 +22,7 @@ Read `proposedExports`, diagnostics, and adapter questions. The command uses the
 
 Analysis leaves the original checkout unchanged. A dependency-free Lake project needs no lockfile; dependencies and configured [generators](#generate-the-public-entry-module) require a reviewed `lake-manifest.json`. The engine runs declared generators against captured inputs before analyzing generated public modules. It does not build consumer adapters or packages.
 
-An explicit reviewed Binding IR takes a separate analysis path: `analyze` validates the document without invoking Lean. Native builds can [check a reviewed copied-value API against its source](#compile-a-reviewed-contract). npm, PHP-Wasm and combined native/Wasm builds still reject supplied `.binding-ir.json` files. Missing backends and compiler errors never fall back to source-scanned signatures.
+An explicit reviewed Binding IR takes a separate analysis path: `analyze` validates the document without invoking Lean. Native, npm, PHP-Wasm and combined builds can [check a reviewed API against its source](#compile-a-reviewed-contract). Missing backends and compiler errors never fall back to source-scanned signatures.
 
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 
@@ -68,9 +68,18 @@ lean-bridge build --project . --target pypi --output ./build/reviewed-release
 
 The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
 
-This path accepts pure copied primitives, arrays and immutable records for native targets: C, C++, .NET, Java/Kotlin, Perl, native PHP, Python, Ruby, Rust and WIT/WASI. Documentation and argument names may differ from the compiler's defaults and are retained in the generated Binding IR. Host export names must match. Defaults, optional arguments, resources, callbacks, asynchronous operations, producer or source extensions and supplied assurance claims are not admitted. Do not combine a review with `exports`, `resources`, `arities`, `specializations` or `contracts` in the configuration.
+Native targets and PHP-Wasm accept reviewed pure copied primitives, arrays and immutable records. Native targets include C, C++, .NET, Java/Kotlin, Perl, native PHP, Python, Ruby, Rust and WIT/WASI. npm accepts the sixteen primitive parameter/result types supported by its scalar ABI; reviewed arrays and records still fail its compiler checks. Documentation and argument names may differ from the compiler's defaults and are retained in the generated Binding IR. Host export names must match. Defaults, optional arguments, resources, callbacks, asynchronous operations, producer or source extensions and supplied assurance claims are not admitted. Do not combine a review with `exports`, `resources`, `arities`, `specializations` or `contracts` in the configuration.
 
-The native model and compilation receipt retain the review's raw file, source hash and semantic hash alongside fresh compiler evidence. The compiler request binds both inputs, and the artifact verifier repeats the contract comparison. A signature disagreement returns `reviewed-ir-source-mismatch`; an unsupported review decision returns `reviewed-ir-build-unsupported`. Neither produces a release. Compiler-free `analyze` validates the document only; it does not establish source agreement.
+Use the same source project for npm or PHP-Wasm, with the target coordinates from the [npm](../publish/npm.md) and [PHP](../publish/php.md) guides. For an API admitted by all three profiles:
+
+```sh
+lean-bridge build --project . --target npm --target php-native --target php-wasm \
+  --output ./build/reviewed-multi-release
+```
+
+The builder compiles once per ABI, checks that each profile used the same reviewed input and source API, and creates the output directory only after every target succeeds. Adding npm restricts the combined API to its primitive surface; the builder does not silently omit reviewed declarations.
+
+Native and PHP-Wasm models and compilation receipts retain the review's raw file, source hash and semantic hash alongside fresh compiler evidence. npm retains the review in its source-intent request and `metadata/lake-entry-exports.json`; target compilation must reproduce that report, and packaging repeats the source/contract checks. Package receipts bind these artifacts through their recorded hashes. A signature disagreement returns `reviewed-ir-source-mismatch`; an unsupported review decision returns `reviewed-ir-build-unsupported`. Unsupported source types retain the target's compiler diagnostics. None produces a release. Compiler-free `analyze` validates the document only; it does not establish source agreement.
 
 ### Describe the downstream packages
 

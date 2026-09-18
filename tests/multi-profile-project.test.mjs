@@ -54,6 +54,9 @@ test("multi-profile API agreement rejects different sources, meaning, contracts 
 		, value => { value.nativeModel.sourceIdentity.lakeDependencies.snapshotSha256 = "0".repeat(64); }
 		, value => { value.nativeModel.sourceIdentity.exportConfigurationSha256 = "0".repeat(64); }
 		, value => { value.nativeModel.sourceIdentity.leanCommit = "0".repeat(40); }
+		, value => { value.nativeModel.sourceIdentity.reviewedBindingIr = {}; }
+		, value => { value.wasmElaboration = { reviewedBindingIr: {} }; }
+		, value => { value.intent.document.reviewedBindingIr = {}; }
 		, value => { value.wasmPlan.bindingIr.origin = "existing-validated"; }
 		, value => { value.wasmIr.declarations[0].result.type.name = "uint64"; }
 		, value => { value.wasmIr.declarations[0].source.extensions["lean-lang.org/export-contract"] = { effects: [] }; }
@@ -76,6 +79,8 @@ test("PHP-Wasm/native agreement retains distinct widths and rejects source or AP
 		, value => { value.models[1].sourceIdentity.leanCompilerSha256 = "0".repeat(64); }
 		, value => { value.models[1].sourceIdentity.extractorSha256 = "0".repeat(64); }
 		, value => { value.models[1].sourceIdentity.sourceTreeSha256 = "0".repeat(64); }
+		, value => { value.models[1].sourceIdentity.reviewedBindingIr = {}; }
+		, value => { value.intent.document.reviewedBindingIr = {}; }
 		, value => { value.models[1].bindingIr.declarations[0].result.type.name = "uint64"; }
 		, value => { value.models.push(value.models[1]); }
 	]) {

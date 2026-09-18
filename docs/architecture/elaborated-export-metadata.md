@@ -1,6 +1,8 @@
 # Elaborated export metadata
 
-The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to Binding IR projection. Public `lean-bridge analyze`, ordinary npm builds and native CPAN builds use this report for captured and generated public modules. Explicit reviewed Binding IR retains its existing validation and build-profile gates.
+The [version-2 metadata schema](../../schema/elaborated-export-metadata.schema.json) connects the Lean-side extractor to Binding IR projection. Public `lean-bridge analyze`, ordinary npm builds and native CPAN builds use this report for captured and generated public modules. Explicit reviewed Binding IR has a compiler-free analysis path and a separate [compiler-checked build path](../lean/existing-package.md#compile-a-reviewed-contract).
+
+Reviewed builds retain the exact document as `reviewedBindingIr`. Its hash joins the source, interface, compiler and extractor identities in the invocation digest. Native and PHP-Wasm models reconcile the review through their retained source identity. npm's version-3 source intent carries the review into the isolated engine, and its elaboration record retains it for target compilation and package verification. Reviewed names and types cannot replace compiler-owned facts; supported documentation and argument names survive reconciliation.
 
 ## Compiler report
 

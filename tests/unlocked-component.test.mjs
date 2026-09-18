@@ -157,12 +157,12 @@ test("unlocked sources keep generator, configuration, and target capability gate
 	assert.deepEqual(await lakeInputState(generated.workspace), before);
 });
 
-test("reviewed IR retains its existing adapter gate instead of being promoted to fresh metadata", async t => {
+test("reviewed IR without source authorization fails before compiler discovery", async t => {
 	const { directory, root } = await fixture(t);
 	const { ir } = await packageReference("tests/fixtures/documentation/lean-author");
 	await saveLakeFile(root, "reviewed.binding-ir.json", canonicalJson(ir));
 	const before = await lakeInputState(root);
-	await assert.rejects(() => prepareLakeEntryIntent({ projectRoot: root }), /not supported by this build profile/);
+	await assert.rejects(() => prepareLakeEntryIntent({ projectRoot: root }), /Set modules in lean-bridge.exports.json/);
 	await assert.rejects(() => build(root, join(directory, "result"), transport({ execute: () => assert.fail("Reviewed IR bypassed its adapter gate") })), { code: "reviewed-ir-build-unsupported" });
 	assert.deepEqual(await lakeInputState(root), before);
 	assert.deepEqual(await readdir(directory), ["project"]);

@@ -15,6 +15,12 @@ import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { corpusLibraries } from "./fixtures/type-corpus/cases.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { prepareLakeEntryIntent, readLakeEntryIntent, writeLakeEntryInputs } from "../src/build/lake-entry-intent.mjs";
+import { resolveLakeBuildWorkspace } from "../src/build/lake-build-workspace.mjs";
+import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.mjs";
+import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
+import { compilerProjectAnalysis, validateCompilerProjectAnalysis } from "../src/analyze/project-analysis.mjs";
+import { createComponentBuildPlan } from "../src/build/component-plan.mjs";
 
 const source = `namespace Public
 structure Packet where
@@ -111,5 +117,59 @@ test("fresh Lean checks review identities, record layouts, selection and drift b
 		assert.equal(adapterChecked, variant.code === "test-checked");
 		await assert.rejects(() => lstat(outputRoot), { code: "ENOENT" });
 		if(!variant.drift) assert.deepEqual(await lakeInputState(root), before);
+	}
+});
+
+test("fresh scalar compilation binds reviewed requests and rejects disagreement before adapters", {
+	skip: process.env.LEAN_BRIDGE_REVIEWED_SOURCE_TEST !== "1", timeout: 180_000
+}, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-scalar-test-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const root = join(directory, "project"), engineRoot = process.cwd();
+	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+	await saveLakeFile(root, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
+	await saveLakeFile(root, "lakefile.toml", 'name = "sample"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Entry"\n');
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Entry"] }));
+	await saveLakeFile(root, "Entry.lean", source);
+	const runtime = JSON.parse(await readFile("poc/lean-link-spike/graph-lock.json", "utf8")).runtime;
+	for(const [index, change] of [
+		() => {}
+		, ir => { ir.declarations[0].parameters[0].type.name = "uint64"; }
+		, ir => { ir.declarations[0].result.type.name = "uint64"; }
+		, ir => { ir.declarations[0].name = "anotherName"; }
+	].entries()) {
+		const ir = contract(); ir.types = []; ir.declarations = ir.declarations.slice(0, 1); change(ir);
+		await saveLakeFile(root, "api.binding-ir.json", canonicalJson(ir));
+		const intent = await prepareLakeEntryIntent({ projectRoot: root });
+		assert.equal(intent.document.schemaVersion, 3);
+		const inputRoot = join(directory, `input-${index}`);
+		await writeLakeEntryInputs({ intent, outputRoot: inputRoot });
+		assert.deepEqual((await readLakeEntryIntent({ inputRoot, expectedSha256: intent.sha256 })).document, intent.document);
+		const inventory = await inspectLeanProject(root);
+		const workspace = await resolveLakeBuildWorkspace({ snapshot: intent.lakeSnapshot, modules: ["Entry"], leanPrefix });
+		try
+		{
+			const compile = () => elaborateLakeEntryModules({ inventory, entries: intent.document.modules, workspace, leanPrefix, engineRoot, reviewedBindingIr: intent.document.reviewedBindingIr });
+			if(index) await assert.rejects(compile, { code: "reviewed-ir-source-mismatch" });
+			else
+			{
+				const analysis = await compile();
+				assert.deepEqual(analysis.bindingIr.document.declarations[0].parameters.map(item => item.name), ["value0"]);
+				createComponentBuildPlan({ analysis, runtime, targets: ["npm"], lakeSnapshotSha256: intent.lakeSnapshot.sha256 });
+				const report = compilerProjectAnalysis(inventory, intent.document.modules, analysis.elaboration);
+				validateCompilerProjectAnalysis(report, inventory, intent);
+				for(const tamper of [
+					value => { delete value.elaboration.reviewedBindingIr; }
+					, value => { value.elaboration.reviewedBindingIr.source += " "; }
+					, value => { value.elaboration.request.exports = []; }
+					, value => { value.bindingIr.document.declarations[0].parameters[0].name = "notReviewed"; }
+				]) {
+					const forged = structuredClone(report); tamper(forged);
+					assert.throws(() => validateCompilerProjectAnalysis(forged, inventory, intent));
+				}
+				await assert.rejects(() => elaborateLakeEntryModules({ inventory, entries: intent.document.modules, workspace, leanPrefix, engineRoot }), { code: "reviewed-ir-source-mismatch" });
+			}
+		} finally
+		{ await workspace.dispose(); }
 	}
 });

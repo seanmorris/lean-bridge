@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
+import { createMetadataRequest } from "./elaborated-metadata.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -29,7 +30,7 @@ export const assertReviewedSourceConfiguration = configuration => {
 
 const checkReview = document => {
 	const reject = (condition, path) => {
-		if(condition) unsupported(`Reviewed native builds do not support this decision: ${path}`, { path });
+		if(condition) unsupported(`Reviewed builds do not support this decision: ${path}`, { path });
 	};
 	for(const field of ["errors", "capabilities", "assurance"]) reject(document[field].length, field);
 	for(const producer of document.producers) reject(Object.keys(producer.extensions).length, `producers.${producer.id}.extensions`);
@@ -101,7 +102,7 @@ export const readReviewedSource = async (projectRoot, inventory, signal) => {
 	const inputs = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json"));
 	if(!inputs.length) return null;
 	const paths = inputs.map(input => input.path).sort();
-	if(inputs.length !== 1) unsupported("Native compilation requires exactly one reviewed Binding IR", { paths });
+	if(inputs.length !== 1) unsupported("Compilation requires exactly one reviewed Binding IR", { paths });
 	const config = inventory.configurationRecord.configuration;
 	assertReviewedSourceConfiguration(config);
 	if(!config.modules?.length) unsupported("Set modules in lean-bridge.exports.json to authorize the reviewed contract's Lean source roots", { paths });
@@ -157,7 +158,7 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	assertReviewedSourceConfiguration(config);
 	const request = sourceIdentity.request;
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
-		|| !same(config.modules, request.exportModules)
+		|| !same(ordered(config.modules), ordered(request.exportModules))
 		|| !same(ordered(request.exports), ordered(document.declarations.map(item => item.source.declaration)))
 		|| request.resources.length || request.arities.length || request.specializations !== undefined || request.contracts !== undefined)
 		mismatch("Reviewed contract differs from the authorized compiler selection");
@@ -190,4 +191,31 @@ export const verifyReviewedSourceInputs = (sourceIdentity, inputs) => {
 	validateReviewedSource(review);
 	if(reviews.length !== 1 || reviews[0].path !== review.path || reviews[0].sha256 !== review.sourceSha256
 		|| reviews[0].bytes !== Buffer.byteLength(review.source)) mismatch("Reviewed contract differs from captured source inputs");
+};
+
+/**
+ * Reconstruct the scalar compiler invocation before reconciling a reviewed API.
+ *
+ * @param inventory - Independently captured project configuration and inputs.
+ * @param elaboration - Retained scalar compiler evidence and reviewed input.
+ * @param compiled - Semantic document derived from that compiler's metadata.
+ */
+export const reconcileReviewedElaboration = (inventory, elaboration, compiled) => {
+	const { reviewedBindingIr, request } = elaboration;
+	verifyReviewedSourceInputs({ reviewedBindingIr }, inventory.inputs);
+	if(reviewedBindingIr === undefined) return compiled;
+	const { metadata, ...selection } = request;
+	const expected = createMetadataRequest(selection, { toolchain: inventory.project.toolchain
+		, snapshotSha256: elaboration.snapshotSha256
+		, generatedSourcesSha256: elaboration.generatedSourcesSha256
+		, leanCompilerSha256: elaboration.leanCompilerSha256
+		, extractorSha256: elaboration.extractorSha256
+		, reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr))
+		, modules: metadata.modules });
+	if(!same(request, expected)) mismatch("Reviewed scalar invocation differs from retained compiler/source evidence");
+	return reconcileReviewedSource(reviewedBindingIr, compiled, {
+		request
+		, exportConfigurationSource: canonicalJson(inventory.configurationRecord.configuration)
+		, exportConfigurationSha256: inventory.configurationRecord.sha256
+	});
 };

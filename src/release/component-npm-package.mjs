@@ -24,6 +24,10 @@ import { componentNpmIdentity, validateComponentPackageReceipt } from "./compone
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
 import { isSourceNotice, sourceNoticeMetadata } from "./source-notices.mjs";
 import { npmPackageMetadata } from "../analyze/package-metadata.mjs";
+import { inspectLeanProject } from "../analyze/lean-project.mjs";
+import { compilerProjectAnalysis, validateCompilerProjectAnalysis } from "../analyze/project-analysis.mjs";
+import { prepareLakeEntryIntent } from "../build/lake-entry-intent.mjs";
+import { readLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -49,6 +53,21 @@ const verifiedBundle = async bundleRoot => {
 		{
 			throw new Error(`component bundle file differs from its manifest: ${item.path}`);
 		}
+	}
+	const evidencePath = "metadata/lake-entry-exports.json";
+	const elaboration = manifest.files.some(item => item.path === evidencePath)
+		? JSON.parse(await readFile(join(root, evidencePath), "utf8")) : null;
+	if(elaboration?.reviewedBindingIr || manifest.files.some(item => item.path.startsWith("source/") && item.path.endsWith(".binding-ir.json")))
+	{
+		const projectRoot = join(root, "source"), inventory = await inspectLeanProject(projectRoot);
+		const lakeSnapshot = await readLakeDependencySnapshot({ snapshotRoot: join(root, "lake"), expectedSha256: elaboration?.snapshotSha256 });
+		const intent = await prepareLakeEntryIntent({ projectRoot, lakeSnapshot });
+		const analysis = compilerProjectAnalysis(inventory, intent.document.modules, elaboration);
+		validateCompilerProjectAnalysis(analysis, inventory, intent);
+		if(canonicalJson(analysis.bindingIr?.document) !== await readFile(join(root, "binding/binding-ir.json"), "utf8")
+			|| analysis.bindingIr?.semanticSha256 !== manifest.bindingIrSemanticSha256
+			|| analysis.adapterHints.length || analysis.diagnostics.some(item => item.severity === "error"))
+			throw new Error("Reviewed npm bundle differs from its captured source and compiler contract");
 	}
 	return Object.freeze({ root, manifest: Object.freeze(manifest), manifestSha256: sha256(canonicalJson(manifest)) });
 };

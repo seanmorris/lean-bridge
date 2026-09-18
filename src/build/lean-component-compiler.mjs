@@ -17,6 +17,8 @@ import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { readExportConfiguration, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
+import { inspectLeanProject } from "../analyze/lean-project.mjs";
+import { readReviewedSource, validateReviewedSource } from "../analyze/reviewed-source.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -221,8 +223,10 @@ export const compileLeanComponentSources = async ({
 			const expectedBytes = elaborated ? await readChecked(join(inputs, "generated/lake-entry-exports.json"), { sha256: compilationPlan.document.source.elaborationSha256 }, "elaborated public API") : null;
 			const rich = elaborated && JSON.parse(expectedBytes.toString()).schemaVersion === 3;
 			if(elaborated && !rich) fail("lean-entry-elaboration-drift", "Target compilation requires the shared compiler metadata report");
+			const sourceInventory = elaborated ? await inspectLeanProject(join(inputs, "source")) : null;
+			const reviewedBindingIr = elaborated ? await readReviewedSource(join(inputs, "source"), sourceInventory) : null;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
-			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: configuration.exports ?? [], resources: [], arities: [], ...compilerExportSelection(configuration) }
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? [], resources: [], arities: [], ...compilerExportSelection(configuration) }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
 			const interfaces = [];
 			if(rich)
@@ -235,6 +239,7 @@ export const compileLeanComponentSources = async ({
 					, generatedSourcesSha256: lake.generatedSources?.sha256 ?? null
 					, leanCompilerSha256: lake.document.leanCompilerSha256
 					, extractorSha256: sha256(await readFile(checker))
+					, ...(reviewedBindingIr ? { reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr)) } : {})
 					, modules: lake.resolution.modules.map((module, index) => ({ name: module.module, sourcePath: module.path, sourceSha256: module.source.sha256, interfaceSha256: interfaces[index].interfaceSha256 })) });
 			}
 			await writeFile(request, canonicalJson(exportRequest));
@@ -251,6 +256,7 @@ export const compileLeanComponentSources = async ({
 						, extractorSha256: sha256(await readFile(checker))
 						, request: exportRequest
 						, interfaces
+						, ...(reviewedBindingIr ? { reviewedBindingIr } : {})
 						, metadata: JSON.parse(checked.stdout) };
 					if(expectedBytes.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
 					if(rich) for(const record of interfaces)

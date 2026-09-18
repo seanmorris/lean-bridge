@@ -1,6 +1,6 @@
 # Types and values
 
-Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below document the ordinary pure-function path.
+Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below apply to compiler-backed pure-function packages, with or without a reviewed contract.
 
 ## Full type surface
 
@@ -77,9 +77,9 @@ Inventory 0.3.0 covers 48 source forms and 17 consumer profiles. The language ta
 | `Synchronous iterator` | A sequence delivered by explicit pulls. | Preserve values, end-of-sequence, failure, early return and cleanup. | Preserve every argument and result ownership transition, including cleanup after rejection or cancellation. Keep parameter omission, declared defaults, Option.none and host null distinct. Preserve declared errors, effect order and delivery protocol; reject unsupported signatures before producing a release. |
 | `Asynchronous iterator` | A sequence whose individual pulls can complete later. | Preserve backpressure, pending-pull cancellation and terminal cleanup. | Preserve every argument and result ownership transition, including cleanup after rejection or cancellation. Keep parameter omission, declared defaults, Option.none and host null distinct. Preserve declared errors, effect order and delivery protocol; reject unsupported signatures before producing a release. |
 
-The ordinary npm, C and C++ paths have installed acceptance for their 16 primitive input/result types. C/C++ also supports nested copied arrays and acyclic records, including primitive fields. Alpha's reviewed profiles exercise a fixed selection of records, arrays, resources and callables. C#, Java, Kotlin and Ruby currently use fixed Alpha projections; they do not implement general mappings for all the rows above.
+Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. npm accepts sixteen primitive parameter/result types; native and PHP-Wasm also accept copied arrays and acyclic records.
 
-PHP's numeric and async declarations, Python's rich annotations and WIT's declarations extend beyond their installed transport coverage. Rust rejects arbitrary-precision integers. JavaScript rejects anonymous Option, result and tuple applications. Missing implementations remain assigned work in the [type inventory](../type-surface.v1.json).
+The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json).
 
 ## Generated host types
 

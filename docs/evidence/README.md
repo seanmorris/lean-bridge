@@ -16,6 +16,8 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 
 ## Author workflow and release
 
+- [Compiler-checked reviewed Wasm APIs and combined releases, 18 September 2026](reviewed-wasm-20260918.md)
+- [Compiler-checked reviewed native APIs, 18 September 2026](reviewed-native-20260918.md)
 - [npm scalar ABI and signed release hardening, 9 September 2026](npm-release-hardening-20260909.md)
 - [Executable author tutorial, 8 September 2026](documentation-author-20260908.md)
 - [Lean project analysis](lean-project-analysis.md)

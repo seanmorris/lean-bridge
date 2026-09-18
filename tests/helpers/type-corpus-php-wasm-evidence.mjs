@@ -96,7 +96,7 @@ export const validatePhpWasmEvidence = (run, library, validate) => {
 	for(const [path, expected] of Object.entries(phpWasmDriverHashes)) assert.equal(evidence.deployment[path].sha256, expected);
 	for(const mode of ["weak", "strict"])
 	{
-		assert.equal(evidence.consumerSources[mode], sha256(corpusPhpSource(mode, "php-wasm")));
+		assert.equal(evidence.consumerSources[mode], sha256(corpusPhpSource(mode, "php-wasm", run.path)));
 		assert.equal(evidence.deployment[mode + ".php"].sha256, evidence.consumerSources[mode]);
 	}
 	for(const arrangement of ["embedded", "composer"])

@@ -47,6 +47,8 @@ export const assertCompiledProfileApiAgreement = options => {
 	for(const model of models)
 	{
 		const source = model.sourceIdentity;
+		if(canonicalJson(source.reviewedBindingIr ?? null) !== canonicalJson(intent.document.reviewedBindingIr ?? null))
+			fail("Compiled profiles do not retain the captured reviewed contract");
 		if(!["native-library-v1", "php-wasm-copied-v1"].includes(model.profile)
 			|| model.pointerBits !== (model.profile === "native-library-v1" ? 64 : 32)
 			|| source.sourceTreeSha256 !== captured.treeSha256
@@ -75,11 +77,14 @@ export const assertCompiledProfileApiAgreement = options => {
  * @param options.wasmPlan - Validated component build plan.
  * @param options.wasmIr - Compiler-derived Wasm Binding IR.
  * @param options.nativeModel - Reconstructed native model, before Perl projection.
+ * @param options.wasmElaboration - Retained scalar compiler report for reviewed builds.
  */
-export const assertProfileApiAgreement = ({ intent, configurationSha256, wasmPlan, wasmIr, nativeModel }) => {
+export const assertProfileApiAgreement = ({ intent, configurationSha256, wasmPlan, wasmIr, nativeModel, wasmElaboration }) => {
 	assertCompiledProfileApiAgreement({ intent, configurationSha256, models: [nativeModel] });
 	validateComponentBuildPlan(wasmPlan);
 	const source = intent.document.source, native = nativeModel.sourceIdentity;
+	if(canonicalJson(wasmElaboration?.reviewedBindingIr ?? null) !== canonicalJson(intent.document.reviewedBindingIr ?? null))
+		fail("WebAssembly compilation does not retain the captured reviewed contract");
 	if(wasmPlan.source.treeSha256 !== source.treeSha256 || native.sourceTreeSha256 !== source.treeSha256
 		|| wasmPlan.source.lakeSnapshotSha256 !== source.lakeSnapshotSha256
 		|| native.lakeDependencies?.snapshotSha256 !== source.lakeSnapshotSha256
@@ -174,7 +179,8 @@ export const buildMultiProfileProject = async ({
 		{
 			const wasmPlan = await json(join(bundleRoot, "locks/component-build-plan.json"));
 			wasmIr = await json(join(bundleRoot, "binding/binding-ir.json"));
-			sourceApiSha256 = assertProfileApiAgreement({ intent, configurationSha256: record.sha256, wasmPlan, wasmIr, nativeModel: models[0] });
+			const wasmElaboration = await json(join(bundleRoot, "metadata/lake-entry-exports.json"));
+			sourceApiSha256 = assertProfileApiAgreement({ intent, configurationSha256: record.sha256, wasmPlan, wasmIr, nativeModel: models[0], wasmElaboration });
 			npm = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(staging, "packages/npm") });
 			await verifyComponentPackageReceipt({ receiptPath: join(npm.output, "component-package-receipt.json") });
 		}
@@ -208,6 +214,7 @@ export const buildMultiProfileProject = async ({
 				, lakeSnapshotSha256: intent.lakeSnapshot.sha256
 				, configurationSha256: record.sha256
 				, toolchain: intent.document.source.toolchain }
+			, ...(intent.document.reviewedBindingIr ? { reviewedBindingIrSha256: intent.document.reviewedBindingIr.semanticSha256 } : {})
 			, sourceApiSha256
 			, profiles, packages
 			, policies: { sourceReadOnly: true, profilesCompiledOnce: true

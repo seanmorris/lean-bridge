@@ -86,6 +86,7 @@ const profileManifest = Object.freeze({
 		, "type-corpus"
 		, "type-corpus-reviewed"
 		, "type-corpus-reviewed-native"
+		, "type-corpus-reviewed-wasm"
 		, "type-surface-docs"
 		, "test-profiles"
 		, "time-to-package"

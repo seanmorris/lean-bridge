@@ -12,6 +12,7 @@ import { verifyLakeEntryModules } from "./lake-entry-modules.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { projectElaboratedMetadata } from "../analyze/project-elaborated.mjs";
 import { compilerExportSelection } from "../analyze/export-configuration.mjs";
+import { validateReviewedSource, verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-elaboration" }); };
 
@@ -35,8 +36,10 @@ export const createLakeEntryAnalysis = (inventory, entries, elaboration) => proj
  * @param options.engineRoot - Installed bridge-owned extractor source.
  * @param options.signal - Optional cancellation signal.
  * @param options.runner - Optional process runner for compiler and extractor fault checks.
+ * @param options.reviewedBindingIr - Captured contract, checked against fresh compiler facts.
  */
-export const elaborateLakeEntryModules = async ({ inventory, entries, workspace, leanPrefix, engineRoot, signal, runner = processBuildRunner }) => {
+export const elaborateLakeEntryModules = async ({ inventory, entries, workspace, leanPrefix, engineRoot, signal, runner = processBuildRunner, reviewedBindingIr }) => {
+	verifyReviewedSourceInputs({ reviewedBindingIr }, inventory.inputs);
 	const roots = verifyLakeEntryModules(entries, workspace.resolution).map(entry => entry.origin.kind === "captured"
 		? { ...entry, origin: { kind: "captured", snapshotSha256: workspace.evidence.resolution.snapshotSha256 } } : entry);
 	if(!roots.length) fail("Entry elaboration requires an authenticated public root");
@@ -60,12 +63,14 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 		const configuration = inventory.configurationRecord.configuration;
 		const selection = { modules: workspace.resolution.modules.map(module => module.module)
 			, exportModules: roots.map(entry => entry.module).sort()
-			, exports: configuration.exports ?? [], resources: [], arities: []
+			, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? []
+			, resources: [], arities: []
 			, ...compilerExportSelection(configuration) };
 		const request = createMetadataRequest(selection, { toolchain: inventory.project.toolchain
 			, snapshotSha256: workspace.evidence.resolution.snapshotSha256
 			, generatedSourcesSha256: workspace.generatedSources?.sha256 ?? null
 			, leanCompilerSha256: workspace.document.leanCompilerSha256, extractorSha256
+			, ...(reviewedBindingIr ? { reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr)) } : {})
 			, modules: workspace.resolution.modules.map((module, index) => ({ name: module.module, sourcePath: module.path, sourceSha256: module.source.sha256, interfaceSha256: interfaces[index].interfaceSha256 })) });
 		const requestPath = join(working, "request.json");
 		await writeFile(requestPath, canonicalJson(request), { flag: "wx", mode: 0o444 });
@@ -87,6 +92,7 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 			, generatedSourcesSha256: workspace.generatedSources?.sha256 ?? null
 			, leanCompilerSha256: workspace.document.leanCompilerSha256
 			, extractorSha256, request, interfaces
+			, ...(reviewedBindingIr ? { reviewedBindingIr } : {})
 			, metadata };
 		if(extractorSha256 !== sha256(await readFile(extractor))) fail("Export extractor changed during elaboration");
 		if(sha256(await readFile(lean)) !== workspace.document.leanCompilerSha256) fail("Lean compiler changed during elaboration");

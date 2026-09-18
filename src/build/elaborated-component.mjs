@@ -8,7 +8,6 @@ import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:f
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { assertSourceBuildInputs } from "./build-error.mjs";
 import { readReviewedSource, validateReviewedSource } from "../analyze/reviewed-source.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -102,7 +101,6 @@ export const buildElaboratedComponent = async ({ projectRoot
 		arities ??= config.arities ?? {};
 		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
-		if(profile !== "native-library-v1") assertSourceBuildInputs(inventory);
 		const reviewedBindingIr = await readReviewedSource(project, inventory, signal);
 		if(reviewedBindingIr)
 		{

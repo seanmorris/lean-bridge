@@ -305,7 +305,7 @@ test("every inventoried profile and position remains a gap without executed case
 	assert.ok(cells.every(cell => cell.status === "gap" && cell.cases.length === 0 && cell.owner > 0));
 	assert.ok(cells.every(cell => cell.reason !== "adapter-not-implemented"));
 	assert.deepEqual(Object.keys(corpusProfiles).sort(), inventory.document.profiles.map(profile => profile.id).sort());
-	assert.ok(cells.some(cell => cell.reason === "source-path-not-implemented"));
+	assert.ok(cells.some(cell => cell.path === "reviewed-ir" && cell.reason === "case-not-executed"));
 	assert.ok(cells.some(cell => cell.reason === "case-not-executed"));
 	assert.equal(canonicalJson(inventory), before);
 });
@@ -879,7 +879,7 @@ test("PHP corpus binds separate weak and strict public callers to the same fresh
 	assert.notEqual(corpusPhpSource("weak"), corpusPhpSource("strict"));
 	assert.throws(() => corpusPhpSource("unknown"));
 	assert.throws(() => corpusPhpSource("weak", "php-native", "unknown"));
-	assert.throws(() => corpusPhpSource("weak", "php-wasm", "reviewed-ir"));
+	assert.ok(corpusPhpSource("weak", "php-wasm", "reviewed-ir").includes('const PARAMETER_PREFIX = "value";'));
 });
 
 for(const [label, change] of [

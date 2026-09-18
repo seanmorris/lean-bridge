@@ -68,7 +68,7 @@ test("public PHP-Wasm build rejects unsupported inputs and cache settings withou
 	await assert.rejects(buildCanonicalProject({ ...options, environment: { LEAN_BRIDGE_PHP_EMSDK: join(working, "missing-sdk") } }), { code: "php-wasm-toolchain-unavailable" });
 	assert.deepEqual(await lakeInputState(working), before);
 	await saveLakeFile(project, "unused.binding-ir.json", "{}");
-	await assert.rejects(buildCanonicalProject(options), { code: "reviewed-ir-build-unsupported" });
+	await assert.rejects(buildCanonicalProject(options), { code: "export-configuration-reviewed-ir" });
 	await assert.rejects(buildCanonicalProject({ projectRoot: process.cwd(), targets: ["php-wasm"] }), { code: "invalid-package-targets" });
 });
 

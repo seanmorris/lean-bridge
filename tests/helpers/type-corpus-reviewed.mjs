@@ -74,6 +74,8 @@ export const reviewedCorpusIdentity = async catalog => {
 	const corpus = await corpusIdentity(repository, catalog), files = [];
 	const paths = ["tests/type-corpus-reviewed.test.mjs"
 		, "tests/type-corpus-reviewed-native.test.mjs"
+		, "tests/type-corpus-reviewed-wasm.test.mjs"
+		, "tests/php-wasm-multi-profile.test.mjs"
 		, "tests/reviewed-source.test.mjs", "tests/reviewed-source-build.test.mjs"
 		, "tests/helpers/type-corpus-reviewed-native.mjs"
 		, "tests/helpers/type-corpus-reviewed.mjs"
@@ -83,6 +85,12 @@ export const reviewedCorpusIdentity = async catalog => {
 		, "src/build/lake-entry-intent.mjs", "src/analyze/project-analysis.mjs"
 		, "src/analyze/reviewed-source.mjs", "src/analyze/native-metadata.mjs"
 		, "src/build/native-model.mjs", "src/build/native-artifacts.mjs"
+		, "src/build/lake-entry-elaboration.mjs", "src/build/lake-entry-engine.mjs"
+		, "src/build/lean-component-compiler.mjs"
+		, "src/analyze/project-elaborated.mjs"
+		, "src/build/php-wasm-copied-artifacts.mjs", "src/build/php-wasm-project.mjs"
+		, "src/build/multi-profile-project.mjs"
+		, "src/release/component-npm-package.mjs"
 		, "src/analyze/compiler-analysis.mjs", "src/binding-ir/canonical.mjs"
 		, "src/binding-ir/contract.mjs", "src/cli/commands.mjs"
 		, "scripts/lean-bridge.mjs"];
@@ -198,8 +206,7 @@ export const reviewedCorpusCoverage = (inventory, catalog, libraries) => {
 			assert.equal(attempt.diagnostics.length, 1);
 			assert.equal(attempt.diagnostics[0].code, "reviewed-ir-build-unsupported");
 			assert.equal(attempt.diagnostics[0].severity, "error");
-			assert.match(attempt.diagnostics[0].message, corpusProfiles[attempt.profile].transport === "native"
-				? /Set modules in lean-bridge.exports.json/ : /not supported by this build profile/);
+			assert.match(attempt.diagnostics[0].message, /Set modules in lean-bridge.exports.json/);
 		}
 	}
 	return corpusCoverage(inventory, catalog).map(cell => {

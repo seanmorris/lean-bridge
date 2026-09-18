@@ -19,6 +19,7 @@ import { validateCorpusDeclarations, validateCorpusObservation } from "./type-co
 import { corpusCases } from "../fixtures/type-corpus/cases.mjs";
 import { corpusPhpWasmSettings } from "./type-corpus-php-source.mjs";
 import { installedPhpWasmCorpus } from "./type-corpus-php-wasm-install.mjs";
+import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -28,13 +29,21 @@ const json = async path => JSON.parse(await readFile(path, "utf8"));
  *
  * @param t - Test context owning all temporary workspaces.
  * @param library - Closed independent corpus definition.
+ * @param options - Explicit ordinary-source or reviewed-IR path.
+ * @param options.path - Source path counted by the installed corpus.
  */
-export const runPhpWasmCorpusLibrary = async (t, library) => {
+export const runPhpWasmCorpusLibrary = async (t, library, { path = "ordinary-source" } = {}) => {
+	assert.ok(["ordinary-source", "reviewed-ir"].includes(path));
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix };
 	if(environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME) environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME = environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
 	const targets = { "php-wasm": corpusPhpWasmSettings(library) };
 	const context = await prepareCorpusSources(t, library, library.operations.map(name => library.module + "." + name), targets);
+	if(path === "reviewed-ir")
+	{
+		await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [library.module], targets }));
+		await saveLakeFile(context.root, "reviewed.binding-ir.json", canonicalJson(corpusReviewedIr(library)));
+	}
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling fresh PHP-Wasm corpus oracle`);
 	const oracle = await leanCorpusOracle(context, library, leanPrefix);
@@ -50,6 +59,10 @@ export const runPhpWasmCorpusLibrary = async (t, library) => {
 	assert.deepEqual(builds[0].packages, builds[1].packages);
 	assert.equal(builds[0].bindingIrSha256, builds[1].bindingIrSha256);
 	const model = await json(join(builds[0].output, "php-wasm/component/model.json"));
+	const reviewed = path === "reviewed-ir" ? { model
+		, metadata: await json(join(builds[0].output, "php-wasm/component/metadata.json"))
+		, receipt: await json(join(builds[0].output, "php-wasm/component/php-wasm-component.json"))
+		, inputs: (await json(join(builds[0].output, "php-wasm/component/source-notices.json"))).packages[0].source.inputs } : undefined;
 	const declarationEvidence = { modelSha256: sha256(await readFile(join(builds[0].output, "php-wasm/component/model.json")))
 		, signatures: validateCorpusDeclarations(library, model) };
 	validateCorpusDeclarations(library, await json(join(builds[1].output, "php-wasm/component/model.json")));
@@ -63,7 +76,19 @@ export const runPhpWasmCorpusLibrary = async (t, library) => {
 	const packageSet = await json(join(packageRoot, "php-wasm-package-set.json"));
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
-	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [library.pendingModule], exports: [library.pendingExport], targets }));
+	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
+		, modules: [library.pendingModule]
+		, ...(path === "ordinary-source" ? { exports: [library.pendingExport] } : {}), targets }));
+	if(path === "reviewed-ir")
+	{
+		const document = corpusReviewedIr(library), template = document.declarations[0];
+		document.types = [];
+		document.declarations = [{ ...template, id: `lean:${library.pendingExport}`
+			, name: library.pendingExport.split(".").at(-1)
+			, overloadKey: library.pendingExport
+			, source: { ...template.source, declaration: library.pendingExport } }];
+		await saveLakeFile(join(pending, "project"), "reviewed.binding-ir.json", canonicalJson(document));
+	}
 	let rejection;
 	try
 	{
@@ -94,7 +119,7 @@ export const runPhpWasmCorpusLibrary = async (t, library) => {
 	const verification = await processBuildRunner.capture({ command: process.execPath, args: [join(repository, "scripts/lean-bridge.mjs"), "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"], cwd: consumer, env: clean });
 	assert.equal(JSON.parse(verification.stdout).result.verificationType, "local-package-set");
 	t.diagnostic(`${library.id}: installing and executing PHP-Wasm without author sources or compilers`);
-	const observed = await installedPhpWasmCorpus({ t, library, consumer, handoff, receipt, packageSet, environment, clean });
+	const observed = await installedPhpWasmCorpus({ t, library, consumer, handoff, receipt, packageSet, environment, clean, sourcePath: path });
 	validateCorpusObservation(library, corpusCases(library), oracle.result, observed.observation);
 	const archiveFor = role => {
 		const pkg = receipt.packages.find(item => item.role === role);
@@ -103,7 +128,8 @@ export const runPhpWasmCorpusLibrary = async (t, library) => {
 	};
 	const archive = archiveFor("component"), runtimeArchive = archiveFor("runtime"), composerArchive = archiveFor("api");
 	const { result, ...oracleEvidence } = oracle;
-	const run = { library: library.id, profile: "php-wasm", path: "ordinary-source"
+	const run = { library: library.id, profile: "php-wasm", path
+		, ...(reviewed ? { reviewed } : {})
 		, archive, runtimeArchive, composerArchive, archiveSha256: archive.sha256
 		, runtimeIdentity: model.runtimeIdentity ?? builds[0].runtimeIdentity
 		, bindingIrSha256: builds[0].bindingIrSha256, declarationEvidence
