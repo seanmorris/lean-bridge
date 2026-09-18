@@ -269,17 +269,19 @@ export const readPhpWasmPackageInputs = async ({ projectRoot, manifestPath }) =>
 
 const releaseReadme = ({ manifest, bindingIr }) => `# ${bindingIr.component.name} for PHP-Wasm
 
-Install this package beside \`php-wasm\`, then add its generated descriptor to the PHP-Wasm dependency list. PHP application code uses the same Composer package as native PHP.
+Install this package beside \`php-wasm\`, then add its generated descriptor to the PHP-Wasm dependency list. This 32-bit PHP profile represents every Lean \`UInt32\` as \`BigInteger\`, including small values. Native 64-bit PHP uses \`int\`.
 
 \`\`\`php
 use LeanAlpha\\Box;
+use LeanAlpha\\BigInteger;
 use LeanAlpha\\Bytes;
 use LeanAlpha\\Payload;
 use function LeanAlpha\\roundTrip;
 
-$box = new Box(41);
-$payload = roundTrip(new Payload(false, 8, 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
-assert($box->read() === 41);
+$box = new Box(BigInteger::fromDecimal('4294967295'));
+$payload = roundTrip(new Payload(false, BigInteger::fromDecimal('2147483647'), 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [BigInteger::fromDecimal('4294967295')]));
+assert((string) $box->read() === '4294967295');
+assert((string) $payload->count === '2147483648');
 $box->close();
 \`\`\`
 
@@ -303,7 +305,7 @@ Graph lock SHA-256: \`${manifest.graphLock.fileSha256}\`
 export const generatePhpWasmReleaseSources = ({ inputs, runtime, extensions }) => {
 	const { manifest, bindingIr, graph } = inputs;
 	validatePhpWasmPackageManifest(manifest);
-	const composer = { ...generatePhpBindingPackage(bindingIr) };
+	const composer = { ...generatePhpBindingPackage(bindingIr, { integerBits: 32 }) };
 	composer["src/LeanBeta/functions.php"] = `<?php
 declare(strict_types=1);
 
@@ -313,7 +315,7 @@ use LeanAlpha\\Box;
 use LeanAlpha\\Internal\\Hydrator;
 use LeanAlpha\\Internal\\Runtime;
 
-function read(Box $box): int
+function read(Box $box): \\LeanAlpha\\BigInteger
 {
     $transport = Runtime::transport();
     if (!method_exists($transport, 'leanBetaRead')) {
@@ -339,7 +341,7 @@ declare(strict_types=1);
 
 namespace LeanBeta;
 
-function read(\\LeanAlpha\\Box $box): int {}
+function read(\\LeanAlpha\\Box $box): \\LeanAlpha\\BigInteger {}
 function identity(\\LeanAlpha\\Box $box): \\LeanAlpha\\Box {}
 `;
 	composer["autoload.php"] = `<?php

@@ -165,7 +165,7 @@
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
-          "sha256": "7ccf16ece1917c9ab7574351f168697566229041efd4e39b5267e7337c62c766"
+          "sha256": "747d516836b71559c981769a3abf078668a2fdb285e2e13ed3f8b452f650b98a"
         },
         {
           "path": "src/analyze/project-elaborated.mjs",
@@ -296,7 +296,7 @@
       "kind": "installed",
       "revision": "0413a9d241574326e663112bcbe87cdcc25c318e",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md.",
+      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The Alpha UInt32 follow-up based on d985024 reruns the ordinary native PHP suite (4/4, including relocated offline Clover and Juniper) before refreshing shared generator/audit hashes. The 64-bit copied API and its scope are unchanged; docs/evidence/php-alpha-uint32-boundaries-20260918.md records this regression check.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -340,11 +340,11 @@
         },
         {
           "path": "src/backends/php/generate.mjs",
-          "sha256": "a6dccee24b0a7869b756b50a7ae60b8d105208deb9c7a95d634b29294ed8f367"
+          "sha256": "c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"
         },
         {
           "path": "src/backends/php/package-audit.mjs",
-          "sha256": "0729a7b3169f8057970a72547ca8fda2f1e5cc7d9aecb0d2e6a2222396c85402"
+          "sha256": "a11019f7b87b1efdc49c567ed0061b3c5548f7857b11ec3105ac1bc05afc209a"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -1407,7 +1407,7 @@
       "command": "Inspect primitiveProjection in src/backends/php/projection.mjs.",
       "scope": "Host syntax and validation descriptors only. PHP generator output does not establish compiled or installed support for these types.",
       "files": [
-        {"path":"src/backends/php/projection.mjs","sha256":"087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"}
+        {"path":"src/backends/php/projection.mjs","sha256":"817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"}
       ],
       "artifacts": []
     },
@@ -1434,16 +1434,131 @@
       "artifacts": []
     },
     {
-      "id": "php-wasm-integer-boundary",
-      "kind": "inspection",
-      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
-      "command": "Inspect the PHP scalar projection and the documented PHP-Wasm host integer boundary.",
-      "scope": "The PHP-Wasm API uses a 32-bit signed PHP int for UInt32. VO1206 owns the existing defect; generator range metadata alone cannot repair it.",
+      "id": "php-alpha-uint32-installed",
+      "kind": "installed",
+      "revision": "d985024dfb6e59e392e20e14cf77cb4527c2f5e5",
+      "command": "node scripts/test-php-native-package-consumer.mjs --package NATIVE_PACKAGE; node scripts/test-php-wasm-package-host.mjs --package WASM_PACKAGE; node scripts/check-php-transport-parity.mjs --native-package NATIVE_PACKAGE --php-wasm-package WASM_PACKAGE --output NEW_DIRECTORY",
+      "scope": "Alpha reviewed-IR UInt32 boundary repair based on d985024. Installed native 64-bit PHP retains int, while installed 32-bit PHP-Wasm uses BigInteger. Strict and weak callers cover 0, 2147483647, 2147483648 and 4294967295 in resource input/read, payload fields/elements, callback arguments/results and returned closures. Invalid values reject without poisoning the runtime; cleanup leaves zero identities. Manifest identities bind the installed native directory and Wasm package payloads. This does not promote other Alpha primitives or ordinary-source callbacks.",
       "files": [
-        {"path":"src/backends/php/projection.mjs","sha256":"087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"},
-        {"path":"docs/evidence/type-surface-audit-20260910.md","sha256":"ba092bcbd925b0c80931578253fb7167810435c8bca836997a35d5a00099627f"}
+        {
+          "path": "docs/evidence/php-alpha-uint32-boundaries-20260918.md",
+          "sha256": "93a3e111abeae0cea1e239aa5869a371c449ccc2a35a8b73dbdd5f7da32f6930"
+        },
+        {
+          "path": "poc/lean-link-spike/Alpha.lean",
+          "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169"
+        },
+        {
+          "path": "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+          "sha256": "c4eb8f6c2ae538f58dd634914e6b9b0f527bad9a84d79276e91d39adc74877cb"
+        },
+        {
+          "path": "poc/lean-link-spike/alpha_shim.c",
+          "sha256": "0e2a6e2b0ace2a2e0cce9afa32c1bd424a3cbaa4ca45f932a80da7fa28eed7f2"
+        },
+        {
+          "path": "src/backends/php/projection.mjs",
+          "sha256": "817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"
+        },
+        {
+          "path": "src/backends/php/generate.mjs",
+          "sha256": "c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"
+        },
+        {
+          "path": "src/backends/php/package-audit.mjs",
+          "sha256": "a11019f7b87b1efdc49c567ed0061b3c5548f7857b11ec3105ac1bc05afc209a"
+        },
+        {
+          "path": "src/backends/php/zend-extension.mjs",
+          "sha256": "9690151b6cd17f4ea2b88299e0bbe1d1700390fb18085d8a501ab77b8ba3bd56"
+        },
+        {
+          "path": "src/backends/php/native-runtime.mjs",
+          "sha256": "27894714fb279eefa65ebb82defdb6a0e5c5c80642b027a5f71e33055c3fd4f4"
+        },
+        {
+          "path": "src/backends/php/php-wasm.mjs",
+          "sha256": "7778ed765c1c7c83a8c2e320b811dcc246b89f958f7f0c87dc27430845576324"
+        },
+        {
+          "path": "src/backends/php/php-wasm-package.mjs",
+          "sha256": "af7014d804284b46be10d5ca2c22109e7534baf18382b75926db62961e51f2e1"
+        },
+        {
+          "path": "src/backends/php/conformance.mjs",
+          "sha256": "8b6e2df74263a9404422c9362c50676787187bcc44fd8987e9f5d2c711b123bc"
+        },
+        {
+          "path": "tests/fixtures/php-uint32-boundaries.php",
+          "sha256": "76b4bfc05d7bcb3aec4cc330884bd8dcb7b9a6161a2961782d57d264affb02a9"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/php-wasm/main.php",
+          "sha256": "8f0f655af580e31e7d87b8b7b65647d8907a1ecab82afd86044ede42fdcfc6be"
+        },
+        {
+          "path": "tests/php-projection.test.mjs",
+          "sha256": "1e428fda41aa237bdec90d1cbcf399af50c084162bfb57c1c4175b23937cbb89"
+        },
+        {
+          "path": "tests/php-generator.test.mjs",
+          "sha256": "627932fdf29d6cf17d04a1a1b2f8cecb452fe1191726fd6d2348c3736bd591a1"
+        },
+        {
+          "path": "tests/php-transport-conformance.test.mjs",
+          "sha256": "cca6a492c48b821f741ed54f734731b843bb4cfdd73f6fec6e7216c34719bfdd"
+        },
+        {
+          "path": "scripts/test-php-native-package-consumer.mjs",
+          "sha256": "37e7565c90e2258b7ce701c97807afa3e81b694a84f3a15fe299335f3c3557e0"
+        },
+        {
+          "path": "scripts/test-php-wasm-package-host.mjs",
+          "sha256": "b6e1ac308e6810ec84968aead202d9d8b0be33da874b31bd80c2e6355560283e"
+        },
+        {
+          "path": "scripts/check-php-transport-parity.mjs",
+          "sha256": "747eb539b82b35c9b9764ff6a6d4d4a2610dd56ee0a33736b32b034db191d198"
+        },
+        {
+          "path": "scripts/check-php-wasm-composition.mjs",
+          "sha256": "a263269de28fd549f672e9a75ab28badda13cbe0f25ce898960bf92453352a73"
+        },
+        {
+          "path": "scripts/benchmark-php-transports.mjs",
+          "sha256": "21a6aaaa2b701d25af2be0b43b312fd3b6cf25313e11ebd3e97e7d499b442943"
+        }
       ],
-      "artifacts": []
+      "artifacts": [
+        {
+          "path": "native/share/lean-bridge/release-manifest.json",
+          "sha256": "c10215106eac67594d866ee8e4692c5aea933e1fdf12ddc3522daad764fb444c"
+        },
+        {
+          "path": "wasm-startup/metadata/release/release-manifest.json",
+          "sha256": "7883d85b416db884d9759bd7d499deb719026ba8ed152752760dde6a7bf84b21"
+        },
+        {
+          "path": "native/lib/php/lean_alpha.so",
+          "sha256": "31134dbbd89af86457f73a6e49d4fc9e500f8ba1d5811f22fb53c93a987e42f7"
+        },
+        {
+          "path": "wasm-startup/lib/php8.4-lean-alpha.so",
+          "sha256": "a7dd6341e44265fbba163988838e358ef2ceb7cd060af32cda24ea9bd7ca88d8"
+        },
+        {
+          "path": "wasm-lazy/metadata/release/release-manifest.json",
+          "sha256": "e1e4606aee22aa680100ce83ec4e5d8728854ad4b513d7183cd38945f00cb6a6"
+        },
+        {
+          "path": "wasm-startup/php-wasm-lean-alpha-0.0.0.tgz",
+          "sha256": "0117137afacd082cf48aec417cd8816e44087d8f443e7476be1e6e880a1ac1ce"
+        },
+        {
+          "path": "wasm-lazy/php-wasm-lean-alpha-0.0.0.tgz",
+          "sha256": "bd6802bd5ba18368cb8b05a886969668a5cf5a00de6257a9f80b1b8b2fa3a59e"
+        }
+      ]
     },
     {
       "id": "javascript-mapping-audit",
@@ -1464,8 +1579,8 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "Shared PHP syntax and coverage guards. Unit is return-only; nullable Option cannot preserve nested Option or Option Unit; result generation rejects.",
       "files": [
-        {"path":"src/backends/php/projection.mjs","sha256":"087884acf7af6d3a9033bfc15e0937c210f9a77c328584d866ce6a2a9d3095e8"},
-        {"path":"src/backends/php/generate.mjs","sha256":"a6dccee24b0a7869b756b50a7ae60b8d105208deb9c7a95d634b29294ed8f367"}
+        {"path":"src/backends/php/projection.mjs","sha256":"817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"},
+        {"path":"src/backends/php/generate.mjs","sha256":"c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"}
       ],
       "artifacts": []
     },
@@ -4487,24 +4602,140 @@
       "limitations": ["Generator syntax does not imply this ordinary-source path can be compiled.","Except analysis now uses canonical [success, error] argument order, with asymmetric parameter/result regression coverage. This does not implement a compiled result adapter; VO1219 remains open.","Nested Option and Option Unit require disjoint host representations; flattening both branches to null or None loses information."]
     },
     {
-      "id": "php-wasm-uint32-projection-boundary",
-      "profiles": ["php-wasm"],
-      "shapes": ["uint32"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "id": "php-alpha-uint32-php-wasm",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "uint32"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
-      "scope": "Existing Alpha-shaped PHP-Wasm projection, inspected against its documented 32-bit PHP integer boundary.",
+      "scope": "Installed Alpha UInt32 inputs, outputs, payload elements, callback arguments/results and returned functions at all four signed/unsigned boundaries.",
       "hostTypes": {
-        "uint32": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"}
+        "uint32": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger",
+          "callback-parameter": "BigInteger",
+          "callback-result": "BigInteger"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["php-wasm-integer-boundary"],"note":"The declared UInt32 range exceeds PHP_INT_MAX on this host; VO1206 must deliver an exact mapping."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."}
+        "analysis": {
+          "state": "passed",
+          "evidence": ["php-alpha-uint32-installed"],
+          "note": "Reviewed Alpha Binding IR validation and concrete UInt32 projection passed. This is not ordinary-source callback analysis."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        }
       },
-      "limitations": ["The present positive PHP int range is 0..2147483647; the required UInt32 range is 0..4294967295.","Do not advertise full UInt32 support from small Alpha inputs. The existing repair is VO1206."],
-      "conversionNotes": {"uint32":"The older Alpha API accepts only 0..2147483647 as positive PHP integers; VO1206 tracks its exact upper-half conversion. An Alpha result above PHP_INT_MAX fails; the compiled copied API uses BigInteger instead."}
+      "limitations": [
+        "Alpha UInt32 only. No claim for arbitrary callback signatures, other primitive exports or browser-hosted Alpha execution."
+      ],
+      "conversionNotes": {
+        "uint32": "Alpha preserves the full 0..4294967295 range as BigInteger, including payload elements, callback arguments/results and returned closures. Use BigInteger even for small values; PHP ints, floats and numeric strings are rejected."
+      }
+    },
+    {
+      "id": "php-alpha-uint32-php-native",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "uint32"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Alpha UInt32 inputs, outputs, payload elements, callback arguments/results and returned functions at all four signed/unsigned boundaries.",
+      "hostTypes": {
+        "uint32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": ["php-alpha-uint32-installed"],
+          "note": "Reviewed Alpha Binding IR validation and concrete UInt32 projection passed. This is not ordinary-source callback analysis."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
+          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
+        }
+      },
+      "limitations": [
+        "Alpha UInt32 only. No claim for arbitrary callback signatures, other primitive exports or browser-hosted Alpha execution."
+      ],
+      "conversionNotes": {
+        "uint32": "Alpha preserves the full 0..4294967295 range as int, including payload elements, callback arguments/results and returned closures. Requires native 64-bit PHP."
+      }
     },
     {
       "id": "js-primitives-node-javascript-1",
@@ -4586,87 +4817,369 @@
     },
     {
       "id": "php-primitives-php-native-1",
-      "profiles": ["php-native"],
-      "shapes": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","string","bytes"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
-        "unit": {"parameter":null,"result":"void","field":null,"callback-parameter":null,"callback-result":null},
-        "bool": {"parameter":"bool","result":"bool","field":"bool","callback-parameter":"bool","callback-result":"bool"},
-        "uint8": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "uint16": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "uint32": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "uint64": {"parameter":"LeanAlpha\\BigInteger","result":"LeanAlpha\\BigInteger","field":"LeanAlpha\\BigInteger","callback-parameter":"LeanAlpha\\BigInteger","callback-result":"LeanAlpha\\BigInteger"},
-        "int8": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int16": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int32": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int64": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "string": {"parameter":"string","result":"string","field":"string","callback-parameter":"string","callback-result":"string"},
-        "bytes": {"parameter":"LeanAlpha\\Bytes","result":"LeanAlpha\\Bytes","field":"LeanAlpha\\Bytes","callback-parameter":"LeanAlpha\\Bytes","callback-result":"LeanAlpha\\Bytes"}
+        "unit": {
+          "parameter": null,
+          "result": "void",
+          "field": null,
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool",
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint64": {
+          "parameter": "LeanAlpha\\BigInteger",
+          "result": "LeanAlpha\\BigInteger",
+          "field": "LeanAlpha\\BigInteger",
+          "callback-parameter": "LeanAlpha\\BigInteger",
+          "callback-result": "LeanAlpha\\BigInteger"
+        },
+        "int8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int64": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string",
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "bytes": {
+          "parameter": "LeanAlpha\\Bytes",
+          "result": "LeanAlpha\\Bytes",
+          "field": "LeanAlpha\\Bytes",
+          "callback-parameter": "LeanAlpha\\Bytes",
+          "callback-result": "LeanAlpha\\Bytes"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["php-mapping-audit"],"note":"Shared PHP generator syntax only; these projections do not establish either transport's compiled range."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-mapping-audit"
+          ],
+          "note": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint32":"Native 64-bit PHP represents the full 0..4294967295 range.","uint64":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int64":"Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int."}
+      "limitations": [
+        "Unit has a void result spelling, not a usable PHP argument or property type."
+      ],
+      "conversionNotes": {
+        "unit": "PHP void is return-only; there is no valid void parameter or property representation.",
+        "uint64": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
+        "int64": "Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int."
+      }
     },
     {
       "id": "php-primitives-php-native-2",
-      "profiles": ["php-native","php-wasm"],
-      "shapes": ["nat","int","float32","float64"],
-      "positions": ["field","callback-parameter","callback-result"],
+      "profiles": [
+        "php-native",
+        "php-wasm"
+      ],
+      "shapes": [
+        "nat",
+        "int",
+        "float32",
+        "float64"
+      ],
+      "positions": [
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
-        "nat": {"field":"LeanAlpha\\BigInteger","callback-parameter":"LeanAlpha\\BigInteger","callback-result":"LeanAlpha\\BigInteger"},
-        "int": {"field":"LeanAlpha\\BigInteger","callback-parameter":"LeanAlpha\\BigInteger","callback-result":"LeanAlpha\\BigInteger"},
-        "float32": {"field":"float","callback-parameter":"float","callback-result":"float"},
-        "float64": {"field":"float","callback-parameter":"float","callback-result":"float"}
+        "nat": {
+          "field": "LeanAlpha\\BigInteger",
+          "callback-parameter": "LeanAlpha\\BigInteger",
+          "callback-result": "LeanAlpha\\BigInteger"
+        },
+        "int": {
+          "field": "LeanAlpha\\BigInteger",
+          "callback-parameter": "LeanAlpha\\BigInteger",
+          "callback-result": "LeanAlpha\\BigInteger"
+        },
+        "float32": {
+          "field": "float",
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "field": "float",
+          "callback-parameter": "float",
+          "callback-result": "float"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["php-mapping-audit"],"note":"Shared PHP generator syntax only; these projections do not establish either transport's compiled range."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-mapping-audit"
+          ],
+          "note": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"nat":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."}
+      "limitations": [
+        "Unit has a void result spelling, not a usable PHP argument or property type."
+      ],
+      "conversionNotes": {
+        "nat": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
+        "int": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."
+      }
     },
     {
       "id": "php-primitives-php-wasm-1",
-      "profiles": ["php-wasm"],
-      "shapes": ["unit","bool","uint8","uint16","uint64","int8","int16","int32","int64","string","bytes"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
-        "unit": {"parameter":null,"result":"void","field":null,"callback-parameter":null,"callback-result":null},
-        "bool": {"parameter":"bool","result":"bool","field":"bool","callback-parameter":"bool","callback-result":"bool"},
-        "uint8": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "uint16": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "uint64": {"parameter":"LeanAlpha\\BigInteger","result":"LeanAlpha\\BigInteger","field":"LeanAlpha\\BigInteger","callback-parameter":"LeanAlpha\\BigInteger","callback-result":"LeanAlpha\\BigInteger"},
-        "int8": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int16": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int32": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "int64": {"parameter":"int","result":"int","field":"int","callback-parameter":"int","callback-result":"int"},
-        "string": {"parameter":"string","result":"string","field":"string","callback-parameter":"string","callback-result":"string"},
-        "bytes": {"parameter":"LeanAlpha\\Bytes","result":"LeanAlpha\\Bytes","field":"LeanAlpha\\Bytes","callback-parameter":"LeanAlpha\\Bytes","callback-result":"LeanAlpha\\Bytes"}
+        "unit": {
+          "parameter": null,
+          "result": "void",
+          "field": null,
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool",
+          "field": "bool",
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint64": {
+          "parameter": "LeanAlpha\\BigInteger",
+          "result": "LeanAlpha\\BigInteger",
+          "field": "LeanAlpha\\BigInteger",
+          "callback-parameter": "LeanAlpha\\BigInteger",
+          "callback-result": "LeanAlpha\\BigInteger"
+        },
+        "int8": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int16": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int",
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int64": {
+          "parameter": "BigInteger",
+          "result": "BigInteger",
+          "field": "BigInteger",
+          "callback-parameter": "BigInteger",
+          "callback-result": "BigInteger"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string",
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "bytes": {
+          "parameter": "LeanAlpha\\Bytes",
+          "result": "LeanAlpha\\Bytes",
+          "field": "LeanAlpha\\Bytes",
+          "callback-parameter": "LeanAlpha\\Bytes",
+          "callback-result": "LeanAlpha\\Bytes"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["php-mapping-audit"],"note":"Shared PHP generator syntax only; these projections do not establish either transport's compiled range."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-mapping-audit"
+          ],
+          "note": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Unit has a void result spelling, not a usable PHP argument or property type.","Int64 requires 64-bit PHP integers; PHP-Wasm uses 32-bit integers.","PHP-Wasm UInt32's upper unsigned half remains the VO1206 defect."],
-      "conversionNotes": {"unit":"PHP void is return-only; there is no valid void parameter or property representation.","uint64":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int64":"The older Alpha projection's generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range; the compiled copied API uses BigInteger instead."}
+      "limitations": [
+        "Unit has a void result spelling, not a usable PHP argument or property type."
+      ],
+      "conversionNotes": {
+        "unit": "PHP void is return-only; there is no valid void parameter or property representation.",
+        "uint64": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
+        "int64": "The 32-bit projection uses BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support."
+      }
     },
     {
       "id": "php-values-php-native-1",

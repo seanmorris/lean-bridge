@@ -6,7 +6,8 @@
  */
 
 
-import { cp, mkdtemp, rm } from "node:fs/promises";
+import assert from "node:assert/strict";
+import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -58,7 +59,7 @@ try
 		, phpWasmArchive
 		, packageArchive
 	], { cwd: consumer, maxBuffer: 64 * 1024 * 1024 });
-	const documentationExpected = { box: 41, identity: true, payload: [true, 9, "consumer", "007fff", [1, 5, 13]], callback: 42, closure: 42 };
+	const documentationExpected = { box: "41", identity: true, payload: [true, "9", "consumer", "007fff", ["1", "5", "13"]], callback: "42", closure: "42" };
 	const documentation = await run(process.execPath, ["main.mjs"], { cwd: consumer, maxBuffer: 16 * 1024 * 1024 })
 		.catch(error => ({ status: error.code, signal: error.signal, stdout: error.stdout, stderr: error.stderr }));
 	assertConsumerJsonResult({
@@ -82,32 +83,49 @@ try
 	});
 
 	await php.binary;
+	const boundarySource = await readFile(new URL("../tests/fixtures/php-uint32-boundaries.php", import.meta.url), "utf8");
+	const boundaryChecks = {};
+	for(const [mode, strict] of [["strict", 1], ["weak", 0]])
+	{
+		await php.writeFile(`/uint32-${mode}.php`, boundarySource.replace("strict_types=1", `strict_types=${strict}`));
+		const status = await php.run(`<?php require_once '/vendor/autoload.php'; echo json_encode(require '/uint32-${mode}.php', JSON_THROW_ON_ERROR);`);
+		assert.equal(status, 0, stdout || stderr);
+		assert.equal(stderr, "");
+		const report = JSON.parse(stdout);
+		assert.equal(report.integerBytes, 4);
+		assert.deepEqual(report.values, ["0", "2147483647", "2147483648", "4294967295"]);
+		assert.equal(report.liveIdentities, 0);
+		assert.ok(report.checks >= 100);
+		boundaryChecks[mode] = report.checks;
+		stdout = "";
+	}
 	const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
-$box = new LeanAlpha\\Box(${STEADY_STATE_BOX_VALUE});
+use LeanAlpha\\BigInteger;
+$box = new LeanAlpha\\Box(BigInteger::fromDecimal('${STEADY_STATE_BOX_VALUE}'));
 $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
     false,
-    8,
+    BigInteger::fromDecimal('8'),
     'wasm',
     LeanAlpha\\Bytes::fromString("\\x00\\x7f\\xff"),
-    [1, 5, 13],
+    array_map(BigInteger::fromDecimal(...), ['1', '5', '13']),
 ));
-$adder = LeanAlpha\\makeAdder(2);
+$adder = LeanAlpha\\makeAdder(BigInteger::fromDecimal('2'));
 $iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
 for ($index = 0; $index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++$index) $box->read();
 $checksum = 0;
 $started = hrtime(true);
-for ($index = 0; $index < $iterations; ++$index) $checksum += $box->read();
+for ($index = 0; $index < $iterations; ++$index) $checksum += (int) (string) $box->read();
 $durationNanoseconds = hrtime(true) - $started;
 $result = [
     'extension' => extension_loaded('lean_alpha'),
-    'box' => $box->read(),
+    'box' => (string) $box->read(),
     'identity' => $box->identity() === $box,
-    'betaRead' => LeanBeta\\read($box),
+    'betaRead' => (string) LeanBeta\\read($box),
     'betaIdentity' => LeanBeta\\identity($box) === $box,
-    'payload' => [$payload->enabled, $payload->count, $payload->label, bin2hex($payload->bytes->toString()), $payload->values],
-    'callback' => LeanAlpha\\withCallback(40, static fn(int $value): int => $value),
-    'closure' => $adder(40),
+    'payload' => [$payload->enabled, (string) $payload->count, $payload->label, bin2hex($payload->bytes->toString()), array_map(strval(...), $payload->values)],
+    'callback' => (string) LeanAlpha\\withCallback(BigInteger::fromDecimal('40'), static fn(BigInteger $value): BigInteger => $value),
+    'closure' => (string) $adder(BigInteger::fromDecimal('40')),
     'performance' => ['iterations' => $iterations, 'durationNanoseconds' => $durationNanoseconds, 'checksum' => $checksum],
 ];
 $adder->close();
@@ -128,13 +146,13 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
 	delete result.performance;
 	const expected = {
 		extension: true
-		, box: STEADY_STATE_BOX_VALUE
+		, box: String(STEADY_STATE_BOX_VALUE)
 		, identity: true
-		, betaRead: STEADY_STATE_BOX_VALUE
+		, betaRead: String(STEADY_STATE_BOX_VALUE)
 		, betaIdentity: true
-		, payload: [true, 9, "wasm", "007fff", [1, 5, 13]]
-		, callback: 42
-		, closure: 42
+		, payload: [true, "9", "wasm", "007fff", ["1", "5", "13"]]
+		, callback: "42"
+		, closure: "42"
 		, runtimeInitRuns: 1
 		, componentInitRuns: 2
 		, liveIdentities: 0
@@ -150,12 +168,12 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
 			consumer: "php-wasm"
 			, operation: STEADY_STATE_OPERATION
 			, timingMode: "steady-state"
-			, scope: "steady-state generated PHP API call through the lazy PHP-Wasm transport"
+			, scope: "steady-state generated PHP API call through the lazy PHP-Wasm transport, including BigInteger result and bounded checksum conversion"
 			, iterations: performance.iterations
 			, durationNanoseconds: performance.durationNanoseconds
 		});
 	}
-	process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+	process.stdout.write(`${JSON.stringify({ ...result, boundaryChecks }, null, 2)}\n`);
 } finally
 {
 	await rm(consumer, { recursive: true, force: true });

@@ -8,6 +8,7 @@ import { createHash } from "node:crypto";
 
 import { canonicalJson } from "../../capsule/node.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { generatePhpBindingPackage } from "./generate.mjs";
 
 /**
  * Reports PHP conformance failures with stable machine-readable codes and structured diagnostic context.
@@ -51,7 +52,7 @@ const sampleExpression = (type, namespace) => {
 	if(type.kind === "primitive")
 	{
 		if(type.binding === "bool") return "false";
-		if(type.binding === "uint32") return "8";
+		if(type.binding === "uint32") return "lean_bridge_conformance_word('8')";
 		if(type.binding === "string") return "'parity'";
 		if(type.binding === "bytes") return `${phpClass(`${namespace}\\Bytes`)}::fromString("\\x00\\x7f\\xff")`;
 	}
@@ -61,7 +62,7 @@ const sampleExpression = (type, namespace) => {
     && type.arguments.length === 1
     && type.arguments[0].kind === "primitive"
     && type.arguments[0].binding === "uint32"
-	) return "[1, 5, 13]";
+	) return "array_map(lean_bridge_conformance_word(...), ['1', '5', '13'])";
 	fail("unsupported-conformance-value", "PHP conformance cannot synthesize a portable value", { type });
 };
 
@@ -71,6 +72,8 @@ const observationExpression = (variable, field) => {
 	{
 		return `bin2hex(${access}->toString())`;
 	}
+	if(field.type.binding === "uint32") return `(string) ${access}`;
+	if(field.type.binding === "array") return `array_map(strval(...), ${access})`;
 	return access;
 };
 
@@ -103,6 +106,18 @@ const validateObservation = (corpus, observation, transport) => {
 			, expected: corpus.bindingIrSha256
 			, actual: observation.bindingIrSha256
 		});
+	}
+	const expectedMetadata = corpus.expected.metadataByTransport[transport];
+	if(canonicalJson(Object.keys(observation.metadata ?? {}).sort()) !== canonicalJson(Object.keys(expectedMetadata).sort()))
+		fail("conformance-metadata-drift", `${transport} metadata fields differ from its generated host profile`, { transport });
+	for(const [key, expected] of Object.entries(expectedMetadata))
+	{
+		if(observation.metadata?.[key] !== expected)
+		{
+			fail("conformance-metadata-drift", `${transport} metadata does not match its generated host profile`, {
+				transport, key, expected, actual: observation.metadata?.[key]
+			});
+		}
 	}
 	if(observation.identity !== corpus.expected.identity)
 	{
@@ -143,7 +158,14 @@ const validateObservation = (corpus, observation, transport) => {
 export const comparePhpConformanceResults = ({ corpus, native, phpWasm }) => {
 	validateObservation(corpus, native, "native-zend");
 	validateObservation(corpus, phpWasm, "php-wasm");
-	const mismatch = differences(native, phpWasm);
+	// Profile-specific files have already been checked against independent hashes.
+	// Compare their component identity, then compare every remaining observation.
+	const sharedObservation = observation => ({ ...observation, metadata: {
+		reflectionComponent: observation.metadata.reflectionComponent
+		, assuranceComponent: observation.metadata.assuranceComponent
+	} });
+	const shared = sharedObservation(native);
+	const mismatch = differences(shared, sharedObservation(phpWasm));
 	if(mismatch.length > 0)
 	{
 		fail("php-transport-semantic-mismatch", "native Zend and PHP-Wasm returned different public observations", {
@@ -158,8 +180,9 @@ export const comparePhpConformanceResults = ({ corpus, native, phpWasm }) => {
 		, transports: ["native-zend", "php-wasm"]
 		, featureCoverage: structuredClone(corpus.featureCoverage)
 		, capabilityGaps: structuredClone(corpus.capabilityGaps)
-		, observationSha256: sha256(canonicalJson(native))
-		, observation: structuredClone(native)
+		, observationSha256: sha256(canonicalJson(shared))
+		, observation: structuredClone(shared)
+		, metadataByTransport: { "native-zend": structuredClone(native.metadata), "php-wasm": structuredClone(phpWasm.metadata) }
 	});
 };
 
@@ -223,6 +246,16 @@ export const generatePhpConformanceCorpus = ir => {
 	const callbackError = errorFor(projection, callbackCall.failure.errors[0]);
 	const disposedError = errorFor(projection, read.failure.errors[0]);
 	const namespace = projection.package.namespace;
+	const metadataByTransport = Object.fromEntries([["native-zend", 64], ["php-wasm", 32]].map(([transport, integerBits]) => {
+		const files = generatePhpBindingPackage(ir, { integerBits });
+		return [transport, {
+			reflectionSha256: sha256(files["reflection.json"])
+			, assuranceSha256: sha256(files["assurance.json"])
+			, documentationSha256: sha256(files["README.md"])
+			, reflectionComponent: ir.component.id
+			, assuranceComponent: ir.component.id
+		}];
+	}));
 	const recordArguments = record.fields.map(field => sampleExpression(field.type, namespace)).join(", ");
 	const recordObservation = record.fields.map(field =>
 		`        ${JSON.stringify(field.name)} => ${observationExpression("$payload", field)},`
@@ -269,6 +302,11 @@ $packageRoot = getenv('LEAN_BRIDGE_CONFORMANCE_PACKAGE_ROOT') ?: '/vendor';
 $autoload = getenv('LEAN_BRIDGE_CONFORMANCE_AUTOLOAD') ?: $packageRoot . '/autoload.php';
 require_once $autoload;
 
+function lean_bridge_conformance_word(string $decimal): int|${phpClass(`${namespace}\\BigInteger`)}
+{
+    return PHP_INT_SIZE === 4 ? ${phpClass(`${namespace}\\BigInteger`)}::fromDecimal($decimal) : (int) $decimal;
+}
+
 function lean_bridge_conformance_root_message(\\Throwable $error): string
 {
     while ($error->getPrevious() !== null) $error = $error->getPrevious();
@@ -279,11 +317,11 @@ $binding = json_decode(file_get_contents($packageRoot . '/binding-manifest.json'
 $reflection = json_decode(file_get_contents($packageRoot . '/reflection.json'), true, flags: JSON_THROW_ON_ERROR);
 $assurance = json_decode(file_get_contents($packageRoot . '/assurance.json'), true, flags: JSON_THROW_ON_ERROR);
 
-$box = new ${phpClass(resource.fqcn)}(41);
+$box = new ${phpClass(resource.fqcn)}(lean_bridge_conformance_word('41'));
 $payload = ${phpFunction(copiedRoundTrip)}(new ${phpClass(record.fqcn)}(${recordArguments}));
-$adder = ${phpFunction(closureFactory)}(2);
+$adder = ${phpFunction(closureFactory)}(lean_bridge_conformance_word('2'));
 try {
-    ${phpFunction(callbackCall)}(40, static function (int $value): int {
+    ${phpFunction(callbackCall)}(lean_bridge_conformance_word('40'), static function ($value) {
         throw new \\RuntimeException("parity callback failed at $value");
     });
     $callbackFailure = null;
@@ -292,8 +330,8 @@ try {
 }
 $identity = $box->${identity.public.name}() === $box;
 $readValue = $box->${read.public.name}();
-$callbackValue = ${phpFunction(callbackCall)}(40, static fn(int $value): int => $value);
-$closureValue = $adder(40);
+$callbackValue = ${phpFunction(callbackCall)}(lean_bridge_conformance_word('40'), static fn($value) => $value);
+$closureValue = $adder(lean_bridge_conformance_word('40'));
 $box->${resource.closeMethod}();
 try {
     $box->${read.public.name}();
@@ -325,12 +363,12 @@ echo json_encode([
         'operations' => json_decode(${phpString(JSON.stringify(operationShape))}, true, flags: JSON_THROW_ON_ERROR),
     ],
     'values' => [
-        'resourceRead' => $readValue,
+        'resourceRead' => (string) $readValue,
         'payload' => [
 ${recordObservation}
         ],
-        'callback' => $callbackValue,
-        'closure' => $closureValue,
+        'callback' => (string) $callbackValue,
+        'closure' => (string) $closureValue,
     ],
     'identity' => $identity,
     'failures' => [
@@ -363,6 +401,7 @@ ${recordObservation}
 		, reflection: { types: typeShape, operations: operationShape }
 		, expected: {
 			bindingIrSha256: projection.bindingIrSha256
+			, metadataByTransport
 			, identity: true
 			, declaredFailures: [callbackError.id, disposedError.id]
 			, runtimeInitRuns: 1

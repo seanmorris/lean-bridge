@@ -102,8 +102,9 @@ const assertCleanPublicSurface = (source, path) => {
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param files - Generated file map or inventory checked for required paths, content, and public-surface constraints.
+ * @param options - Expected host projection settings, including integerBits.
  */
-export const auditPhpPackage = (ir, files) => {
+export const auditPhpPackage = (ir, files, options = {}) => {
 	validateBindingIr(ir);
 	if(files === null || typeof files !== "object" || Array.isArray(files))
 	{
@@ -111,6 +112,8 @@ export const auditPhpPackage = (ir, files) => {
 	}
 	if(parseJson(files, "binding-manifest.json").generator?.id === "lean-wasm/php-copied")
 	{
+		if(options.integerBits !== undefined && options.integerBits !== 64)
+			fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
 		const expected = generateCopiedPhpPackage(ir), manifest = parseJson(files, "binding-manifest.json");
 		const reference = parseJson(expected, "binding-manifest.json");
 		if(files["src/Api.php"] !== expected["src/Api.php"]
@@ -123,7 +126,7 @@ export const auditPhpPackage = (ir, files) => {
 		assertCleanPublicSurface(files["src/Api.php"], "src/Api.php");
 		return true;
 	}
-	const projection = compilePhpProjection(ir);
+	const projection = compilePhpProjection(ir, options);
 	const manifest = parseJson(files, "binding-manifest.json");
 	const composer = parseJson(files, "composer.json");
 	const reflection = parseJson(files, "reflection.json");

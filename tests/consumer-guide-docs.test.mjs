@@ -127,6 +127,7 @@ test("Alpha conversion tables match the generated public Payload field types", a
 	const java = generateJvmBindingPackage(alpha.bindingIr)["src/main/java/org/leanbridge/alpha/Payload.java"];
 	const ruby = generateRubyBindingPackage(alpha.bindingIr)["sig/lean_bridge/alpha.rbs"];
 	const php = generatePhpBindingPackage(alpha.bindingIr)["src/Payload.php"];
+	const phpWasm = generatePhpBindingPackage(alpha.bindingIr, { integerBits: 32 })["src/Payload.php"];
 	const namedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, name, type]) => [name, type]));
 	const typedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, type, name]) => [name.toLowerCase(), type.replace(/^\\/u, "")]));
 	const jvmFields = typedFirst(java, new RegExp(`([a-zA-Z\\[\\]]+) (${fields})(?=[,)])`, "gu"));
@@ -141,7 +142,7 @@ test("Alpha conversion tables match the generated public Payload field types", a
 		, kotlin: new Map([...jvmFields].map(([name, type]) => [name, kotlinTypes[type]]))
 		, ruby: namedFirst(ruby, new RegExp(`^      attr_reader (${fields}): (.+)$`, "gmu"))
 		, "php-native": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
-		, "php-wasm": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
+		, "php-wasm": typedFirst(phpWasm, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
 	};
 	const leanNames = { bool: "Bool", uint32: "UInt32", string: "String", bytes: "ByteArray" };
 	for(const [target, generated] of Object.entries(targets))
@@ -171,9 +172,10 @@ test("the combined PHP guide owns both profiles and preserves their differences"
 		assert.equal(docPages.find(page => page.id === profile).legacy, true);
 	}
 	const range = overview.rows.get("`UInt32`").rules;
-	assert.match(range, /Native PHP: `0\.\.4294967295` with 64-bit/u);
-	assert.match(range, /PHP-Wasm: `0\.\.2147483647` with 32-bit signed/u);
-	assert.match(overview.section, /result above `PHP_INT_MAX`/u);
+	assert.match(range, /Full `0\.\.4294967295` range in both profiles/u);
+	assert.match(range, /PHP-Wasm.*BigInteger::fromDecimal/u);
+	assert.match(overview.section, /callback\(BigInteger\)|callable\(BigInteger\): BigInteger/u);
+	assert.doesNotMatch(overview.section, /result above `PHP_INT_MAX` cannot be represented/u);
 	assert.match(source, /PHP module API `20220829`/u);
 	assert.match(source, /PHP's virtual filesystem/u);
 });
@@ -193,8 +195,8 @@ test("conversion tables distinguish full-width integers and executable WASI supp
 	const phpNative = conversionTable(await readFile("docs/php.md", "utf8"));
 	const phpWasm = phpNative;
 	assert.match(phpNative.rows.get("`UInt32`").rules, /4294967295/u);
-	assert.match(phpWasm.rows.get("`UInt32`").rules, /PHP-Wasm: `0\.\.2147483647` with 32-bit signed/u);
-	assert.match(phpWasm.section, /result above `PHP_INT_MAX`/u);
+	assert.match(phpWasm.rows.get("`UInt32`").rules, /BigInteger::fromDecimal\('4294967295'\)/u);
+	assert.match(phpWasm.section, /4294967295` wraps to `0/u);
 	const wasi = conversionTable(await readFile("docs/consume/wit-wasi.md", "utf8"));
 	assert.match(wasi.rows.get("`UInt32`").rules, /Executable input and result/u);
 	for(const lean of ["Bool", "String", "ByteArray", "Array UInt32"])

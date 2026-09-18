@@ -164,7 +164,7 @@ const runProfile = async ({ packageRoot, expectedProfile }) => {
 	assert.deepEqual(host.snapshot().components, []);
 	const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
-$box = new LeanAlpha\\Box(41);
+$box = new LeanAlpha\\Box(LeanAlpha\\BigInteger::fromDecimal('4294967295'));
 $alphaRead = $box->read();
 $transport = new LeanAlpha\\Internal\\NativeTransport();
 $beforeBeta = $transport->runtimeSnapshot();
@@ -174,8 +174,8 @@ $afterBeta = $transport->runtimeSnapshot();
 $box->close();
 $afterClose = $transport->runtimeSnapshot();
 echo json_encode([
-    'alphaRead' => $alphaRead,
-    'betaRead' => $betaRead,
+    'alphaRead' => (string) $alphaRead,
+    'betaRead' => (string) $betaRead,
     'canonicalIdentity' => $same === $box,
     'beforeBeta' => $beforeBeta,
     'afterBeta' => $afterBeta,
@@ -187,8 +187,8 @@ echo json_encode([
 		throw new Error(`${expectedProfile} PHP-Wasm run failed with status ${status}: ${stderr || stdout}`);
 	}
 	const result = JSON.parse(stdout);
-	assert.equal(result.alphaRead, 41);
-	assert.equal(result.betaRead, 41);
+	assert.equal(result.alphaRead, "4294967295");
+	assert.equal(result.betaRead, "4294967295");
 	assert.equal(result.canonicalIdentity, true);
 	const liveBoxRegistrations = 2;
 	assert.deepEqual(

@@ -43,7 +43,7 @@ const deliveryFixture = () => {
 	return ir;
 };
 
-test("PHP projection defines one immutable surface for both transports", () => {
+test("native PHP projection defines an immutable 64-bit surface", () => {
   const projection = compilePhpProjection(alpha.bindingIr);
   assert.deepEqual(projection, compilePhpProjection(clone(alpha.bindingIr)));
   assert.equal(Object.isFrozen(projection.operations), true);
@@ -73,6 +73,32 @@ test("PHP projection defines one immutable surface for both transports", () => {
     ...projection.operations.map(operation => operation.transportMethod)
     , ...projection.lifecycle.map(operation => operation.transportMethod)
   ]).size, projection.operations.length + projection.lifecycle.length);
+});
+
+test("32-bit PHP keeps exact wide integers in parameters, results, fields and callbacks", () => {
+  const projection = compilePhpProjection(alpha.bindingIr, { integerBits: 32 });
+  const wide = "\\LeanAlpha\\BigInteger";
+  const read = projection.operations.find(operation => operation.id === "lean:Alpha.Box.read");
+  assert.equal(read.result.publicType, wide);
+  assert.equal(read.result.transportType, wide);
+  const payload = projection.types.find(type => type.name === "Payload");
+  assert.equal(payload.fields.find(field => field.name === "count").type.phpType, wide);
+  assert.equal(payload.fields.find(field => field.name === "values").type.phpDocType, `list<${wide}>`);
+  const callback = projection.types.find(type => type.name === "Transform");
+  assert.equal(callback.parameters[0].publicType, wide);
+  assert.equal(callback.result.publicType, wide);
+  assert.equal(projection.lifecycle.find(operation => operation.kind === "callable-call").parameters.at(-1).publicType, wide);
+  assert.ok(projection.requiredCapabilities.includes("big-integer-value-v1"));
+  assert.equal(projection.bindingIrSha256, compilePhpProjection(alpha.bindingIr).bindingIrSha256);
+  assert.throws(() => compilePhpProjection(alpha.bindingIr, { integerBits: 16 }), { code: "invalid-php-integer-width" });
+  const signedIr = JSON.parse(JSON.stringify(alpha.bindingIr).replaceAll('"uint32"', '"int64"'));
+  const signed = compilePhpProjection(signedIr, { integerBits: 32 }).types.find(type => type.name === "Payload").fields.find(field => field.name === "count").type;
+  assert.equal(signed.phpType, wide);
+  assert.deepEqual(signed.validation, {
+    kind: "decimal-integer-range"
+    , minimum: "-9223372036854775808"
+    , maximum: "9223372036854775807"
+  });
 });
 
 test("PHP projection preserves copied primitives as typed values", () => {

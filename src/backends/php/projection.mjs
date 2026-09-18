@@ -60,7 +60,17 @@ const camel = value => {
 
 const fqcn = (namespace, name) => `${namespace}\\${name}`;
 
-const primitiveProjection = (name, namespace) => {
+const primitiveProjection = (name, namespace, integerBits) => {
+	if(integerBits === 32 && ["uint32", "int64"].includes(name))
+		return {
+			kind: "primitive", binding: name
+			, phpType: `\\${fqcn(namespace, "BigInteger")}`
+			, phpDocType: `\\${fqcn(namespace, "BigInteger")}`
+			, validation: { kind: "decimal-integer-range"
+				, minimum: name === "uint32" ? "0" : "-9223372036854775808"
+				, maximum: name === "uint32" ? "4294967295" : "9223372036854775807" }
+			, capabilities: ["big-integer-value-v1", "checked-integer-ranges-v1"]
+		};
 	const fixedIntegers = new Map([
 		["uint8", [0, 0xff]]
 		, ["uint16", [0, 0xffff]]
@@ -140,8 +150,8 @@ const primitiveProjection = (name, namespace) => {
 	fail("unsupported-primitive", `PHP projection does not define ${name}`, { primitive: name });
 };
 
-const projectTypeRef = (typeRef, typeMap, namespace) => {
-	if(typeRef.kind === "primitive") return primitiveProjection(typeRef.name, namespace);
+const projectTypeRef = (typeRef, typeMap, namespace, integerBits) => {
+	if(typeRef.kind === "primitive") return primitiveProjection(typeRef.name, namespace, integerBits);
 	if(typeRef.kind === "parameter")
 	{
 		return {
@@ -159,7 +169,7 @@ const projectTypeRef = (typeRef, typeMap, namespace) => {
 		if(!type) fail("unknown-type", `PHP projection cannot resolve ${typeRef.id}`, { type: typeRef.id });
 		if(type.kind === "alias")
 		{
-			const target = projectTypeRef(type.target, typeMap, namespace);
+			const target = projectTypeRef(type.target, typeMap, namespace, integerBits);
 			return { ...target, binding: typeRef.id, alias: fqcn(namespace, type.name) };
 		}
 		if(type.kind === "callback")
@@ -186,7 +196,7 @@ const projectTypeRef = (typeRef, typeMap, namespace) => {
 	}
 	if(typeRef.kind === "apply")
 	{
-		const argumentsProjected = typeRef.arguments.map(argument => projectTypeRef(argument, typeMap, namespace));
+		const argumentsProjected = typeRef.arguments.map(argument => projectTypeRef(argument, typeMap, namespace, integerBits));
 		const capabilities = [...new Set(argumentsProjected.flatMap(argument => argument.capabilities))];
 		if(typeRef.constructor === "array")
 		{
@@ -256,9 +266,9 @@ const transportType = (namespace, projectedType, role) => {
 	return projectedType.phpType;
 };
 
-const projectSite = (site, role, typeMap, namespace) => {
+const projectSite = (site, role, typeMap, namespace, integerBits) => {
 	if(site === null) return null;
-	const type = projectTypeRef(site.type, typeMap, namespace);
+	const type = projectTypeRef(site.type, typeMap, namespace, integerBits);
 	return {
 		...(site.name ? { name: site.name } : {}),
 		type
@@ -335,7 +345,7 @@ const declarationCapabilities = operation => {
 	return [...capabilities].sort();
 };
 
-const projectType = (type, typeMap, namespace) => {
+const projectType = (type, typeMap, namespace, integerBits) => {
 	const base = {
 		id: type.id
 		, name: type.name
@@ -350,7 +360,7 @@ const projectType = (type, typeMap, namespace) => {
 	{
 		const fields = type.fields.map(field => ({
 			name: field.name
-			, type: projectTypeRef(field.type, typeMap, namespace)
+			, type: projectTypeRef(field.type, typeMap, namespace, integerBits)
 			, readonly: field.mutability !== "write"
 			, documentation: clone(field.documentation)
 		}));
@@ -377,8 +387,8 @@ const projectType = (type, typeMap, namespace) => {
 	}
 	if(type.kind === "callback")
 	{
-		const parameters = type.callable.parameters.map(parameter => projectSite(parameter, "parameter", typeMap, namespace));
-		const result = projectSite(type.callable.result, "result", typeMap, namespace);
+		const parameters = type.callable.parameters.map(parameter => projectSite(parameter, "parameter", typeMap, namespace, integerBits));
+		const result = projectSite(type.callable.result, "result", typeMap, namespace, integerBits);
 		return {
 			...base,
 			projection: "invokable-object"
@@ -398,15 +408,15 @@ const projectType = (type, typeMap, namespace) => {
 	return {
 		...base,
 		projection: "phpdoc-alias"
-		, target: projectTypeRef(type.target, typeMap, namespace)
+		, target: projectTypeRef(type.target, typeMap, namespace, integerBits)
 		, typeParameters: clone(type.typeParameters)
 	};
 };
 
-const projectOperation = (declaration, typeMap, namespace) => {
-	const receiver = projectSite(declaration.receiver, "receiver", typeMap, namespace);
-	const parameters = declaration.parameters.map(parameter => projectSite(parameter, "parameter", typeMap, namespace));
-	const result = projectSite(declaration.result, "result", typeMap, namespace);
+const projectOperation = (declaration, typeMap, namespace, integerBits) => {
+	const receiver = projectSite(declaration.receiver, "receiver", typeMap, namespace, integerBits);
+	const parameters = declaration.parameters.map(parameter => projectSite(parameter, "parameter", typeMap, namespace, integerBits));
+	const result = projectSite(declaration.result, "result", typeMap, namespace, integerBits);
 	let specializations = [];
 	if(declaration.typeParameters.length > 0)
 	{
@@ -517,9 +527,11 @@ const assertUniqueTransportMethods = (operations, lifecycle) => {
  * @param ir - Binding IR document that defines the source types and operations.
  * @param root0 - Named inputs and dependency overrides used to compile PHP projection.
  * @param root0.namespace - PHP namespace assigned to generated projection classes and exceptions.
+ * @param root0.integerBits - Host PHP integer width; native defaults to 64, PHP-Wasm uses 32.
  */
-export const compilePhpProjection = (ir, { namespace } = {}) => {
+export const compilePhpProjection = (ir, { namespace, integerBits = 64 } = {}) => {
 	validateBindingIr(ir);
+	if(![32, 64].includes(integerBits)) fail("invalid-php-integer-width", "PHP integer width must be 32 or 64");
 	const phpNamespace = namespace ?? pascal(ir.component.name);
 	if(!/^[A-Za-z_][A-Za-z0-9_]*(?:\\[A-Za-z_][A-Za-z0-9_]*)*$/.test(phpNamespace))
 	{
@@ -529,8 +541,8 @@ export const compilePhpProjection = (ir, { namespace } = {}) => {
 		});
 	}
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));
-	const types = ir.types.map(type => projectType(type, typeMap, phpNamespace));
-	const operations = ir.declarations.map(declaration => projectOperation(declaration, typeMap, phpNamespace));
+	const types = ir.types.map(type => projectType(type, typeMap, phpNamespace, integerBits));
+	const operations = ir.declarations.map(declaration => projectOperation(declaration, typeMap, phpNamespace, integerBits));
 	const lifecycle = lifecycleOperations(types, phpNamespace);
 	assertUniqueTransportMethods(operations, lifecycle);
 	const requiredCapabilities = new Set([
@@ -588,7 +600,7 @@ export const compilePhpProjection = (ir, { namespace } = {}) => {
 			, name: error.name
 			, fqcn: fqcn(phpNamespace, error.name)
 			, category: error.category
-			, payload: error.payload === null ? null : projectTypeRef(error.payload, typeMap, phpNamespace)
+			, payload: error.payload === null ? null : projectTypeRef(error.payload, typeMap, phpNamespace, integerBits)
 			, documentation: clone(error.documentation)
 		}))
 		, operations

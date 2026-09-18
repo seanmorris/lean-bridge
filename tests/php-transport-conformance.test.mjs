@@ -20,21 +20,15 @@ import {
 
 const run = promisify(execFile);
 
-const observation = corpus => ({
+const observation = (corpus, transport = "native-zend") => ({
 	bindingIrSha256: corpus.bindingIrSha256
-	, metadata: {
-		reflectionSha256: "1".repeat(64)
-		, assuranceSha256: "2".repeat(64)
-		, documentationSha256: "3".repeat(64)
-		, reflectionComponent: corpus.component.id
-		, assuranceComponent: corpus.component.id
-	}
+	, metadata: structuredClone(corpus.expected.metadataByTransport[transport])
 	, reflection: corpus.reflection
 	, values: {
-		resourceRead: 41
-		, payload: { enabled: true, count: 9, label: "parity", bytes: "007fff", values: [1, 5, 13] }
-		, callback: 42
-		, closure: 42
+		resourceRead: "41"
+		, payload: { enabled: true, count: "9", label: "parity", bytes: "007fff", values: ["1", "5", "13"] }
+		, callback: "42"
+		, closure: "42"
 	}
 	, identity: true
 	, failures: {
@@ -83,12 +77,13 @@ test("Binding IR generates one transport-neutral PHP conformance corpus", async 
 test("PHP conformance comparison rejects undocumented transport differences", () => {
   const { manifest } = generatePhpConformanceCorpus(alpha.bindingIr);
   const native = observation(manifest);
-  const phpWasm = structuredClone(native);
+  const phpWasm = observation(manifest, "php-wasm");
+  assert.notEqual(native.metadata.reflectionSha256, phpWasm.metadata.reflectionSha256);
   const report = comparePhpConformanceResults({ corpus: manifest, native, phpWasm });
   assert.equal(report.result, "passed");
   assert.deepEqual(report.transports, ["native-zend", "php-wasm"]);
 
-  phpWasm.values.callback = 41;
+  phpWasm.values.callback = "41";
   assert.throws(
     () => comparePhpConformanceResults({ corpus: manifest, native, phpWasm }),
     error =>
@@ -96,4 +91,21 @@ test("PHP conformance comparison rejects undocumented transport differences", ()
       && error.code === "php-transport-semantic-mismatch"
       && error.details.differences.some(difference => difference.path === "result.values.callback"),
   );
+});
+
+test("PHP conformance verifies each host profile's metadata before comparing values", () => {
+	const { manifest } = generatePhpConformanceCorpus(alpha.bindingIr);
+	for(const key of Object.keys(manifest.expected.metadataByTransport["php-wasm"]))
+	{
+		const native = observation(manifest);
+		const phpWasm = observation(manifest, "php-wasm");
+		native.metadata[key] = phpWasm.metadata[key] = "same but wrong";
+		assert.throws(() => comparePhpConformanceResults({ corpus: manifest, native, phpWasm }),
+			error => error instanceof PhpConformanceError && error.code === "conformance-metadata-drift");
+	}
+	const native = observation(manifest);
+	const phpWasm = observation(manifest, "php-wasm");
+	phpWasm.metadata.unreviewedSha256 = "0".repeat(64);
+	assert.throws(() => comparePhpConformanceResults({ corpus: manifest, native, phpWasm }),
+		error => error instanceof PhpConformanceError && error.code === "conformance-metadata-drift");
 });

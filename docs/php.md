@@ -228,7 +228,7 @@ Invalid types raise `TypeError`; out-of-range values and conversion limits raise
 
 Use the package's `BigInteger::fromDecimal` for every `UInt32`, `UInt64`, `Int64`, `Nat` and `Int` argument, including small values. Numeric PHP strings, integers and floats are not substitutes. Decimal text must be canonical and contain at most 16,384 digits. The same mapping applies to array elements and record fields, with `strict_types` either enabled or disabled.
 
-The [installed boundary checks](evidence/php-wasm-primitive-boundaries-20260918.md) cover both halves of `UInt32`, signed bounds, values beyond JavaScript's exact-number range, and large `Nat`/`Int` values. They also check floating-point rounding, signed zero, NaN classification, Unicode, embedded NUL and arbitrary bytes in Node and Chromium. This copied API is separate from the older [Alpha example API](#alpha-example-api), whose PHP-Wasm `int` mapping remains limited to `PHP_INT_MAX`.
+The [installed boundary checks](evidence/php-wasm-primitive-boundaries-20260918.md) cover both halves of `UInt32`, signed bounds, values beyond JavaScript's exact-number range, and large `Nat`/`Int` values. They also check floating-point rounding, signed zero, NaN classification, Unicode, embedded NUL and arbitrary bytes in Node and Chromium. The [Alpha example API](#alpha-example-api) uses the same `BigInteger` representation for its `UInt32` resources, callbacks and returned functions.
 
 #### Use the companion Composer API
 
@@ -412,35 +412,37 @@ declare(strict_types=1);
 require_once '/vendor/autoload.php';
 
 use LeanAlpha\Box;
+use LeanAlpha\BigInteger;
 use LeanAlpha\Bytes;
 use LeanAlpha\Payload;
 use function LeanAlpha\makeAdder;
 use function LeanAlpha\roundTrip;
 use function LeanAlpha\withCallback;
 
-$box = new Box(41);
+$box = new Box(BigInteger::fromDecimal('41'));
 $addTwo = null;
 try {
     $payload = roundTrip(new Payload(
-        false, 8, 'consumer', Bytes::fromString("\x00\x7f\xff"), [1, 5, 13],
+        false, BigInteger::fromDecimal('8'), 'consumer', Bytes::fromString("\x00\x7f\xff"),
+        array_map(BigInteger::fromDecimal(...), ['1', '5', '13']),
     ));
-    $addTwo = makeAdder(2);
+    $addTwo = makeAdder(BigInteger::fromDecimal('2'));
     $result = [
-        'box' => $box->read(),
+        'box' => (string) $box->read(),
         'identity' => $box->identity() === $box,
         'payload' => [
-            $payload->enabled, $payload->count, $payload->label,
-            bin2hex($payload->bytes->toString()), $payload->values,
+            $payload->enabled, (string) $payload->count, $payload->label,
+            bin2hex($payload->bytes->toString()), array_map(strval(...), $payload->values),
         ],
-        'callback' => withCallback(40, static fn(int $value): int => $value),
-        'closure' => $addTwo(40),
+        'callback' => (string) withCallback(BigInteger::fromDecimal('40'), static fn(BigInteger $value): BigInteger => $value),
+        'closure' => (string) $addTwo(BigInteger::fromDecimal('40')),
     ];
     $expected = [
-        'box' => 41,
+        'box' => '41',
         'identity' => true,
-        'payload' => [true, 9, 'consumer', '007fff', [1, 5, 13]],
-        'callback' => 42,
-        'closure' => 42,
+        'payload' => [true, '9', 'consumer', '007fff', ['1', '5', '13']],
+        'callback' => '42',
+        'closure' => '42',
     ];
     if ($result !== $expected) {
         throw new RuntimeException('Lean Alpha returned an unexpected result');
@@ -526,7 +528,7 @@ Handle both JavaScript initialization failures and PHP failures. The host exampl
 
 ## Values and cleanup
 
-The copied-package examples above use exact `BigInteger` values where PHP-Wasm's 32-bit integers cannot hold the full Lean range. The table keeps those installed ordinary-source mappings separate from the older Alpha reviewed-IR projection. In particular, Alpha's `UInt32` limitation does not apply to the copied API.
+The copied-package examples above use exact `BigInteger` values where PHP-Wasm's 32-bit integers cannot hold the full Lean range. The table distinguishes ordinary-source packages from the separately checked Alpha resource and callback API.
 
 ### Type conversions
 
@@ -540,12 +542,12 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Exact bool, including when the caller has strict_types disabled.; PHP-Wasm: Exact bool in weak and strict callers; numbers and strings are not Boolean inputs. Required: Exactly two Boolean values; do not coerce numbers or strings. |
 | `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
 | `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field); `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full 0..4294967295 range.; PHP-Wasm: The compiled copied API uses BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected. The older Alpha API accepts only 0..2147483647 as positive PHP integers; VO1206 tracks its exact upper-half conversion. An Alpha result above PHP_INT_MAX fails; the compiled copied API uses BigInteger instead. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt32` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed | Native PHP: Alpha preserves the full 0..4294967295 range as int, including payload elements, callback arguments/results and returned closures. Requires native 64-bit PHP.; PHP-Wasm: The compiled copied API uses BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected. Alpha preserves the full 0..4294967295 range as BigInteger, including payload elements, callback arguments/results and returned closures. Use BigInteger even for small values; PHP ints, floats and numeric strings are rejected. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
 | `UInt64` | `BigInteger` (input, result, field); `LeanAlpha\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
 | `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
 | `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
 | `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field); `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int.; PHP-Wasm: The compiled copied API uses BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host. The older Alpha projection's generated int spelling requires 64-bit PHP. PHP-Wasm's 32-bit int does not provide this full range; the compiled copied API uses BigInteger instead. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Int64` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int.; PHP-Wasm: The compiled copied API uses BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host. The 32-bit projection uses BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
 | `Nat` | `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger stores canonical unsigned decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
 | `Int` | `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger stores canonical signed decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
 | `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: PHP float input rounds to binary32. NaN classification, infinities and signed zero are preserved.; PHP-Wasm: PHP float input rounds to binary32 in scalar, array and record positions. NaN classification, infinities, subnormals and signed zero are checked. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
@@ -587,21 +589,21 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 
 ### Alpha example API
 
-Both prepared Alpha profiles use these PHP types. Keep `declare(strict_types=1)` in application files so PHP does not coerce arguments before the bindings validate them.
+Alpha uses `int` for `UInt32` on native 64-bit PHP and `LeanAlpha\BigInteger` on PHP-Wasm. Keep `declare(strict_types=1)` in application files so PHP does not coerce scalar arguments before the bindings validate them.
 
 | Lean type | PHP type | Conversion rules |
 | --- | --- | --- |
 | `Bool` | `bool` | Pass `true` or `false`. |
-| `UInt32` | `int` | Native PHP: `0..4294967295` with 64-bit integers. PHP-Wasm: `0..2147483647` with 32-bit signed integers. Inputs and results must fit the host range. |
+| `UInt32` | Native: `int`; PHP-Wasm: `LeanAlpha\BigInteger` | Full `0..4294967295` range in both profiles. In PHP-Wasm, use `BigInteger::fromDecimal('4294967295')`, including for small values. |
 | `String` | `string` | Valid UTF-8 text; embedded NUL is preserved. |
 | `ByteArray` | `LeanAlpha\Bytes` | Use `Bytes::fromString` for binary data and `toString()` to retrieve it. |
-| `Array UInt32` | `array` documented as `list<int>` | Sequential keys starting at zero; each element obeys the host's `UInt32` range above. |
+| `Array UInt32` | `array`, documented as native `list<int>` or PHP-Wasm `list<BigInteger>` | Sequential keys starting at zero; each element uses the profile's `UInt32` representation. |
 | `Payload` | `LeanAlpha\Payload` | Readonly copied value with typed fields; no JSON conversion. |
 | `Box` | `LeanAlpha\Box` | Resource with canonical object identity; close it in `finally`. |
-| `UInt32 → UInt32` callback | `callable` taking and returning `int` | Synchronous PHP callback; arguments and results obey the host integer range. |
+| `UInt32 → UInt32` callback | Native: `callable(int): int`; PHP-Wasm: `callable(BigInteger): BigInteger` | Synchronous PHP callback; arguments and results preserve the full unsigned range. |
 | Returned Lean closure | `LeanAlpha\Transform` | Invokable resource; call it in its originating runtime and release it with `close()`. |
 
-In PHP-Wasm, a Lean result above `PHP_INT_MAX` cannot be represented. Alpha's `roundTrip` increments its count, so input `2147483647` cannot produce a representable count.
+Alpha's `roundTrip` increments its count with Lean's `UInt32` arithmetic: `2147483647` becomes `2147483648`, and `4294967295` wraps to `0`. Both results are exact in PHP-Wasm. PHP integers, floats and numeric strings cannot substitute for `BigInteger` arguments. [Installed checks](evidence/php-alpha-uint32-boundaries-20260918.md) cover strict and weak callers, payload elements, callback arguments and results, returned closures, rejected inputs and cleanup.
 
 
 

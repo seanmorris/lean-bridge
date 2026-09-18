@@ -303,7 +303,18 @@ const emitValidators = (ir, projection) => {
 		{
 			if(ref.name === "unit") continue;
 			lines.push(`    public static function ${method}(${projected.phpType} $value, string $path): void`, "    {");
-			if(ref.name.startsWith("uint") && ref.name !== "uint64")
+			if(projected.validation?.kind === "decimal-integer-range")
+			{
+				const { minimum, maximum } = projected.validation;
+				lines.push("        $decimal = (string) $value;", "        $negative = str_starts_with($decimal, '-');"
+					, "        $magnitude = $negative ? substr($decimal, 1) : $decimal;"
+					, `        $limit = $negative ? '${minimum.replace(/^-/, "")}' : '${maximum}';`
+					, "        if (preg_match('/^(?:0|-?[1-9][0-9]*)$/D', $decimal) !== 1"
+					, ...(minimum === "0" ? ["            || $negative"] : [])
+					, "            || strlen($magnitude) > strlen($limit)"
+					, "            || (strlen($magnitude) === strlen($limit) && strcmp($magnitude, $limit) > 0)) {"
+					, `            throw new \\ValueError($path . ' must be ${ref.name}');`, "        }");
+			} else if(ref.name.startsWith("uint") && ref.name !== "uint64")
 			{
 				const maximum = (2n ** BigInt(Number(ref.name.slice(4))) - 1n).toString();
 				lines.push(`        if ($value < 0 || $value > ${maximum}) {`, `            throw new \\ValueError($path . ' must be ${ref.name}');`, "        }");
@@ -1030,7 +1041,7 @@ const exampleValue = (ir, projection, ref, stack = new Set()) => {
 	{
 		if(resolved.name === "unit") return "null";
 		if(resolved.name === "bool") return "false";
-		if(new Set(["uint64", "int64", "nat", "int"]).has(resolved.name))
+		if(new Set(["uint64", "int64", "nat", "int"]).has(resolved.name) || projectionForRef(projection, resolved).validation?.kind === "decimal-integer-range")
 		{
 			return `\\${projection.package.namespace}\\BigInteger::fromDecimal('1')`;
 		}
@@ -1075,7 +1086,7 @@ const emitReadme = (ir, projection) => {
 		, ""
 		, ir.documentation.summary
 		, ""
-		, "Install the package and one transport adapter. Native PHP and PHP-Wasm expose the same namespace, classes, functions, exceptions, and ownership behavior."
+		, "Install the package and one transport adapter. Native PHP and PHP-Wasm share resource, callback, exception and ownership behavior. Integer representations follow the host profile: UInt32 uses int on native 64-bit PHP and BigInteger on PHP-Wasm."
 		, ""
 		, "```sh"
 		, `composer require ${projection.package.composerName}`
@@ -1126,13 +1137,17 @@ const publicExports = (projection, support) => [
  * Compiles Binding IR into the validated PHP package projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Host projection settings, including integerBits.
  */
-export const compilePhpPackageModel = ir => {
+export const compilePhpPackageModel = (ir, options = {}) => {
 	validateBindingIr(ir);
+	if(options.integerBits !== undefined && options.integerBits !== 64
+		&& ir.declarations.every(declaration => declaration.kind === "function") && ir.types.every(type => type.kind === "record"))
+		fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
 	if(ir.declarations.every(declaration => declaration.kind === "function") && ir.types.every(type => type.kind === "record"))
 		return Object.freeze({ ir, copied: compileCopiedPhpModel(ir) });
 	validateCoverage(ir);
-	const projection = compilePhpProjection(ir);
+	const projection = compilePhpProjection(ir, options);
 	const support = supportProfile(projection);
 	return Object.freeze({ ir, projection, support });
 };
@@ -1253,10 +1268,11 @@ export const renderPhpPackageLayout = model => {
  * Generates and audits a PHP package through explicit model and rendering stages.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Host projection settings, including integerBits.
  */
-export const generatePhpBindingPackage = ir => {
-	const model = compilePhpPackageModel(ir);
+export const generatePhpBindingPackage = (ir, options = {}) => {
+	const model = compilePhpPackageModel(ir, options);
 	const files = renderPhpPackageLayout(model);
-	auditPhpPackage(ir, files);
+	auditPhpPackage(ir, files, options);
 	return files;
 };

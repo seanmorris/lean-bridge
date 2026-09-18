@@ -36,6 +36,15 @@ test("PHP model and render stages preserve audited package bytes", () => {
 	assert.doesNotThrow(() => auditPhpPackage(alpha.bindingIr, files));
 });
 
+test("32-bit PHP packages audit their own integer profile, not the native surface", () => {
+	const files = generatePhpBindingPackage(alpha.bindingIr, { integerBits: 32 });
+	assert.doesNotThrow(() => auditPhpPackage(alpha.bindingIr, files, { integerBits: 32 }));
+	assert.throws(() => auditPhpPackage(alpha.bindingIr, files), PhpPackageAuditError);
+	assert.match(files["src/Internal/Transport.php"], /leanAlphaBox\(\\LeanAlpha\\BigInteger/);
+	assert.match(files["stubs/lean_alpha.php"], /function withCallback\(\\LeanAlpha\\BigInteger/);
+	assert.match(files["README.md"], /BigInteger::fromDecimal\('1'\)/);
+});
+
 const writePackage = async (directory, files) => {
 	for(const [relativePath, source] of Object.entries(files))
 	{

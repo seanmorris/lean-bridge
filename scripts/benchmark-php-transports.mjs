@@ -76,52 +76,58 @@ $autoloadStart = hrtime(true);
 require_once $autoload;
 $autoloadNanoseconds = hrtime(true) - $autoloadStart;
 
+function lean_bridge_benchmark_word(int $value): int|LeanAlpha\\BigInteger
+{
+    return PHP_INT_SIZE === 4 ? LeanAlpha\\BigInteger::fromDecimal((string) $value) : $value;
+}
+
 $firstStart = hrtime(true);
-$firstBox = new LeanAlpha\\Box(41);
+$firstBox = new LeanAlpha\\Box(lean_bridge_benchmark_word(41));
 $firstValue = $firstBox->read();
 $firstBox->close();
 $firstAlphaNanoseconds = hrtime(true) - $firstStart;
 
 $betaFirstNanoseconds = null;
 if (function_exists('LeanBeta\\read')) {
-    $betaBox = new LeanAlpha\\Box(41);
+    $betaBox = new LeanAlpha\\Box(lean_bridge_benchmark_word(41));
     $betaStart = hrtime(true);
     $betaValue = LeanBeta\\read($betaBox);
     $betaIdentity = LeanBeta\\identity($betaBox) === $betaBox;
     $betaFirstNanoseconds = hrtime(true) - $betaStart;
-    if ($betaValue !== 41 || !$betaIdentity) throw new RuntimeException('Beta benchmark identity failed');
+    if ((string) $betaValue !== '41' || !$betaIdentity) throw new RuntimeException('Beta benchmark identity failed');
     $betaBox->close();
 }
 
 for ($index = 0; $index < ${iterations.warmup}; ++$index) {
-    $box = new LeanAlpha\\Box($index);
+    $box = new LeanAlpha\\Box(lean_bridge_benchmark_word($index));
     $box->read();
     $box->close();
 }
 
-$checksum = $firstValue;
-$retained = new LeanAlpha\\Box(73);
+$checksum = (int) (string) $firstValue;
+$retained = new LeanAlpha\\Box(lean_bridge_benchmark_word(73));
 $start = hrtime(true);
-for ($index = 0; $index < ${iterations.reads}; ++$index) $checksum += $retained->read();
+for ($index = 0; $index < ${iterations.reads}; ++$index) $checksum += (int) (string) $retained->read();
 $warmReadNanoseconds = hrtime(true) - $start;
 $retained->close();
 
-$callback = static fn(int $value): int => $value;
+$callback = static fn($value) => $value;
+$callbackInput = lean_bridge_benchmark_word(40);
 $start = hrtime(true);
-for ($index = 0; $index < ${iterations.callbacks}; ++$index) $checksum += LeanAlpha\\withCallback(40, $callback);
+for ($index = 0; $index < ${iterations.callbacks}; ++$index) $checksum += (int) (string) LeanAlpha\\withCallback($callbackInput, $callback);
 $callbackNanoseconds = hrtime(true) - $start;
 
-$payload = new LeanAlpha\\Payload(false, 8, 'benchmark', LeanAlpha\\Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]);
+$payload = new LeanAlpha\\Payload(false, lean_bridge_benchmark_word(8), 'benchmark', LeanAlpha\\Bytes::fromString("\\x00\\x7f\\xff"), array_map(lean_bridge_benchmark_word(...), [1, 5, 13]));
 $start = hrtime(true);
 for ($index = 0; $index < ${iterations.copiedValues}; ++$index) {
     $copy = LeanAlpha\\roundTrip($payload);
-    $checksum += $copy->count;
+    $checksum += (int) (string) $copy->count;
 }
 $copiedNanoseconds = hrtime(true) - $start;
 
 $start = hrtime(true);
 for ($index = 0; $index < ${iterations.cleanup}; ++$index) {
-    $box = new LeanAlpha\\Box($index);
+    $box = new LeanAlpha\\Box(lean_bridge_benchmark_word($index));
     $box->close();
 }
 $cleanupNanoseconds = hrtime(true) - $start;
@@ -134,8 +140,10 @@ if (is_string($status)) {
     if (preg_match('/^VmRSS:\\s+(\\d+) kB$/m', $status, $match)) $rssKiB = (int) $match[1];
     if (preg_match('/^VmHWM:\\s+(\\d+) kB$/m', $status, $match)) $peakRssKiB = (int) $match[1];
 }
-if ($checksum === 0 || $snapshot['liveIdentities'] !== 0) throw new RuntimeException('benchmark cleanup failed');
+if ($checksum !== ${41 + 73 * iterations.reads + 42 * iterations.callbacks + 9 * iterations.copiedValues} || $snapshot['liveIdentities'] !== 0) throw new RuntimeException('benchmark checksum or cleanup failed');
 echo json_encode([
+    'integerRepresentation' => PHP_INT_SIZE === 4 ? 'BigInteger' : 'int',
+    'checksumScope' => 'Measured calls include converting known-small results to PHP int through exact decimal text.',
     'iterations' => ${phpIterations},
     'logicalCopiedBytesPerCall' => ${logicalCopiedBytes},
     'measurements' => [

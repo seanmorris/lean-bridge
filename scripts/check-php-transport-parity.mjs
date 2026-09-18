@@ -131,9 +131,9 @@ const writeReport = async report => {
 
 Result: **${report.result}**
 
-Both transports executed the same generated PHP source. The observation hash is \`${report.observationSha256}\`.
+Both transports executed the same generated PHP source, using \`int\` on native 64-bit PHP and \`BigInteger\` on PHP-Wasm for UInt32 values. The observation hash is \`${report.observationSha256}\`.
 
-The corpus checked typed copied values, canonical object identity, PHP callbacks, returned Lean closures, declared exceptions, initialization, deterministic cleanup, stale resource rejection, reflection, documentation identity, assurance identity, and Binding IR identity.
+The corpus checked typed copied values, canonical object identity, PHP callbacks, returned Lean closures, declared exceptions, initialization, deterministic cleanup, stale resource rejection, reflection, assurance identity, and Binding IR identity. Each profile's reflection and documentation hashes must match its generated package; their PHP type spellings intentionally differ.
 
 ## Current fixture gaps
 

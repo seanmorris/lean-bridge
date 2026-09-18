@@ -6,8 +6,9 @@
  */
 
 
+import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { chmod, cp, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -94,6 +95,24 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
 `);
 
 	const extension = join(packageRoot, "lib/php/lean_alpha.so");
+	const boundarySource = await readFile(new URL("../tests/fixtures/php-uint32-boundaries.php", import.meta.url), "utf8");
+	const boundaryChecks = {};
+	for(const [mode, strict] of [["strict", 1], ["weak", 0]])
+	{
+		const boundaryFile = join(consumer, `uint32-${mode}.php`);
+		await writeFile(boundaryFile, boundarySource.replace("strict_types=1", `strict_types=${strict}`));
+		const { stdout, stderr } = await run("php", [
+			"-n", "-d", `extension=${extension}`, "-r"
+			, `require ${JSON.stringify(join(composerPackage, "vendor/autoload.php"))}; echo json_encode(require ${JSON.stringify(boundaryFile)}, JSON_THROW_ON_ERROR);`
+		]);
+		assert.equal(stderr, "");
+		const report = JSON.parse(stdout);
+		assert.equal(report.integerBytes, 8);
+		assert.deepEqual(report.values, ["0", "2147483647", "2147483648", "4294967295"]);
+		assert.equal(report.liveIdentities, 0);
+		assert.ok(report.checks >= 100);
+		boundaryChecks[mode] = report.checks;
+	}
 	const documentationProgram = join(consumer, "main.php");
 	await cp(new URL("../tests/fixtures/documentation/consumers/php-native/main.php", import.meta.url), documentationProgram);
 	const documentation = await run("php", ["-n", "-d", `extension=${extension}`, documentationProgram], {
@@ -135,7 +154,7 @@ echo json_encode($result, JSON_THROW_ON_ERROR);
 		, iterations: performance.iterations
 		, durationNanoseconds: performance.durationNanoseconds
 	});
-	process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+	process.stdout.write(`${JSON.stringify({ ...result, boundaryChecks }, null, 2)}\n`);
 } finally
 {
 	await rm(consumer, { recursive: true, force: true });

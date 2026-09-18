@@ -112,6 +112,9 @@ const zendSource = (ir, projection, shape) => {
 	const closeResource = projection.lifecycle.find(operation => operation.kind === "resource-close").transportMethod;
 	const callCallback = projection.lifecycle.find(operation => operation.kind === "callable-call").transportMethod;
 	const closeCallback = projection.lifecycle.find(operation => operation.kind === "callable-close").transportMethod;
+	const wide = projection.operations.find(operation => operation.id === "lean:Alpha.Box.read").result.type.phpType !== "int";
+	const uint32Argument = name => wide ? `ZEND_ARG_OBJ_INFO(0, ${name}, ${namespace}\\\\BigInteger, 0)` : `ZEND_ARG_TYPE_INFO(0, ${name}, IS_LONG, 0)`;
+	const uint32Return = (name, count) => wide ? `ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(${name}, 0, ${count}, ${namespace}\\\\BigInteger, 0)` : `ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(${name}, 0, ${count}, IS_LONG, 0)`;
 	return `#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -302,6 +305,57 @@ static zend_result make_bytes(const uint8_t *data, size_t length, zval *result)
     return EG(exception) ? FAILURE : SUCCESS;
 }
 
+static zend_result uint32_input(zval *value, uint32_t *out)
+{
+    ZVAL_DEREF(value);
+${wide ? `    zend_class_entry *ce = lookup_class("${namespace}\\\\BigInteger");
+    if (ce == NULL) return FAILURE;
+    if (Z_TYPE_P(value) != IS_OBJECT || Z_OBJCE_P(value) != ce) {
+        zend_type_error("UInt32 requires BigInteger"); return FAILURE;
+    }
+    zval rv;
+    zval *decimal = zend_read_property(ce, Z_OBJ_P(value), "decimal", sizeof("decimal") - 1, 1, &rv);
+    if (EG(exception)) return FAILURE;
+    if (Z_TYPE_P(decimal) != IS_STRING || Z_STRLEN_P(decimal) == 0 || Z_STRLEN_P(decimal) > 10) goto invalid;
+    const char *text = Z_STRVAL_P(decimal);
+    size_t length = Z_STRLEN_P(decimal);
+    if (length > 1 && text[0] == '0') goto invalid;
+    uint64_t number = 0;
+    for (size_t i = 0; i < length; ++i) {
+        if (text[i] < '0' || text[i] > '9') goto invalid;
+        number = number * 10 + (unsigned)(text[i] - '0');
+    }
+    if (number > UINT32_MAX) goto invalid;
+    *out = (uint32_t)number;
+    return SUCCESS;
+invalid:
+    zend_value_error("BigInteger must fit UInt32"); return FAILURE;` : `    if (Z_TYPE_P(value) != IS_LONG) {
+        zend_type_error("UInt32 requires int"); return FAILURE;
+    }
+    if (Z_LVAL_P(value) < 0 || (zend_ulong)Z_LVAL_P(value) > UINT32_MAX) {
+        zend_value_error("value must fit UInt32"); return FAILURE;
+    }
+    *out = (uint32_t)Z_LVAL_P(value);
+    return SUCCESS;`}
+}
+
+static zend_result uint32_result(uint32_t value, zval *out)
+{
+${wide ? `    zend_class_entry *ce = lookup_class("${namespace}\\\\BigInteger");
+    if (ce == NULL) return FAILURE;
+    zend_function *method = zend_hash_str_find_ptr(&ce->function_table, "fromdecimal", sizeof("fromdecimal") - 1);
+    if (method == NULL) { zend_throw_error(NULL, "BigInteger::fromDecimal is missing"); return FAILURE; }
+    char text[11];
+    int length = snprintf(text, sizeof(text), "%" PRIu32, value);
+    zval argument;
+    ZVAL_STRINGL(&argument, text, (size_t)length);
+    ZVAL_UNDEF(out);
+    zend_call_known_function(method, NULL, ce, out, 1, &argument, NULL);
+    zval_ptr_dtor(&argument);
+    return EG(exception) ? FAILURE : SUCCESS;` : `    ZVAL_LONG(out, (zend_long)value);
+    return SUCCESS;`}
+}
+
 static zend_result payload_input(zval *value, ${stem}_${snake(payload)} *out, zval *bytes_string, uint32_t **values)
 {
     zend_class_entry *ce = Z_OBJCE_P(value);
@@ -312,7 +366,8 @@ static zend_result payload_input(zval *value, ${stem}_${snake(payload)} *out, zv
     zval *bytes = zend_read_property(ce, Z_OBJ_P(value), "bytes", sizeof("bytes") - 1, 0, &rv_bytes);
     zval *items = zend_read_property(ce, Z_OBJ_P(value), "values", sizeof("values") - 1, 0, &rv_values);
     if (Z_TYPE_P(enabled) != IS_TRUE && Z_TYPE_P(enabled) != IS_FALSE) goto invalid;
-    if (Z_TYPE_P(count) != IS_LONG || Z_LVAL_P(count) < 0 || (zend_ulong)Z_LVAL_P(count) > UINT32_MAX) goto invalid;
+    uint32_t copied_count;
+    if (uint32_input(count, &copied_count) != SUCCESS) return FAILURE;
     if (Z_TYPE_P(label) != IS_STRING || Z_TYPE_P(bytes) != IS_OBJECT || Z_TYPE_P(items) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(items))) goto invalid;
     ZVAL_UNDEF(bytes_string);
     if (bytes_to_string(bytes, bytes_string) != SUCCESS) return FAILURE;
@@ -322,12 +377,12 @@ static zend_result payload_input(zval *value, ${stem}_${snake(payload)} *out, zv
     size_t index = 0;
     zval *item;
     ZEND_HASH_FOREACH_VAL(Z_ARRVAL_P(items), item) {
-        if (Z_TYPE_P(item) != IS_LONG || Z_LVAL_P(item) < 0 || (zend_ulong)Z_LVAL_P(item) > UINT32_MAX) goto invalid_values;
-        (*values)[index++] = (uint32_t)Z_LVAL_P(item);
+        if (uint32_input(item, &(*values)[index]) != SUCCESS) goto invalid_values;
+        ++index;
     } ZEND_HASH_FOREACH_END();
     *out = (${stem}_${snake(payload)}){
         .enabled = Z_TYPE_P(enabled) == IS_TRUE,
-        .count = (uint32_t)Z_LVAL_P(count),
+        .count = copied_count,
         .label = {Z_STRVAL_P(label), Z_STRLEN_P(label), NULL, NULL},
         .bytes = {(const uint8_t *)Z_STRVAL_P(bytes_string), Z_STRLEN_P(bytes_string), NULL, NULL},
         .values = {*values, item_count, NULL, NULL},
@@ -339,7 +394,7 @@ invalid_values:
 invalid_bytes:
     zval_ptr_dtor(bytes_string);
 invalid:
-    zend_throw_exception(zend_ce_type_error, "Generated ${payload} fields do not match Binding IR", 0);
+    if (!EG(exception)) zend_throw_exception(zend_ce_type_error, "Generated ${payload} fields do not match Binding IR", 0);
     return FAILURE;
 }
 
@@ -348,21 +403,29 @@ static zend_result payload_result(const ${stem}_${snake(payload)} *value, zval *
     zend_class_entry *ce = lookup_class("${namespace}\\\\${payload}");
     if (ce == NULL || ce->constructor == NULL) return FAILURE;
     zval arguments[5], constructor_result;
+    for (size_t index = 0; index < 5; index++) ZVAL_UNDEF(&arguments[index]);
+    zend_result converted = FAILURE;
     ZVAL_BOOL(&arguments[0], value->enabled);
-    ZVAL_LONG(&arguments[1], value->count);
+    if (uint32_result(value->count, &arguments[1]) != SUCCESS) goto cleanup;
     ZVAL_STRINGL(&arguments[2], value->label.length == 0 ? "" : value->label.data, value->label.length);
-    if (make_bytes(value->bytes.data, value->bytes.length, &arguments[3]) != SUCCESS) {
-        zval_ptr_dtor(&arguments[2]);
-        return FAILURE;
-    }
+    if (make_bytes(value->bytes.data, value->bytes.length, &arguments[3]) != SUCCESS) goto cleanup;
     array_init_size(&arguments[4], value->values.length);
-    for (size_t index = 0; index < value->values.length; index++) add_next_index_long(&arguments[4], value->values.data[index]);
+    for (size_t index = 0; index < value->values.length; index++) {
+        zval item; ZVAL_UNDEF(&item);
+        if (uint32_result(value->values.data[index], &item) != SUCCESS) {
+            if (!Z_ISUNDEF(item)) zval_ptr_dtor(&item);
+            goto cleanup;
+        }
+        add_next_index_zval(&arguments[4], &item);
+    }
     object_init_ex(return_value, ce);
     ZVAL_UNDEF(&constructor_result);
     zend_call_known_instance_method(ce->constructor, Z_OBJ_P(return_value), &constructor_result, 5, arguments);
     if (!Z_ISUNDEF(constructor_result)) zval_ptr_dtor(&constructor_result);
-    for (size_t index = 2; index < 5; index++) zval_ptr_dtor(&arguments[index]);
-    return EG(exception) ? FAILURE : SUCCESS;
+    converted = EG(exception) ? FAILURE : SUCCESS;
+cleanup:
+    for (size_t index = 0; index < 5; index++) if (!Z_ISUNDEF(arguments[index])) zval_ptr_dtor(&arguments[index]);
+    return converted;
 }
 
 typedef struct php_callback_context {
@@ -375,12 +438,16 @@ static ${stem}_status php_callback_call(void *context, uint32_t value, uint32_t 
 {
     php_callback_context *callback = context;
     zval argument, result;
-    ZVAL_LONG(&argument, value);
+    ZVAL_UNDEF(&argument);
     ZVAL_UNDEF(&result);
     callback->fci.retval = &result;
     callback->fci.params = &argument;
     callback->fci.param_count = 1;
-    if (zend_call_function(&callback->fci, &callback->fcc) != SUCCESS || EG(exception)) {
+    zend_result called = uint32_result(value, &argument);
+    if (called == SUCCESS) called = zend_call_function(&callback->fci, &callback->fcc);
+    if (!Z_ISUNDEF(argument)) zval_ptr_dtor(&argument);
+    if (called == SUCCESS && !EG(exception)) called = uint32_input(&result, out);
+    if (called != SUCCESS || EG(exception)) {
         if (EG(exception)) {
             callback->exception = EG(exception);
             GC_ADDREF(callback->exception);
@@ -392,15 +459,6 @@ static ${stem}_status php_callback_call(void *context, uint32_t value, uint32_t 
         if (!Z_ISUNDEF(result)) zval_ptr_dtor(&result);
         return ${macro}_STATUS_DECLARED_ERROR;
     }
-    if (Z_TYPE(result) != IS_LONG || Z_LVAL(result) < 0 || (zend_ulong)Z_LVAL(result) > UINT32_MAX) {
-        zval_ptr_dtor(&result);
-        zend_throw_exception(zend_ce_type_error, "Generated callback must return UInt32", 0);
-        error->code = ${macro}_ERROR_CALLBACK_THREW;
-        error->message = "PHP callback returned an invalid value";
-        error->message_length = sizeof("PHP callback returned an invalid value") - 1;
-        return ${macro}_STATUS_DECLARED_ERROR;
-    }
-    *out = (uint32_t)Z_LVAL(result);
     zval_ptr_dtor(&result);
     return ${macro}_STATUS_OK;
 }
@@ -420,9 +478,9 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_runtime_snapshot, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
-    ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
+    ${uint32Argument("value")}
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_box_read, 0, 1, IS_LONG, 0)
+${uint32Return("arginfo_box_read", 1)}
     ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_box_identity, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
@@ -431,19 +489,19 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_round_trip, 0, 1, ${namespace}\\\\${payload}, 0)
     ZEND_ARG_OBJ_INFO(0, payload, ${namespace}\\\\${payload}, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_with_callback, 0, 2, IS_LONG, 0)
-    ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
+${uint32Return("arginfo_with_callback", 2)}
+    ${uint32Argument("value")}
     ZEND_ARG_CALLABLE_INFO(0, transform, 0)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_make_adder, 0, 1, ${namespace}\\\\Internal\\\\Identity, 0)
-    ZEND_ARG_TYPE_INFO(0, base, IS_LONG, 0)
+    ${uint32Argument("base")}
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_identity_close, 0, 1, IS_VOID, 0)
     ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
 ZEND_END_ARG_INFO()
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_transform_call, 0, 2, IS_LONG, 0)
+${uint32Return("arginfo_transform_call", 2)}
     ZEND_ARG_OBJ_INFO(0, self, ${namespace}\\\\Internal\\\\Identity, 0)
-    ZEND_ARG_TYPE_INFO(0, value, IS_LONG, 0)
+    ${uint32Argument("value")}
 ZEND_END_ARG_INFO()
 
 PHP_METHOD(LeanAlpha_Identity, __construct)
@@ -535,12 +593,10 @@ PHP_METHOD(LeanAlpha_NativeTransport, runtimeSnapshot)
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.box"]})
 {
-    zend_long value;
-    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_LONG(value) ZEND_PARSE_PARAMETERS_END();
-    if (value < 0 || (zend_ulong)value > UINT32_MAX) {
-        zend_throw_exception(zend_ce_value_error, "value must fit UInt32", 0);
-        RETURN_THROWS();
-    }
+    zval *argument;
+    uint32_t value;
+    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_ZVAL(argument) ZEND_PARSE_PARAMETERS_END();
+    if (uint32_input(argument, &value) != SUCCESS) RETURN_THROWS();
     ${stem}_${snake(resource)} *result = NULL;
     ${stem}_error error = {0};
     ${stem}_status status = ${stem}_${snake(resource)}_create((uint32_t)value, &result, &error);
@@ -564,7 +620,7 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.Box.read"]}
         throw_transport(&error);
         RETURN_THROWS();
     }
-    RETURN_LONG(result);
+    if (uint32_result(result, return_value) != SUCCESS) RETURN_THROWS();
 }
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["bridge:Alpha.Box.identity"]})
@@ -612,16 +668,14 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.roundTrip"]
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.withCallback"]})
 {
-    zend_long value;
+    zval *argument;
+    uint32_t value;
     php_callback_context context = {0};
     ZEND_PARSE_PARAMETERS_START(2, 2)
-        Z_PARAM_LONG(value)
+        Z_PARAM_ZVAL(argument)
         Z_PARAM_FUNC(context.fci, context.fcc)
     ZEND_PARSE_PARAMETERS_END();
-    if (value < 0 || (zend_ulong)value > UINT32_MAX) {
-        zend_throw_exception(zend_ce_value_error, "value must fit UInt32", 0);
-        RETURN_THROWS();
-    }
+    if (uint32_input(argument, &value) != SUCCESS) RETURN_THROWS();
     ${stem}_${snake(callback)} transform = {php_callback_call, &context};
     uint32_t result = 0;
     ${stem}_error error = {0};
@@ -639,17 +693,15 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.withCallbac
         zend_throw_exception(zend_ce_error, "native callback transport ignored a PHP exception", 0);
         RETURN_THROWS();
     }
-    RETURN_LONG(result);
+    if (uint32_result(result, return_value) != SUCCESS) RETURN_THROWS();
 }
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${transportMethods["lean:Alpha.makeAdder"]})
 {
-    zend_long base;
-    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_LONG(base) ZEND_PARSE_PARAMETERS_END();
-    if (base < 0 || (zend_ulong)base > UINT32_MAX) {
-        zend_throw_exception(zend_ce_value_error, "base must fit UInt32", 0);
-        RETURN_THROWS();
-    }
+    zval *argument;
+    uint32_t base;
+    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_ZVAL(argument) ZEND_PARSE_PARAMETERS_END();
+    if (uint32_input(argument, &base) != SUCCESS) RETURN_THROWS();
     ${stem}_owned_${snake(callback)} *result = NULL;
     ${stem}_error error = {0};
     ${stem}_status status = ${stem}_make_adder((uint32_t)base, &result, &error);
@@ -675,15 +727,13 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${closeResource})
 PHP_METHOD(LeanAlpha_NativeTransport, ${callCallback})
 {
     zval *self;
-    zend_long value;
+    zval *argument;
+    uint32_t value;
     ZEND_PARSE_PARAMETERS_START(2, 2)
         Z_PARAM_OBJECT_OF_CLASS(self, identity_ce)
-        Z_PARAM_LONG(value)
+        Z_PARAM_ZVAL(argument)
     ZEND_PARSE_PARAMETERS_END();
-    if (value < 0 || (zend_ulong)value > UINT32_MAX) {
-        zend_throw_exception(zend_ce_value_error, "value must fit UInt32", 0);
-        RETURN_THROWS();
-    }
+    if (uint32_input(argument, &value) != SUCCESS) RETURN_THROWS();
     lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_CALLBACK);
     if (identity == NULL) RETURN_THROWS();
     uint32_t result = 0;
@@ -693,7 +743,7 @@ PHP_METHOD(LeanAlpha_NativeTransport, ${callCallback})
         throw_transport(&error);
         RETURN_THROWS();
     }
-    RETURN_LONG(result);
+    if (uint32_result(result, return_value) != SUCCESS) RETURN_THROWS();
 }
 
 PHP_METHOD(LeanAlpha_NativeTransport, ${closeCallback})
@@ -819,10 +869,11 @@ ZEND_GET_MODULE(${stem})
  * Generates PHP zend extension package from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Host projection settings, including integerBits.
  */
-export const generatePhpZendExtensionPackage = ir => {
+export const generatePhpZendExtensionPackage = (ir, options = {}) => {
 	validateBindingIr(ir);
-	const projection = compilePhpProjection(ir);
+	const projection = compilePhpProjection(ir, options);
 	const shape = exactAlphaShape(ir, projection);
 	const cFiles = generateCBindingPackage(ir);
 	const stem = packageStem(ir);
