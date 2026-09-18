@@ -20,6 +20,7 @@ import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 import { assertPackagedMetadata, packageMetadataFixture } from "./helpers/package-metadata.mjs";
+import { brickMathRepository } from "./helpers/brick-math.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_MULTI_PROFILE_TEST === "1";
 const engineRoot = process.cwd(), json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -288,9 +289,12 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 		const pkg = builds[0].packages.find(pkg => pkg.target === "php-native"), install = join(consumer, "php");
 		const metadata = await json(join(builds[0].output, "profiles/native/packages/php-native/composer/composer.json"));
 		metadata.dist = { type: "zip", url: `file://${join(builds[0].output, pkg.archives[0].path)}` };
-		await saveLakeFile(install, "composer.json", canonicalJson({ name: "test/shop-consumer", repositories: [{ "packagist.org": false }, { type: "package", package: metadata }], require: { [metadata.name]: metadata.version } }));
-		const env = { PATH: "/usr/bin:/bin", COMPOSER_HOME: join(install, "composer-config"), COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1" };
-		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_COMPOSER ?? "composer", args: ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], cwd: install, env });
+		await saveLakeFile(install, "composer.json", canonicalJson({ name: "test/shop-consumer", repositories: [{ "packagist.org": false }, await brickMathRepository(join(install, "feed")), { type: "package", package: metadata }], require: { [metadata.name]: metadata.version } }));
+		const env = { PATH: "/usr/bin:/bin", COMPOSER_HOME: join(install, "composer-config"), COMPOSER_CACHE_DIR: join(install, "composer-cache"), COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1" };
+		await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_COMPOSER ?? "composer", args: ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], cwd: install, env })
+			.catch(error => { throw new Error(`${error.message}\n${JSON.stringify(error.details ?? {})}`, { cause: error }); });
+		const lock = await json(join(install, "composer.lock"));
+		assert.equal(lock.packages.find(pkg => pkg.name === "brick/math")?.version, "1.0.0");
 		await saveLakeFile(install, "main.php", "<?php require 'vendor/autoload.php'; echo LeanShop\\quote(20), PHP_EOL;");
 		assert.equal((await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_PHP ?? "php", args: ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "main.php"], cwd: install, env })).stdout.trim(), expected);
 	}

@@ -37,9 +37,18 @@ test("offline Composer resolves Brick Math automatically and bridge checks rejec
 	const repository = await brickMathRepository(join(root, "feed"));
 	const ir = copiedZendFixture(), generated = generateCopiedPhpZendAdapter(ir);
 	for(const [path, text] of Object.entries(generated).filter(([path]) => path.endsWith(".php"))) await saveLakeFile(root, path, text);
-	await saveLakeFile(root, "composer.json", JSON.stringify({ name: "test/generated-integers", require: { php: "^8.2", ...brickMathRequirement }, repositories: [{ "packagist.org": false }, repository], autoload: { files: ["src/Api.php"] }, config: { "allow-plugins": false } }));
+	const manifest = { name: "test/generated-integers", require: { php: "^8.2", ...brickMathRequirement }, repositories: [{ "packagist.org": false }], autoload: { files: ["src/Api.php"] }, config: { "allow-plugins": false } };
+	await saveLakeFile(root, "composer.json", JSON.stringify(manifest));
 	const env = { ...process.env, COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(root, "composer-home"), COMPOSER_CACHE_DIR: join(root, "composer-cache") };
-	await processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_COMPOSER ?? "composer", args: ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist", "--no-dev"], cwd: root, env });
+	const install = () => processBuildRunner.capture({ command: process.env.LEAN_BRIDGE_COMPOSER ?? "composer", args: ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist", "--no-dev"], cwd: root, env });
+	await assert.rejects(install, error => {
+		assert.equal(error.code, "build-command-failed");
+		assert.match(error.details.stderr, /brick\/math[^\n]*could not be found/);
+		return true;
+	});
+	manifest.repositories.push(repository);
+	await saveLakeFile(root, "composer.json", JSON.stringify(manifest));
+	await install();
 	const lock = JSON.parse(await readFile(join(root, "composer.lock"), "utf8"));
 	assert.equal(lock.packages.length, 1); assert.equal(lock.packages[0].name, "brick/math"); assert.equal(lock.packages[0].version, "1.0.0");
 	const model = compileCopiedPhpModel(ir, { integerBits: 32 });
