@@ -36,6 +36,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity) => {
 	const expected = createMetadataRequest(selection, { toolchain: `leanprover/lean4:v${sourceIdentity.leanVersion}`
 		, modules
 		, leanCompilerSha256: sourceIdentity.leanCompilerSha256
+		, ...(sourceIdentity.reviewedBindingIr === undefined ? {} : { reviewedBindingIrSha256: sha256(canonicalJson(sourceIdentity.reviewedBindingIr)) })
 		, extractorSha256: sourceIdentity.extractorSha256 });
 	if(canonicalJson(expected.metadata) !== canonicalJson(context)) fail("Native invocation differs from retained compiler/source evidence");
 	validateElaboratedMetadata(metadata, expected);

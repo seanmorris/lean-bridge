@@ -73,11 +73,16 @@ export const reviewedCorpusCli = async (project, args) => {
 export const reviewedCorpusIdentity = async catalog => {
 	const corpus = await corpusIdentity(repository, catalog), files = [];
 	const paths = ["tests/type-corpus-reviewed.test.mjs"
+		, "tests/type-corpus-reviewed-native.test.mjs"
+		, "tests/reviewed-source.test.mjs", "tests/reviewed-source-build.test.mjs"
+		, "tests/helpers/type-corpus-reviewed-native.mjs"
 		, "tests/helpers/type-corpus-reviewed.mjs"
 		, "tests/helpers/type-corpus-reviewed-ir.mjs"
 		, "src/build/build-error.mjs", "src/build/canonical-build.mjs"
 		, "src/build/native-project.mjs", "src/build/elaborated-component.mjs"
 		, "src/build/lake-entry-intent.mjs", "src/analyze/project-analysis.mjs"
+		, "src/analyze/reviewed-source.mjs", "src/analyze/native-metadata.mjs"
+		, "src/build/native-model.mjs", "src/build/native-artifacts.mjs"
 		, "src/analyze/compiler-analysis.mjs", "src/binding-ir/canonical.mjs"
 		, "src/binding-ir/contract.mjs", "src/cli/commands.mjs"
 		, "scripts/lean-bridge.mjs"];
@@ -193,8 +198,8 @@ export const reviewedCorpusCoverage = (inventory, catalog, libraries) => {
 			assert.equal(attempt.diagnostics.length, 1);
 			assert.equal(attempt.diagnostics[0].code, "reviewed-ir-build-unsupported");
 			assert.equal(attempt.diagnostics[0].severity, "error");
-			assert.match(attempt.diagnostics[0].message, /analysis only/);
-			assert.match(attempt.diagnostics[0].hint, /lean-bridge.exports.json/);
+			assert.match(attempt.diagnostics[0].message, corpusProfiles[attempt.profile].transport === "native"
+				? /Set modules in lean-bridge.exports.json/ : /not supported by this build profile/);
 		}
 	}
 	return corpusCoverage(inventory, catalog).map(cell => {

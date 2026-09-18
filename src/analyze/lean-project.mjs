@@ -682,8 +682,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	}
 
 	const existingPaths = inputs.filter(input => input.path.endsWith(".binding-ir.json"));
-	if(existingPaths.length && ["modules", "exports", "resources", "arities", "specializations", "contracts"].some(key => configuration[key] !== undefined))
-		fail("export-configuration-reviewed-ir", "Shared source selection cannot yet override a reviewed Binding IR; keep export decisions in the reviewed document until the elaborated pipeline supports this combination");
+	if(existingPaths.length && ["exports", "resources", "arities", "specializations", "contracts"].some(key => configuration[key] !== undefined))
+		fail("export-configuration-reviewed-ir", "Keep export decisions in the reviewed Binding IR; modules may select its Lean source roots");
 	let bindingIr = null;
 	if(existingPaths.length === 1)
 	{

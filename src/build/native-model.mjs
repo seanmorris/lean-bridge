@@ -7,6 +7,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateNativeType } from "../analyze/native-types.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
 import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
+import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
+import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
 
 export { validateNativeType };
@@ -125,14 +127,16 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		metadata, request: sourceIdentity.request, component
 		, elaborationSha256: elaborated.sha256
 	});
-	const model = { schemaVersion: 2
+	const bindingIr = sourceIdentity.reviewedBindingIr === undefined ? semantic.document
+		: reconcileReviewedSource(sourceIdentity.reviewedBindingIr, semantic.document, sourceIdentity);
+	const model = { schemaVersion: sourceIdentity.reviewedBindingIr === undefined ? 2 : 3
 		, profile
 		, pointerBits
 		, byteOrder: "little"
 		, component
 		, ...(moduleName === undefined ? {} : { moduleName })
-		, bindingIr: semantic.document
-		, bindingIrSha256: semantic.semanticSha256
+		, bindingIr
+		, bindingIrSha256: hashBindingIr(bindingIr)
 		, sourceIdentity
 		, exports
 		, types: [...allTypes.values()] };

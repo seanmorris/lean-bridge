@@ -14,12 +14,16 @@ const fixture = await readFile(new URL("../fixtures/type-corpus/consumers/php.ph
  *
  * @param mode - Weak or strict caller typing.
  * @param profile - Native or wasm32 PHP transport.
+ * @param sourcePath - Source contract whose exact argument names must survive.
  */
-export const corpusPhpSource = (mode, profile = "php-native") => {
+export const corpusPhpSource = (mode, profile = "php-native", sourcePath = "ordinary-source") => {
 	assert.ok(["weak", "strict"].includes(mode));
 	assert.ok(["php-native", "php-wasm"].includes(profile));
+	assert.ok(["ordinary-source", "reviewed-ir"].includes(sourcePath));
+	assert.ok(sourcePath !== "reviewed-ir" || profile === "php-native");
 	const source = fixture.replace('const PROFILE = "php-native";', 'const PROFILE = "' + profile + '";');
-	return source.replace("declare(strict_types=0);", `declare(strict_types=${mode === "strict" ? 1 : 0});`).replace('const MODE = "weak";', `const MODE = "${mode}";`);
+	return source.replace("declare(strict_types=0);", `declare(strict_types=${mode === "strict" ? 1 : 0});`).replace('const MODE = "weak";', `const MODE = "${mode}";`)
+		.replace('const PARAMETER_PREFIX = "arg";', `const PARAMETER_PREFIX = "${sourcePath === "reviewed-ir" ? "value" : "arg"}";`);
 };
 
 export const phpRuntimeCases = Object.freeze({

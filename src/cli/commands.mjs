@@ -98,6 +98,7 @@ const blockedBuildCodes = new Set([
 	, "cache-directory-unsupported"
 	, "php-wasm-toolchain-unavailable"
 	, "reviewed-ir-build-unsupported"
+	, "reviewed-ir-source-mismatch", "export-configuration-reviewed-ir"
 	, "unknown-package-target"
 	, "package-target-ineligible"
 	, "component-binding-ir-required", "component-adapter-hints-required"

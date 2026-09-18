@@ -873,9 +873,13 @@ test("PHP corpus binds separate weak and strict public callers to the same fresh
 		assert.ok(source.includes("$result = $call(...$args);"));
 		assert.ok(source.includes("bitsFromDecimal(") && source.includes("bitsToDecimal("));
 		assert.ok(!source.includes("Internal\\Native") && !source.includes("$request['oracle']"));
+		assert.ok(source.includes('const PARAMETER_PREFIX = "arg";'));
+		assert.ok(corpusPhpSource(mode, "php-native", "reviewed-ir").includes('const PARAMETER_PREFIX = "value";'));
 	}
 	assert.notEqual(corpusPhpSource("weak"), corpusPhpSource("strict"));
 	assert.throws(() => corpusPhpSource("unknown"));
+	assert.throws(() => corpusPhpSource("weak", "php-native", "unknown"));
+	assert.throws(() => corpusPhpSource("weak", "php-wasm", "reviewed-ir"));
 });
 
 for(const [label, change] of [

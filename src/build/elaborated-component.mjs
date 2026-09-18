@@ -9,6 +9,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { assertSourceBuildInputs } from "./build-error.mjs";
+import { readReviewedSource, validateReviewedSource } from "../analyze/reviewed-source.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -101,7 +102,14 @@ export const buildElaboratedComponent = async ({ projectRoot
 		arities ??= config.arities ?? {};
 		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
-		assertSourceBuildInputs(inventory);
+		if(profile !== "native-library-v1") assertSourceBuildInputs(inventory);
+		const reviewedBindingIr = await readReviewedSource(project, inventory, signal);
+		if(reviewedBindingIr)
+		{
+			if(exports.length || resources.length || Object.keys(arities).length || canonicalJson(modules) !== canonicalJson(config.modules))
+				throw Object.assign(new Error("Reviewed builds cannot override the authorized modules or export decisions"), { code: "export-configuration-reviewed-ir" });
+			exports = validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort();
+		}
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
 		const analysis = inventory;
 		assertExportConfigurationSnapshot(record, analysis.inputs);
@@ -185,12 +193,15 @@ export const buildElaboratedComponent = async ({ projectRoot
 			, exportModules: selectedModules };
 		const request = createMetadataRequest(selection, { toolchain: analysis.project.toolchain
 			, leanCompilerSha256, extractorSha256
+			, ...(reviewedBindingIr ? { reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr)) } : {})
 			, modules: compileOrder.map(item => ({ name: item.module
 				, sourcePath: item.source.path
 				, sourceSha256: item.source.sha256
 				, interfaceSha256: item.interface.interfaceSha256 })) });
 		await save(join(staging, "request.json"), json(request));
 		const verifyElaborationInputs = async () => {
+			if(reviewedBindingIr && sha256(await readFile(join(project, reviewedBindingIr.path))) !== reviewedBindingIr.sourceSha256)
+				throw Object.assign(new Error("Reviewed contract changed during compilation"), { code: "native-elaboration-drift" });
 			if(sha256(await readFile(lean)) !== leanCompilerSha256 || sha256(await readFile(extractor)) !== extractorSha256)
 				throw Object.assign(new Error("Native compiler or extractor changed during compilation"), { code: "native-elaboration-drift" });
 			for(const item of compileOrder)
@@ -230,6 +241,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 			, sourceNoticesSha256: notices.sha256
 			, exportConfigurationSha256: record.sha256
 			, exportConfigurationSource
+			, ...(reviewedBindingIr ? { reviewedBindingIr } : {})
 			, extractorSha256
 			, request
 			, modules: compileOrder.map(({ module, source, interface: compiledInterface }) => ({ module, source, interface: compiledInterface })) };

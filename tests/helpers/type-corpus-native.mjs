@@ -25,6 +25,7 @@ import { installedPhpCorpus } from "./type-corpus-php.mjs";
 import { installedWitCorpus } from "./type-corpus-wit.mjs";
 import { installedJvmCorpus } from "./type-corpus-jvm.mjs";
 import { prepareJvmCorpusDependencies } from "./type-corpus-jvm-tools.mjs";
+import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus");
@@ -104,8 +105,11 @@ const installedObservation = async ({ profile, library, consumer, handoff, pkg, 
  * @param t - Test context owning both author and consumer scratch directories.
  * @param library - Closed corpus library definition.
  * @param profiles - Validated consumer profiles sharing this native build.
+ * @param options - Explicit ordinary-source or compiler-checked reviewed path.
+ * @param options.path - Corpus source path; never inferred from successful analysis.
  */
-export const runNativeCorpusLibrary = async (t, library, profiles) => {
+export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ordinary-source" } = {}) => {
+	assert.ok(["ordinary-source", "reviewed-ir"].includes(path));
 	assert.ok(profiles.length > 0 && profiles.every(profile => corpusProfiles[profile]?.transport === "native"));
 	assert.equal(new Set(profiles).size, profiles.length);
 	const space = await statfs(tmpdir());
@@ -140,6 +144,12 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	}
 	const targets = [...new Set(profiles.map(profile => corpusProfiles[profile].target))];
 	const context = await prepareCorpusSources(t, library, library.operations.map(operation => `${library.module}.${operation}`), targetSettings(library, profiles));
+	if(path === "reviewed-ir")
+	{
+		await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
+			, modules: [library.module], targets: targetSettings(library, profiles) }));
+		await saveLakeFile(context.root, "reviewed.binding-ir.json", canonicalJson(corpusReviewedIr(library)));
+	}
 	const before = await lakeInputState(context.workspace);
 	t.diagnostic(`${library.id}: compiling Lean oracle`);
 	const oracle = await leanCorpusOracle(context, library, leanPrefix);
@@ -157,6 +167,10 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const model = await json(join(builds[0].output, "native/component/model.json"));
 	const declarationEvidence = { modelSha256: sha256(await readFile(join(builds[0].output, "native/component/model.json")))
 		, signatures: validateCorpusDeclarations(library, model) };
+	const reviewed = path === "reviewed-ir" ? { model
+		, metadata: await json(join(builds[0].output, "native/component/metadata.json"))
+		, receipt: await json(join(builds[0].output, "native/component/native-component.json"))
+		, inputs: (await json(join(builds[0].output, "native/component/source-notices.json"))).packages[0].source.inputs } : undefined;
 	validateCorpusDeclarations(library, await json(join(builds[1].output, "native/component/model.json")));
 	// The reproduced archives and declarations have been compared. Only the first
 	// release supplies consumers; retaining the duplicate during handoff can fill
@@ -186,8 +200,20 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 	const pendingWorkspace = join(context.directory, "pending");
 	await cp(context.workspace, pendingWorkspace, { recursive: true });
 	await saveLakeFile(join(pendingWorkspace, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
-		, modules: [library.pendingModule], exports: [library.pendingExport]
+		, modules: [library.pendingModule]
+		, ...(path === "ordinary-source" ? { exports: [library.pendingExport] } : {})
 		, targets: targetSettings(library, profiles, "pending") }));
+	if(path === "reviewed-ir")
+	{
+		const document = corpusReviewedIr(library), declaration = document.declarations[0];
+		// Claiming a copied result cannot authorize the source's Option/Except.
+		document.types = [];
+		document.declarations = [{ ...declaration, id: `lean:${library.pendingExport}`
+			, name: library.pendingExport.split(".").at(-1)
+			, overloadKey: library.pendingExport
+			, source: { ...declaration.source, declaration: library.pendingExport } }];
+		await saveLakeFile(join(pendingWorkspace, "project"), "reviewed.binding-ir.json", canonicalJson(document));
+	}
 	let rejection;
 	try
 	{
@@ -232,12 +258,13 @@ export const runNativeCorpusLibrary = async (t, library, profiles) => {
 		const observed = profile === "wit-wasi" ? await installedWitCorpus({ library, consumer, handoff, pkg, environment, clean }) : profile === "rust"
 			? await installedRustCorpus({ library, consumer, handoff, pkg, dependencies: rustDependencies, environment, clean })
 			: profile === "dotnet" ? await installedDotnetCorpus({ library, consumer, handoff, pkg, environment, clean })
-				: profile === "php-native" ? await installedPhpCorpus({ library, consumer, handoff, pkg, environment, clean })
+				: profile === "php-native" ? await installedPhpCorpus({ library, consumer, handoff, pkg, environment, clean, sourcePath: path })
 					: ["java", "kotlin"].includes(profile) ? await installedJvmCorpus({ library, profile, consumer, handoff, pkg, dependencies: jvmDependencies, environment, clean })
 						: ["c", "cpp"].includes(profile) ? await installedCFamilyCorpus({ library, profile, consumer, handoff, pkg, clean })
 							: { observation: await installedObservation({ profile, library, consumer, handoff, pkg, runtimePackage, perlAbi, cases, oracle: result, environment }) };
 		validateCorpusObservation(library, cases, result, observed.observation);
-		runs.push({ library: library.id, profile, path: "ordinary-source"
+		runs.push({ library: library.id, profile, path
+			, ...(reviewed ? { reviewed } : {})
 			, archiveSha256: archive.sha256
 			, archive: { ...archive, target: pkg.target, name: pkg.name, version: pkg.version }
 			, ...(pkg.target === "maven" ? { pomArchive: { ...pkg.artifacts.find(file => file.path.endsWith(".pom")), target: pkg.target, name: pkg.name, version: pkg.version } } : {})

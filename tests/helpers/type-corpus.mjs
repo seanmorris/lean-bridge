@@ -5,6 +5,7 @@
  */
 
 import assert from "node:assert/strict";
+import { validateReviewedCorpusBuild } from "./type-corpus-reviewed-native.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
@@ -549,10 +550,16 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 		const identity = `${run.profile}/${run.path}/${run.library}`;
 		assert.ok(!identities.has(identity), `Duplicate corpus run: ${identity}`);
 		identities.add(identity);
-		assert.equal(run.path, "ordinary-source");
+		assert.ok(["ordinary-source", "reviewed-ir"].includes(run.path));
 		assert.ok(Object.hasOwn(corpusProfiles, run.profile));
 		const library = catalog.libraries.find(library => library.id === run.library);
 		assert.ok(library, "Unknown corpus library");
+		if(run.path === "reviewed-ir")
+		{
+			assert.equal(corpusProfiles[run.profile].transport, "native");
+			validateReviewedCorpusBuild(run, library);
+		}
+		else assert.equal(run.reviewed, undefined, "Ordinary evidence cannot be relabeled reviewed execution");
 		assert.match(run.archiveSha256, /^[a-f0-9]{64}$/);
 		assert.match(run.runtimeIdentity, /^[a-f0-9]{64}$/);
 		assert.match(run.bindingIrSha256, /^[a-f0-9]{64}$/);
@@ -618,7 +625,7 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 			, position: cell.position
 			, status: caseIds.length ? "observed" : "gap", cases: caseIds
 			, reason: caseIds.length ? "scoped-cases-only" : !Object.hasOwn(corpusProfiles, cell.profile) ? "adapter-not-implemented"
-				: cell.path !== "ordinary-source" ? "source-path-not-implemented" : "case-not-executed"
+				: cell.path === "reviewed-ir" && corpusProfiles[cell.profile].transport !== "native" ? "source-path-not-implemented" : "case-not-executed"
 			, owner: cell.owner };
 	});
 };

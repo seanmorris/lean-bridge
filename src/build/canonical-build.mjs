@@ -804,7 +804,7 @@ export const buildCanonicalProject = async ({
 	{
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
-		assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
+		if(normalized.includes("npm") || phpWasm) assertSourceBuildInputs(await inspectLeanProject(root, { signal }));
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)

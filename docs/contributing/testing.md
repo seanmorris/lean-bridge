@@ -375,7 +375,7 @@ Each browser profile gets a separate offline npm installation. React dependencie
 
 Browser checks cover repeated calls, recovery after a missing WASM asset, production React and development StrictMode effects, unmount/remount and unmount while WASM loads, and dedicated-worker reuse, termination and restart. Worker results must come from the worker realm. Reports retain each engine/variant's observations and lifecycle checks separately; extra engine runs do not multiply type-position coverage.
 
-Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. All 17 ordinary-source adapters are implemented. Unsupported or unexecuted cases and the reviewed-IR path remain gaps. These scoped cases do not change the [type-support inventory](../reference/types.md).
+Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. All 17 ordinary-source adapters are implemented. Unsupported or unexecuted cases remain gaps. A separate report covers compiler-checked reviewed native builds. These scoped cases do not change the [type-support inventory](../reference/types.md).
 
 The C/C++ report is `c-cpp.json`. It records GCC identities, public signature and caller hashes, source-located compiler diagnostics, pkg-config and CMake integration, deployed library/executable hashes, and repeated source-free execution. `cFamilyRuntimeRejections` counts the additional 60 invalid-input/recovery checks across both libraries. The two build integrations and repeated executions do not multiply catalog or coverage counts.
 
@@ -395,11 +395,41 @@ source scripts/env.sh
 npm run test:type-corpus:reviewed
 ```
 
-The two library contracts come from the independent corpus signatures, not generated compiler metadata or the Alpha fixture. The actual CLI validates all 19 declarations in each contract without a compiler. Builds for all 17 profiles, covering 12 package targets, must return `reviewed-ir-build-unsupported` before tool discovery and leave no release directory. Fast checks also cover combined targets, the Perl alias, direct native/PHP entry points, cached interface claims, conflicting source selectors and malformed review files.
+The two library contracts come from the independent corpus signatures, not generated compiler metadata or the Alpha fixture. The actual CLI validates all 19 declarations in each contract without a compiler. These admission fixtures omit authorized source modules. Builds for all 17 profiles, covering 12 package targets, must return `reviewed-ir-build-unsupported` before tool discovery and leave no release directory. Fast checks also cover combined targets, the Perl alias, direct native/PHP entry points, cached interface claims, conflicting export decisions and malformed review files.
 
 `build/type-corpus/reviewed-ir.json` records 38 analyzed declarations and 34 rejected build attempts. It records zero installed runs, executed consumer cases or observed cells. All 6,562 corpus cells remain gaps in this admission-only report; 697 carry the reviewed-build rejection reason. A separate fresh Lean oracle checks the source fixtures and their proofs. That oracle is not evidence that reviewed IR was compiled. The report binds the catalog, admission implementation, source/dependency snapshots and oracle identities, and rejects invented execution evidence.
 
-The consumer workflow's required `Reviewed IR admission corpus` job uploads `type-corpus-reviewed-ir-<commit>`. A failed command or missing report fails CI. See the [admission acceptance record](../evidence/type-corpus-reviewed-ir-20260917.md). Installed reviewed-IR execution remains planned work; these checks do not change the type-support inventory.
+The consumer workflow's required `Reviewed IR admission corpus` job uploads `type-corpus-reviewed-ir-<commit>`. A failed command or missing report fails CI. The [admission acceptance record](../evidence/type-corpus-reviewed-ir-20260917.md) preserves the earlier analysis-only milestone.
+
+### Compiler-checked reviewed native corpus
+
+The native corpus supplies explicit modules alongside each independent review, compiles fresh Lean interfaces, and requires the reviewed API to match. Run all eleven native consumer profiles with the same host toolchains listed above:
+
+```sh
+npm run test:type-corpus:reviewed-native
+```
+
+For a smaller selection:
+
+```sh
+LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,python \
+  node --test tests/type-corpus-reviewed-native.test.mjs
+```
+
+The runner builds each library twice from relocated sources, compares exact archives, removes the author workspace, and installs the copied packages offline. Public consumer calls must match a separately compiled Lean oracle. The report reconstructs the native model from retained metadata and checks the raw review, semantic digest, compiler invocation, source inventory, receipt and oracle identities. Review-only analysis cannot satisfy these checks.
+
+Run the fresh-compiler rejection checks separately with the pinned host Lean compiler:
+
+```sh
+LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 \
+  node --test tests/reviewed-source-build.test.mjs
+```
+
+These checks cover a namespace that differs from its source module, changed signatures, record field order and nominal identity, exports outside the selected roots, and review-file changes during compilation. Invalid inputs must stop before native linking and leave no component output.
+
+Reports use `reviewed-native-<sorted-profiles>.json` in `build/type-corpus/`. Each native CI corpus step runs both source paths and uploads both reports in its existing artifact. npm and PHP-Wasm reviewed paths remain gaps. Observed reviewed cells cover the executed copied-value cases only; they do not promote the full type-support inventory.
+
+The [reviewed native acceptance record](../evidence/reviewed-native-20260918.md) lists the eleven-profile results, compiler rejections and retained identities.
 
 CI requires all 17 adapters: C, C++, .NET, Java, Kotlin, Python, Ruby, Rust, native PHP, PHP-Wasm, WIT/WASI, all five npm adapters and all four Perl configurations. Jobs upload `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-jvm-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-php-native-<commit>`, `type-corpus-php-wasm-<commit>`, `type-corpus-wit-wasi-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
 

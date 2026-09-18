@@ -138,13 +138,17 @@ jobs:
         run: |
           export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"
           source scripts/env.sh
-          npm run test:type-corpus:perl
+          npm run test:type-corpus:perl && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/perl.json
+          test -s build/type-corpus/reviewed-native-perl.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-perl-${{ matrix.configuration }}-${{ github.sha }}
-          path: build/type-corpus/perl.json
+          path: |
+            build/type-corpus/perl.json
+            build/type-corpus/reviewed-native-perl.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

@@ -46,8 +46,9 @@ export const phpIsolationFlags = Object.freeze([
  * @param options.pkg - Package-set component entry.
  * @param options.environment - Explicit author tools.
  * @param options.clean - Compiler-free runtime environment.
+ * @param options.sourcePath - Independently specified argument-name contract.
  */
-export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, environment, clean }) => {
+export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, environment, clean, sourcePath = "ordinary-source" }) => {
 	const root = join(consumer, "php-native"), project = join(root, "project");
 	const feed = join(project, "feed"), home = join(project, "composer-home"), cache = join(project, "cache");
 	for(const directory of [feed, home, cache]) await mkdir(directory, { recursive: true });
@@ -139,13 +140,13 @@ export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, envi
 		, bindingIrSha256: receipt.bindingIrSha256, archiveSha256: archive.sha256
 		, declarationsSha256: await digest(join(packageRoot, "src/Api.php"))
 		, requestSha256: sha256(corpusPhpRequestJson(library))
-		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode))]))
+		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode, "php-native", sourcePath))]))
 		, ...Object.fromEntries(phpIsolationFlags.map(key => [key, true])) };
 	const deployment = join(root, "relocated");
 	await mkdir(deployment);
 	await rename(join(project, "vendor"), join(deployment, "vendor"));
 	await saveLakeFile(deployment, "request.json", corpusPhpRequestJson(library));
-	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode));
+	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode, "php-native", sourcePath));
 	await rm(project, { recursive: true, force: true });
 	assert.deepEqual(await readdir(root), ["relocated"]);
 	evidence.deployment = await inventory(deployment);
@@ -263,7 +264,7 @@ export const validatePhpEvidence = (run, library, validate) => {
 		assert.equal(observation.callerMode, mode); assert.equal(observation.integerBytes, 8);
 		assert.ok(observation.threadSafe === 0 || observation.threadSafe === false); assert.equal(observation.sapi, "cli");
 		assert.equal(observation.iniDisabled, true); assert.equal(observation.copiedValuesCollected, true);
-		assert.equal(evidence.consumerSources[mode], sha256(corpusPhpSource(mode)));
+		assert.equal(evidence.consumerSources[mode], sha256(corpusPhpSource(mode, "php-native", run.path)));
 		assert.equal(evidence.deployment[mode + ".php"].sha256, evidence.consumerSources[mode]);
 		assert.ok(observation.apiLocation.endsWith("/relocated/" + prefix + "src/Api.php"));
 		const root = observation.apiLocation.slice(0, -(prefix + "src/Api.php").length);

@@ -38,6 +38,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           npm run test:type-corpus:reviewed
+          LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 node --test tests/reviewed-source-build.test.mjs
       - name: Preserve reviewed admission evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -320,13 +321,17 @@ jobs:
           export LEAN_BRIDGE_PHP="$(command -v php)"
           export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
           source scripts/env.sh
-          npm run test:type-corpus:php-native
+          npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/php-native.json
+          test -s build/type-corpus/reviewed-native-php-native.json
       - name: Upload installed PHP corpus observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-php-native-${{ github.sha }}
-          path: build/type-corpus/php-native.json
+          path: |
+            build/type-corpus/php-native.json
+            build/type-corpus/reviewed-native-php-native.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -402,7 +407,7 @@ jobs:
             wasm_result=failed
             wasm_executed=false
           fi
-          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native"
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs"
           node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && npm run test:type-corpus:php-wasm"
       - name: Upload PHP observations
         if: always()
@@ -454,13 +459,17 @@ jobs:
         continue-on-error: true
         run: |
           source scripts/env.sh
-          npm run test:type-corpus:c-family
+          npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/c-cpp.json
+          test -s build/type-corpus/reviewed-native-c-cpp.json
       - name: Upload installed C and C++ corpus observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-c-family-${{ github.sha }}
-          path: build/type-corpus/c-cpp.json
+          path: |
+            build/type-corpus/c-cpp.json
+            build/type-corpus/reviewed-native-c-cpp.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -478,13 +487,17 @@ jobs:
         continue-on-error: true
         run: |
           source scripts/env.sh
-          npm run test:type-corpus:python
+          npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/python.json
+          test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-python-${{ github.sha }}
-          path: build/type-corpus/python.json
+          path: |
+            build/type-corpus/python.json
+            build/type-corpus/reviewed-native-python.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -507,13 +520,17 @@ jobs:
           export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
-          npm run test:type-corpus:rust
+          npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/rust.json
+          test -s build/type-corpus/reviewed-native-rust.json
       - name: Upload installed Rust corpus observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-rust-${{ github.sha }}
-          path: build/type-corpus/rust.json
+          path: |
+            build/type-corpus/rust.json
+            build/type-corpus/reviewed-native-rust.json
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
@@ -527,21 +544,21 @@ jobs:
             installed="$executed"
             consumer_command="npm run test:consumer:native"
             if [ "$consumer" = c ] || [ "$consumer" = cpp ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
             fi
             if [ "$consumer" = python ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
             fi
             if [ "$consumer" = rust ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs && npm run test:type-corpus:rust"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs && npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed
                 installed=false
@@ -605,13 +622,17 @@ jobs:
         run: |
           export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
           source scripts/env.sh
-          npm run test:type-corpus:dotnet
+          npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/dotnet.json
+          test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-dotnet-${{ github.sha }}
-          path: build/type-corpus/dotnet.json
+          path: |
+            build/type-corpus/dotnet.json
+            build/type-corpus/reviewed-native-dotnet.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -645,13 +666,17 @@ jobs:
           export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
           export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
           source scripts/env.sh
-          npm run test:type-corpus:jvm
+          npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/java-kotlin.json
+          test -s build/type-corpus/reviewed-native-java-kotlin.json
       - name: Upload installed Java and Kotlin corpus observations
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-jvm-${{ github.sha }}
-          path: build/type-corpus/java-kotlin.json
+          path: |
+            build/type-corpus/java-kotlin.json
+            build/type-corpus/reviewed-native-java-kotlin.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -675,13 +700,17 @@ jobs:
           export LEAN_BRIDGE_RUBY="$(command -v ruby)"
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           source scripts/env.sh
-          npm run test:type-corpus:ruby
+          npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/ruby.json
+          test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-ruby-${{ github.sha }}
-          path: build/type-corpus/ruby.json
+          path: |
+            build/type-corpus/ruby.json
+            build/type-corpus/reviewed-native-ruby.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -694,21 +723,21 @@ jobs:
             test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
             executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
             if [ "$consumer" = dotnet ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
             fi
             if [ "$consumer" = jvm ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
             fi
             if [ "$consumer" = ruby ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs"
               if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
@@ -770,20 +799,24 @@ jobs:
         run: |
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
           source scripts/env.sh
-          npm run test:type-corpus:wit-wasi
+          npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs
+          test -s build/type-corpus/wit-wasi.json
+          test -s build/type-corpus/reviewed-native-wit-wasi.json
       - name: Record WIT and WASI observations
         if: always()
         shell: bash
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && npm run test:type-corpus:wit-wasi"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs"
       - name: Upload WIT shared corpus evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-wit-wasi-${{ github.sha }}
-          path: build/type-corpus/wit-wasi.json
+          path: |
+            build/type-corpus/wit-wasi.json
+            build/type-corpus/reviewed-native-wit-wasi.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

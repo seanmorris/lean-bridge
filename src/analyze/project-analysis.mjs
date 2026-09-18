@@ -10,6 +10,7 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { projectElaboratedMetadata } from "./project-elaborated.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { compilerExportSelection } from "./export-configuration.mjs";
+import { assertReviewedSourceConfiguration } from "./reviewed-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-compiler-analysis" }); };
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
@@ -79,8 +80,7 @@ export const compilerProjectAnalysis = (inventory, entries, elaboration) => {
 export const reviewedProjectAnalysis = async (projectRoot, inventory, signal) => {
 	const paths = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json"));
 	if(!paths.length) fail("Reviewed analysis requires an explicit Binding IR document");
-	if(["modules", "exports", "resources", "arities", "specializations", "contracts"].some(key => inventory.configurationRecord.configuration[key] !== undefined))
-		throw Object.assign(new Error("Shared source selection cannot override a reviewed Binding IR"), { code: "export-configuration-reviewed-ir" });
+	assertReviewedSourceConfiguration(inventory.configurationRecord.configuration);
 	let bindingIr = null;
 	if(paths.length === 1)
 	{

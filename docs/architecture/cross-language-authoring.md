@@ -32,7 +32,7 @@ The [contract acceptance record](../evidence/export-contracts-20260914.md) cover
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its separate validation path. Native projections retain their compiler-checked C representations, resource selection and closure arities. Both build profiles accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis retains the scalar profile. Configuration support does not enable additional source targets.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Native reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile pure copied contracts with fresh metadata before generating adapters. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis retains the scalar profile.
 
 ## Shared semantic model and combined builds
 

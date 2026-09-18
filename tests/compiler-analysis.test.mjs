@@ -118,6 +118,8 @@ test("reviewed Binding IR works without a compiler and ignores cached source cla
 	assert.equal(multiple.bindingIr, null);
 	assert.equal(multiple.adapterHints[0].reason, "multiple-binding-ir-documents");
 	await saveLakeFile(root, "lean-bridge.exports.json", '{"schemaVersion":1,"modules":["OnboardingSmall"]}');
+	assert.deepEqual((await analyzeCompilerProject(root, { runner })).adapterHints, multiple.adapterHints);
+	await saveLakeFile(root, "lean-bridge.exports.json", '{"schemaVersion":1,"exports":["OnboardingSmall.twiceWord"]}');
 	await assert.rejects(() => analyzeCompilerProject(root, { runner }), { code: "export-configuration-reviewed-ir" });
 });
 

@@ -22,7 +22,7 @@ Read `proposedExports`, diagnostics, and adapter questions. The command uses the
 
 Analysis leaves the original checkout unchanged. A dependency-free Lake project needs no lockfile; dependencies and configured [generators](#generate-the-public-entry-module) require a reviewed `lake-manifest.json`. The engine runs declared generators against captured inputs before analyzing generated public modules. It does not build consumer adapters or packages.
 
-An explicit reviewed Binding IR takes a separate path: analysis validates that document without invoking Lean. Ordinary `build` commands reject supplied `.binding-ir.json` files with `reviewed-ir-build-unsupported`; they do not compile or ignore those decisions. Keep review documents outside a source-build project and express supported choices in `lean-bridge.exports.json`. Missing backends and compiler errors never fall back to source-scanned signatures.
+An explicit reviewed Binding IR takes a separate analysis path: `analyze` validates the document without invoking Lean. Native builds can [check a reviewed copied-value API against its source](#compile-a-reviewed-contract). npm, PHP-Wasm and combined native/Wasm builds still reject supplied `.binding-ir.json` files. Missing backends and compiler errors never fall back to source-scanned signatures.
 
 Prefer a small host-facing API with explicit input and result types. If you add wrapper functions, keep their behavior connected to the existing implementation and check the relevant theorems again. Do not erase a precondition merely to fit a host type. The [first component](first-component.md) is a complete supported npm example you can inspect as an existing library without recreating its files.
 
@@ -46,7 +46,31 @@ Ordinary npm builds send source and module selection to the engine without host-
 
 Native CPAN uses the same [compiler report](../architecture/elaborated-export-metadata.md) with its native type projection. Its prepared package includes `metadata.json` with documentation, source locations, resolved native types and theorem references. The native receipt binds that report to the compiled library. `resources` and `arities` remain native configuration decisions; public `analyze` still checks the ordinary scalar profile.
 
-The npm builder accepts shared module/export selection, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. Existing reviewed Binding IR retains its own decisions; combining it with shared source selectors or contracts currently produces an explicit error.
+The npm builder accepts shared module/export selection, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, package metadata, generators and target settings can accompany it.
+
+### Compile a reviewed contract
+
+Keep exactly one schema-3 `.binding-ir.json` file in the source project. Select its source entry modules explicitly in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Shop.Pricing"],
+  "targets": {
+    "pypi": { "name": "shop-pricing", "version": "1.0.0" }
+  }
+}
+```
+
+```sh
+lean-bridge build --project . --target pypi --output ./build/reviewed-release
+```
+
+The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
+
+This path accepts pure copied primitives, arrays and immutable records for native targets: C, C++, .NET, Java/Kotlin, Perl, native PHP, Python, Ruby, Rust and WIT/WASI. Documentation and argument names may differ from the compiler's defaults and are retained in the generated Binding IR. Host export names must match. Defaults, optional arguments, resources, callbacks, asynchronous operations, producer or source extensions and supplied assurance claims are not admitted. Do not combine a review with `exports`, `resources`, `arities`, `specializations` or `contracts` in the configuration.
+
+The native model and compilation receipt retain the review's raw file, source hash and semantic hash alongside fresh compiler evidence. The compiler request binds both inputs, and the artifact verifier repeats the contract comparison. A signature disagreement returns `reviewed-ir-source-mismatch`; an unsupported review decision returns `reviewed-ir-build-unsupported`. Neither produces a release. Compiler-free `analyze` validates the document only; it does not establish source agreement.
 
 ### Describe the downstream packages
 

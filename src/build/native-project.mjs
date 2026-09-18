@@ -10,8 +10,9 @@ import { projectCpanPackages } from "./cpan-projection.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { assertSourceBuildInputs, CanonicalBuildError } from "./build-error.mjs";
+import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
+import { readReviewedSource } from "../analyze/reviewed-source.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
@@ -40,7 +41,10 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	assertSourceBuildInputs(await inspectLeanProject(projectRoot, { signal }));
+	try
+	{ await readReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal); }
+	catch(error)
+	{ throw new CanonicalBuildError(error.code ?? "native-project-build-failed", error.message, { details: error.details }); }
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
 	for(const target of targets)
@@ -102,6 +106,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, component: built.model.component
 			, nativeRuntimeIdentity: built.receipt.runtimeIdentity
 			, bindingIrSha256: built.model.bindingIrSha256
+			, ...(built.model.sourceIdentity.reviewedBindingIr ? { reviewedBindingIrSha256: built.model.sourceIdentity.reviewedBindingIr.semanticSha256 } : {})
 			, configurationSha256: record.sha256 };
 		await writeFile(join(working, "native-release.json"), canonicalJson(manifest));
 		await writeNativePackageSet({ root: working, model: built.model, runtimeIdentity: built.receipt.runtimeIdentity, projections, signal });

@@ -5,6 +5,7 @@ namespace Corpus;
 // Generated packages are the only API implementation used by this caller.
 const MODE = "weak";
 const PROFILE = "php-native";
+const PARAMETER_PREFIX = "arg";
 function exactTypes(): array {
     return PHP_INT_SIZE === 4 ? ['nat', 'int', 'uint64', 'uint32', 'int64'] : ['nat', 'int', 'uint64'];
 }
@@ -118,9 +119,9 @@ function declarations(array $request): void {
         check((string) $fn->getReturnType() === publicType($signature['result'], $module));
         $parameters = $fn->getParameters(); check(count($parameters) === count($signature['parameters']));
         foreach ($parameters as $i => $parameter) {
-            check((string) $parameter->getType() === 'mixed' && $parameter->getName() === 'arg' . $i);
+            check((string) $parameter->getType() === 'mixed' && $parameter->getName() === PARAMETER_PREFIX . $i);
             check(!$parameter->isOptional() && !$parameter->isPassedByReference() && !$parameter->isVariadic());
-            check(str_contains($fn->getDocComment(), '@param ' . publicType($signature['parameters'][$i], $module, true) . ' $arg' . $i));
+            check(str_contains($fn->getDocComment(), '@param ' . publicType($signature['parameters'][$i], $module, true) . ' $' . PARAMETER_PREFIX . $i));
         }
         check(str_contains($fn->getDocComment(), '@return ' . publicType($signature['result'], $module, true) . "\n"));
         if (is_array($signature['result']) && isset($signature['result']['record'])) {

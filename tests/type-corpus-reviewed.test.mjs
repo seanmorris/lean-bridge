@@ -104,7 +104,7 @@ for(const library of corpusLibraries)
 	});
 }
 
-for(const [field, value] of Object.entries({ modules: ["Shop.Pricing"], exports: ["Shop.Pricing.quoteUnits"], resources: [], arities: {}, specializations: [], contracts: { "Shop.Pricing.quoteUnits": { effects: [] } } }))
+for(const [field, value] of Object.entries({ exports: ["Shop.Pricing.quoteUnits"], resources: [], arities: {}, specializations: [], contracts: { "Shop.Pricing.quoteUnits": { effects: [] } } }))
 	test(`reviewed analysis does not silently ignore shared ${field}`, async t => {
 		const context = await prepareReviewedCorpus(t, corpusLibraries[0]);
 		await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, [field]: value }));
