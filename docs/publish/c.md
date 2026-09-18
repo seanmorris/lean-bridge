@@ -8,7 +8,7 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Install Node 22, Lean 4.32.2, a C11 compiler, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select pure functions with copied parameters and results. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Resources, callbacks, effects and asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. C also accepts synchronous primitive callbacks and returned closures, as described below. C++ and the other copied-value host projections still reject callable signatures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
 
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 
@@ -48,6 +48,25 @@ Inputs borrow caller storage for the duration of the call. The adapter validates
 The 16 MiB per-call budget covers input and output payloads together, array slots and copied record storage. Array slots cost at least one native pointer each; output arrays also account for their ownership header. It is a conversion limit, not a limit on memory used by the Lean algorithm. Type nesting is limited to 32. Invalid input and conversion failures leave the caller's output slot unchanged; partially built outputs are released internally.
 
 Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. See the [installed array and record acceptance](../evidence/native-c-copied-20260914.md) for nested structures, exact values and allocation-failure checks.
+
+## Export callbacks and closures
+
+For target `c`, ordinary source and reviewed contracts accept callbacks with one to sixteen primitive arguments and one primitive result. All nineteen primitives use the same C representation as copied values, including exact `Nat`/`Int` limbs, scalar-valued `Char`, and 64-bit `USize`/`ISize`.
+
+```lean
+namespace Sample
+def applyTwice (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def makeChooser (captured : String) : Bool → String → String :=
+  fun useCaptured value => if useCaptured then captured else value
+end Sample
+```
+
+Select both exports and set `"arities": { "Sample.makeChooser": 1 }` in an ordinary-source configuration. This leaves the final two arguments on the returned closure. For a reviewed contract, the outer parameter count supplies that decision; do not also set `arities`. Build with `--target c`. A combined build selecting an unsupported callable target rejects the complete request.
+
+Host functions are borrowed for the synchronous call. Lean must not retain them for later use. Returned Lean closures have explicit leases and generated `_call`/`_dispose` functions. The public header supplies signature-specific callback names. See [C callback ownership](../consume/c.md#callbacks-and-returned-closures) and the [installed acceptance checks](../evidence/c-callables-20260918.md).
+
+These callable signatures do not admit arrays, records, nested callbacks, asynchronous delivery, or retained host functions. Copied arrays and records remain available outside callable signatures. C's `Nat`/`Int` representation remains the existing exact limb-buffer API; this change does not introduce GMP.
 
 ## Build the reviewed Alpha example
 

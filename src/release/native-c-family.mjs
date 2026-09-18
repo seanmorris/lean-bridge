@@ -41,7 +41,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity);
-	const surface = compilePrimitiveCSurface(model.bindingIr), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: target === "c" }), p = surface.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== 1 || adapter.profile !== "native-library-v1"
@@ -87,9 +87,12 @@ Version: ${version}
 Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}
 Cflags: -I\${includedir}
 `);
-	const copiedGuide = surface.copies.some(copy => copy.record || copy.element)
-		? "\n\nArrays and acyclic records can nest up to 32 types deep. C spans own their nested elements through their release callback; record clear functions clear their fields. Do not shallow-copy an owned result and clear both copies. C++ uses owned vectors and structs, with scoped input views. The 16 MiB conversion budget includes input and output payloads, array slots (at least pointer-sized), output ownership headers and record storage; it does not bound the Lean algorithm's working memory."
+	const callableGuide = surface.callbacks.size
+		? "\n\nSynchronous callbacks use the signature-specific function/context structs in the public header. Keep them valid until the Lean call returns. Dynamic callback arguments are borrowed views with null ownership fields. Return a borrowed view or an owned buffer with its release hook; the adapter copies and then releases callback results, including failed results. Return normally with a status; do not unwind across Lean frames. The first callback failure suppresses later host invocations in that call. Error text is thread-local, limited to 1023 bytes, and valid until the next failing call on that thread. Returned closures use generated _call and pointer-to-pointer _dispose functions. Invoke them on the creating thread, dispose once per owning pointer, and never use an alias after disposal. Call-scoped host callbacks cannot be retained by Lean. Nested callable calls are limited to 64; the 16 MiB budget includes callback conversions. Closure leases share the runtime's 4096-identity capacity."
 		: "";
+	const copiedGuide = (surface.copies.some(copy => copy.record || copy.element)
+		? "\n\nArrays and acyclic records can nest up to 32 types deep. C spans own their nested elements through their release callback; record clear functions clear their fields. Do not shallow-copy an owned result and clear both copies. C++ uses owned vectors and structs, with scoped input views. The 16 MiB conversion budget includes input and output payloads, array slots (at least pointer-sized), output ownership headers and record storage; it does not bound the Lean algorithm's working memory."
+		: "") + callableGuide;
 	await save(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `get_filename_component(_LB_PREFIX "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 if(NOT TARGET ${cmakeTarget})
   add_library(${cmakeTarget} SHARED IMPORTED)

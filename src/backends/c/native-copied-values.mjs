@@ -4,10 +4,17 @@
  * @file
  */
 import { nativeCType, nativeObjectType, nativeTypeKey } from "../../build/native-model.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 
-const reference = type => type.kind === "primitive" ? { kind: "primitive", name: type.name }
-	: type.kind === "array" ? { kind: "apply", constructor: "array", arguments: [reference(type.element)] }
-		: { kind: "named", id: `lean:${type.name}` };
+/**
+ * Convert a compiler type to its semantic C reference.
+ *
+ * @param type - Checked native type.
+ */
+export const nativeCReference = type => type.kind === "primitive" ? { kind: "primitive", name: type.name }
+	: type.kind === "callback" ? { kind: "named", id: `bridge:Callback${sha256(canonicalJson({ parameters: type.parameters.map(nativeCReference), result: nativeCReference(type.result) })).slice(0, 20)}` }
+		: type.kind === "array" ? { kind: "apply", constructor: "array", arguments: [nativeCReference(type.element)] }
+			: { kind: "named", id: `lean:${type.name}` };
 const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
 
 /**
@@ -18,11 +25,11 @@ const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
  */
 export const generateCopiedNativeCalls = (model, surface) => {
 	const p = surface.prefix, macro = p.toUpperCase();
-	const copy = type => surface.copy(reference(type));
+	const copy = type => surface.copy(nativeCReference(type));
 	const id = type => `lb_copy_${copy(type).index}`;
 	const boxed = (type, value) => nativeObjectType(type) ? value : `${type.abi.box}(${value})`;
 	const unboxed = (type, value) => nativeObjectType(type) ? value : `(${nativeCType(type)})${type.abi.unbox}(${value})`;
-	const definitions = model.types.map(type => {
+	const definitions = model.types.filter(type => type.kind !== "callback").map(type => {
 		const c = copy(type), key = id(type), n = nativeCType(type);
 		const check = [], input = [], output = [], extra = [];
 		if(type.kind === "primitive")
@@ -111,7 +118,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			, "  return 1;", "}"].join("\n");
 	});
 	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item]));
-	const calls = surface.functions.map(fn => {
+	const calls = surface.functions.filter(fn => ![...fn.declaration.parameters, fn.declaration.result].some(site => surface.callbacks.has(site.type.id))).map(fn => {
 		const native = exports.get(fn.declaration.id), lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`, "  (void)context; size_t budget = 16u * 1024u * 1024u;"];
 		const args = fn.parameters.map(({ name }, i) => {
 			const type = native.parameters[i].type, value = copy(type).aggregate ? name : `&${name}`;

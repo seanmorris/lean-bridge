@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.7.0",
+  "contractVersion": "0.8.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,11 +157,130 @@
   ],
   "evidence": [
     {
+      "id": "c-callables-installed",
+      "kind": "installed",
+      "revision": "2cb189f3eff4ca5acc4f9853edc1d64e374f5e11",
+      "command": "LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs",
+      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json.",
+      "files": [
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "096d21bcfa996db4d51278a2642621d76d21160512b7fbfa44cd6b3be0396a95"
+        },
+        {
+          "path": "tests/c-callables.test.mjs",
+          "sha256": "d292273802733cbdba9e338d90fbae9e0bd6457bcbe7bf17dab37cf29f1ee2e2"
+        },
+        {
+          "path": "tests/c-callable-contract.test.mjs",
+          "sha256": "5d4754f673a9b00ed8d53473c0bc563b2d00f02ff33d035a92e3398b0d7b1378"
+        },
+        {
+          "path": "tests/c-callable-evidence.test.mjs",
+          "sha256": "a411470a9ac97b21b640628ac3398e404b51a66a4cfc86a46ebe801022c544a9"
+        },
+        {
+          "path": "tests/helpers/callable-fixture.mjs",
+          "sha256": "fdfb536780348c73d7dac0c4c4bf246634c99df0e6d16f2b5b0b5cd227df5d84"
+        },
+        {
+          "path": "tests/helpers/callable-c-consumer.mjs",
+          "sha256": "45c38c5c85c48d7d077d9cd226e95306cf6c8b7672b98b53f2387a728ffb9408"
+        },
+        {
+          "path": "tests/helpers/c-callable-faults.mjs",
+          "sha256": "1b4edf5d02cc466a8c836a773d44ced0afbb7462b336db2bc25e3c543fe2ccae"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/fixtures/onboarding/callables/Callables.lean",
+          "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+          "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "e8d24f6de93f5c0c3f40731d89b4035962c9685027581a2793cbcaddda3b79c2"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "3875fbabb81753e377f26ac7181792ba9146e7f5bc6548ddd8a45e3f930f8db8"
+        },
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "591bbe7d9eafc2ea6f9270f48b0411e511dd62a460ef3e5d353371c1b68164d0"
+        },
+        {
+          "path": "docs/evidence/c-callables-20260918.md",
+          "sha256": "d3b3c367999a3f5d9ce1982fbf358dea94817cccaae241e2dbb97194dea538a4"
+        },
+        {
+          "path": "docs/evidence/c-callables-20260918.json",
+          "sha256": "3e83089e4a0931593556070100d88377ac2dd0df5724ee5f7eea21bdc797727a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/callables-1.0.0-c.tar.gz",
+          "sha256": "2faf5f5ba8e660eafa58f5eb82ff9ed1e8e2947e2e61e7a22cc34f4ab7ee92b2"
+        },
+        {
+          "path": "reviewed-ir/archives/callables-1.0.0-c.tar.gz",
+          "sha256": "a90a7031a3f67eef4551210022d3be16c6288b0ba59ae3afa7a60ecdae451b1e"
+        }
+      ]
+    },
+    {
       "id": "perl-callables-installed",
       "kind": "installed",
       "revision": "01f10ed85b75e3676df0eba41de9e8efc89c0dcc",
       "command": "LEAN_BRIDGE_PERL_CALLABLE_TEST=1 LEAN_BRIDGE_CORPUS_PERL=<pinned-Perl> node --test tests/perl-callables.test.mjs",
-      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json.",
+      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -237,15 +356,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a8718f8adf1a63eeeda96b02cc0c35c2f62e981d0f5bb5cb87660e43f75a34b9"
+          "sha256": "e8d24f6de93f5c0c3f40731d89b4035962c9685027581a2793cbcaddda3b79c2"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "934173ff2decd5fd8d665be456baed5baa02f5c96146c52c26e0bd702cadb50c"
+          "sha256": "2346d6d90f010e05bab8f69a2e2ccfc65b8df7e415448d005c6ba626d150b339"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "6114be37bd987e5f817ed81c200cdd60e98ecf778f9431dfb25ff121568a734c"
+          "sha256": "3875fbabb81753e377f26ac7181792ba9146e7f5bc6548ddd8a45e3f930f8db8"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -332,11 +451,11 @@
       "kind": "installed",
       "revision": "f5001a1d0e0cc891798786b197c4f643359cf54d",
       "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=c,python node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=cpp,rust node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=perl,php-native,wit-wasi node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs",
-      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "44ec757ca32898ab46f5de0255b0476fdf7f5d0520837bc8f2b96028a1613774"
+          "sha256": "591bbe7d9eafc2ea6f9270f48b0411e511dd62a460ef3e5d353371c1b68164d0"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -352,7 +471,7 @@
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
-          "sha256": "62d2715241cc9112340cae721de19535c0c24b36a5ec3b12503c2d1c00a28586"
+          "sha256": "1e8835d40b89ed1fc787d1f5b2147034eea7889e13f104078c596feaf2550fab"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
@@ -384,7 +503,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "6114be37bd987e5f817ed81c200cdd60e98ecf778f9431dfb25ff121568a734c"
+          "sha256": "3875fbabb81753e377f26ac7181792ba9146e7f5bc6548ddd8a45e3f930f8db8"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -404,19 +523,19 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "27ba1fc3e0f579531e7a70785e73534fc27b88d50b2dfb9774ab0500a070c559"
+          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -536,7 +655,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "934173ff2decd5fd8d665be456baed5baa02f5c96146c52c26e0bd702cadb50c"
+          "sha256": "2346d6d90f010e05bab8f69a2e2ccfc65b8df7e415448d005c6ba626d150b339"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -640,7 +759,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a8718f8adf1a63eeeda96b02cc0c35c2f62e981d0f5bb5cb87660e43f75a34b9"
+          "sha256": "e8d24f6de93f5c0c3f40731d89b4035962c9685027581a2793cbcaddda3b79c2"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -707,7 +826,7 @@
       "kind": "installed",
       "revision": "062757aee17110bf7631b98ab30b2d2888079ad6",
       "command": "LEAN_BRIDGE_CHAR_PROFILES=c,cpp,python,rust node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=perl,php-native,wit-wasi node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs",
-      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/char-native-20260918.json",
@@ -715,7 +834,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "44ec757ca32898ab46f5de0255b0476fdf7f5d0520837bc8f2b96028a1613774"
+          "sha256": "591bbe7d9eafc2ea6f9270f48b0411e511dd62a460ef3e5d353371c1b68164d0"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -727,19 +846,19 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "6114be37bd987e5f817ed81c200cdd60e98ecf778f9431dfb25ff121568a734c"
+          "sha256": "3875fbabb81753e377f26ac7181792ba9146e7f5bc6548ddd8a45e3f930f8db8"
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "27ba1fc3e0f579531e7a70785e73534fc27b88d50b2dfb9774ab0500a070c559"
+          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -1057,7 +1176,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -1073,15 +1192,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -1089,11 +1208,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -1212,7 +1331,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -1224,23 +1343,23 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -1331,7 +1450,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -1343,15 +1462,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
@@ -1383,11 +1502,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -1438,7 +1557,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -1450,15 +1569,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
@@ -1486,11 +1605,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -1529,7 +1648,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -1541,15 +1660,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
@@ -1573,11 +1692,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -1620,7 +1739,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -1632,15 +1751,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
@@ -1668,11 +1787,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -1715,7 +1834,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -1727,15 +1846,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
@@ -1763,11 +1882,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -1822,7 +1941,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -1834,15 +1953,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
@@ -1866,11 +1985,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -1917,7 +2036,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -1929,19 +2048,19 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "27ba1fc3e0f579531e7a70785e73534fc27b88d50b2dfb9774ab0500a070c559"
+          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -1965,7 +2084,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -1981,11 +2100,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "ac388f51aa818caccf571cfcc1ebfdc4fa5fc751473ac62af37e60e4eefe3d5b"
+          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
         },
         {
           "path": "tests/cpp-generator.test.mjs",
@@ -2028,7 +2147,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -2056,11 +2175,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "76fa67f5e4ca58b0b0a8d0571e47320eac366302c711ea9767ad25fdff192eb2"
+          "sha256": "2c503e8e1a0800459db5a328f39405e2da3dad724bbe35c3a9fc7d2a953c2477"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -2068,15 +2187,15 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "27ba1fc3e0f579531e7a70785e73534fc27b88d50b2dfb9774ab0500a070c559"
+          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "d6e1a63e71f3ca641a838e2d116904994cc9ab9762c5bf83465e0d57aacb1d1e"
+          "sha256": "d80446362b0fa3fbd2663636aeafc784decf9573e40a32b2660cd0c19deeeeab"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "be40aaee51b842023e9b843e6a328154a84dbe9e0fc18ffff476424ef8161bff"
+          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -2088,7 +2207,7 @@
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "ac388f51aa818caccf571cfcc1ebfdc4fa5fc751473ac62af37e60e4eefe3d5b"
+          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
         },
         {
           "path": "tests/native-c-family.test.mjs",
@@ -2100,7 +2219,7 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "1a8d1ef820652c6b0586311a8cacae4989a0977ef7198936de6b632528332df4"
+          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -2135,7 +2254,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -2283,7 +2402,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8573e9f4876c1c67456c5bb5b3b1e66e0f7c78898c11aaa419106a9d440ae220"
+          "sha256": "819895dcc8ddbbfea9e9a233bc9ccc348cb73fddcbe29899642ce9b701f8c387"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -2666,9 +2785,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
+      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"27ba1fc3e0f579531e7a70785e73534fc27b88d50b2dfb9774ab0500a070c559"}
+        {"path":"src/backends/c/generate.mjs","sha256":"3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"}
       ],
       "artifacts": []
     },
@@ -2737,6 +2856,660 @@
     }
   ],
   "observations": [
+    {
+      "id": "c-primitive-callables-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Nineteen primitive callback and returned-closure conversions, captured state, explicit cleanup, exact endpoints and failures through installed C APIs.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "uint8_t (zero)",
+          "callback-result": "void (no output)"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "uint8_t",
+          "callback-result": "uint8_t"
+        },
+        "uint16": {
+          "callback-parameter": "uint16_t",
+          "callback-result": "uint16_t"
+        },
+        "uint32": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "uint64": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "int8": {
+          "callback-parameter": "int8_t",
+          "callback-result": "int8_t"
+        },
+        "int16": {
+          "callback-parameter": "int16_t",
+          "callback-result": "int16_t"
+        },
+        "int32": {
+          "callback-parameter": "int32_t",
+          "callback-result": "int32_t"
+        },
+        "int64": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        },
+        "nat": {
+          "callback-parameter": "<prefix>_nat",
+          "callback-result": "<prefix>_nat"
+        },
+        "int": {
+          "callback-parameter": "<prefix>_int",
+          "callback-result": "<prefix>_int"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "double",
+          "callback-result": "double"
+        },
+        "string": {
+          "callback-parameter": "<prefix>_string",
+          "callback-result": "<prefix>_string"
+        },
+        "bytes": {
+          "callback-parameter": "<prefix>_bytes",
+          "callback-result": "<prefix>_bytes"
+        },
+        "char": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "usize": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "isize": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        }
+      },
+      "conversionNotes": {
+        "unit": "C inputs use zero; Unit results have no output argument.",
+        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
+        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
+        "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
+    {
+      "id": "c-primitive-callables-reviewed-ir",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Nineteen primitive callback and returned-closure conversions, captured state, explicit cleanup, exact endpoints and failures through installed C APIs.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "uint8_t (zero)",
+          "callback-result": "void (no output)"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "uint8_t",
+          "callback-result": "uint8_t"
+        },
+        "uint16": {
+          "callback-parameter": "uint16_t",
+          "callback-result": "uint16_t"
+        },
+        "uint32": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "uint64": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "int8": {
+          "callback-parameter": "int8_t",
+          "callback-result": "int8_t"
+        },
+        "int16": {
+          "callback-parameter": "int16_t",
+          "callback-result": "int16_t"
+        },
+        "int32": {
+          "callback-parameter": "int32_t",
+          "callback-result": "int32_t"
+        },
+        "int64": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        },
+        "nat": {
+          "callback-parameter": "<prefix>_nat",
+          "callback-result": "<prefix>_nat"
+        },
+        "int": {
+          "callback-parameter": "<prefix>_int",
+          "callback-result": "<prefix>_int"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "double",
+          "callback-result": "double"
+        },
+        "string": {
+          "callback-parameter": "<prefix>_string",
+          "callback-result": "<prefix>_string"
+        },
+        "bytes": {
+          "callback-parameter": "<prefix>_bytes",
+          "callback-result": "<prefix>_bytes"
+        },
+        "char": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "usize": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "isize": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        }
+      },
+      "conversionNotes": {
+        "unit": "C inputs use zero; Unit results have no output argument.",
+        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
+        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
+        "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
+    {
+      "id": "c-reviewed-callable-inputs",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Nineteen primitive callback and returned-closure conversions, captured state, explicit cleanup, exact endpoints and failures through installed C APIs.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "uint8_t (zero)",
+          "result": "void (no output)"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool"
+        },
+        "uint8": {
+          "parameter": "uint8_t",
+          "result": "uint8_t"
+        },
+        "uint16": {
+          "parameter": "uint16_t",
+          "result": "uint16_t"
+        },
+        "uint32": {
+          "parameter": "uint32_t",
+          "result": "uint32_t"
+        },
+        "uint64": {
+          "parameter": "uint64_t",
+          "result": "uint64_t"
+        },
+        "int8": {
+          "parameter": "int8_t",
+          "result": "int8_t"
+        },
+        "int16": {
+          "parameter": "int16_t",
+          "result": "int16_t"
+        },
+        "int32": {
+          "parameter": "int32_t",
+          "result": "int32_t"
+        },
+        "int64": {
+          "parameter": "int64_t",
+          "result": "int64_t"
+        },
+        "nat": {
+          "parameter": "<prefix>_nat",
+          "result": "<prefix>_nat"
+        },
+        "int": {
+          "parameter": "<prefix>_int",
+          "result": "<prefix>_int"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float"
+        },
+        "float64": {
+          "parameter": "double",
+          "result": "double"
+        },
+        "string": {
+          "parameter": "<prefix>_string",
+          "result": "<prefix>_string"
+        },
+        "bytes": {
+          "parameter": "<prefix>_bytes",
+          "result": "<prefix>_bytes"
+        }
+      },
+      "conversionNotes": {
+        "unit": "C inputs use zero; Unit results have no output argument.",
+        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
+        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
+        "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
+    {
+      "id": "c-host-callbacks-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "Synchronous primitive host callbacks, repeated invocation, nested calls, first-error recovery and expired-borrow rejection.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "generated typed callback struct"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
+    {
+      "id": "c-closure-leases-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Captured primitive closures, checked invocation signatures and creating threads, deterministic disposal, registry exhaustion and allocation cleanup.",
+      "hostTypes": {
+        "closure": {
+          "result": "generated owned closure pointer"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
+    {
+      "id": "c-closure-leases-reviewed-ir",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Captured primitive closures, checked invocation signatures and creating threads, deterministic disposal, registry exhaustion and allocation cleanup.",
+      "hostTypes": {
+        "closure": {
+          "result": "generated owned closure pointer"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
+      },
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ]
+    },
     {
       "id": "perl-primitive-callables-ordinary-source",
       "profiles": [
@@ -10606,38 +11379,122 @@
     },
     {
       "id": "c-primitives-c-1",
-      "profiles": ["c"],
-      "shapes": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","nat","int","float32","float64","string","bytes"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
       "path": "reviewed-ir",
-      "scope": "Generated C11 declarations; outputs use out parameters and a separate status/error result.",
+      "scope": "Historical reviewed C copied-field inspection only. Installed primitive input/result and callable coverage is recorded separately.",
       "hostTypes": {
-        "unit": {"parameter":"uint8_t (zero)","result":"void (no result payload)","field":"uint8_t (zero)","callback-parameter":"uint8_t (zero)","callback-result":"void (no result payload)"},
-        "bool": {"parameter":"bool","result":"bool","field":"bool","callback-parameter":"bool","callback-result":"bool"},
-        "uint8": {"parameter":"uint8_t","result":"uint8_t","field":"uint8_t","callback-parameter":"uint8_t","callback-result":"uint8_t"},
-        "uint16": {"parameter":"uint16_t","result":"uint16_t","field":"uint16_t","callback-parameter":"uint16_t","callback-result":"uint16_t"},
-        "uint32": {"parameter":"uint32_t","result":"uint32_t","field":"uint32_t","callback-parameter":"uint32_t","callback-result":"uint32_t"},
-        "uint64": {"parameter":"uint64_t","result":"uint64_t","field":"uint64_t","callback-parameter":"uint64_t","callback-result":"uint64_t"},
-        "int8": {"parameter":"int8_t","result":"int8_t","field":"int8_t","callback-parameter":"int8_t","callback-result":"int8_t"},
-        "int16": {"parameter":"int16_t","result":"int16_t","field":"int16_t","callback-parameter":"int16_t","callback-result":"int16_t"},
-        "int32": {"parameter":"int32_t","result":"int32_t","field":"int32_t","callback-parameter":"int32_t","callback-result":"int32_t"},
-        "int64": {"parameter":"int64_t","result":"int64_t","field":"int64_t","callback-parameter":"int64_t","callback-result":"int64_t"},
-        "nat": {"parameter":"<prefix>_nat buffer struct","result":"<prefix>_nat buffer struct","field":"<prefix>_nat buffer struct","callback-parameter":"<prefix>_nat buffer struct","callback-result":"<prefix>_nat buffer struct"},
-        "int": {"parameter":"<prefix>_int buffer struct","result":"<prefix>_int buffer struct","field":"<prefix>_int buffer struct","callback-parameter":"<prefix>_int buffer struct","callback-result":"<prefix>_int buffer struct"},
-        "float32": {"parameter":"float","result":"float","field":"float","callback-parameter":"float","callback-result":"float"},
-        "float64": {"parameter":"double","result":"double","field":"double","callback-parameter":"double","callback-result":"double"},
-        "string": {"parameter":"<prefix>_string buffer struct","result":"<prefix>_string buffer struct","field":"<prefix>_string buffer struct","callback-parameter":"<prefix>_string buffer struct","callback-result":"<prefix>_string buffer struct"},
-        "bytes": {"parameter":"<prefix>_bytes buffer struct","result":"<prefix>_bytes buffer struct","field":"<prefix>_bytes buffer struct","callback-parameter":"<prefix>_bytes buffer struct","callback-result":"<prefix>_bytes buffer struct"}
+        "unit": {
+          "field": "uint8_t (zero)"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "uint8_t"
+        },
+        "uint16": {
+          "field": "uint16_t"
+        },
+        "uint32": {
+          "field": "uint32_t"
+        },
+        "uint64": {
+          "field": "uint64_t"
+        },
+        "int8": {
+          "field": "int8_t"
+        },
+        "int16": {
+          "field": "int16_t"
+        },
+        "int32": {
+          "field": "int32_t"
+        },
+        "int64": {
+          "field": "int64_t"
+        },
+        "nat": {
+          "field": "<prefix>_nat buffer struct"
+        },
+        "int": {
+          "field": "<prefix>_int buffer struct"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "<prefix>_string buffer struct"
+        },
+        "bytes": {
+          "field": "<prefix>_bytes buffer struct"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["c-mapping-audit"],"note":"Generated C11 declarations; outputs use out parameters and a separate status/error result."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "c-mapping-audit"
+          ],
+          "note": "Generated C11 declarations; outputs use out parameters and a separate status/error result."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Input buffers may borrow for the call; returned buffers use generated clear functions.","Reviewed-IR buffer declarations alone do not establish arbitrary-integer transport; ordinary primitive execution is recorded separately."],
-      "conversionNotes": {"unit":"C value positions use uint8_t zero; no-payload results omit the output argument.","nat":"Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport.","int":"Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport.","string":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().","bytes":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."}
+      "limitations": [
+        "Input buffers may borrow for the call; returned buffers use generated clear functions.",
+        "Reviewed-IR buffer declarations alone do not establish arbitrary-integer transport; ordinary primitive execution is recorded separately."
+      ],
+      "conversionNotes": {
+        "unit": "C value positions use uint8_t zero; no-payload results omit the output argument.",
+        "nat": "Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport.",
+        "int": "Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport.",
+        "string": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().",
+        "bytes": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."
+      }
     },
     {
       "id": "c-values-c-1",
@@ -11284,40 +12141,112 @@
     },
     {
       "id": "identity-input-c-1",
-      "profiles": ["c"],
-      "shapes": ["callback"],
-      "positions": ["parameter"],
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
       "path": "reviewed-ir",
-      "scope": "Generated synchronous callback interface; installed Alpha uses UInt32.",
+      "scope": "Synchronous primitive host callbacks, repeated invocation, nested calls, first-error recovery and expired-borrow rejection.",
       "hostTypes": {
-        "callback": {"parameter":"generated typed callback struct"}
+        "callback": {
+          "parameter": "generated typed callback struct"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["c-mapping-audit"],"note":"Generated synchronous callback interface; installed Alpha uses UInt32."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "c-callables-installed"
+          ],
+          "note": "Fresh ordinary/reviewed Lean compiled and installed as C11 archives. Independent caller and allocation-failure checks passed; see c-callables-installed."
+        }
       },
-      "limitations": []
+      "limitations": [
+        "Linux x64 synchronous primitive callables only. Host callbacks borrow one call; returned closures need explicit disposal and invocation on their creating thread.",
+        "No callable collections, retained host functions, asynchronous delivery or other-language callable promotion.",
+        "A 16 MiB conversion budget applies per call; same-thread callable reentry is limited to 64. NaN payload bits are not a contract."
+      ],
+      "conversionNotes": {"callback": "Host context and function pointer borrow the synchronous call. Primitive arguments use the checked C value representations."}
     },
     {
       "id": "identity-output-c-1",
-      "profiles": ["c"],
-      "shapes": ["resource","closure"],
-      "positions": ["result"],
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "resource"
+      ],
+      "positions": [
+        "result"
+      ],
       "path": "reviewed-ir",
-      "scope": "Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance.",
+      "scope": "Historical reviewed C resource inspection only. Primitive closure leases have separate installed evidence.",
       "hostTypes": {
-        "resource": {"result":"opaque resource pointer"},
-        "closure": {"result":"owned transform pointer"}
+        "resource": {
+          "result": "opaque resource pointer"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["c-mapping-audit"],"note":"Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "c-mapping-audit"
+          ],
+          "note": "Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },

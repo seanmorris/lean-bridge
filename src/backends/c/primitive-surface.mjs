@@ -31,10 +31,13 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param ir - Authoritative canonical Binding IR.
  * @param options - Fixed compiled Lean profile, independent of the consumer process.
  * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
+ * @param options.callables - Admit the C-only synchronous primitive callable adapter.
  */
-export const compilePrimitiveCSurface = (ir, { wordBits = 64 } = {}) => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
+	const callbacks = new Map();
+	const callback = ref => ref.kind === "named" && ir.types.find(type => type.id === ref.id && type.kind === "callback");
 	const visit = (ref, declaration, depth = 0) => {
 		const key = typeKey(ref);
 		if(depth > 32 || visiting.has(key)) rejectPrimitiveSurface(declaration, "C/C++ copied values must be acyclic and at most 32 types deep");
@@ -67,11 +70,46 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64 } = {}) => {
 	};
 	for(const declaration of ir.declarations)
 	{
+		const hasCallback = callables && declaration.parameters.some(site => callback(site.type));
 		if(declaration.kind !== "function" || declaration.receiver || declaration.typeParameters.length
-			|| declaration.resultMode !== "value" || declaration.effects.length
-			|| ![...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))
+			|| declaration.resultMode !== "value"
+			|| [...declaration.effects].sort().join(",") !== (hasCallback ? "fails,host-call" : ""))
 			rejectPrimitiveSurface(declaration, "ordinary C/C++ adapters require concrete, pure, copied parameters and results");
-		for(const site of [...declaration.parameters, declaration.result]) visit(site.type, declaration);
+		if(hasCallback && (declaration.failure.mode !== "declared" || declaration.failure.errors.join(",") !== "error:native-callback"
+			|| declaration.failure.unexpected !== "poison-runtime")) rejectPrimitiveSurface(declaration, "C callbacks require the native callback failure policy");
+		for(const site of [...declaration.parameters, declaration.result])
+		{
+			const type = callables && callback(site.type);
+			if(!type)
+			{
+				if(site.ownership !== "copy") rejectPrimitiveSurface(declaration, "C/C++ copied values require copy ownership");
+				visit(site.type, declaration); continue;
+			}
+			const result = site === declaration.result, callable = type.callable;
+			if(site.ownership !== (result ? "lease" : "borrow") || site.lifetime?.scope !== (result ? "explicit" : "call")
+				|| site.lifetime.anchor !== null || callable.resultMode !== "value"
+				|| callable.invocation !== "many" || callable.reentry !== "same-agent" || callable.selfDisposal !== "defer"
+				|| !callable.parameters.length || callable.parameters.length > 16
+				|| [...callable.effects].sort().join(",") !== "fails,host-call"
+				|| callable.failure.mode !== "declared" || callable.failure.errors.join(",") !== "error:native-callback"
+				|| callable.failure.unexpected !== "poison-runtime")
+				rejectPrimitiveSurface(declaration, "C callbacks require synchronous primitive signatures, call borrows and explicit closure leases");
+			for(const value of [...callable.parameters, callable.result])
+			{
+				if(value.type.kind !== "primitive" || value.ownership !== "copy" || value.lifetime !== null)
+					rejectPrimitiveSurface(declaration, "C callbacks currently require copied primitive parameters and results");
+				visit(value.type, declaration);
+			}
+			const parameterNames = new Set(["context", "self", "out", "error"]);
+			for(const parameter of callable.parameters)
+			{
+				const name = cIdentifier(parameter.name);
+				if(!safe(name) || parameterNames.has(name) || parameter.optional || parameter.default !== null || parameter.mutability !== "immutable")
+					rejectPrimitiveSurface(declaration, "C callback parameters require distinct, non-reserved names and immutable required values");
+				parameterNames.add(name);
+			}
+			callbacks.set(type.id, { ...describeCType(ir, site.type), field: cIdentifier(type.name), type });
+		}
 	}
 	const names = new Set([...copies.values()].filter(copy => copy.aggregate).flatMap(copy => [copy.name, `${copy.name}_clear`]));
 	const functions = ir.declarations.map(declaration => {
@@ -88,5 +126,5 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64 } = {}) => {
 		}
 		return { ...surface, declaration };
 	});
-	return { ...compileCProjectionModel(ir), prefix: functions[0].prefix, functions, copies: [...copies.values()], copy: ref => copies.get(typeKey(ref)) };
+	return { ...compileCProjectionModel(ir), prefix: functions[0].prefix, functions, callbacks, copies: [...copies.values()], copy: ref => copies.get(typeKey(ref)) };
 };
