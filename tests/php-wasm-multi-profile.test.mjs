@@ -20,6 +20,7 @@ import { buildPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inp
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { corpusLibraries } from "./fixtures/type-corpus/cases.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
+import { brickMathRepository } from "./helpers/brick-math.mjs";
 
 const reviewed = process.env.LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST === "1" || reviewed;
@@ -111,7 +112,7 @@ test(`${reviewed ? "Reviewed" : "Ordinary"} PHP-Wasm combines atomically with ei
 		{
 			const metadata = await json(join(built.output, "profiles/native/packages/php-native/composer/composer.json"));
 			metadata.dist = { type: "zip", url: pathToFileURL(join(built.output, native.archives[0].path)).href };
-			await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/telemetry", repositories: [{ "packagist.org": false }, { type: "package", package: metadata }], require: { [metadata.name]: metadata.version } }));
+			await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/telemetry", repositories: [{ "packagist.org": false }, await brickMathRepository(join(consumer, "feed")), { type: "package", package: metadata }], require: { [metadata.name]: metadata.version } }));
 			await run(process.env.LEAN_BRIDGE_COMPOSER ?? "composer", ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], consumer, { ...process.env, COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(context.directory, "composer-home") });
 			await saveLakeFile(consumer, "main.php", "<?php require 'vendor/autoload.php'; echo LeanTelemetry\\measure(20);");
 		}
@@ -124,7 +125,7 @@ const php = new PhpNode({version: '8.4', sharedLibs: [api]});
 let output = '', errors = '';
 php.addEventListener('output', event => { for (const part of event.detail) output += part; });
 php.addEventListener('error', event => { for (const part of event.detail) errors += part; });
-assert.equal(await php.run("<?php require '" + api.autoload + "'; echo LeanTelemetry\\\\measure(LeanTelemetry\\\\BigInteger::fromDecimal('20'));"), 0);
+assert.equal(await php.run("<?php require '" + api.autoload + "'; echo LeanTelemetry\\\\measure(Brick\\\\Math\\\\BigInteger::of('20'));"), 0);
 assert.equal(errors, ''); assert.equal(output, '66'); console.log('66');
 `);
 		await rename(consumer, moved); await rename(built.output, `${built.output}-hidden`);

@@ -164,7 +164,7 @@ const runProfile = async ({ packageRoot, expectedProfile }) => {
 	assert.deepEqual(host.snapshot().components, []);
 	const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
-$box = new LeanAlpha\\Box(LeanAlpha\\BigInteger::fromDecimal('4294967295'));
+$box = new LeanAlpha\\Box(Brick\\Math\\BigInteger::of('4294967295'));
 $alphaRead = $box->read();
 $transport = new LeanAlpha\\Internal\\NativeTransport();
 $beforeBeta = $transport->runtimeSnapshot();

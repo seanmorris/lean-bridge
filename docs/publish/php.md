@@ -13,6 +13,10 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Select a PHP target explicitly. `--target npm` alone produces JavaScript packages. Neither PHP target has a CLI registry-upload adapter.
 
+Generated copied-value Composer packages declare `brick/math: 1.0.0`; the 32-bit Alpha package declares it too. Consumers receive `Brick\Math\BigInteger` directly. Publish the generated dependency declaration unchanged. Composer resolves Brick Math through the application's repositories and records it in the application lockfile. For an offline release, supply that dependency through the same local repository or a prepared cache.
+
+PHP-Wasm npm packages bundle the pinned Brick Math sources and MIT license for hosts without Composer. The CLI includes those sources, so authors need no network access to assemble them. The bundled version and the Composer dependency are identical. No GMP or BCMath extension is required.
+
 ## Build an ordinary Lean project
 
 Install the [C author toolchain](c.md#build-an-ordinary-lean-project) and PHP 8.2 or newer. Set `LEAN_BRIDGE_PHP` only if PHP is not on `PATH`. The package targets NTS CLI on Linux x86-64 with glibc 2.38 or newer and FFI enabled. PHP headers, `phpize` and a package-specific Zend extension are not required for this path.

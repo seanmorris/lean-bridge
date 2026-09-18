@@ -40,9 +40,18 @@ test("32-bit PHP packages audit their own integer profile, not the native surfac
 	const files = generatePhpBindingPackage(alpha.bindingIr, { integerBits: 32 });
 	assert.doesNotThrow(() => auditPhpPackage(alpha.bindingIr, files, { integerBits: 32 }));
 	assert.throws(() => auditPhpPackage(alpha.bindingIr, files), PhpPackageAuditError);
-	assert.match(files["src/Internal/Transport.php"], /leanAlphaBox\(\\LeanAlpha\\BigInteger/);
-	assert.match(files["stubs/lean_alpha.php"], /function withCallback\(\\LeanAlpha\\BigInteger/);
-	assert.match(files["README.md"], /BigInteger::fromDecimal\('1'\)/);
+	assert.match(files["src/Internal/Transport.php"], /leanAlphaBox\(\\Brick\\Math\\BigInteger/);
+	assert.match(files["stubs/lean_alpha.php"], /function withCallback\(\\Brick\\Math\\BigInteger/);
+	assert.match(files["README.md"], /BigInteger::of\('1'\)/);
+});
+
+test("PHP examples follow the host integer projection for Int64", () => {
+	const ir = clone(alpha.bindingIr);
+	ir.types.find(type => type.name === "Payload").fields.find(field => field.name === "count").type = { kind: "primitive", name: "int64" };
+	const native = generatePhpBindingPackage(ir, { integerBits: 64 });
+	const wasm = generatePhpBindingPackage(ir, { integerBits: 32 });
+	assert.match(native["README.md"], /new \\LeanAlpha\\Payload\(false, 1,/);
+	assert.match(wasm["README.md"], /new \\LeanAlpha\\Payload\(false, \\Brick\\Math\\BigInteger::of\('1'\),/);
 });
 
 const writePackage = async (directory, files) => {

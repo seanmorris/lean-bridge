@@ -10,13 +10,13 @@ import { nativeMetadataFixture } from "./native-metadata.mjs";
 
 export const zendScalars = [
 	["unit", "null"], ["bool", "true"], ["uint8", "255"], ["uint16", "65535"]
-	, ["uint32", "BigInteger::fromDecimal('4294967295')"]
-	, ["uint64", "BigInteger::fromDecimal('18446744073709551615')"]
+	, ["uint32", "BigInteger::of('4294967295')"]
+	, ["uint64", "BigInteger::of('18446744073709551615')"]
 	, ["int8", "-128"], ["int16", "-32768"]
 	, ["int32", "-2147483647 - 1"]
-	, ["int64", "BigInteger::fromDecimal('-9223372036854775808')"]
-	, ["nat", `BigInteger::fromDecimal('${(1n << 4096n) + 1n}')`]
-	, ["int", `BigInteger::fromDecimal('-${1n << 4096n}')`]
+	, ["int64", "BigInteger::of('-9223372036854775808')"]
+	, ["nat", `BigInteger::of('${(1n << 4096n) + 1n}')`]
+	, ["int", `BigInteger::of('-${1n << 4096n}')`]
 	, ["float32", "-0.0"], ["float64", "-0.0"]
 	, ["string", '"a\\0λ🌿"'], ["bytes", 'Bytes::fromString("\\0\\xff\\x80")']
 ];
@@ -133,7 +133,8 @@ export const zendConsumerFixture = (name, manifest) => {
 	return `<?php
 namespace Test${name};
 require '/${name}/src/Api.php';
-use ${ns}\\{BigInteger, Bytes, Leaf, Packet, EmptyValue};
+use Brick\\Math\\BigInteger;
+use ${ns}\\{Bytes, Leaf, Packet, EmptyValue};
 function check($condition, $message = 'Check failed') { if (!$condition) throw new \\RuntimeException($message); }
 function same($a, $b) { check(get_debug_type($a) === get_debug_type($b) && $a == $b, 'Values differ'); }
 function rejects($call, $class = \\Throwable::class) {
@@ -152,14 +153,15 @@ rejects(fn() => $result->rows = []);
 same(\\${ns}\\echo_emptyvalue(new EmptyValue()), new EmptyValue());
 same(\\${ns}\\answer(), 42);
 same(\\${ns}\\choose('left', 'right', false), 'right');
-foreach (['0', '1', '4294967295', '18446744073709551615', str_repeat('9', 16384)] as $text) same((string) \\${ns}\\echo_nat(BigInteger::fromDecimal($text)), $text);
-foreach (['0', '-1', '9223372036854775807', '-9223372036854775808'] as $text) same((string) \\${ns}\\echo_int64(BigInteger::fromDecimal($text)), $text);
+foreach (['0', '1', '4294967295', '18446744073709551615', str_repeat('9', 16384)] as $text) same((string) \\${ns}\\echo_nat(BigInteger::of($text)), $text);
+foreach (['0', '-1', '9223372036854775807', '-9223372036854775808'] as $text) same((string) \\${ns}\\echo_int64(BigInteger::of($text)), $text);
 same((string) \\${ns}\\max_word(), '18446744073709551615');
 same((string) \\${ns}\\min_signed(), '-9223372036854775808');
-${[0n, 4294967295n, 4294967296n, (1n << 4096n) + 123457n].map(value => `same((string) \\${ns}\\nat_low_word(BigInteger::fromDecimal('${value}')), '${value & 0xffffffffn}');`).join("\n")}
-foreach (['01', '-0', '+1', '1.0', "1\\n", str_repeat('9', 16385)] as $bad) rejects(fn() => BigInteger::fromDecimal($bad), \\ValueError::class);
-foreach (['-1', '4294967296'] as $bad) rejects(fn() => \\${ns}\\echo_uint32(BigInteger::fromDecimal($bad)), \\ValueError::class);
-foreach (['9223372036854775808', '-9223372036854775809'] as $bad) rejects(fn() => \\${ns}\\echo_int64(BigInteger::fromDecimal($bad)), \\ValueError::class);
+${[0n, 4294967295n, 4294967296n, (1n << 4096n) + 123457n].map(value => `same((string) \\${ns}\\nat_low_word(BigInteger::of('${value}')), '${value & 0xffffffffn}');`).join("\n")}
+rejects(fn() => \\${ns}\\echo_nat(BigInteger::of(str_repeat('9', 16385))), \\ValueError::class);
+same((string) \\${ns}\\echo_nat(BigInteger::of('4294967295')->plus(1)), '4294967296');
+foreach (['-1', '4294967296'] as $bad) rejects(fn() => \\${ns}\\echo_uint32(BigInteger::of($bad)), \\ValueError::class);
+foreach (['9223372036854775808', '-9223372036854775809'] as $bad) rejects(fn() => \\${ns}\\echo_int64(BigInteger::of($bad)), \\ValueError::class);
 foreach ([1, 1.0, true, '1', null] as $bad) rejects(fn() => \\${ns}\\echo_uint32($bad), \\TypeError::class);
 foreach (['float32', 'float64'] as $label) {
   $call = '${ns}\\\\echo_' . $label;

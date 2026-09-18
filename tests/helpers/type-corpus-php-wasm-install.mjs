@@ -17,6 +17,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { composerProbe } from "./type-corpus-php.mjs";
 import { corpusPhpRequestJson, corpusPhpSource, corpusPhpWasmSettings } from "./type-corpus-php-source.mjs";
 import { browserPhpWasmCorpus } from "./type-corpus-php-wasm-browser.mjs";
+import { brickMathRepository } from "./brick-math.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
@@ -76,18 +77,19 @@ const composerInstall = async ({ project, handoff, pkg, environment, clean }) =>
 	const inspection = join(project, "inspection");
 	await run("/usr/bin/unzip", ["-q", join(project, "feed/api.zip"), "-d", inspection], project, clean);
 	const original = await json(join(inspection, "composer.json"));
-	assert.deepEqual(original.require, { php: ">=8.4 <8.5" });
+	assert.deepEqual(original.require, { php: ">=8.4 <8.5", "brick/math": "1.0.0" });
 	const dist = { type: "zip", url: pathToFileURL(join(project, "feed/api.zip")).href, shasum: createHash("sha1").update(bytes).digest("hex") };
 	const manifest = { name: "lean-bridge-corpus/php-wasm-consumer"
 		, require: { [pkg.name]: pkg.version }
-		, repositories: [{ "packagist.org": false }, { type: "package", package: { ...original, dist } }]
+		, repositories: [{ "packagist.org": false }, await brickMathRepository(join(project, "feed")), { type: "package", package: { ...original, dist } }]
 		, config: { "allow-plugins": false, platform: { php: "8.4.1" } } };
 	await saveLakeFile(project, "composer.json", canonicalJson(manifest));
 	const args = ["install", "--prefer-dist", "--no-progress", "--no-dev"];
 	await invoke(args);
 	const lock = await json(join(project, "composer.lock")), installed = await json(join(project, "vendor/composer/installed.json"));
-	assert.equal(lock.packages.length, 1); assert.equal(installed.packages.length, 1); assert.deepEqual(lock["packages-dev"], []);
-	for(const selected of [lock.packages[0], installed.packages[0]])
+	assert.equal(lock.packages.length, 2); assert.equal(installed.packages.length, 2); assert.deepEqual(lock["packages-dev"], []);
+	for(const list of [lock.packages, installed.packages]) assert.equal(list.find(item => item.name === "brick/math").version, "1.0.0");
+	for(const selected of [lock.packages, installed.packages].map(list => list.find(item => item.name === pkg.name)))
 	{
 		assert.equal(selected.name, pkg.name); assert.equal(selected.version, pkg.version); assert.deepEqual(selected.dist, dist);
 	}

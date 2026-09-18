@@ -13,6 +13,7 @@ import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { canonicalJson, readLockedGraph } from "../../capsule/node.mjs";
 import { generatePhpBindingPackage } from "./generate.mjs";
 import { generatePhpWasmAdapterPackage } from "./php-wasm.mjs";
+import { bundledBrickMath } from "./brick-math.mjs";
 
 /**
  * Reports PHP WebAssembly package failures with stable machine-readable codes and structured diagnostic context.
@@ -273,13 +274,13 @@ Install this package beside \`php-wasm\`, then add its generated descriptor to t
 
 \`\`\`php
 use LeanAlpha\\Box;
-use LeanAlpha\\BigInteger;
+use Brick\\Math\\BigInteger;
 use LeanAlpha\\Bytes;
 use LeanAlpha\\Payload;
 use function LeanAlpha\\roundTrip;
 
-$box = new Box(BigInteger::fromDecimal('4294967295'));
-$payload = roundTrip(new Payload(false, BigInteger::fromDecimal('2147483647'), 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [BigInteger::fromDecimal('4294967295')]));
+$box = new Box(BigInteger::of('4294967295'));
+$payload = roundTrip(new Payload(false, BigInteger::of('2147483647'), 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [BigInteger::of('4294967295')]));
 assert((string) $box->read() === '4294967295');
 assert((string) $payload->count === '2147483648');
 $box->close();
@@ -315,7 +316,7 @@ use LeanAlpha\\Box;
 use LeanAlpha\\Internal\\Hydrator;
 use LeanAlpha\\Internal\\Runtime;
 
-function read(Box $box): \\LeanAlpha\\BigInteger
+function read(Box $box): \\Brick\\Math\\BigInteger
 {
     $transport = Runtime::transport();
     if (!method_exists($transport, 'leanBetaRead')) {
@@ -341,11 +342,13 @@ declare(strict_types=1);
 
 namespace LeanBeta;
 
-function read(\\LeanAlpha\\Box $box): \\LeanAlpha\\BigInteger {}
+function read(\\LeanAlpha\\Box $box): \\Brick\\Math\\BigInteger {}
 function identity(\\LeanAlpha\\Box $box): \\LeanAlpha\\Box {}
 `;
 	composer["autoload.php"] = `<?php
 declare(strict_types=1);
+
+require_once __DIR__ . '/dependencies/brick-math/autoload.php';
 
 spl_autoload_register(static function (string $class): void {
     $prefix = 'LeanAlpha\\\\';
@@ -357,6 +360,7 @@ spl_autoload_register(static function (string $class): void {
 require_once __DIR__ . '/src/functions.php';
 require_once __DIR__ . '/src/LeanBeta/functions.php';
 `;
+	Object.assign(composer, bundledBrickMath());
 	const phpFiles = Object.keys(composer)
     .sort()
     .map(path => `${manifest.artifacts.composerPackage}/${path}`);

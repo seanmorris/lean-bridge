@@ -7,6 +7,8 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { composerProbe } from "./type-corpus-php.mjs";
 import { corpusPhpRequestJson, corpusPhpSource, corpusPhpWasmSettings, phpWasmRuntimeCases } from "./type-corpus-php-source.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
+import { brickMathValidationFixture } from "./brick-math.mjs";
+import { bundledBrickMath } from "../../src/backends/php/brick-math.mjs";
 
 /**
  * Supply an internally consistent synthetic PHP-Wasm report to mutation tests.
@@ -22,6 +24,7 @@ export const phpWasmValidationFixture = (library, observation, oracle) => {
 	const runtimeArchive = { name: "@lean-bridge/php-wasm-copied-runtime", version: "0.0.0-copied1.test", target: "php-wasm", sha256: "b".repeat(64), bytes: 100, path: "packages/php-wasm/archives/runtime.tgz" };
 	const composerArchive = { ...settings.composer, target: "php-wasm", sha256: "c".repeat(64), bytes: 100, path: "packages/php-wasm/archives/api.zip" };
 	const componentRoot = "node_modules/" + archive.name + "/compiled/";
+	const bundledRoot = "node_modules/" + archive.name + "/php/";
 	const runtimeRoot = "node_modules/" + runtimeArchive.name + "/compiled/";
 	const composerRoot = "vendor/" + composerArchive.name + "/";
 	const names = ["liblean_bridge_php_wasm_copied_" + "a".repeat(20) + ".so", "php8.4-lb_" + library.id + "_" + "b".repeat(16) + ".so"];
@@ -46,8 +49,10 @@ export const phpWasmValidationFixture = (library, observation, oracle) => {
 		deployment[componentRoot + path] = identity;
 		deployment[composerRoot + path] = identity;
 	}
+	for(const [path, source] of Object.entries(bundledBrickMath())) put(bundledRoot + path, source);
+	deployment[bundledRoot + "bootstrap.php"] = identity;
 	const files = Object.fromEntries(Object.entries(deployment).map(([path, id]) => [
-		path.startsWith(componentRoot) ? "component/package/compiled/" + path.slice(componentRoot.length)
+		path.startsWith("node_modules/" + archive.name + "/") ? "component/package/" + path.slice(("node_modules/" + archive.name + "/").length)
 			: path.startsWith(runtimeRoot) ? "runtime/package/compiled/" + path.slice(runtimeRoot.length)
 				: "composer/" + path.slice(composerRoot.length)
 		, id
@@ -78,14 +83,16 @@ export const phpWasmValidationFixture = (library, observation, oracle) => {
 	const npmLock = { packages: { "": {}, ...Object.fromEntries([archive, runtimeArchive, { name: "php-wasm", version: "0.1.0" }].map(pkg => ["node_modules/" + pkg.name, { version: pkg.version }])) } };
 	put("package.json", canonicalJson(npmManifest)); put("package-lock.json", canonicalJson(npmLock));
 	const selected = { name: composerArchive.name
-		, version: composerArchive.version, require: { php: ">=8.4 <8.5" }
+		, version: composerArchive.version
+		, require: { php: ">=8.4 <8.5", "brick/math": "1.0.0" }
 		, autoload: { files: ["src/Api.php"] }
 		, dist: { type: "zip", url: "file:///validator/project/feed/api.zip", shasum: "a".repeat(40) } };
+	const dependency = brickMathValidationFixture(); Object.assign(deployment, dependency.deployment);
 	const manifest = { name: "lean-bridge-corpus/php-wasm-consumer"
 		, require: { [selected.name]: selected.version }
 		, config: { "allow-plugins": false, platform: { php: "8.4.1" } }
-		, repositories: [{ "packagist.org": false }, { type: "package", package: selected }] };
-	const lock = { packages: [selected], "packages-dev": [] }, installed = { packages: [selected] };
+		, repositories: [{ "packagist.org": false }, { type: "package", package: dependency.selected }, { type: "package", package: selected }] };
+	const lock = { packages: [dependency.selected, selected], "packages-dev": [] }, installed = { packages: [dependency.selected, selected] };
 	put("composer.json", canonicalJson(manifest)); put("composer.lock", canonicalJson(lock));
 	put("vendor/composer/installed.json", canonicalJson(installed));
 	deployment["vendor/autoload.php"] = identity;
@@ -117,7 +124,11 @@ export const phpWasmValidationFixture = (library, observation, oracle) => {
 				, includedFiles: { [mode + ".php"]: consumerSources[mode]
 					, [composerRoot + "src/Api.php"]: digest
 					, [composerRoot + "src/Internal/Native.php"]: digest
-					, ...(arrangement === "composer" ? { "vendor/autoload.php": digest } : {}) }
+					, ...(arrangement === "composer" ? { "vendor/autoload.php": digest
+						, "vendor/brick/math/src/BigInteger.php": deployment["vendor/brick/math/src/BigInteger.php"].sha256 }
+						: { [composerRoot + "bootstrap.php"]: digest
+							, [composerRoot + "dependencies/brick-math/autoload.php"]: deployment[bundledRoot + "dependencies/brick-math/autoload.php"].sha256
+							, [composerRoot + "dependencies/brick-math/src/BigInteger.php"]: deployment[bundledRoot + "dependencies/brick-math/src/BigInteger.php"].sha256 }) }
 				, errors: Object.entries(phpWasmRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception, recovery: oracle.dependency }))) };
 			return { realm, arrangement, loading, mode, observation: current
 				, phases: ["ready", "autoload", "invalid", "complete"].map(stage => ({ stage, libraries: stage === "complete" || loading === "startup" ? [...names] : [] }))

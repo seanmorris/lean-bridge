@@ -101,16 +101,16 @@ try
 	}
 	const status = await php.run(`<?php
 require_once '/vendor/autoload.php';
-use LeanAlpha\\BigInteger;
-$box = new LeanAlpha\\Box(BigInteger::fromDecimal('${STEADY_STATE_BOX_VALUE}'));
+use Brick\\Math\\BigInteger;
+$box = new LeanAlpha\\Box(BigInteger::of('${STEADY_STATE_BOX_VALUE}'));
 $payload = LeanAlpha\\roundTrip(new LeanAlpha\\Payload(
     false,
-    BigInteger::fromDecimal('8'),
+    BigInteger::of('8'),
     'wasm',
     LeanAlpha\\Bytes::fromString("\\x00\\x7f\\xff"),
-    array_map(BigInteger::fromDecimal(...), ['1', '5', '13']),
+    array_map(BigInteger::of(...), ['1', '5', '13']),
 ));
-$adder = LeanAlpha\\makeAdder(BigInteger::fromDecimal('2'));
+$adder = LeanAlpha\\makeAdder(BigInteger::of('2'));
 $iterations = ${STEADY_STATE_MEASURED_ITERATIONS};
 for ($index = 0; $index < ${STEADY_STATE_WARMUP_ITERATIONS}; ++$index) $box->read();
 $checksum = 0;
@@ -124,8 +124,8 @@ $result = [
     'betaRead' => (string) LeanBeta\\read($box),
     'betaIdentity' => LeanBeta\\identity($box) === $box,
     'payload' => [$payload->enabled, (string) $payload->count, $payload->label, bin2hex($payload->bytes->toString()), array_map(strval(...), $payload->values)],
-    'callback' => (string) LeanAlpha\\withCallback(BigInteger::fromDecimal('40'), static fn(BigInteger $value): BigInteger => $value),
-    'closure' => (string) $adder(BigInteger::fromDecimal('40')),
+    'callback' => (string) LeanAlpha\\withCallback(BigInteger::of('40'), static fn(BigInteger $value): BigInteger => $value),
+    'closure' => (string) $adder(BigInteger::of('40')),
     'performance' => ['iterations' => $iterations, 'durationNanoseconds' => $durationNanoseconds, 'checksum' => $checksum],
 ];
 $adder->close();

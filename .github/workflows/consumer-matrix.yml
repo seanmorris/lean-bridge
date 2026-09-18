@@ -318,7 +318,7 @@ jobs:
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
-          node --test tests/native-php.test.mjs
+          node --test tests/php-brick-math.test.mjs tests/native-php.test.mjs
       - name: Compare weak and strict installed Composer callers with fresh Lean
         id: type_corpus_php_native
         continue-on-error: true

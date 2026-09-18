@@ -18,6 +18,7 @@ import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../src/backe
 import { packageOrdinaryPhp } from "../src/release/native-composer.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { brickMathRepository } from "./helpers/brick-math.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_PHP_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -30,11 +31,11 @@ const scalars = [
 	["unit", "Unit", "null"], ["bool", "Bool", "true"]
 	, ["u8", "UInt8", "255"], ["u16", "UInt16", "65535"]
 	, ["u32", "UInt32", "4294967295"]
-	, ["u64", "UInt64", "BigInteger::fromDecimal('18446744073709551615')"]
+	, ["u64", "UInt64", "BigInteger::of('18446744073709551615')"]
 	, ["i8", "Int8", "-128"], ["i16", "Int16", "-32768"]
 	, ["i32", "Int32", "-2147483648"], ["i64", "Int64", "PHP_INT_MIN"]
-	, ["nat", "Nat", `BigInteger::fromDecimal('${(1n << 4096n) + 1n}')`]
-	, ["integer", "Int", `BigInteger::fromDecimal('-${1n << 4096n}')`]
+	, ["nat", "Nat", `BigInteger::of('${(1n << 4096n) + 1n}')`]
+	, ["integer", "Int", `BigInteger::of('-${1n << 4096n}')`]
 	, ["f32", "Float32", "-0.0"], ["f64", "Float", "-0.0"]
 	, ["text", "String", '"a\\0λ🌿"']
 	, ["bytes", "ByteArray", 'Bytes::fromString("\\0\\xff\\x80")']
@@ -117,7 +118,8 @@ test("ordinary PHP admission rejects reserved names and noncanonical coordinates
 const consumerSource = name => `<?php
 // Deliberately weak caller mode: public checks must still reject coercion.
 require __DIR__ . '/vendor/autoload.php';
-use Lean${name}\\{BigInteger, Bytes, Leaf, Packet, Word, EmptyValue, LeanBridgeError};
+use Brick\\Math\\BigInteger;
+use Lean${name}\\{Bytes, Leaf, Packet, Word, EmptyValue, LeanBridgeError};
 function check($condition, $message = 'Check failed') { if (!$condition) throw new RuntimeException($message); }
 function same($left, $right) { check(get_debug_type($left) === get_debug_type($right) && $left == $right, 'Values differ'); }
 function rejects($type, $call) {
@@ -142,7 +144,7 @@ check(count($result->rows[0]) === 1);
 rejects(Error::class, fn() => $result->rows[0] = []);
 same(Lean${name}\\choose($packet, $packet, false), $packet);
 same(Lean${name}\\echo_rows([[$leaf], []]), [[$leaf], []]);
-$word = new Word(${name === "Clover" ? "4294967295" : "BigInteger::fromDecimal('18446744073709551615')"});
+$word = new Word(${name === "Clover" ? "4294967295" : "BigInteger::of('18446744073709551615')"});
 same(Lean${name}\\echo_word($word), $word);
 same(Lean${name}\\echo_empty(new EmptyValue()), new EmptyValue());
 same(Lean${name}\\array_empty([new EmptyValue()]), [new EmptyValue()]);
@@ -150,9 +152,9 @@ same(Lean${name}\\matrix([1, 2, 3]), [[1, 2, 3], [1, 2, 3]]);
 same(Lean${name}\\replicate(256), array_fill(0, 256, 7));
 same(Lean${name}\\answer(), 42);
 same(Lean${name}\\echo_bool(false), false);
-same(Lean${name}\\echo_nat(BigInteger::fromDecimal('0')), BigInteger::fromDecimal('0'));
-same(Lean${name}\\echo_integer(BigInteger::fromDecimal('0')), BigInteger::fromDecimal('0'));
-same(Lean${name}\\echo_integer(BigInteger::fromDecimal('42')), BigInteger::fromDecimal('42'));
+same(Lean${name}\\echo_nat(BigInteger::of('0')), BigInteger::of('0'));
+same(Lean${name}\\echo_integer(BigInteger::of('0')), BigInteger::of('0'));
+same(Lean${name}\\echo_integer(BigInteger::of('42')), BigInteger::of('42'));
 same(Lean${name}\\echo_text(''), '');
 same(Lean${name}\\echo_bytes(Bytes::fromString('')), Bytes::fromString(''));
 foreach (['Lean${name}\\\\echo_f32', 'Lean${name}\\\\echo_f64'] as $echo) {
@@ -162,16 +164,17 @@ foreach (['Lean${name}\\\\echo_f32', 'Lean${name}\\\\echo_f64'] as $echo) {
 }
 same(Lean${name}\\echo_f32(1 / 3), unpack('f', pack('f', 1 / 3))[1]);
 same(Lean${name}\\echo_f32(1e300), INF);
-foreach (['01', '-0', '+1', '1.0', "1\\n", str_repeat('1', 16385)] as $bad) rejects(ValueError::class, fn() => BigInteger::fromDecimal($bad));
-rejects(TypeError::class, fn() => BigInteger::fromDecimal(12));
+foreach (['01' => '1', '-0' => '0', '+1' => '1', '1.0' => '1'] as $text => $expected) same((string) Lean${name}\\echo_nat(BigInteger::of($text)), $expected);
+same((string) Lean${name}\\echo_nat(BigInteger::of(12)->plus(30)), '42');
+rejects(ValueError::class, fn() => Lean${name}\\echo_nat(BigInteger::of(str_repeat('1', 16385))));
 rejects(TypeError::class, fn() => Bytes::fromString(12));
 ${[8, 16, 32].map(bits => `rejects(ValueError::class, fn() => Lean${name}\\echo_u${bits}(-1));
 rejects(ValueError::class, fn() => Lean${name}\\echo_u${bits}(${2 ** bits}));
 rejects(ValueError::class, fn() => Lean${name}\\echo_i${bits}(${-(2 ** (bits-1)) - 1}));
 rejects(ValueError::class, fn() => Lean${name}\\echo_i${bits}(${2 ** (bits-1)}));`).join("\n")}
-rejects(ValueError::class, fn() => Lean${name}\\echo_u64(BigInteger::fromDecimal('18446744073709551616')));
-rejects(ValueError::class, fn() => Lean${name}\\echo_u64(BigInteger::fromDecimal('-1')));
-rejects(ValueError::class, fn() => Lean${name}\\echo_nat(BigInteger::fromDecimal('-1')));
+rejects(ValueError::class, fn() => Lean${name}\\echo_u64(BigInteger::of('18446744073709551616')));
+rejects(ValueError::class, fn() => Lean${name}\\echo_u64(BigInteger::of('-1')));
+rejects(ValueError::class, fn() => Lean${name}\\echo_nat(BigInteger::of('-1')));
 rejects(TypeError::class, fn() => Lean${name}\\echo_u64(1));
 rejects(TypeError::class, fn() => Lean${name}\\echo_i64((float) PHP_INT_MAX));
 foreach ([1.0, true, '1', null] as $bad) rejects(TypeError::class, fn() => Lean${name}\\echo_u32($bad));
@@ -187,7 +190,7 @@ $forged = (new ReflectionClass(Packet::class))->newInstanceWithoutConstructor();
 foreach (['title' => 'bad', 'leaf' => $leaf, 'rows' => [[null]]] as $field => $value) (new ReflectionProperty(Packet::class, $field))->setValue($forged, $value);
 rejects(TypeError::class, fn() => Lean${name}\\echo_record($forged));
 $forgedInteger = (new ReflectionClass(BigInteger::class))->newInstanceWithoutConstructor();
-(new ReflectionProperty(BigInteger::class, 'decimal'))->setValue($forgedInteger, 'invalid');
+(new ReflectionProperty(BigInteger::class, 'value'))->setValue($forgedInteger, 'invalid');
 rejects(ValueError::class, fn() => Lean${name}\\echo_nat($forgedInteger));
 rejects(ValueError::class, fn() => Lean${name}\\echo_text("\\xff"));
 rejects(ValueError::class, fn() => Lean${name}\\echo_text(str_repeat('x', 16 * 1024 * 1024 + 1)));
@@ -199,7 +202,7 @@ for ($i = 0; $i < 3; $i++) {
     rejects(ValueError::class, fn() => Lean${name}\\replicate(600000));
     same(Lean${name}\\answer(), 42);
 }
-rejects(ValueError::class, fn() => Lean${name}\\double_nat(BigInteger::fromDecimal(str_repeat('9', 16384))));
+rejects(ValueError::class, fn() => Lean${name}\\double_nat(BigInteger::of(str_repeat('9', 16384))));
 for ($i = 0; $i < 100; $i++) same(Lean${name}\\echo_record($packet), $packet);
 echo 'Installed ${name}: all copied types, exact validation and recovery passed', PHP_EOL;
 `;
@@ -210,7 +213,7 @@ test("ordinary PHP ZIPs reproduce and execute after offline Composer installatio
 	const packages = [], clean = { PATH: "/usr/bin:/bin", CC: "/missing/cc", LEAN_BRIDGE_LEAN_PREFIX: "/missing/lean", LEAN_BRIDGE_NATIVE_ROOT: "/must/not/use/overrides", COMPOSER_HOME: join(working, "composer-config"), COMPOSER_CACHE_DIR: join(working, "composer-cache"), COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1" };
 	const install = async (consumer, entries) => {
 		await mkdir(consumer);
-		await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/consumer", repositories: [{ "packagist.org": false }, ...entries.map(entry => ({ type: "package", package: entry }))], require: Object.fromEntries(entries.map(entry => [entry.name, entry.version])) }));
+		await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/consumer", repositories: [{ "packagist.org": false }, await brickMathRepository(join(consumer, "feed")), ...entries.map(entry => ({ type: "package", package: entry }))], require: Object.fromEntries(entries.map(entry => [entry.name, entry.version])) }));
 		await run(composer, ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], consumer, clean);
 	};
 	for(const name of ["Clover", "Juniper"])
@@ -255,6 +258,9 @@ test("ordinary PHP ZIPs reproduce and execute after offline Composer installatio
 			await mkdir(join(docs, "releases"), { recursive: true });
 			await cp(join(builds[0].output, "archives", archive.archive), join(docs, "releases", archive.archive));
 			for(const file of ["composer.json", "main.php"]) await cp(new URL(`./fixtures/documentation/consumers/php-native/ordinary/${file}`, import.meta.url), join(docs, file));
+			const config = JSON.parse(await readFile(join(docs, "composer.json"), "utf8"));
+			config.repositories.unshift({ "packagist.org": false }, await brickMathRepository(join(docs, "feed")));
+			await saveLakeFile(docs, "composer.json", canonicalJson(config));
 			await run(composer, ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], docs, clean);
 			assert.match((await run(php, [...phpArgs, "main.php"], docs, clean)).stdout, /42; exact integers and copied arrays/);
 		}
@@ -268,6 +274,8 @@ test("ordinary PHP ZIPs reproduce and execute after offline Composer installatio
 	const composition = join(working, "composition"); await install(composition, packages);
 	await saveLakeFile(composition, "main.php", `<?php require 'vendor/autoload.php';
 if (LeanClover\\answer() !== 42 || LeanJuniper\\answer() !== 42) throw new RuntimeException('Wrong answers');
+$integer = LeanClover\\echo_nat(Brick\\Math\\BigInteger::of('18446744073709551616'));
+if ((string) LeanJuniper\\echo_nat($integer)->plus(1) !== '18446744073709551617') throw new RuntimeException('Integer cannot cross packages');
 $ffi = FFI::cdef('void lean_bridge_native_snapshot_read(void*);', __DIR__ . '/vendor/example/clover-api/native/linux-x64/liblean_bridge_native.so');
 $data = $ffi->new('uint32_t[10]'); $ffi->lean_bridge_native_snapshot_read(FFI::addr($data));
 if ($data[2] !== 1 || $data[3] !== 2 || $data[4] !== 2) throw new RuntimeException('Runtime not shared');

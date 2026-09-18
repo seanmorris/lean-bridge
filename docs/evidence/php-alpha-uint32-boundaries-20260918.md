@@ -1,5 +1,7 @@
 # Alpha UInt32 boundaries in PHP
 
+This record describes the original boundary repair. The subsequent [Brick Math milestone](php-brick-math-20260918.md) replaces its package-local integer class and records the current dependency and installed checks.
+
 Alpha's PHP-Wasm API now represents every `UInt32` as `LeanAlpha\BigInteger`. Native 64-bit PHP keeps `int`. Both profiles preserve the full unsigned range in resource constructors and reads, record fields, array elements, callback arguments and results, and returned Lean functions.
 
 The PHP-Wasm adapter reads and writes canonical decimal text without converting through a PHP integer or float. Its generated signatures, validators, reflection and stubs use the same representation. Cross-component `LeanBeta\read` returns `BigInteger` too.

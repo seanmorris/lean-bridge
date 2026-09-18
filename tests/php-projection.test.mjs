@@ -77,7 +77,7 @@ test("native PHP projection defines an immutable 64-bit surface", () => {
 
 test("32-bit PHP keeps exact wide integers in parameters, results, fields and callbacks", () => {
   const projection = compilePhpProjection(alpha.bindingIr, { integerBits: 32 });
-  const wide = "\\LeanAlpha\\BigInteger";
+  const wide = "\\Brick\\Math\\BigInteger";
   const read = projection.operations.find(operation => operation.id === "lean:Alpha.Box.read");
   assert.equal(read.result.publicType, wide);
   assert.equal(read.result.transportType, wide);

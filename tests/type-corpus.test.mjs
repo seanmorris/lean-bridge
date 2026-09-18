@@ -10,6 +10,7 @@ import { resolve } from "node:path";
 import test from "node:test";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { brickMathValidationFixture } from "./helpers/brick-math.mjs";
 import { corpusBrowserSelection, corpusCaseSupported, corpusCatalog, corpusCoverage, corpusIdentity, corpusProfiles, corpusProfileSignatures, corpusSelection, validateCorpusDeclarations, validateCorpusObservation } from "./helpers/type-corpus.mjs";
 import { runNativeCorpusLibrary } from "./helpers/type-corpus-native.mjs";
 import { runPhpWasmCorpusLibrary } from "./helpers/type-corpus-php-wasm.mjs";
@@ -135,12 +136,13 @@ const phpValidationFixture = (library, observation, oracle) => {
 	const strict = structuredClone(observation); strict.callerMode = "strict";
 	delete strict.includedFiles["weak.php"]; strict.includedFiles["strict.php"] = deployment["strict.php"].sha256;
 	const selected = { name, version: "1.0.0"
-		, require: { php: ">=8.2 <9", "ext-ffi": "*" }
+		, require: { php: ">=8.2 <9", "ext-ffi": "*", "brick/math": "1.0.0" }
 		, autoload: { files: ["src/Api.php"] }
 		, dist: { type: "zip", url: "file:///validator/project/feed/package.zip", shasum: "a".repeat(40) } };
+	const dependency = brickMathValidationFixture(); Object.assign(deployment, dependency.deployment);
 	const manifest = { require: { [name]: "1.0.0" }
 		, config: { "allow-plugins": false }
-		, repositories: [{ "packagist.org": false }, { type: "package", package: selected }] };
+		, repositories: [{ "packagist.org": false }, { type: "package", package: dependency.selected }, { type: "package", package: selected }] };
 	return { archive: { sha256: "a".repeat(64), target: "php-native", name, version: "1.0.0" }
 		, php: {
 			version: "8.2.33", composerVersion: "Composer version 2.5.5"
@@ -149,8 +151,8 @@ const phpValidationFixture = (library, observation, oracle) => {
 			, requestSha256: sha256(corpusPhpRequestJson(library))
 			, archiveSha256: "a".repeat(64), bindingIrSha256: "c".repeat(64)
 			, manifest, manifestSha256: sha256(canonicalJson(manifest))
-			, lock: { packages: [selected], "packages-dev": [] }
-			, installed: { packages: [selected] }
+			, lock: { packages: [dependency.selected, selected], "packages-dev": [] }
+			, installed: { packages: [dependency.selected, selected] }
 			, composerFiles: { "/usr/bin/composer": { bytes: 100, sha256: hash } }
 			, composerGeneratedFiles: files(["vendor/composer/autoload_classmap.php"])
 			, extensions: {}
@@ -281,10 +283,11 @@ test("corpus cases cover two renamed nested libraries, valid positions and expli
 test("corpus identity binds the cases, consumers, Lean sources, oracles and harness", async () => {
 	const identity = await corpusIdentity(repository, catalog);
 	assert.match(identity.sha256, /^[a-f0-9]{64}$/);
-	assert.equal(identity.files.length, 56);
-	assert.equal(new Set(identity.files.map(file => file.path)).size, 56);
+	assert.equal(identity.files.length, 59);
+	assert.equal(new Set(identity.files.map(file => file.path)).size, 59);
 	assert.ok(identity.files.every(file => file.bytes > 0 && /^[a-f0-9]{64}$/.test(file.sha256)));
 	assert.ok(identity.files.some(file => file.path === "tests/helpers/lake-workspace.mjs"));
+	assert.ok(identity.files.some(file => file.path === "src/backends/php/brick-math.source.json"));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/python.py")));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/ruby.rb")));
 	assert.ok(identity.files.some(file => file.path.endsWith("consumers/perl.pl")));
@@ -902,6 +905,9 @@ for(const [label, change] of [
 	, ["extra extension", run => { run.php.extensions.xdebug = { path: "/usr/lib/xdebug.so", sha256: "f".repeat(64) }; }]
 	, ["unbound receipt", run => { run.php.packageReceipt.version = "9.9.9"; }]
 	, ["extra locked package", run => { run.php.lock.packages.push(structuredClone(run.php.lock.packages[0])); }]
+	, ["changed integer dependency", run => { run.php.lock.packages.find(pkg => pkg.name === "brick/math").version = "0.14.0"; }]
+	, ["missing integer source", run => { delete run.php.deployment["vendor/brick/math/src/BigInteger.php"]; }]
+	, ["changed integer source", run => { run.php.deployment["vendor/brick/math/src/BigInteger.php"].sha256 = "0".repeat(64); }]
 	, ["extra dev package", run => { run.php.lock["packages-dev"].push({ name: "other/plugin" }); }]
 	, ["wrong installed package", run => { run.php.installed.packages[0] = { name: "wrong" }; }]
 	, ["extra deployed payload", run => { run.php.deployment["vendor/lean-bridge-corpus/shop-corpus/extra.php"] = { bytes: 1, sha256: "f".repeat(64) }; }]
@@ -998,6 +1004,11 @@ for(const [label, change] of [
 	, ["wrong rejection stage", run => { run.observation.results.find(entry => entry.id.endsWith("/bad-record")).stage = "public-call"; }]
 	, ["unbound npm lock", run => { run.phpWasm.npm.lock.packages.extra = {}; }]
 	, ["unbound Composer lock", run => { run.phpWasm.composer.lock.packages.push({ name: "extra" }); }]
+	, ["changed integer dependency", run => { run.phpWasm.composer.lock.packages.find(pkg => pkg.name === "brick/math").version = "0.14.0"; }]
+	, ["missing integer source", run => { delete run.phpWasm.deployment["vendor/brick/math/src/BigInteger.php"]; }]
+	, ["changed bundled integer source", run => { run.phpWasm.deployment["node_modules/" + run.archive.name + "/php/dependencies/brick-math/src/BigInteger.php"].sha256 = "0".repeat(64); }]
+	, ["missing bundled bootstrap", run => { delete run.phpWasm.executions[0].observation.includedFiles["vendor/" + run.composerArchive.name + "/bootstrap.php"]; }]
+	, ["missing loaded integer class", run => { delete run.phpWasm.executions[0].observation.includedFiles["vendor/" + run.composerArchive.name + "/dependencies/brick-math/src/BigInteger.php"]; }]
 	, ["unidentified Composer", run => { run.phpWasm.composer.toolFiles = {}; }]
 	, ["ambient Composer plugin", run => { run.phpWasm.composer.manifest.config["allow-plugins"] = true; }]
 	, ["ambient PHP extension", run => { run.phpWasm.composer.extensions.xdebug = { path: "/usr/lib/xdebug.so", sha256: "f".repeat(64) }; }]

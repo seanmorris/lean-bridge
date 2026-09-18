@@ -15,7 +15,7 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push("(void)value; ZVAL_NULL(out);"); }
 	else if(name === "bool")
 	{ input.push('if (Z_TYPE_P(value) != IS_TRUE && Z_TYPE_P(value) != IS_FALSE) return lb_fail(s, "Bool requires bool", 1);', "*out = Z_TYPE_P(value) == IS_TRUE;"); output.push("ZVAL_BOOL(out, *value);"); }
-	else if(copy.publicType === "BigInteger" && !["nat", "int"].includes(name))
+	else if(copy.publicType === "\\Brick\\Math\\BigInteger" && !["nat", "int"].includes(name))
 	{
 		input.push(`uint64_t bits; if (!lb_u64_in(value, s, &bits, ${name === "int64" ? "true" : "false"}, ${name === "uint32" ? 32 : 64})) return 0;`);
 		input.push(name === "int64" ? "memcpy(out, &bits, sizeof(bits));" : `*out = (${copy.ctype})bits;`);

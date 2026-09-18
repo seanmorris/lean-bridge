@@ -291,7 +291,7 @@ const fileHeader = (namespace, hash, imports = []) => [
 const emitValidators = (ir, projection) => {
 	const namespace = `${projection.package.namespace}\\Internal`;
 	const lines = fileHeader(namespace, projection.bindingIrSha256, [
-		`${projection.package.namespace}\\BigInteger`
+		"Brick\\Math\\BigInteger"
 		, `${projection.package.namespace}\\Bytes`
 	]);
 	lines.push("final class Validators", "{");
@@ -650,28 +650,6 @@ final readonly class Bytes implements \\Countable, \\Stringable
 }
 `;
 
-const emitBigInteger = projection => `${fileHeader(projection.package.namespace, projection.bindingIrSha256).join("\n")}
-final readonly class BigInteger implements \\Stringable
-{
-    private function __construct(private string $decimal)
-    {
-    }
-
-    public static function fromDecimal(string $decimal): self
-    {
-        if (preg_match('/^-?(?:0|[1-9][0-9]*)$/D', $decimal) !== 1) {
-            throw new \\ValueError('BigInteger requires canonical decimal text');
-        }
-        return new self($decimal);
-    }
-
-    public function __toString(): string
-    {
-        return $this->decimal;
-    }
-}
-`;
-
 const emitAwaitable = projection => `${fileHeader(projection.package.namespace, projection.bindingIrSha256).join("\n")}
 /** @template T */
 interface Awaitable
@@ -986,7 +964,6 @@ const stubParameter = (projection, parameter) => parameterCode(projection, param
 const emitStub = (ir, projection, support) => {
 	const lines = ["<?php", `// Generated from Binding IR SHA-256 ${projection.bindingIrSha256}.`, `namespace ${projection.package.namespace};`, ""];
 	if(support.bytes) lines.push("final readonly class Bytes implements \\Countable, \\Stringable { public static function fromString(string $value): self {} public function toString(): string {} public function count(): int {} public function __toString(): string {} }", "");
-	if(support.bigInteger) lines.push("final readonly class BigInteger implements \\Stringable { public static function fromDecimal(string $decimal): self {} public function __toString(): string {} }", "");
 	if(support.awaitable) lines.push("/** @template T */ interface Awaitable { /** @return T */ public function await(); public function cancel(): void; }", "");
 	if(support.asyncIterator) lines.push("/** @template T */ interface AsyncIterator { /** @return Awaitable<?T> */ public function next(): Awaitable; public function close(): void; }", "");
 	for(const error of projection.errors) lines.push(`class ${error.name} extends \\RuntimeException { public const ID = ${phpString(error.id)}; }`, "");
@@ -1041,9 +1018,9 @@ const exampleValue = (ir, projection, ref, stack = new Set()) => {
 	{
 		if(resolved.name === "unit") return "null";
 		if(resolved.name === "bool") return "false";
-		if(new Set(["uint64", "int64", "nat", "int"]).has(resolved.name) || projectionForRef(projection, resolved).validation?.kind === "decimal-integer-range")
+		if(projectionForRef(projection, resolved).phpType === "\\Brick\\Math\\BigInteger")
 		{
-			return `\\${projection.package.namespace}\\BigInteger::fromDecimal('1')`;
+			return "\\Brick\\Math\\BigInteger::of('1')";
 		}
 		if(resolved.name.startsWith("uint") || resolved.name.startsWith("int")) return "1";
 		if(resolved.name.startsWith("float")) return "1.0";
@@ -1120,7 +1097,6 @@ const supportProfile = projection => ({
 
 const publicExports = (projection, support) => [
 	...(support.bytes ? [`${projection.package.namespace}\\Bytes`] : [])
-	, ...(support.bigInteger ? [`${projection.package.namespace}\\BigInteger`] : [])
 	, ...(support.awaitable ? [`${projection.package.namespace}\\Awaitable`] : [])
 	, ...(support.asyncIterator ? [`${projection.package.namespace}\\AsyncIterator`] : [])
 	, ...projection.types
@@ -1168,7 +1144,6 @@ export const renderPhpPackageLayout = model => {
 	const addInternal = (path, source) => { files[path] = source; internalFiles.push(path); };
 
 	if(support.bytes) addPublic("src/Bytes.php", emitBytes(projection));
-	if(support.bigInteger) addPublic("src/BigInteger.php", emitBigInteger(projection));
 	if(support.awaitable) addPublic("src/Awaitable.php", emitAwaitable(projection));
 	if(support.asyncIterator) addPublic("src/AsyncIterator.php", emitAsyncIterator(projection));
 	for(const error of projection.errors) addPublic(`src/${error.name}.php`, emitError(projection, error.name, error.documentation, error.id));
@@ -1228,7 +1203,7 @@ export const renderPhpPackageLayout = model => {
 		, version: ir.component.version
 		, description: ir.documentation.summary
 		, type: "library"
-		, require: { php: ">=8.2" }
+		, require: { php: ">=8.2", ...(support.bigInteger ? { "brick/math": "1.0.0" } : {}) }
 		, autoload: {
 			"psr-4": { [`${root}\\`]: "src/" }
 			, files: ["src/functions.php"]

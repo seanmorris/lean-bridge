@@ -15,6 +15,7 @@ import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./det
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata, composerPackageMetadata, npmPackageMetadata } from "../analyze/package-metadata.mjs";
+import { brickMathRequirement, bundledBrickMath } from "../backends/php/brick-math.mjs";
 
 const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
@@ -38,6 +39,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 	if(npm.name === runtimeName) throw new TypeError("Component cannot replace the PHP-Wasm runtime package");
 	const composer = { name: composerSettings.name ?? `lean-bridge/${model.component.name.replaceAll("_", "-")}-php-wasm`, version: composerSettings.version ?? localVersion };
 	validateOrdinaryPhpSettings(composer);
+	const brickMath = bundledBrickMath();
 	const host = await readFile(new URL("../backends/php/php-wasm-copied-host.mjs", import.meta.url));
 	const identityBasis = { schemaVersion: 1, profile
 		, runtimeIdentity: runtime.identity
@@ -45,11 +47,13 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, host: identity(host)
 		, phpLoader: identity(await readFile(new URL("../backends/php/php-wasm-copied-loader.mjs", import.meta.url)))
 		, packaging: identity(await readFile(new URL(import.meta.url)))
+		, phpDependencies: Object.fromEntries(Object.entries(brickMath).map(([path, bytes]) => [path, identity(Buffer.from(bytes))]))
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
 	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
+	const phpDependencies = { ...brickMath, "bootstrap.php": "<?php\ndeclare(strict_types=1);\nrequire_once __DIR__ . '/dependencies/brick-math/autoload.php';\nrequire_once __DIR__ . '/src/Api.php';\n" };
 	const runtimeIndex = `import { createPhpWasmCopiedDescriptor } from './host.mjs';
 const runtime = Object.freeze(${JSON.stringify({ identity: runtime.identity, loaderIdentity, library: basename(runtime.manifest.library) })});
 export const createDescriptor = (component, assets) => createPhpWasmCopiedDescriptor({ ...runtime, url: new URL(${JSON.stringify(`./compiled/${runtime.manifest.library}`)}, import.meta.url) }, component, assets);
@@ -60,13 +64,16 @@ const descriptor = createDescriptor(${JSON.stringify(definition)}, {
   api: new URL('./compiled/src/Api.php', import.meta.url),
   native: new URL('./compiled/src/Internal/Native.php', import.meta.url),
   registration: new URL('./lazy-library.txt', import.meta.url),
+  php: {
+${Object.keys(phpDependencies).map(path => `    ${JSON.stringify(path)}: new URL(${JSON.stringify(`./php/${path}`)}, import.meta.url),`).join("\n")}
+  },
 });
 export const { getLibs, getFiles, extensions, autoload, lazy } = descriptor;
 export default descriptor;
 `;
 	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses", "runtime-identity.json"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
-	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, ...npmPackageMetadata(metadata), exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
-	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
+	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, ...npmPackageMetadata(metadata), exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "php", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
+	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5", ...brickMathRequirement }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
 	const readme = `# ${model.component.name} for PHP-Wasm
 
 Import this package's default descriptor and include it in PHP-Wasm's \`sharedLibs\` array. npm installs the matching Lean runtime dependency. The descriptor registers that runtime once per PHP host and mounts the generated PHP files.
@@ -98,6 +105,7 @@ This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node
 			, "component/package/package.json": json(componentPackage)
 			, "component/package/README.md": readme
 			, "component/package/lazy-library.txt": definition.library
+			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity })
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))

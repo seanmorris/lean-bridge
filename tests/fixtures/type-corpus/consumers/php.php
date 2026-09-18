@@ -10,8 +10,8 @@ function exactTypes(): array {
     return PHP_INT_SIZE === 4 ? ['nat', 'int', 'uint64', 'uint32', 'int64'] : ['nat', 'int', 'uint64'];
 }
 function u32(int $value, string $module): mixed {
-    $class = $module . '\BigInteger';
-    return PHP_INT_SIZE === 4 ? $class::fromDecimal((string) $value) : $value;
+    $class = \Brick\Math\BigInteger::class;
+    return PHP_INT_SIZE === 4 ? $class::of((string) $value) : $value;
 }
 function check(bool $condition, string $message = 'Corpus assertion failed'): void {
     if (!$condition) throw new \RuntimeException($message);
@@ -49,7 +49,7 @@ function bitsToDecimal(string $bytes): string {
 function decode(array $value, mixed $type, string $module): mixed {
     if (isset($value['integer'])) {
         if (in_array($type, exactTypes(), true)) {
-            $class = $module . '\BigInteger'; return $class::fromDecimal($value['integer']);
+            $class = \Brick\Math\BigInteger::class; return $class::of($value['integer']);
         }
         $integer = (int) $value['integer'];
         // On wasm32, out-of-range Int32 literals become PHP floats. Present that
@@ -97,13 +97,14 @@ function encode(mixed $value, mixed $type, string $module): array {
         check(is_float($value));
         return [$type => is_nan($value) ? 'nan' : bitsToDecimal(pack($type === 'float32' ? 'g' : 'e', $value))];
     }
-    check(in_array($type, exactTypes(), true) ? $value::class === $module . '\BigInteger' : is_int($value));
+    check(in_array($type, exactTypes(), true) ? $value::class === \Brick\Math\BigInteger::class : is_int($value));
     return ['integer' => (string) $value];
 }
 function publicType(mixed $type, string $module, bool $doc = false): string {
     if (is_array($type)) return isset($type['array']) ? ($doc ? 'list<' . publicType($type['array'], $module, true) . '>' : 'array')
         : ($doc ? '' : $module . '\\') . substr($type['record'], strrpos($type['record'], '.') + 1);
-    $name = in_array($type, exactTypes(), true) ? 'BigInteger' : match ($type) {
+    if (in_array($type, exactTypes(), true)) return ($doc ? '\\' : '') . \Brick\Math\BigInteger::class;
+    $name = match ($type) {
         'unit' => 'null', 'bool' => 'bool', 'string' => 'string', 'bytes' => 'Bytes',
         'nat', 'int', 'uint64' => 'BigInteger', 'float32', 'float64' => 'float', default => 'int'
     };
@@ -210,7 +211,7 @@ foreach ($request['cases'] as $entry) {
     [$observed, $references] = observe($entry, $signature, $request, $recover); $results[] = $observed;
     gc_collect_cycles(); foreach ($references as $reference) check($reference->get() === null, 'Copied record remains retained');
 }
-$integer = $module . '\BigInteger'; $bytes = $module . '\Bytes';
+$integer = \Brick\Math\BigInteger::class; $bytes = $module . '\Bytes';
 $recordType = $signatures[6]['parameters'][0]; $recordCase = array_values(array_filter($request['cases'], fn($case) => $case['checkIndependentCopy']))[0];
 $fields = $recordCase['arguments'][0]['fields']; $title = array_search('string', $recordType['fields'], true);
 $matrix = array_keys(array_filter($recordType['fields'], fn($type) => is_array($type)))[0];
@@ -226,7 +227,7 @@ $forgedRecord = function() use ($recordCase, $recordType, $module, $matrix, $fun
 };
 $forgedNat = function() use ($integer, $functions, $module) {
     $forged = (new \ReflectionClass($integer))->newInstanceWithoutConstructor();
-    (new \ReflectionProperty($integer, 'decimal'))->setValue($forged, 'invalid');
+    (new \ReflectionProperty($integer, 'value'))->setValue($forged, 'invalid');
     return $functions[1]($forged, u32(0, $module));
 };
 $invalid = [
@@ -235,7 +236,7 @@ $invalid = [
     'null-nat' => fn() => $functions[1](null, u32(0, $module)), 'null-bool' => fn() => $functions[9](null),
     'numeric-string' => fn() => $functions[0]('1'), 'float-as-int' => fn() => $functions[0](1.0),
     'wrong-nat-wrapper' => fn() => $functions[1](1, u32(0, $module)), 'wrong-u64-wrapper' => fn() => $functions[7](1),
-    'raw-bytes' => fn() => $functions[11]('abc'), 'negative-u64' => fn() => $functions[7]($integer::fromDecimal('-1')),
+    'raw-bytes' => fn() => $functions[11]('abc'), 'negative-u64' => fn() => $functions[7]($integer::of('-1')),
     'non-list' => fn() => $functions[4]([1 => u32(1, $module)], u32(0, $module)), 'nested-non-list' => fn() => $functions[5]([[1 => u32(1, $module)]]),
     'malformed-utf8' => fn() => $functions[3]("\xff", ''), 'record-utf8' => $badText,
     'forged-record' => $forgedRecord, 'forged-nat' => $forgedNat,

@@ -95,7 +95,7 @@ const phpRejection = id => {
 };
 
 const phpWasmExpectation = id => {
-	if(["bool-as-number", "bad-nested"].includes(id)) return { rejectionMessage: "Expected BigInteger" };
+	if(["bool-as-number", "bad-nested"].includes(id)) return { rejectionMessage: "Expected Brick Math BigInteger" };
 	if(id === "overflow-u32") return { rejectionMessage: "Integer is outside the UInt32 range" };
 	if(["int32-below", "int32-above"].includes(id))
 		return { expectation: { kind: "host-rejection", category: "type" }, rejectionMessage: "Expected an int without numeric coercion" };

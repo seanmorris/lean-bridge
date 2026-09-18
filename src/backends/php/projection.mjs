@@ -64,8 +64,8 @@ const primitiveProjection = (name, namespace, integerBits) => {
 	if(integerBits === 32 && ["uint32", "int64"].includes(name))
 		return {
 			kind: "primitive", binding: name
-			, phpType: `\\${fqcn(namespace, "BigInteger")}`
-			, phpDocType: `\\${fqcn(namespace, "BigInteger")}`
+			, phpType: "\\Brick\\Math\\BigInteger"
+			, phpDocType: "\\Brick\\Math\\BigInteger"
 			, validation: { kind: "decimal-integer-range"
 				, minimum: name === "uint32" ? "0" : "-9223372036854775808"
 				, maximum: name === "uint32" ? "4294967295" : "9223372036854775807" }
@@ -115,8 +115,8 @@ const primitiveProjection = (name, namespace, integerBits) => {
 		return {
 			kind: "primitive"
 			, binding: name
-			, phpType: `\\${fqcn(namespace, "BigInteger")}`
-			, phpDocType: `\\${fqcn(namespace, "BigInteger")}`
+			, phpType: "\\Brick\\Math\\BigInteger"
+			, phpDocType: "\\Brick\\Math\\BigInteger"
 			, validation: { kind: "lean-integer", signed: name !== "uint64" && name !== "nat" }
 			, capabilities: ["big-integer-value-v1"]
 		};
@@ -574,7 +574,7 @@ export const compilePhpProjection = (ir, { namespace, integerBits = 64 } = {}) =
 		}
 		, conventions: {
 			bytes: fqcn(phpNamespace, "Bytes")
-			, bigInteger: fqcn(phpNamespace, "BigInteger")
+			, bigInteger: "Brick\\Math\\BigInteger"
 			, awaitable: fqcn(phpNamespace, "Awaitable")
 			, asyncIterator: fqcn(phpNamespace, "AsyncIterator")
 			, closeMethod: "close"

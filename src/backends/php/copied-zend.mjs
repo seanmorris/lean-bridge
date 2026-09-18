@@ -16,8 +16,8 @@ import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 const phpWire = model => model.surface.copies.map(copy => {
 	const name = copy.ref.name, ns = `\\${model.namespace}\\`;
 	let input = "$value", output = "$value";
-	if(copy.publicType === "BigInteger")
-	{ input = "(string) $value"; output = `${ns}BigInteger::fromDecimal($value)`; }
+	if(copy.publicType === "\\Brick\\Math\\BigInteger")
+	{ input = "(string) $value"; output = "\\Brick\\Math\\BigInteger::of($value)"; }
 	else if(name === "bytes")
 	{ input = "$value->toString()"; output = `${ns}Bytes::fromString($value)`; }
 	else if(copy.record)

@@ -6,6 +6,7 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/php/brick-math.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/source-notices.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/package-metadata.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/package-license.mjs", "classification": "strict-migration-backlog" },

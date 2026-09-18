@@ -29,7 +29,12 @@ export const createPhpWasmCopiedDescriptor = (runtime, component, assets) => {
 	if(runtime.identity !== component.runtimeIdentity) reject("php-wasm-runtime-conflict", "Component requires another PHP-Wasm runtime");
 	const definition = Object.freeze({ ...component });
 	const fingerprint = JSON.stringify([definition.id, definition.identity, definition.namespace, definition.library, definition.composer]);
-	const autoload = `/vendor/${definition.composer}/src/Api.php`;
+	if(assets.php !== undefined && (!assets.php || typeof assets.php !== "object"
+		|| !(assets.php["bootstrap.php"] instanceof URL)
+		|| Object.entries(assets.php).some(([path, url]) => !(url instanceof URL)
+			|| path !== "bootstrap.php" && !/^dependencies\/brick-math\/(?:autoload\.php|LICENSE|composer\.json|src\/[A-Za-z0-9_/]+\.php)$/.test(path))))
+		reject("invalid-php-wasm-descriptor", "Invalid bundled PHP dependencies");
+	const autoload = `/vendor/${definition.composer}/${assets.php ? "bootstrap.php" : "src/Api.php"}`;
 	const prepare = (php, mode, getLibs) => {
 		const args = php?.phpArgs;
 		if(!args || typeof args !== "object" || php.phpVersion !== "8.4" || (php.phpVariant ?? "") !== "")
@@ -91,7 +96,7 @@ export const createPhpWasmCopiedDescriptor = (runtime, component, assets) => {
 			const { entry } = prepare(php, mode, getLibs);
 			if(entry.filesEmitted) return files;
 			entry.filesEmitted = true;
-			const sources = [["src/Api.php", assets.api], ["src/Internal/Native.php", assets.native]].map(([path, url]) => ({
+			const sources = [["src/Api.php", assets.api], ["src/Internal/Native.php", assets.native], ...Object.entries(assets.php ?? {})].map(([path, url]) => ({
 				path: `/vendor/${definition.composer}/${path}`
 				, url: new URL(url)
 			}));

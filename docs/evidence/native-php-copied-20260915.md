@@ -1,5 +1,7 @@
 # Ordinary-source PHP copied values
 
+The subsequent [Brick Math milestone](php-brick-math-20260918.md) replaces this record's package-local integer class and reruns the installed native suite.
+
 VO1216 adds self-contained Composer packages from ordinary elaborated Lean projects. This milestone is based on `0413a9d241574326e663112bcbe87cdcc25c318e`. The type inventory binds implementation and acceptance files by hash.
 
 ## Acceptance

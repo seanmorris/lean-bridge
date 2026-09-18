@@ -23,7 +23,6 @@ Authenticate your publisher's archive using [Use a prepared release](consume/rec
 {
   "name": "example/lean-php-consumer",
   "repositories": [
-    { "packagist.org": false },
     { "type": "artifact", "url": "./releases" }
   ],
   "require": { "example/clover-api": "2.0.0-RC.1" }
@@ -40,10 +39,10 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use LeanClover\BigInteger;
+use Brick\Math\BigInteger;
 use function LeanClover\{array_u32, echo_nat, echo_text, echo_u32};
 
-$large = BigInteger::fromDecimal('184467440737095516160000000001');
+$large = BigInteger::of('184467440737095516160000000001');
 if (echo_u32(42) !== 42
     || (string) echo_nat($large) !== (string) $large
     || echo_text("Lean λ\0") !== "Lean λ\0"
@@ -55,15 +54,19 @@ echo '42; exact integers and copied arrays', PHP_EOL;
 
 Run `php main.php`. Expected output is `42; exact integers and copied arrays`. You do not need Lean, C headers, a package-specific extension or runtime paths. Keep the installed package directory intact; it can move with your application.
 
-Ordinary native packages support pure functions over 16 primitive types, arrays and acyclic records. `Unit` is `null`. Fixed-width integers use PHP `int`, except `UInt64`, which uses `BigInteger`; `Nat` and `Int` use it too. `BigInteger::fromDecimal` accepts canonical decimal text up to 16,384 digits. `Bytes::fromString` preserves arbitrary binary data. Arrays are consecutive-key lists, and records are final readonly classes. Results own independent copied values.
+Ordinary native packages support pure functions over 16 primitive types, arrays and acyclic records. `Unit` is `null`. Fixed-width integers use PHP `int`, except `UInt64`, which uses `BigInteger`; `Nat` and `Int` use it too. Composer installs the pinned `brick/math` 1.0.0 dependency. Use `Brick\Math\BigInteger::of` to construct exact integers. Lean Bridge accepts values up to 16,384 decimal digits. `Bytes::fromString` preserves arbitrary binary data. Arrays are consecutive-key lists, and records are final readonly classes. Results own independent copied values.
 
 Parameters use `mixed` with precise PHPDoc so generated checks can reject numeric coercion even in weak caller mode. Invalid types raise `TypeError`; range and conversion limits raise `ValueError`; native failures raise the package's `LeanBridgeError`. `Float32` rounds PHP floats to binary32; floating-point conversions preserve NaN classification, infinities and signed zero.
+
+`BigInteger` is the standard Brick Math class. Its arithmetic methods work on returned values, and two Lean Bridge packages accept the same integer object. For example, `$large->plus(1)` returns another exact integer. For untrusted text, use `BigInteger::parse($text, allowedSyntax: [], maxDigits: 16384)` to bound parsing before calling Lean. See the [Brick Math API](https://github.com/brick/math/tree/1.0.0) and [installed integer checks](evidence/php-brick-math-20260918.md).
 
 Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
 
 ### Ordinary PHP-Wasm packages
 
 Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Obtain the publisher's archives, `package-set-receipt.json`, and its `.json.sha256` sidecar through your trusted release channel. [Verify the package set](consume/receive-package.md#verify-a-local-package-set) before installation. It contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
+
+The npm descriptor includes Brick Math 1.0.0 and loads its classes automatically. No Composer installation or GMP/BCMath extension is required. A Composer application uses the generated package's exact `brick/math` dependency instead. Include dependencies in your application lockfile; offline Composer installs need that locked dependency in their repository or cache.
 
 Install the two npm `.tgz` files from your release directory along with the host:
 
@@ -97,8 +100,8 @@ php.addEventListener('error', event => {
 });
 const status = await php.run(String.raw`<?php
 require_once '${api.autoload}';
-use LeanWillow\BigInteger;
-echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+use Brick\Math\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::of('4294967295'));
 `);
 assert.equal(status, 0);
 ```
@@ -174,8 +177,8 @@ try
 	});
 	const status = await php.run(String.raw`<?php
 require_once '${api.autoload}';
-use LeanWillow\BigInteger;
-echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+use Brick\Math\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::of('4294967295'));
 `);
 	if(status !== 0 || stderr) throw new Error(stderr || `PHP exited with status ${status}`);
 	output.dataset.state = 'ready';
@@ -217,7 +220,7 @@ These mappings apply to ordinary copied packages. The Alpha tables later on this
 | `Unit` | `null` | Arguments, results and fields |
 | `Bool` | `bool` | No integer coercion |
 | `UInt8`, `UInt16`, `Int8`, `Int16`, `Int32` | `int` | Exact width and range checks |
-| `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` | Generated `BigInteger` | Canonical decimal input; exact values across the 32-bit host boundary |
+| `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` | `Brick\Math\BigInteger` | Canonical decimal input; exact values across the 32-bit host boundary |
 | `Float32`, `Float` | `float` | Binary32 rounding for `Float32`; NaN, infinities and signed zero preserved |
 | `String` | `string` | Valid UTF-8, including embedded NUL |
 | `ByteArray` | Generated `Bytes` | Arbitrary binary data |
@@ -226,7 +229,7 @@ These mappings apply to ordinary copied packages. The Alpha tables later on this
 
 Invalid types raise `TypeError`; out-of-range values and conversion limits raise `ValueError`. Native conversion failures raise the package's `LeanBridgeError`. Converted input and output have separate 16 MiB accounting limits; those limits do not bound Lean's working memory.
 
-Use the package's `BigInteger::fromDecimal` for every `UInt32`, `UInt64`, `Int64`, `Nat` and `Int` argument, including small values. Numeric PHP strings, integers and floats are not substitutes. Decimal text must be canonical and contain at most 16,384 digits. The same mapping applies to array elements and record fields, with `strict_types` either enabled or disabled.
+Use `Brick\Math\BigInteger::of` for every `UInt32`, `UInt64`, `Int64`, `Nat` and `Int` argument, including small values. Numeric PHP strings, integers and floats are not substitutes. Brick normalizes the number; Lean Bridge checks its canonical value and limits it to 16,384 decimal digits. Use quoted decimal strings for values above `PHP_INT_MAX`, never PHP floating-point literals. The same mapping applies to array elements and record fields, with `strict_types` either enabled or disabled.
 
 The [installed boundary checks](evidence/php-wasm-primitive-boundaries-20260918.md) cover both halves of `UInt32`, signed bounds, values beyond JavaScript's exact-number range, and large `Nat`/`Int` values. They also check floating-point rounding, signed zero, NaN classification, Unicode, embedded NUL and arbitrary bytes in Node and Chromium. The [Alpha example API](#alpha-example-api) uses the same `BigInteger` representation for its `UInt32` resources, callbacks and returned functions.
 
@@ -412,21 +415,21 @@ declare(strict_types=1);
 require_once '/vendor/autoload.php';
 
 use LeanAlpha\Box;
-use LeanAlpha\BigInteger;
+use Brick\Math\BigInteger;
 use LeanAlpha\Bytes;
 use LeanAlpha\Payload;
 use function LeanAlpha\makeAdder;
 use function LeanAlpha\roundTrip;
 use function LeanAlpha\withCallback;
 
-$box = new Box(BigInteger::fromDecimal('41'));
+$box = new Box(BigInteger::of('41'));
 $addTwo = null;
 try {
     $payload = roundTrip(new Payload(
-        false, BigInteger::fromDecimal('8'), 'consumer', Bytes::fromString("\x00\x7f\xff"),
-        array_map(BigInteger::fromDecimal(...), ['1', '5', '13']),
+        false, BigInteger::of('8'), 'consumer', Bytes::fromString("\x00\x7f\xff"),
+        array_map(BigInteger::of(...), ['1', '5', '13']),
     ));
-    $addTwo = makeAdder(BigInteger::fromDecimal('2'));
+    $addTwo = makeAdder(BigInteger::of('2'));
     $result = [
         'box' => (string) $box->read(),
         'identity' => $box->identity() === $box,
@@ -434,8 +437,8 @@ try {
             $payload->enabled, (string) $payload->count, $payload->label,
             bin2hex($payload->bytes->toString()), array_map(strval(...), $payload->values),
         ],
-        'callback' => (string) withCallback(BigInteger::fromDecimal('40'), static fn(BigInteger $value): BigInteger => $value),
-        'closure' => (string) $addTwo(BigInteger::fromDecimal('40')),
+        'callback' => (string) withCallback(BigInteger::of('40'), static fn(BigInteger $value): BigInteger => $value),
+        'closure' => (string) $addTwo(BigInteger::of('40')),
     ];
     $expected = [
         'box' => '41',
@@ -542,14 +545,14 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Exact bool, including when the caller has strict_types disabled.; PHP-Wasm: Exact bool in weak and strict callers; numbers and strings are not Boolean inputs. Required: Exactly two Boolean values; do not coerce numbers or strings. |
 | `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
 | `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed | Native PHP: Alpha preserves the full 0..4294967295 range as int, including payload elements, callback arguments/results and returned closures. Requires native 64-bit PHP.; PHP-Wasm: The compiled copied API uses BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected. Alpha preserves the full 0..4294967295 range as BigInteger, including payload elements, callback arguments/results and returned closures. Use BigInteger even for small values; PHP ints, floats and numeric strings are rejected. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `BigInteger` (input, result, field); `LeanAlpha\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `UInt32` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `Brick\Math\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed | Native PHP: Alpha preserves the full 0..4294967295 range as int, including payload elements, callback arguments/results and returned closures. Requires native 64-bit PHP.; PHP-Wasm: The compiled copied API uses Brick\Math\BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected. Alpha preserves the full 0..4294967295 range as Brick\Math\BigInteger, including payload elements, callback arguments/results and returned closures. Use Brick\Math\BigInteger even for small values; PHP ints, floats and numeric strings are rejected. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `Brick\Math\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Brick\Math\BigInteger::of preserves the full unsigned range without conversion through PHP float. The reviewed-IR Brick\Math\BigInteger projection has no installed full-range Alpha transport evidence. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
 | `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
 | `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
 | `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int.; PHP-Wasm: The compiled copied API uses BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host. The 32-bit projection uses BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger stores canonical unsigned decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `BigInteger` (input, result, field); `Generated BigInteger value` (input, result); `LeanAlpha\BigInteger` (field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | BigInteger stores canonical signed decimal text up to 16384 digits. The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Int64` | Native PHP: `int` (input, result, field, callback input, callback result); PHP-Wasm: `Brick\Math\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int.; PHP-Wasm: The compiled copied API uses Brick\Math\BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host. The 32-bit projection uses Brick\Math\BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support. Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `Brick\Math\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Brick\Math\BigInteger accepts nonnegative integer values up to 16384 decimal digits. The reviewed-IR Brick\Math\BigInteger projection has no installed full-range Alpha transport evidence. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `Brick\Math\BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Brick\Math\BigInteger accepts signed integer values up to 16384 decimal digits. The reviewed-IR Brick\Math\BigInteger projection has no installed full-range Alpha transport evidence. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
 | `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: PHP float input rounds to binary32. NaN classification, infinities and signed zero are preserved.; PHP-Wasm: PHP float input rounds to binary32 in scalar, array and record positions. NaN classification, infinities, subnormals and signed zero are checked. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
 | `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Exact PHP float inputs preserve NaN classification, infinities and signed zero.; PHP-Wasm: Binary64 values, NaN classification, infinities, subnormals and signed zero are checked in scalar, array and record positions. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Validated UTF-8 PHP strings preserve embedded NUL. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
@@ -589,12 +592,12 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 
 ### Alpha example API
 
-Alpha uses `int` for `UInt32` on native 64-bit PHP and `LeanAlpha\BigInteger` on PHP-Wasm. Keep `declare(strict_types=1)` in application files so PHP does not coerce scalar arguments before the bindings validate them.
+Alpha uses `int` for `UInt32` on native 64-bit PHP and `Brick\Math\BigInteger` on PHP-Wasm. Keep `declare(strict_types=1)` in application files so PHP does not coerce scalar arguments before the bindings validate them.
 
 | Lean type | PHP type | Conversion rules |
 | --- | --- | --- |
 | `Bool` | `bool` | Pass `true` or `false`. |
-| `UInt32` | Native: `int`; PHP-Wasm: `LeanAlpha\BigInteger` | Full `0..4294967295` range in both profiles. In PHP-Wasm, use `BigInteger::fromDecimal('4294967295')`, including for small values. |
+| `UInt32` | Native: `int`; PHP-Wasm: `Brick\Math\BigInteger` | Full `0..4294967295` range in both profiles. In PHP-Wasm, use `BigInteger::of('4294967295')`, including for small values. |
 | `String` | `string` | Valid UTF-8 text; embedded NUL is preserved. |
 | `ByteArray` | `LeanAlpha\Bytes` | Use `Bytes::fromString` for binary data and `toString()` to retrieve it. |
 | `Array UInt32` | `array`, documented as native `list<int>` or PHP-Wasm `list<BigInteger>` | Sequential keys starting at zero; each element uses the profile's `UInt32` representation. |

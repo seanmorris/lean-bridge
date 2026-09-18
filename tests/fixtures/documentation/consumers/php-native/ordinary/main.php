@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use LeanClover\BigInteger;
+use Brick\Math\BigInteger;
 use function LeanClover\{array_u32, echo_nat, echo_text, echo_u32};
 
-$large = BigInteger::fromDecimal('184467440737095516160000000001');
+$large = BigInteger::of('184467440737095516160000000001');
 if (echo_u32(42) !== 42
     || (string) echo_nat($large) !== (string) $large
     || echo_text("Lean λ\0") !== "Lean λ\0"

@@ -16,6 +16,7 @@ import { generateCopiedPhpPackage } from "../backends/php/copied-values.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { auditPhpPackage } from "../backends/php/package-audit.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
+import { brickMathRequirement } from "../backends/php/brick-math.mjs";
 
 /**
  * Package verified PHP sources and native libraries without a consumer build hook.
@@ -47,7 +48,7 @@ export const packageOrdinaryPhp = async options => {
 	await copy(join(leanPrefix, "LICENSES"), "licenses/Lean-LICENSES");
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "licenses/LeanBridge-LICENSE");
-	const composer = { name, version, type: "library", description: "Compiled Lean API with generated PHP copied-value conversions", ...composerPackageMetadata(compiledPackageMetadata(model.sourceIdentity)), require: { php: ">=8.2 <9", "ext-ffi": "*" }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile: "ordinary-php-cli-ffi-v1", platform: "linux-x86_64", glibcMinimumVersion, namespace: projection.namespace, licenses: "licenses/" } } };
+	const composer = { name, version, type: "library", description: "Compiled Lean API with generated PHP copied-value conversions", ...composerPackageMetadata(compiledPackageMetadata(model.sourceIdentity)), require: { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile: "ordinary-php-cli-ffi-v1", platform: "linux-x86_64", glibcMinimumVersion, namespace: projection.namespace, licenses: "licenses/" } } };
 	await save("composer.json", canonicalJson(composer));
 	for(const path of Object.keys(files).filter(path => path.endsWith(".php")))
 		await processBuildRunner.capture({ command: environment.LEAN_BRIDGE_PHP ?? "php", args: ["-n", "-l", path], cwd: root, env: environment, signal });

@@ -302,9 +302,9 @@ $packageRoot = getenv('LEAN_BRIDGE_CONFORMANCE_PACKAGE_ROOT') ?: '/vendor';
 $autoload = getenv('LEAN_BRIDGE_CONFORMANCE_AUTOLOAD') ?: $packageRoot . '/autoload.php';
 require_once $autoload;
 
-function lean_bridge_conformance_word(string $decimal): int|${phpClass(`${namespace}\\BigInteger`)}
+function lean_bridge_conformance_word(string $decimal): int|${phpClass("Brick\\Math\\BigInteger")}
 {
-    return PHP_INT_SIZE === 4 ? ${phpClass(`${namespace}\\BigInteger`)}::fromDecimal($decimal) : (int) $decimal;
+    return PHP_INT_SIZE === 4 ? ${phpClass("Brick\\Math\\BigInteger")}::of($decimal) : (int) $decimal;
 }
 
 function lean_bridge_conformance_root_message(\\Throwable $error): string

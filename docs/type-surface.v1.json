@@ -159,13 +159,13 @@
     {
       "id": "php-wasm-installed-copied",
       "kind": "installed",
-      "revision": "03a96e6ac8118b2434e2199dcc59188bbdb5f6b2",
+      "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 milestone based on 03a96e6, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. Existing generated BigInteger is tested; Brick Math integration and the Alpha VO1206 repair remain open.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
-          "sha256": "747d516836b71559c981769a3abf078668a2fdb285e2e13ed3f8b452f650b98a"
+          "sha256": "c8699ed2843f1bfc875fa2d45d050f5ac069d924a0f893a7f2df20fdf4ce8d9b"
         },
         {
           "path": "src/analyze/project-elaborated.mjs",
@@ -213,7 +213,7 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "59b6a34403a219ed9f032e87ede06fcc894e23b23ef01590251d8787b66d1025"
+          "sha256": "114396b10c70487f02093b79afc554c5488f236ddc38caec95da0f07fd2fafd9"
         },
         {
           "path": "src/release/php-wasm-compiler-inputs.mjs",
@@ -221,23 +221,23 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "e5ec3188b27bdac11994bcd5b1ce345f16d80da508bb8e84d9bb97d8dca22fda"
+          "sha256": "f32db536918da05868c22ab5e4d6c1c134dc530c532e9bd5d16b8c362889497b"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "1a903db0da76b4b8067e39527deb4ddc5ba882879cab2822253def4bf08ae1de"
+          "sha256": "66be01d53f51992f033b5656a188ac70ae009a94a6999a0bcbb674313921f21e"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "6c037052f63e35467704584c9403af4b524da93efdc677d55d55269f456470f9"
+          "sha256": "05da62cd7568bc7abbd467c86e1d5e76d96e7c1683457d45ab163534d4667d01"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "83045db31793f6b17bb9665c7fba5c9562a6dc38ccc3f7d5325ea7b0e5c9eb03"
+          "sha256": "9d17a732fde433e6602260d29527ed3fee5e2768fb16444f35600a09b0b77f9b"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "e40bbfdeb6ead4cfcb1eb12ac14e0cca17c342619b3cd37fb43e97ee08294225"
+          "sha256": "021d919c2e9329199f936bb065730a8ce1e808b199897c3fda984aea604655bd"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -245,7 +245,7 @@
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "6ce556857f8487b22d0d8583888ab3d6bb6d81a98d92cf73e988bd2196be8d6d"
+          "sha256": "e30e16a8744b83265cfbb712c7daa4fce1b710eb58f9b9b8bfec9b590c53715d"
         },
         {
           "path": "src/backends/php/php-wasm-copied-loader.mjs",
@@ -253,54 +253,74 @@
         },
         {
           "path": "tests/php-wasm-ordinary.test.mjs",
-          "sha256": "7ec01e8dc39f58a8d81afbcab6323a88a246bca24ee6d8f31f023cc909fd03f4"
+          "sha256": "c77e5111e95eabe811038530033dcd5590a2d180bcede88dafff157fe4623f39"
         },
         {
           "path": "tests/helpers/php-wasm-ordinary.mjs",
-          "sha256": "b616262c74193598a6008ab2edf04d3d47ba9756ddff5d78fc9b9e4f1155485f"
+          "sha256": "0dc92eb5409a22720d1e65a638ece5bf9035e17c76f3fa115fb407b075f3f758"
         },
         {
           "path": "tests/helpers/php-wasm-packages.mjs",
-          "sha256": "8868a73a7c745a0916061ce032f741de432368c6cf08a0a486a8b53f084e2341"
+          "sha256": "8bc667a5f551e47bd038cc696c62602a395251bb64e73dcc73af48b4b37b6c56"
         },
         {
           "path": "tests/helpers/php-wasm-browser.mjs",
           "sha256": "65a98144a7fbc51856d8a001b5a241b697d2674b6f1072a05f95c8a7818ba2bf"
+        },
+        {
+          "path": "docs/evidence/php-brick-math-20260918.md",
+          "sha256": "85c4f34ba50ae3b0dbbcb972b146d1653b53b5df83dd3dcb4880d2c8004d64fc"
+        },
+        {
+          "path": "src/backends/php/brick-math.mjs",
+          "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+        },
+        {
+          "path": "src/backends/php/brick-math.source.json",
+          "sha256": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/php-brick-math.test.mjs",
+          "sha256": "054a27c0a33c916f27ea6675b2f2efd7adedbd7e1b78ebaa7cb81db371f223b6"
         }
       ],
       "artifacts": [
         {
-          "path": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.a7dbc86239a3c5e862f8223cb5848a2f62296cea542b705042492767b2300078.tgz",
-          "sha256": "c04f0e88a6522fab805a619907eb1f5950df4fea2cecdd752ef6d94b6497cf94"
+          "path": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16.tgz",
+          "sha256": "f3db595875924f7532a91c4d6058d7588144a591476d6c192035530970b88847"
         },
         {
           "path": "example-willow-php-wasm-2.0.0-RC.1.tgz",
-          "sha256": "454c1bcd1789f2a0fec0f47e3eca43ba843af4c727085c8a2e056dbe9b5041d1"
+          "sha256": "5c983387cc6b2d0aa52aec175f4cfae4ffda09f65e65bd9316a6b8247cdc60c6"
         },
         {
           "path": "example-willow-php-wasm-2.0.0-RC.1-php-wasm.zip",
-          "sha256": "f5ec84c39328a80fa654bd25861b45d27ad296d4672e8c2e87e8c1b17cff78b3"
+          "sha256": "430f7846f401195530683f2e8189d09caa7d6282cbb728d2b8611f4ac97ebbfb"
         },
         {
           "path": "example-aspen-php-wasm-2.0.0-RC.1.tgz",
-          "sha256": "bbcd87ea5d721827fcdc1a8e585ac5f2149c779dadabf2016aa749660b4d32bb"
+          "sha256": "311d6512d929cfc3536b28cf90ff7406031a911178ce86bdf8adcc598d0792a2"
         },
         {
           "path": "example-aspen-php-wasm-2.0.0-RC.1-php-wasm.zip",
-          "sha256": "ae2cb4a28f5306ef47a755853e7006b293bf66f3cce825f84ba4f0f3d99d7631"
+          "sha256": "484da08c1fb17fa7f8b29719f10e330a92e080e13df29960ebdb2fec8fbebf33"
         }
       ]
     },
     {
       "id": "native-php-installed-copied",
       "kind": "installed",
-      "revision": "0413a9d241574326e663112bcbe87cdcc25c318e",
+      "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "Ordinary PHP CLI milestone based on 0413a9d, bound by source hashes. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, strict weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The Alpha UInt32 follow-up based on d985024 reruns the ordinary native PHP suite (4/4, including relocated offline Clover and Juniper) before refreshing shared generator/audit hashes. The 64-bit copied API and its scope are unchanged; docs/evidence/php-alpha-uint32-boundaries-20260918.md records this regression check.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
-          "sha256": "b87970d09b69ab987d6293d1726939d9f5aceff3359a01eaeca00367ddaabb3f"
+          "sha256": "d107b97f38ef5c55ff4fae3807df31ffc4031c0c5752475dc8c7a991f05dea2c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -336,19 +356,19 @@
         },
         {
           "path": "src/release/native-composer.mjs",
-          "sha256": "9b193e6e4381c9b7db58464ade7f830265d76786ef04329ededd7d062c9c589b"
+          "sha256": "4c57149cd083a8484fcefaadb5bea3e3f84826044e2316a562658454bf3473ec"
         },
         {
           "path": "src/backends/php/generate.mjs",
-          "sha256": "c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"
+          "sha256": "d6b5562e5b714e1bd816001a35aead40aab8e880a5fcf24ae633d265f798618e"
         },
         {
           "path": "src/backends/php/package-audit.mjs",
-          "sha256": "a11019f7b87b1efdc49c567ed0061b3c5548f7857b11ec3105ac1bc05afc209a"
+          "sha256": "a9ae452e79e4a7f69a955e7d1143b4af55dceb2a598be8ed312556fce1996f6b"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "e5ec3188b27bdac11994bcd5b1ce345f16d80da508bb8e84d9bb97d8dca22fda"
+          "sha256": "f32db536918da05868c22ab5e4d6c1c134dc530c532e9bd5d16b8c362889497b"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -356,37 +376,57 @@
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "1a903db0da76b4b8067e39527deb4ddc5ba882879cab2822253def4bf08ae1de"
+          "sha256": "66be01d53f51992f033b5656a188ac70ae009a94a6999a0bcbb674313921f21e"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "83045db31793f6b17bb9665c7fba5c9562a6dc38ccc3f7d5325ea7b0e5c9eb03"
+          "sha256": "9d17a732fde433e6602260d29527ed3fee5e2768fb16444f35600a09b0b77f9b"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "6c037052f63e35467704584c9403af4b524da93efdc677d55d55269f456470f9"
+          "sha256": "05da62cd7568bc7abbd467c86e1d5e76d96e7c1683457d45ab163534d4667d01"
         },
         {
           "path": "tests/native-php.test.mjs",
-          "sha256": "d16aa31e44b2cd5e705e36a513587a4f16caf93889cfea37c07ea84a947cf7e4"
+          "sha256": "3f5a3c4b9b7abfb3959fe074e7336cac742cc78aef509f8de63964e410674a29"
         },
         {
           "path": "tests/fixtures/documentation/consumers/php-native/ordinary/composer.json",
-          "sha256": "96c39ba510530c16ada9d35f461b8c20518d22e58d24c6d8f2610bcb21e03006"
+          "sha256": "a19d69abb319d38a733fe7df051e18fcc6445b8ade12086824d40f04b2c1f30a"
         },
         {
           "path": "tests/fixtures/documentation/consumers/php-native/ordinary/main.php",
-          "sha256": "6bded0344e96ffd64c9a9c4ca2f7e4fe655f75d6219f6948409daf37e6304d3f"
+          "sha256": "2731fd83c4584c72f084354d0cc07ee890dc9c1e299207dfd1a62d264e016695"
+        },
+        {
+          "path": "docs/evidence/php-brick-math-20260918.md",
+          "sha256": "85c4f34ba50ae3b0dbbcb972b146d1653b53b5df83dd3dcb4880d2c8004d64fc"
+        },
+        {
+          "path": "src/backends/php/brick-math.mjs",
+          "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+        },
+        {
+          "path": "src/backends/php/brick-math.source.json",
+          "sha256": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/php-brick-math.test.mjs",
+          "sha256": "054a27c0a33c916f27ea6675b2f2efd7adedbd7e1b78ebaa7cb81db371f223b6"
         }
       ],
       "artifacts": [
         {
           "path": "example-clover-api-2.0.0-RC.1-linux-x86_64.zip",
-          "sha256": "7414aec6f6865a84bd292f227c104604971118438f9d2940dda7d05ba53b03df"
+          "sha256": "3377b14e98c1a5deb89b8acdcaab6088a717859a561ed87c7c96edc36ccd90a0"
         },
         {
           "path": "example-juniper-api-2.0.0-RC.1-linux-x86_64.zip",
-          "sha256": "f21694c55a51decfe6e0edaab9be9ade03f839d03ea04b21d9c68365aa5255d2"
+          "sha256": "49b6642cd7da7dd044a2c012327bda5b190dc64e90a64f6f8b7d9439e87682f2"
         }
       ]
     },
@@ -1403,11 +1443,14 @@
     {
       "id": "php-numeric-projection",
       "kind": "inspection",
-      "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
+      "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "Inspect primitiveProjection in src/backends/php/projection.mjs.",
-      "scope": "Host syntax and validation descriptors only. PHP generator output does not establish compiled or installed support for these types.",
+      "scope": "Host syntax and validation descriptors use Brick Math BigInteger. The generator mapping alone does not establish compiled or installed support for these types.",
       "files": [
-        {"path":"src/backends/php/projection.mjs","sha256":"817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"}
+        {
+          "path": "src/backends/php/projection.mjs",
+          "sha256": "d8ab19e9cb453d679aa49902781ebaf71f9922ef72ce7b9d876df0e5de1aab81"
+        }
       ],
       "artifacts": []
     },
@@ -1436,13 +1479,13 @@
     {
       "id": "php-alpha-uint32-installed",
       "kind": "installed",
-      "revision": "d985024dfb6e59e392e20e14cf77cb4527c2f5e5",
+      "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "node scripts/test-php-native-package-consumer.mjs --package NATIVE_PACKAGE; node scripts/test-php-wasm-package-host.mjs --package WASM_PACKAGE; node scripts/check-php-transport-parity.mjs --native-package NATIVE_PACKAGE --php-wasm-package WASM_PACKAGE --output NEW_DIRECTORY",
-      "scope": "Alpha reviewed-IR UInt32 boundary repair based on d985024. Installed native 64-bit PHP retains int, while installed 32-bit PHP-Wasm uses BigInteger. Strict and weak callers cover 0, 2147483647, 2147483648 and 4294967295 in resource input/read, payload fields/elements, callback arguments/results and returned closures. Invalid values reject without poisoning the runtime; cleanup leaves zero identities. Manifest identities bind the installed native directory and Wasm package payloads. This does not promote other Alpha primitives or ordinary-source callbacks.",
+      "scope": "Alpha reviewed-IR UInt32 boundary repair, rerun with Brick Math 1.0.0 based on dc641ec. Installed native 64-bit PHP retains int, while installed 32-bit PHP-Wasm uses Brick Math BigInteger. Strict and weak callers cover 0, 2147483647, 2147483648 and 4294967295 in resource input/read, payload fields/elements, callback arguments/results and returned closures. Invalid values reject without poisoning the runtime, normalized zero succeeds, and cleanup leaves zero identities. Manifest identities bind the installed native directory and Wasm package payloads. This does not promote other Alpha primitives or ordinary-source callbacks. See docs/evidence/php-brick-math-20260918.md.",
       "files": [
         {
           "path": "docs/evidence/php-alpha-uint32-boundaries-20260918.md",
-          "sha256": "93a3e111abeae0cea1e239aa5869a371c449ccc2a35a8b73dbdd5f7da32f6930"
+          "sha256": "7921eed7ad12eb56b9bcf689f114dc01b137e4b02c7125128f92dc3ed433ea07"
         },
         {
           "path": "poc/lean-link-spike/Alpha.lean",
@@ -1458,19 +1501,19 @@
         },
         {
           "path": "src/backends/php/projection.mjs",
-          "sha256": "817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"
+          "sha256": "d8ab19e9cb453d679aa49902781ebaf71f9922ef72ce7b9d876df0e5de1aab81"
         },
         {
           "path": "src/backends/php/generate.mjs",
-          "sha256": "c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"
+          "sha256": "d6b5562e5b714e1bd816001a35aead40aab8e880a5fcf24ae633d265f798618e"
         },
         {
           "path": "src/backends/php/package-audit.mjs",
-          "sha256": "a11019f7b87b1efdc49c567ed0061b3c5548f7857b11ec3105ac1bc05afc209a"
+          "sha256": "a9ae452e79e4a7f69a955e7d1143b4af55dceb2a598be8ed312556fce1996f6b"
         },
         {
           "path": "src/backends/php/zend-extension.mjs",
-          "sha256": "9690151b6cd17f4ea2b88299e0bbe1d1700390fb18085d8a501ab77b8ba3bd56"
+          "sha256": "eefa4cebb791d334b81e206d56c6e5c49abfc8b90653f34f4a473e368f07a177"
         },
         {
           "path": "src/backends/php/native-runtime.mjs",
@@ -1482,27 +1525,27 @@
         },
         {
           "path": "src/backends/php/php-wasm-package.mjs",
-          "sha256": "af7014d804284b46be10d5ca2c22109e7534baf18382b75926db62961e51f2e1"
+          "sha256": "06a44fb558f3dfe944111557ef5575b957f3fcd1e57cc29dd9d596df86a186c0"
         },
         {
           "path": "src/backends/php/conformance.mjs",
-          "sha256": "8b6e2df74263a9404422c9362c50676787187bcc44fd8987e9f5d2c711b123bc"
+          "sha256": "13788de6d00019ffeb10c3f111f38704b3988cc6eb465cfcbf30b4ad734c499a"
         },
         {
           "path": "tests/fixtures/php-uint32-boundaries.php",
-          "sha256": "76b4bfc05d7bcb3aec4cc330884bd8dcb7b9a6161a2961782d57d264affb02a9"
+          "sha256": "529c8d59ef09e8c7721a6e2d3125455d1949420231122e05cc3bd3c7a67388a3"
         },
         {
           "path": "tests/fixtures/documentation/consumers/php-wasm/main.php",
-          "sha256": "8f0f655af580e31e7d87b8b7b65647d8907a1ecab82afd86044ede42fdcfc6be"
+          "sha256": "02f6818c87bc2e222eaa0532670e09a5c6ebca5af36bb2ad16ddcedff4587438"
         },
         {
           "path": "tests/php-projection.test.mjs",
-          "sha256": "1e428fda41aa237bdec90d1cbcf399af50c084162bfb57c1c4175b23937cbb89"
+          "sha256": "f3c2a03a9988b23228124950be8b26d9afd289ff2e4aec598249c0f28dedc46a"
         },
         {
           "path": "tests/php-generator.test.mjs",
-          "sha256": "627932fdf29d6cf17d04a1a1b2f8cecb452fe1191726fd6d2348c3736bd591a1"
+          "sha256": "de4200feb5efd43848899dc5f1860184bd292e13da8c89fd5f72d4f8eeb4ca24"
         },
         {
           "path": "tests/php-transport-conformance.test.mjs",
@@ -1514,7 +1557,7 @@
         },
         {
           "path": "scripts/test-php-wasm-package-host.mjs",
-          "sha256": "b6e1ac308e6810ec84968aead202d9d8b0be33da874b31bd80c2e6355560283e"
+          "sha256": "a15f408ccf657bbc187321dbbbeee94b5579374bdc791de8a626342a45703a1b"
         },
         {
           "path": "scripts/check-php-transport-parity.mjs",
@@ -1522,41 +1565,61 @@
         },
         {
           "path": "scripts/check-php-wasm-composition.mjs",
-          "sha256": "a263269de28fd549f672e9a75ab28badda13cbe0f25ce898960bf92453352a73"
+          "sha256": "04e90d6cbf50674a5b8ba32bba28d2e922f5229c680a26a2d55bf853a4c4414b"
         },
         {
           "path": "scripts/benchmark-php-transports.mjs",
-          "sha256": "21a6aaaa2b701d25af2be0b43b312fd3b6cf25313e11ebd3e97e7d499b442943"
+          "sha256": "bb13fa13abdab4a97bc0380b3fb84bd01166909356fc2ae1b3588383fcbde6a4"
+        },
+        {
+          "path": "docs/evidence/php-brick-math-20260918.md",
+          "sha256": "85c4f34ba50ae3b0dbbcb972b146d1653b53b5df83dd3dcb4880d2c8004d64fc"
+        },
+        {
+          "path": "src/backends/php/brick-math.mjs",
+          "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+        },
+        {
+          "path": "src/backends/php/brick-math.source.json",
+          "sha256": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/php-brick-math.test.mjs",
+          "sha256": "054a27c0a33c916f27ea6675b2f2efd7adedbd7e1b78ebaa7cb81db371f223b6"
         }
       ],
       "artifacts": [
         {
           "path": "native/share/lean-bridge/release-manifest.json",
-          "sha256": "c10215106eac67594d866ee8e4692c5aea933e1fdf12ddc3522daad764fb444c"
-        },
-        {
-          "path": "wasm-startup/metadata/release/release-manifest.json",
-          "sha256": "7883d85b416db884d9759bd7d499deb719026ba8ed152752760dde6a7bf84b21"
+          "sha256": "04e312c8cb43e11ef306c9590f71b2203be9363b8c17315d199560ffa76f6185"
         },
         {
           "path": "native/lib/php/lean_alpha.so",
           "sha256": "31134dbbd89af86457f73a6e49d4fc9e500f8ba1d5811f22fb53c93a987e42f7"
         },
         {
+          "path": "wasm-startup/metadata/release/release-manifest.json",
+          "sha256": "7add7900d5ebc95a1723ad579f2788ec7eeda8513ecb6ab960b923920753b147"
+        },
+        {
           "path": "wasm-startup/lib/php8.4-lean-alpha.so",
-          "sha256": "a7dd6341e44265fbba163988838e358ef2ceb7cd060af32cda24ea9bd7ca88d8"
+          "sha256": "997fdfa16233920073a310d3db29b8ea062fa870689057bcd02c406cde9e4217"
         },
         {
           "path": "wasm-lazy/metadata/release/release-manifest.json",
-          "sha256": "e1e4606aee22aa680100ce83ec4e5d8728854ad4b513d7183cd38945f00cb6a6"
+          "sha256": "161519612b095a7efcf0c533a749530b52fd6fe84c6899d5fe332b503f7cdf4f"
         },
         {
           "path": "wasm-startup/php-wasm-lean-alpha-0.0.0.tgz",
-          "sha256": "0117137afacd082cf48aec417cd8816e44087d8f443e7476be1e6e880a1ac1ce"
+          "sha256": "9629302db6e624dd8a72a545bfbac6af8b5bc5b049f6ecaa34cec823dbbd37e1"
         },
         {
           "path": "wasm-lazy/php-wasm-lean-alpha-0.0.0.tgz",
-          "sha256": "bd6802bd5ba18368cb8b05a886969668a5cf5a00de6257a9f80b1b8b2fa3a59e"
+          "sha256": "5ba30807bae8959646c3993e48f1e8fceb6d4ccd75305f34bc16d9ca9fac4f59"
         }
       ]
     },
@@ -1575,12 +1638,18 @@
     {
       "id": "php-mapping-audit",
       "kind": "inspection",
-      "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
+      "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "Shared PHP syntax and coverage guards. Unit is return-only; nullable Option cannot preserve nested Option or Option Unit; result generation rejects.",
+      "scope": "Shared PHP syntax, Brick Math host representations and coverage guards. Unit is return-only; nullable Option cannot preserve nested Option or Option Unit; result generation rejects.",
       "files": [
-        {"path":"src/backends/php/projection.mjs","sha256":"817622f65c473a488b2722fba472be09015cc0f3a2a304aead7fee2e63833186"},
-        {"path":"src/backends/php/generate.mjs","sha256":"c9e3c25a07625ec74256f0c618bd929900b0b4399745b47557aab1f3848f1a30"}
+        {
+          "path": "src/backends/php/projection.mjs",
+          "sha256": "d8ab19e9cb453d679aa49902781ebaf71f9922ef72ce7b9d876df0e5de1aab81"
+        },
+        {
+          "path": "src/backends/php/generate.mjs",
+          "sha256": "d6b5562e5b714e1bd816001a35aead40aab8e880a5fcf24ae633d265f798618e"
+        }
       ],
       "artifacts": []
     },
@@ -1736,14 +1805,14 @@
           "field": "int"
         },
         "uint32": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "uint64": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "int8": {
           "parameter": "int",
@@ -1761,19 +1830,19 @@
           "field": "int"
         },
         "int64": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "nat": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "int": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "float32": {
           "parameter": "float",
@@ -1846,22 +1915,22 @@
       "limitations": [
         "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32. Node and Chromium are tested; this is not native PHP or a server SAPI.",
         "Pure concrete copied values with acyclic nesting up to 32. No callback, closure, resource, optional, variant, effect, Char, USize or ISize support is promoted. Alpha reviewed-IR projection evidence stays separate.",
-        "PHP and Zend conversions and native copying have separate 16 MiB accounting budgets. PHP lists count at least 32 bytes per element; BigInteger canonical decimal text is limited to 16384 digits. These limits do not bound Lean working memory."
+        "PHP and Zend conversions and native copying have separate 16 MiB accounting budgets. PHP lists count at least 32 bytes per element; Brick\\Math\\BigInteger canonical decimal text is limited to 16384 digits. These limits do not bound Lean working memory."
       ],
       "conversionNotes": {
         "unit": "Unit is null in arguments, results and fields.",
         "bool": "Exact bool in weak and strict callers; numbers and strings are not Boolean inputs.",
-        "uint64": "BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float.",
-        "nat": "BigInteger stores canonical unsigned decimal text up to 16384 digits.",
-        "int": "BigInteger stores canonical signed decimal text up to 16384 digits.",
+        "uint64": "Brick\\Math\\BigInteger::of preserves the full unsigned range without conversion through PHP float.",
+        "nat": "Brick\\Math\\BigInteger accepts nonnegative integer values up to 16384 decimal digits.",
+        "int": "Brick\\Math\\BigInteger accepts signed integer values up to 16384 decimal digits.",
         "float32": "PHP float input rounds to binary32 in scalar, array and record positions. NaN classification, infinities, subnormals and signed zero are checked.",
         "float64": "Binary64 values, NaN classification, infinities, subnormals and signed zero are checked in scalar, array and record positions.",
         "string": "Validated UTF-8 PHP strings preserve embedded NUL.",
         "bytes": "Bytes::fromString and toString preserve arbitrary binary bytes.",
         "array": "Consecutive-key PHP lists with recursive element validation; nested results own independent copies.",
         "record": "Final readonly typed classes, including empty and scalar-represented records. Nested fields are checked and results own independent copies.",
-        "uint32": "The compiled copied API uses BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected.",
-        "int64": "The compiled copied API uses BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host."
+        "uint32": "The compiled copied API uses Brick\\Math\\BigInteger for the full 0..4294967295 range, even for values below PHP_INT_MAX. PHP ints, floats and numeric strings are rejected.",
+        "int64": "The compiled copied API uses Brick\\Math\\BigInteger for the full -9223372036854775808..9223372036854775807 range on the 32-bit host."
       }
     },
     {
@@ -1923,9 +1992,9 @@
           "field": "int"
         },
         "uint64": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "int8": {
           "parameter": "int",
@@ -1948,14 +2017,14 @@
           "field": "int"
         },
         "nat": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "int": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger"
         },
         "float32": {
           "parameter": "float",
@@ -2028,14 +2097,14 @@
       "limitations": [
         "PHP 8.2+ below 9, NTS CLI on Linux x86-64, FFI enabled and readable /proc/self/maps. Local glibc 2.36 acceptance; production floor 2.38. Server SAPIs, ZTS and PHP-Wasm are separate work.",
         "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
-        "Validation, FFI conversions and native copying have separate 16 MiB accounting budgets. PHP list accounting includes at least 32 bytes per element. BigInteger decimal text is limited to 16384 digits. Lean working memory is not bounded by these conversions."
+        "Validation, FFI conversions and native copying have separate 16 MiB accounting budgets. PHP list accounting includes at least 32 bytes per element. Brick\\Math\\BigInteger decimal text is limited to 16384 digits. Lean working memory is not bounded by these conversions."
       ],
       "conversionNotes": {
         "unit": "Unit is null in arguments, results and fields.",
         "bool": "Exact bool, including when the caller has strict_types disabled.",
-        "uint64": "BigInteger::fromDecimal preserves the full unsigned range without conversion through PHP float.",
-        "nat": "BigInteger stores canonical unsigned decimal text up to 16384 digits.",
-        "int": "BigInteger stores canonical signed decimal text up to 16384 digits.",
+        "uint64": "Brick\\Math\\BigInteger::of preserves the full unsigned range without conversion through PHP float.",
+        "nat": "Brick\\Math\\BigInteger accepts nonnegative integer values up to 16384 decimal digits.",
+        "int": "Brick\\Math\\BigInteger accepts signed integer values up to 16384 decimal digits.",
         "float32": "PHP float input rounds to binary32. NaN classification, infinities and signed zero are preserved.",
         "float64": "Exact PHP float inputs preserve NaN classification, infinities and signed zero.",
         "string": "Validated UTF-8 PHP strings preserve embedded NUL.",
@@ -4523,20 +4592,20 @@
       "path": "reviewed-ir",
       "scope": "Numeric PHP projection descriptors from explicit Binding IR, without a compiled arbitrary-project adapter.",
       "hostTypes": {
-        "nat": {"parameter":"Generated BigInteger value","result":"Generated BigInteger value"},
-        "int": {"parameter":"Generated BigInteger value","result":"Generated BigInteger value"},
+        "nat": {"parameter":"Brick\\Math\\BigInteger","result":"Brick\\Math\\BigInteger"},
+        "int": {"parameter":"Brick\\Math\\BigInteger","result":"Brick\\Math\\BigInteger"},
         "float32": {"parameter":"float","result":"float"},
         "float64": {"parameter":"float","result":"float"}
       },
       "stages": {
         "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["php-numeric-projection"],"note":"Nat/Int use BigInteger; Float32/Float use PHP float. These are generator mappings, not Alpha exports."},
+        "generation": {"state":"inspected","evidence":["php-numeric-projection"],"note":"Nat/Int use Brick\\Math\\BigInteger; Float32/Float use PHP float. These are generator mappings, not Alpha exports."},
         "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
         "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
         "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."}
       },
-      "limitations": ["BigInteger projection does not establish installed arbitrary-precision runtime support.","Float width validation and special values need compiled round-trip tests."],
-      "conversionNotes": {"nat":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."}
+      "limitations": ["Brick\\Math\\BigInteger projection does not establish installed arbitrary-precision runtime support.","Float width validation and special values need compiled round-trip tests."],
+      "conversionNotes": {"nat":"The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence."}
     },
     {
       "id": "rust-arbitrary-integers-rejected",
@@ -4620,11 +4689,11 @@
       "scope": "Installed Alpha UInt32 inputs, outputs, payload elements, callback arguments/results and returned functions at all four signed/unsigned boundaries.",
       "hostTypes": {
         "uint32": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger",
-          "callback-parameter": "BigInteger",
-          "callback-result": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         }
       },
       "stages": {
@@ -4666,7 +4735,7 @@
         "Alpha UInt32 only. No claim for arbitrary callback signatures, other primitive exports or browser-hosted Alpha execution."
       ],
       "conversionNotes": {
-        "uint32": "Alpha preserves the full 0..4294967295 range as BigInteger, including payload elements, callback arguments/results and returned closures. Use BigInteger even for small values; PHP ints, floats and numeric strings are rejected."
+        "uint32": "Alpha preserves the full 0..4294967295 range as Brick\\Math\\BigInteger, including payload elements, callback arguments/results and returned closures. Use Brick\\Math\\BigInteger even for small values; PHP ints, floats and numeric strings are rejected."
       }
     },
     {
@@ -4872,11 +4941,11 @@
           "callback-result": "int"
         },
         "uint64": {
-          "parameter": "LeanAlpha\\BigInteger",
-          "result": "LeanAlpha\\BigInteger",
-          "field": "LeanAlpha\\BigInteger",
-          "callback-parameter": "LeanAlpha\\BigInteger",
-          "callback-result": "LeanAlpha\\BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         },
         "int8": {
           "parameter": "int",
@@ -4955,7 +5024,7 @@
       ],
       "conversionNotes": {
         "unit": "PHP void is return-only; there is no valid void parameter or property representation.",
-        "uint64": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
+        "uint64": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
         "int64": "Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int."
       }
     },
@@ -4980,14 +5049,14 @@
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
         "nat": {
-          "field": "LeanAlpha\\BigInteger",
-          "callback-parameter": "LeanAlpha\\BigInteger",
-          "callback-result": "LeanAlpha\\BigInteger"
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         },
         "int": {
-          "field": "LeanAlpha\\BigInteger",
-          "callback-parameter": "LeanAlpha\\BigInteger",
-          "callback-result": "LeanAlpha\\BigInteger"
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         },
         "float32": {
           "field": "float",
@@ -5033,8 +5102,8 @@
         "Unit has a void result spelling, not a usable PHP argument or property type."
       ],
       "conversionNotes": {
-        "nat": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
-        "int": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence."
+        "nat": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
+        "int": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence."
       }
     },
     {
@@ -5094,11 +5163,11 @@
           "callback-result": "int"
         },
         "uint64": {
-          "parameter": "LeanAlpha\\BigInteger",
-          "result": "LeanAlpha\\BigInteger",
-          "field": "LeanAlpha\\BigInteger",
-          "callback-parameter": "LeanAlpha\\BigInteger",
-          "callback-result": "LeanAlpha\\BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         },
         "int8": {
           "parameter": "int",
@@ -5122,11 +5191,11 @@
           "callback-result": "int"
         },
         "int64": {
-          "parameter": "BigInteger",
-          "result": "BigInteger",
-          "field": "BigInteger",
-          "callback-parameter": "BigInteger",
-          "callback-result": "BigInteger"
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger",
+          "field": "Brick\\Math\\BigInteger",
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
         },
         "string": {
           "parameter": "string",
@@ -5177,8 +5246,8 @@
       ],
       "conversionNotes": {
         "unit": "PHP void is return-only; there is no valid void parameter or property representation.",
-        "uint64": "The reviewed-IR BigInteger projection has no installed full-range Alpha transport evidence.",
-        "int64": "The 32-bit projection uses BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support."
+        "uint64": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
+        "int64": "The 32-bit projection uses Brick\\Math\\BigInteger with exact signed bounds. Alpha declares no Int64 export; this is inspected generation, not installed Alpha Int64 support."
       }
     },
     {

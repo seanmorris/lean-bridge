@@ -1,5 +1,7 @@
 # Installed PHP-Wasm primitive boundaries
 
+The subsequent [Brick Math milestone](php-brick-math-20260918.md) replaces this record's package-local integer class and reruns the installed boundary suite.
+
 VO1218 extends the ordinary-source copied-value acceptance and records its exact mappings in the type inventory. This milestone is based on `03a96e6ac8118b2434e2199dcc59188bbdb5f6b2`; the inventory pins the implementation and test files by hash. It changes the tests and support documentation, not the generated API or conversion implementation.
 
 ## Reproduce

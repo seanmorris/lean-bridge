@@ -20,19 +20,6 @@ final readonly class Bytes implements \Stringable, \Countable
     public function count(): int { return strlen($this->value); }
 }
 
-final readonly class BigInteger implements \Stringable
-{
-    private function __construct(private string $decimal) {}
-    public static function fromDecimal(mixed $decimal): self {
-        if (!is_string($decimal)) throw new \TypeError('BigInteger requires a string');
-        if (strlen($decimal) > 16385 || preg_match('/^(?:0|-?[1-9][0-9]*)$/D', $decimal) !== 1
-            || strlen(ltrim($decimal, '-')) > 16384) {
-            throw new \ValueError('BigInteger requires canonical decimal text of at most 16384 digits');
-        }
-        return new self($decimal);
-    }
-    public function __toString(): string { return $this->decimal; }
-}
 `;
 
 /** Private PHP helpers. Integer arithmetic stays below signed 64-bit overflow. */

@@ -13,6 +13,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { corpusPhpRequestJson, corpusPhpSource, phpRuntimeCases } from "./type-corpus-php-source.mjs";
+import { brickMathRepository, validateBrickMathInstall } from "./brick-math.mjs";
 
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -104,19 +105,20 @@ export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, envi
 	assert.equal(receipt.runtimeIdentity, pkg.runtimeIdentity);
 	await verifyNativeFiles(inspection, receipt.files);
 	const original = await json(join(inspection, "composer.json"));
-	assert.deepEqual(original.require, { php: ">=8.2 <9", "ext-ffi": "*" });
+	assert.deepEqual(original.require, { php: ">=8.2 <9", "ext-ffi": "*", "brick/math": "1.0.0" });
 	assert.deepEqual(original.autoload, { files: ["src/Api.php"] });
 	const distribution = { type: "zip", url: pathToFileURL(localArchive).href, shasum: createHash("sha1").update(archiveBytes).digest("hex") };
 	const manifest = { name: "lean-bridge-corpus/consumer"
 		, require: { [pkg.name]: pkg.version }
-		, repositories: [{ "packagist.org": false }, { type: "package", package: { ...original, dist: distribution } }]
+		, repositories: [{ "packagist.org": false }, await brickMathRepository(feed), { type: "package", package: { ...original, dist: distribution } }]
 		, config: { "allow-plugins": false } };
 	await saveLakeFile(project, "composer.json", canonicalJson(manifest));
 	const install = ["install", "--prefer-dist", "--no-progress", "--no-dev"];
 	await composerRun(install);
 	const lock = await json(join(project, "composer.lock")), installed = await json(join(project, "vendor/composer/installed.json"));
-	assert.deepEqual(lock["packages-dev"], []); assert.equal(lock.packages.length, 1); assert.equal(installed.packages.length, 1);
-	for(const selected of [lock.packages[0], installed.packages[0]])
+	assert.deepEqual(lock["packages-dev"], []); assert.equal(lock.packages.length, 2); assert.equal(installed.packages.length, 2);
+	for(const list of [lock.packages, installed.packages]) assert.equal(list.find(item => item.name === "brick/math").version, "1.0.0");
+	for(const selected of [lock.packages, installed.packages].map(list => list.find(item => item.name === pkg.name)))
 	{
 		assert.equal(selected.name, pkg.name); assert.equal(selected.version, pkg.version);
 		assert.deepEqual(selected.dist, distribution);
@@ -198,18 +200,19 @@ export const validatePhpEvidence = (run, library, validate) => {
 	assert.equal(evidence.manifestSha256, sha256(canonicalJson(evidence.manifest)));
 	assert.deepEqual(evidence.manifest.require, { [run.archive.name]: run.archive.version });
 	assert.deepEqual(evidence.manifest.config, { "allow-plugins": false });
-	assert.equal(evidence.manifest.repositories.length, 2);
+	assert.equal(evidence.manifest.repositories.length, 3);
+	validateBrickMathInstall(evidence, evidence.deployment);
 	assert.deepEqual(evidence.manifest.repositories[0], { "packagist.org": false });
-	const selected = evidence.manifest.repositories[1];
+	const selected = evidence.manifest.repositories[2];
 	assert.equal(selected.type, "package"); assert.equal(selected.package.name, run.archive.name);
 	assert.equal(selected.package.version, run.archive.version);
-	assert.deepEqual(selected.package.require, { php: ">=8.2 <9", "ext-ffi": "*" });
+	assert.deepEqual(selected.package.require, { php: ">=8.2 <9", "ext-ffi": "*", "brick/math": "1.0.0" });
 	assert.deepEqual(selected.package.autoload, { files: ["src/Api.php"] });
 	assert.match(selected.package.dist.url, /^file:\/\/\/.+\/project\/feed\/package\.zip$/);
 	assert.equal(selected.package.dist.type, "zip"); assert.match(selected.package.dist.shasum, /^[a-f0-9]{40}$/);
-	assert.equal(evidence.lock.packages.length, 1); assert.deepEqual(evidence.lock["packages-dev"], []);
-	assert.equal(evidence.installed.packages.length, 1);
-	for(const pkg of [evidence.lock.packages[0], evidence.installed.packages[0]])
+	assert.equal(evidence.lock.packages.length, 2); assert.deepEqual(evidence.lock["packages-dev"], []);
+	assert.equal(evidence.installed.packages.length, 2);
+	for(const pkg of [evidence.lock.packages, evidence.installed.packages].map(list => list.find(item => item.name === run.archive.name)))
 	{
 		assert.equal(pkg.name, run.archive.name); assert.equal(pkg.version, run.archive.version);
 		assert.deepEqual(pkg.dist, selected.package.dist);

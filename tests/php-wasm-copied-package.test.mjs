@@ -47,6 +47,16 @@ test("descriptor registration rejects incompatible identities before accepting a
 	assert.throws(() => descriptor({ ...runtime, identity: "0".repeat(64) }, component, base), /another PHP-Wasm runtime/);
 });
 
+test("bundled PHP dependencies mount once without affecting extension-only Composer loading", () => {
+	const assets = { ...base, php: { "bootstrap.php": new URL("./bootstrap.php", base.api), "dependencies/brick-math/src/BigInteger.php": new URL("./BigInteger.php", base.api) } };
+	const a = descriptor(runtime, component, assets), php = host();
+	assert.equal(a.autoload, "/vendor/example/willow/bootstrap.php");
+	assert.equal(a.getFiles(php).length, 4); assert.deepEqual(a.getFiles(php), []);
+	assert.deepEqual(Object.keys(a.extensions), ["getLibs"]);
+	for(const key of ["../escape.php", "dependencies/brick-math/../../escape.php", "src/Api.php"])
+		assert.throws(() => descriptor(runtime, component, { ...assets, php: { ...assets.php, [key]: base.api } }), /Invalid bundled PHP dependencies/);
+});
+
 test("descriptors reject unsupported versions, variants, misplaced modes and late registration", async () => {
 	const a = descriptor(runtime, component, base);
 	for(const php of [null, {}, { ...host(), phpVersion: "8.3" }, { ...host(), phpVariant: "zts" }])

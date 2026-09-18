@@ -173,7 +173,7 @@ test("the combined PHP guide owns both profiles and preserves their differences"
 	}
 	const range = overview.rows.get("`UInt32`").rules;
 	assert.match(range, /Full `0\.\.4294967295` range in both profiles/u);
-	assert.match(range, /PHP-Wasm.*BigInteger::fromDecimal/u);
+	assert.match(range, /PHP-Wasm.*BigInteger::of/u);
 	assert.match(overview.section, /callback\(BigInteger\)|callable\(BigInteger\): BigInteger/u);
 	assert.doesNotMatch(overview.section, /result above `PHP_INT_MAX` cannot be represented/u);
 	assert.match(source, /PHP module API `20220829`/u);
@@ -195,7 +195,7 @@ test("conversion tables distinguish full-width integers and executable WASI supp
 	const phpNative = conversionTable(await readFile("docs/php.md", "utf8"));
 	const phpWasm = phpNative;
 	assert.match(phpNative.rows.get("`UInt32`").rules, /4294967295/u);
-	assert.match(phpWasm.rows.get("`UInt32`").rules, /BigInteger::fromDecimal\('4294967295'\)/u);
+	assert.match(phpWasm.rows.get("`UInt32`").rules, /BigInteger::of\('4294967295'\)/u);
 	assert.match(phpWasm.section, /4294967295` wraps to `0/u);
 	const wasi = conversionTable(await readFile("docs/consume/wit-wasi.md", "utf8"));
 	assert.match(wasi.rows.get("`UInt32`").rules, /Executable input and result/u);

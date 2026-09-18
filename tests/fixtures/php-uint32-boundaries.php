@@ -7,10 +7,10 @@ return (static function (): array {
         if (!$condition) throw new RuntimeException("UInt32 boundary failed: $label");
         ++$checks;
     };
-    $word = static fn(string $decimal): int|LeanAlpha\BigInteger => PHP_INT_SIZE === 4
-        ? LeanAlpha\BigInteger::fromDecimal($decimal) : (int) $decimal;
+    $word = static fn(string $decimal): int|Brick\Math\BigInteger => PHP_INT_SIZE === 4
+        ? Brick\Math\BigInteger::of($decimal) : (int) $decimal;
     $exact = static function (mixed $value, string $expected, string $label) use ($check): void {
-        $check(PHP_INT_SIZE === 4 ? $value instanceof LeanAlpha\BigInteger : is_int($value), "$label type");
+        $check(PHP_INT_SIZE === 4 ? $value instanceof Brick\Math\BigInteger : is_int($value), "$label type");
         $check((string) $value === $expected, "$label value");
     };
     $reject = static function (callable $call, string $label) use ($check): void {
@@ -53,7 +53,7 @@ return (static function (): array {
         foreach ($decimals as $index => $expected) $exact($payload->values[$index], $expected, "array element $index");
 
         $called = false;
-        $result = LeanAlpha\withCallback($word($previous), static function (int|LeanAlpha\BigInteger $value) use ($exact, $word, $decimal, &$called): int|LeanAlpha\BigInteger {
+        $result = LeanAlpha\withCallback($word($previous), static function (int|Brick\Math\BigInteger $value) use ($exact, $word, $decimal, &$called): int|Brick\Math\BigInteger {
             $called = true;
             $exact($value, $decimal, 'callback argument');
             return $word($decimal);
@@ -82,10 +82,18 @@ return (static function (): array {
         $reject(static fn() => LeanAlpha\withCallback($word('0'), static fn() => $invalid), 'callback return range');
     }
     if (PHP_INT_SIZE === 4) {
-        foreach ([0, 2147483648.0, '4294967295', LeanAlpha\BigInteger::fromDecimal('-0')] as $invalid) {
+        foreach ([0, 2147483648.0, '4294967295', Brick\Math\BigDecimal::of('0')] as $invalid) {
             $reject(static fn() => new LeanAlpha\Box($invalid), 'UInt32 representation');
             $reject(static fn() => new LeanAlpha\Payload(false, $word('0'), '', LeanAlpha\Bytes::fromString(''), [$invalid]), 'array representation');
             $reject(static fn() => LeanAlpha\withCallback($word('0'), static fn() => $invalid), 'callback representation');
+        }
+        $zero = Brick\Math\BigInteger::of('-0');
+        $box = new LeanAlpha\Box($zero);
+        try {
+            $exact($box->read(), '0', 'normalized resource input');
+            $exact(LeanAlpha\withCallback($word('0'), static fn() => $zero), '1', 'normalized callback result');
+        } finally {
+            $box->close();
         }
     }
     $cause = new RuntimeException('boundary callback cause');

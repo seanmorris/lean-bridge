@@ -16,7 +16,7 @@ php.addEventListener('error', event => {
 });
 const status = await php.run(String.raw`<?php
 require_once '${api.autoload}';
-use LeanWillow\BigInteger;
-echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+use Brick\Math\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::of('4294967295'));
 `);
 assert.equal(status, 0);

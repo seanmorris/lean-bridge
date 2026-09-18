@@ -49,15 +49,15 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	const source = await readFile("docs/php.md", "utf8");
 	assert.match(row(source, "UInt32"), /Native PHP.*PHP-Wasm|PHP-Wasm.*Native PHP/u);
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
-	assert.match(row(source, "UInt32"), /PHP-Wasm: `BigInteger`/u);
+	assert.match(row(source, "UInt32"), /PHP-Wasm: `Brick\\Math\\BigInteger`/u);
 	assert.match(row(source, "UInt32"), /Ordinary source: Installed checks passed \(input, result, field\)/u);
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "UInt32"), /Alpha.*full 0\.\.4294967295/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
 	assert.match(row(source, "Except ε α"), /Generation rejected/u);
 	const wasm = source;
-	assert.match(row(wasm, "Int64"), /32-bit projection uses BigInteger/u);
-	assert.match(row(wasm, "Int64"), /compiled copied API uses BigInteger for the full/u);
+	assert.match(row(wasm, "Int64"), /32-bit projection uses Brick\\Math\\BigInteger/u);
+	assert.match(row(wasm, "Int64"), /compiled copied API uses Brick\\Math\\BigInteger for the full/u);
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 

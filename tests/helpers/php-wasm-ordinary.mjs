@@ -9,19 +9,19 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 export const phpWasmOrdinaryScalars = [
 	["unit", "Unit", "null"], ["bool", "Bool", "true"]
 	, ["u8", "UInt8", "255"], ["u16", "UInt16", "65535"]
-	, ["u32", "UInt32", "BigInteger::fromDecimal('4294967295')"]
-	, ["u64", "UInt64", "BigInteger::fromDecimal('18446744073709551615')"]
+	, ["u32", "UInt32", "BigInteger::of('4294967295')"]
+	, ["u64", "UInt64", "BigInteger::of('18446744073709551615')"]
 	, ["i8", "Int8", "-128"], ["i16", "Int16", "-32768"]
 	, ["i32", "Int32", "-2147483647 - 1"]
-	, ["i64", "Int64", "BigInteger::fromDecimal('-9223372036854775808')"]
-	, ["nat", "Nat", `BigInteger::fromDecimal('${(1n << 4096n) + 1n}')`]
-	, ["integer", "Int", `BigInteger::fromDecimal('-${1n << 4096n}')`]
+	, ["i64", "Int64", "BigInteger::of('-9223372036854775808')"]
+	, ["nat", "Nat", `BigInteger::of('${(1n << 4096n) + 1n}')`]
+	, ["integer", "Int", `BigInteger::of('-${1n << 4096n}')`]
 	, ["f32", "Float32", "-0.0"], ["f64", "Float", "-0.0"]
 	, ["text", "String", '"a\\0λ🌿"']
 	, ["bytes", "ByteArray", 'Bytes::fromString("\\0\\xff\\x80")']
 ];
 const fields = name => name === "Willow" ? phpWasmOrdinaryScalars : [...phpWasmOrdinaryScalars].reverse();
-const big = value => `BigInteger::fromDecimal('${value}')`;
+const big = value => `BigInteger::of('${value}')`;
 const integerEdges = [31n, 32n, 53n, 63n].flatMap(bits => {
 	const value = 1n << bits;
 	return [value - 1n, value, value + 1n];
@@ -94,7 +94,8 @@ export const phpWasmOrdinaryConsumer = (name, { strict = false } = {}) => `<?php
 declare(strict_types=${strict ? 1 : 0});
 namespace Test${name};
 require_once '/${name}/src/Api.php';
-use Lean${name}\\{BigInteger, Bytes, Leaf, Packet, Word, EmptyValue};
+use Brick\\Math\\BigInteger;
+use Lean${name}\\{Bytes, Leaf, Packet, Word, EmptyValue};
 function check($condition, $message = 'Check failed') { if (!$condition) throw new \\RuntimeException($message); }
 function same($a, $b) {
     check(get_debug_type($a) === get_debug_type($b), 'Value types differ');
@@ -113,7 +114,7 @@ function rejects($call, $class = \\Throwable::class) {
     throw new \\RuntimeException('Expected rejection');
 }
 check(PHP_INT_SIZE === 4);
-rejects(fn() => same([BigInteger::fromDecimal('1')], [BigInteger::fromDecimal('2')]));
+rejects(fn() => same([BigInteger::of('1')], [BigInteger::of('2')]));
 rejects(fn() => same(Bytes::fromString('a'), Bytes::fromString('b')));
 rejects(fn() => same([-0.0], [0.0]));
 same([NAN], [NAN]);
@@ -134,7 +135,7 @@ function exactValue($label, $value, $expected) {
 }
 ${phpWasmPrimitiveVectors.map(({ label, value, expected }) => `exactValue('${label}', ${value}, ${expected});`).join("\n")}
 foreach ([str_repeat('9', 16384), '-' . str_repeat('9', 16384)] as $text) {
-    $value = BigInteger::fromDecimal($text);
+    $value = BigInteger::of($text);
     exactValue('integer', $value, $value);
     if ($text[0] !== '-') exactValue('nat', $value, $value);
 }
@@ -150,19 +151,19 @@ rejects(fn() => $result->rows = []);
 $other = new Packet(title: 'other', leaf: $leaf, rows: []);
 same(\\Lean${name}\\choose($packet, $other, false), $other);
 same(\\Lean${name}\\echo_rows([[$leaf], []]), [[$leaf], []]);
-$word = new Word(BigInteger::fromDecimal('${name === "Willow" ? "4294967295" : "18446744073709551615"}'));
+$word = new Word(BigInteger::of('${name === "Willow" ? "4294967295" : "18446744073709551615"}'));
 same(\\Lean${name}\\echo_word($word), $word);
 same(\\Lean${name}\\echo_empty(new EmptyValue()), new EmptyValue());
 same(\\Lean${name}\\array_empty([new EmptyValue(), new EmptyValue()]), [new EmptyValue(), new EmptyValue()]);
 same(\\Lean${name}\\answer(), ${name === "Willow" ? 17 : 29});
-$word = BigInteger::fromDecimal('4294967295');
+$word = BigInteger::of('4294967295');
 same(\\Lean${name}\\matrix([$word]), [[$word], [$word]]);
 same(\\Lean${name}\\grow("hello\\0λ"), ["hello\\0λ", "hello\\0λ"]);
-same(\\Lean${name}\\replicate(BigInteger::fromDecimal('4')), [7, 7, 7, 7]);
-same((string) \\Lean${name}\\double_nat(BigInteger::fromDecimal('${(1n << 4096n) + 1n}')), '${(1n << 4097n) + 2n}');
-${[0n, 4294967295n, 4294967296n, (1n << 4096n) + 123457n].map(value => `same((string) \\Lean${name}\\nat_low_word(BigInteger::fromDecimal('${value}')), '${value & 0xffffffffn}');`).join("\n")}
-foreach (['0', '1', '4294967295', '18446744073709551615', str_repeat('9', 16384)] as $text) same((string) \\Lean${name}\\echo_nat(BigInteger::fromDecimal($text)), $text);
-foreach (['0', '-1', '9223372036854775807', '-9223372036854775808'] as $text) same((string) \\Lean${name}\\echo_i64(BigInteger::fromDecimal($text)), $text);
+same(\\Lean${name}\\replicate(BigInteger::of('4')), [7, 7, 7, 7]);
+same((string) \\Lean${name}\\double_nat(BigInteger::of('${(1n << 4096n) + 1n}')), '${(1n << 4097n) + 2n}');
+${[0n, 4294967295n, 4294967296n, (1n << 4096n) + 123457n].map(value => `same((string) \\Lean${name}\\nat_low_word(BigInteger::of('${value}')), '${value & 0xffffffffn}');`).join("\n")}
+foreach (['0', '1', '4294967295', '18446744073709551615', str_repeat('9', 16384)] as $text) same((string) \\Lean${name}\\echo_nat(BigInteger::of($text)), $text);
+foreach (['0', '-1', '9223372036854775807', '-9223372036854775808'] as $text) same((string) \\Lean${name}\\echo_i64(BigInteger::of($text)), $text);
 foreach (['f32', 'f64'] as $label) {
     $call = 'Lean${name}\\\\echo_' . $label;
     check(is_nan($call(NAN))); same($call(INF), INF); same($call(-INF), -INF);
@@ -174,16 +175,16 @@ foreach ([
     ['u8', -1, \\ValueError::class], ['u8', 256, \\ValueError::class],
     ['u16', -1, \\ValueError::class], ['u16', 65536, \\ValueError::class],
     ['u32', 1, \\TypeError::class], ['u32', 2147483648.0, \\TypeError::class],
-    ['u32', BigInteger::fromDecimal('-1'), \\ValueError::class],
-    ['u32', BigInteger::fromDecimal('4294967296'), \\ValueError::class],
-    ['u64', BigInteger::fromDecimal('-1'), \\ValueError::class],
-    ['u64', BigInteger::fromDecimal('18446744073709551616'), \\ValueError::class],
+    ['u32', BigInteger::of('-1'), \\ValueError::class],
+    ['u32', BigInteger::of('4294967296'), \\ValueError::class],
+    ['u64', BigInteger::of('-1'), \\ValueError::class],
+    ['u64', BigInteger::of('18446744073709551616'), \\ValueError::class],
     ['i8', -129, \\ValueError::class], ['i8', 128, \\ValueError::class],
     ['i16', -32769, \\ValueError::class], ['i16', 32768, \\ValueError::class],
     ['i32', 2147483648.0, \\TypeError::class], ['i32', -2147483649.0, \\TypeError::class],
-    ['i64', BigInteger::fromDecimal('-9223372036854775809'), \\ValueError::class],
-    ['i64', BigInteger::fromDecimal('9223372036854775808'), \\ValueError::class],
-    ['nat', BigInteger::fromDecimal('-1'), \\ValueError::class], ['integer', '1', \\TypeError::class],
+    ['i64', BigInteger::of('-9223372036854775809'), \\ValueError::class],
+    ['i64', BigInteger::of('9223372036854775808'), \\ValueError::class],
+    ['nat', BigInteger::of('-1'), \\ValueError::class], ['integer', '1', \\TypeError::class],
     ['f32', 1, \\TypeError::class], ['f64', '1.0', \\TypeError::class],
     ['text', "\\xff", \\ValueError::class], ['text', "\\xc0\\x80", \\ValueError::class],
     ['text', "\\xed\\xa0\\x80", \\ValueError::class], ['bytes', 'bytes', \\TypeError::class]
@@ -194,11 +195,13 @@ foreach ([
     rejects(fn() => leafValue($label, $value), $class);
     same(\\Lean${name}\\answer(), ${name === "Willow" ? 17 : 29});
 }
-rejects(fn() => BigInteger::fromDecimal(str_repeat('9', 16385)), \\ValueError::class);
-foreach (['01', '-0', '+1', '1e3', ' 1'] as $text) rejects(fn() => BigInteger::fromDecimal($text), \\ValueError::class);
+rejects(fn() => \\Lean${name}\\echo_nat(BigInteger::of(str_repeat('9', 16385))), \\ValueError::class);
+foreach (['01' => '1', '-0' => '0', '+1' => '1', '1e3' => '1000'] as $text => $expected) same((string) \\Lean${name}\\echo_nat(BigInteger::of($text)), $expected);
+same((string) \\Lean${name}\\echo_nat(BigInteger::of('4294967295')->plus(1)), '4294967296');
+${name === "Aspen" ? "same((string) \\LeanAspen\\echo_nat(\\LeanWillow\\echo_nat(BigInteger::of('18446744073709551616')))->plus(1), '18446744073709551617');" : ""}
 rejects(fn() => \\Lean${name}\\echo_u32(1), \\TypeError::class);
-rejects(fn() => \\Lean${name}\\echo_u32(BigInteger::fromDecimal('4294967296')), \\ValueError::class);
-rejects(fn() => \\Lean${name}\\echo_i64(BigInteger::fromDecimal('-9223372036854775809')), \\ValueError::class);
+rejects(fn() => \\Lean${name}\\echo_u32(BigInteger::of('4294967296')), \\ValueError::class);
+rejects(fn() => \\Lean${name}\\echo_i64(BigInteger::of('-9223372036854775809')), \\ValueError::class);
 rejects(fn() => \\Lean${name}\\echo_f64(1), \\TypeError::class);
 rejects(fn() => \\Lean${name}\\echo_text("\\xff"), \\ValueError::class);
 rejects(fn() => \\Lean${name}\\array_u8([1 => 1]), \\TypeError::class);

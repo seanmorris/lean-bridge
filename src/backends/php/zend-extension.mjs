@@ -113,8 +113,8 @@ const zendSource = (ir, projection, shape) => {
 	const callCallback = projection.lifecycle.find(operation => operation.kind === "callable-call").transportMethod;
 	const closeCallback = projection.lifecycle.find(operation => operation.kind === "callable-close").transportMethod;
 	const wide = projection.operations.find(operation => operation.id === "lean:Alpha.Box.read").result.type.phpType !== "int";
-	const uint32Argument = name => wide ? `ZEND_ARG_OBJ_INFO(0, ${name}, ${namespace}\\\\BigInteger, 0)` : `ZEND_ARG_TYPE_INFO(0, ${name}, IS_LONG, 0)`;
-	const uint32Return = (name, count) => wide ? `ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(${name}, 0, ${count}, ${namespace}\\\\BigInteger, 0)` : `ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(${name}, 0, ${count}, IS_LONG, 0)`;
+	const uint32Argument = name => wide ? `ZEND_ARG_OBJ_INFO(0, ${name}, Brick\\\\Math\\\\BigInteger, 0)` : `ZEND_ARG_TYPE_INFO(0, ${name}, IS_LONG, 0)`;
+	const uint32Return = (name, count) => wide ? `ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(${name}, 0, ${count}, Brick\\\\Math\\\\BigInteger, 0)` : `ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(${name}, 0, ${count}, IS_LONG, 0)`;
 	return `#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -308,17 +308,16 @@ static zend_result make_bytes(const uint8_t *data, size_t length, zval *result)
 static zend_result uint32_input(zval *value, uint32_t *out)
 {
     ZVAL_DEREF(value);
-${wide ? `    zend_class_entry *ce = lookup_class("${namespace}\\\\BigInteger");
+${wide ? `    zend_class_entry *ce = lookup_class("Brick\\\\Math\\\\BigInteger");
     if (ce == NULL) return FAILURE;
     if (Z_TYPE_P(value) != IS_OBJECT || Z_OBJCE_P(value) != ce) {
         zend_type_error("UInt32 requires BigInteger"); return FAILURE;
     }
-    zval rv;
-    zval *decimal = zend_read_property(ce, Z_OBJ_P(value), "decimal", sizeof("decimal") - 1, 1, &rv);
-    if (EG(exception)) return FAILURE;
-    if (Z_TYPE_P(decimal) != IS_STRING || Z_STRLEN_P(decimal) == 0 || Z_STRLEN_P(decimal) > 10) goto invalid;
-    const char *text = Z_STRVAL_P(decimal);
-    size_t length = Z_STRLEN_P(decimal);
+    zend_string *decimal = zval_get_string(value);
+    if (EG(exception)) { zend_string_release(decimal); return FAILURE; }
+    if (ZSTR_LEN(decimal) == 0 || ZSTR_LEN(decimal) > 10) goto invalid;
+    const char *text = ZSTR_VAL(decimal);
+    size_t length = ZSTR_LEN(decimal);
     if (length > 1 && text[0] == '0') goto invalid;
     uint64_t number = 0;
     for (size_t i = 0; i < length; ++i) {
@@ -327,8 +326,10 @@ ${wide ? `    zend_class_entry *ce = lookup_class("${namespace}\\\\BigInteger");
     }
     if (number > UINT32_MAX) goto invalid;
     *out = (uint32_t)number;
+    zend_string_release(decimal);
     return SUCCESS;
 invalid:
+    zend_string_release(decimal);
     zend_value_error("BigInteger must fit UInt32"); return FAILURE;` : `    if (Z_TYPE_P(value) != IS_LONG) {
         zend_type_error("UInt32 requires int"); return FAILURE;
     }
@@ -341,10 +342,10 @@ invalid:
 
 static zend_result uint32_result(uint32_t value, zval *out)
 {
-${wide ? `    zend_class_entry *ce = lookup_class("${namespace}\\\\BigInteger");
+${wide ? `    zend_class_entry *ce = lookup_class("Brick\\\\Math\\\\BigInteger");
     if (ce == NULL) return FAILURE;
-    zend_function *method = zend_hash_str_find_ptr(&ce->function_table, "fromdecimal", sizeof("fromdecimal") - 1);
-    if (method == NULL) { zend_throw_error(NULL, "BigInteger::fromDecimal is missing"); return FAILURE; }
+    zend_function *method = zend_hash_str_find_ptr(&ce->function_table, "of", sizeof("of") - 1);
+    if (method == NULL) { zend_throw_error(NULL, "BigInteger::of is missing"); return FAILURE; }
     char text[11];
     int length = snprintf(text, sizeof(text), "%" PRIu32, value);
     zval argument;

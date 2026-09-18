@@ -60,7 +60,6 @@ const sorted = values => [...values].sort((left, right) => left.localeCompare(ri
 
 const expectedExports = projection => [
 	...(projection.requiredCapabilities.includes("bytes-value-v1") ? [`${projection.package.namespace}\\Bytes`] : [])
-	, ...(projection.requiredCapabilities.includes("big-integer-value-v1") ? [`${projection.package.namespace}\\BigInteger`] : [])
 	, ...(projection.requiredCapabilities.includes("bridge-awaitable-v1") ? [`${projection.package.namespace}\\Awaitable`] : [])
 	, ...(projection.requiredCapabilities.includes("bridge-async-iterator-v1") ? [`${projection.package.namespace}\\AsyncIterator`] : [])
 	, ...projection.types
@@ -204,6 +203,7 @@ export const auditPhpPackage = (ir, files, options = {}) => {
 		composer.name !== projection.package.composerName
     || composer.version !== ir.component.version
     || composer.require?.php !== ">=8.2"
+    || composer.require?.["brick/math"] !== (projection.requiredCapabilities.includes("big-integer-value-v1") ? "1.0.0" : undefined)
     || composer.autoload?.["psr-4"]?.[namespacePrefix] !== "src/"
     || JSON.stringify(composer.autoload?.files) !== JSON.stringify(["src/functions.php"])
     || composer.extra?.["lean-bridge"]?.bindingIrSha256 !== hashBindingIr(ir)

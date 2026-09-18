@@ -23,17 +23,17 @@ export const copiedPhpDefinitions = model => {
  * @param model - Admitted public type names and copied shapes.
  */
 export const copiedPhpChecks = model => model.surface.copies.map(copy => {
-	const lines = [], name = copy.ref.name, publicType = `\\${model.namespace}\\${copy.publicType}`;
+	const lines = [], name = copy.ref.name, publicType = copy.publicType.startsWith("\\") ? copy.publicType : `\\${model.namespace}\\${copy.publicType}`;
 	if(name === "unit") lines.push("if ($value !== null) throw new \\TypeError('Unit requires null');");
 	else if(name === "bool") lines.push("if (!is_bool($value)) throw new \\TypeError('Bool requires bool');");
-	else if(/^(?:u?int)(?:8|16|32|64)$/.test(name) && copy.publicType !== "BigInteger")
+	else if(/^(?:u?int)(?:8|16|32|64)$/.test(name) && copy.publicType !== "\\Brick\\Math\\BigInteger")
 	{
 		const bits = Number(name.match(/\d+/)[0]), signed = name.startsWith("int");
 		lines.push("if (!is_int($value)) throw new \\TypeError('Expected an int without numeric coercion');");
 		if(bits !== 64) lines.push(`if ($value < ${signed ? -(2 ** (bits-1)) : 0} || $value > ${2 ** (signed ? bits-1 : bits) - 1}) throw new \\ValueError('Integer is outside the declared Lean range');`);
-	} else if(copy.publicType === "BigInteger")
+	} else if(copy.publicType === "\\Brick\\Math\\BigInteger")
 	{
-		lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected BigInteger');`, "$decimal = (string) $value;", `${publicType}::fromDecimal($decimal);`, "$budget->charge(strlen($decimal));");
+		lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected Brick Math BigInteger');`, "$decimal = (string) $value;", "if (strlen($decimal) > 16385 || strlen(ltrim($decimal, '-')) > 16384 || preg_match('/^(?:0|-?[1-9][0-9]*)$/D', $decimal) !== 1) throw new \\ValueError('BigInteger requires canonical decimal text of at most 16384 digits');", "$budget->charge(strlen($decimal));");
 		if(name !== "int" && name !== "int64") lines.push("if ($decimal[0] === '-') throw new \\ValueError('Expected an unsigned integer');");
 		if(name === "uint64") lines.push("if (strlen($decimal) > 20 || (strlen($decimal) === 20 && strcmp($decimal, '18446744073709551615') > 0)) throw new \\ValueError('Integer is outside the UInt64 range');");
 		if(name === "uint32") lines.push("if (strlen($decimal) > 10 || (strlen($decimal) === 10 && strcmp($decimal, '4294967295') > 0)) throw new \\ValueError('Integer is outside the UInt32 range');");
@@ -60,14 +60,14 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 	else if(name === "uint64")
 	{
 		input.push("$words = IntegerCodec::limbs((string) $value);", "\\FFI::memcpy(\\FFI::addr($out), pack('V2', $words[0] ?? 0, $words[1] ?? 0), 8);");
-		output.push(`return ${ns}BigInteger::fromDecimal(IntegerCodec::decimal(array_values(unpack('V2', pack('q', $value))), false));`);
+		output.push("return \\Brick\\Math\\BigInteger::of(IntegerCodec::decimal(array_values(unpack('V2', pack('q', $value))), false));");
 	} else if(["string", "bytes", "nat", "int"].includes(name))
 	{
 		if(name === "nat" || name === "int")
 		{
 			input.push("$decimal = (string) $value;", "$words = IntegerCodec::limbs($decimal);", "$scope->budget->charge(count($words), 32);", "$bytes = $words ? pack('V*', ...$words) : '';", "$out->length = count($words);");
 			if(name === "int") input.push("$out->negative = $decimal[0] === '-';");
-			output.push("if ($value->length > 1701) throw new \\ValueError('BigInteger decimal conversion limit exceeded');", "$bytes = $scope->read($value->data, $value->length * 4, 8);", `return ${ns}BigInteger::fromDecimal(IntegerCodec::decimal($bytes === '' ? [] : array_values(unpack('V*', $bytes)), ${name === "int" ? "$value->negative" : "false"}));`);
+			output.push("if ($value->length > 1701) throw new \\ValueError('BigInteger decimal conversion limit exceeded');", "$bytes = $scope->read($value->data, $value->length * 4, 8);", `return \\Brick\\Math\\BigInteger::of(IntegerCodec::decimal($bytes === '' ? [] : array_values(unpack('V*', $bytes)), ${name === "int" ? "$value->negative" : "false"}));`);
 		} else
 		{
 			input.push(`$bytes = ${name === "bytes" ? "$value->toString()" : "$value"};`, "$out->length = strlen($bytes);");

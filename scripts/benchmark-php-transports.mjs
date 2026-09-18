@@ -76,9 +76,9 @@ $autoloadStart = hrtime(true);
 require_once $autoload;
 $autoloadNanoseconds = hrtime(true) - $autoloadStart;
 
-function lean_bridge_benchmark_word(int $value): int|LeanAlpha\\BigInteger
+function lean_bridge_benchmark_word(int $value): int|Brick\\Math\\BigInteger
 {
-    return PHP_INT_SIZE === 4 ? LeanAlpha\\BigInteger::fromDecimal((string) $value) : $value;
+    return PHP_INT_SIZE === 4 ? Brick\\Math\\BigInteger::of((string) $value) : $value;
 }
 
 $firstStart = hrtime(true);

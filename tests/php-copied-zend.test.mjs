@@ -14,6 +14,7 @@ import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mj
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedZendFixture, zendAllocationFixture, zendAllocationHeader, zendProviderFixture, zendConsumerFixture } from "./helpers/php-copied-zend.mjs";
+import { brickMathMountSource } from "./helpers/brick-math.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ZEND_TEST === "1";
 const phpSource = process.env.LEAN_BRIDGE_PHP_SOURCE ?? join(process.cwd(), "build/php-wasm-sdk/php8.4-src");
@@ -27,8 +28,8 @@ test("copied Zend sources bind arbitrary functions to a checked integer-width co
 	const manifest = JSON.parse(files["copied-zend-manifest.json"]);
 	assert.equal(manifest.integerBits, 32);
 	assert.equal(manifest.exports.length, ir.declarations.length);
-	assert.match(files["src/Api.php"], /function echo_uint32\(mixed \$arg0\): BigInteger/);
-	assert.match(files["src/Api.php"], /function echo_int64\(mixed \$arg0\): BigInteger/);
+	assert.match(files["src/Api.php"], /function echo_uint32\(mixed \$arg0\): \\Brick\\Math\\BigInteger/);
+	assert.match(files["src/Api.php"], /function echo_int64\(mixed \$arg0\): \\Brick\\Math\\BigInteger/);
 	assert.doesNotMatch(files["src/Api.php"], /Alpha|FFI|dispatch|pointer/);
 	assert.doesNotMatch(files["src/Internal/Native.php"], /FFI|IntegerCodec/);
 	const native = generateCopiedPhpZendAdapter(ir, { integerBits: 64 });
@@ -92,6 +93,7 @@ let stdout = '', stderr = '';
 php.addEventListener('output', event => { for (const part of event.detail) stdout += part; });
 php.addEventListener('error', event => { for (const part of event.detail) stderr += part; });
 await php.binary;
+${brickMathMountSource()}
 ${packages.map(({ name, root, files }) => `await php.mkdir('/${name}'); await php.mkdir('/${name}/src'); await php.mkdir('/${name}/src/Internal');
 ${Object.keys(files).filter(path => path.endsWith(".php")).concat("consumer.php").map(path => `await php.writeFile('/${name}/${path}', await readFile(${JSON.stringify(join(root, path))}, 'utf8'));`).join("\n")}`).join("\n")}
 const status = await php.run("<?php require '/willow/consumer.php'; require '/aspen/consumer.php';");

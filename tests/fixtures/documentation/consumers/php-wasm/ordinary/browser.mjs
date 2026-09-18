@@ -19,8 +19,8 @@ try
 	});
 	const status = await php.run(String.raw`<?php
 require_once '${api.autoload}';
-use LeanWillow\BigInteger;
-echo LeanWillow\echo_u32(BigInteger::fromDecimal('4294967295'));
+use Brick\Math\BigInteger;
+echo LeanWillow\echo_u32(BigInteger::of('4294967295'));
 `);
 	if(status !== 0 || stderr) throw new Error(stderr || `PHP exited with status ${status}`);
 	output.dataset.state = 'ready';

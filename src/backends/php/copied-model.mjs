@@ -6,7 +6,8 @@
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const reserved = new Set("abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield bigint biginteger bytes leanbridgeerror internal this globals dispatch invoke".split(" "));
-const primitives = { unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: "BigInteger", int8: "int", int16: "int", int32: "int", int64: "int", nat: "BigInteger", int: "BigInteger", float32: "float", float64: "float", string: "string", bytes: "Bytes" };
+const bigInteger = "\\Brick\\Math\\BigInteger";
+const primitives = { unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: bigInteger, int8: "int", int16: "int", int32: "int", int64: "int", nat: bigInteger, int: bigInteger, float32: "float", float64: "float", string: "string", bytes: "Bytes" };
 
 /**
  * Require exact Composer coordinates, never silently rewrite author settings.
@@ -44,7 +45,7 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64 } = {}) => {
 			for(const field of copy.fields) if(reserved.has(field.name.toLowerCase())) fail(ir.declarations[0], `PHP field name is reserved: ${field.name}`);
 		}
 		copy.publicType = copy.record ? copy.publicName : copy.element ? "array" : primitives[copy.ref.name];
-		if(integerBits === 32 && ["uint32", "int64"].includes(copy.ref.name)) copy.publicType = "BigInteger";
+		if(integerBits === 32 && ["uint32", "int64"].includes(copy.ref.name)) copy.publicType = bigInteger;
 		copy.docType = copy.element ? `list<${copy.element.docType}>` : copy.publicType;
 		copy.ctype = copy.aggregate ? copy.name : copy.ref.name === "unit" ? "uint8_t" : copy.name;
 	}

@@ -26,6 +26,7 @@ import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { buildPhpWasmCompilerInputs, readVerifiedPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
 import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 import { tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
+import { brickMathMountSource } from "./helpers/brick-math.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -123,7 +124,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 			command: process.execPath
 			, args: [cli, "build", "--project", projectRoot, "--output", outputRoot, "--target", "php-wasm", "--json", "--progress", "none"]
 			, cwd: working
-			, env: environment });
+			, env: environment }).catch(error => { t.diagnostic(error.details?.stderr ?? error.message); throw error; });
 		const { result, status } = JSON.parse(response.stdout);
 		assert.equal(status, "ok"); assert.deepEqual(result.targets, ["php-wasm"]);
 		return { ...await readVerifiedPhpWasmCopiedComponent(join(outputRoot, "php-wasm/component"), runtime.identity), root: join(outputRoot, "php-wasm/component"), release: { output: join(outputRoot, "packages/php-wasm"), ...(await readVerifiedPhpWasmCopiedPackageSet(join(outputRoot, "packages/php-wasm"))) } };
@@ -241,6 +242,7 @@ let stdout = '', stderr = '';
 php.addEventListener('output', e => { for (const part of e.detail) stdout += part; });
 php.addEventListener('error', e => { for (const part of e.detail) stderr += part; });
 await php.binary;
+${brickMathMountSource()}
 ${components.map(({ name, root }) => `await php.mkdir('/${name}'); await php.mkdir('/${name}/src'); await php.mkdir('/${name}/src/Internal');
 ${["src/Api.php", "src/Internal/Native.php"].map(path => `await php.writeFile('/${name}/${path}', await readFile(${JSON.stringify(join(root, path))}, 'utf8'));`).join("\n")}
 await php.writeFile('/${name}/consumer.php', await readFile(${JSON.stringify(join(working, `${name}-consumer.php`))}, 'utf8'));`).join("\n")}

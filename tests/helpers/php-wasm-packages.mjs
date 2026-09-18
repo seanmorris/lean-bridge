@@ -14,6 +14,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { phpWasmOrdinaryConsumer } from "./php-wasm-ordinary.mjs";
 import { exerciseBrowserPhpWasmPackages } from "./php-wasm-browser.mjs";
 import { exercisePhpWasmLoadingFailures } from "./php-wasm-loading-failures.mjs";
+import { brickMathRepository } from "./brick-math.mjs";
 
 /**
  * Install both package ecosystems and exercise a compiler-free PHP-Wasm host.
@@ -43,7 +44,7 @@ export const exerciseInstalledPhpWasmPackages = async options => {
 	}
 	const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
 	await run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--legacy-peer-deps", ...npmArchives], consumer);
-	await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/php-wasm-consumer", config: { platform: { php: "8.4.1" } }, repositories: [{ "packagist.org": false }, ...composerEntries.map(entry => ({ type: "package", package: entry }))], require: Object.fromEntries(composerEntries.map(entry => [entry.name, entry.version])) }));
+	await saveLakeFile(consumer, "composer.json", canonicalJson({ name: "test/php-wasm-consumer", config: { platform: { php: "8.4.1" } }, repositories: [{ "packagist.org": false }, await brickMathRepository(join(consumer, "feed")), ...composerEntries.map(entry => ({ type: "package", package: entry }))], require: Object.fromEntries(composerEntries.map(entry => [entry.name, entry.version])) }));
 	await run(process.env.LEAN_BRIDGE_COMPOSER ?? "composer", ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], consumer, { ...process.env, COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(working, "composer-home"), COMPOSER_CACHE_DIR: join(working, "composer-cache") });
 	await rename(consumer, moved);
 	// Supply the pinned test host under its public package name for the exact guide file.

@@ -120,6 +120,7 @@ const profileManifest = Object.freeze({
 	, managed: Object.freeze(["managed-artifacts", "managed-generators", "managed-registry-package"])
 	, php: Object.freeze([
 		"php-generator", "php-native-package", "php-native-runtime", "php-projection"
+		, "php-brick-math"
 		, "php-transport-conformance"
 		, "php-wasm-adapter"
 		, "php-wasm-package"

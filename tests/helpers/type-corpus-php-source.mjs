@@ -61,7 +61,7 @@ export const corpusPhpWasmSettings = library => ({
  */
 export const corpusPhpRequest = (library, profile = "php-native", arrangement = "composer") => ({
 	module: library.phpModule, profile
-	, autoload: arrangement === "composer" ? "vendor/autoload.php" : "vendor/" + corpusPhpWasmSettings(library).composer.name + "/src/Api.php"
+	, autoload: arrangement === "composer" ? "vendor/autoload.php" : "vendor/" + corpusPhpWasmSettings(library).composer.name + "/bootstrap.php"
 	, operations: Object.fromEntries(library.operations.map((name, i) => [name, library.snakeOperations[i]]))
 	, signatures: corpusSignatures(library)
 	, cases: corpusCases(library).map(entry => corpusHostCase(entry, profile))

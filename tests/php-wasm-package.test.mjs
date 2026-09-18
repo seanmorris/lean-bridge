@@ -98,9 +98,12 @@ test("one PHP-Wasm manifest generates the descriptor, Composer surface, stubs, d
   assert.ok(descriptor.php.composerFiles.includes("composer/src/Box.php"));
   assert.ok(descriptor.php.composerFiles.includes("composer/src/LeanBeta/functions.php"));
   assert.ok(descriptor.php.composerFiles.includes("composer/stubs/lean_beta.php"));
-  assert.match(files["composer/src/LeanBeta/functions.php"], /function read\(Box \$box\): \\LeanAlpha\\BigInteger/);
-  assert.ok(files["composer/src/BigInteger.php"]);
-  assert.match(files["composer/src/Box.php"], /function __construct\(\\LeanAlpha\\BigInteger \$value\)/);
+  assert.match(files["composer/src/LeanBeta/functions.php"], /function read\(Box \$box\): \\Brick\\Math\\BigInteger/);
+  assert.equal(files["composer/src/BigInteger.php"], undefined);
+  assert.ok(files["composer/dependencies/brick-math/src/BigInteger.php"]);
+  assert.match(files["composer/dependencies/brick-math/LICENSE"], /Permission is hereby granted/);
+  assert.equal(JSON.parse(files["composer/composer.json"]).require["brick/math"], "1.0.0");
+  assert.match(files["composer/src/Box.php"], /function __construct\(\\Brick\\Math\\BigInteger \$value\)/);
   assert.match(files["composer/src/Internal/Validators.php"], /4294967295/);
   assert.match(files["composer/src/LeanBeta/functions.php"], /function identity\(Box \$box\): Box/);
   assert.doesNotMatch(files["composer/src/LeanBeta/functions.php"], /\bccall\b|\bcwrap\b|handle|pointer/);

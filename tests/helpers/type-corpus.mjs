@@ -522,6 +522,7 @@ export const corpusIdentity = async (repository, catalog) => {
 	paths.push("tests/helpers/type-corpus-dotnet-source.mjs", "tests/helpers/type-corpus-dotnet.mjs", "tests/fixtures/type-corpus/consumers/dotnet.cs");
 	paths.push("tests/helpers/type-corpus-jvm-source.mjs", "tests/helpers/type-corpus-jvm.mjs", "tests/helpers/type-corpus-jvm-tools.mjs", "tests/fixtures/type-corpus/consumers/Wire.java");
 	paths.push("tests/helpers/type-corpus-php-source.mjs", "tests/helpers/type-corpus-php.mjs", "tests/fixtures/type-corpus/consumers/php.php");
+	paths.push("tests/helpers/brick-math.mjs", "src/backends/php/brick-math.mjs", "src/backends/php/brick-math.source.json");
 	paths.push(...["php-wasm", "php-wasm-node", "php-wasm-browser"].map(name => "tests/fixtures/type-corpus/consumers/" + name + ".mjs"));
 	paths.push(...["php-wasm", "php-wasm-install", "php-wasm-browser", "php-wasm-evidence", "php-wasm-fixture"].map(name => "tests/helpers/type-corpus-" + name + ".mjs"));
 	paths.push("tests/fixtures/type-corpus/consumers/wit.h", "tests/fixtures/type-corpus/wasmtime-c-api-files.json", ...["wit", "wit-source", "wit-evidence", "wit-fixture"].map(name => "tests/helpers/type-corpus-" + name + ".mjs"));

@@ -8,6 +8,8 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { composerProbe } from "./type-corpus-php.mjs";
+import { validateBrickMathInstall } from "./brick-math.mjs";
+import { bundledBrickMath } from "../../src/backends/php/brick-math.mjs";
 import { corpusPhpRequestJson, corpusPhpSource, corpusPhpWasmSettings, phpWasmRuntimeCases } from "./type-corpus-php-source.mjs";
 
 export const phpWasmDriverHashes = Object.fromEntries(await Promise.all([
@@ -72,6 +74,10 @@ export const validatePhpWasmEvidence = (run, library, validate) => {
 	const componentRoot = "node_modules/" + run.archive.name + "/compiled/";
 	const runtimeRoot = "node_modules/" + run.runtimeArchive.name + "/compiled/";
 	const composerRoot = "vendor/" + run.composerArchive.name + "/";
+	const bundledRoot = "node_modules/" + run.archive.name + "/php/";
+	for(const [path, source] of Object.entries(bundledBrickMath()))
+		assert.deepEqual(evidence.deployment[bundledRoot + path], { bytes: Buffer.byteLength(source), sha256: sha256(source) });
+	assert.ok(evidence.deployment[bundledRoot + "bootstrap.php"]);
 	const component = evidence.component, runtime = evidence.runtime;
 	assert.equal(evidence.deployment[componentRoot + "php-wasm-component.json"].sha256, sha256(canonicalJson(component)));
 	assert.equal(evidence.deployment[runtimeRoot + "runtime.json"].sha256, sha256(canonicalJson(runtime)));
@@ -123,16 +129,17 @@ export const validatePhpWasmEvidence = (run, library, validate) => {
 	assert.equal(composer.installedSha256, sha256(composer.installedText)); assert.deepEqual(JSON.parse(composer.installedText), composer.installed);
 	assert.deepEqual(composer.manifest.config, { "allow-plugins": false, platform: { php: "8.4.1" } });
 	assert.deepEqual(composer.manifest.require, { [run.composerArchive.name]: run.composerArchive.version });
-	assert.equal(composer.manifest.repositories.length, 2);
+	assert.equal(composer.manifest.repositories.length, 3);
+	validateBrickMathInstall(composer, evidence.deployment);
 	assert.deepEqual(composer.manifest.repositories[0], { "packagist.org": false });
-	const selected = composer.manifest.repositories[1];
+	const selected = composer.manifest.repositories[2];
 	assert.equal(selected.type, "package"); assert.equal(selected.package.name, run.composerArchive.name);
-	assert.deepEqual(selected.package.require, { php: ">=8.4 <8.5" });
+	assert.deepEqual(selected.package.require, { php: ">=8.4 <8.5", "brick/math": "1.0.0" });
 	assert.deepEqual(selected.package.autoload, { files: ["src/Api.php"] });
 	assert.equal(selected.package.dist.type, "zip"); assert.match(selected.package.dist.url, /^file:\/\/\/.+\/project\/feed\/api\.zip$/);
 	assert.match(selected.package.dist.shasum, /^[a-f0-9]{40}$/);
-	assert.equal(composer.lock.packages.length, 1); assert.deepEqual(composer.lock["packages-dev"], []); assert.equal(composer.installed.packages.length, 1);
-	for(const pkg of [composer.lock.packages[0], composer.installed.packages[0]])
+	assert.equal(composer.lock.packages.length, 2); assert.deepEqual(composer.lock["packages-dev"], []); assert.equal(composer.installed.packages.length, 2);
+	for(const pkg of [composer.lock.packages, composer.installed.packages].map(list => list.find(item => item.name === run.composerArchive.name)))
 	{
 		assert.equal(pkg.name, run.composerArchive.name); assert.equal(pkg.version, run.composerArchive.version);
 		assert.deepEqual(pkg.dist, selected.package.dist);
@@ -178,10 +185,17 @@ export const validatePhpWasmEvidence = (run, library, validate) => {
 		for(const path of [composerRoot + "src/Api.php", composerRoot + "src/Internal/Native.php"]) assert.equal(included[path], evidence.deployment[path].sha256);
 		for(const [path, value] of Object.entries(included))
 		{
-			assert.ok(path === mode + ".php" || path.startsWith("vendor/")); assert.equal(value, evidence.deployment[path]?.sha256);
+			assert.ok(path === mode + ".php" || path.startsWith("vendor/"));
+			const relative = path.startsWith(composerRoot) ? path.slice(composerRoot.length) : null;
+			const deployed = arrangement !== "composer" && relative && (relative === "bootstrap.php" || relative.startsWith("dependencies/"))
+				? bundledRoot + relative : path;
+			assert.equal(value, evidence.deployment[deployed]?.sha256, `Included PHP source differs: ${arrangement}/${path}`);
 			if(arrangement !== "composer") assert.ok(path === mode + ".php" || path.startsWith(composerRoot));
 		}
 		if(arrangement === "composer") assert.equal(included["vendor/autoload.php"], evidence.deployment["vendor/autoload.php"].sha256);
+		else assert.equal(included[composerRoot + "bootstrap.php"], evidence.deployment[bundledRoot + "bootstrap.php"].sha256);
+		const integerPath = arrangement === "composer" ? "vendor/brick/math/src/BigInteger.php" : "dependencies/brick-math/src/BigInteger.php";
+		assert.equal(included[(arrangement === "composer" ? "" : composerRoot) + integerPath], evidence.deployment[(arrangement === "composer" ? "" : bundledRoot) + integerPath].sha256);
 		assert.deepEqual(observation.errors, Object.entries(phpWasmRuntimeCases).flatMap(([id, exception]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, exception, recovery: run.oracle.dependency }))));
 		if(realm === "chromium")
 		{
