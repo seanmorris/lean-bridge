@@ -40,6 +40,13 @@ const fromPrimitive = type => {
 	const { name } = type;
 	if(name === "unit") return 'lbp_plain(aTHX_ value); if (SvOK(value)) croak("Unit requires undef"); return lean_box(0);';
 	if(name === "bool") return 'lbp_plain(aTHX_ value); if (!SvIsBOOL(value)) croak("Bool requires true() or false()"); return SvTRUE(value) ? 1 : 0;';
+	if(name === "char") return `
+    lbp_plain(aTHX_ value); if (!SvPOK(value)) croak("Char requires a text scalar");
+    STRLEN length, consumed; const U8 *bytes = (const U8 *)SvPVutf8(value, length);
+    if (!length || length > 4 || !is_utf8_string_flags(bytes, length, UTF8_DISALLOW_SURROGATE | UTF8_DISALLOW_SUPER)) croak("Char requires one Unicode scalar");
+    UV point = utf8_to_uvchr_buf(bytes, bytes + length, &consumed);
+    if (consumed != length) croak("Char requires one Unicode scalar");
+    return (uint32_t)point;`;
 	if(/^uint/.test(name)) return `return (${nativeCType(type)})lbp_unsigned(aTHX_ value, UINT${name.match(/\d+/)[0]}_MAX);`;
 	if(/^int\d/.test(name))
 	{
@@ -67,6 +74,10 @@ const toPrimitive = type => {
 	const { name } = type;
 	if(name === "unit") return "return &PL_sv_undef;";
 	if(name === "bool") return "return boolSV(value != 0);";
+	if(name === "char") return `
+    if (value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) croak("Invalid native Unicode scalar");
+    U8 bytes[UTF8_MAXBYTES]; U8 *end = uvchr_to_utf8(bytes, value);
+    SV *result = lbp_mortal(newSVpvn((const char *)bytes, end - bytes)); SvUTF8_on(result); return result;`;
 	if(name.startsWith("uint")) return "return lbp_mortal(newSVuv(value));";
 	if(/^int\d/.test(name)) return `return lbp_mortal(newSViv((int${name.match(/\d+/)[0]}_t)value));`;
 	if(name === "float32" || name === "float64") return "return lbp_mortal(newSVnv(value));";

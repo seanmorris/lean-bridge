@@ -330,6 +330,7 @@ jobs:
           export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
           source scripts/env.sh
           npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=php-native node --test tests/native-char.test.mjs
           test -s build/type-corpus/php-native.json
           test -s build/type-corpus/reviewed-native-php-native.json
       - name: Upload installed PHP corpus observations
@@ -340,6 +341,7 @@ jobs:
           path: |
             build/type-corpus/php-native.json
             build/type-corpus/reviewed-native-php-native.json
+            build/char-native/php-native.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -377,6 +379,7 @@ jobs:
           source scripts/env.sh
           npm run test:type-corpus:php-wasm
           npm run test:type-corpus:reviewed-php-wasm
+          LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs
           test -s build/type-corpus/php-wasm.json
           test -s build/type-corpus/reviewed-wasm-php-wasm.json
       - name: Upload PHP-Wasm corpus evidence
@@ -387,6 +390,7 @@ jobs:
           path: |
             build/type-corpus/php-wasm.json
             build/type-corpus/reviewed-wasm-php-wasm.json
+            build/char-native/php-wasm.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -474,6 +478,7 @@ jobs:
         run: |
           source scripts/env.sh
           npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=c,cpp node --test tests/native-char.test.mjs
           test -s build/type-corpus/c-cpp.json
           test -s build/type-corpus/reviewed-native-c-cpp.json
       - name: Upload installed C and C++ corpus observations
@@ -484,6 +489,7 @@ jobs:
           path: |
             build/type-corpus/c-cpp.json
             build/type-corpus/reviewed-native-c-cpp.json
+            build/char-native/c-cpp.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -502,6 +508,7 @@ jobs:
         run: |
           source scripts/env.sh
           npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=python node --test tests/native-char.test.mjs
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -512,6 +519,7 @@ jobs:
           path: |
             build/type-corpus/python.json
             build/type-corpus/reviewed-native-python.json
+            build/char-native/python.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -535,6 +543,7 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
           npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=rust node --test tests/native-char.test.mjs
           test -s build/type-corpus/rust.json
           test -s build/type-corpus/reviewed-native-rust.json
       - name: Upload installed Rust corpus observations
@@ -545,6 +554,7 @@ jobs:
           path: |
             build/type-corpus/rust.json
             build/type-corpus/reviewed-native-rust.json
+            build/char-native/rust.json
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
@@ -637,6 +647,7 @@ jobs:
           export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
           source scripts/env.sh
           npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=dotnet node --test tests/native-char.test.mjs
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
@@ -647,6 +658,7 @@ jobs:
           path: |
             build/type-corpus/dotnet.json
             build/type-corpus/reviewed-native-dotnet.json
+            build/char-native/dotnet.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -681,6 +693,7 @@ jobs:
           export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
           source scripts/env.sh
           npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=java,kotlin node --test tests/native-char.test.mjs
           test -s build/type-corpus/java-kotlin.json
           test -s build/type-corpus/reviewed-native-java-kotlin.json
       - name: Upload installed Java and Kotlin corpus observations
@@ -691,6 +704,7 @@ jobs:
           path: |
             build/type-corpus/java-kotlin.json
             build/type-corpus/reviewed-native-java-kotlin.json
+            build/char-native/java-kotlin.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -715,6 +729,7 @@ jobs:
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           source scripts/env.sh
           npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=ruby node --test tests/native-char.test.mjs
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
@@ -725,6 +740,7 @@ jobs:
           path: |
             build/type-corpus/ruby.json
             build/type-corpus/reviewed-native-ruby.json
+            build/char-native/ruby.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -814,6 +830,7 @@ jobs:
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
           source scripts/env.sh
           npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=wit-wasi node --test tests/native-char.test.mjs
           test -s build/type-corpus/wit-wasi.json
           test -s build/type-corpus/reviewed-native-wit-wasi.json
       - name: Record WIT and WASI observations
@@ -831,6 +848,7 @@ jobs:
           path: |
             build/type-corpus/wit-wasi.json
             build/type-corpus/reviewed-native-wit-wasi.json
+            build/char-native/wit-wasi.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

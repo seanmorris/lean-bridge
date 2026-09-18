@@ -53,6 +53,7 @@ export const nativeCType = type => {
 	if(type.kind !== "primitive") return "lean_object *";
 	if(/^u?int(?:8|16|32|64)$/.test(type.name)) return `uint${type.name.match(/\d+/)[0]}_t`;
 	if(type.name === "bool") return "uint8_t";
+	if(type.name === "char") return "uint32_t";
 	if(type.name === "float32") return "float";
 	if(type.name === "float64") return "double";
 	return "lean_object *";
@@ -82,7 +83,7 @@ const callbackLeanDefault = type => {
 	if(type.kind === "array") return "#[]";
 	if(type.kind === "record") return `(_root_.${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values");
-	return { unit: "()", bool: "false", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
+	return { unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
 };
 
 const closed = (value, fields, label) => {

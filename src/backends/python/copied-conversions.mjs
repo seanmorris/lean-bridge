@@ -83,6 +83,10 @@ export const copiedPythonConversions = model => model.surface.copies.map(copy =>
 	{
 		input.push('if type(value) is not bool: raise TypeError("Bool requires bool")', "return value");
 		output.push("return bool(value)");
+	} else if(name === "char")
+	{
+		input.push('if type(value) is not str: raise TypeError("Char requires a string")', 'if len(value) != 1 or 0xd800 <= ord(value) <= 0xdfff: raise ValueError("Char requires one Unicode scalar")', "return ord(value)");
+		output.push('if value > 0x10ffff or 0xd800 <= value <= 0xdfff: raise LeanBridgeError(5, "Invalid native Unicode scalar")', "return chr(value)");
 	} else if(/^(?:u?int)(?:8|16|32|64)$/.test(name))
 	{
 		const signed = name.startsWith("int"), bits = Number(name.match(/\d+/)[0]);

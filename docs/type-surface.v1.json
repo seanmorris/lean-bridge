@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.4.0",
+  "contractVersion": "0.5.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,11 +157,234 @@
   ],
   "evidence": [
     {
+      "id": "native-installed-char",
+      "kind": "installed",
+      "revision": "062757aee17110bf7631b98ab30b2d2888079ad6",
+      "command": "LEAN_BRIDGE_CHAR_PROFILES=c,cpp,python,rust node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=perl,php-native,wit-wasi node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs",
+      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json.",
+      "files": [
+        {
+          "path": "docs/evidence/char-native-20260918.json",
+          "sha256": "8411854a359b72b4d32219894f2150053f1f902d5e8ac3f5ba53617e052ce572"
+        },
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "ae49d996fd8b0c3e611b8b3ab528b326717082dea19bf6123a8a698464fb9c65"
+        },
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "48a2beb9f22500802e73202b4eb46cbd9415d7e7aaea0f388515daeb39541d6d"
+        },
+        {
+          "path": "docs/evidence/char-native-20260918.md",
+          "sha256": "20c96d65d61c7ce236f0d4904e333d81f619ba150ff24bad49e965fab3185ed6"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "04dccd69494759676636be8ace912096448601e5f2a76d23bf85d647bcd9d3b4"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "e3ee18d5fe5876af637d4f02c09422ee4fafeab8b37ee5a0514ed23b5ef20356"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "9c76eaaada3f19a18fffb0f94472ad0a0bfcd3b238746b25577143be6dca730d"
+        },
+        {
+          "path": "src/backends/dotnet/copied-conversions.mjs",
+          "sha256": "e7f8a41255931923ab57e56fea53de48c8a802bb96f2800fe888a276dcf8363e"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "eb881ac7bf25eb03305da505d4c9cb0b65d2d4b5888276ca92f0892d96ddbf7e"
+        },
+        {
+          "path": "src/backends/jvm/copied-conversions.mjs",
+          "sha256": "77c508a6895cfc99dc5917010d82029cfc511a2c0cd73de90481f356a7ec9c16"
+        },
+        {
+          "path": "src/backends/jvm/copied-model.mjs",
+          "sha256": "4541039ac26365f88c38ea0cf6c8be955b04c5dd7692a29b4425d1e1a9b9c29f"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "5043c34297c48a5aee5c6f67b30c77b4eeceee65e366d4b7678aa2c13bf46eec"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "7113b896fb69e080d30f3c94eb6d12d91b02bab53ddb7491c5a0dfa9d1986afb"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "b37a212bd95d7b991f34e293a24372970d4845c41f0a8b9f242ed25463edc8e8"
+        },
+        {
+          "path": "src/backends/php/copied-support.mjs",
+          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+        },
+        {
+          "path": "src/backends/php/copied-zend-conversions.mjs",
+          "sha256": "a766f8f976d332c2d4d0a479b570dcca417d41293013d75b48b17d195196229c"
+        },
+        {
+          "path": "src/backends/php/copied-zend-support.mjs",
+          "sha256": "0749c00f3c575e9d45c751c91a3b02aec82957e4ab1b9e691e67cb792f4b4809"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "bfca078b55865a9df6eef48d96317c8aee9cc9814eee0f7f55376b0b98c2f75c"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "326d80269da62a025e23d7680225abd6508b06397916f5b96dce75c88645cfe3"
+        },
+        {
+          "path": "src/backends/ruby/copied-conversions.mjs",
+          "sha256": "eebb06436edd84fb854b70787aff45c312302e85e374a57c068731af0ea9d5eb"
+        },
+        {
+          "path": "src/backends/ruby/copied-model.mjs",
+          "sha256": "416f6900203d80b13fa1ccf270220000987581d2bf623139bf61d4ffaaa28d2d"
+        },
+        {
+          "path": "src/backends/rust/copied-conversions.mjs",
+          "sha256": "1a27ee3d6bffd5d5eb2c387ad9909af95a7a853283a79adef701df199247ff32"
+        },
+        {
+          "path": "src/backends/rust/copied-model.mjs",
+          "sha256": "4a95d462285524f8418e0bfb7e32eaa9d74d873568b87761c8c6ca47ded9b19d"
+        },
+        {
+          "path": "src/backends/wit/copied-component.mjs",
+          "sha256": "64c570e0925076d15daa55699e385d95f31b419e2ddbddb3a4c14782b217d5ba"
+        },
+        {
+          "path": "src/backends/wit/copied-conversions.mjs",
+          "sha256": "1588c92f54ed98f699e8cb6b70879bde9bb624a54dd30c962d4f93107e2f01f8"
+        },
+        {
+          "path": "src/backends/wit/copied-model.mjs",
+          "sha256": "e3c385310893dff4609b749c4b6bc0ef5603e15dfd9a98015596cec6ab05c766"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "8adef523fc67ae754c9c715e25de5a9bf52670517ea566f771114381affe7000"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/c.c",
+          "sha256": "4d554eb52e7e39e03203467d78b4cf439483f802321c355fffd2b5b37d6023b8"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/cpp.cpp",
+          "sha256": "3bf48c8c989e0729c5a09fae1e9adfb4567a701f5fc22d6d8039a8aae239196c"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/dotnet.cs",
+          "sha256": "43bb25ae16fa1825d78dd2bf8ba2089e52272d57baf62ad42d5567188668929d"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/java.java",
+          "sha256": "27cdffdfb33672f905f064238863214d79ffd9d34defafc24b99025d734c2a98"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/kotlin.kt",
+          "sha256": "62d22b01f51b8f3d06aeb398eefd7d128b30536adc0bfc97dfed2848e09a2c84"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/perl.pl",
+          "sha256": "cc3369a9b7b6387fbf47fbf126b514bb74b335dcdd91ab6807ea80f394778cd9"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/php-native.php",
+          "sha256": "c075d045acaef5815d4d679a3bd43a942969407242506dc46797803df4bf67eb"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/python.py",
+          "sha256": "bf43391b5e83506e8dd53825aa523ba9f8fe19c0f0536d4463f1632a6815c126"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/ruby.rb",
+          "sha256": "7300424fa7e5fa694b9cb9303e1b0a6e86db4e5443619f9cf83d1ed6d5fd206b"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/rust.rs",
+          "sha256": "4ef31b130de88d67867748767c257171b94284ba14f74ba81b6e456d03890e21"
+        },
+        {
+          "path": "tests/fixtures/char-consumers/wit-wasi.c",
+          "sha256": "6717924e62870a1b9be7a4745c74f52cd7de25f2722157aa732acdbd46755c8b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/glyphs/Glyphs.lean",
+          "sha256": "4a137f74b9d69c506248eb01e6300cd53c7cacf715759c27182d3fba269eeed6"
+        },
+        {
+          "path": "tests/fixtures/onboarding/glyphs/lakefile.toml",
+          "sha256": "425dc318b18bfae9146ba894f13b1d0dc776f3d0c413f719cf3acb434f7291fd"
+        },
+        {
+          "path": "tests/fixtures/onboarding/glyphs/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/glyphs/package.json",
+          "sha256": "5be4677ceb81c204673adec19eea9c96842d211ef954cda1b5b8f1fa0162d9f9"
+        },
+        {
+          "path": "tests/helpers/native-char-fixture.mjs",
+          "sha256": "d91f55b4b854cf17cbe70acf674e085d9c7530654a68597d14d80f8f934d8dbd"
+        },
+        {
+          "path": "tests/helpers/native-char-install.mjs",
+          "sha256": "22bc0931c69cc3a84542b84b72e96242a2959d196240e2c1b5190519e40d5880"
+        },
+        {
+          "path": "tests/helpers/native-char-php-wasm.mjs",
+          "sha256": "634e761f351e3a441a6576619b732cab946122bb12fe8f7c027ec91751caaa8d"
+        },
+        {
+          "path": "tests/native-char-contract.test.mjs",
+          "sha256": "4d62b63cb9cf50409c773e38d1a472f8ea4ab317517458ea71e28dd42db4fdad"
+        },
+        {
+          "path": "tests/native-char.test.mjs",
+          "sha256": "c373449c48a095b94fd1531a410e1125da54f6c32fe4cd4e07b3bbe4194c6c31"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "build/char-native/c-cpp-python-rust.json",
+          "sha256": "52ff8d7c6dc99d266dc898b347ab03b7b032b1ec9cc11846accc53cf71819e34"
+        },
+        {
+          "path": "build/char-native/dotnet-java-kotlin-ruby.json",
+          "sha256": "cdb22fd4721c1ebc20f863494aeb154ede39f67cf3d734d5c5cd0e071c468b64"
+        },
+        {
+          "path": "build/char-native/perl-php-native-wit-wasi.json",
+          "sha256": "fd42d4c3e2f699cb7f84a202a2afad3936e8ae25b39e3a6d6c4b9f5b5350dfb7"
+        },
+        {
+          "path": "build/char-native/php-wasm.json",
+          "sha256": "ccc2a3a0cc960a8e36641e02d9f23abb4324529836a7e2cddb5970dcd878feeb"
+        }
+      ]
+    },
+    {
       "id": "npm-installed-char",
       "kind": "installed",
       "revision": "80a9846d1fa78a7198af257de6034c375a5cd9fa",
       "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-char.test.mjs; node --test tests/component-char-contract.test.mjs tests/component-scalars.test.mjs",
-      "scope": "VO1218 Char npm milestone based on 80a9846, bound by source and archive hashes. Ordinary-source and compiler-checked reviewed contracts compile fresh Lean and install offline after relocating the source. Node JavaScript, strict TypeScript, plain browsers, React StrictMode and dedicated workers execute Char parameters and results. Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 each run 1,126 assertions per context and source path; Node runs the same checks and five strict TypeScript calls. Contract and real wasm32 slot validators exhaust the Unicode code-point range and reject surrogates, invalid flags and oversized slots. A reviewed UInt32-for-Char substitution is rejected. See docs/evidence/char-npm-20260918.md. No field, callback, closure, native or PHP-Wasm Char promotion.",
+      "scope": "VO1218 Char npm milestone based on 80a9846, bound by source and archive hashes. Ordinary-source and compiler-checked reviewed contracts compile fresh Lean and install offline after relocating the source. Node JavaScript, strict TypeScript, plain browsers, React StrictMode and dedicated workers execute Char parameters and results. Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 each run 1,126 assertions per context and source path; Node runs the same checks and five strict TypeScript calls. Contract and real wasm32 slot validators exhaust the Unicode code-point range and reject surrogates, invalid flags and oversized slots. A reviewed UInt32-for-Char substitution is rejected. See docs/evidence/char-npm-20260918.md. No field, callback, closure, native or PHP-Wasm Char promotion. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/char-npm-20260918.md",
@@ -225,7 +448,7 @@
         },
         {
           "path": "tests/component-char-contract.test.mjs",
-          "sha256": "a4d2893c60ec267ec6f2b329b2847cedf58d1b6f91e7237c755d39014ce1cc16"
+          "sha256": "67d5317dfbee629f7374d69bec2bece257d9aeef238777ec762145104450ef98"
         },
         {
           "path": "tests/helpers/char-fixture.mjs",
@@ -288,7 +511,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -304,7 +527,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -312,11 +535,11 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "870c96d1931fcbadbd107fea332558186293c5051c8f2cfff7838409b1b33556"
+          "sha256": "8adef523fc67ae754c9c715e25de5a9bf52670517ea566f771114381affe7000"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -348,11 +571,11 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "f32db536918da05868c22ab5e4d6c1c134dc530c532e9bd5d16b8c362889497b"
+          "sha256": "b37a212bd95d7b991f34e293a24372970d4845c41f0a8b9f242ed25463edc8e8"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "66be01d53f51992f033b5656a188ac70ae009a94a6999a0bcbb674313921f21e"
+          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
@@ -360,7 +583,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "9d17a732fde433e6602260d29527ed3fee5e2768fb16444f35600a09b0b77f9b"
+          "sha256": "7113b896fb69e080d30f3c94eb6d12d91b02bab53ddb7491c5a0dfa9d1986afb"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
@@ -368,11 +591,11 @@
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
-          "sha256": "edc6c34b2eef5966f2b9a0372692e2d6b6f4d0c3d623fe2de050911c3a24647a"
+          "sha256": "0749c00f3c575e9d45c751c91a3b02aec82957e4ab1b9e691e67cb792f4b4809"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "e30e16a8744b83265cfbb712c7daa4fce1b710eb58f9b9b8bfec9b590c53715d"
+          "sha256": "a766f8f976d332c2d4d0a479b570dcca417d41293013d75b48b17d195196229c"
         },
         {
           "path": "src/backends/php/php-wasm-copied-loader.mjs",
@@ -443,7 +666,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -455,7 +678,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -463,7 +686,7 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -495,7 +718,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "f32db536918da05868c22ab5e4d6c1c134dc530c532e9bd5d16b8c362889497b"
+          "sha256": "b37a212bd95d7b991f34e293a24372970d4845c41f0a8b9f242ed25463edc8e8"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -503,11 +726,11 @@
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "66be01d53f51992f033b5656a188ac70ae009a94a6999a0bcbb674313921f21e"
+          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "9d17a732fde433e6602260d29527ed3fee5e2768fb16444f35600a09b0b77f9b"
+          "sha256": "7113b896fb69e080d30f3c94eb6d12d91b02bab53ddb7491c5a0dfa9d1986afb"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
@@ -562,7 +785,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -574,7 +797,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -582,11 +805,11 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "f910e3389d23f1ba542e630cbb9af663fb745b2235d58aa90cf2cce28b69bec2"
+          "sha256": "4a95d462285524f8418e0bfb7e32eaa9d74d873568b87761c8c6ca47ded9b19d"
         },
         {
           "path": "src/backends/rust/copied-assets.mjs",
@@ -594,7 +817,7 @@
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
-          "sha256": "48c96f8302a7a80438969633a7912f7948a78df915fd72b3baedc24e68297589"
+          "sha256": "1a27ee3d6bffd5d5eb2c387ad9909af95a7a853283a79adef701df199247ff32"
         },
         {
           "path": "src/backends/rust/copied-values.mjs",
@@ -669,7 +892,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -681,7 +904,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -689,11 +912,11 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "812e4446deaaf4e074f76eb848e8d5030efff2f224fa0c42e91d572abdee120a"
+          "sha256": "326d80269da62a025e23d7680225abd6508b06397916f5b96dce75c88645cfe3"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -701,7 +924,7 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "80e7229db891680ffd81074726c9f7b881911d6f0fb6cd69231d6e584d7e5f42"
+          "sha256": "bfca078b55865a9df6eef48d96317c8aee9cc9814eee0f7f55376b0b98c2f75c"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
@@ -760,7 +983,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -772,7 +995,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -780,19 +1003,19 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "f2af648c8d1ee39a9f1c945602f8bee84d353e945aa530095c0896b5cd0adffe"
+          "sha256": "e3c385310893dff4609b749c4b6bc0ef5603e15dfd9a98015596cec6ab05c766"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "24556f8a831a6feaf55d63cf4ebb5e049470f42c0453ce7209baff2a7426c9dd"
+          "sha256": "64c570e0925076d15daa55699e385d95f31b419e2ddbddb3a4c14782b217d5ba"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
-          "sha256": "553be3118788ce8f1ed2324bfad7457183b2d52fbe27c9f54a94ba5b2720fa0a"
+          "sha256": "1588c92f54ed98f699e8cb6b70879bde9bb624a54dd30c962d4f93107e2f01f8"
         },
         {
           "path": "src/backends/wit/copied-host.mjs",
@@ -851,7 +1074,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -863,7 +1086,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -871,15 +1094,15 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "c729de62aa2875c4a4f69460696f65e9abbb5e34b587ab96f1f94f9f3805e4b8"
+          "sha256": "416f6900203d80b13fa1ccf270220000987581d2bf623139bf61d4ffaaa28d2d"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "e2be1784043dd672dcb67ffd0bca9b8ae9ca7e8ec16b66e54008034f10f7e870"
+          "sha256": "eebb06436edd84fb854b70787aff45c312302e85e374a57c068731af0ea9d5eb"
         },
         {
           "path": "src/backends/ruby/copied-assets.mjs",
@@ -946,7 +1169,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -958,7 +1181,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -966,15 +1189,15 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "6f448c88995727c6bed487da3ff85666e84ab8efacdd56be4b1163212459465e"
+          "sha256": "4541039ac26365f88c38ea0cf6c8be955b04c5dd7692a29b4425d1e1a9b9c29f"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "856235dc49a1b23d5ae1b6ebfa28074b82623c828ce1f2218df1e38435e6b07b"
+          "sha256": "77c508a6895cfc99dc5917010d82029cfc511a2c0cd73de90481f356a7ec9c16"
         },
         {
           "path": "src/backends/jvm/copied-assets.mjs",
@@ -1053,7 +1276,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -1065,7 +1288,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -1073,15 +1296,15 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "97da55051b3d6e111fce14ebb369d0cdcc219368acf1a08b34f3c40dd27b1982"
+          "sha256": "eb881ac7bf25eb03305da505d4c9cb0b65d2d4b5888276ca92f0892d96ddbf7e"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d2c732a151e8fa608e13c5affafdf6ca21f8777f4525045fc1d94ad383b741e5"
+          "sha256": "e7f8a41255931923ab57e56fea53de48c8a802bb96f2800fe888a276dcf8363e"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
@@ -1148,7 +1371,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -1160,11 +1383,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"
+          "sha256": "e3ee18d5fe5876af637d4f02c09422ee4fafeab8b37ee5a0514ed23b5ef20356"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -1172,11 +1395,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "c4925bc530f9d8285cc76819364291ac618cbbb4e408374ba591be5017003313"
+          "sha256": "9c76eaaada3f19a18fffb0f94472ad0a0bfcd3b238746b25577143be6dca730d"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -1208,7 +1431,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "870c96d1931fcbadbd107fea332558186293c5051c8f2cfff7838409b1b33556"
+          "sha256": "8adef523fc67ae754c9c715e25de5a9bf52670517ea566f771114381affe7000"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1259,7 +1482,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -1279,7 +1502,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "870c96d1931fcbadbd107fea332558186293c5051c8f2cfff7838409b1b33556"
+          "sha256": "8adef523fc67ae754c9c715e25de5a9bf52670517ea566f771114381affe7000"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -1299,11 +1522,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"
+          "sha256": "e3ee18d5fe5876af637d4f02c09422ee4fafeab8b37ee5a0514ed23b5ef20356"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "bd06ca87cac083cce1e84f9796bd432404b658607d78ccbc7f9ed578d78a7f30"
+          "sha256": "1c3b131e96f8bbadafaff5b8a6ef878ed51fe0dfbe571f0c9bd60f84663a98d7"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -1331,11 +1554,11 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "3200c4a527e0a6731fe9a1ab6b6d0ac3abd5f6b0c800fa5e5fb23887dc1f353a"
+          "sha256": "c6ebe9794589a04075f97444a834d84ff1c3485a96faab3aaec4dd959548f0b5"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "c4925bc530f9d8285cc76819364291ac618cbbb4e408374ba591be5017003313"
+          "sha256": "9c76eaaada3f19a18fffb0f94472ad0a0bfcd3b238746b25577143be6dca730d"
         },
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -1366,7 +1589,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
         {"path":"src/analyze/semantic-model.mjs","sha256":"6a928013f7bd6840014df0d702f473743fbe82ee9d6722d4dd1449a1ea9838a0"},
         {"path":"src/backends/perl/naming.mjs","sha256":"e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"},
@@ -1416,7 +1639,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "870c96d1931fcbadbd107fea332558186293c5051c8f2cfff7838409b1b33556"
+          "sha256": "8adef523fc67ae754c9c715e25de5a9bf52670517ea566f771114381affe7000"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -1436,7 +1659,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "d63e5e93106c6590d1b565e416fa476d570cb77b33d3b8517ba45a1189b5668c"
+          "sha256": "5043c34297c48a5aee5c6f67b30c77b4eeceee65e366d4b7678aa2c13bf46eec"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -1807,9 +2030,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support.",
+      "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"87b2fb53ef0d6753a96ff1d02b6ac4e3b0d71201891308f1715ee361637ae21b"}
+        {"path":"src/backends/c/generate.mjs","sha256":"e3ee18d5fe5876af637d4f02c09422ee4fafeab8b37ee5a0514ed23b5ef20356"}
       ],
       "artifacts": []
     },
@@ -1878,6 +2101,1590 @@
     }
   ],
   "observations": [
+    {
+      "id": "c-char-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "uint32_t",
+          "result": "uint32_t",
+          "field": "uint32_t"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "c-char-reviewed-ir",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "uint32_t",
+          "result": "uint32_t",
+          "field": "uint32_t"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "cpp-char-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char32_t",
+          "result": "char32_t",
+          "field": "char32_t"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "cpp-char-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char32_t",
+          "result": "char32_t",
+          "field": "char32_t"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "python-char-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "str",
+          "result": "str",
+          "field": "str"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "python-char-reviewed-ir",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "str",
+          "result": "str",
+          "field": "str"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "rust-char-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char",
+          "result": "char",
+          "field": "char"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "rust-char-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char",
+          "result": "char",
+          "field": "char"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "dotnet-char-ordinary-source",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "System.Text.Rune",
+          "result": "System.Text.Rune",
+          "field": "System.Text.Rune"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Rune preserves supplementary characters; System.Char alone cannot."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "dotnet-char-reviewed-ir",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "System.Text.Rune",
+          "result": "System.Text.Rune",
+          "field": "System.Text.Rune"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Rune preserves supplementary characters; System.Char alone cannot."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "java-char-ordinary-source",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "java-char-reviewed-ir",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "int",
+          "result": "int",
+          "field": "int"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "kotlin-char-ordinary-source",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "Int",
+          "result": "Int",
+          "field": "Int"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "kotlin-char-reviewed-ir",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "Int",
+          "result": "Int",
+          "field": "Int"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "ruby-char-ordinary-source",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "String",
+          "result": "String",
+          "field": "String"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs require valid UTF-8 or US-ASCII encoding."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "ruby-char-reviewed-ir",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "String",
+          "result": "String",
+          "field": "String"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs require valid UTF-8 or US-ASCII encoding."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "perl-char-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "text scalar",
+          "result": "text scalar",
+          "field": "text scalar"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs must be text scalars; numeric-only values and references are rejected."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "perl-char-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "text scalar",
+          "result": "text scalar",
+          "field": "text scalar"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs must be text scalars; numeric-only values and references are rejected."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "php-native-char-ordinary-source",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "php-native-char-reviewed-ir",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "php-wasm-char-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "php-wasm-char-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "string",
+          "result": "string",
+          "field": "string"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "wit-wasi-char-ordinary-source",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char",
+          "result": "char",
+          "field": "char"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
+    {
+      "id": "wit-wasi-char-reviewed-ir",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "char"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed pure copied Char calls, arrays, nested arrays and record fields from ordinary and reviewed Lean packages.",
+      "hostTypes": {
+        "char": {
+          "parameter": "char",
+          "result": "char",
+          "field": "char"
+        }
+      },
+      "conversionNotes": {
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-installed-char"
+          ],
+          "note": "Fresh compiled packages, verified offline archive installation and source-free host execution; see native-installed-char."
+        }
+      },
+      "limitations": [
+        "Pure copied input/result/field positions only. Callback and returned-function Char positions and older Alpha identity APIs are not promoted."
+      ]
+    },
     {
       "id": "npm-char-ordinary",
       "profiles": [

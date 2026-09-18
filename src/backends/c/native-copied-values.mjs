@@ -28,6 +28,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		if(type.kind === "primitive")
 		{
 			if(type.name === "unit") check.push("if (*value != 0) return 0;");
+			if(type.name === "char") check.push("if (*value > 0x10ffff || (*value >= 0xd800 && *value <= 0xdfff)) return 0;");
 			if(dynamic(type))
 			{
 				const width = ["nat", "int"].includes(type.name) ? "sizeof(uint32_t)" : "1";
@@ -55,7 +56,8 @@ export const generateCopiedNativeCalls = (model, surface) => {
 				if(type.name === "int") output.push("lean_dec(magnitude);");
 				output.push("if (status != 1) return status;", "*budget -= length * sizeof(uint32_t);"
 					, `*out = (${c.name}){data, length, data, free${type.name === "int" ? ", negative" : ""}};`);
-			} else if(type.name === "unit") output.push("*out = 0;");
+			} else if(type.name === "char") output.push("if (value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) return -2;", "*out = value;");
+			else if(type.name === "unit") output.push("*out = 0;");
 			else if(/^int\d/.test(type.name)) output.push("memcpy(out, &value, sizeof(value));");
 			else output.push(`*out = (${c.name})value;`);
 		} else if(type.kind === "array")
@@ -119,6 +121,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			lines.push(`  ${copy(native.result).name} result = {0};`, `  int status = ${id(native.result)}_out(value, &result, &budget);`);
 			if(nativeObjectType(native.result)) lines.push("  lean_dec(value);");
 			lines.push('  if (status == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
+				, '  if (status == -2) return lb_failure(error, "Invalid native Unicode scalar result");'
 				, '  if (status < 0) return lb_failure(error, "Cannot allocate copied result");', "  *out = result;");
 		} else lines.push("  lean_dec(value); (void)budget;");
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");

@@ -3,7 +3,7 @@
  *
  * @file
  */
-const scalar = { bool: ["BOOL", "boolean"], uint8: ["U8", "u8"], uint16: ["U16", "u16"], uint32: ["U32", "u32"], uint64: ["U64", "u64"], int8: ["S8", "s8"], int16: ["S16", "s16"], int32: ["S32", "s32"], int64: ["S64", "s64"], float32: ["F32", "f32"], float64: ["F64", "f64"] };
+const scalar = { char: ["CHAR", "character"], bool: ["BOOL", "boolean"], uint8: ["U8", "u8"], uint16: ["U16", "u16"], uint32: ["U32", "u32"], uint64: ["U64", "u64"], int8: ["S8", "s8"], int16: ["S16", "s16"], int32: ["S32", "s32"], int64: ["S64", "s64"], float32: ["F32", "f32"], float64: ["F64", "f64"] };
 
 /** Shared conversion helpers, private to each compiled host library. */
 export const witConversionPrelude = `
@@ -78,7 +78,13 @@ export const renderWitConversions = ({ surface }) => surface.copies.map(copy => 
 	if(scalar[name])
 	{
 		const [kind, field] = scalar[name];
-		input.push(`if (value->kind != WASMTIME_COMPONENT_${kind}) return false;`, `if (out) *out = value->of.${field};`);
+		input.push(`if (value->kind != WASMTIME_COMPONENT_${kind}) return false;`);
+		if(name === "char")
+		{
+			input.push("if (value->of.character > 0x10ffff || (value->of.character >= 0xd800 && value->of.character <= 0xdfff)) return false;");
+			output.push("if (*value > 0x10ffff || (*value >= 0xd800 && *value <= 0xdfff)) return false;");
+		}
+		input.push(`if (out) *out = value->of.${field};`);
 		output.push(`out->kind = WASMTIME_COMPONENT_${kind}; out->of.${field} = *value;`);
 	} else if(name === "unit")
 	{

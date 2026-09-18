@@ -30,8 +30,8 @@ test("Char is a distinct IR primitive and an appended, stable wire tag", async (
 	validateNativeType(type);
 	await assertJsonSchema("native-metadata-type", type);
 	assert.throws(() => validateNativeType({ ...type, lean: "UInt32" }), /spelling/);
-	assert.throws(() => compilePrimitiveCSurface(ir), /Char conversion is not yet implemented/);
-	assert.throws(() => compileCProjectionModel(ir), /C projection does not define char/);
+	assert.equal(compilePrimitiveCSurface(ir).copy(scalar).name, "uint32_t");
+	assert.equal(compileCProjectionModel(ir).component, ir.component.id);
 	const legacy = structuredClone(alpha);
 	legacy.types.find(type => type.kind === "record").fields[0].type = scalar;
 	assert.throws(() => compilePythonPackageModel(legacy), /Python projection does not define char/);

@@ -59,6 +59,9 @@ ${copy.fields.map(field => `        ${write(field.type, "result", field.offset, 
 			input = `integer(value, -(1 << ${bits - 1}), (1 << ${bits - 1}) - 1)`; output = "value"; break;
 		}
 		case "float32": case "float64": input = 'raise TypeError, "Expected Float" unless value.instance_of?(::Float)\n        value'; output = "value"; break;
+		case "char":
+			input = 'raise TypeError, "Char requires String" unless value.instance_of?(::String)\n        raise EncodingError, "Char requires valid UTF-8 or US-ASCII" unless [Encoding::UTF_8, Encoding::US_ASCII].include?(value.encoding) && value.valid_encoding?\n        raise RangeError, "Char requires one Unicode scalar" unless value.length == 1\n        value.ord';
+			output = 'raise RangeError, "Invalid native Unicode scalar" unless value.between?(0, 0x10ffff) && !value.between?(0xd800, 0xdfff)\n        value.chr(Encoding::UTF_8)'; break;
 		case "string": case "bytes":
 			input = `raise TypeError, "Expected String" unless value.instance_of?(::String)
         ${copy.ref.name === "string" ? 'raise EncodingError, "Expected valid UTF-8 or US-ASCII" unless [Encoding::UTF_8, Encoding::US_ASCII].include?(value.encoding) && value.valid_encoding?' : ""}

@@ -9,7 +9,7 @@ import { renderCopiedWitComponent } from "./copied-component.mjs";
 
 const kebab = value => value.replace(/([a-z0-9])([A-Z])/g, "$1-$2").replaceAll("_", "-").toLowerCase();
 const reserved = new Set("as async bool borrow char constructor enum export f32 f64 flags from func future import include interface list option own package record resource result s8 s16 s32 s64 static stream string tuple type u8 u16 u32 u64 use variant with world".split(" "));
-const primitive = { bool: "bool", uint8: "u8", uint16: "u16", uint32: "u32", uint64: "u64", int8: "s8", int16: "s16", int32: "s32", int64: "s64", float32: "f32", float64: "f64", string: "string" };
+const primitive = { char: "char", bool: "bool", uint8: "u8", uint16: "u16", uint32: "u32", uint64: "u64", int8: "s8", int16: "s16", int32: "s32", int64: "s64", float32: "f32", float64: "f64", string: "string" };
 
 /**
  * Validate archive coordinates without normalizing distinct WIT identities.

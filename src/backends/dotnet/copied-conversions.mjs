@@ -48,6 +48,7 @@ export const copiedConversions = model => model.surface.copies.map(copy => {
 	{
 		case "unit": input = "return 0;"; output = "return default;"; break;
 		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = "return value != 0;"; break;
+		case "char": input = "return (uint)value.Value;"; output = "return new global::System.Text.Rune(value);"; break;
 		case "string":
 			input = `ArgumentNullException.ThrowIfNull(value);
         var length = Utf8.GetByteCount(value);

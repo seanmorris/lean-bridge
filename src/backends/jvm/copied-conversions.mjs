@@ -54,6 +54,9 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
 	{
 		case "unit": input = "Objects.requireNonNull(value); return (byte)0;"; output = "return Unit.INSTANCE;"; break;
 		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = "return value != 0;"; break;
+		case "char":
+			input = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Char requires a Unicode scalar code point"); return value;';
+			output = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Invalid native Unicode scalar"); return value;'; break;
 		case "uint8": case "uint16": case "uint32":
 			input = `if (value < 0 || value > ${copy.ref.name === "uint8" ? "255" : copy.ref.name === "uint16" ? "65535" : "0xffff_ffffL"}) throw new IllegalArgumentException("${copy.ref.name} is out of range"); return (${copy.nativeType})value;`;
 			output = `return ${copy.ref.name === "uint8" ? "Byte.toUnsignedInt" : copy.ref.name === "uint16" ? "Short.toUnsignedInt" : "Integer.toUnsignedLong"}(value);`; break;

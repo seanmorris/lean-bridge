@@ -12,7 +12,8 @@
  */
 const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
 const leaf = {
-	bool: ["i32", 1], uint8: ["i32", 1], int8: ["i32", 1], unit: ["i32", 1]
+	char: ["i32", 4], bool: ["i32", 1], uint8: ["i32", 1], int8: ["i32", 1]
+	, unit: ["i32", 1]
 	, uint16: ["i32", 2], int16: ["i32", 2], uint32: ["i32", 4], int32: ["i32", 4]
 	, uint64: ["i64", 8], int64: ["i64", 8]
 	, float32: ["f32", 4], float64: ["f64", 8]

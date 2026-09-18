@@ -65,6 +65,20 @@ static int lb_utf8(const unsigned char *p, size_t n) {
   }
   return 1;
 }
+static inline int lb_char_in(const unsigned char *text, size_t length, uint32_t *out) {
+  if (!length || length > 4 || !lb_utf8(text, length)) return 0;
+  size_t expected = text[0] < 128 ? 1 : text[0] < 0xe0 ? 2 : text[0] < 0xf0 ? 3 : 4;
+  if (length != expected) return 0;
+  uint32_t point = text[0] & (length == 1 ? 127 : length == 2 ? 31 : length == 3 ? 15 : 7);
+  for (size_t i = 1; i < length; i++) point = (point << 6) | (text[i] & 63);
+  *out = point; return 1;
+}
+static inline size_t lb_char_out(uint32_t point, char *text) {
+  if (point < 128) { text[0] = (char)point; return 1; }
+  size_t length = point < 0x800 ? 2 : point < 0x10000 ? 3 : 4;
+  for (size_t i = length - 1; i > 0; i--) { text[i] = (char)(0x80 | (point & 63)); point >>= 6; }
+  text[0] = (char)((length == 2 ? 0xc0 : length == 3 ? 0xe0 : 0xf0) | point); return length;
+}
 static int lb_decimal(zval *value, lb_scope *s, const char **digits, size_t *length, bool *negative) {
   if (Z_TYPE_P(value) != IS_STRING) return lb_fail(s, "Expected canonical decimal text", 1);
   const char *text = Z_STRVAL_P(value); size_t n = Z_STRLEN_P(value);

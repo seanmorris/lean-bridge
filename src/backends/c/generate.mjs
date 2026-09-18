@@ -60,6 +60,7 @@ const primitiveCType = name => {
 		, uint8: "uint8_t"
 		, uint16: "uint16_t"
 		, uint32: "uint32_t"
+		, char: "uint32_t"
 		, uint64: "uint64_t"
 		, int8: "int8_t"
 		, int16: "int16_t"

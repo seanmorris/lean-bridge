@@ -8,7 +8,7 @@ import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
 const reserved = new Set(["Api", "Unit", "LeanBridgeException", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
 const runtimeNames = new Set(("Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding Span ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison").split(" "));
-const scalar = { unit: "Unit", bool: "bool", uint8: "byte", uint16: "ushort", uint32: "uint", uint64: "ulong", int8: "sbyte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double", string: "string", bytes: "byte[]", nat: "global::System.Numerics.BigInteger", int: "global::System.Numerics.BigInteger" };
+const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", uint8: "byte", uint16: "ushort", uint32: "uint", uint64: "ulong", int8: "sbyte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double", string: "string", bytes: "byte[]", nat: "global::System.Numerics.BigInteger", int: "global::System.Numerics.BigInteger" };
 
 /**
  * Build a closed projection over the checked native C surface.
@@ -44,7 +44,7 @@ export const compileCopiedDotnetModel = ir => {
 		functionNames.add(fn.publicName);
 	}
 	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.ref.name];
-	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.ref.name) ? "byte" : scalar[copy.ref.name];
+	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.ref.name) ? "byte" : copy.ref.name === "char" ? "uint" : scalar[copy.ref.name];
 	return { ir, surface, componentName, namespace: `LeanBridge.${componentName}`, assembly: `LeanBridge.${componentName}`, publicType, nativeType };
 };
 

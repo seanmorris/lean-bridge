@@ -61,6 +61,23 @@ final class Scope
     public function close(): void { $this->owners = []; }
 }
 
+final class ScalarCodec
+{
+    public static function point(string $text): int {
+        $length = strlen($text);
+        $value = ord($text[0]) & [1 => 127, 2 => 31, 3 => 15, 4 => 7][$length];
+        for ($i = 1; $i < $length; $i++) $value = ($value << 6) | (ord($text[$i]) & 63);
+        return $value;
+    }
+    public static function text(int $value): string {
+        if ($value < 0 || $value > 0x10ffff || ($value >= 0xd800 && $value <= 0xdfff)) throw new \RuntimeException('Invalid native Unicode scalar');
+        if ($value < 128) return chr($value);
+        if ($value < 0x800) return chr(0xc0 | ($value >> 6)) . chr(0x80 | ($value & 63));
+        if ($value < 0x10000) return chr(0xe0 | ($value >> 12)) . chr(0x80 | (($value >> 6) & 63)) . chr(0x80 | ($value & 63));
+        return chr(0xf0 | ($value >> 18)) . chr(0x80 | (($value >> 12) & 63)) . chr(0x80 | (($value >> 6) & 63)) . chr(0x80 | ($value & 63));
+    }
+}
+
 final class IntegerCodec
 {
     public static function limbs(string $decimal): array {

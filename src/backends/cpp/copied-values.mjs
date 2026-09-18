@@ -13,7 +13,7 @@ export const copiedCppType = copy => {
 	if(copy.element) return `std::vector<${copiedCppType(copy.element)}>`;
 	if(copy.record) return copy.record.name;
 	const name = copy.ref.name;
-	return ({ unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: "Nat", int: "Int", bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
+	return ({ char: "char32_t", unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: "Nat", int: "Int", bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
 };
 
 /**

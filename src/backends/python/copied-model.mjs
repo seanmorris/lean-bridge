@@ -5,8 +5,8 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
-const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord sum min max enumerate BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError invoke dispatch handle token".split(" "));
-const primitive = { unit: ["None", "c_uint8"], bool: ["bool", "c_bool"], uint8: ["int", "c_uint8"], uint16: ["int", "c_uint16"], uint32: ["int", "c_uint32"], uint64: ["int", "c_uint64"], int8: ["int", "c_int8"], int16: ["int", "c_int16"], int32: ["int", "c_int32"], int64: ["int", "c_int64"], float32: ["float", "c_float"], float64: ["float", "c_double"], nat: ["int"], int: ["int"], string: ["str"], bytes: ["bytes"] };
+const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError invoke dispatch handle token".split(" "));
+const primitive = { char: ["str", "c_uint32"], unit: ["None", "c_uint8"], bool: ["bool", "c_bool"], uint8: ["int", "c_uint8"], uint16: ["int", "c_uint16"], uint32: ["int", "c_uint32"], uint64: ["int", "c_uint64"], int8: ["int", "c_int8"], int16: ["int", "c_int16"], int32: ["int", "c_int32"], int64: ["int", "c_int64"], float32: ["float", "c_float"], float64: ["float", "c_double"], nat: ["int"], int: ["int"], string: ["str"], bytes: ["bytes"] };
 
 /**
  * Validate exact distribution coordinates rather than normalize author choices.

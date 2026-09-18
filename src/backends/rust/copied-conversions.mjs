@@ -108,6 +108,8 @@ export const copiedRustConversions = model => model.surface.copies.map(copy => {
 	const name = copy.ref.name, input = [], output = [];
 	if(name === "unit")
 	{ input.push("Ok(0)"); output.push("Ok(())"); }
+	else if(name === "char")
+	{ input.push("Ok(*value as u32)"); output.push("char::from_u32(*value).ok_or(Error::InvalidNative)"); }
 	else if(!copy.aggregate)
 	{ input.push("Ok(*value)"); output.push("Ok(*value)"); }
 	else if(name === "string" || name === "bytes")

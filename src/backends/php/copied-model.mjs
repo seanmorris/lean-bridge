@@ -7,7 +7,7 @@ import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const reserved = new Set("abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield bigint biginteger bytes leanbridgeerror internal this globals dispatch invoke".split(" "));
 const bigInteger = "\\Brick\\Math\\BigInteger";
-const primitives = { unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: bigInteger, int8: "int", int16: "int", int32: "int", int64: "int", nat: bigInteger, int: bigInteger, float32: "float", float64: "float", string: "string", bytes: "Bytes" };
+const primitives = { char: "string", unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: bigInteger, int8: "int", int16: "int", int32: "int", int64: "int", nat: bigInteger, int: bigInteger, float32: "float", float64: "float", string: "string", bytes: "Bytes" };
 
 /**
  * Require exact Composer coordinates, never silently rewrite author settings.

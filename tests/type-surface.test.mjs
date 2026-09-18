@@ -64,21 +64,23 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("Char installed evidence covers only npm scalar parameters and results", () => {
+test("Char installed evidence distinguishes npm scalars from native copied positions", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 20);
+	assert.equal(observed.length, 92);
 	for(const cell of cells)
 	{
-		const covered = profiles.includes(cell.profile) && ["parameter", "result"].includes(cell.position);
+		const npm = profiles.includes(cell.profile);
+		const covered = (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
 		if(!covered) continue;
-		assert.equal(cell.hostType, "string");
+		assert.equal(cell.hostType, npm ? "string" : hosts[cell.profile]);
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, ["npm-installed-char"]);
+			assert.deepEqual(stage.evidence, [npm ? "npm-installed-char" : "native-installed-char"]);
 		}
 	}
 });
@@ -104,15 +106,15 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 54);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive.filter(name => name !== "char"), "array", "record"].sort());
+	assert.equal(observed.length, 57);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record"].sort());
 	for(const cell of observed)
 	{
 		assert.ok(["parameter", "result", "field"].includes(cell.position));
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [evidence]);
+			assert.deepEqual(stage.evidence, [cell.shape === "char" ? "native-installed-char" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

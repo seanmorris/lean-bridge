@@ -4,7 +4,7 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.4.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.5.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ Inventory 0.4.0 covers 48 source forms and 17 consumer profiles. The language ta
 | `Synchronous iterator` | A sequence delivered by explicit pulls. | Preserve values, end-of-sequence, failure, early return and cleanup. | Preserve every argument and result ownership transition, including cleanup after rejection or cancellation. Keep parameter omission, declared defaults, Option.none and host null distinct. Preserve declared errors, effect order and delivery protocol; reject unsupported signatures before producing a release. |
 | `Asynchronous iterator` | A sequence whose individual pulls can complete later. | Preserve backpressure, pending-pull cancellation and terminal cleanup. | Preserve every argument and result ownership transition, including cleanup after rejection or cancellation. Keep parameter omission, declared defaults, Option.none and host null distinct. Preserve declared errors, effect order and delivery protocol; reject unsupported signatures before producing a release. |
 
-Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. npm accepts seventeen primitive parameter/result types, including [Char](../evidence/char-npm-20260918.md). Native and PHP-Wasm accept the original sixteen primitives, copied arrays and acyclic records; their Char adapters remain unfinished.
+Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. All profiles accept seventeen primitive parameter/result types, including [Char in npm](../evidence/char-npm-20260918.md) and [native/PHP-Wasm packages](../evidence/char-native-20260918.md). Native and PHP-Wasm also accept copied arrays and acyclic records, including Char elements and fields.
 
 The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json).
 
@@ -123,7 +123,7 @@ Strings accept Unicode scalar values and embedded NUL characters. Unpaired UTF-1
 
 `Char` accepts a JavaScript `string` containing exactly one Unicode scalar. `"a"`, `"🌱"`, `"\0"`, and a standalone combining character are valid. Empty strings, unpaired surrogates, and multi-scalar strings such as `"ab"` or `"e\u0301"` throw `TypeError`. The adapter preserves the scalar without normalization. A supplementary character occupies two UTF-16 code units but is still one `Char`.
 
-`Char` currently works in npm parameter and result positions, including compiler-checked reviewed contracts. Native and PHP-Wasm mappings, copied fields, arrays and callable positions remain tracked in VO1218.
+`Char` works in npm parameter and result positions. Native and PHP-Wasm packages also support copied `Array Char`, nested arrays and record fields. Both ordinary-source and compiler-checked reviewed contracts have [installed checks](../evidence/char-native-20260918.md). Java and Kotlin use integer code points rather than UTF-16 `char`; .NET uses `System.Text.Rune`. Each consumer page lists its host mapping. Callable positions and platform-sized integers remain in VO1218.
 
 `ByteArray` accepts a `Uint8Array`. The call copies the input and returns an owned `Uint8Array`; the result is not a view into the Lean heap. Text, bytes, and integer payloads share the per-value 16 MiB copy limit. Total memory also includes runtime storage, all arguments, results, and temporary allocations.
 

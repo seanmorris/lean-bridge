@@ -60,7 +60,7 @@ Ordinary npm components support pure functions with zero to 32 primitive argumen
 
 Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
 
-`Char` is currently npm-only. The native and PHP-Wasm profiles below retain the original sixteen primitive mappings.
+`Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
@@ -72,7 +72,7 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 ## Native C and C++ exports
 
-Ordinary `c` and `cpp` builds accept the 16 pure primitive parameter/result types above other than `Char`, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
+Ordinary `c` and `cpp` builds accept all 17 pure primitive parameter/result types above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars and copied buffer structs; C++ supplies owned standard-library values and exact Nat/Int limb vectors. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
 
 The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Resources, callbacks, effects and asynchronous functions remain unsupported on this path. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ still requires a primitive-only API.
 
@@ -106,7 +106,7 @@ The compiler-backed analyzer projects:
 
 - `Unit`, `Bool`, `UInt8`, `UInt16`, `UInt32`, and `UInt64`;
 - `Int8`, `Int16`, `Int32`, `Int64`, `Nat`, and `Int`;
-- `Float32`, `Float`, `String`, and `ByteArray`.
+- `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
 `IO`, `Task`, collections, records, callbacks, resources, and configured closure arities produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 

@@ -39,6 +39,7 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 		if(name === "uint32") lines.push("if (strlen($decimal) > 10 || (strlen($decimal) === 10 && strcmp($decimal, '4294967295') > 0)) throw new \\ValueError('Integer is outside the UInt32 range');");
 		if(name === "int64") lines.push("$magnitude = ltrim($decimal, '-');", "$limit = $decimal[0] === '-' ? '9223372036854775808' : '9223372036854775807';", "if (strlen($magnitude) > 19 || (strlen($magnitude) === 19 && strcmp($magnitude, $limit) > 0)) throw new \\ValueError('Integer is outside the Int64 range');");
 	} else if(name === "float32" || name === "float64") lines.push("if (!is_float($value)) throw new \\TypeError('Expected a float without numeric coercion');");
+	else if(name === "char") lines.push("if (!is_string($value)) throw new \\TypeError('Char requires a string');", "if (strlen($value) < 1 || strlen($value) > 4 || preg_match('/\\\\A.\\\\z/us', $value) !== 1) throw new \\ValueError('Char requires one Unicode scalar');");
 	else if(name === "string") lines.push("if (!is_string($value)) throw new \\TypeError('Expected a UTF-8 string');", "$budget->charge(strlen($value));", "if (preg_match('//u', $value) !== 1) throw new \\ValueError('String requires valid UTF-8');");
 	else if(name === "bytes") lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected Bytes');`, "$budget->charge(strlen($value->toString()));");
 	else if(copy.record) lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected ${copy.publicType}');`, ...copy.fields.map(field => `self::check${field.type.index}($value->${field.name}, $budget);`));
@@ -57,6 +58,8 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 	input.push(`$out = $scope->allocate('${copy.ctype}');`);
 	if(name === "unit")
 	{ input.push("$out->cdata = 0;"); output.push("return null;"); }
+	else if(name === "char")
+	{ input.push("$out->cdata = ScalarCodec::point($value);"); output.push("return ScalarCodec::text($value);"); }
 	else if(name === "uint64")
 	{
 		input.push("$words = IntegerCodec::limbs((string) $value);", "\\FFI::memcpy(\\FFI::addr($out), pack('V2', $words[0] ?? 0, $words[1] ?? 0), 8);");

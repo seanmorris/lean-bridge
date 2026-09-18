@@ -15,6 +15,11 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push("(void)value; ZVAL_NULL(out);"); }
 	else if(name === "bool")
 	{ input.push('if (Z_TYPE_P(value) != IS_TRUE && Z_TYPE_P(value) != IS_FALSE) return lb_fail(s, "Bool requires bool", 1);', "*out = Z_TYPE_P(value) == IS_TRUE;"); output.push("ZVAL_BOOL(out, *value);"); }
+	else if(name === "char")
+	{
+		input.push('if (Z_TYPE_P(value) != IS_STRING) return lb_fail(s, "Char requires a string", 1);', 'if (!lb_char_in((const unsigned char *)Z_STRVAL_P(value), Z_STRLEN_P(value), out)) return lb_fail(s, "Char requires one Unicode scalar", 0);');
+		output.push('if (*value > 0x10ffff || (*value >= 0xd800 && *value <= 0xdfff)) return lb_fail(s, "Invalid native Unicode scalar", 0);', "char text[4]; size_t length = lb_char_out(*value, text);", "ZVAL_STRINGL(out, text, length);");
+	}
 	else if(copy.publicType === "\\Brick\\Math\\BigInteger" && !["nat", "int"].includes(name))
 	{
 		input.push(`uint64_t bits; if (!lb_u64_in(value, s, &bits, ${name === "int64" ? "true" : "false"}, ${name === "uint32" ? 32 : 64})) return 0;`);
