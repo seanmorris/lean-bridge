@@ -6,6 +6,9 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/abi/component-callables.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/component-callable-runtime.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/component-scalar-codec.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/php/brick-math.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/source-notices.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/package-metadata.mjs", "classification": "strict-migration-backlog" },

@@ -128,6 +128,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	for(const declaration of abi.exports) assertComponentSignature(declaration);
 	const runtimeSource = (await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
 	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
+	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
@@ -148,6 +149,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["internal/main.wasm", mainWasm]
 		, ["internal/component-runtime.mjs", runtimeSource]
 		, ["internal/component-scalars.mjs", scalarSource]
+		, ["internal/component-scalar-codec.mjs", codecSource]
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);

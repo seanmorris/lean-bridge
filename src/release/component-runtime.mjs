@@ -4,12 +4,12 @@
  * @file
  */
 import {
-	assertComponentSignature, componentScalarAbi, componentScalarTypes,
-	scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes, validateComponentScalar,
+	assertComponentSignature, componentScalarAbi,
+	scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes,
 } from "../abi/component-scalars.mjs";
+import { readComponentScalarSlot, writeComponentScalarSlot } from "./component-scalar-codec.mjs";
 
 const encoder = new TextEncoder();
-const decoder = new TextDecoder("utf-8", { fatal: true });
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
 	.map(byte => byte.toString(16).padStart(2, "0")).join("");
 
@@ -22,20 +22,6 @@ const readArtifact = async url => {
 	const response = await fetch(url);
 	if(!response.ok) throw new Error(`Unable to read Lean component: HTTP ${response.status}`);
 	return new Uint8Array(await response.arrayBuffer());
-};
-
-const integerBytes = value => {
-	let magnitude = value < 0n ? -value : value;
-	const count = magnitude === 0n ? 0 : Math.ceil(magnitude.toString(16).length / 8);
-	if(count * 4 > scalarCopyLimit) throw new RangeError("Integer exceeds the component copy budget");
-	const bytes = new Uint8Array(count * 4);
-	const view = new DataView(bytes.buffer);
-	for(let index = 0; index < count; index += 1)
-	{
-		view.setUint32(index * 4, Number(magnitude & 0xffffffffn), true);
-		magnitude >>= 32n;
-	}
-	return bytes;
 };
 
 /**
@@ -69,68 +55,12 @@ export const callComponentScalar = (module, operation, signature, args) => {
 		view().setUint32(frame + 12, args.length, true);
 		for(const [index, parameter] of signature.parameters.entries())
 		{
-			const type = parameter.name;
-			const value = validateComponentScalar(type, args[index]);
 			const slot = frame + scalarFrameHeaderBytes + index * scalarSlotBytes;
-			view().setUint32(slot, componentScalarTypes.indexOf(type), true);
-			if(type === "string" || type === "bytes" || type === "nat" || type === "int")
-			{
-				const bytes = type === "string" ? encoder.encode(value) : type === "bytes" ? value : integerBytes(value);
-				const pointer = allocate(bytes.length);
-				module.HEAP8.set(bytes, pointer);
-				view().setUint32(slot + 4, typeof value === "bigint" && value < 0n ? 1 : 0, true);
-				view().setUint32(slot + 8, pointer, true);
-				view().setUint32(slot + 12, type === "nat" || type === "int" ? bytes.length / 4 : bytes.length, true);
-			}
-			else if(type === "float32") view().setFloat32(slot + 8, value, true);
-			else if(type === "float64") view().setFloat64(slot + 8, value, true);
-			else if(type === "char") view().setBigUint64(slot + 8, BigInt(value.codePointAt(0)), true);
-			else view().setBigUint64(slot + 8, BigInt.asUintN(64, type === "unit" ? 0n : BigInt(value)), true);
+			writeComponentScalarSlot(module, slot, parameter.name, args[index], allocate);
 		}
 		const status = operation(frame);
 		if(status !== 0 || view().getUint32(frame + 8, true) !== 0) throw new Error(`Component scalar call failed (${status})`);
-		const slot = frame + 16;
-		const type = signature.result.name;
-		if(view().getUint32(slot, true) !== componentScalarTypes.indexOf(type)) throw new Error("Component result type mismatch");
-		let value;
-		if(type === "unit") value = undefined;
-		else if(type === "bool")
-		{
-			const bits = view().getBigUint64(slot + 8, true);
-			if(bits > 1n) throw new Error("Invalid component boolean representation");
-			value = bits === 1n;
-		}
-		else if(type === "float32") value = view().getFloat32(slot + 8, true);
-		else if(type === "float64") value = view().getFloat64(slot + 8, true);
-		else if(type === "char")
-		{
-			const point = view().getBigUint64(slot + 8, true);
-			if(view().getUint32(slot + 4, true) !== 0 || point > 0x10ffffn || (point >= 0xd800n && point <= 0xdfffn)) throw new TypeError("Invalid component Unicode scalar representation");
-			value = String.fromCodePoint(Number(point));
-		}
-		else if(type === "string" || type === "bytes" || type === "nat" || type === "int")
-		{
-			const pointer = view().getUint32(slot + 8, true);
-			const length = view().getUint32(slot + 12, true);
-			const byteLength = length * (type === "nat" || type === "int" ? 4 : 1);
-			if(byteLength > scalarCopyLimit || pointer + byteLength > module.HEAP8.length) throw new RangeError("Invalid component result buffer");
-			const bytes = new Uint8Array(module.HEAP8.buffer, pointer, byteLength);
-			if(type === "string") value = decoder.decode(bytes);
-			else if(type === "bytes") value = bytes.slice();
-			else
-			{
-				value = 0n;
-				for(let index = length - 1; index >= 0; index -= 1) value = (value << 32n) | BigInt(view().getUint32(pointer + index * 4, true));
-				if(view().getUint32(slot + 4, true) & 1) value = -value;
-			}
-		}
-		else
-		{
-			if((type === "usize" || type === "isize") && view().getUint32(slot + 4, true) !== 0) throw new TypeError("Invalid component platform integer flags");
-			value = type.startsWith("int") || type === "isize" ? view().getBigInt64(slot + 8, true) : view().getBigUint64(slot + 8, true);
-			if(!type.endsWith("64")) value = Number(value);
-		}
-		return validateComponentScalar(type, value);
+		return readComponentScalarSlot(module, frame + 16, signature.result.name);
 	} finally
 	{
 		if(frame) module._bridge_scalar_frame_clear(frame);

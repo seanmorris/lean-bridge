@@ -757,6 +757,22 @@ The command verifies the supplied archives, installs them in an external tempora
 
 It checks loading, unmount during loading, invalid input, exact large-integer arithmetic, failed assets, reload recovery, and deployment prefixes. A successful run writes `acceptance.json` with `status: "passed"`. The adjacent `numeric-boundary-diagnostic.json` records successful addition at the 31-bit and 64-bit boundaries and for an input above `2^4096`. Acceptance neither rebuilds the component nor publishes it.
 
+### Staged npm callable transport
+
+The contract profile runs the private callable lifecycle and shared scalar codec checks:
+
+```sh
+node --test tests/component-callable-runtime.test.mjs tests/component-scalar-codec.test.mjs
+```
+
+The callable suite supplies a synthetic native side. It checks primitive conversions, sixteen-argument callbacks, exception identity, expiration, reentry, disposal, registry limits and cumulative copy budgets. The ordinary installed scalar tests separately exercise the extracted codec against real Lean and verify the U+FEFF string regression:
+
+```sh
+node --test tests/component-scalars.test.mjs tests/component-npm-package.test.mjs
+```
+
+Compiler and package admission for npm callables remains disabled pending Lean/C trampoline and shared-Wasm integration. The [transport staging record](../evidence/npm-callable-transport-20260919.md) lists that work and the required five-profile installed acceptance.
+
 ## Consumer acceptance
 
 Choose the command for the package boundary you changed. These commands run from the checkout, build the required packages, and install them into clean consumer projects. Native and managed jobs use the pinned Nix environment. The browser job needs Playwright's Chromium installed. The Node job also runs browser acceptance when `LEAN_BRIDGE_DOCUMENTATION_BROWSERS` names the requested engines, such as `chromium,firefox,webkit`; install those engines first.

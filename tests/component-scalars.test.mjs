@@ -66,7 +66,7 @@ assert.equal(api.isize(-0x80000000), -0x80000000);
 assert.throws(() => api.usize(0x100000000), TypeError);
 assert.throws(() => api.isize(0x80000000), TypeError);
 for(const name of ["f32", "f64"]) for(const value of [1.25, -0, Infinity, -Infinity, NaN]) assert.ok(Object.is(api[name](value), value));
-for(const value of ["", "🌱\\0end", "λ中文é"]) assert.equal(api.text(value), value);
+for(const value of ["", "🌱\\0end", "λ中文é", "\\uFEFF", "\\uFEFF\\0🌱\\uFEFF"]) assert.equal(api.text(value), value);
 assert.throws(() => api.text("\\ud800"), /surrogate/);
 for(const value of ["a", "\\0", "🌱", "\\u{10ffff}"]) assert.equal(api.character(value), value);
 for(const value of ["", "ab", "e\\u0301", "\\ud800", "\\udfff", 65]) assert.throws(() => api.character(value), TypeError);
