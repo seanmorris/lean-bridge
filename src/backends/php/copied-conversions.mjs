@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { phpValue, phpCallableDefinitions } from "./callables.mjs";
 
 /**
  * Declare C layouts and calls without preprocessing or Lean layout assumptions.
@@ -13,7 +14,8 @@ export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
 		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.record ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
-		, ...surface.functions.map(fn => `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = surface.copy(site.type); return copy.ctype + (copy.aggregate ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [`${surface.copy(fn.declaration.result.type).ctype} *`]).concat("BridgeError *").join(", ")});`)
+		, ...surface.callbacks.size ? [phpCallableDefinitions(model)] : []
+		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return copy.ctype + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${result.ctype} *`]).concat("BridgeError *").join(", ")});`; })
 	].join("\n");
 };
 

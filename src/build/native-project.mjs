@@ -83,7 +83,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, validateModel: cTargets.length ? model => {
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);

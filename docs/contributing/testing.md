@@ -155,6 +155,15 @@ LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs
 
 This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires this suite, the Alpha transport checks below, the copied Zend boundary check, and ordinary PHP-Wasm compilation.
 
+The native suite also tests cross-package callbacks, returned functions and nested exception identity. Run the independent primitive callable acceptance with:
+
+```sh
+LEAN_BRIDGE_PHP_CALLABLE_TEST=1 \
+  node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs
+```
+
+This checks all nineteen primitive signatures and sixteen-argument functions on ordinary-source and independently reviewed Composer paths. Weak and strict callers each run twice after relocation, without author sources, compilers, Composer caches or runtime overrides. It checks exact values, exception identity, borrowed lifetime, reentry, alias lifetime, deterministic disposal, destructor recovery, capacity limits, fiber rejection and post-fork rejection. A 20,000-callback stress test checks retained memory after warm-up. A separate production-state contract checks deferred active close. CI retains `build/callables/php-native.json`; the [acceptance record](../evidence/php-callables-20260919.md) identifies the installed archives.
+
 The generic Zend adapter has a separate real PHP-Wasm check:
 
 ```sh

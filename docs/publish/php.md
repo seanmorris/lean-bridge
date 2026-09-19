@@ -40,11 +40,29 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts pure copied primitives, arrays and acyclic records. It does not add FPM, ZTS, ordinary resources, callbacks or PHP-Wasm support. The [acceptance record](../evidence/native-php-copied-20260915.md) records the installed checks and hashes.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, acyclic records and synchronous primitive callables. FPM, ZTS, resources, asynchronous delivery and compound callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md) and [callable record](../evidence/php-callables-20260919.md) record installed checks and archive identities.
 
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
+
+### Export native callbacks and returned functions
+
+Select the callable exports alongside the other functions in `lean-bridge.exports.json`:
+
+```lean
+namespace Clover
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
+end Clover
+```
+
+Add `Clover.call_word` and `Clover.make_word` to `exports`. Set `"arities": { "Clover.make_word": 1 }` so `make_word` accepts the captured value and returns the remaining function. A reviewed Binding IR contract records that choice through its outer parameter count; do not also configure `arities` for that path.
+
+The native FFI adapter supports one to sixteen primitive callback arguments and a primitive result. Its PHP API accepts callables and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Composer installs the same pinned Brick Math dependency used by copied values. The existing private C callable ABI handles borrowing and owned closures. See the [consumer example](../php.md#native-callbacks-and-returned-functions) for lifetime, exception and execution-context rules.
+
+PHP-Wasm's copied Zend adapter does not yet implement these callables. A combined build rejects signatures that any selected target cannot implement.
 
 ## Build an ordinary PHP-Wasm package
 

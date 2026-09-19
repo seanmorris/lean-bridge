@@ -51,7 +51,7 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(source, "UInt32"), /Native PHP.*PHP-Wasm|PHP-Wasm.*Native PHP/u);
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
 	assert.match(row(source, "UInt32"), /PHP-Wasm: `Brick\\Math\\BigInteger`/u);
-	assert.match(row(source, "UInt32"), /Ordinary source: Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "UInt32"), /Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed \(input, result, field\); Not audited \(callback input, callback result\)/u);
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "UInt32"), /Alpha.*full 0\.\.4294967295/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
@@ -60,6 +60,16 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(wasm, "Int64"), /32-bit projection uses Brick\\Math\\BigInteger/u);
 	assert.match(row(wasm, "Int64"), /compiled copied API uses Brick\\Math\\BigInteger for the full/u);
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
+});
+
+test("PHP documents native primitive callables without promoting PHP-Wasm or copied fields", async () => {
+	const source = await readFile("docs/php.md", "utf8");
+	assert.match(row(source, "Nat"), /Reviewed IR: Native PHP: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\); PHP-Wasm: Generator inspected/u);
+	const callback = row(source, "Host function passed to Lean");
+	assert.match(callback, /`callable` \(input\)/u);
+	assert.match(callback, /Ordinary source: Native PHP: Installed checks passed \(input\).*PHP-Wasm: Not audited\. Reviewed IR: Native PHP: Installed checks passed \(input\).*PHP-Wasm: Generator inspected \(input\)/u);
+	assert.match(row(source, "Lean function returned to the host"), /Native PHP: `LeanClosure` \(result\); PHP-Wasm: `LeanAlpha\\Transform` \(result\)/u);
+	assert.doesNotMatch(row(source, "Task α / asynchronous result"), /Installed checks passed/u);
 });
 
 test("Java and Kotlin document installed primitive callables without promoting fields or async", async () => {

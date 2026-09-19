@@ -66,10 +66,12 @@ def grow (value : String) := #[value, value]
 def replicate (count : UInt32) : Array UInt8 := Array.replicate count.toNat 7
 def double_nat (value : Nat) := value + value
 def answer : UInt32 := 42
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 := callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
 theorem echo_rows_spec (value : Array (Array Leaf)) : echo_rows value = value := rfl
 end ${name}
 `);
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [name], exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "answer"].map(label => `${name}.${label}`)], targets: { "php-native": { name: `example/${name.toLowerCase()}-api`, version: "2.0.0-RC.1" } } }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [name], exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "answer", "call_word", "make_word"].map(label => `${name}.${label}`)], arities: { [`${name}.make_word`]: 1 }, targets: { "php-native": { name: `example/${name.toLowerCase()}-api`, version: "2.0.0-RC.1" } } }));
 };
 
 test("ordinary PHP emits deterministic checked functions without public FFI", async t => {
@@ -151,6 +153,9 @@ same(Lean${name}\\array_empty([new EmptyValue()]), [new EmptyValue()]);
 same(Lean${name}\\matrix([1, 2, 3]), [[1, 2, 3], [1, 2, 3]]);
 same(Lean${name}\\replicate(256), array_fill(0, 256, 7));
 same(Lean${name}\\answer(), 42);
+same(Lean${name}\\call_word(40, fn($value) => $value + 1), 42);
+$adder = Lean${name}\\make_word(2);
+try { same($adder(40), 42); same(Lean${name}\\call_word(40, $adder), 44); } finally { $adder->close(); }
 same(Lean${name}\\echo_bool(false), false);
 same(Lean${name}\\echo_nat(BigInteger::of('0')), BigInteger::of('0'));
 same(Lean${name}\\echo_integer(BigInteger::of('0')), BigInteger::of('0'));
@@ -236,7 +241,7 @@ test("ordinary PHP ZIPs reproduce and execute after offline Composer installatio
 		await saveLakeFile(consumer, "main.php", consumerSource(name));
 		assert.match((await run(php, [...phpArgs, "main.php"], consumer, clean)).stdout, /validation and recovery passed/);
 		const model = compileCopiedPhpModel(JSON.parse(await readFile(join(builds[0].output, "native/component/binding-ir.json"), "utf8")));
-		assert.equal(model.surface.functions.length, 43);
+		assert.equal(model.surface.functions.length, 45);
 		const root = join(consumer, "vendor", entry.name), native = join(root, "src/Internal/Native.php"), original = await readFile(native, "utf8");
 		const result = model.surface.copy(model.surface.functions.find(fn => fn.field === "echo_record").declaration.result.type);
 		// Test-only edits inject failure after native output allocation, with observable cleanup.
@@ -276,6 +281,12 @@ test("ordinary PHP ZIPs reproduce and execute after offline Composer installatio
 if (LeanClover\\answer() !== 42 || LeanJuniper\\answer() !== 42) throw new RuntimeException('Wrong answers');
 $integer = LeanClover\\echo_nat(Brick\\Math\\BigInteger::of('18446744073709551616'));
 if ((string) LeanJuniper\\echo_nat($integer)->plus(1) !== '18446744073709551617') throw new RuntimeException('Integer cannot cross packages');
+$adder = LeanJuniper\\make_word(2);
+try { if (LeanClover\\call_word(40, $adder) !== 44) throw new RuntimeException('Closure cannot cross packages'); } finally { $adder->close(); }
+$marker = new Error('cross-package error');
+try { LeanClover\\call_word(1, fn($value) => LeanJuniper\\call_word($value, fn($inner) => throw $marker)); throw new RuntimeException('Missing failure'); }
+catch (Error $error) { if ($error !== $marker) throw new RuntimeException('Callback error identity lost'); }
+if (LeanClover\\call_word(1, fn($value) => LeanJuniper\\call_word($value, fn($inner) => $inner + 1)) !== 5) throw new RuntimeException('Nested callbacks failed');
 $ffi = FFI::cdef('void lean_bridge_native_snapshot_read(void*);', __DIR__ . '/vendor/example/clover-api/native/linux-x64/liblean_bridge_native.so');
 $data = $ffi->new('uint32_t[10]'); $ffi->lean_bridge_native_snapshot_read(FFI::addr($data));
 if ($data[2] !== 1 || $data[3] !== 2 || $data[4] !== 2) throw new RuntimeException('Runtime not shared');

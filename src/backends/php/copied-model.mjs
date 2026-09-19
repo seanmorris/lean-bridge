@@ -5,7 +5,7 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
-const reserved = new Set("abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield bigint biginteger bytes leanbridgeerror internal this globals dispatch invoke".split(" "));
+const reserved = new Set("abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield bigint biginteger bytes leanbridgeerror leanclosure internal this globals dispatch invoke".split(" "));
 const bigInteger = "\\Brick\\Math\\BigInteger";
 const primitives = { char: "string", unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: bigInteger, int8: "int", int16: "int", int32: "int", int64: "int", nat: bigInteger, int: bigInteger, float32: "float", float64: "float", string: "string", bytes: "Bytes" };
 
@@ -26,10 +26,12 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param options - Explicit PHP integer width for the compiled transport.
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
+ * @param options.callables - Enable the implemented 64-bit native FFI callable transport.
  */
-export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits } = {}) => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = integerBits === 64 } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
-	const surface = compilePrimitiveCSurface(ir, { wordBits });
+	if(callables && integerBits !== 64) throw new TypeError("PHP primitive callables require the native 64-bit FFI transport");
+	const surface = compilePrimitiveCSurface(ir, { wordBits, callables });
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
@@ -55,6 +57,13 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 		if(names.has(fn.field.toLowerCase())) fail(fn.declaration, `PHP function name is reserved or duplicated: ${fn.field}`);
 		names.add(fn.field.toLowerCase());
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name.toLowerCase())) fail(fn.declaration, `PHP parameter name is reserved: ${parameter.name}`);
+	}
+	for(const [index, callback] of [...surface.callbacks.values()].entries())
+	{
+		const doc = ref => surface.copy(ref).docType;
+		Object.assign(callback, { index, ctype: callback.name, publicType: "callable"
+			, ownedType: `${surface.prefix}_owned_${callback.field}`
+			, docType: `callable(${callback.type.callable.parameters.map(site => doc(site.type)).join(", ")}): ${doc(callback.type.callable.result.type)}` });
 	}
 	return { ir, surface, namespace };
 };

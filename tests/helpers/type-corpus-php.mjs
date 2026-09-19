@@ -48,8 +48,11 @@ export const phpIsolationFlags = Object.freeze([
  * @param options.environment - Explicit author tools.
  * @param options.clean - Compiler-free runtime environment.
  * @param options.sourcePath - Independently specified argument-name contract.
+ * @param options.fixture - Optional independent callable request and lexical-mode consumers.
  */
-export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, environment, clean, sourcePath = "ordinary-source" }) => {
+export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, environment, clean, sourcePath = "ordinary-source", fixture }) => {
+	const request = fixture ? fixture.request(sourcePath) : corpusPhpRequestJson(library);
+	const source = mode => fixture ? fixture.source(mode, sourcePath) : corpusPhpSource(mode, "php-native", sourcePath);
 	const root = join(consumer, "php-native"), project = join(root, "project");
 	const feed = join(project, "feed"), home = join(project, "composer-home"), cache = join(project, "cache");
 	for(const directory of [feed, home, cache]) await mkdir(directory, { recursive: true });
@@ -141,14 +144,14 @@ export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, envi
 		, packageReceiptSha256: await digest(join(packageRoot, "lean-bridge/package-receipt.json"))
 		, bindingIrSha256: receipt.bindingIrSha256, archiveSha256: archive.sha256
 		, declarationsSha256: await digest(join(packageRoot, "src/Api.php"))
-		, requestSha256: sha256(corpusPhpRequestJson(library))
-		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode, "php-native", sourcePath))]))
+		, requestSha256: sha256(request)
+		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(source(mode))]))
 		, ...Object.fromEntries(phpIsolationFlags.map(key => [key, true])) };
 	const deployment = join(root, "relocated");
 	await mkdir(deployment);
 	await rename(join(project, "vendor"), join(deployment, "vendor"));
-	await saveLakeFile(deployment, "request.json", corpusPhpRequestJson(library));
-	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode, "php-native", sourcePath));
+	await saveLakeFile(deployment, "request.json", request);
+	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", source(mode));
 	await rm(project, { recursive: true, force: true });
 	assert.deepEqual(await readdir(root), ["relocated"]);
 	evidence.deployment = await inventory(deployment);

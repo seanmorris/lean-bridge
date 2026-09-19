@@ -366,7 +366,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests\/php-callables\.test\.mjs tests\/php-callable-contract\.test\.mjs/);
   assert.equal(packageDocument.scripts["test:type-corpus:php-wasm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=php-wasm node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: type_corpus_php_wasm\n\s*continue-on-error: true/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome != 'success'/);
