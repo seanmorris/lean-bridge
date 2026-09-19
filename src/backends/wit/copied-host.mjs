@@ -4,10 +4,7 @@
  * @file
  */
 import { renderWitConversions, witConversionPrelude } from "./copied-conversions.mjs";
-
-const requireCopiedHost = surface => {
-	if(surface.callbacks.size) throw Object.assign(new TypeError("WIT primitive callables have a staged resource projection only; the native Lean callable host is not implemented"), { code: "unsupported-wit-callable-host" });
-};
+import { renderCallableHostHeader, renderCallableHostSource } from "./callable-host.mjs";
 
 /**
  * Render the session API. Each session owns an engine and store for one thread.
@@ -16,7 +13,7 @@ const requireCopiedHost = surface => {
  * @param root0.surface - Shared C naming and function model.
  */
 export const renderWitHostHeader = ({ surface }) => {
-	requireCopiedHost(surface);
+	if(surface.callbacks.size) return renderCallableHostHeader({ surface });
 	const p = surface.prefix;
 	return `#ifndef ${p.toUpperCase()}_WASMTIME_H
 #define ${p.toUpperCase()}_WASMTIME_H
@@ -52,7 +49,7 @@ void ${p}_wasmtime_close(${p}_wasmtime *session);
  */
 export const renderWitHostSource = (model, componentBytes) => {
 	const { surface } = model, p = surface.prefix;
-	requireCopiedHost(surface);
+	if(surface.callbacks.size) return renderCallableHostSource(model, componentBytes);
 	const callbacks = surface.functions.map((fn, index) => {
 		const result = surface.copy(fn.declaration.result.type), unit = fn.resultType === "void";
 		return `static wasmtime_error_t *lb_call_${index}(void *data, wasmtime_context_t *context,

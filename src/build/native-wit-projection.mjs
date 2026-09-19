@@ -65,10 +65,12 @@ export const projectOrdinaryWasi = async options => {
 		, "-I", join(root, "include")
 		, "-I", join(root, "wasmtime/include")
 		, "-I", join(adapterRoot, "include")
+		, ...(projection.resources.length ? ["-I", join(options.runtimeRoot, "include"), "-pthread"] : [])
 		, join(root, `src/${p}_wasmtime.c`)
 		, "-L", join(adapterRoot, "lib")
 		, "-L", join(root, "wasmtime/lib")
 		, `-l${p}`, "-lwasmtime", "-Wl,-z,defs", "-Wl,--build-id=none"
+		, ...(projection.resources.length ? [join(options.runtimeRoot, "lib/liblean_bridge_native.so")] : [])
 		, "-Wl,-rpath,$ORIGIN", `-Wl,-soname,${library}`
 		, "-o", join(root, "lib", library)]);
 	for(const path of [join(root, "lib", library), join(root, "wasmtime/lib/libwasmtime.so")])

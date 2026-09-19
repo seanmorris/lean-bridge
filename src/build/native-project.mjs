@@ -83,12 +83,12 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, validateModel: cTargets.length ? model => {
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
 				if(targets.includes("rubygems")) compileCopiedRubyModel(model.bindingIr);
-				if(targets.includes("wit-wasi")) compileCopiedWitModel(model.bindingIr, config.targets?.["wit-wasi"]);
+				if(targets.includes("wit-wasi")) compileCopiedWitModel(model.bindingIr, config.targets?.["wit-wasi"], { callables: true });
 				if(targets.includes("pypi")) compileCopiedPythonModel(model.bindingIr);
 				if(targets.includes("cargo")) compileCopiedRustModel(model.bindingIr);
 				if(targets.includes("php-native")) compileCopiedPhpModel(model.bindingIr);

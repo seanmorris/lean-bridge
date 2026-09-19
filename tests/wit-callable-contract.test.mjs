@@ -11,6 +11,8 @@ import test from "node:test";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../src/backends/wit/copied-host.mjs";
 import { generateWitPackage } from "../src/backends/wit/generate.mjs";
+import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { brokerHeader } from "../src/backends/native/runtime-broker.mjs";
 import { snapshotWasmtimeCapi } from "../src/build/native-wit-projection.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { callablePrimitives, callableReviewedIr } from "./helpers/callable-fixture.mjs";
@@ -47,17 +49,17 @@ test("copied WIT output retains its pre-callable byte identities", () => {
 	assert.equal(sha256(canonicalJson(outputs)), "6ce5a1813807446a0713700dff5416504691caa06b11ca81f16bc055fc43b4c5");
 });
 
-test("WIT primitive callable projection is explicit and does not enable package admission", () => {
+test("WIT primitive callable projection supplies a checked owning native host", () => {
 	const ir = callableReviewedIr(witCallableSignatures);
 	assert.throws(() => compileCopiedWitModel(ir), { code: "unsupported-native-c-signature" });
-	assert.throws(() => generateWitPackage(ir));
+	assert.ok(generateWitPackage(ir));
 	const model = compileCopiedWitModel(ir, {}, { callables: true });
-	assert.throws(() => renderWitHostHeader(model), { code: "unsupported-wit-callable-host" });
-	assert.throws(() => renderWitHostSource(model, new Uint8Array()), { code: "unsupported-wit-callable-host" });
+	assert.match(renderWitHostHeader(model), /wasmtime_callback_create/);
+	assert.match(renderWitHostSource(model, new Uint8Array()), /lean_bridge_native_identity_acquire/);
 	const repeated = compileCopiedWitModel(structuredClone(ir), {}, { callables: true });
 	assert.equal(model.wit, repeated.wit); assert.equal(model.wat, repeated.wat);
 	assert.deepEqual(model.manifest, repeated.manifest);
-	assert.equal(model.manifest.backend, "wit-primitive-callable-projection-v1");
+	assert.equal(model.manifest.backend, "ordinary-wit-native-callable-v1");
 	assert.equal(model.manifest.declarations.length, 61);
 	assert.equal(model.resources.length, 39);
 	assert.match(model.wit, /resource function-bool-to-bool;/u);
@@ -78,6 +80,23 @@ test("wasm-tools validates all nineteen callable types and sixteen-argument cano
 	const source = JSON.parse((await runCopied("wasm-tools", ["component", "wit", "model.wit", "--json"], root, process.env)).stdout);
 	const binary = JSON.parse((await runCopied("wasm-tools", ["component", "wit", "model.wasm", "--json"], root, process.env)).stdout);
 	for(const name of ["native", "api"]) assert.deepEqual(semanticInterface(binary, name), semanticInterface(source, name));
+});
+
+test("native WIT callable host compiles against the public C and Wasmtime APIs", { skip: process.env.LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST !== "1" }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-wit-callable-compile-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const sdk = join(root, "wasmtime");
+	await snapshotWasmtimeCapi(process.env.LEAN_BRIDGE_WASMTIME_C_API, sdk);
+	for(const signatures of [witCallableSignatures, witCallableSignatures.filter(fn => fn.name === "Callables.makeUInt32")])
+	{
+		const ir = callableReviewedIr(signatures), model = compileCopiedWitModel(ir, {}, { callables: true });
+		const c = generateCBindingPackage(ir);
+		await saveLakeFile(root, "callables.h", c["include/callables.h"]);
+		await saveLakeFile(root, "callables_wasmtime.h", renderWitHostHeader(model));
+		await saveLakeFile(root, "lean_bridge_native_runtime.h", brokerHeader);
+		await saveLakeFile(root, "host.c", renderWitHostSource(model, new Uint8Array([0])));
+		await runCopied("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-pthread", "-I", join(sdk, "include"), "-c", "host.c", "-o", "host.o"], root, process.env);
+	}
 });
 
 test("Wasmtime executes primitive callable ownership through the generated component", { skip: process.env.LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST !== "1" }, async t => {

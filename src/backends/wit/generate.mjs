@@ -406,9 +406,11 @@ const projectWitPackageModel = ir => {
  */
 export const compileWitPackageModel = irValue => {
 	const ir = validateBindingIr(irValue);
-	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+	const ordinary = ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"
+		|| (site.type.kind === "named" && ir.types.some(type => type.id === site.type.id && type.kind === "callback"))));
+	if(ordinary)
 	{
-		const copied = compileCopiedWitModel(ir);
+		const copied = compileCopiedWitModel(ir, {}, { callables: true });
 		return { wit: copied.wit, manifest: copied.manifest, copied };
 	}
 	return projectWitPackageModel(ir);

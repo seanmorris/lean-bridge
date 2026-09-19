@@ -522,7 +522,19 @@ LEAN_BRIDGE_NATIVE_WIT_TEST=1 \
 
 Cobalt and Saffron each build from two relocated source trees. The suite hides their source directories, extracts the original archives and compiles consumer applications against the installed public headers and libraries. It checks copied values, input rejection, cleanup, shared runtime composition, altered artifacts and atomic build failure. See the [ordinary WIT acceptance record](../evidence/native-wit-20260914.md).
 
+### Native WIT callables
+
+Run the installed callable checks using the author toolchain above:
+
+```sh
+LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs
+```
+
+This compiles a 63-export Lean library and its Component Model host on both ordinary-source and independently reviewed paths. The test removes the producer workspace before installing each original archive and compiling a consumer against its public headers. Execution has no compiler or Lean on `PATH`. The consumer checks nineteen primitive mappings, sixteen-argument functions, borrowed and returned ownership, nested calls, deferred close, wrong-thread/session/signature rejection, expired borrows, registry reuse and exhaustion. It also checks that a surviving Lean function remains callable after a callback traps and the helper replaces its component store. CI retains `build/callables/wit.json`.
+
 ### Staged WIT callable projection
+
+The separate component projection probe requires no Lean compiler:
 
 With the same pinned Wasmtime C API and wasm-tools, run:
 
@@ -533,7 +545,7 @@ LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 \
 
 This test supplies synthetic native imports to the generated component. It checks all 19 primitive signatures, borrowed callback handles, owned returned functions, 16-argument invocation, and two callbacks following mixed aligned arguments. It also exercises nested calls, scratch-memory preservation, wrong-signature rejection, double disposal, callback failure and store replacement. Two deliberately broken components must fail: one omits borrow cleanup; the other resets the outer call's memory during re-entry.
 
-The WIT consumer CI job runs this probe alongside the installed copied-value suite. It does not execute Lean callbacks or produce an installable callable package. Package builds still reject callable signatures. See the [projection milestone and remaining native-host work](../evidence/wit-callable-projection-20260919.md).
+The WIT consumer CI job runs both suites alongside the installed copied-value tests. The synthetic probe isolates Component Model ownership and includes compile checks against the generated native C API. The installed suite exercises real Lean callbacks. The [earlier projection milestone](../evidence/wit-callable-projection-20260919.md) records the work before native-host integration.
 
 ### Alpha bundle
 

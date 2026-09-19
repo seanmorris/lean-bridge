@@ -69,11 +69,11 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 136);
+	assert.equal(observed.length, 140);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
@@ -90,12 +90,12 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 272);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 280);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
@@ -122,7 +122,7 @@ test("historical C callable evidence excludes GMP integers, other hosts and copi
 	}
 });
 
-for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native", "php-wasm"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
+for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-callables-installed" : `${profile}-callables-installed`;
 	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
@@ -203,7 +203,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "ruby-callables-installed", "rust-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "jvm-callables-installed", "php-native-callables-installed", "php-wasm-callables-installed"].includes(id))))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "ruby-callables-installed", "rust-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "jvm-callables-installed", "php-native-callables-installed", "php-wasm-callables-installed", "wit-wasi-callables-installed"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 

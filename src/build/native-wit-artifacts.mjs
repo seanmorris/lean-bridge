@@ -28,7 +28,7 @@ export const wasmtimeCapiIdentity = Object.freeze({
 export const ordinaryWitEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot, settings }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity);
-	const projection = compileCopiedWitModel(model.bindingIr, settings);
+	const projection = compileCopiedWitModel(model.bindingIr, settings, { callables: true });
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== 1 || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity

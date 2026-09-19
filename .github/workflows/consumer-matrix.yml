@@ -873,6 +873,8 @@ jobs:
           source scripts/env.sh
           node --test tests/native-wit.test.mjs
           LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs
+          LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs
+          test -s build/callables/wit.json
       - name: Compare installed WIT packages with the shared Lean corpus
         id: type_corpus_wit
         continue-on-error: true
@@ -890,7 +892,7 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs"
       - name: Upload WIT shared corpus evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -901,6 +903,7 @@ jobs:
             build/type-corpus/reviewed-native-wit-wasi.json
             build/char-native/wit-wasi.json
             build/word-native/wit-wasi.json
+            build/callables/wit.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

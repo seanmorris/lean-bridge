@@ -26,8 +26,8 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  *
  * @param ir - Authoritative compiler-derived Binding IR.
  * @param settings - Optional archive name and exact semantic version.
- * @param options - Internal projection capabilities, not package admission.
- * @param options.callables - Render the staged primitive callable contract.
+ * @param options - Explicit projection capabilities.
+ * @param options.callables - Admit the primitive callable resource contract.
  */
 export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
 	const surface = compilePrimitiveCSurface(ir, { callables });
@@ -102,7 +102,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 	const manifest = { schemaVersion: 1, backend: "ordinary-wit-native-v1", component: ir.component, bindingIrSha256: hashBindingIr(ir), wit: { package: packageName, world: name, apiInterface: exportName, nativeImport: importName }, declarations: surface.functions.map(fn => ({ id: fn.declaration.id, witName: fn.witName })), deferred: [], assurance: ir.assurance };
 	if(resources.length)
 	{
-		manifest.backend = "wit-primitive-callable-projection-v1";
+		manifest.backend = "ordinary-wit-native-callable-v1";
 		manifest.callables = resources.map(resource => ({ id: resource.type.id, witName: resource.witName, invoke: `invoke-${resource.witName}`, parameter: "borrow", result: "own" }));
 	}
 	return { ir, surface, functions, resources, name, version, exportName, importName, wit, wat, manifest };
