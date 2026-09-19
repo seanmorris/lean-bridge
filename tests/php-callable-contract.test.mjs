@@ -58,9 +58,12 @@ declare(strict_types=1);
 namespace LeanBridge\\CopiedNativeV1 { final class Runtime { public static bool $changed = false; public static function ensureProcess(): void { if (self::$changed) throw new \\LogicException('process changed'); } } }
 namespace Contract {
 ${phpCallableState}
+set_error_handler(static function (int $severity, string $message, string $file, int $line): never {
+    throw new \\ErrorException($message, 0, $severity, $file, $line);
+});
 function check(bool $value): void { if (!$value) throw new \\RuntimeException('lease assertion'); }
 function reject(callable $call): void { try { $call(); } catch (\\LogicException|\\ArgumentCountError $expected) { return; } throw new \\RuntimeException('missing rejection'); }
-$released = 0; $lease = null; $box = \\FFI::new('uint64_t'); $box->cdata = 42;
+$released = 0; $lease = null; $ffi = \\FFI::cdef(''); $box = $ffi->new('uint64_t'); $box->cdata = 42;
 $lease = new Lease(function ($token, $args) use (&$lease, &$released) { $lease->close(); check($released === 0); return $token->cdata + $args[0]; },
     function ($token) use (&$released) { if ($token->cdata !== 0) { ++$released; $token->cdata = 0; } }, $box, 1);
 reject(fn() => $lease->invoke([])); reject(fn() => $lease->invoke(['named' => 1]));
@@ -72,5 +75,7 @@ $fiber = new \\Fiber(fn() => reject(fn() => Lease::ensureCall())); $fiber->start
 echo 'php-lease-contract-ok';
 }
 `);
-	assert.equal((await runCopied(php, ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "state.php"], root)).stdout, "php-lease-contract-ok");
+	const result = await runCopied(php, ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "-d", "error_reporting=-1", "state.php"], root);
+	assert.equal(result.stdout, "php-lease-contract-ok");
+	assert.equal(result.stderr, "");
 });
