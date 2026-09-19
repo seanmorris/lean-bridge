@@ -69,11 +69,11 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 132);
+	assert.equal(observed.length, 136);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
@@ -90,12 +90,12 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 264);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 272);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
@@ -122,7 +122,7 @@ test("historical C callable evidence excludes GMP integers, other hosts and copi
 	}
 });
 
-for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
+for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native", "php-wasm"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-callables-installed" : `${profile}-callables-installed`;
 	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
@@ -203,7 +203,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "ruby-callables-installed", "rust-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "jvm-callables-installed", "php-native-callables-installed"].includes(id))))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "ruby-callables-installed", "rust-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "jvm-callables-installed", "php-native-callables-installed", "php-wasm-callables-installed"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
@@ -335,7 +335,7 @@ test("rejections and partial ranges remain required work, and exclusions need re
 });
 
 test("the inventory command keeps unknown filters closed and emits unreviewed cells as JSON", async () => {
-	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "char"], { cwd: root });
+	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "array"], { cwd: root });
 	const report = JSON.parse(result.stdout);
 	assert.equal(report.complete, false);
 	assert.equal(report.selectedCells.length, 10);
@@ -343,8 +343,10 @@ test("the inventory command keeps unknown filters closed and emits unreviewed ce
 	assert.equal(report.profiles, 1);
 	assert.equal(report.shapes, 1);
 	assert.equal(report.requiredGaps, report.gaps.length);
-	assert.ok(report.selectedCells.every(cell => cell.profile === "php-wasm" && cell.shape === "char"));
-	assert.ok(report.gaps.every(gap => gap.cell.startsWith("php-wasm/char/")));
+	assert.ok(report.selectedCells.every(cell => cell.profile === "php-wasm" && cell.shape === "array"));
+	assert.ok(report.gaps.every(gap => gap.cell.startsWith("php-wasm/array/")));
+	const complete = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "char"], { cwd: root })).stdout);
+	assert.equal(complete.complete, true); assert.equal(complete.requiredGaps, 0);
 	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "unknown"], { cwd: root }), /Unknown profile/);
 	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--unknown"], { cwd: root }), /Use --json/);
 });

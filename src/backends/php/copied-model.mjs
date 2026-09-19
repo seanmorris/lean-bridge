@@ -26,11 +26,10 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param options - Explicit PHP integer width for the compiled transport.
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
- * @param options.callables - Enable the implemented 64-bit native FFI callable transport.
+ * @param options.callables - Admit synchronous primitive callables for FFI or Zend.
  */
-export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = integerBits === 64 } = {}) => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
-	if(callables && integerBits !== 64) throw new TypeError("PHP primitive callables require the native 64-bit FFI transport");
 	const surface = compilePrimitiveCSurface(ir, { wordBits, callables });
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {

@@ -62,11 +62,13 @@ Add `Clover.call_word` and `Clover.make_word` to `exports`. Set `"arities": { "C
 
 The native FFI adapter supports one to sixteen primitive callback arguments and a primitive result. Its PHP API accepts callables and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Composer installs the same pinned Brick Math dependency used by copied values. The existing private C callable ABI handles borrowing and owned closures. See the [consumer example](../php.md#native-callbacks-and-returned-functions) for lifetime, exception and execution-context rules.
 
-PHP-Wasm's copied Zend adapter does not yet implement these callables. A combined build rejects signatures that any selected target cannot implement.
+The PHP-Wasm Zend adapter accepts the same primitive signatures and `arities` settings. It uses the 32-bit mappings in the [PHP conversion table](../php.md#type-conversions), including `BigInteger` for UInt32 and Int64. Both targets preserve the original callback `Throwable` after Lean cleanup. A combined build rejects signatures that any selected target cannot implement.
 
 ## Build an ordinary PHP-Wasm package
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.
+
+Callable exports require compiler inputs containing the callback registry. The builder rejects older inputs with a rebuild diagnostic; the ordinary copied-only profile can still use them. Contributors can rebuild the bundle using the [PHP-Wasm toolchain instructions](../contributing/author-toolchain.md#php-wasm). Distribute the matching runtime archive with the new component.
 
 Authors still need Lean 4.32.2 and the bundle's pinned Emscripten 3.1.68 installation:
 

@@ -78,8 +78,10 @@ export const installCopiedPhpWasm = async ({ consumer, handoff, packages, enviro
   if (libraries.length !== before || (loading === 'lazy' && before !== 0)) throw new Error('Invalid input loaded lazy code');
   await php.writeFile('/consumer.php', source);
   if (await php.run("<?php require '/consumer.php';") !== 0 || stderr || !/^${fixture.success}:[0-9]+\\n$/.test(stdout)) throw new Error(JSON.stringify({stdout,stderr}));
+  ${fixture.phpBailout ? `if (await php.run(${JSON.stringify("<?php " + fixture.phpBailout)}) !== 0 || stderr) throw new Error(JSON.stringify({stdout,stderr}));
+  if (await php.run(${JSON.stringify("<?php " + fixture.phpRecovery)}) !== 0 || stderr) throw new Error(JSON.stringify({stdout,stderr}));` : ""}
   if (libraries.length !== 2 || new Set(libraries).size !== 2) throw new Error('Expected one component and one runtime');
-  return {checks: Number(stdout.trim().split(':')[1]), libraries: libraries.length, mode, loading};
+  return {checks: Number(stdout.trim().split(':')[1]), libraries: libraries.length, mode, loading${fixture.phpBailout ? ", bailoutRecovery: true" : ""}};
 }\n`;
 	await saveLakeFile(root, "driver.mjs", driver);
 	await saveLakeFile(root, "node.mjs", `import {readFile,readdir} from 'node:fs/promises';
@@ -87,6 +89,8 @@ import {join} from 'node:path';
 import {PhpNode} from './node_modules/php-wasm/PhpNode.mjs';
 import api from ${JSON.stringify(name)};
 import {checkPhp} from './driver.mjs';
+// Print the actual failure, not Node's multi-megabyte minified host source line.
+process.setUncaughtExceptionCaptureCallback(error => { console.error(error.stack || String(error)); process.exit(1); });
 const [arrangement,loading,mode]=process.argv.slice(2);
 async function mount(php) {
   async function copy(from,to) { await php.mkdir(to); for(const file of await readdir(from,{withFileTypes:true})) {if(file.isDirectory()) await copy(join(from,file.name),to+'/'+file.name); else await php.writeFile(to+'/'+file.name,await readFile(join(from,file.name)));} }

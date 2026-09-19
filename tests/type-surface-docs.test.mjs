@@ -51,7 +51,7 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(source, "UInt32"), /Native PHP.*PHP-Wasm|PHP-Wasm.*Native PHP/u);
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
 	assert.match(row(source, "UInt32"), /PHP-Wasm: `Brick\\Math\\BigInteger`/u);
-	assert.match(row(source, "UInt32"), /Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed \(input, result, field\); Not audited \(callback input, callback result\)/u);
+	assert.match(row(source, "UInt32"), /Ordinary source: Installed checks passed\./u);
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "UInt32"), /Alpha.*full 0\.\.4294967295/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
@@ -62,13 +62,19 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 
-test("PHP documents native primitive callables without promoting PHP-Wasm or copied fields", async () => {
+test("PHP documents both primitive callable transports without promoting reviewed fields or async", async () => {
 	const source = await readFile("docs/php.md", "utf8");
-	assert.match(row(source, "Nat"), /Reviewed IR: Native PHP: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\); PHP-Wasm: Generator inspected/u);
+	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\)/u);
 	const callback = row(source, "Host function passed to Lean");
 	assert.match(callback, /`callable` \(input\)/u);
-	assert.match(callback, /Ordinary source: Native PHP: Installed checks passed \(input\).*PHP-Wasm: Not audited\. Reviewed IR: Native PHP: Installed checks passed \(input\).*PHP-Wasm: Generator inspected \(input\)/u);
-	assert.match(row(source, "Lean function returned to the host"), /Native PHP: `LeanClosure` \(result\); PHP-Wasm: `LeanAlpha\\Transform` \(result\)/u);
+	assert.match(callback, /Ordinary source: Installed checks passed \(input\).*Reviewed IR: Installed checks passed \(input\)/u);
+	assert.match(row(source, "Lean function returned to the host"), /`LeanClosure` \(result\)/u);
+	for(const profile of ["php-native", "php-wasm"]) for(const path of ["ordinary-source", "reviewed-ir"])
+	{
+		const closure = cells.find(cell => cell.id === `${profile}/closure/${path}/result`);
+		assert.equal(closure.hostType, "LeanClosure");
+		assert.deepEqual(closure.stages.installedExecution.evidence, [`${profile}-callables-installed`]);
+	}
 	assert.doesNotMatch(row(source, "Task α / asynchronous result"), /Installed checks passed/u);
 });
 

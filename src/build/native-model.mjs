@@ -162,12 +162,13 @@ export const createPhpWasmCopiedModel = options => {
 	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm models cannot carry a Perl namespace");
 	const model = createCompiledModel(options, "php-wasm-copied-v1", 32);
 	const copied = type => type.kind === "primitive" || (type.kind === "array" && copied(type.element)) || (type.kind === "record" && type.fields.every(field => copied(field.type)));
-	const unsupported = model.exports.find(item => !item.parameters.every(parameter => copied(parameter.type)) || !copied(item.result));
+	const admitted = type => copied(type) || (type.kind === "callback" && type.parameters.every(parameter => parameter.kind === "primitive") && type.result.kind === "primitive");
+	const unsupported = model.exports.find(item => !item.parameters.every(parameter => admitted(parameter.type)) || !admitted(item.result));
 	if(unsupported)
 	{
 		const declaration = model.bindingIr.declarations.find(item => item.source.declaration === unsupported.name);
 		const source = declaration.source.extensions?.["lean-lang.org/source-position"];
-		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm copied compilation admits only primitives, arrays and records`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, records and synchronous primitive callables`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
 	}
 	return model;
 };

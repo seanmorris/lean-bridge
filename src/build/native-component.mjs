@@ -36,7 +36,7 @@ lb_native_callback lb_native_callback_lookup(uint64_t token);
 int lb_native_callback_wrong_thread(uint64_t token);
 int lb_native_callback_take_error(void);
 `;
-const callbackBroker = `
+export const nativeCallbackBroker = `
 typedef struct { lb_native_callback callback; uint64_t generation; pthread_t thread; int wrong_thread; } lb_callback_slot;
 static lb_callback_slot callback_slots[4096];
 static _Thread_local int callback_error;
@@ -94,7 +94,7 @@ export const buildNativeSharedRuntime = async ({ outputRoot, leanPrefix, cc = "c
 		const probe = await run(join(leanPrefix, "bin/lean"), ["--version"]);
 		if(!probe.stdout.includes(pinnedNativeLean)) throw new Error("native runtime Lean identity mismatch");
 		await save(join(staging, "include/lean_bridge_native_runtime.h"), brokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`));
-		await save(join(staging, "broker.c"), `${brokerSource}\n${callbackBroker}`);
+		await save(join(staging, "broker.c"), `${brokerSource}\n${nativeCallbackBroker}`);
 		await mkdir(join(staging, "lib"));
 		const leanLibrary = join(leanPrefix, "lib/lean/libleanshared.so");
 		await copyFile(leanLibrary, join(staging, "lib/libleanshared.so"));
@@ -139,6 +139,21 @@ export const buildNativeSharedRuntime = async ({ outputRoot, leanPrefix, cc = "c
 const callbackDefault = nativeCallbackDefault;
 
 /**
+ * Connect compiler-emitted callable bodies to the shared borrowed-call registry.
+ *
+ * @param model - Compiler-checked model at its target pointer width.
+ */
+export const generateCompiledCallbacks = model => {
+	let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
+	for(const type of model.types.filter(t => t.kind === "callback"))
+	{
+		const result = nativeCType(type.result), arguments_ = type.parameters.map((_, i) => `value${i}`).join(", ");
+		callbacks += `${result} lb_t${type.key}_invoke(size_t token, ${type.parameters.map((p, i) => `${nativeCType(p)} value${i}`).join(", ")}) {\n  lb_native_callback cb = lb_native_callback_lookup(token);\n  if (!cb.invoke) { ${type.parameters.map((p, i) => nativeCType(p) === "lean_object *" ? `lean_dec(value${i});` : "").join(" ")} return ${callbackDefault(type.result)}; }\n  return ((${result} (*)(void *, ${type.parameters.map(nativeCType).join(", ")}))cb.invoke)(cb.context, ${arguments_});\n}\n`;
+	}
+	return callbacks;
+};
+
+/**
  * Compile one freshly elaborated API against the verified 64-bit native runtime.
  *
  * @param options - Source selection, pinned compiler and native runtime paths.
@@ -151,13 +166,7 @@ export const buildNativeComponent = async options => {
 	return buildElaboratedComponent({ ...options, profile: "native-library-v1"
 		, receiptName: "native-component.json", createModel: createNativeModel
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot, run, verifyElaborationInputs }) => {
-			let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
-			for(const type of model.types.filter(t => t.kind === "callback"))
-			{
-				const result = nativeCType(type.result), arguments_ = type.parameters.map((_, i) => `value${i}`).join(", ");
-				callbacks += `${result} lb_t${type.key}_invoke(size_t token, ${type.parameters.map((p, i) => `${nativeCType(p)} value${i}`).join(", ")}) {\n  lb_native_callback cb = lb_native_callback_lookup(token);\n  if (!cb.invoke) { ${type.parameters.map((p, i) => nativeCType(p) === "lean_object *" ? `lean_dec(value${i});` : "").join(" ")} return ${callbackDefault(type.result)}; }\n  return ((${result} (*)(void *, ${type.parameters.map(nativeCType).join(", ")}))cb.invoke)(cb.context, ${arguments_});\n}\n`;
-			}
-			await save(join(staging, "c/callbacks.c"), callbacks);
+			await save(join(staging, "c/callbacks.c"), generateCompiledCallbacks(model));
 			const objects = [];
 			const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.resolution) : [];
 			const nativeCompilation = nativeInputs.length ? await compileLakeNativeInputs({ snapshot: lakeSnapshot

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.16.0",
+  "contractVersion": "0.17.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,11 +157,250 @@
   ],
   "evidence": [
     {
+      "id": "php-wasm-callables-installed",
+      "kind": "installed",
+      "revision": "05f1d2119166c695750c50c534c67cab1bdbdf43",
+      "command": "LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs; node --test tests/php-wasm-callable-contract.test.mjs; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs; npm run test:type-corpus:php-wasm; LEAN_BRIDGE_REVIEWED_WASM_PROFILES=php-wasm node --test tests/type-corpus-reviewed-wasm.test.mjs",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH. The 63-export fixture passes 79934 assertions in each of 24 configurations. Covers exact values through 16385 bits, floats, Unicode, arity 16, original Throwable, copy independence, expired borrows, reentry, alias lifetime, destructor recovery, registry exhaustion, and callback exit with later-request recovery. A warmed 20000-call test bounds retained PHP memory. Separate production-state tests check deferred active close, the Fiber guard and both registries at token exhaustion. Willow/Aspen npm and Composer archives reproduce; cross-package callables, shared runtime and nested exception identity pass. Fresh Shop/Telemetry oracles pass 124 catalog cases on each path. PHP 8.4.1, php-wasm 0.1.0, Emscripten 3.1.68 and Chromium 152.0.7977.75. The pinned host cannot start Fibers. See docs/evidence/php-wasm-callables-20260919.json. Copied fields and other profiles are not promoted.",
+      "files": [
+        {
+          "path": "src/backends/php/zend-callables.mjs",
+          "sha256": "201f532701f74b2a84a6714982e1e1f80cf4e7a53745a737639c6e5daef44270"
+        },
+        {
+          "path": "src/backends/php/copied-zend.mjs",
+          "sha256": "35e3b08a061643cdb1dd1ca7635ff862616c739421a5fc408fe830c7209a7493"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
+        },
+        {
+          "path": "src/backends/php/copied-values.mjs",
+          "sha256": "24e4515932adeb8ef9d458c4171ff0c80493dcf1cbff2264c362a4fe9ff9e5d2"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "daa29ddc140ab68416e5efb1e10920bf136330d2b21973cf49056278c0bb6a4f"
+        },
+        {
+          "path": "src/backends/php/callables.mjs",
+          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+        },
+        {
+          "path": "src/build/php-wasm-project.mjs",
+          "sha256": "f8c9ad85c91fedd1945bdb67a6fb431022a930f126939e0d37a7de6decd6fef9"
+        },
+        {
+          "path": "src/build/php-wasm-copied-component.mjs",
+          "sha256": "0171d358548562f1d662ac3fc8f859177847a9ba55e3ac6a92f7f1ca4290cf67"
+        },
+        {
+          "path": "src/release/php-wasm-copied-package.mjs",
+          "sha256": "7f470f7c774175fb381513fc5652d46533df6f281f7debc79e235e87b05ea447"
+        },
+        {
+          "path": "tests/php-wasm-callable-contract.test.mjs",
+          "sha256": "b7f7608846a135a82948a3e4e347d1640cc67ef61043af5b63148d6bd9048273"
+        },
+        {
+          "path": "tests/php-wasm-callable-evidence.test.mjs",
+          "sha256": "82b5a007dc94504db1ca2a805e81a3257299124285c3b3bbcd4a3797440ab884"
+        },
+        {
+          "path": "tests/php-wasm-callables.test.mjs",
+          "sha256": "d65b1d5f42223f51efea09bc3f077e2d7338e24de0f98992b8bccc1043d7573e"
+        },
+        {
+          "path": "tests/helpers/php-callable-fixture.mjs",
+          "sha256": "b3c77b2c1fd756e12e74720e215b7c06aaec0619ff7f47c5013a8a805a4bdd81"
+        },
+        {
+          "path": "tests/helpers/callable-fixture.mjs",
+          "sha256": "fdfb536780348c73d7dac0c4c4bf246634c99df0e6d16f2b5b0b5cd227df5d84"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-php-wasm.mjs",
+          "sha256": "6eaa5192ea554d3144d572e37b4048736d2eb023ae2b99c743fe388e7e69b139"
+        },
+        {
+          "path": "tests/helpers/php-wasm-ordinary.mjs",
+          "sha256": "b96dba71e2885572262bc0c1190b341369ef436402c40eace2ba4f1c2ac68805"
+        },
+        {
+          "path": "tests/php-wasm-ordinary.test.mjs",
+          "sha256": "f943de4c8f61063b2330db0a2162a5258bec4df81e5a206252b75887597f474c"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
+        },
+        {
+          "path": "tests/type-surface-docs.test.mjs",
+          "sha256": "23c8e5afae5a9daa02df903465e4ffd803303409fffab1a6f87e6d07e56015be"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/php-wasm.php",
+          "sha256": "2292834b680304a0b18e40d93cd9e4b7b8865179d7b138646a4d8e286c8b831c"
+        },
+        {
+          "path": "tests/fixtures/onboarding/callables/Callables.lean",
+          "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+          "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Python.lean",
+          "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Dotnet.lean",
+          "sha256": "35e910d444fccff2ebdd09a2021444b9d3ca5412811c8e30b379c014c5650c9a"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Jvm.lean",
+          "sha256": "841d639d52a99079af66bda768e0db6db344c29293ff676a7e81d8e5ec1babdb"
+        },
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
+        },
+        {
+          "path": "docs/evidence/php-wasm-callables-20260919.md",
+          "sha256": "9c5b2a383cefc9ae7580c6625dcc6709205b29ef19153528e650178dde49f2a1"
+        },
+        {
+          "path": "docs/evidence/php-wasm-callables-20260919.json",
+          "sha256": "f8fc9f7584fdc5c8e13da28ad606405754e2da5851eb1461a22ef2d90184f81e"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/packages/php-wasm/archives/lean-bridge-callables-wasm-1.0.0-php-wasm.zip",
+          "sha256": "b9ef75fc2be6a7ce744a79083e3bcebf82cbd2c4325c52eafb6836eca8bc0aeb"
+        },
+        {
+          "path": "ordinary-source/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "ordinary-source/packages/php-wasm/archives/lean-bridge-callables-wasm-1.0.0.tgz",
+          "sha256": "1d2c6de9f0930384ed8c2277ad0bf2aca458475a29b215f8328c55ec8ce964af"
+        },
+        {
+          "path": "reviewed-ir/packages/php-wasm/archives/lean-bridge-callables-wasm-1.0.0-php-wasm.zip",
+          "sha256": "c6067c7989596f50ac69b09156165c3176d2c64d5c3545c018775ab9fddb929d"
+        },
+        {
+          "path": "reviewed-ir/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "reviewed-ir/packages/php-wasm/archives/lean-bridge-callables-wasm-1.0.0.tgz",
+          "sha256": "d23f482ad12812cce75009c034ebdc9248771296db7f1eb42ffa9ada6c990af7"
+        },
+        {
+          "path": "ordinary-source/shop/packages/php-wasm/archives/shop-php-wasm-corpus-1.0.0.tgz",
+          "sha256": "b7efef6181ab16ac6ed70ab537ff5fb9d3a2b61cc592462c04431c5e3020399e"
+        },
+        {
+          "path": "ordinary-source/shop/packages/php-wasm/archives/lean-bridge-corpus-shop-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "f120356a55da542cee400782278d5a1c61faae048a466746a211767c8e9a52cd"
+        },
+        {
+          "path": "ordinary-source/shop/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "ordinary-source/telemetry/packages/php-wasm/archives/telemetry-php-wasm-corpus-1.0.0.tgz",
+          "sha256": "3d023d21bd7f53d2e924111c6759d25eefd1ebb98d1ca28fa436466a69ec9e70"
+        },
+        {
+          "path": "ordinary-source/telemetry/packages/php-wasm/archives/lean-bridge-corpus-telemetry-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "7726654d478cfcbb2dc0d857b2c04cce316ccfe5310358ad0655c64cdbe2dcbd"
+        },
+        {
+          "path": "ordinary-source/telemetry/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "reviewed-ir/shop/packages/php-wasm/archives/shop-php-wasm-corpus-1.0.0.tgz",
+          "sha256": "e86444d7ce352d2d4c12ff5dcccd523e26b6621334b42f5b8b80ca3b5d04330b"
+        },
+        {
+          "path": "reviewed-ir/shop/packages/php-wasm/archives/lean-bridge-corpus-shop-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "f588c08658d6ae136bc4f0a8cbe1dd73a8605ffd875f8e5a1943fc90f9496638"
+        },
+        {
+          "path": "reviewed-ir/shop/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "reviewed-ir/telemetry/packages/php-wasm/archives/telemetry-php-wasm-corpus-1.0.0.tgz",
+          "sha256": "301afc6e3a291782cbde3f0940c78184a7e1dc6e505e7b40d26ae48972ddf620"
+        },
+        {
+          "path": "reviewed-ir/telemetry/packages/php-wasm/archives/lean-bridge-corpus-telemetry-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "f8408438c1145a855bcce087a5d8b988b35c824346c2c2634f62da13bbd8bcde"
+        },
+        {
+          "path": "reviewed-ir/telemetry/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "regression/Willow/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "regression/Willow/example-willow-php-wasm-2.0.0-RC.1.tgz",
+          "sha256": "45c0bed5791cdbf4eee0c4f8d454ff94bc4e4a131566b39cfb929a86ac5e37a7"
+        },
+        {
+          "path": "regression/Willow/example-willow-php-wasm-2.0.0-RC.1-php-wasm.zip",
+          "sha256": "30e8b682f29e47fef6476253c4ff63f981f07bd6e0bb9372457ec7ef0b4f9ce5"
+        },
+        {
+          "path": "regression/Aspen/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.ca13d333e064b4b5a4611cbe617290c0f86999cd54023d15f11a0956f378336c.tgz",
+          "sha256": "54135db6a98076ff6861e7405eeb1d82889b5d5d919a8b086c861f8669dcb50b"
+        },
+        {
+          "path": "regression/Aspen/example-aspen-php-wasm-2.0.0-RC.1.tgz",
+          "sha256": "948c8cdd182c673b0010b0feadc876ca82b934effa333a9a7fc37fa2323cd9ab"
+        },
+        {
+          "path": "regression/Aspen/example-aspen-php-wasm-2.0.0-RC.1-php-wasm.zip",
+          "sha256": "cca747f6d45df30dced4e8b1a3edcf26febb3a1ac033dbbe467349e8f58adf7d"
+        }
+      ]
+    },
+    {
       "id": "php-native-callables-installed",
       "kind": "installed",
       "revision": "c2f05ca3fff9f91763a128ebe3302680cb8e58f4",
       "command": "LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs; node --test tests/php-callable-contract.test.mjs; LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs; npm run test:type-corpus:php-native; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs",
-      "scope": "Offline installed native PHP Composer consumers cover nineteen primitive callback and returned-function signatures on ordinary-source and independently reviewed paths, with relocated weak and strict callers repeated without compilers. The 63-export fixture passes 51686 assertions per weak/strict caller on each path, repeated twice after installation project/cache removal. Covers exact values through 16385 bits, floats, Unicode, arity 16, original Throwable and trace, copy independence, expired borrows, reentry, deferred close, alias lifetime, destructor recovery, registry exhaustion, fiber and real post-fork rejection. A warmed 20000-call test bounds retained PHP memory. Clover/Juniper Composer and C archives reproduce; cross-package callables, shared runtime and nested exception identity pass. Fresh Shop/Telemetry oracles pass 124 catalog cases on each path in both caller modes. PHP 8.2.33 NTS CLI, Composer 2, GCC 12.2.0; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/php-callables-20260919.json. PHP-Wasm and copied fields are not promoted.",
+      "scope": "Offline installed native PHP Composer consumers cover nineteen primitive callback and returned-function signatures on ordinary-source and independently reviewed paths, with relocated weak and strict callers repeated without compilers. The 63-export fixture passes 51686 assertions per weak/strict caller on each path, repeated twice after installation project/cache removal. Covers exact values through 16385 bits, floats, Unicode, arity 16, original Throwable and trace, copy independence, expired borrows, reentry, deferred close, alias lifetime, destructor recovery, registry exhaustion, fiber and real post-fork rejection. A warmed 20000-call test bounds retained PHP memory. Clover/Juniper Composer and C archives reproduce; cross-package callables, shared runtime and nested exception identity pass. Fresh Shop/Telemetry oracles pass 124 catalog cases on each path in both caller modes. PHP 8.2.33 NTS CLI, Composer 2, GCC 12.2.0; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/php-callables-20260919.json. PHP-Wasm and copied fields are not promoted. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/php/callables.mjs",
@@ -169,7 +408,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "08b14a7ad5d2562597ae67a4ac3f6393abe3d86b7596b9882b609c90b9d9cf6f"
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
@@ -193,11 +432,11 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "af2f059b08a3312a4cf2cdfeb0434dfa6307bcc33e34fd68c152ab73ac92fdc7"
+          "sha256": "35e3b08a061643cdb1dd1ca7635ff862616c739421a5fc408fe830c7209a7493"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -217,7 +456,7 @@
         },
         {
           "path": "tests/php-callable-contract.test.mjs",
-          "sha256": "8db47d5e8205e88184d1d7b922631eba1d8d58754202376e65ad426fa597c9b3"
+          "sha256": "d714cfc5109c551619bcbc10abce69e5b3c832b6861255a830f7b0dcb281b070"
         },
         {
           "path": "tests/php-callable-evidence.test.mjs",
@@ -249,15 +488,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "c23b40a1e447f31004cd31732fed48c4c7b24cf54c7f9be159980deff580c116"
+          "sha256": "23c8e5afae5a9daa02df903465e4ffd803303409fffab1a6f87e6d07e56015be"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -285,7 +524,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -344,7 +583,7 @@
       "kind": "installed",
       "revision": "95f0a9188a6f0e8a08320d58673c449342148d5c",
       "command": "LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs; node --test tests/jvm-callable-contract.test.mjs; LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs; npm run test:type-corpus:jvm; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs",
-      "scope": "Offline installed Java 22 and Kotlin 2.2 Maven consumers cover all nineteen primitive callback and returned-function signatures on ordinary-source and independently reviewed paths, repeated with runtime-only relocation. The 63-export fixture passes 66683 Java assertions and 66655 Kotlin assertions on each path, six compiler-rejected callers per language, and two source/SDK-free executions per consumer. Covers exact integers through 16,385 bits, float/Unicode boundaries, arity 16, Throwable identity/stack, GC rooting, thread ownership, deferred close, Cleaner recovery, expired borrows, nested calls and registry exhaustion. The compiled state-machine test simulates a PID change, without forking the JVM. Maple/Cedar archives reproduce, compose across class loaders and share callable exception identity. Fresh Shop/Telemetry oracles pass for both languages and source paths. JDK 22.0.2, Kotlin 2.2.0, Maven 3.9.11; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/jvm-callables-20260919.json. No copied-field or other-host promotion. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Offline installed Java 22 and Kotlin 2.2 Maven consumers cover all nineteen primitive callback and returned-function signatures on ordinary-source and independently reviewed paths, repeated with runtime-only relocation. The 63-export fixture passes 66683 Java assertions and 66655 Kotlin assertions on each path, six compiler-rejected callers per language, and two source/SDK-free executions per consumer. Covers exact integers through 16,385 bits, float/Unicode boundaries, arity 16, Throwable identity/stack, GC rooting, thread ownership, deferred close, Cleaner recovery, expired borrows, nested calls and registry exhaustion. The compiled state-machine test simulates a PID change, without forking the JVM. Maple/Cedar archives reproduce, compose across class loaders and share callable exception identity. Fresh Shop/Telemetry oracles pass for both languages and source paths. JDK 22.0.2, Kotlin 2.2.0, Maven 3.9.11; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/jvm-callables-20260919.json. No copied-field or other-host promotion. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -372,7 +611,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -440,11 +679,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -468,7 +707,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -575,7 +814,7 @@
       "kind": "installed",
       "revision": "524af25f5568b34d3340f97d061f500f304320ba",
       "command": "LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs; node --test tests/dotnet-callable-contract.test.mjs; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs; npm run test:type-corpus:dotnet; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs",
-      "scope": "Offline installed .NET 8 NuGet execution covers all nineteen primitive callback and returned-closure signatures on ordinary-source and independently reviewed paths, with runtime-only relocation. Each 62-export package passes 128,247 assertions, seven expected Roslyn rejections and two SDK/source-free reruns. Checks include exact integers through 16,385 bits, float/Unicode boundaries, arity 16, exception identity/stack preservation, GC rooting, thread affinity, finalization, disposal, alias lifetime, expired borrows, 64-frame reentry and 4,096-identity exhaustion/recovery. A compiled state-machine test simulates process identity change and active deferred release without forking the CLR. Aurora/Boreal archives reproduce and share cross-package callable state and exception identity. Fresh Shop/Telemetry oracles pass on both paths. SDK 8.0.424; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/dotnet-callables-20260919.json for exact source/compiler/archive identities. No copied-field or other-host promotion. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Offline installed .NET 8 NuGet execution covers all nineteen primitive callback and returned-closure signatures on ordinary-source and independently reviewed paths, with runtime-only relocation. Each 62-export package passes 128,247 assertions, seven expected Roslyn rejections and two SDK/source-free reruns. Checks include exact integers through 16,385 bits, float/Unicode boundaries, arity 16, exception identity/stack preservation, GC rooting, thread affinity, finalization, disposal, alias lifetime, expired borrows, 64-frame reentry and 4,096-identity exhaustion/recovery. A compiled state-machine test simulates process identity change and active deferred release without forking the CLR. Aurora/Boreal archives reproduce and share cross-package callable state and exception identity. Fresh Shop/Telemetry oracles pass on both paths. SDK 8.0.424; local glibc 2.36, declared package/CI floor 2.38. See docs/evidence/dotnet-callables-20260919.json for exact source/compiler/archive identities. No copied-field or other-host promotion. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -599,7 +838,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -663,11 +902,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -687,7 +926,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -742,7 +981,7 @@
       "kind": "installed",
       "revision": "e2c70e3be6547159750f24ee2d26b600044d0bc0",
       "command": "LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs; LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs; npm run test:type-corpus:c-family; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c node --test tests/type-corpus-reviewed-native.test.mjs",
-      "scope": "Installed C/GMP exact integers in scalar calls, nested copied values and primitive callbacks/closures; ordinary-source and independently reviewed packages, offline installation and source-free relocation. GMP 6.3.0 source was signature-verified and is pinned by SHA-256. Independent builds run upstream make check, reproduce archives and supply CMake/pkg-config metadata automatically. Installed consumers verify dependency hashes, exact values through 16,385 bits, negative Nat, initialization, aliasing, replacement, nested cleanup, error snapshots and source-free library loading. Separate allocation probes cover the facade and unchanged private ABI. Ordinary C/C++ and reviewed C Shop/Telemetry cases match fresh Lean oracles. Host glibc 2.36; declared package/CI floor 2.38. Exact receipts and archive identities are retained in docs/evidence/c-gmp-20260919.json. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Installed C/GMP exact integers in scalar calls, nested copied values and primitive callbacks/closures; ordinary-source and independently reviewed packages, offline installation and source-free relocation. GMP 6.3.0 source was signature-verified and is pinned by SHA-256. Independent builds run upstream make check, reproduce archives and supply CMake/pkg-config metadata automatically. Installed consumers verify dependency hashes, exact values through 16,385 bits, negative Nat, initialization, aliasing, replacement, nested cleanup, error snapshots and source-free library loading. Separate allocation probes cover the facade and unchanged private ABI. Ordinary C/C++ and reviewed C Shop/Telemetry cases match fresh Lean oracles. Host glibc 2.36; declared package/CI floor 2.38. Exact receipts and archive identities are retained in docs/evidence/c-gmp-20260919.json. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/c/gmp.mjs",
@@ -766,7 +1005,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/build/native-gmp.mjs",
@@ -858,15 +1097,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "flake.nix",
@@ -953,7 +1192,7 @@
       "kind": "installed",
       "revision": "7d847366237c3c054af14c567008a717c8a08696",
       "command": "LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs; LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs; npm run test:type-corpus:cpp; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=cpp node --test tests/type-corpus-reviewed-native.test.mjs",
-      "scope": "Both paths pass installed C++ callable assertions and repeat them after source-free executable/library relocation. All nineteen primitive conversions, exact cpp_int values, original exceptions, reentry, expired borrows, stable creator-thread/fork checks, allocation-failure cleanup, deferred disposal and registry exhaustion. Seven compile-fail consumers reject incompatible signatures and copies. Boost 1.90.0 standalone headers are pinned, bundled and verified. Scalar/nested C/C++ package regressions and independent Shop/Telemetry Lean oracle corpora cover exact bigint fields on both paths. Local host glibc is 2.36; package and CI floor remain 2.38. No other-host callable promotion; exact archive identities are retained in docs/evidence/cpp-callables-20260919.json. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both paths pass installed C++ callable assertions and repeat them after source-free executable/library relocation. All nineteen primitive conversions, exact cpp_int values, original exceptions, reentry, expired borrows, stable creator-thread/fork checks, allocation-failure cleanup, deferred disposal and registry exhaustion. Seven compile-fail consumers reject incompatible signatures and copies. Boost 1.90.0 standalone headers are pinned, bundled and verified. Scalar/nested C/C++ package regressions and independent Shop/Telemetry Lean oracle corpora cover exact bigint fields on both paths. Local host glibc is 2.36; package and CI floor remain 2.38. No other-host callable promotion; exact archive identities are retained in docs/evidence/cpp-callables-20260919.json. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/cpp/boost.mjs",
@@ -981,7 +1220,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -1069,15 +1308,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -1152,7 +1391,7 @@
       "kind": "installed",
       "revision": "e7a25782d2978c832622453c7edae8082157e48a",
       "command": "LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs",
-      "scope": "Both source paths pass 35,890 installed Rust assertions each and repeat them after source-free binary relocation. All nineteen primitive callback/closure conversions, exact values, original errors and panic payloads, reentry, expired borrows, thread/fork checks, conversion-failure cleanup, deferred disposal and registry exhaustion. Eight compile-fail consumers per path reject invalid signatures, Send, Sync, Clone and async. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/rust-callables-20260919.json. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both source paths pass 35,890 installed Rust assertions each and repeat them after source-free binary relocation. All nineteen primitive callback/closure conversions, exact values, original errors and panic payloads, reentry, expired borrows, thread/fork checks, conversion-failure cleanup, deferred disposal and registry exhaustion. Eight compile-fail consumers per path reject invalid signatures, Send, Sync, Clone and async. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/rust-callables-20260919.json. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/rust/callables.mjs",
@@ -1180,7 +1419,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -1264,15 +1503,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -1299,7 +1538,7 @@
       "kind": "installed",
       "revision": "f554d863135e43c7928c181d290c5f0cb7ac3dc8",
       "command": "LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs",
-      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -1327,7 +1566,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -1395,15 +1634,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -1430,7 +1669,7 @@
       "kind": "installed",
       "revision": "8f0c94826ce6782d677867e38f2f375aabde7624",
       "command": "LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs",
-      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/python/callables.mjs",
@@ -1458,7 +1697,7 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -1526,15 +1765,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -1561,7 +1800,7 @@
       "kind": "installed",
       "revision": "2cb189f3eff4ca5acc4f9853edc1d64e374f5e11",
       "command": "LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs",
-      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
@@ -1581,15 +1820,15 @@
         },
         {
           "path": "src/backends/c/native-callables.mjs",
-          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+          "sha256": "320f172dbad7fe6551af00082de9429350b089f6233983a1297eeac55ddd3f13"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1645,15 +1884,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -1680,7 +1919,7 @@
       "kind": "installed",
       "revision": "01f10ed85b75e3676df0eba41de9e8efc89c0dcc",
       "command": "LEAN_BRIDGE_PERL_CALLABLE_TEST=1 LEAN_BRIDGE_CORPUS_PERL=<pinned-Perl> node --test tests/perl-callables.test.mjs",
-      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -1708,11 +1947,11 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
         },
         {
           "path": "src/backends/perl/generate.mjs",
@@ -1756,15 +1995,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "dd2158fbcd067356be4e5c6b0086c9b4f6f085ae26a0c310551e8fd22dbbe345"
+          "sha256": "7dac391fe40c92d273f9cd397a6cf9df227aa4bb3aaff64e402c3d4e822db83c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -1851,11 +2090,11 @@
       "kind": "installed",
       "revision": "f5001a1d0e0cc891798786b197c4f643359cf54d",
       "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=c,python node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=cpp,rust node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=perl,php-native,wit-wasi node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs",
-      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -1903,7 +2142,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -1971,7 +2210,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "08b14a7ad5d2562597ae67a4ac3f6393abe3d86b7596b9882b609c90b9d9cf6f"
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -1979,7 +2218,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "af2f059b08a3312a4cf2cdfeb0434dfa6307bcc33e34fd68c152ab73ac92fdc7"
+          "sha256": "35e3b08a061643cdb1dd1ca7635ff862616c739421a5fc408fe830c7209a7493"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -2031,7 +2270,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/release/component-npm-package.mjs",
@@ -2055,7 +2294,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "dd2158fbcd067356be4e5c6b0086c9b4f6f085ae26a0c310551e8fd22dbbe345"
+          "sha256": "7dac391fe40c92d273f9cd397a6cf9df227aa4bb3aaff64e402c3d4e822db83c"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -2139,7 +2378,7 @@
         },
         {
           "path": "tests/helpers/copied-fixture-php-wasm.mjs",
-          "sha256": "3954f31307023d7d94a49dd98d217186ce90be39e64a54e47e8ae446fbbe9f0a"
+          "sha256": "6eaa5192ea554d3144d572e37b4048736d2eb023ae2b99c743fe388e7e69b139"
         },
         {
           "path": "tests/helpers/native-word-install.mjs",
@@ -2159,7 +2398,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "0430ea59d864f56bbbde331adee640a5674b6d7538d8983fb7b8d3011401256a"
+          "sha256": "19d2ef1da36b7d4cac1808ce61b94d45ec9bdf6ad0f7c87182cee9ff241b18e7"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -2226,7 +2465,7 @@
       "kind": "installed",
       "revision": "062757aee17110bf7631b98ab30b2d2888079ad6",
       "command": "LEAN_BRIDGE_CHAR_PROFILES=c,cpp,python,rust node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=perl,php-native,wit-wasi node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs",
-      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/char-native-20260918.json",
@@ -2234,7 +2473,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "174d4a86301277cd9f3a19d4c71bcbe292f17c6bed0724484b05c7017b196b2a"
+          "sha256": "9ebca994701ca4f75c7a96d7c3ce0b3d7278097fc932ec885041fb77b4bdb3fd"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2246,7 +2485,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "582aaa9fde8b20bf2cdf41b0c7a1c770781e1bf194b54ae6dd886615cfa4b5fe"
+          "sha256": "b255ef71637a0b6b817fa75e2b47bc250d3add3b2332611dea0c3d84507c63f4"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -2290,7 +2529,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "08b14a7ad5d2562597ae67a4ac3f6393abe3d86b7596b9882b609c90b9d9cf6f"
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
@@ -2342,7 +2581,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "tests/fixtures/char-consumers/c.c",
@@ -2414,7 +2653,7 @@
         },
         {
           "path": "tests/helpers/copied-fixture-php-wasm.mjs",
-          "sha256": "3954f31307023d7d94a49dd98d217186ce90be39e64a54e47e8ae446fbbe9f0a"
+          "sha256": "6eaa5192ea554d3144d572e37b4048736d2eb023ae2b99c743fe388e7e69b139"
         },
         {
           "path": "tests/native-char-contract.test.mjs",
@@ -2576,7 +2815,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -2604,7 +2843,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -2620,7 +2859,7 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "5ef4ca6c6bf453d9c35ecfbeeeeafa2fbff990b59843ecf63dea4a4b7a1d1c40"
+          "sha256": "0171d358548562f1d662ac3fc8f859177847a9ba55e3ac6a92f7f1ca4290cf67"
         },
         {
           "path": "src/build/php-wasm-copied-artifacts.mjs",
@@ -2628,7 +2867,7 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "114396b10c70487f02093b79afc554c5488f236ddc38caec95da0f07fd2fafd9"
+          "sha256": "7f470f7c774175fb381513fc5652d46533df6f281f7debc79e235e87b05ea447"
         },
         {
           "path": "src/release/php-wasm-compiler-inputs.mjs",
@@ -2636,7 +2875,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "08b14a7ad5d2562597ae67a4ac3f6393abe3d86b7596b9882b609c90b9d9cf6f"
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
@@ -2652,7 +2891,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "af2f059b08a3312a4cf2cdfeb0434dfa6307bcc33e34fd68c152ab73ac92fdc7"
+          "sha256": "35e3b08a061643cdb1dd1ca7635ff862616c739421a5fc408fe830c7209a7493"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -2668,11 +2907,11 @@
         },
         {
           "path": "tests/php-wasm-ordinary.test.mjs",
-          "sha256": "c77e5111e95eabe811038530033dcd5590a2d180bcede88dafff157fe4623f39"
+          "sha256": "f943de4c8f61063b2330db0a2162a5258bec4df81e5a206252b75887597f474c"
         },
         {
           "path": "tests/helpers/php-wasm-ordinary.mjs",
-          "sha256": "0dc92eb5409a22720d1e65a638ece5bf9035e17c76f3fa115fb407b075f3f758"
+          "sha256": "b96dba71e2885572262bc0c1190b341369ef436402c40eace2ba4f1c2ac68805"
         },
         {
           "path": "tests/helpers/php-wasm-packages.mjs",
@@ -2731,7 +2970,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -2783,7 +3022,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "08b14a7ad5d2562597ae67a4ac3f6393abe3d86b7596b9882b609c90b9d9cf6f"
+          "sha256": "61baa1aad6f4347197151d8c1ebbfc5d1121ef253602735168e048bbe748e102"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -3436,7 +3675,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -3492,11 +3731,11 @@
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -3547,7 +3786,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -3563,11 +3802,11 @@
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -3654,7 +3893,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed.",
       "files": [
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -3790,11 +4029,11 @@
         },
         {
           "path": "src/build/native-component.mjs",
-          "sha256": "7e23c98aa920f2f13ecafafb6543e9f98a0a1e2420b094dcb395d0610eb727d5"
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "9324a767bc2fee65a2382d1024132201293256230f8227897e522d961e20c06e"
+          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -4256,6 +4495,733 @@
     }
   ],
   "observations": [
+    {
+      "id": "php-wasm-primitive-callables-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "null",
+          "callback-result": "null"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint16": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint32": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "uint64": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "int8": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int16": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int32": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int64": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "nat": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "int": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "string": {
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "bytes": {
+          "callback-parameter": "Bytes",
+          "callback-result": "Bytes"
+        },
+        "char": {
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "usize": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "isize": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "unit": "Unit is null for arguments and results, including callbacks; a PHP void callback returns null.",
+        "uint32": "The 32-bit PHP host requires Brick\\Math\\BigInteger for the full 0..4294967295 range, even for small values; PHP ints, floats and numeric strings reject.",
+        "int64": "Exact Brick\\Math\\BigInteger preserves both signed 64-bit endpoints on the 32-bit host.",
+        "nat": "Exact Brick\\Math\\BigInteger; negative Nat inputs and callback results reject. No native integer narrowing.",
+        "int": "Exact signed Brick\\Math\\BigInteger including multi-thousand-bit captured values.",
+        "char": "One UTF-8 Unicode scalar, including NUL and supplementary values. Malformed text and multiple scalars reject.",
+        "usize": "Exact Brick\\Math\\BigInteger for the 32-bit compiled Lean target, checked in 0..4294967295.",
+        "isize": "PHP int for the 32-bit compiled Lean target, checked in -2147483648..2147483647."
+      }
+    },
+    {
+      "id": "php-wasm-host-callbacks-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "callable"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "callback": "Synchronous PHP callable with generated signature PHPDoc. Mixed bridge parameters prevent weak-caller coercion; callback failures preserve the same Throwable, trace and previous exception after cleanup."
+      }
+    },
+    {
+      "id": "php-wasm-closure-leases-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "closure": "Invokable LeanClosure with exact positional arity, close and isClosed. Saved callable aliases share its lease. Cloning, serialization and direct construction reject."
+      }
+    },
+    {
+      "id": "php-wasm-primitive-callables-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "null",
+          "callback-result": "null"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint16": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "uint32": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "uint64": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "int8": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int16": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int32": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        },
+        "int64": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "nat": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "int": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "string": {
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "bytes": {
+          "callback-parameter": "Bytes",
+          "callback-result": "Bytes"
+        },
+        "char": {
+          "callback-parameter": "string",
+          "callback-result": "string"
+        },
+        "usize": {
+          "callback-parameter": "Brick\\Math\\BigInteger",
+          "callback-result": "Brick\\Math\\BigInteger"
+        },
+        "isize": {
+          "callback-parameter": "int",
+          "callback-result": "int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "unit": "Unit is null for arguments and results, including callbacks; a PHP void callback returns null.",
+        "uint32": "The 32-bit PHP host requires Brick\\Math\\BigInteger for the full 0..4294967295 range, even for small values; PHP ints, floats and numeric strings reject.",
+        "int64": "Exact Brick\\Math\\BigInteger preserves both signed 64-bit endpoints on the 32-bit host.",
+        "nat": "Exact Brick\\Math\\BigInteger; negative Nat inputs and callback results reject. No native integer narrowing.",
+        "int": "Exact signed Brick\\Math\\BigInteger including multi-thousand-bit captured values.",
+        "char": "One UTF-8 Unicode scalar, including NUL and supplementary values. Malformed text and multiple scalars reject.",
+        "usize": "Exact Brick\\Math\\BigInteger for the 32-bit compiled Lean target, checked in 0..4294967295.",
+        "isize": "PHP int for the 32-bit compiled Lean target, checked in -2147483648..2147483647."
+      }
+    },
+    {
+      "id": "php-wasm-host-callbacks-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "callable"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "callback": "Synchronous PHP callable with generated signature PHPDoc. Mixed bridge parameters prevent weak-caller coercion; callback failures preserve the same Throwable, trace and previous exception after cleanup."
+      }
+    },
+    {
+      "id": "php-wasm-closure-leases-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "closure": "Invokable LeanClosure with exact positional arity, close and isClosed. Saved callable aliases share its lease. Cloning, serialization and direct construction reject."
+      }
+    },
+    {
+      "id": "php-wasm-reviewed-callable-inputs",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "null",
+          "result": "null"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool"
+        },
+        "uint8": {
+          "parameter": "int",
+          "result": "int"
+        },
+        "uint16": {
+          "parameter": "int",
+          "result": "int"
+        },
+        "uint32": {
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger"
+        },
+        "uint64": {
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger"
+        },
+        "int8": {
+          "parameter": "int",
+          "result": "int"
+        },
+        "int16": {
+          "parameter": "int",
+          "result": "int"
+        },
+        "int32": {
+          "parameter": "int",
+          "result": "int"
+        },
+        "int64": {
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger"
+        },
+        "nat": {
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger"
+        },
+        "int": {
+          "parameter": "Brick\\Math\\BigInteger",
+          "result": "Brick\\Math\\BigInteger"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float"
+        },
+        "float64": {
+          "parameter": "float",
+          "result": "float"
+        },
+        "string": {
+          "parameter": "string",
+          "result": "string"
+        },
+        "bytes": {
+          "parameter": "Bytes",
+          "result": "Bytes"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-callables-installed"
+          ],
+          "note": "Offline installed PHP-Wasm npm and Composer consumers cover nineteen primitive callable signatures on ordinary-source and independently reviewed paths, with weak/strict callers in Node and Chromium, startup/lazy loading, and no compilers on PATH."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32 in Node and Chromium. Synchronous primitive callables use the main execution context. The pinned host cannot start Fibers; its guard is tested separately in native PHP.",
+        "No compound callable, resource, async, copied-field or other-profile promotion. Host functions borrow one call; returned closures own a Zend resource with idempotent close and destructor fallback.",
+        "PHP, Zend and native copy budgets each limit conversions to 16 MiB. Brick Math text is limited to 16384 decimal digits. Reentry allows 64 invocations per adapter, with 4096 shared-runtime owned identities. These are not Lean/PHP heap limits."
+      ],
+      "conversionNotes": {
+        "unit": "Unit is null for arguments and results, including callbacks; a PHP void callback returns null.",
+        "uint32": "The 32-bit PHP host requires Brick\\Math\\BigInteger for the full 0..4294967295 range, even for small values; PHP ints, floats and numeric strings reject.",
+        "int64": "Exact Brick\\Math\\BigInteger preserves both signed 64-bit endpoints on the 32-bit host.",
+        "nat": "Exact Brick\\Math\\BigInteger; negative Nat inputs and callback results reject. No native integer narrowing.",
+        "int": "Exact signed Brick\\Math\\BigInteger including multi-thousand-bit captured values."
+      }
+    },
     {
       "id": "php-native-primitive-callables-ordinary-source",
       "profiles": [
@@ -15705,7 +16671,7 @@
       },
       "limitations": [
         "Pinned PHP-Wasm 0.1.0, PHP 8.4.1 NTS, Emscripten 3.1.68 and wasm32. Node and Chromium are tested; this is not native PHP or a server SAPI.",
-        "Pure concrete copied values with acyclic nesting up to 32. No callback, closure, resource, optional, variant, effect, Char, USize or ISize support is promoted. Alpha reviewed-IR projection evidence stays separate.",
+        "This observation covers copied acyclic values, nesting at most 32. Primitive callables, Char and platform words have separate installed evidence. Optional values, variants, resources and async remain outside this profile.",
         "PHP and Zend conversions and native copying have separate 16 MiB accounting budgets. PHP lists count at least 32 bytes per element; Brick\\Math\\BigInteger canonical decimal text is limited to 16384 digits. These limits do not bound Lean working memory."
       ],
       "conversionNotes": {
@@ -18298,79 +19264,6 @@
       "limitations": ["Browser and React/worker examples already execute some types; this observation does not generalize those examples to every scalar or position.","No change to the existing consumer-level supported states. This is a separate type-specific evidence inventory."]
     },
     {
-      "id": "php-exact-and-floating-projection",
-      "profiles": [
-        "php-wasm"
-      ],
-      "shapes": [
-        "nat",
-        "int",
-        "float32",
-        "float64"
-      ],
-      "positions": [
-        "parameter",
-        "result"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Numeric PHP projection descriptors from explicit Binding IR, without a compiled arbitrary-project adapter.",
-      "hostTypes": {
-        "nat": {
-          "parameter": "Brick\\Math\\BigInteger",
-          "result": "Brick\\Math\\BigInteger"
-        },
-        "int": {
-          "parameter": "Brick\\Math\\BigInteger",
-          "result": "Brick\\Math\\BigInteger"
-        },
-        "float32": {
-          "parameter": "float",
-          "result": "float"
-        },
-        "float64": {
-          "parameter": "float",
-          "result": "float"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific audit is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "php-numeric-projection"
-          ],
-          "note": "Nat/Int use Brick\\Math\\BigInteger; Float32/Float use PHP float. These are generator mappings, not Alpha exports."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific audit is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific audit is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific audit is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Brick\\Math\\BigInteger projection does not establish installed arbitrary-precision runtime support.",
-        "Float width validation and special values need compiled round-trip tests."
-      ],
-      "conversionNotes": {
-        "nat": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
-        "int": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence."
-      }
-    },
-    {
       "id": "wit-missing-primitive-values",
       "profiles": ["wit-wasi"],
       "shapes": ["unit","nat","int"],
@@ -18422,27 +19315,21 @@
         "uint32"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
-        "callback-parameter",
-        "callback-result"
+        "field"
       ],
       "path": "reviewed-ir",
       "scope": "Installed Alpha UInt32 inputs, outputs, payload elements, callback arguments/results and returned functions at all four signed/unsigned boundaries.",
       "hostTypes": {
         "uint32": {
-          "parameter": "Brick\\Math\\BigInteger",
-          "result": "Brick\\Math\\BigInteger",
-          "field": "Brick\\Math\\BigInteger",
-          "callback-parameter": "Brick\\Math\\BigInteger",
-          "callback-result": "Brick\\Math\\BigInteger"
+          "field": "Brick\\Math\\BigInteger"
         }
       },
       "stages": {
         "analysis": {
           "state": "passed",
-          "evidence": ["php-alpha-uint32-installed"],
+          "evidence": [
+            "php-alpha-uint32-installed"
+          ],
           "note": "Reviewed Alpha Binding IR validation and concrete UInt32 projection passed. This is not ordinary-source callback analysis."
         },
         "generation": {
@@ -18729,32 +19616,22 @@
         "float64"
       ],
       "positions": [
-        "field",
-        "callback-parameter",
-        "callback-result"
+        "field"
       ],
       "path": "reviewed-ir",
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
         "nat": {
-          "field": "Brick\\Math\\BigInteger",
-          "callback-parameter": "Brick\\Math\\BigInteger",
-          "callback-result": "Brick\\Math\\BigInteger"
+          "field": "Brick\\Math\\BigInteger"
         },
         "int": {
-          "field": "Brick\\Math\\BigInteger",
-          "callback-parameter": "Brick\\Math\\BigInteger",
-          "callback-result": "Brick\\Math\\BigInteger"
+          "field": "Brick\\Math\\BigInteger"
         },
         "float32": {
-          "field": "float",
-          "callback-parameter": "float",
-          "callback-result": "float"
+          "field": "float"
         },
         "float64": {
-          "field": "float",
-          "callback-parameter": "float",
-          "callback-result": "float"
+          "field": "float"
         }
       },
       "stages": {
@@ -18813,91 +19690,43 @@
         "bytes"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
-        "callback-parameter",
-        "callback-result"
+        "field"
       ],
       "path": "reviewed-ir",
       "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
       "hostTypes": {
         "unit": {
-          "parameter": null,
-          "result": "void",
-          "field": null,
-          "callback-parameter": null,
-          "callback-result": null
+          "field": null
         },
         "bool": {
-          "parameter": "bool",
-          "result": "bool",
-          "field": "bool",
-          "callback-parameter": "bool",
-          "callback-result": "bool"
+          "field": "bool"
         },
         "uint8": {
-          "parameter": "int",
-          "result": "int",
-          "field": "int",
-          "callback-parameter": "int",
-          "callback-result": "int"
+          "field": "int"
         },
         "uint16": {
-          "parameter": "int",
-          "result": "int",
-          "field": "int",
-          "callback-parameter": "int",
-          "callback-result": "int"
+          "field": "int"
         },
         "uint64": {
-          "parameter": "Brick\\Math\\BigInteger",
-          "result": "Brick\\Math\\BigInteger",
-          "field": "Brick\\Math\\BigInteger",
-          "callback-parameter": "Brick\\Math\\BigInteger",
-          "callback-result": "Brick\\Math\\BigInteger"
+          "field": "Brick\\Math\\BigInteger"
         },
         "int8": {
-          "parameter": "int",
-          "result": "int",
-          "field": "int",
-          "callback-parameter": "int",
-          "callback-result": "int"
+          "field": "int"
         },
         "int16": {
-          "parameter": "int",
-          "result": "int",
-          "field": "int",
-          "callback-parameter": "int",
-          "callback-result": "int"
+          "field": "int"
         },
         "int32": {
-          "parameter": "int",
-          "result": "int",
-          "field": "int",
-          "callback-parameter": "int",
-          "callback-result": "int"
+          "field": "int"
         },
         "int64": {
-          "parameter": "Brick\\Math\\BigInteger",
-          "result": "Brick\\Math\\BigInteger",
-          "field": "Brick\\Math\\BigInteger",
-          "callback-parameter": "Brick\\Math\\BigInteger",
-          "callback-result": "Brick\\Math\\BigInteger"
+          "field": "Brick\\Math\\BigInteger"
         },
         "string": {
-          "parameter": "string",
-          "result": "string",
-          "field": "string",
-          "callback-parameter": "string",
-          "callback-result": "string"
+          "field": "string"
         },
         "bytes": {
-          "parameter": "LeanAlpha\\Bytes",
-          "result": "LeanAlpha\\Bytes",
-          "field": "LeanAlpha\\Bytes",
-          "callback-parameter": "LeanAlpha\\Bytes",
-          "callback-result": "LeanAlpha\\Bytes"
+          "field": "LeanAlpha\\Bytes"
         }
       },
       "stages": {
@@ -20241,8 +21070,7 @@
         "php-wasm"
       ],
       "shapes": [
-        "resource",
-        "closure"
+        "resource"
       ],
       "positions": [
         "result"
@@ -20252,9 +21080,6 @@
       "hostTypes": {
         "resource": {
           "result": "LeanAlpha\\Box"
-        },
-        "closure": {
-          "result": "LeanAlpha\\Transform"
         }
       },
       "stages": {
@@ -20269,55 +21094,6 @@
             "php-mapping-audit"
           ],
           "note": "Alpha-specific retained wrappers; close() releases the runtime value."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": []
-    },
-    {
-      "id": "php-callback-php-native-1",
-      "profiles": [
-        "php-wasm"
-      ],
-      "shapes": [
-        "callback"
-      ],
-      "positions": [
-        "parameter"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Generated callback; Alpha executes only synchronous UInt32 calls.",
-      "hostTypes": {
-        "callback": {
-          "parameter": "callable"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "php-mapping-audit"
-          ],
-          "note": "Generated callback; Alpha executes only synchronous UInt32 calls."
         },
         "compilation": {
           "state": "unreviewed",

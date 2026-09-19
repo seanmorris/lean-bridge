@@ -38,10 +38,10 @@ for(const [label, change] of Object.entries({
 	const ir = callableReviewedIr(); change(ir); assert.throws(() => compilePhpPackageModel(ir));
 });
 
-test("native FFI callable support does not admit the unimplemented Zend or wasm32 transport", () => {
+test("native FFI requires 64-bit PHP while Zend uses its separate checked-width adapter", () => {
 	const ir = callableReviewedIr();
 	assert.throws(() => compilePhpPackageModel(ir, { integerBits: 32 }), /PHP-Wasm/);
-	for(const integerBits of [32, 64]) assert.throws(() => generateCopiedPhpZendAdapter(ir, { integerBits }));
+	for(const integerBits of [32, 64]) assert.ok(generateCopiedPhpZendAdapter(ir, { integerBits })["src/Api.php"].includes("final class LeanClosure"));
 });
 
 const php = process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php";

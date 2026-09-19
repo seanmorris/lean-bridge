@@ -49,8 +49,10 @@ export const phpWasmPrimitiveVectors = [
  *
  * @param root - Temporary source root.
  * @param name - Component discriminator and public namespace suffix.
+ * @param options - Additional callable composition fixtures.
+ * @param options.callables - Include synchronous callbacks and returned functions.
  */
-export const createPhpWasmOrdinaryProject = async (root, name) => {
+export const createPhpWasmOrdinaryProject = async (root, name, { callables = false } = {}) => {
 	await saveLakeFile(root, "LICENSE", `Source notice fixture: ${name}\n`);
 	await saveLakeFile(root, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
 	await saveLakeFile(root, "lakefile.toml", `name = "${name.toLowerCase()}"\n[[lean_lib]]\nname = "SharedApi"\n`);
@@ -77,10 +79,11 @@ def replicate (count : UInt32) : Array UInt8 := Array.replicate count.toNat 7
 def double_nat (value : Nat) := value + value
 def nat_low_word (value : Nat) : UInt32 := value.toUInt32
 def answer : UInt16 := ${name === "Willow" ? 17 : 29}
+${callables ? "def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 := callback (callback value)\ndef make_word (captured value : UInt32) : UInt32 := captured + value" : ""}
 theorem echo_rows_spec (value : Array (Array Leaf)) : echo_rows value = value := rfl
 end SharedApi
 `);
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["SharedApi"], exports: [...phpWasmOrdinaryScalars.flatMap(([label]) => [`SharedApi.echo_${label}`, `SharedApi.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "nat_low_word", "answer"].map(label => `SharedApi.${label}`)], targets: { "php-wasm": { npm: { name: `@example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" }, composer: { name: `example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" } } } }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["SharedApi"], exports: [...phpWasmOrdinaryScalars.flatMap(([label]) => [`SharedApi.echo_${label}`, `SharedApi.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "replicate", "double_nat", "nat_low_word", "answer", ...callables ? ["call_word", "make_word"] : []].map(label => `SharedApi.${label}`)], ...callables ? { arities: { "SharedApi.make_word": 1 } } : {}, targets: { "php-wasm": { npm: { name: `@example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" }, composer: { name: `example/${name.toLowerCase()}-php-wasm`, version: "2.0.0-RC.1" } } } }));
 };
 
 /**
@@ -89,8 +92,9 @@ end SharedApi
  * @param name - Component discriminator and public namespace suffix.
  * @param options - Caller strictness; generated validation must not depend on it.
  * @param options.strict - Enable PHP strict_types in the consumer file.
+ * @param options.callables - Exercise the additional callable exports.
  */
-export const phpWasmOrdinaryConsumer = (name, { strict = false } = {}) => `<?php
+export const phpWasmOrdinaryConsumer = (name, { strict = false, callables = false } = {}) => `<?php
 declare(strict_types=${strict ? 1 : 0});
 namespace Test${name};
 require_once '/${name}/src/Api.php';
@@ -156,6 +160,9 @@ same(\\Lean${name}\\echo_word($word), $word);
 same(\\Lean${name}\\echo_empty(new EmptyValue()), new EmptyValue());
 same(\\Lean${name}\\array_empty([new EmptyValue(), new EmptyValue()]), [new EmptyValue(), new EmptyValue()]);
 same(\\Lean${name}\\answer(), ${name === "Willow" ? 17 : 29});
+${callables ? `same(\\Lean${name}\\call_word(BigInteger::of(40), fn($value) => $value->plus(1)), BigInteger::of(42));
+$adder = \\Lean${name}\\make_word(BigInteger::of(2));
+try { same($adder(BigInteger::of(40)), BigInteger::of(42)); } finally { $adder->close(); }` : ""}
 $word = BigInteger::of('4294967295');
 same(\\Lean${name}\\matrix([$word]), [[$word], [$word]]);
 same(\\Lean${name}\\grow("hello\\0λ"), ["hello\\0λ", "hello\\0λ"]);

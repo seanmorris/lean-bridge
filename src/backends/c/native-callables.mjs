@@ -21,6 +21,7 @@ export const generateNativeCallables = (model, surface) => {
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";
 	const types = model.types.filter(type => type.kind === "callback");
+	const wasm = model.pointerBits === 32;
 	const source = [`
 /* The first error wins. Its text survives callback cleanup and nested calls. */
 typedef struct lb_frame {
@@ -65,8 +66,8 @@ static ${p}_status lb_leave(lb_frame *frame, ${p}_error *error) {
 }
 /* Registry lookups never dereference a supplied token. Active calls retain a
    separate Lean reference, so disposing a lease during reentry is safe. */
-typedef struct { uintptr_t token; lean_object *value; const char *kind; pthread_t thread; pid_t process; } lb_lease;
-static lb_lease lb_leases[4096];
+typedef struct { uintptr_t token; ${wasm ? "uint64_t identity; " : ""}lean_object *value; const char *kind; pthread_t thread; pid_t process; } lb_lease;
+static lb_lease lb_leases[4096];${wasm ? "\nstatic uintptr_t lb_next_lease; /* Never reuse a wasm32 token. */" : ""}
 static pthread_mutex_t lb_lease_mutex = PTHREAD_MUTEX_INITIALIZER;
 static inline uintptr_t lb_lease_store(lean_object *value, const char *kind) {
   pthread_mutex_lock(&lb_lease_mutex);
@@ -78,10 +79,11 @@ static inline uintptr_t lb_lease_store(lean_object *value, const char *kind) {
   uintptr_t token = 0;
   if (free_slot < 4096) {
     lb_lease *slot = &lb_leases[free_slot];
-    token = (uintptr_t)lean_bridge_native_identity_acquire(kind, slot);
+    ${wasm ? `uint64_t identity = lb_next_lease < UINTPTR_MAX ? lean_bridge_native_identity_acquire(kind, slot) : 0;
+    if (identity) token = ++lb_next_lease;` : "token = (uintptr_t)lean_bridge_native_identity_acquire(kind, slot);"}
     if (token) {
       lean_mark_mt(value);
-      *slot = (lb_lease){token, value, kind, pthread_self(), getpid()};
+      *slot = (lb_lease){token, ${wasm ? "identity, " : ""}value, kind, pthread_self(), getpid()};
     }
   }
   pthread_mutex_unlock(&lb_lease_mutex); return token;
@@ -104,7 +106,7 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
     lb_lease *slot = &lb_leases[i];
     if (slot->token == token && !strcmp(slot->kind, kind) && slot->process == getpid()) {
       value = slot->value;
-      (void)lean_bridge_native_identity_release(token, kind, slot);
+      (void)lean_bridge_native_identity_release(${wasm ? "slot->identity" : "token"}, kind, slot);
       *slot = (lb_lease){0};
       break;
     }

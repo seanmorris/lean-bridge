@@ -12,6 +12,7 @@ import { copiedPhpChecks } from "./copied-conversions.mjs";
 import { copiedZendSupport } from "./copied-zend-support.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
+import { phpZendLease, phpZendCall, phpZendCallableMethods, zendCallableOwners, zendCallableTrampolines, zendCallableCalls } from "./zend-callables.mjs";
 
 const phpWire = model => model.surface.copies.map(copy => {
 	const name = copy.scalarName, ns = `\\${model.namespace}\\`;
@@ -52,10 +53,12 @@ final class Checks
 {
 ${copiedPhpChecks(model)}
 }
+${model.surface.callbacks.size ? phpZendLease : ""}
 final class Native
 {
 ${phpWire(model)}
-${model.surface.functions.map((fn, index) => `    public static function call${index}(${fn.parameters.map((_, i) => `mixed $arg${i}`).join(", ")}): mixed {
+${model.surface.callbacks.size ? phpZendCallableMethods(model, transport) : ""}
+${model.surface.functions.map((fn, index) => model.surface.callbacks.size ? phpZendCall(model, transport, library, { name: `call${index}`, entry: `call${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result }) : `    public static function call${index}(${fn.parameters.map((_, i) => `mixed $arg${i}`).join(", ")}): mixed {
         $budget = new Budget();
 ${fn.declaration.parameters.map((site, i) => { const c = model.surface.copy(site.type); return `        $input${i} = self::to${c.index}(Checks::check${c.index}($arg${i}, $budget));`; }).join("\n")}
         if (!function_exists('${transport}\\\\call${index}')) {
@@ -136,7 +139,7 @@ static ZEND_FUNCTION(lb_call${index}) {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
 export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
-	const model = compileCopiedPhpModel(ir, { integerBits, callables: false }), identity = hashBindingIr(ir);
+	const model = compileCopiedPhpModel(ir, { integerBits }), identity = hashBindingIr(ir);
 	const stem = `lb_${model.surface.prefix}_${identity.slice(0, 16)}`;
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);
@@ -157,15 +160,22 @@ _Static_assert(sizeof(zend_long) * CHAR_BIT == ${integerBits}, "PHP integer widt
 #endif
 ${copiedZendSupport}
 ${copiedZendConversions(model)}
-${zendCalls(model)}
+${model.surface.callbacks.size ? zendCallableOwners(model) + zendCallableTrampolines(model) + zendCallableCalls(model) : zendCalls(model)}
+
+${model.surface.callbacks.size ? `static PHP_MINIT_FUNCTION(lb_callables) {
+  lb_owned_type = zend_register_list_destructors_ex(lb_owned_destroy, NULL, "Lean closure", module_number);
+  return SUCCESS;
+}` : ""}
 
 static const zend_function_entry lb_functions[] = {
-${model.surface.functions.map((_, index) => `  ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, call${index}, zif_lb_call${index}, lb_args${index})`).join("\n")}
+${model.surface.functions.map((_, index) => `  ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, call${index}, zif_lb_call${index}, lb_args${model.surface.callbacks.size ? "_call" : ""}${index})`).join("\n")}
+${[...model.surface.callbacks.values()].map(value => `  ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, invoke${value.index}, zif_lb_invoke${value.index}, lb_args_invoke${value.index})
+  ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, close${value.index}, zif_lb_close${value.index}, lb_close_args${value.index})`).join("\n")}
   PHP_FE_END
 };
 zend_module_entry ${stem}_module_entry = {
   STANDARD_MODULE_HEADER, "${stem}", lb_functions,
-  NULL, NULL, NULL, NULL, NULL, "1", STANDARD_MODULE_PROPERTIES
+  ${model.surface.callbacks.size ? "PHP_MINIT(lb_callables)" : "NULL"}, NULL, NULL, NULL, NULL, "1", STANDARD_MODULE_PROPERTIES
 };
 ZEND_GET_MODULE(${stem})
 ` };

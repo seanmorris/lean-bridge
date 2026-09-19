@@ -61,6 +61,8 @@ test("PHP-Wasm uses a fixed wasm32 model without changing native compilation", (
 	const callback = nativeMetadataFixture(), declaration = callback.metadata.modules[0].declarations[0];
 	const scalar = declaration.projection.result;
 	declaration.projection.result = { kind: "callback", parameters: [scalar], result: scalar, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
+	assert.equal(createPhpWasmCopiedModel({ ...callback, component: options.component }).exports[0].result.kind, "callback");
+	declaration.projection.result.parameters = [{ kind: "array", element: scalar, abi: scalar.abi }];
 	assert.throws(() => createPhpWasmCopiedModel({ ...callback, component: options.component }), error => error.code === "unsupported-php-wasm-signature" && error.details.source.path === "Sample.lean" && error.details.source.startLine === 2);
 });
 
@@ -133,12 +135,12 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 	for(const name of ["Willow", "Aspen"])
 	{
 		const project = join(working, name), buildRoot = join(working, `${name}-compiled`);
-		await createPhpWasmOrdinaryProject(project, name);
+		await createPhpWasmOrdinaryProject(project, name, { callables: true });
 		const before = await lakeInputState(project);
 		const result = await build(project, buildRoot), outputRoot = result.root;
 		assert.equal(result.receipt.phpHeadersSha256, compilerInputs.phpHeadersSha256);
 		await assertPackagedSourceNotices(t, buildRoot, [`Source notice fixture: ${name}\n`]);
-		assert.equal(result.model.pointerBits, 32); assert.equal(result.model.exports.length, 44);
+		assert.equal(result.model.pointerBits, 32); assert.equal(result.model.exports.length, 46);
 		assert.deepEqual(await lakeInputState(project), before);
 		await readVerifiedPhpWasmCopiedComponent(outputRoot, runtime.identity);
 		const binary = await readFile(join(outputRoot, result.receipt.library));
@@ -189,7 +191,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 		await rename(repeatedSource, `${repeatedSource}-unavailable`);
 		await rm(buildRoot, { recursive: true }); await rm(repeatedBuild, { recursive: true });
 		await rm(repeatedInputs, { recursive: true });
-		await saveLakeFile(working, `${name}-consumer.php`, phpWasmOrdinaryConsumer(name));
+		await saveLakeFile(working, `${name}-consumer.php`, phpWasmOrdinaryConsumer(name, { callables: true }));
 		components.push({ name, root: relocated, receipt: result.receipt });
 	}
 	const relocatedRuntime = join(working, "installed/runtime");
@@ -248,6 +250,15 @@ ${["src/Api.php", "src/Internal/Native.php"].map(path => `await php.writeFile('/
 await php.writeFile('/${name}/consumer.php', await readFile(${JSON.stringify(join(working, `${name}-consumer.php`))}, 'utf8'));`).join("\n")}
 const status = await php.run("<?php require '/Willow/consumer.php'; require '/Aspen/consumer.php';");
 if (status || stderr || stdout !== 'Willow:okAspen:ok') throw new Error(JSON.stringify({status,stdout,stderr}));
+const composition = await php.run(String.raw\`<?php
+$adder = LeanAspen\\make_word(Brick\\Math\\BigInteger::of(2));
+try { if ((string) LeanWillow\\call_word(Brick\\Math\\BigInteger::of(40), $adder) !== '44') throw new Exception('Cross-package closure failed'); } finally { $adder->close(); }
+$marker = new Error('nested identity');
+try { LeanWillow\\call_word(Brick\\Math\\BigInteger::of(1), fn($value) => LeanAspen\\call_word($value, fn($inner) => throw $marker)); throw new Exception('Missing failure'); }
+catch (Error $error) { if ($error !== $marker) throw new Exception('Lost callback error'); }
+if ((string) LeanWillow\\call_word(Brick\\Math\\BigInteger::of(1), fn($value) => LeanAspen\\call_word($value, fn($inner) => $inner->plus(1))) !== '5') throw new Exception('Cross-package recovery failed');
+\`);
+if (composition || stderr) throw new Error(JSON.stringify({composition, stdout, stderr}));
 stdout = ''; stderr = '';
 for (let i = 0; i < 20; i++) {
   const status = await php.run("<?php echo LeanWillow\\\\answer(), ':', LeanAspen\\\\answer(), ';';");
@@ -257,14 +268,14 @@ if (stderr || stdout !== '17:29;'.repeat(20)) throw new Error(JSON.stringify({st
 stdout = ''; stderr = '';
 const snapshotStatus = await php.run("<?php echo json_encode(lean_bridge_test_snapshot());");
 if (snapshotStatus || stderr || stdout !== '[1,2,1,2,2,0]') throw new Error('Unexpected shared runtime snapshot: ' + JSON.stringify({snapshotStatus,stdout,stderr}));
-console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20}));
+console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 92, repeatedRequests: 20}));
 } catch (error) { console.error(error.stack); process.exitCode = 1; }
 `);
 	const host = await processBuildRunner.capture({ command: process.execPath
 		, args: ["host.mjs"], cwd: working, timeoutMs: 120000
 		, env: { ...process.env, PATH: join(working, "no-compilers"), LEAN_SYSROOT: "/unavailable", LEAN_PATH: "/unavailable" } })
 		.catch(error => { t.diagnostic(error.details?.stderr ?? error.message); throw error; });
-	assert.deepEqual(JSON.parse(host.stdout.trim()), { status: 0, components: 2, pointerBits: 32, exports: 88, repeatedRequests: 20 });
+	assert.deepEqual(JSON.parse(host.stdout.trim()), { status: 0, components: 2, pointerBits: 32, exports: 92, repeatedRequests: 20 });
 	// Resealing a receipt cannot authorize changed generated loaders or a new
 	// install hook. The reader reconstructs the sources and deterministic archives.
 	const packageVictim = releases[0];

@@ -19,6 +19,13 @@ import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { phpWasmCopiedPins as pins, phpWasmCopiedProfile as profile, phpWasmCopiedCompilerFiles, readVerifiedPhpWasmCopiedRuntime, validatePhpWasmCopiedBinary } from "./php-wasm-copied-artifacts.mjs";
 import { phpWasmHeaderPaths } from "../release/php-wasm-compiler-inputs.mjs";
+import { nativeCallbackHeader, nativeCallbackBroker, generateCompiledCallbacks } from "./native-component.mjs";
+
+// Callback tokens travel through Lean USize. Exhausted generations retire;
+// they must never truncate or wrap on the 32-bit host.
+export const phpWasmCallbackBroker = nativeCallbackBroker.replace("UINT64_MAX >> 12", "UINT32_MAX >> 12");
+const runtimeHeader = brokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`);
+const runtimeSource = `${brokerSource}\n${phpWasmCallbackBroker}`;
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
@@ -74,8 +81,8 @@ export const buildPhpWasmCopiedRuntime = async ({ outputRoot, leanRuntimeRoot, e
 		const inputFiles = await capture(target, ["source/.lean-wasm-patched", ...headerPaths, ...archives, ...uvHeaders.map(path => `cmake/libuv/src/libuv/include/${path}`)]);
 		for(const path of headerPaths) await save(staging, `include/lean/${basename(path)}`, await readFile(join(target, path)));
 		for(const path of uvHeaders) await save(staging, `c/uv/${path}`, await readFile(join(uvRoot, path)));
-		await save(staging, "include/lean_bridge_native_runtime.h", brokerHeader);
-		await save(staging, "c/broker.c", `${brokerSource}\n_Static_assert(sizeof(void *) == 4, "PHP-Wasm requires wasm32");\n`);
+		await save(staging, "include/lean_bridge_native_runtime.h", runtimeHeader);
+		await save(staging, "c/broker.c", `${runtimeSource}\n_Static_assert(sizeof(void *) == 4, "PHP-Wasm requires wasm32");\n`);
 		await save(staging, "c/libuv.c", phpWasmUnsupportedLibuvC);
 		const objects = [];
 		for(const name of ["broker", "libuv"])
@@ -83,7 +90,7 @@ export const buildPhpWasmCopiedRuntime = async ({ outputRoot, leanRuntimeRoot, e
 			const object = join(staging, `c/${name}.o`); objects.push(object);
 			await compiler.run(compiler.emcc, ["-O2", "-g0", "-fPIC", `-ffile-prefix-map=${staging}=/build/php-wasm-runtime`, ...includes([join(staging, "include"), join(staging, "c/uv")]), "-c", join(staging, `c/${name}.c`), "-o", object]);
 		}
-		const inputs = { files: inputFiles, brokerSha256: sha256(brokerSource), libuvSha256: sha256(phpWasmUnsupportedLibuvC) };
+		const inputs = { files: inputFiles, brokerSha256: sha256(runtimeSource), libuvSha256: sha256(phpWasmUnsupportedLibuvC) };
 		const key = sha256(canonicalJson({ profile, pins, compiler: compiler.compiler, inputs })).slice(0, 20);
 		const library = `lib/liblean_bridge_php_wasm_copied_${key}.so`;
 		await mkdir(join(staging, "lib"));
@@ -125,13 +132,15 @@ export const buildPhpWasmCopiedComponent = async options => {
 			for(const path of Object.keys(phpHeaders)) await save(staging, `c/php/${path}`, await readFile(join(php, path)));
 			const zend = generateCopiedPhpZendAdapter(model.bindingIr), c = generateCBindingPackage(model.bindingIr);
 			const manifest = JSON.parse(zend["copied-zend-manifest.json"]), { surface } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
+			if(surface.callbacks.size && !(await readFile(join(runtime, "include/lean_bridge_native_runtime.h"), "utf8")).includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
 			for(const [path, source] of Object.entries(zend)) await save(staging, path, source);
 			for(const path of [surface.paths.publicHeader, surface.paths.internalHeader, surface.paths.implementation]) await save(staging, `c/binding/${path}`, c[path]);
 			const initializer = `initialize_${adapters.module}`;
 			await save(staging, "c/provider.c", generateNativePrimitiveC(model, { initializer }));
+			await save(staging, "c/callbacks.c", generateCompiledCallbacks(model));
 			await save(staging, "c/width.c", '#include <php.h>\n#include <lean/lean.h>\n_Static_assert(sizeof(void *) == 4 && sizeof(size_t) == 4 && sizeof(zend_long) == 4, "PHP-Wasm requires wasm32");\n_Static_assert(PHP_VERSION_ID == 80401, "PHP headers must match PHP-Wasm 8.4.1");\n');
 			const roots = [staging, join(staging, "include"), join(staging, "c/binding/include"), join(staging, "c/binding/internal"), join(runtime, "include"), join(staging, "c/php"), ...["Zend", "main", "TSRM", "ext"].map(path => join(staging, "c/php", path))];
-			const sources = [...compileOrder.map(item => item.c), generatedC, join(staging, "c/provider.c"), join(staging, "c/width.c"), join(staging, `c/binding/${surface.paths.implementation}`), join(staging, `extension/${manifest.extension}.c`)];
+			const sources = [...compileOrder.map(item => item.c), generatedC, join(staging, "c/provider.c"), join(staging, "c/callbacks.c"), join(staging, "c/width.c"), join(staging, `c/binding/${surface.paths.implementation}`), join(staging, `extension/${manifest.extension}.c`)];
 			const objects = [];
 			for(const [i, source] of sources.entries())
 			{

@@ -15,7 +15,7 @@ Select the languages your library will serve, then follow each target's build an
 | Java and Kotlin | [Maven](publish/maven.md) | An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `maven`. |
 | Ruby | [RubyGems](publish/rubygems.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`. |
 | Perl | [CPAN](publish/cpan.md) | An ordinary Lean project plus shared export configuration; CLI target `cpan` (alias `perl`). |
-| PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | An ordinary Lake project with copied primitives, arrays and acyclic records; CLI target `php-native` or `php-wasm`. Native PHP also supports synchronous primitive callables. PHP-Wasm uses its own compiler inputs and npm/Composer coordinates. Alpha recipes retain separate manifests. |
+| PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `php-native` or `php-wasm`. PHP-Wasm uses its own compiler inputs and npm/Composer coordinates. Alpha recipes retain separate manifests. |
 | WIT / WASI | [Component and archive distribution](publish/wit-wasi.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `wit-wasi`. |
 
 Ordinary source builds and package projections are different stages. The Alpha recipes for Python, Rust, C, C++, managed runtimes, PHP, and WASI use this repository's target-specific inputs. They do not make every Lake project buildable for those languages. Each target guide names its current inputs and checks.
