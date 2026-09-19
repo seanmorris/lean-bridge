@@ -9,7 +9,7 @@ import { compileCopiedPythonModel } from "../src/backends/python/copied-model.mj
 import { generateCopiedPythonPackage } from "../src/backends/python/copied-values.mjs";
 import { generatePythonBindingPackage } from "../src/backends/python/generate.mjs";
 import { auditPythonPackage } from "../src/backends/python/package-audit.mjs";
-import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
+import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 
 test("Python primitive callables emit typed closures without enabling other hosts", () => {
@@ -22,7 +22,7 @@ test("Python primitive callables emit typed closures without enabling other host
 	assert.match(files["lean_callables/__init__.pyi"], /def call_nat\(value0: int, value1: _Callable\[\[int\], int\]\) -> int/);
 	assert.match(files["lean_callables/__init__.pyi"], /def make_char\(value0: str\) -> LeanClosure\[\[bool, str\], str\]/);
 	assert.doesNotMatch(files["lean_callables/__init__.pyi"], /ctypes|Any|c_void_p/);
-	assert.throws(() => compileCopiedRubyModel(ir), { code: "unsupported-native-c-signature" });
+	assert.throws(() => compilePrimitiveCSurface(ir), { code: "unsupported-native-c-signature" });
 });
 
 for(const [label, change] of Object.entries({

@@ -4,7 +4,7 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.9.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.10.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |
@@ -127,7 +127,7 @@ Strings accept Unicode scalar values and embedded NUL characters. Unpaired UTF-1
 
 `Char` accepts a JavaScript `string` containing exactly one Unicode scalar. `"a"`, `"🌱"`, `"\0"`, and a standalone combining character are valid. Empty strings, unpaired surrogates, and multi-scalar strings such as `"ab"` or `"e\u0301"` throw `TypeError`. The adapter preserves the scalar without normalization. A supplementary character occupies two UTF-16 code units but is still one `Char`.
 
-`Char` works in npm parameter and result positions. Native and PHP-Wasm packages also support copied `Array Char`, nested arrays and record fields. Both ordinary-source and compiler-checked reviewed contracts have [installed checks](../evidence/char-native-20260918.md). Java and Kotlin use integer code points rather than UTF-16 `char`; .NET uses `System.Text.Rune`. Each consumer page lists its host mapping. [Platform integers](../evidence/platform-words-20260918.md) work across all profiles. [C](../evidence/c-callables-20260918.md), [Perl](../evidence/perl-callables-20260918.md) and [Python](../evidence/python-callables-20260918.md) also have installed callable coverage for all nineteen primitives. Other uncovered callable positions remain in VO1218.
+`Char` works in npm parameter and result positions. Native and PHP-Wasm packages also support copied `Array Char`, nested arrays and record fields. Both ordinary-source and compiler-checked reviewed contracts have [installed checks](../evidence/char-native-20260918.md). Java and Kotlin use integer code points rather than UTF-16 `char`; .NET uses `System.Text.Rune`. Each consumer page lists its host mapping. [Platform integers](../evidence/platform-words-20260918.md) work across all profiles. [C](../evidence/c-callables-20260918.md), [Perl](../evidence/perl-callables-20260918.md) [Python](../evidence/python-callables-20260918.md) and [Ruby](../evidence/ruby-callables-20260919.md) also have installed callable coverage for all nineteen primitives. Other uncovered callable positions remain in VO1218.
 
 `ByteArray` accepts a `Uint8Array`. The call copies the input and returns an owned `Uint8Array`; the result is not a view into the Lean heap. Text, bytes, and integer payloads share the per-value 16 MiB copy limit. Total memory also includes runtime storage, all arguments, results, and temporary allocations.
 

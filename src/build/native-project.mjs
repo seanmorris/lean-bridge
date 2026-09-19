@@ -82,7 +82,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, validateModel: cTargets.length ? model => {
-				compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "pypi"].includes(target)) });
+				compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "pypi", "rubygems"].includes(target)) });
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
 				if(targets.includes("rubygems")) compileCopiedRubyModel(model.bindingIr);

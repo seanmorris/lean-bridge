@@ -758,6 +758,8 @@ jobs:
           npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=ruby node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=ruby node --test tests/native-words.test.mjs
+          LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs
+          test -s build/callables/ruby.json
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
@@ -770,6 +772,7 @@ jobs:
             build/type-corpus/reviewed-native-ruby.json
             build/char-native/ruby.json
             build/word-native/ruby.json
+            build/callables/ruby.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -797,6 +800,7 @@ jobs:
             fi
             if [ "$consumer" = ruby ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"
               if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

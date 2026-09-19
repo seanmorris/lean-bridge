@@ -69,11 +69,11 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 104);
+	assert.equal(observed.length, 108);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
-		const callable = ["c", "perl", "python"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "perl", "python", "ruby"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
 		if(!covered) continue;
@@ -89,12 +89,12 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 208);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 216);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
-		const callable = ["c", "perl", "python"].includes(cell.profile) && cell.position.startsWith("callback-");
+		const callable = ["c", "perl", "python", "ruby"].includes(cell.profile) && cell.position.startsWith("callback-");
 		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
 		if(audited)
@@ -119,11 +119,11 @@ test("C callable evidence promotes no other host projection or copied field", ()
 	}
 });
 
-test("Python callable evidence promotes only its installed primitive and callable positions", () => {
+for(const profile of ["python", "ruby"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
 	const cells = typeSurfaceCells(document, contracts);
-	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("python-callables-installed"));
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes(`${profile}-callables-installed`));
 	assert.equal(observed.length, 112);
-	assert.ok(observed.every(cell => cell.profile === "python" && cell.position !== "field" && cell.stages.installedExecution.state === "passed"));
+	assert.ok(observed.every(cell => cell.profile === profile && cell.position !== "field" && cell.stages.installedExecution.state === "passed"));
 	for(const path of document.paths)
 	{
 		for(const primitive of document.irFacets.primitive) for(const position of ["callback-parameter", "callback-result"])
@@ -184,7 +184,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.includes("python-callables-installed")))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "ruby-callables-installed"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 

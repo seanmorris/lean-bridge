@@ -7,6 +7,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedRubyModel } from "./copied-model.mjs";
 import { copiedRubyAssets } from "./copied-assets.mjs";
 import { copiedRubyConversions, copiedRubyHelpers, readRubyValue } from "./copied-conversions.mjs";
+import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
 
 const args = fn => fn.declaration.parameters.map((_, index) => `arg${index}`);
 const publicSource = model => `# frozen_string_literal: true
@@ -14,6 +15,7 @@ module LeanBridge
   module ${model.componentName}
     UNIT = ::Object.new.freeze
     class LeanBridgeError < ::StandardError; end
+${model.surface.callbacks.size ? rubyClosurePublic : ""}\
 ${model.surface.copies.filter(copy => copy.record).map(copy => `    class ${copy.publicName}
       ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.name}`).join(", ")}` : ""}
       def initialize(${copy.fields.map(field => `${field.name}:`).join(", ")})
@@ -22,9 +24,14 @@ ${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
       end
     end`).join("\n")}
     module_function
-${model.surface.functions.map((fn, index) => `    def ${fn.field}(${args(fn).join(", ")})
-      Native.call${index}(${args(fn).join(", ")})
-    end`).join("\n")}
+${model.surface.functions.map((fn, index) => {
+	const parameters = args(fn), last = parameters.at(-1);
+	const block = fn.declaration.parameters.length && model.surface.callbacks.has(fn.declaration.parameters.at(-1).type.id);
+	return `    def ${fn.field}(${(block ? [...parameters.slice(0, -1), `${last} = nil`, "&block"] : parameters).join(", ")})
+      ${block ? `raise ArgumentError, "Pass a callable or a block, not both" if !${last}.nil? && block\n      ${last} = block if ${last}.nil?` : ""}
+      Native.call${index}(${parameters.join(", ")})
+    end`;
+}).join("\n")}
   end
 end
 require_relative "${model.surface.prefix}/native"
@@ -34,16 +41,20 @@ const nativeSource = (model, evidence) => `# frozen_string_literal: true
 require "fiddle"
 require "digest"
 require "digest/sha2"
+${model.surface.callbacks.size ? 'require "monitor"\nraise LoadError, "Lean callables require Ruby 1:1 threads; unset RUBY_MN_THREADS" unless ENV.fetch("RUBY_MN_THREADS", "0").to_i.zero?\n' : ""}\
 module LeanBridge
   module ${model.componentName}
     module Native
       extend self
 ${copiedRubyAssets(model, evidence)}
-${model.surface.functions.map((fn, index) => `      CALL${index} = ::Fiddle::Function.new(LIBRARY["${fn.name}"], [${fn.declaration.parameters.map(site => `::Fiddle::TYPE_${model.surface.copy(site.type).ffi}`).concat(fn.resultType === "void" ? [] : ["::Fiddle::TYPE_VOIDP"]).concat("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT)`).join("\n")}
+${model.surface.functions.map((fn, index) => `      CALL${index} = ::Fiddle::Function.new(LIBRARY["${fn.name}"], [${fn.declaration.parameters.map(site => `::Fiddle::TYPE_${rubyValue(model, site.type).ffi}`).concat(fn.resultType === "void" ? [] : ["::Fiddle::TYPE_VOIDP"]).concat("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT${model.surface.callbacks.size ? ", need_gvl: true" : ""})`).join("\n")}
+${rubyCallableTypes(model)}
 ${model.surface.copies.filter(copy => copy.aggregate).map(copy => `      CLEAR${copy.index} = ::Fiddle::Function.new(LIBRARY["${copy.name}_clear"], [::Fiddle::TYPE_VOIDP], ::Fiddle::TYPE_VOID)`).join("\n")}
 ${copiedRubyHelpers}
 ${copiedRubyConversions(model)}
+${model.surface.callbacks.size ? rubyCallableSupport(model) : ""}
 ${model.surface.functions.map((fn, index) => {
+	if(model.surface.callbacks.size) return rubyNativeCall(model, { ...fn.declaration, name: `call${index}`, symbol: `CALL${index}` });
 	const copy = model.surface.copy(fn.declaration.result.type), unit = fn.resultType === "void";
 	return `      def call${index}(${args(fn).join(", ")})
         ::Thread.handle_interrupt(Exception => :never) do
@@ -81,8 +92,9 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 	const files = { [entry]: publicSource(model)
 		, [internal]: nativeSource(model, evidence)
 		, [shared]: '# frozen_string_literal: true\nmodule LeanBridge\n  module NativeCopiedRuntimeV1\n    LOCK = ::Mutex.new\n    STATE = { components: {}, handles: [] }\n  end\n  private_constant :NativeCopiedRuntimeV1\nend\n'
-		, "README.md": `# ${model.namespace}\n\nRequire "${model.requirePath}" and call ${model.namespace} functions. Prepared gems include the native component and shared runtime, which load automatically. Requires MRI Ruby 3.3 on Linux x86-64. No Lean compiler or extension build is needed by consumers.\n\nUnit is ${model.namespace}::UNIT in every position. Integers remain exact; fixed-width values are range checked and Nat rejects negatives. Float32 rounds to binary32. Strings require valid UTF-8 or US-ASCII, including embedded NUL; ByteArray uses binary String. Arrays and generated keyword-initialized record values are copied at each call. Nil and implicit numeric coercions are rejected. Only pure acyclic copied types at most 32 levels deep are admitted. Native input/output copies share a 16 MiB budget; input scratch is separately bounded. Native buffers are freed on failure. Compatible gems share one runtime for the process lifetime. Ractors and native-library unloading are not supported.\n\n${model.surface.functions.map(fn => `- ${model.namespace}.${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };
-	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "ruby-copied-v1", target: "ruby", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles: [entry], internalFiles: [internal, shared], packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close"], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary RubyGems currently admits pure copied values only." }, { feature: "additional-platforms", reason: "The compiled profile is MRI Ruby 3.3 on Linux x86-64." }] }, null, 2)}\n`;
+		, "README.md": `# ${model.namespace}\n\nRequire "${model.requirePath}" and call ${model.namespace} functions. Prepared gems include the native component and shared runtime, which load automatically. Requires MRI Ruby 3.3 on Linux x86-64. No Lean compiler or extension build is needed by consumers.\n\nUnit is ${model.namespace}::UNIT in every position. Integers remain exact; fixed-width values are range checked and Nat rejects negatives. Float32 rounds to binary32. Strings require valid UTF-8 or US-ASCII, including embedded NUL; ByteArray uses binary String. Arrays and generated keyword-initialized record values are copied at each call. Nil and implicit numeric coercions are rejected. Copied types must be pure, acyclic and at most 32 levels deep. Native input/output copies share a 16 MiB budget; input scratch is separately bounded. Native buffers are freed on failure. Compatible gems share one runtime for the process lifetime. Ractors and native-library unloading are not supported.\n\n${model.surface.functions.map(fn => `- ${model.namespace}.${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };
+	if(model.surface.callbacks.size) files["README.md"] += "\nSynchronous primitive callbacks accept callable objects or a final Ruby block. Borrowed callbacks expire when the exporting call returns. Returned LeanClosure values support call, close, closed?, and with { |closure| ... } for scoped cleanup. Invoke them on their creating thread. Exceptions are re-raised after native cleanup; non-local block exits raise LocalJumpError. Re-entry is limited to 64 native calls. Closures cannot be copied or serialized. Forked children, Ractors and RUBY_MN_THREADS are unsupported.\n";
+	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "ruby-copied-v1", target: "ruby", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles: [entry], internalFiles: [internal, shared], packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "returned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported." }, { feature: "additional-platforms", reason: "The compiled profile is MRI Ruby 3.3 on Linux x86-64." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };
 

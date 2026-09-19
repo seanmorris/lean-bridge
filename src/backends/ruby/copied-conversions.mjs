@@ -97,9 +97,19 @@ ${copy.fields.map(field => `        ${write(field.type, "result", field.offset, 
 
 /** Scoped native allocations and exact-value helpers. */
 export const copiedRubyHelpers = `      class Scope
+        attr_accessor :failure
         def initialize
           @buffers = []
+          @callbacks = []
           @remaining = 16 * 1024 * 1024
+        end
+        def retain_callback(function)
+          begin
+            @callbacks << function
+          rescue Exception
+            function.free
+            raise
+          end
         end
         def charge(bytes)
           raise RangeError, "Lean Bridge copy budget exceeded (16 MiB)" if bytes < 0 || bytes > @remaining
@@ -118,6 +128,8 @@ export const copiedRubyHelpers = `      class Scope
           pointer
         end
         def close
+          @callbacks.reverse_each(&:free)
+          @callbacks.clear
           @buffers.reverse_each { |pointer| pointer.call_free unless pointer.freed? }
           @buffers.clear
         end
@@ -132,7 +144,8 @@ export const copiedRubyHelpers = `      class Scope
         result[0, 16] = [data.to_i, length].pack("Q<Q<")
         result
       end
-      def check(status, error)
+      def check(status, error, scope = nil)
+        raise scope.failure if scope && scope.failure
         return if status.zero?
         data, length = error[8, 16].unpack("Q<Q<")
         message = data.zero? ? "Lean call failed" : ::Fiddle::Pointer.new(data)[0, length].force_encoding(Encoding::UTF_8)
