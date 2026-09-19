@@ -522,6 +522,19 @@ LEAN_BRIDGE_NATIVE_WIT_TEST=1 \
 
 Cobalt and Saffron each build from two relocated source trees. The suite hides their source directories, extracts the original archives and compiles consumer applications against the installed public headers and libraries. It checks copied values, input rejection, cleanup, shared runtime composition, altered artifacts and atomic build failure. See the [ordinary WIT acceptance record](../evidence/native-wit-20260914.md).
 
+### Staged WIT callable projection
+
+With the same pinned Wasmtime C API and wasm-tools, run:
+
+```sh
+LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 \
+  node --test tests/wit-callable-contract.test.mjs
+```
+
+This test supplies synthetic native imports to the generated component. It checks all 19 primitive signatures, borrowed callback handles, owned returned functions, 16-argument invocation, and two callbacks following mixed aligned arguments. It also exercises nested calls, scratch-memory preservation, wrong-signature rejection, double disposal, callback failure and store replacement. Two deliberately broken components must fail: one omits borrow cleanup; the other resets the outer call's memory during re-entry.
+
+The WIT consumer CI job runs this probe alongside the installed copied-value suite. It does not execute Lean callbacks or produce an installable callable package. Package builds still reject callable signatures. See the [projection milestone and remaining native-host work](../evidence/wit-callable-projection-20260919.md).
+
 ### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:

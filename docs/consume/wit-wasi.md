@@ -68,6 +68,8 @@ Keep the installed libraries together. Arguments borrow caller-owned Wasmtime va
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
 
+Ordinary WIT packages do not yet expose callbacks or returned functions. The [callable projection milestone](../evidence/wit-callable-projection-20260919.md) records the work toward that support.
+
 ## Alpha prepared package
 
 The Alpha package includes a WebAssembly Component Model adapter and a Wasmtime host. The exported `read-box` function enters the component, calls a typed native host import, and returns the value read from a real Lean `Box`.

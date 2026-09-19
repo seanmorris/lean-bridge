@@ -19,6 +19,7 @@ const leaf = {
 	, float32: ["f32", 4], float64: ["f64", 8]
 };
 const layout = (copy, cache) => {
+	if(copy.resource) return { flat: ["i32"], size: 4, alignment: 4 };
 	if(cache.has(copy)) return cache.get(copy);
 	if(copy.record && copy.fields.length)
 	{
@@ -39,10 +40,23 @@ const layout = (copy, cache) => {
 	return { flat: ["i32", "i32"], size: 8, alignment: 4 };
 };
 
-const allocator = `(core module $allocator
+// Nested host callbacks may re-enter this component. Keep the outer return area
+// live until its own post-return; reserve 64 heap marks below callable data.
+const allocator = callables => `(core module $allocator
     (memory (export "memory") 1 1024)
-    (global $heap (mut i32) (i32.const 16))
-    (func (export "realloc") (param $old i32) (param $old-size i32) (param $alignment i32) (param $size i32) (result i32)
+    (global $heap (mut i32) (i32.const ${callables ? 272 : 16}))
+${callables ? `    (global $depth (mut i32) (i32.const 0))
+    (func (export "enter")
+      (if (i32.ge_u (global.get $depth) (i32.const 64)) (then unreachable))
+      (i32.store offset=16 (i32.shl (global.get $depth) (i32.const 2)) (global.get $heap))
+      (global.set $depth (i32.add (global.get $depth) (i32.const 1))))
+    (func $leave
+      (if (i32.eqz (global.get $depth)) (then unreachable))
+      (global.set $depth (i32.sub (global.get $depth) (i32.const 1)))
+      (global.set $heap (if (result i32) (i32.eqz (global.get $depth))
+        (then (i32.const 272))
+        (else (i32.load offset=16 (i32.shl (global.get $depth) (i32.const 2)))))))
+` : ""}    (func (export "realloc") (param $old i32) (param $old-size i32) (param $alignment i32) (param $size i32) (result i32)
       (local $start i32) (local $end i32) (local $pages i32)
       (if (i32.eqz (local.get $size)) (then (return (i32.const 0))))
       (local.set $start (i32.and
@@ -58,7 +72,7 @@ const allocator = `(core module $allocator
           (select (local.get $old-size) (local.get $size) (i32.lt_u (local.get $old-size) (local.get $size))))))
       (global.set $heap (local.get $end))
       (local.get $start))
-${["i32", "i64", "f32", "f64"].map(type => `    (func (export "post-${type}") (param ${type}) (global.set $heap (i32.const 16)))`).join("\n")}
+${["i32", "i64", "f32", "f64"].map(type => `    (func (export "post-${type}") (param ${type}) ${callables ? "(call $leave)" : "(global.set $heap (i32.const 16))"})`).join("\n")}
   )
   (core instance $allocation (instantiate $allocator))
   (alias core export $allocation "memory" (core memory $memory))
@@ -70,47 +84,65 @@ ${["i32", "i64", "f32", "f64"].map(type => `  (alias core export $allocation "po
  *
  * @param model - Native interface type and admitted source functions.
  * @param model.surface - Canonical copied C descriptions.
+ * @param model.functions - Forwarded functions, including typed callable invocations.
  * @param model.types - Non-primitive WIT types.
+ * @param model.resources - Signature-specific callable resource types.
  * @param model.typeBody - Component instance type declarations and functions.
  * @param model.importName - Fully qualified native interface.
  * @param model.exportName - Fully qualified public interface.
  */
-export const renderCopiedWitComponent = ({ surface, types, typeBody, importName, exportName }) => {
+export const renderCopiedWitComponent = ({ surface, functions: exports = surface.functions, types, resources = [], typeBody, importName, exportName }) => {
 	const layouts = new Map();
-	const functions = surface.functions.map((fn, index) => {
-		const input = fn.parameters.flatMap(parameter => layout(parameter.copy, layouts).flat), result = layout(surface.copy(fn.declaration.result.type), layouts);
+	const functions = exports.map((fn, index) => {
+		const input = fn.parameters.flatMap(parameter => layout(parameter.copy, layouts).flat), result = layout(fn.resultCopy ?? surface.copy(fn.declaration.result.type), layouts);
 		const parameters = input.length > 16 ? ["i32"] : input;
 		const indirect = result.flat.length > 1, returned = indirect ? "i32" : result.flat[0];
-		return { fn, index, result, parameters, indirect, returned, lowered: [...parameters, ...(indirect ? ["i32"] : [])] };
+		let offset = 0, flat = 0;
+		// Canonical lowering creates guest borrow handles. Even after the native
+		// import releases its borrow, this forwarding instance must drop its own.
+		const drop = fn.parameters.flatMap(parameter => {
+			const value = layout(parameter.copy, layouts); offset = align(offset, value.alignment);
+			const handle = input.length > 16 ? `(i32.load offset=${offset} (local.get 0))` : `(local.get ${flat})`;
+			offset += value.size; flat += value.flat.length;
+			return parameter.copy.resource && parameter.copy.borrowed ? [`      (call $drop${parameter.copy.resourceIndex} ${handle})`] : [];
+		}).join("\n");
+		return { fn, index, result, parameters, indirect, returned, drop, lowered: [...parameters, ...(indirect ? ["i32"] : [])] };
 	});
-	const publicType = copy => copy.witName ? `$public${copy.index}` : copy.wat;
+	const publicType = copy => copy.resource ? `$public${copy.borrowed ? "Borrow" : "Own"}${copy.resourceIndex}` : copy.witName ? `$public${copy.index}` : copy.wat;
+	// Type ascription gives re-exported aliases fresh IDs while preserving the
+	// imported resource identity. Direct duplicate exports confuse WIT decoders.
+	const publicResources = resources.length ? `  (type $public-api (instance
+${types.map(copy => `    (alias outer 1 $public${copy.index} (type $outer${copy.index}))\n    (export "${copy.witName}" (type $public${copy.index} (eq $outer${copy.index})))`).join("\n")}
+${resources.map(resource => `    (alias outer 1 $publicResource${resource.index} (type $outer${resource.index}))\n    (export "${resource.witName}" (type $publicResource${resource.index} (eq $outer${resource.index})))\n    (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n    (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n")}
+${functions.map(({ fn }) => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${publicType(parameter.copy)})`).join(" ")} (result ${publicType(fn.resultCopy)})))`).join("\n")}
+  ))\n` : "";
 	return `(component
   (type $api (instance
 ${typeBody}
   ))
   (import "${importName}" (instance $host (type $api)))
 ${types.map(copy => `  (alias export $host "${copy.witName}" (type $public${copy.index}))`).join("\n")}
-${functions.map(({ fn, index }) => `  (alias export $host "${fn.witName}" (func $host${index}))`).join("\n")}
-  ${allocator}
+${resources.length ? resources.map(resource => `  (alias export $host "${resource.witName}" (type $publicResource${resource.index}))\n  (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n  (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `  (alias export $host "${fn.witName}" (func $host${index}))`).join("\n")}
+  ${allocator(resources.length > 0)}
 ${functions.map(({ index }) => `  (core func $lower${index} (canon lower (func $host${index}) (memory $memory) (realloc $realloc)))`).join("\n")}
-  (core module $forward
+${resources.length ? resources.map(resource => `  (core func $drop${resource.index} (canon resource.drop $publicResource${resource.index}))`).join("\n") + "\n" : ""}  (core module $forward
     (import "allocation" "realloc" (func $allocate (param i32 i32 i32 i32) (result i32)))
-${functions.map(({ index, lowered, indirect, returned }) => `    (import "host" "f${index}" (func $f${index} ${lowered.length ? `(param ${lowered.join(" ")})` : ""} ${indirect ? "" : `(result ${returned})`}))`).join("\n")}
-${functions.map(({ index, parameters, indirect, returned, result }) => `    (func (export "f${index}") ${parameters.length ? `(param ${parameters.join(" ")})` : ""} (result ${returned})${indirect ? ` (local $result i32)\n      (local.set $result (call $allocate (i32.const 0) (i32.const 0) (i32.const ${result.alignment}) (i32.const ${result.size})))` : ""}
+${resources.length ? `    (import "allocation" "memory" (memory 1))\n    (import "allocation" "enter" (func $enter))\n${resources.map(resource => `    (import "resources" "drop${resource.index}" (func $drop${resource.index} (param i32)))`).join("\n")}\n` : ""}${functions.map(({ index, lowered, indirect, returned }) => `    (import "host" "f${index}" (func $f${index} ${lowered.length ? `(param ${lowered.join(" ")})` : ""} ${indirect ? "" : `(result ${returned})`}))`).join("\n")}
+${functions.map(({ index, parameters, indirect, returned, result, drop }) => `    (func (export "f${index}") ${parameters.length ? `(param ${parameters.join(" ")})` : ""} (result ${returned})${indirect || drop ? ` (local $result ${returned})` : ""}${resources.length ? "\n      call $enter" : ""}${indirect ? `\n      (local.set $result (call $allocate (i32.const 0) (i32.const 0) (i32.const ${result.alignment}) (i32.const ${result.size})))` : ""}
 ${parameters.map((_, i) => `      local.get ${i}`).join("\n")}
-      ${indirect ? "local.get $result\n      " : ""}call $f${index}${indirect ? "\n      local.get $result" : ""}
+      ${indirect ? "local.get $result\n      " : ""}call $f${index}${drop && !indirect ? "\n      local.set $result" : ""}${drop ? `\n${drop}` : ""}${indirect || drop ? "\n      local.get $result" : ""}
     )`).join("\n")}
   )
   (core instance $imports
 ${functions.map(({ index }) => `    (export "f${index}" (func $lower${index}))`).join("\n")}
   )
-  (core instance $forwarded (instantiate $forward (with "allocation" (instance $allocation)) (with "host" (instance $imports))))
+${resources.length ? `  (core instance $resources\n${resources.map(resource => `    (export "drop${resource.index}" (func $drop${resource.index}))`).join("\n")}\n  )\n` : ""}  (core instance $forwarded (instantiate $forward (with "allocation" (instance $allocation)) (with "host" (instance $imports))${resources.length ? ' (with "resources" (instance $resources))' : ""}))
 ${functions.map(({ index }) => `  (alias core export $forwarded "f${index}" (core func $forward${index}))`).join("\n")}
-${functions.map(({ fn, index, returned }) => `  (func $f${index} ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${publicType(parameter.copy)})`).join(" ")} (result ${publicType(surface.copy(fn.declaration.result.type))}) (canon lift (core func $forward${index}) (memory $memory) (realloc $realloc) (post-return $post-${returned})))`).join("\n")}
-  (instance $public
-${functions.map(({ fn, index }) => `    (export "${fn.witName}" (func $f${index}))`).join("\n")}
+${functions.map(({ fn, index, returned }) => `  (func $f${index} ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${publicType(parameter.copy)})`).join(" ")} (result ${publicType(fn.resultCopy ?? surface.copy(fn.declaration.result.type))}) (canon lift (core func $forward${index}) (memory $memory) (realloc $realloc) (post-return $post-${returned})))`).join("\n")}
+${publicResources}  (instance $public
+${resources.length ? [...types.map(copy => `    (export "${copy.witName}" (type $public${copy.index}))`), ...resources.map(resource => `    (export "${resource.witName}" (type $publicResource${resource.index}))`)].join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `    (export "${fn.witName}" (func $f${index}))`).join("\n")}
   )
-  (export "${exportName}" (instance $public))
+  (export "${exportName}" (instance $public)${resources.length ? " (instance (type $public-api))" : ""})
 )
 `;
 };

@@ -49,6 +49,7 @@ const profileManifest = Object.freeze({
 		, "php-callable-evidence"
 		, "php-wasm-callable-contract"
 		, "php-wasm-callable-evidence"
+		, "wit-callable-contract"
 		, "rust-callable-evidence"
 		, "callable-evidence"
 		, "publish-configuration"

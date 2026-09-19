@@ -8,6 +8,8 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 The `wit-wasi` target accepts pure copied primitives, arrays and acyclic records from an ordinary Lake project. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
 
+Callbacks and returned functions are not yet available in WIT packages. The [staged callable projection](../evidence/wit-callable-projection-20260919.md) tests their Component Model representation; native Lean dispatch and installed-package acceptance remain unfinished.
+
 Use Lean 4.32.2, a native C compiler, wasm-tools 1.245.1 and the [Wasmtime 42.0.1 x86-64 Linux C API archive](https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz). Its SHA-256 is `2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082`. Extract it and set `LEAN_BRIDGE_WASMTIME_C_API` to that directory. The builder checks the library, headers and license against the pinned archive before compilation. Wasmtime is an author-side build dependency and is included in the consumer package.
 
 For a Lake package named `cobalt`, select its exports in `lean-bridge.exports.json`:

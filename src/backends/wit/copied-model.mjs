@@ -26,9 +26,11 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  *
  * @param ir - Authoritative compiler-derived Binding IR.
  * @param settings - Optional archive name and exact semantic version.
+ * @param options - Internal projection capabilities, not package admission.
+ * @param options.callables - Render the staged primitive callable contract.
  */
-export const compileCopiedWitModel = (ir, settings = {}) => {
-	const surface = compilePrimitiveCSurface(ir);
+export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
+	const surface = compilePrimitiveCSurface(ir, { callables });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
 	const fail = (declaration, message) => {
@@ -49,13 +51,31 @@ export const compileCopiedWitModel = (ir, settings = {}) => {
 		const fields = new Set();
 		for(const field of copy.fields) field.witName = admit(field.name, ir.declarations[0], fields);
 	}
+	const resources = [...surface.callbacks.values()].map((callback, index) => {
+		const signature = callback.type.callable;
+		const label = type => kebab(type.name);
+		const witName = admit(`function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
+		const resource = { ...callback, index: surface.copies.length + index, witName };
+		resource.borrow = { resource: true, resourceIndex: resource.index, borrowed: true, wit: `borrow<${witName}>`, wat: `$borrow${resource.index}` };
+		resource.own = { resource: true, resourceIndex: resource.index, borrowed: false, wit: `own<${witName}>`, wat: `$own${resource.index}` };
+		return resource;
+	});
+	const value = (ref, returned = false) => resources.find(resource => resource.type.id === ref.id)?.[returned ? "own" : "borrow"] ?? surface.copy(ref);
 	for(const fn of surface.functions)
 	{
 		fn.witName = admit(fn.field, fn.declaration);
 		const parameters = new Set();
 		for(const [index, parameter] of fn.parameters.entries())
-		{ parameter.witName = admit(parameter.name, fn.declaration, parameters); parameter.copy = surface.copy(fn.declaration.parameters[index].type); }
+		{ parameter.witName = admit(parameter.name, fn.declaration, parameters); parameter.copy = value(fn.declaration.parameters[index].type); }
+		fn.resultCopy = value(fn.declaration.result.type, true);
 	}
+	const functions = [...surface.functions
+		, ...resources.map(resource => ({
+			witName: admit(`invoke-${resource.witName}`, ir.declarations[0])
+			, resource
+			, parameters: [{ witName: "self", copy: resource.borrow }, ...resource.type.callable.parameters.map((site, index) => ({ witName: `arg${index}`, copy: surface.copy(site.type) }))]
+			, resultCopy: surface.copy(resource.type.callable.result.type)}))
+	];
 	const types = surface.copies.filter(copy => copy.witName);
 	const witType = copy => {
 		if(copy.element) return `type ${copy.witName} = list<${copy.element.wit}>;`;
@@ -72,12 +92,20 @@ export const compileCopiedWitModel = (ir, settings = {}) => {
 		return `(list ${copy.scalarName === "nat" ? "u32" : "u8"})`;
 	};
 	const packageName = `lean-bridge:${name}@${version}`, exportName = `lean-bridge:${name}/api@${version}`, importName = `lean-bridge:${name}/native@${version}`;
-	const signatures = surface.functions.map(fn => `  ${fn.witName}: func(${fn.parameters.map(parameter => `${parameter.witName}: ${parameter.copy.wit}`).join(", ")}) -> ${surface.copy(fn.declaration.result.type).wit};`).join("\n");
-	const wit = `package ${packageName};\n\ninterface native {\n${types.map(copy => `  ${witType(copy)}`).join("\n")}\n${signatures}\n}\n\ninterface api {\n${types.length ? `  use native.{${types.map(copy => copy.witName).join(", ")}};\n` : ""}${signatures}\n}\n\nworld ${name} {\n  import native;\n  export api;\n}\n`;
-	const typeBody = `    (type $limbs (list u32))\n${types.map(copy => `    (type $base${copy.index} ${watType(copy)})\n    (export "${copy.witName}" (type $t${copy.index} (eq $base${copy.index})))`).join("\n")}\n${surface.functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${surface.copy(fn.declaration.result.type).wat})))`).join("\n")}`;
-	const wat = renderCopiedWitComponent({ surface, types, typeBody, importName, exportName });
+	const signatures = functions.map(fn => `  ${fn.witName}: func(${fn.parameters.map(parameter => `${parameter.witName}: ${parameter.copy.wit}`).join(", ")}) -> ${fn.resultCopy.wit};`).join("\n");
+	const resourceWit = resources.length ? resources.map(resource => `  resource ${resource.witName};`).join("\n") + "\n" : "";
+	const exportedTypes = [...types, ...resources];
+	const wit = `package ${packageName};\n\ninterface native {\n${types.map(copy => `  ${witType(copy)}`).join("\n")}\n${resourceWit}${signatures}\n}\n\ninterface api {\n${exportedTypes.length ? `  use native.{${exportedTypes.map(copy => copy.witName).join(", ")}};\n` : ""}${signatures}\n}\n\nworld ${name} {\n  import native;\n  export api;\n}\n`;
+	const resourceWat = resources.length ? resources.map(resource => `    (export "${resource.witName}" (type $resource${resource.index} (sub resource)))\n    (type $borrow${resource.index} (borrow $resource${resource.index}))\n    (type $own${resource.index} (own $resource${resource.index}))`).join("\n") + "\n" : "";
+	const typeBody = `    (type $limbs (list u32))\n${types.map(copy => `    (type $base${copy.index} ${watType(copy)})\n    (export "${copy.witName}" (type $t${copy.index} (eq $base${copy.index})))`).join("\n")}\n${resourceWat}${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${fn.resultCopy.wat})))`).join("\n")}`;
+	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName });
 	const manifest = { schemaVersion: 1, backend: "ordinary-wit-native-v1", component: ir.component, bindingIrSha256: hashBindingIr(ir), wit: { package: packageName, world: name, apiInterface: exportName, nativeImport: importName }, declarations: surface.functions.map(fn => ({ id: fn.declaration.id, witName: fn.witName })), deferred: [], assurance: ir.assurance };
-	return { ir, surface, name, version, exportName, importName, wit, wat, manifest };
+	if(resources.length)
+	{
+		manifest.backend = "wit-primitive-callable-projection-v1";
+		manifest.callables = resources.map(resource => ({ id: resource.type.id, witName: resource.witName, invoke: `invoke-${resource.witName}`, parameter: "borrow", result: "own" }));
+	}
+	return { ir, surface, functions, resources, name, version, exportName, importName, wit, wat, manifest };
 };
 
 /**
