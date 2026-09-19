@@ -32,6 +32,8 @@ typedef struct lb_frame {
   size_t message_length;
   char message[1024];
 } lb_frame;
+/* Scoped frames have thread lifetime; no stack address escapes into TLS. */
+static _Thread_local lb_frame lb_frames[64];
 static _Thread_local lb_frame *lb_current;
 static _Thread_local unsigned lb_depth;
 static _Thread_local char lb_error_text[1024];
@@ -47,11 +49,12 @@ static void lb_record(lb_frame *frame, ${p}_status status, const ${p}_error *err
 static void lb_observe(lb_frame *frame) {
   if (lb_native_callback_take_error()) lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Expired or wrong-thread host callback");
 }
-static int lb_enter(lb_frame *frame) {
+static lb_frame *lb_enter(void) {
   if (lb_current) lb_observe(lb_current);
-  if (lb_depth == 64) return 0;
+  if (lb_depth == 64) return NULL;
+  lb_frame *frame = &lb_frames[lb_depth];
   *frame = (lb_frame){.previous = lb_current, .budget = 16u * 1024u * 1024u};
-  lb_current = frame; ++lb_depth; return 1;
+  lb_current = frame; ++lb_depth; return frame;
 }
 static ${p}_status lb_leave(lb_frame *frame, ${p}_error *error) {
   lb_observe(frame); lb_current = frame->previous; --lb_depth;
@@ -149,49 +152,49 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 
 	const render = (signature, parameters, result, symbol, leaseType = null) => {
 		const hostArgs = parameters.filter(parameter => parameter.type.kind === "callback");
-		const lines = [signature, "  (void)context; lb_frame _lb_frame;"
-			, '  if (!lb_enter(&_lb_frame)) return lb_failure(error, "C callback reentry limit (64) exceeded");'
+		const lines = [signature, "  (void)context; lb_frame *_lb_frame = lb_enter();"
+			, '  if (!_lb_frame) return lb_failure(error, "C callback reentry limit (64) exceeded");'
 			, ...hostArgs.map(({ name, type }) => `  uint64_t _lb_token_${name} = 0; lb_host_${nativeTypeKey(type)} _lb_host_${name} = {0};`)];
 		const kind = t => JSON.stringify(`${model.component.id}:callback:${nativeTypeKey(t)}`);
 		if(leaseType) lines.push(`  lean_object *_lb_closure = lb_lease_borrow(self, ${kind(leaseType)});`
-			, `  if (!_lb_closure) { lb_record(&_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid, disposed, wrong-signature or wrong-thread Lean closure"); goto done; }`);
-		if(!unit(result)) lines.push(`  if (!out) { lb_record(&_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Null C result pointer"); goto done; }`);
+			, `  if (!_lb_closure) { lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid, disposed, wrong-signature or wrong-thread Lean closure"); goto done; }`);
+		if(!unit(result)) lines.push(`  if (!out) { lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Null C result pointer"); goto done; }`);
 		for(const { name, type } of parameters)
 		{
 			const invalid = type.kind === "callback" ? `!${name} || !${name}->call`
-				: `${copy(type).aggregate ? `!${name} || ` : ""}!${id(type)}_check(${copy(type).aggregate ? name : `&${name}`}, &_lb_frame.budget)`;
-			lines.push(`  if (${invalid}) { lb_record(&_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid C argument or 16 MiB call limit exceeded"); goto done; }`);
+				: `${copy(type).aggregate ? `!${name} || ` : ""}!${id(type)}_check(${copy(type).aggregate ? name : `&${name}`}, &_lb_frame->budget)`;
+			lines.push(`  if (${invalid}) { lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid C argument or 16 MiB call limit exceeded"); goto done; }`);
 		}
 		for(const { name, type } of hostArgs)
 		{
 			const key = nativeTypeKey(type);
-			lines.push(`  _lb_host_${name} = (lb_host_${key}){*${name}, &_lb_frame};`
+			lines.push(`  _lb_host_${name} = (lb_host_${key}){*${name}, _lb_frame};`
 				, `  _lb_token_${name} = lb_native_callback_register((void (*)(void))lb_invoke_${key}, &_lb_host_${name});`
-				, `  if (!_lb_token_${name}) { lb_record(&_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Native callback registry full"); goto done; }`);
+				, `  if (!_lb_token_${name}) { lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Native callback registry full"); goto done; }`);
 		}
 		const args = parameters.map(({ name, type }) => type.kind === "callback" ? `lb_t${nativeTypeKey(type)}_wrap(_lb_token_${name})` : `${id(type)}_in(${copy(type).aggregate ? name : `&${name}`})`);
 		if(leaseType) args.unshift("_lb_closure");
 		lines.push(`  ${nativeCType(result)} _lb_value = ${symbol}(${args.join(", ") || "lean_box(0)"});`);
 		if(leaseType) lines.push("  _lb_closure = NULL; /* Consumed by the checked Lean call. */");
-		for(const { name } of hostArgs) lines.push(`  if (lb_native_callback_wrong_thread(_lb_token_${name})) lb_record(&_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Wrong-thread host callback");`);
-		lines.push("  lb_observe(&_lb_frame);");
-		if(result.kind === "callback") lines.push(`  if (_lb_frame.status == ${m}_STATUS_OK) {`
+		for(const { name } of hostArgs) lines.push(`  if (lb_native_callback_wrong_thread(_lb_token_${name})) lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Wrong-thread host callback");`);
+		lines.push("  lb_observe(_lb_frame);");
+		if(result.kind === "callback") lines.push(`  if (_lb_frame->status == ${m}_STATUS_OK) {`
 			, `    uintptr_t token = lb_lease_store(_lb_value, ${kind(result)});`
 			, "    if (token) { *out = token; _lb_value = NULL; }"
-			, `    else lb_record(&_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Lean closure registry full");`, "  }"
+			, `    else lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Lean closure registry full");`, "  }"
 			, "  if (_lb_value) lean_dec(_lb_value);");
 		else
 		{
-			if(!unit(result)) lines.push(`  if (_lb_frame.status == ${m}_STATUS_OK) {`
-				, `    ${copy(result).name} copied = {0}; int status = ${id(result)}_out(_lb_value, &copied, &_lb_frame.budget);`
+			if(!unit(result)) lines.push(`  if (_lb_frame->status == ${m}_STATUS_OK) {`
+				, `    ${copy(result).name} copied = {0}; int status = ${id(result)}_out(_lb_value, &copied, &_lb_frame->budget);`
 				, "    if (status == 1) *out = copied;"
-				, `    else lb_record(&_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Cannot copy Lean result or 16 MiB call limit exceeded");`, "  }");
+				, `    else lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Cannot copy Lean result or 16 MiB call limit exceeded");`, "  }");
 			if(nativeObjectType(result)) lines.push("  lean_dec(_lb_value);");
 		}
 		lines.push("done:");
 		if(leaseType) lines.push("  if (_lb_closure) lean_dec(_lb_closure);");
 		for(const { name } of hostArgs) lines.push(`  if (_lb_token_${name}) lb_native_callback_release(_lb_token_${name});`);
-		lines.push("  return lb_leave(&_lb_frame, error);", "}");
+		lines.push("  return lb_leave(_lb_frame, error);", "}");
 		return lines.join("\n");
 	};
 	for(const fn of surface.functions)
