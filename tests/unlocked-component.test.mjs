@@ -143,7 +143,8 @@ test("unlocked sources keep generator, configuration, and target capability gate
 	for(const settings of [{ resources: ["OnboardingSmall.Object"] }, { arities: { "OnboardingSmall.add": 2 } }])
 	{
 		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], ...settings }));
-		await assert.rejects(() => prepareLakeEntryIntent({ projectRoot: root }), { code: "unsupported-export-configuration" });
+		if(settings.arities) assert.ok(await prepareLakeEntryIntent({ projectRoot: root }));
+		else await assert.rejects(() => prepareLakeEntryIntent({ projectRoot: root }), { code: "unsupported-export-configuration" });
 	}
 	await rm(join(root, "lean-bridge.exports.json"));
 	const intent = await prepareLakeEntryIntent({ projectRoot: root });

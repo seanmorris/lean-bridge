@@ -144,6 +144,12 @@ BRIDGE_EXPORTS=(
   _bridge_scalar_word_bits
   _bridge_scalar_decode_object
   _bridge_scalar_encode_object
+  _bridge_callable_abi
+  _bridge_callable_store
+  _bridge_callable_invoke
+  _bridge_callable_release
+  _bridge_callable_dispatch
+  _bridge_callable_frame_clear
   _bridge_test_lean_runtime_force_init_error
   _bridge_test_lean_heap_size
   _bridge_test_lean_grow_heap

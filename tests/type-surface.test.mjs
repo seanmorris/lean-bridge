@@ -69,12 +69,12 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 140);
+	assert.equal(observed.length, 160);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(cell.profile) && cell.position.startsWith("callback-");
-		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
 		if(!covered) continue;
@@ -90,13 +90,13 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 280);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 320);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
-		const callable = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(cell.profile) && cell.position.startsWith("callback-");
-		const callableEvidence = ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
 		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
 		if(audited)
@@ -104,6 +104,21 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? callableEvidence : "platform-words-installed"]);
 			assert.ok(cell.conversionNote.includes(`${cell.wordBits}-bit compiled Lean target`));
 		}
+	}
+});
+
+test("npm callable evidence covers five installed profiles without claiming fields or compound values", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-callables-installed"));
+	assert.equal(observed.length, 720);
+	assert.equal(observed.filter(cell => cell.position.startsWith("callback-") || ["callback", "closure"].includes(cell.shape)).length, 400);
+	assert.deepEqual([...new Set(observed.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker", "node-javascript", "node-typescript"]);
+	for(const cell of observed)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.notEqual(cell.position, "field");
+		assert.ok([...document.irFacets.primitive, "callback", "closure"].includes(cell.shape));
+		assert.ok(cell.conversionNote !== null || cell.hostType === "number" || cell.hostType === "bigint" || cell.hostType === "boolean");
 	}
 });
 

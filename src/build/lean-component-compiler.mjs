@@ -11,6 +11,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
+import { generateComponentCallableAdapters } from "./component-callable-adapters.mjs";
 import { validateCompilerAdapterPlan } from "./compiler-adapters.mjs";
 import { readLakeDependencySnapshot, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
@@ -18,7 +19,7 @@ import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { readExportConfiguration, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readReviewedSource, validateReviewedSource } from "../analyze/reviewed-source.mjs";
+import { readReviewedSource, validateReviewedSource, reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -203,7 +204,7 @@ export const compileLeanComponentSources = async ({
 			{
 				fail("lean-component-compile-failed", `Lean failed to compile ${module}`, { module, cause: error.message, compilerDetails: error.details ?? null });
 			}
-			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${generateComponentScalarAdapters(adapterPlan.privateAbi)}`);
+			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${(adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi)}`);
 			const [cBytes, oleanBytes] = await Promise.all([readFile(paths.c), readFile(paths.olean)]);
 			records.push(Object.freeze({
 				module
@@ -226,7 +227,7 @@ export const compileLeanComponentSources = async ({
 			const sourceInventory = elaborated ? await inspectLeanProject(join(inputs, "source")) : null;
 			const reviewedBindingIr = elaborated ? await readReviewedSource(join(inputs, "source"), sourceInventory) : null;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
-			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? [], resources: [], arities: [], ...compilerExportSelection(configuration) }
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? [], resources: [], arities: reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr).arities : Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)), ...compilerExportSelection(configuration) }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
 			const interfaces = [];
 			if(rich)

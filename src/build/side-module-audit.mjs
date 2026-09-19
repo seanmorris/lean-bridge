@@ -100,6 +100,7 @@ const allowedFunctionImport = name => name === "initialize_Init"
   || name === "abort"
   || name.startsWith("lean_")
   || name.startsWith("bridge_scalar_")
+  || ["bridge_callable_abi", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].includes(name)
   || name.startsWith("l_")
   || name.startsWith("emscripten_")
   || name.startsWith("__cxa_");
@@ -126,7 +127,7 @@ export const auditWasmStructure = async ({ bytes, directSymbols, initializer, in
 	const rejectedImports = functionImports.filter(value => value.module !== "env" || !allowedFunctionImport(value.name));
 	if(rejectedImports.length > 0) fail("side-module-import-domain", "Side module imports an unreviewed function domain", { imports: rejectedImports });
 	const allowedGlobals = entries(imports, "global").every(value =>
-		(value.module === "env" && new Set(["__memory_base", "__table_base"]).has(value.name))
+		(value.module === "env" && new Set(["__memory_base", "__table_base", "__stack_pointer"]).has(value.name))
     || (new Set(["GOT.func", "GOT.mem"]).has(value.module) && /^[A-Za-z_][A-Za-z0-9_.$]*$/.test(value.name)),
 	);
 	if(!allowedGlobals) fail("side-module-import-domain", "Side module imports an unreviewed global domain", { globals: entries(imports, "global") });

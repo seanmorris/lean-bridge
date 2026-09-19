@@ -134,3 +134,77 @@ extern "C" EMSCRIPTEN_KEEPALIVE void bridge_scalar_frame_clear(bridge_scalar_fra
   frame->result.flags = 0;
   frame->result.bits = 0;
 }
+
+/* A lease owns a reference, never a pointer visible to JavaScript. Tokens are
+   monotonic and retire before wasm32 wraparound. All use is on this JS agent. */
+struct callable_lease {
+  uint32_t token;
+  char key[41];
+  lean_object *value;
+  bridge_callable_apply apply;
+};
+static callable_lease callable_leases[1024] = {};
+static uint32_t callable_next_token = 0;
+
+static bool callable_key_valid(char const *key) {
+  if (!in_heap((uintptr_t)key, 41)) return false;
+  for (unsigned i = 0; i < 40; ++i)
+    if (!((key[i] >= '0' && key[i] <= '9') || (key[i] >= 'a' && key[i] <= 'f'))) return false;
+  return key[40] == 0;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_callable_abi(void) { return 1; }
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_callable_store(lean_object *value, char const *key, bridge_callable_apply apply) {
+  if (bridge_lean_runtime_status() == 2 && callable_key_valid(key) && apply && callable_next_token != UINT32_MAX) {
+    for (auto &lease : callable_leases) if (!lease.token) {
+      lease.token = ++callable_next_token;
+      memcpy(lease.key, key, 41);
+      lease.value = value;
+      lease.apply = apply;
+      return lease.token;
+    }
+  }
+  lean_dec(value);
+  return 0;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_callable_invoke(uint32_t token, char const *key, bridge_scalar_frame *frame) {
+  if (!token || !callable_key_valid(key) || bridge_lean_runtime_status() != 2) return 9;
+  for (auto const &lease : callable_leases) if (lease.token == token && !memcmp(lease.key, key, 41)) {
+    auto apply = lease.apply;
+    lean_object *value = lease.value;
+    lean_inc(value); // The trampoline consumes this pin even when validation fails.
+    return apply(value, frame);
+  }
+  return 9;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_callable_release(uint32_t token, char const *key) {
+  if (!token || !callable_key_valid(key) || bridge_lean_runtime_status() != 2) return 0;
+  for (auto &lease : callable_leases) if (lease.token == token && !memcmp(lease.key, key, 41)) {
+    lean_object *value = lease.value;
+    lease = {}; // Reentrant disposal cannot find the lease again.
+    lean_dec(value);
+    return 1;
+  }
+  return 0;
+}
+
+EM_JS(uint32_t, callable_dispatch_js, (uint32_t token, char const *key, bridge_scalar_frame *frame), {
+  return Module.bridgeCallableDispatch ? Module.bridgeCallableDispatch(token >>> 0, UTF8ToString(key), frame >>> 0) : 8;
+});
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_callable_dispatch(uint32_t token, char const *key, bridge_scalar_frame *frame) {
+  if (!callable_key_valid(key)) return 9;
+  return callable_dispatch_js(token, key, frame);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE void bridge_callable_frame_clear(bridge_scalar_frame *frame) {
+  bridge_scalar_frame_clear(frame);
+  for (uint32_t i = 0; i < frame->argc; ++i) {
+    if (frame->args[i].flags & 2) free((void *)(uintptr_t)(uint32_t)frame->args[i].bits);
+    frame->args[i].flags = 0;
+    frame->args[i].bits = 0;
+  }
+}

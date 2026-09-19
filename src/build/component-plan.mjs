@@ -9,7 +9,7 @@ import { join, resolve } from "node:path";
 
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
-import { assertComponentSignature } from "../abi/component-scalars.mjs";
+import { createComponentPrivateAbi } from "./component-callable-adapters.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
@@ -112,7 +112,7 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [], lake
 	if(analysis.bindingIr === null) fail("component-binding-ir-required", "Build requires a complete Binding IR", { hints: analysis.adapterHints.map(item => item.id) });
 	const requiredHints = analysis.adapterHints.filter(item => item.required);
 	if(requiredHints.length > 0) fail("component-adapter-hints-required", "Build requires decisions for unresolved adapter hints", { hints: requiredHints.map(item => item.id) });
-	if(analysis.bindingIr.origin !== "existing-validated") for(const declaration of analysis.bindingIr.document.declarations) assertComponentSignature(declaration);
+	if(analysis.bindingIr.origin !== "existing-validated") createComponentPrivateAbi(analysis.bindingIr.document);
 	const document = Object.freeze({
 		schemaVersion: lakeSnapshotSha256 === undefined ? 1 : 2
 		, component: Object.freeze({ ...analysis.bindingIr.document.component })
@@ -162,7 +162,7 @@ export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targe
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const selected = (targets.length ? targets : ["npm"]).map(target => target === "javascript" ? "npm" : target);
 	for(const target of selected)
-		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["package", "modules", "exports", "generators", "specializations", "contracts"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["package", "modules", "exports", "arities", "generators", "specializations", "contracts"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)

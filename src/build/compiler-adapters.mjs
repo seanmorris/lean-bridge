@@ -9,6 +9,8 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
+import { assertComponentCallableAbi } from "../abi/component-callables.mjs";
+import { componentCallableLeanPrelude, createComponentPrivateAbi } from "./component-callable-adapters.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -57,7 +59,7 @@ const exactKeys = (value, expected, label) => {
 	if(JSON.stringify(actual) !== JSON.stringify(wanted)) fail("invalid-compiler-adapter-plan", `${label} fields must be closed`, { actual, expected: wanted });
 };
 
-const leanType = type => {
+const leanType = (type, callbacks = new Map()) => {
 	if(type.kind === "primitive")
 	{
 		const result = primitiveLeanTypes.get(type.name);
@@ -66,6 +68,8 @@ const leanType = type => {
 	}
 	if(type.kind === "named")
 	{
+		const callback = callbacks.get(type.id);
+		if(callback) return `(${[...callback.parameters, callback.result].map(type => leanType(type)).join(" → ")})`;
 		const separator = type.id.indexOf(":");
 		if(separator === -1 || type.id.slice(0, separator) !== "lean") fail("unsupported-compiler-type", `Named compiler type must come from Lean: ${type.id}`);
 		return type.id.slice(separator + 1);
@@ -118,8 +122,13 @@ export const validateCompilerAdapterPlan = plan => {
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
 	}
-	exactKeys(plan.privateAbi, ["version", "dispatch", "exports"], "private ABI");
-	if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2");
+	const callable = plan.privateAbi.version === 3;
+	if(callable) assertComponentCallableAbi(plan.privateAbi);
+	else
+	{
+		exactKeys(plan.privateAbi, ["version", "dispatch", "exports"], "private ABI");
+		if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2 or callable frame 3");
+	}
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{
@@ -129,25 +138,28 @@ export const validateCompilerAdapterPlan = plan => {
 			fail("invalid-compiler-adapter-plan", "private ABI export order and identities must match generated exports");
 		}
 		if(!Array.isArray(item.parameters) || item.result === null || typeof item.result !== "object") fail("invalid-compiler-adapter-plan", "private ABI type shapes are incomplete");
-		assertComponentSignature(item);
+		if(!callable) assertComponentSignature(item);
 	}
 	return true;
 };
 
-const renderLeanSource = ({ imports, exports, module }) => {
+const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 	const lines = [
 		...imports.map(module => `import ${module}`)
 		, ""
 		, `namespace ${module}`
 		, ""
 	];
+	if(privateAbi.version === 3) lines.push(...componentCallableLeanPrelude(privateAbi, leanType));
 	for(const item of exports)
 	{
+		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
+		const callback = privateAbi.callbacks?.find(type => type.id === signature.result.id);
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
 		const arguments_ = item.parameters.map(parameter => parameter.name).join(" ");
 		lines.push(`@[export ${item.symbol}_lean]`);
-		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : _root_.Unit)" : parameters} : ${item.leanEffect === null ? item.leanResultType : `_root_.${item.leanEffect} ${item.leanResultType}`} :=`);
-		lines.push(`  ${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${arguments_ === "" ? "" : ` ${arguments_}`}`);
+		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : _root_.Unit)" : parameters} : ${callback ? `ClosureCarry${callback.key}` : item.leanEffect === null ? item.leanResultType : `_root_.${item.leanEffect} ${item.leanResultType}`} :=`);
+		lines.push(`  ${callback ? "⟨" : ""}${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${arguments_ === "" ? "" : ` ${arguments_}`}${callback ? "⟩" : ""}`);
 		lines.push("");
 	}
 	lines.push(`end ${module}`, "");
@@ -165,8 +177,12 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	if(!["statically-inferred", "lean-elaborated"].includes(analysis.bindingIr?.origin)) fail("compiler-adapter-ir-origin", "Generated compiler adapters require source or freshly elaborated Binding IR");
 	if(componentPlan?.document?.bindingIr?.semanticSha256 !== analysis.bindingIr.semanticSha256) fail("compiler-adapter-plan-drift", "Component plan and Binding IR identities differ");
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
+	const document = analysis.bindingIr.document;
+	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
+	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");
+	const callbackTypes = new Map(callbacks.map(type => [type.id, type]));
 	const exports = analysis.bindingIr.document.declarations.map(declaration => {
-    assertComponentSignature(declaration);
+    if(!callbacks.length) assertComponentSignature(declaration);
     if(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null) fail("unsupported-compiler-declaration", `Compiler adapter cannot emit ${declaration.id}`);
     const sourceDeclaration = declaration.source.declaration;
     const specialization = declaration.source.extensions["lean-lang.org/specialization"];
@@ -189,8 +205,8 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
       , sourceModule: candidate.sourceModule ?? sourceModule(candidate.path)
       , wrapper: wrapperIdentifier(declaration.id)
       , symbol: exportSymbol(analysis.bindingIr.document.component.id, declaration.id)
-      , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type) })))
-      , leanResultType: leanType(declaration.result.type)
+      , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type, callbackTypes) })))
+      , leanResultType: leanType(declaration.result.type, callbackTypes)
       , resultMode: declaration.resultMode
       , leanEffect: effect
     });
@@ -198,18 +214,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	});
 	const imports = Object.freeze([...new Set(exports.map(item => item.sourceModule))].sort());
 	const module = `LeanBridgeGenerated${sha256(analysis.bindingIr.document.component.id).slice(0, 16)}`;
-	const leanSource = renderLeanSource({ imports, exports, module });
-	const privateAbi = Object.freeze({
-		version: 2
-		, dispatch: "scalar-frame-v2"
-		, exports: Object.freeze(exports.map(item => Object.freeze({
-			bindingId: item.bindingId
-			, symbol: item.symbol
-			, parameters: Object.freeze(analysis.bindingIr.document.declarations.find(declaration => declaration.id === item.bindingId).parameters.map(parameter => parameter.type))
-			, result: analysis.bindingIr.document.declarations.find(declaration => declaration.id === item.bindingId).result.type
-			, resultMode: item.resultMode
-		})))
-	});
+	const leanSource = renderLeanSource({ imports, exports, module, privateAbi });
 	const plan = Object.freeze({
 		schemaVersion: 1
 		, component: analysis.bindingIr.document.component.id

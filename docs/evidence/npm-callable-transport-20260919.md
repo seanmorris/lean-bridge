@@ -1,5 +1,7 @@
 # npm callable transport staging, 2026-09-19
 
+This records the transport-only milestone. The later [installed npm callable acceptance](npm-callables-20260919.md) adds compiler integration, generated trampolines and real Lean/Wasm execution.
+
 VO1218 has a private JavaScript transport for primitive callbacks and returned Lean functions. The lifecycle tests use a synthetic native side. Compiler admission, generated Lean/C trampolines and the shared Wasm callable helpers are still pending. Ordinary npm packages continue to reject callable signatures.
 
 ## Implemented boundary

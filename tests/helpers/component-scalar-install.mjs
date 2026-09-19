@@ -20,7 +20,10 @@ import { browserFrameworkArchives } from "./type-corpus-browser.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
-const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 });
+const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 180_000 }).catch(error => {
+	error.message += `: ${JSON.stringify(error.details)}`;
+	throw error;
+});
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
 const clean = { PATH: "/unavailable", CC: "/unavailable", CXX: "/unavailable", NODE_PATH: "", LEAN_BRIDGE_LEAN: "/unavailable" };
@@ -42,7 +45,8 @@ const compile = async (fixture, projectRoot, root, local = false) => {
 	});
 	const bundleRoot = join(outputRoot, "bundle");
 	const ir = await json(join(bundleRoot, "binding/binding-ir.json"));
-	assert.deepEqual(ir.declarations.map(d => ({ name: d.source.declaration, parameters: d.parameters.map(p => p.type.name), result: d.result.type.name })).sort((a, b) => a.name.localeCompare(b.name)), [...fixture.signatures].sort((a, b) => a.name.localeCompare(b.name)));
+	if(fixture.assertIr) fixture.assertIr(ir);
+	else assert.deepEqual(ir.declarations.map(d => ({ name: d.source.declaration, parameters: d.parameters.map(p => p.type.name), result: d.result.type.name })).sort((a, b) => a.name.localeCompare(b.name)), [...fixture.signatures].sort((a, b) => a.name.localeCompare(b.name)));
 	const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(root, "npm") });
 	await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
 	if(fixture.requiredRuntimeSymbol)
@@ -61,11 +65,13 @@ const compile = async (fixture, projectRoot, root, local = false) => {
 
 const browserChecks = async (fixture, root, expected) => {
 	if(!browserNames.length) return [];
-	await writeFile(join(root, "worker.mjs"), `import * as api from ${JSON.stringify(fixture.name)};\nimport { ${fixture.check} } from "./checks.mjs";\npostMessage(${fixture.check}(api));\n`);
+	const trace = fixture.trace ? 'globalThis.callableProgress = stage => console.debug("callable check: " + stage);' : "";
+	await writeFile(join(root, "worker.mjs"), `import * as api from ${JSON.stringify(fixture.name)};\nimport { ${fixture.check} } from "./checks.mjs";\n${trace}\npostMessage(${fixture.check}(api));\n`);
 	await writeFile(join(root, "page.mjs"), `import * as api from ${JSON.stringify(fixture.name)};
 import { ${fixture.check} } from "./checks.mjs";
 import { createElement, StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+${trace}
 const page = ${fixture.check}(api);
 const worker = new Promise((accept, reject) => {
   const task = new Worker(new URL("./worker.mjs", import.meta.url), { type: "module" });
@@ -96,12 +102,16 @@ Promise.all([worker, react]).then(([worker, react]) => { globalThis.scalarResult
 			const browser = await engines[name].launch({ headless: true });
 			try
 			{
-				const context = await browser.newContext({ serviceWorkers: "block" }), errors = [];
+				const context = await browser.newContext({ serviceWorkers: "block" }), errors = [], traces = [];
 				await context.route("**/*", route => route.request().url().startsWith(server.url) ? route.continue() : route.abort());
 				const page = await context.newPage();
 				page.on("pageerror", error => errors.push(error.message));
+				if(fixture.trace) page.on("console", message => { traces.push(message.text()); if(traces.length > 30) traces.shift(); });
 				await page.goto(server.url);
-				await page.waitForFunction(() => globalThis.scalarResult || globalThis.scalarError, undefined, { timeout: 30_000 });
+				try
+				{ await page.waitForFunction(() => globalThis.scalarResult || globalThis.scalarError, undefined, { timeout: fixture.browserTimeout ?? 30_000 }); }
+				catch(error)
+				{ error.message += `; page errors: ${JSON.stringify(errors)}; progress: ${JSON.stringify(traces)}`; throw error; }
 				assert.equal(await page.evaluate(() => globalThis.scalarError), undefined);
 				const result = await page.evaluate(() => globalThis.scalarResult);
 				assert.deepEqual(result, { page: expected, worker: expected, react: expected });
@@ -126,8 +136,10 @@ export const checkInstalledScalars = async (t, fixture) => {
 	t.after(() => rm(scratch, { recursive: true, force: true }));
 	const source = join(scratch, "source");
 	await cp(join(repository, `tests/fixtures/onboarding/${fixture.sourceDir}`), source, { recursive: true });
+	if(fixture.extension) await writeFile(join(source, `${fixture.module}.lean`), `${await readFile(join(source, `${fixture.module}.lean`), "utf8")}\n${await readFile(join(repository, fixture.extension), "utf8")}`);
+	const sourceSha256 = sha256(await readFile(join(source, `${fixture.module}.lean`)));
 	const save = (name, value) => writeFile(join(source, name), canonicalJson(value));
-	await save("lean-bridge.exports.json", { schemaVersion: 1, modules: [fixture.module], exports: fixture.signatures.map(item => item.name) });
+	await save("lean-bridge.exports.json", { schemaVersion: 1, modules: [fixture.module], exports: fixture.signatures.map(item => item.name), ...(fixture.arities ? { arities: fixture.arities } : {}) });
 	const builds = [];
 	for(const path of ["ordinary-source", "reviewed-ir"])
 	{
@@ -177,7 +189,7 @@ export const checkInstalledScalars = async (t, fixture) => {
 			, result
 			, browsers
 			, receipt: release.report
-			, sourceSha256: sha256(await readFile(join(repository, `tests/fixtures/onboarding/${fixture.sourceDir}/${fixture.module}.lean`))) });
+			, sourceSha256 });
 	}
 	await writeFile(join(repository, `build/${fixture.reportDir}/report.json`), canonicalJson({ schemaVersion: 1, runs }));
 };

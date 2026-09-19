@@ -1,0 +1,199 @@
+{
+  "runs": [
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            }
+          },
+          "version": "153.0"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "8dd3920f70bd419788114323e28c4d3fb99a104668224a4d92752079513d1c05",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "ordinary-source",
+      "receipt": {
+        "bindingIrSha256": "bdb77b08142e63b2f6a08aeebc9e2938615b04d8dfadb735e23aa5fdd41082b1",
+        "component": {
+          "id": "callables@1.0.0",
+          "name": "callables",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "dc5ddce22c71d1dbe51f651b7bffd3c4967d1c5d0772c127325b2f5994bc3216",
+        "componentBundleSha256": "afcf15cec91efc9da3558359f0a7d4c63367ca824510b85045ae69154a809b44",
+        "componentIdentitySha256": "713f951ed143eee2fc1e16992d6966f9c3be0a7efbfe0090d6282ae8fe3c3af8",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "callables-1.0.0.tgz",
+          "package": "callables@1.0.0",
+          "sha256": "8e9877efc6bc5ccd95add2cbbcfe7eb1ef69f81080f161ce7b609cb6a91ae4f3"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "92b61ebb96a14a4d978bf39f204009cdf30faef0e2a41135c6ac13bcb271325d",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.106812106d45b2f36e86148134ad1b0a781b10eae675789d020333877a8ca5da.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.106812106d45b2f36e86148134ad1b0a781b10eae675789d020333877a8ca5da",
+          "sha256": "f82987c1f55b447095f012fcd6a2aafcbd30ff484fe527d7bcf613c03d4830f1"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "76fa135153a4dcbfd6317b72ebbf99899fae68949c471168ccfa73e19082e356"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 8084,
+        "primitives": 19,
+        "wordBits": 32
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "13a1a675fa5bdb06f562bf6d5f3cfd79a86684569a2be8840d52d63f65b5f269",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    },
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            }
+          },
+          "version": "153.0"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "8dd3920f70bd419788114323e28c4d3fb99a104668224a4d92752079513d1c05",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "reviewed-ir",
+      "receipt": {
+        "bindingIrSha256": "5eead2a71f4a2f9bd4e7858af4a1ed9c5f553abe3ec44cf1adc6b0f114534189",
+        "component": {
+          "id": "callables@1.0.0",
+          "name": "callables",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "dc5ddce22c71d1dbe51f651b7bffd3c4967d1c5d0772c127325b2f5994bc3216",
+        "componentBundleSha256": "5047aab5fd94bb74bf7e896b6f0df749f516a3b81585bc4514b31b8ad2eee672",
+        "componentIdentitySha256": "bc206148a2f77f039f14584a75129371c4481702a659ee48a047510f1ec88149",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "callables-1.0.0.tgz",
+          "package": "callables@1.0.0",
+          "sha256": "7141dca9ff2445c02ca0bddb036914bdd9f57528245318c31594a42936fc7909"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "300941b288e09d7ba1ba05a29a2dea3cdeaf8569391a51e8c20365140b1c9a62",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.106812106d45b2f36e86148134ad1b0a781b10eae675789d020333877a8ca5da.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.106812106d45b2f36e86148134ad1b0a781b10eae675789d020333877a8ca5da",
+          "sha256": "f82987c1f55b447095f012fcd6a2aafcbd30ff484fe527d7bcf613c03d4830f1"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "67300b998df6fa54e966759117d671d289d5c446a8d2a64d043dac429a659568"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 8084,
+        "primitives": 19,
+        "wordBits": 32
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "13a1a675fa5bdb06f562bf6d5f3cfd79a86684569a2be8840d52d63f65b5f269",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    }
+  ],
+  "schemaVersion": 1
+}

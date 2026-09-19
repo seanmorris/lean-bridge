@@ -570,6 +570,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	const inspected = await inspectLeanProject(root, { signal });
 	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
 	const configuration = configurationRecord.configuration;
+	if(Object.keys(configuration.arities ?? {}).length)
+		fail("arity-requires-elaboration", "Explicit function arities require compiler-backed analysis; source discovery cannot distinguish returned functions");
 	if(configuration.specializations?.length)
 		fail("specialization-requires-elaboration", "Finite specializations require compiler-backed analysis; source discovery cannot assign their types");
 	if(Object.keys(configuration.contracts ?? {}).length)

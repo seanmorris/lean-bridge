@@ -64,7 +64,8 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 		const selection = { modules: workspace.resolution.modules.map(module => module.module)
 			, exportModules: roots.map(entry => entry.module).sort()
 			, exports: configuration.exports ?? []
-			, resources: [], arities: []
+			, resources: []
+			, arities: Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b))
 			, ...compilerExportSelection(configuration)
 			, ...(reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr) : {}) };
 		const request = createMetadataRequest(selection, { toolchain: inventory.project.toolchain

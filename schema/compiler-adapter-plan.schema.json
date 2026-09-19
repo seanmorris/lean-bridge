@@ -64,9 +64,24 @@
       "additionalProperties": false,
       "required": ["version", "dispatch", "exports"],
       "properties": {
-        "version": { "const": 2 },
-        "dispatch": { "const": "scalar-frame-v2" },
+        "version": { "enum": [2, 3] },
+        "dispatch": { "enum": ["scalar-frame-v2", "scalar-callable-frame-v1"] },
+        "callbacks": { "type": "array", "minItems": 1, "maxItems": 1024, "items": { "$ref": "#/$defs/callback" } },
         "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/privateExport" } }
+      },
+      "oneOf": [
+        { "properties": { "version": { "const": 2 }, "dispatch": { "const": "scalar-frame-v2" } }, "not": { "required": ["callbacks"] } },
+        { "properties": { "version": { "const": 3 }, "dispatch": { "const": "scalar-callable-frame-v1" } }, "required": ["callbacks"] }
+      ]
+    },
+    "callback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "key", "parameters", "result"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "key": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "parameters": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "elaborated-export-metadata.schema.json#/$defs/scalarType" } },
+        "result": { "$ref": "elaborated-export-metadata.schema.json#/$defs/scalarType" }
       }
     }
   }

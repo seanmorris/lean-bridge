@@ -8,6 +8,8 @@ import {
 	scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes,
 } from "../abi/component-scalars.mjs";
 import { readComponentScalarSlot, writeComponentScalarSlot } from "./component-scalar-codec.mjs";
+import { assertComponentCallableBindings, componentCallableSignatureText } from "../abi/component-callables.mjs";
+import { createComponentCallableRuntime } from "./component-callable-runtime.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -79,8 +81,12 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	if(!module._bridge_lean_runtime_init()) throw new Error("The shared Lean runtime failed to initialize");
 	if(!module.FS || !module._bridge_scalar_frame_clear) throw new Error("Shared runtime does not implement scalar ABI 2");
 	const loaded = new Map();
+	const callables = module._bridge_callable_abi ? createComponentCallableRuntime(module) : null;
+	let poisoned = false;
+	const assertOpen = () => { if(poisoned) throw new Error("Component runtime is poisoned"); callables?.assertOpen(); };
 	let linkQueue = Promise.resolve();
 	const loadComponent = descriptor => {
+		assertOpen();
 		descriptor = { ...descriptor, sideModule: new URL(descriptor.sideModule.href), privateAbi: structuredClone(descriptor.privateAbi), bindingIr: structuredClone(descriptor.bindingIr) };
 		const fingerprint = JSON.stringify([descriptor.buildHash, descriptor.integrity, descriptor.initializer, descriptor.privateAbi, descriptor.bindingIr]);
 		const existing = loaded.get(descriptor.id);
@@ -88,14 +94,25 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
-			if(descriptor.privateAbi.version !== componentScalarAbi || descriptor.privateAbi.dispatch !== "scalar-frame-v2") throw new Error("Unsupported component private ABI");
-			for(const abi of descriptor.privateAbi.exports) assertComponentSignature(abi);
+			const callable = descriptor.privateAbi.version === 3;
+			if(callable)
+			{
+				if(!callables) throw new Error("Shared runtime lacks the component callable ABI; rebuild it");
+				assertComponentCallableBindings(descriptor.privateAbi, descriptor.bindingIr);
+				for(const signature of descriptor.privateAbi.callbacks)
+					if((await digest(encoder.encode(componentCallableSignatureText(signature)))).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
+			}
+			else
+			{
+				if(descriptor.privateAbi.version !== componentScalarAbi || descriptor.privateAbi.dispatch !== "scalar-frame-v2") throw new Error("Unsupported component private ABI");
+				for(const abi of descriptor.privateAbi.exports) assertComponentSignature(abi);
+			}
 			const symbols = new Set();
 			const bindings = new Set();
 			if(descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
 			for(const declaration of descriptor.bindingIr.declarations)
 			{
-				assertComponentSignature(declaration);
+				if(!callable) assertComponentSignature(declaration);
 				const abi = descriptor.privateAbi.exports.find(item => item.bindingId === declaration.id);
 				if(!abi || bindings.has(declaration.id) || symbols.has(abi.symbol) || !/^lean_bridge_[0-9a-f]{24}$/.test(abi.symbol)
 					|| JSON.stringify(abi.parameters) !== JSON.stringify(declaration.parameters.map(item => item.type))
@@ -106,6 +123,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			const bytes = await readArtifact(descriptor.sideModule);
 			if(await digest(bytes) !== descriptor.integrity) throw new Error(`Lean component integrity mismatch for ${descriptor.id}`);
 			const link = async () => {
+				assertOpen();
 				record.linking = true;
 				const filename = `/lean-component-${descriptor.integrity}.wasm`;
 				module.FS.writeFile(filename, bytes);
@@ -122,17 +140,25 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 					if(!module._bridge_lean_component_initialize(pointer) || module._bridge_lean_component_last_error()) throw new Error(`Lean component initialization failed for ${descriptor.id}`);
 				} finally
 { module._free(pointer); }
-				const calls = new Map(descriptor.privateAbi.exports.map(abi => {
+				const operations = new Map(descriptor.privateAbi.exports.map(abi => {
 					if(!descriptor.bindingIr.declarations.some(item => item.id === abi.bindingId)) throw new Error("Component binding identity mismatch");
 					const symbol = encoder.encode(`${abi.symbol}\0`);
-					return [abi.bindingId, args => callComponentScalar(module, frame => {
+					return [abi.bindingId, frame => {
+						assertOpen();
 						const name = module._malloc(symbol.length);
 						if(!name) throw new Error("Component call allocation failed");
 						try
 { module.HEAP8.set(symbol, name); return module._bridge_scalar_call(name, frame); }
+						catch(error)
+{ poisoned = true; callables?.poison(); throw error; }
 						finally
 { module._free(name); }
-					}, abi, args)];
+					}];
+				}));
+				if(callable) return callables.bind(descriptor.privateAbi, operations);
+				const calls = new Map(descriptor.privateAbi.exports.map(abi => {
+					const call = args => { assertOpen(); return callComponentScalar(module, operations.get(abi.bindingId), abi, args); };
+					return [abi.bindingId, call];
 				}));
 				return Object.freeze({ call: (id, args) => {
 					const call = calls.get(id);

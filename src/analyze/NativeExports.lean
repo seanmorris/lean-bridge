@@ -193,6 +193,20 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
   let name ← ofExcept <| value.getObjValAs? String "name"
   return obj [("kind", str "primitive"), ("name", str name)]
 
+def componentType (value : Json) : MetaM Json := do
+  if (value.getObjValAs? String "kind").toOption == some "primitive" then
+    return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
+  unless (value.getObjValAs? String "kind").toOption == some "callback" do
+    throwError "components require primitives or synchronous primitive callables"
+  let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
+  let result ← ofExcept <| value.getObjVal? "result"
+  let scalar (type : Json) : MetaM Json := do
+    unless (type.getObjValAs? String "kind").toOption == some "primitive" do
+      throwError "component callable arguments and results must be primitive"
+    return obj [("kind", str "primitive"), ("name", ← ofExcept <| type.getObjVal? "name")]
+  return obj [("kind", str "callback"), ("parameters", toJson (← parameters.mapM scalar)),
+    ("result", ← scalar result)]
+
 def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Json × String × Json) :=
   forallTelescopeReducing type fun arguments result => do
     let mut parameters := #[]
@@ -273,16 +287,27 @@ def constrainProjection (request : Request) (name : String) (projection : Json) 
 
 def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do
   let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
-  if request.profile.getD "component-scalars-v1" != "native-library-v1" then return (parameters, resultText, scalarProjection)
-  let arity := request.arities.find? (·.1 == name) |>.map (·.2) |>.getD 1024
+  let native := request.profile.getD "component-scalars-v1" == "native-library-v1"
+  let selectedArity := request.arities.find? (·.1 == name) |>.map (·.2)
+  if !native && selectedArity.isNone && (scalarProjection.getObjValAs? String "status").toOption == some "supported" then
+    return (parameters, resultText, scalarProjection)
+  if !native && selectedArity.isNone && (scalarProjection.getObjValAs? String "reason").toOption == some "arity-limit" then
+    return (parameters, resultText, scalarProjection)
+  let arity := selectedArity.getD (if native then 1024 else 32)
   try
     let (nativeParameters, result) ← signature request type arity
+    if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
+    let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
+      pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
+        ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type"))]
+    let result ← if native then pure result else componentType result
     let nativeParameters := nativeParameters.mapIdx fun index parameter =>
       obj [("name", (parameters[index]?.bind fun value => (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
         ("type", (parameter.getObjVal? "type").toOption.getD Json.null)]
     return (parameters, resultText, obj [("status", str "supported"),
-      ("bindingShape", str "native-function"), ("parameters", toJson nativeParameters), ("result", result)])
+      ("bindingShape", str (if native then "native-function" else "pure-function")), ("parameters", toJson nativeParameters), ("result", result)])
   catch error =>
+    if !native then return (parameters, resultText, scalarProjection)
     let reason := (scalarProjection.getObjValAs? String "reason").toOption.getD "unsupported-native-type"
     let reason := if ["implicit-parameter", "instance-parameter", "dependent-type"].contains reason then reason else "unsupported-native-type"
     return (parameters, resultText, unsupported reason (← error.toMessageData.toString))

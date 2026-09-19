@@ -24,15 +24,46 @@ This path supports Lean dependency imports, including transitive packages and cu
 
 Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The engine runs selected pure tools and compiles their Lean/C/header outputs. `bundle/generated/lake-generated-sources.json` retains their bytes and receipts; the target-C and link manifests bind its digest. The publication dry run reproduces generation in both isolated builds. Installed npm users do not need Lean or generator tooling.
 
-A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm's supported API remains pure functions with primitive arguments and results.
+A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm accepts primitives and synchronous callables with primitive arguments and results.
 
-To compile an [explicit reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), keep one `.binding-ir.json` file and set `modules` in `lean-bridge.exports.json`. Put declaration selection in the review, not `exports` in the configuration. The engine checks the reviewed primitive signatures against fresh Lean metadata, retains documentation and argument names, and binds the review into its compiler request and package evidence. `analyze` alone validates the document without checking source correspondence. Prepared npm packages use the same installation and automatic runtime loading as ordinary-source packages.
+To compile an [explicit reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), keep one `.binding-ir.json` file and set `modules` in `lean-bridge.exports.json`. Put declaration selection in the review, not `exports` in the configuration. The engine checks reviewed primitive and callable signatures against fresh Lean metadata, retains documentation and argument names, and binds the review into its compiler request and package evidence. `analyze` alone validates the document without checking source correspondence. Prepared npm packages use the same installation and automatic runtime loading as ordinary-source packages.
 
 To publish concrete versions of generic Lean functions, configure [finite specializations](../lean/existing-package.md#export-concrete-specializations). Lean checks the selected types and instance dictionaries; each configured name becomes a concrete JavaScript/TypeScript function. The source configuration and compiler applications travel with the build bundle and publication receipts.
 
-Optional [export contracts](../lean/existing-package.md#declare-export-contracts) require copied argument/result ownership, a refinement rejection policy and the implemented boundary effects. Lean checks each contract against the selected primitive signature. Unsupported requirements stop the build before linking; package assembly and publication retain the captured configuration.
+Optional [export contracts](../lean/existing-package.md#declare-export-contracts) can declare copied primitive values, call-scoped borrowed callbacks and explicitly owned returned functions. Lean checks ownership and effects against the implemented synchronous boundary. Unsupported requirements stop the build before linking; package assembly and publication retain the captured configuration.
 
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
+
+## Export callbacks and returned functions
+
+Callback arguments and returned functions can use any of the nineteen supported primitives. Each callable accepts one to sixteen arguments. For example:
+
+```lean
+namespace Functions
+
+def apply (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback value
+
+def makeAdder (captured : UInt32) : UInt32 → UInt32 :=
+  fun value => captured + value
+
+end Functions
+```
+
+Lean function types are curried. Set the outer arity of `makeAdder` to one so the generated API returns a function instead of accepting both arguments at once:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Functions"],
+  "exports": ["Functions.apply", "Functions.makeAdder"],
+  "arities": { "Functions.makeAdder": 1 }
+}
+```
+
+Build and publish with the same commands as a scalar component. The package declares its exact shared-runtime dependency; consumers do not register callback dispatchers or configure Wasm imports. Older prepared runtimes are rejected during packaging with a rebuild diagnostic.
+
+Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. Promise-returning callbacks, retained host callbacks, and compound callable arguments or results are unsupported. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
 
 ## Build npm and CPAN together
 
@@ -58,7 +89,7 @@ Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/p
 
 Add `--target c` or `--target cpp` to include [prepared native C/C++ archives](c.md#build-an-ordinary-lean-project). Those targets share the same native compilation with CPAN. You can also omit CPAN and build npm with either C-family target; no Perl installation is needed in that case.
 
-The selected exports must fit both profiles. Today that means npm's pure primitive arguments and results, including supported concrete specializations. Native-only arrays, records, resources and callbacks still use a separate CPAN build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
+The selected exports must fit both profiles: primitives and synchronous primitive callables, including supported concrete specializations. Source-configured closure arities still require separate target builds. Native-only arrays, records and resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
 
 ## Publish an ordinary component
 

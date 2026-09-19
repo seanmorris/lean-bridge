@@ -4,7 +4,7 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.18.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.19.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |
@@ -80,6 +80,8 @@ Inventory 0.18.0 covers 48 source forms and 17 consumer profiles. The language t
 Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. All profiles accept nineteen primitive parameter/result types, including [Char in npm](../evidence/char-npm-20260918.md), [native/PHP-Wasm Char](../evidence/char-native-20260918.md), and [USize/ISize](../evidence/platform-words-20260918.md). Native and PHP-Wasm also accept copied arrays and acyclic records containing these primitives.
 
 Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit words; native packages and native-backed WIT components use 64-bit words. Host adapters check those ranges before calling Lean. The consumer's pointer width does not select the range. Lean arithmetic still wraps at its compiled word width.
+
+All seventeen profiles have installed checks for synchronous primitive callbacks and returned Lean functions on both source paths. The [npm callable record](../evidence/npm-callables-20260919.md) covers Node, strict TypeScript, Chromium and Firefox, including React and workers. Callables use one through sixteen primitive arguments and a primitive result; compound and asynchronous callables remain separate work.
 
 The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json).
 

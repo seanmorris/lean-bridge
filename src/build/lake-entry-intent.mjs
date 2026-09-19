@@ -75,7 +75,7 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 	catch(error)
 	{ throw new CanonicalBuildError(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 	const configuration = inventory.configurationRecord.configuration;
-	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "arities", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
 	if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
 		fail("Compiler entry discovery requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
 	if(configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))

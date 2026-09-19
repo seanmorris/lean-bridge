@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support pure functions with zero to 32 primitive arguments:
+Ordinary npm components support synchronous functions with zero to 32 arguments. Each argument and result can be a primitive or a synchronous callable whose one to sixteen arguments and result are primitive:
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -77,7 +77,7 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 Ordinary `c` and `cpp` builds accept all 19 pure primitive parameter/result types above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars, copied buffers and GMP `mpz_t` for Nat/Int; C++ supplies owned standard-library values and Boost.Multiprecision cpp_int. Packages include and configure the exact-integer dependency. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
 
-The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Both targets support synchronous primitive callbacks and returned closures: [C uses signature-specific function/context structs](../publish/c.md#export-callbacks-and-closures), while [C++ uses typed lambdas and move-only LeanClosure values](../publish/cpp.md#primitive-callbacks-and-returned-closures). Resources and asynchronous functions remain unsupported in these adapters. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ still requires a primitive-only API.
+The native C/C++ adapters also accept arrays and acyclic copied records, including nested combinations and primitive record fields. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. Both targets support synchronous primitive callbacks and returned closures: [C uses signature-specific function/context structs](../publish/c.md#export-callbacks-and-closures), while [C++ uses typed lambdas and move-only LeanClosure values](../publish/cpp.md#primitive-callbacks-and-returned-closures). Resources and asynchronous functions remain unsupported in these adapters. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ requires an API admitted by both profiles.
 
 Ordinary [C# / NuGet builds](../publish/nuget.md#build-an-ordinary-lean-project) use the same private native adapter. C# exposes exact-width scalars, `BigInteger`, `T[]` arrays and sealed records. Synchronous primitive callbacks use `Func`/`Action`; returned functions use disposable `LeanClosure<TDelegate>` values. Generated code handles native buffers, callback exception recovery, deep cleanup and compatible runtime loading. The separate Alpha fixture supplies the identity-bearing resource example.
 
@@ -112,9 +112,9 @@ The compiler-backed analyzer projects:
 - `USize` and `ISize`, with the compiled target's width;
 - `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
-`IO`, `Task`, collections, records, callbacks, resources, and configured closure arities produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
+Synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, collections, records and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or primitive parameters/results for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or primitives and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 

@@ -138,11 +138,18 @@ export const validateElaboratedMetadata = (report, request) => {
 			else
 			{
 				closed(projection, ["status", "bindingShape", "parameters", "result"]);
-				const arity = native ? new Map(request.arities).get(declaration.identity) ?? 1024 : 32;
+				const arity = new Map(request.arities).get(declaration.identity) ?? (native ? 1024 : 32);
 				if(projection.status !== "supported" || projection.bindingShape !== (native ? "native-function" : "pure-function") || !Array.isArray(projection.parameters)
-					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== (native ? Math.min(arity, declaration.parameters.length) : declaration.parameters.length)
+					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
+				const component = type => {
+					if(type?.kind !== "callback") return scalar(type);
+					closed(type, ["kind", "parameters", "result"]);
+					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
+					for(const parameter of type.parameters) scalar(parameter);
+					scalar(type.result);
+				};
 				const nativeType = type => {
 					validateNativeType(type);
 					const check = value => {
@@ -154,7 +161,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					};
 					check(type);
 				};
-				const validateType = native ? nativeType : scalar;
+				const validateType = native ? nativeType : component;
 				projection.parameters.forEach((parameter, index) => {
 					closed(parameter, ["name", "type"]);
 					if(parameter.name !== declaration.parameters[index].name) fail("Runtime binder differs from the elaborated binder");

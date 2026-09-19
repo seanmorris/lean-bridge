@@ -757,7 +757,7 @@ The command verifies the supplied archives, installs them in an external tempora
 
 It checks loading, unmount during loading, invalid input, exact large-integer arithmetic, failed assets, reload recovery, and deployment prefixes. A successful run writes `acceptance.json` with `status: "passed"`. The adjacent `numeric-boundary-diagnostic.json` records successful addition at the 31-bit and 64-bit boundaries and for an input above `2^4096`. Acceptance neither rebuilds the component nor publishes it.
 
-### Staged npm callable transport
+### npm primitive callables
 
 The contract profile runs the private callable lifecycle and shared scalar codec checks:
 
@@ -771,7 +771,14 @@ The callable suite supplies a synthetic native side. It checks primitive convers
 node --test tests/component-scalars.test.mjs tests/component-npm-package.test.mjs
 ```
 
-Compiler and package admission for npm callables remains disabled pending Lean/C trampoline and shared-Wasm integration. The [transport staging record](../evidence/npm-callable-transport-20260919.md) lists that work and the required five-profile installed acceptance.
+The installed suite builds ordinary-source and independently reviewed callable packages, installs their verified archives offline, hides producer sources, and runs without compilers on the consumer PATH:
+
+```sh
+LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit \
+  node --test tests/component-callables.test.mjs
+```
+
+It checks all nineteen primitives in Node JavaScript, strict TypeScript, browser JavaScript, React and workers. Cases include sixteen-argument functions, exact large integers, callback exception identity, expired borrows, reentry, disposal, registry exhaustion and recovery. CI retains `build/callables/npm/`. The [transport staging record](../evidence/npm-callable-transport-20260919.md) describes the earlier synthetic-only milestone.
 
 ## Consumer acceptance
 

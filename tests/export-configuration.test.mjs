@@ -344,7 +344,7 @@ test("configured changes cannot be silently ignored by a compiler or reviewed IR
 	for(const settings of [{ resources: ["Library.Counter"] }, { arities: { "First.bump": 0 } }])
 	{
 		await configure(directory, { schemaVersion: 1, exports: ["First.bump"], ...settings });
-		await assert.rejects(() => prepareComponentBuildPlan({ projectRoot: directory, engineRoot: process.cwd(), targets: ["npm"] }), { code: "unsupported-export-configuration" });
+		await assert.rejects(() => prepareComponentBuildPlan({ projectRoot: directory, engineRoot: process.cwd(), targets: ["npm"] }), { code: settings.arities ? "arity-requires-elaboration" : "unsupported-export-configuration" });
 	}
 	const record = await readExportConfiguration(fixture);
 	assert.doesNotThrow(() => assertExportConfigurationCapabilities(record.configuration, { target: "npm" }));

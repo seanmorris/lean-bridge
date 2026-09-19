@@ -25,6 +25,15 @@ lean_object *bridge_scalar_decode_object(bridge_scalar_slot const *);
 uint32_t bridge_scalar_encode_object(bridge_scalar_slot *, uint32_t, lean_object *);
 uint32_t bridge_scalar_call(char const *, bridge_scalar_frame *);
 void bridge_scalar_frame_clear(bridge_scalar_frame *);
+/* Callable ABI 1 shares scalar slots. Store consumes one owned Lean reference;
+   invoke transfers a separately retained reference to its typed trampoline. */
+typedef uint32_t (*bridge_callable_apply)(lean_object *, bridge_scalar_frame *);
+uint32_t bridge_callable_abi(void);
+uint32_t bridge_callable_store(lean_object *, char const *, bridge_callable_apply);
+uint32_t bridge_callable_invoke(uint32_t, char const *, bridge_scalar_frame *);
+uint32_t bridge_callable_release(uint32_t, char const *);
+uint32_t bridge_callable_dispatch(uint32_t, char const *, bridge_scalar_frame *);
+void bridge_callable_frame_clear(bridge_scalar_frame *);
 #ifdef __cplusplus
 }
 #endif

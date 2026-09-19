@@ -171,7 +171,7 @@ export const createComponentCallableRuntime = module => {
 			requireOpen();
 			if(!current || !callback || !frames.includes(callback.scope) || callback.signature.key !== key) throw new TypeError("Expired or wrong-signature host callback");
 			if(callback.scope.failed || current.failed) return 8;
-			if(module._bridge_scalar_frame_validate(frame, callback.signature.parameters.length) !== 0) throw new TypeError("Invalid callback frame");
+			if(module._bridge_scalar_frame_validate(frame, callback.signature.parameters.length) !== 0 || new DataView(module.HEAP8.buffer).getUint32(frame + 8, true) !== 0) throw new TypeError("Invalid callback frame");
 			const args = callback.signature.parameters.map((type, index) => readComponentScalarSlot(module, frame + scalarFrameHeaderBytes + index * scalarSlotBytes, type.name, bytes => charge(current, bytes)));
 			const result = Reflect.apply(callback.value, undefined, args);
 			if(callback.scope.failed || current.failed) return 8;
@@ -195,6 +195,7 @@ export const createComponentCallableRuntime = module => {
 	runtimes.add(module);
 	return Object.freeze({
 		assertOpen: requireOpen
+		, poison: () => { poisoned = true; }
 		, bind: (descriptor, operations) => {
 			requireOpen();
 			const abi = structuredClone(descriptor); assertComponentCallableAbi(abi);

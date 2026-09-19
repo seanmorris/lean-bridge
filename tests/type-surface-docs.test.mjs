@@ -109,23 +109,25 @@ test("C++ distinguishes typed primitive closures from Alpha's named wrapper", as
 	assert.match(cpp.split("### Alpha example API")[1], /Returned Lean closure.*`Transform`/u);
 });
 
-test("a generator observation cannot become installed coverage or leak into another path", () => {
+test("installed primitive coverage stays separate from field audits and other producer paths", () => {
 	const node = cells.find(cell => cell.id === "node-javascript/nat/ordinary-source/parameter");
 	const reviewed = cells.find(cell => cell.id === "node-javascript/nat/reviewed-ir/parameter");
 	const field = cells.find(cell => cell.id === "node-javascript/nat/ordinary-source/field");
 	assert.equal(cellTypeCoverage(node), "Installed checks passed");
-	assert.equal(cellTypeCoverage(reviewed), "Generator inspected");
+	assert.equal(cellTypeCoverage(reviewed), "Installed checks passed");
 	assert.equal(cellTypeCoverage(field), "Not audited");
+	assert.equal(cellTypeCoverage(cells.find(cell => cell.id === "node-javascript/nat/reviewed-ir/field")), "Generator inspected");
 	const profiles = typeGuideProfiles["docs/javascript-typescript.md"];
 	const combined = row(renderTypeTable(inventory, profiles, "reference/types.md"), "Nat");
-	assert.match(combined, /Ordinary source: Node JavaScript: Installed checks passed \(input, result\)/u);
+	assert.match(combined, /Ordinary source: Installed checks passed \(input, result, callback input, callback result\)/u);
 	assert.equal(combined.split("Reviewed IR:").length, 2, "Shared reviewed evidence appears once");
 	const candidate = structuredClone(inventory);
 	const observed = candidate.document.observations.find(observation => observation.id === node.observation);
 	observed.stages.installedExecution = { state: "unreviewed", evidence: [], note: "Archive execution evidence removed." };
 	const source = renderTypeTable(candidate, ["node-javascript"], "reference/types.md");
-	assert.doesNotMatch(row(source, "Nat"), /Installed checks passed/u);
-	assert.match(row(source, "Nat"), /Packaged; execution unaudited/u);
+	assert.match(row(source, "Nat"), /Ordinary source: Packaged; execution unaudited \(input, result\)/u);
+	assert.match(row(source, "Nat"), /Installed checks passed \(callback input, callback result\)/u);
+	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\)/u);
 });
 
 test("table generation rejects missing, overlapping and foreign conversion-note claims", () => {
