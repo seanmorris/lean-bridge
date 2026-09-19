@@ -17,6 +17,7 @@ import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../src/backends/cpp/generate.mjs";
+import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const inventory = await readTypeSurface();
@@ -76,13 +77,18 @@ test("Java and Kotlin keep their own host representations without widening Alpha
 	}
 });
 
-test("C++ names the actual generated closure wrapper", async () => {
+test("C++ distinguishes typed primitive closures from Alpha's named wrapper", async () => {
 	const cpp = await readFile("docs/consume/cpp.md", "utf8");
-	const name = cells.find(cell => cell.id === "cpp/closure/reviewed-ir/result").hostType;
-	const header = generateCppBindingPackage(alpha.bindingIr)["include/lean_alpha.hpp"];
-	assert.match(header, new RegExp(`class ${name} final`, "u"));
-	assert.match(row(cpp, "Lean function returned to the host"), /`Transform`/u);
-	assert.doesNotMatch(row(cpp, "Lean function returned to the host"), /OwnedTransform/u);
+	for(const path of ["ordinary-source", "reviewed-ir"])
+		assert.equal(cells.find(cell => cell.id === `cpp/closure/${path}/result`).hostType, "LeanClosure<Result(Args...)>");
+	const header = generateCppBindingPackage(callableReviewedIr())["include/callables.hpp"];
+	assert.match(header, /class LeanClosure<Result\(Args\.\.\.\)> final/u);
+	assert.match(header, /inline LeanClosure<Nat\(bool, Nat\)> make_nat/u);
+	assert.match(row(cpp, "Lean function returned to the host"), /`LeanClosure<Result\(Args\.\.\.\)>`/u);
+	assert.doesNotMatch(row(cpp, "Lean function returned to the host"), /Transform/u);
+	const alphaHeader = generateCppBindingPackage(alpha.bindingIr)["include/lean_alpha.hpp"];
+	assert.match(alphaHeader, /class Transform final/u);
+	assert.match(cpp.split("### Alpha example API")[1], /Returned Lean closure.*`Transform`/u);
 });
 
 test("a generator observation cannot become installed coverage or leak into another path", () => {

@@ -41,7 +41,8 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity);
-	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: target === "c" }), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true }), p = surface.prefix;
+	const bigint = target === "cpp" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== 1 || adapter.profile !== "native-library-v1"
@@ -55,6 +56,8 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	const copy = async (from, path) => { await mkdir(dirname(join(root, path)), { recursive: true }); await copyFile(from, join(root, path), 1); };
 	await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
 	if(target === "cpp") await copy(join(adapterRoot, `include/${p}.hpp`), `include/${p}.hpp`);
+	if(target === "cpp") for(const path of Object.keys(adapter.files).filter(path => path.startsWith("include/boost/") || path === "share/lean-bridge/boost.json" || path === "share/lean-bridge/licenses/Boost-LICENSE"))
+		await copy(join(adapterRoot, path), path);
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);
 	await copy(join(nativeRoot, receipt.library), `lib/${receipt.library}`);
 	for(const path of Object.keys(runtime.files).filter(path => path.startsWith("lib/"))) await copy(join(runtimeRoot, path), path);
@@ -85,10 +88,12 @@ Name: ${name}
 Description: Compiled Lean ${model.component.name} ${target === "cpp" ? "C++20" : "C11"} API
 Version: ${version}
 Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}
-Cflags: -I\${includedir}
+Cflags: -I\${includedir}${bigint ? " -DBOOST_MP_STANDALONE" : ""}
 `);
 	const callableGuide = surface.callbacks.size
-		? "\n\nSynchronous callbacks use the signature-specific function/context structs in the public header. Keep them valid until the Lean call returns. Dynamic callback arguments are borrowed views with null ownership fields. Return a borrowed view or an owned buffer with its release hook; the adapter copies and then releases callback results, including failed results. Return normally with a status; do not unwind across Lean frames. The first callback failure suppresses later host invocations in that call. Error text is thread-local, limited to 1023 bytes, and valid until the next failing call on that thread. Returned closures use generated _call and pointer-to-pointer _dispose functions. Invoke them on the creating thread, dispose once per owning pointer, and never use an alias after disposal. Call-scoped host callbacks cannot be retained by Lean. Nested callable calls are limited to 64; the 16 MiB budget includes callback conversions. Closure leases share the runtime's 4096-identity capacity."
+		? (target === "cpp" ? "\n\nPass typed C++ lambdas or functions for synchronous callbacks. Arguments are owned values and results must match the declared type exactly; Unit results return void. Move-only callbacks are supported. Exceptions are contained before C and rethrown after the native call returns. The first failure suppresses later host invocations. Returned LeanClosure<Result(Args...)> values are move-only: call(...) or operator() invokes them, close() releases explicitly, and destruction releases automatically. Invoke and close on the creating thread. Moving a closure does not change its creating thread. Calls after close and inherited calls after fork reject. Active invocation defers self-close until return."
+			: "\n\nSynchronous callbacks use the signature-specific function/context structs in the public header. Keep them valid until the Lean call returns. Dynamic callback arguments are borrowed views with null ownership fields. Return a borrowed view or an owned buffer with its release hook; the adapter copies and then releases callback results, including failed results. Return normally with a status; do not unwind across Lean frames. The first callback failure suppresses later host invocations in that call. Error text is thread-local, limited to 1023 bytes, and valid until the next failing call on that thread. Returned closures use generated _call and pointer-to-pointer _dispose functions. Invoke them on the creating thread, dispose once per owning pointer, and never use an alias after disposal.")
+			+ " Call-scoped host callbacks cannot be retained by Lean. Nested callable calls are limited to 64; the 16 MiB budget includes callback conversions. Closure leases share the runtime's 4096-identity capacity."
 		: "";
 	const copiedGuide = (surface.copies.some(copy => copy.record || copy.element)
 		? "\n\nArrays and acyclic records can nest up to 32 types deep. C spans own their nested elements through their release callback; record clear functions clear their fields. Do not shallow-copy an owned result and clear both copies. C++ uses owned vectors and structs, with scoped input views. The 16 MiB conversion budget includes input and output payloads, array slots (at least pointer-sized), output ownership headers and record storage; it does not bound the Lean algorithm's working memory."
@@ -100,6 +105,7 @@ if(NOT TARGET ${cmakeTarget})
     IMPORTED_LOCATION "\${_LB_PREFIX}/lib/${adapter.library}"
     INTERFACE_INCLUDE_DIRECTORIES "\${_LB_PREFIX}/include"
     INTERFACE_COMPILE_FEATURES "${target === "cpp" ? "cxx_std_20" : "c_std_11"}"
+${bigint ? '    INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"\n' : ""}\
   )
 endif()
 unset(_LB_PREFIX)
@@ -112,7 +118,7 @@ else()
   set(PACKAGE_VERSION_COMPATIBLE FALSE)
 endif()
 `);
-	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\nC inputs borrow caller buffers for one call. Initialize result structs to zero and call the matching ${p}_TYPE_clear function after use, before reusing a result slot. Clear is idempotent. C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. Nat/Int use little-endian uint32 limbs; an empty span is zero, and Int carries a negative flag. Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}\n\n${surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`).join("\n")}\n`);
+	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\nC inputs borrow caller buffers for one call. Initialize result structs to zero and call the matching ${p}_TYPE_clear function after use, before reusing a result slot. Clear is idempotent. C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. ${target === "cpp" ? "Nat and Int are Boost.Multiprecision cpp_int values. Negative Nat inputs reject. Packages using these types include Boost 1.90.0 standalone headers, license and source hashes; CMake and pkg-config configure them automatically." : "Nat/Int use little-endian uint32 limbs; an empty span is zero, and Int carries a negative flag."} Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}\n\n${surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`).join("\n")}\n`);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
 	const manifest = { schemaVersion: 1, kind: "lean-bridge-native-c-package"

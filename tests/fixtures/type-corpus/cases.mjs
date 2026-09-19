@@ -115,6 +115,7 @@ const rustRejection = (id, category) => ({ expectation: { kind: "compile-rejecti
 		: id.startsWith("overflow-") || /^(?:uint|int)\d+-(?:below|above)$/.test(id) ? "overflowing_literals" : "E0308" } });
 
 const cFamilyExpectation = (id, category, profile) => {
+	if(profile === "cpp" && ["negative-nat", "bad-record"].includes(id)) return { rejectionMessage: "Nat must be nonnegative" };
 	if(["bool-as-number", "wrong-boolean", "float32-wrong-type", "float64-wrong-type", ...(profile === "c" ? ["bad-nested"] : [])].includes(id))
 		return { expectation: { kind: "lean-oracle" }, oracleKey: id
 			, resultEncoding: id.startsWith("float") ? id.split("-")[0] : "value" };

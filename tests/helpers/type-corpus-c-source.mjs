@@ -45,7 +45,7 @@ const header = (library, profile) => `#ifndef _GNU_SOURCE\n#define _GNU_SOURCE\n
 const cppValue = (wire, type) => {
 	if(wire.integer !== undefined)
 	{
-		if(["nat", "int"].includes(type)) return `api::${type === "int" || wire.integer.startsWith("-") ? "Int" : "Nat"}{${type === "int" || wire.integer.startsWith("-") ? `${wire.integer.startsWith("-")}, ` : ""}{${limbs(wire.integer).map(value => `UINT32_C(${value})`).join(", ")}}}`;
+		if(["nat", "int"].includes(type)) return `api::${type === "int" ? "Int" : "Nat"}("${wire.integer}")`;
 		return `${typeof type === "string" && /^(?:u?int)\d+$/.test(type) ? cpptype(type) : "int64_t"}{${integer(wire.integer)}}`;
 	}
 	if(wire.string !== undefined) return `std::string(${quoted(wire.string)}, ${Buffer.byteLength(wire.string)})`;
@@ -138,12 +138,12 @@ export const corpusCFamilyRejection = (library, entry, profile) => {
 
 const encoders = (library, profile) => types(library).map(type => {
 	const pointer = "value", value = "(*value)", cpp = profile === "cpp";
-	const data = cpp ? `${value}.${["nat", "int"].includes(type) ? "limbs." : ""}data()` : `${value}.data`;
-	const length = cpp ? `${value}.${["nat", "int"].includes(type) ? "limbs." : ""}size()` : `${value}.length`;
+	const data = cpp ? `${value}.data()` : `${value}.data`;
+	const length = cpp ? `${value}.size()` : `${value}.length`;
 	let body;
 	if(type.array) body = `fputs(${JSON.stringify('{"array":[')}, out); for (size_t i = 0; i < ${cpp ? `${value}.size()` : `${value}.length`}; ++i) { if(i) fputc(',', out); encode_${key(type.array)}(out, &${cpp ? `${value}[i]` : `${value}.data[i]`}); } fputs("]}", out);`;
 	else if(type.record) body = `fputs(${JSON.stringify(`{"record":"${type.record.split(".").at(-1)}","fields":{`)}, out); ${Object.entries(type.fields).map(([name, field], i) => `fputs(${JSON.stringify(`${i ? "," : ""}"${name}":`)}, out); encode_${key(field)}(out, &${value}.${name});`).join(" ")} fputs("}}", out);`;
-	else if(["nat", "int"].includes(type)) body = `wire_big(out, ${data}, ${length}, ${type === "int" ? `${value}.negative` : "false"});`;
+	else if(["nat", "int"].includes(type)) body = cpp ? `auto text = value->str(); fputs(${JSON.stringify('{"integer":')}, out); wire_quote(out, text.data(), text.size()); fputc('}', out);` : `wire_big(out, ${data}, ${length}, ${type === "int" ? `${value}.negative` : "false"});`;
 	else if(type === "string") body = `fputs(${JSON.stringify('{"string":')}, out); wire_quote(out, ${data}, ${length}); fputc('}', out);`;
 	else if(type === "bytes") body = `fputs(${JSON.stringify('{"bytes":[')}, out); for(size_t i = 0; i < ${length}; ++i) { if(i) fputc(',', out); fprintf(out, "%u", (unsigned)${data}[i]); } fputs("]}", out);`;
 	else if(type === "unit") body = `(void)${pointer}; fputs(${JSON.stringify('{"unit":true}')}, out);`;
@@ -234,10 +234,15 @@ export const corpusCFamilySource = (library, profile) => {
 		{
 			const fields = Object.entries(type.fields), matrix = fields.find(([, type]) => type.array)[0];
 			const text = fields.find(([, type]) => type === "string")[0], nat = fields.find(([, type]) => type === "nat")[0], int = fields.find(([, type]) => type === "int")[0];
-			const mutate = name => `for (auto& row : ${name}.${matrix}) { row.push_back(17); } ${name}.${text}[0] = 'X'; ${name}.${nat}.limbs[0] ^= 17; ${name}.${int}.limbs[0] ^= 17;`;
+			const mutate = name => `for (auto& row : ${name}.${matrix}) { row.push_back(17); } ${name}.${text}[0] = 'X'; ${name}.${nat} += 17; ${name}.${int} -= 17;`;
 			ownership = `char *after = snapshot_${key(type)}(&arg0); assert(strcmp(before, after) == 0); free(before); free(after);\n${cpp ? mutate("arg0") : `assert(result.${matrix}.data != arg0.${matrix}.data && result.${matrix}.data[0].data != arg0.${matrix}.data[0].data);\narg0_${matrix}_0_data[0] ^= 17; arg0_${text}_data[0] = 'X'; arg0_${nat}_data[0] ^= 17; arg0_${int}_data[0] ^= 17;`}\nchar *independent = snapshot_${key(type)}(&result); assert(strcmp(observed, independent) == 0); free(independent);\nchar *changed = snapshot_${key(type)}(&arg0);\n${cpp ? mutate("result") : clear(library, type)}\nchar *still = snapshot_${key(type)}(&arg0); assert(strcmp(changed, still) == 0); free(changed); free(still);`;
 		}
 		return `{\n${bindings(library, entry, profile)}\n${copy ? `char *before = snapshot_${key(type)}(&arg0);` : ""}\n${cpp ? type === "unit" ? `${call(library, entry, profile)}; std::monostate result{};` : `auto result = ${call(library, entry, profile)};` : `${p}_error error = {0}; ${ctype(library, type)} result = {0}; assert(${call(library, entry, profile)} == ${p.toUpperCase()}_STATUS_OK); assert(error.code == ${p.toUpperCase()}_ERROR_NONE);`}\nchar *observed = snapshot_${key(type)}(&result);\n${ownership}\nif (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"matched","independentCopy":${copy},"observed":`)}, stdout); fputs(observed, stdout); fputc('}', stdout); free(observed);\n${!cpp && !copy ? clear(library, type) : ""}\n}`;
 	});
+	if(cpp) for(const entry of corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "host-rejection"))
+		blocks.push(`{\n${bindings(library, entry, profile)}\nbool rejected = false; std::string message;
+try { (void)${call(library, entry, profile)}; } catch(const api::Error& error) { rejected = error.status == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT; message = error.what(); }
+assert(rejected); (void)api::${library.snakeOperations[0]}(7);
+if (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"rejected-as-expected","exception":"Error","recovered":true,"message":`)}, stdout); wire_quote(stdout, message.data(), message.size()); fputc('}', stdout);\n}`);
 	return `${header(library, profile)}#include "c-family.h"\n${corpusCFamilySignatures(library, profile)}\n${encoders(library, profile)}\nint main(void) {\nunsigned results = 0, errors = 0;\nfputs(${JSON.stringify(`{"schemaVersion":1,"profile":"${profile}","module":"${p}","results":[`)}, stdout);\n${blocks.join("\n")}\nfputs(${JSON.stringify('],"errors":[')}, stdout);\n${runtimeChecks(library, profile)}\nfputs("]}\\n", stdout); return 0;\n}\n`;
 };

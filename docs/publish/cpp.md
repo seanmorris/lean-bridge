@@ -8,13 +8,23 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. Select `--target c --target cpp` to produce both archives from one native compilation. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
 
-The generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. `Nat` and `Int` use exact little-endian `uint32_t` limb vectors; `Int` also carries a sign. Unit parameters use `std::monostate`, and Unit results return `void`.
+The generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
+
+Packages using `Nat` or `Int` include pinned Boost.Multiprecision and Boost.Config 1.90.0 headers and their Boost Software License. Builds and downstream installs need no Boost download. CMake and pkg-config supply `BOOST_MP_STANDALONE`; use the packaged include path and this same mode throughout your application. The package records dependency sources and file hashes in `share/lean-bridge/boost.json`.
 
 C++ arrays use `std::vector<T>` and records use generated structs with owned fields. Both can nest. `Array Bool` uses `std::vector<bool>`; its packed storage is converted to the C API's individual Boolean values. Empty records use empty C++ structs. The [copied-value rules](c.md#copied-arrays-and-records) define the shared budget and nesting limit.
 
 C++ results own their data. Scoped input views keep nested buffers alive through the call. Generated wrappers free intermediate C results on success and exceptions, including allocation failures partway through a nested result. Invalid UTF-8 or an exceeded copy budget raises the generated `Error` with the underlying status and code. C++ allocation failures propagate as `std::bad_alloc`. The [type conversion table](../consume/cpp.md#type-conversions) records installed coverage by position.
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.
+
+## Primitive callbacks and returned closures
+
+Ordinary-source and independently reviewed builds support synchronous callbacks and returned Lean closures with all nineteen primitives. Pass a typed lambda or function as a callback; move-only lambdas work too. Arguments are owned C++ values. Return the declared C++ type exactly, including an explicit `cpp_int` result for arithmetic expression templates. A `Unit` callback result is `void`.
+
+Generated trampolines catch C++ exceptions before returning to C and rethrow the original exception once the native call returns. The first failure suppresses later callbacks in the same call. Returned `LeanClosure<Result(Args...)>` values are move-only, provide `call`, `operator()`, `close` and `is_closed`, and release automatically on destruction. Invoke and explicitly close them on their creating thread. Moving them does not transfer thread ownership. Self-close during an active call defers disposal until the call returns.
+
+For an ordinary export that returns a function, set its outer parameter count in `arities`. Reviewed contracts carry that count in their declaration instead. Call-scoped host callbacks must not escape into a retained Lean closure. The adapter rejects expired borrows, calls after close, and post-fork use. Primitive callables share the C adapter's 16 MiB conversion budget, 64-level nesting limit and 4,096 live-closure capacity. Arrays, records, resources and asynchronous callables are not part of this callable profile. See the [installed acceptance record](../evidence/cpp-callables-20260919.md).
 
 ## Build the reviewed Alpha example
 

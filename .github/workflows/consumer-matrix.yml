@@ -489,6 +489,8 @@ jobs:
           LEAN_BRIDGE_WORD_PROFILES=c,cpp node --test tests/native-words.test.mjs
           LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs
           test -s build/callables/c.json
+          LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
+          test -s build/callables/cpp.json
           test -s build/type-corpus/c-cpp.json
           test -s build/type-corpus/reviewed-native-c-cpp.json
       - name: Upload installed C and C++ corpus observations
@@ -502,6 +504,7 @@ jobs:
             build/char-native/c-cpp.json
             build/word-native/c-cpp.json
             build/callables/c.json
+            build/callables/cpp.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -597,6 +600,7 @@ jobs:
             fi
             if [ "$consumer" = c ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs"
             fi
             if [ "$consumer" = python ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"

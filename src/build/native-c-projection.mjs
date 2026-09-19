@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
+import { boostSources } from "../backends/cpp/boost.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { generateNativePrimitiveC } from "../backends/c/native-primitives.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -37,7 +38,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity);
-	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: targets.every(target => ["c", "pypi", "rubygems", "cargo"].includes(target)) }), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo"].includes(target)) }), p = surface.prefix;
 	const root = join(working, "native/c-binding");
 	const files = { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(targets.includes("cpp"))
@@ -46,6 +47,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		files[`include/${p}.hpp`] = cpp[`include/${p}.hpp`];
 		files[`src/${p}.cpp`] = cpp[`src/${p}.cpp`];
 		files["cpp-binding-manifest.json"] = cpp["binding-manifest.json"];
+		if(surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName))) Object.assign(files, boostSources());
 	}
 	for(const [path, contents] of Object.entries(files))
 	{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents); }

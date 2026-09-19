@@ -14,7 +14,7 @@ Invalid fixed-width values use fatal GCC conversion warnings in C and list-initi
 
 Each rejected input gets a separate source file and syntax-only compile. The harness requires exit status 1, complete GCC JSON errors in that input file, and the expected narrowing or incompatible-type diagnostic. A missing header, failed link or unrelated compiler error cannot count as rejection evidence. Reports bind each program to its input with a source hash. Rejected programs do not contribute to runtime coverage.
 
-The public C/C++ APIs currently represent `Nat` and `Int` as little-endian 32-bit limbs. This milestone tests that representation. The planned GMP and Boost representation changes remain in VO 1218.
+At this milestone, the public C/C++ APIs represent `Nat` and `Int` as little-endian 32-bit limbs. This milestone tests that representation. The subsequent [C++ exact-integer and callable milestone](cpp-callables-20260919.md) replaces C++ limb carriers with Boost cpp_int. The C GMP work remains in VO 1218.
 
 ## Ownership and runtime errors
 

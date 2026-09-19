@@ -50,7 +50,8 @@ export const corpusProfiles = Object.freeze({
 		, Object.freeze({
 			adapter: "prepared-c-family-v1", target: profile
 			, transport: "native"
-			, moduleKey: "cModule", errors: Object.freeze({})
+			, moduleKey: "cModule"
+			, errors: Object.freeze(profile === "cpp" ? { range: "Error" } : {})
 		})
 	]))
 	, ...Object.fromEntries(["java", "kotlin"].map(profile => [profile
@@ -264,7 +265,7 @@ export const validateCorpusObservation = (library, cases, oracle, actual) => {
 		{
 			assert.equal(observed.status, "rejected-as-expected", entry.id);
 			assert.equal(observed.exception, corpusProfiles[actual.profile].errors[entry.expectation.category], entry.id);
-			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "php-wasm", "dotnet", "java", "kotlin", "wit-wasi"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
+			if(entry.rejectionMessage) assert.ok(observed.message.startsWith(["php-native", "php-wasm", "dotnet", "java", "kotlin", "wit-wasi", "cpp"].includes(actual.profile) ? entry.rejectionMessage : `${entry.rejectionMessage} at `), entry.id);
 			assert.equal(observed.recovered, true, entry.id);
 			if(["php-native", "php-wasm", "dotnet", "java", "kotlin", "wit-wasi"].includes(actual.profile)) assert.deepEqual(observed.recovery, oracle.dependency, entry.id);
 			if(wit)
@@ -317,7 +318,8 @@ const validateCFamilyEvidence = (run, library) => {
 	for(const flag of ["gccDiagnostics", "installedSourcesRemoved", "offline", "runtimeOverridesDisabled", "publicHeadersOnly", "compilerFreeExecution", "repeatExecution", "localLibraries"]) assert.equal(evidence[flag], true);
 	assert.deepEqual(evidence.negativeCompilerOptions, [`-std=${evidence.standard}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", ...profile === "c" ? ["-Wconversion", "-Wsign-conversion"] : [], "-fsyntax-only", "-fdiagnostics-format=json"]);
 	assert.match(evidence.pkgConfig.version, /^\d+\.\d+(?:\.\d+)?$/);
-	assert.equal(evidence.pkgConfig.flags.length, 4);
+	assert.equal(evidence.pkgConfig.flags.length, profile === "cpp" ? 5 : 4);
+	if(profile === "cpp") assert.ok(evidence.pkgConfig.flags.includes("-DBOOST_MP_STANDALONE"));
 	assert.match(evidence.pkgConfig.manifestSha256, /^[a-f0-9]{64}$/);
 	assert.match(evidence.cmake.version, /^cmake version \d+\.\d+\.\d+/);
 	for(const key of ["manifestSha256", "consumerSourceSha256"]) assert.match(evidence.cmake[key], /^[a-f0-9]{64}$/);

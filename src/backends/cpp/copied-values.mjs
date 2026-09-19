@@ -48,14 +48,22 @@ export const renderCppCopiedValues = surface => {
 			constructor.push(`value = ${name}{${fields.map((_, i) => `field${i}.value`).join(", ")}};`);
 			check.unshift(`charge(budget, 1, sizeof(${name}));`);
 			output.push(`return ${host}{${fields.map(field => `from${field.type.index}(source.${field.name})`).join(", ")}};`);
-		} else if(["string", "bytes", "nat", "int"].includes(ref.name))
+		} else if(["nat", "int"].includes(ref.name))
 		{
-			const limbs = ["nat", "int"].includes(ref.name), data = limbs ? "source.limbs" : "source";
-			constructor.push(`value = ${name}{${data}.data(), ${data}.size(), nullptr, nullptr${ref.name === "int" ? ", source.negative" : ""}};`);
-			check.push(`charge(budget, ${data}.size(), ${limbs ? "sizeof(uint32_t)" : "1"});`);
+			view.push("std::vector<uint32_t> limbs;");
+			constructor.push("if (source != 0) boost::multiprecision::export_bits(source, std::back_inserter(limbs), 32, false);"
+				, `value = ${name}{limbs.data(), limbs.size(), nullptr, nullptr${ref.name === "int" ? ", source < 0" : ""}};`);
+			if(ref.name === "nat") check.push('if (source < 0) invalid("Nat must be nonnegative");');
+			check.push("charge(budget, source == 0 ? 0 : (boost::multiprecision::msb(source < 0 ? -source : source) / 32 + 1), sizeof(uint32_t));");
+			output.push(`${host} result = 0;`
+				, "if (source.length) boost::multiprecision::import_bits(result, source.data, source.data + source.length, 32, false);"
+				, ref.name === "int" ? "return source.negative ? -result : result;" : "return result;");
+		} else if(["string", "bytes"].includes(ref.name))
+		{
+			constructor.push(`value = ${name}{source.data(), source.size(), nullptr, nullptr};`);
+			check.push("charge(budget, source.size(), 1);");
 			if(ref.name === "string") output.push('return source.length ? std::string(source.data, source.length) : std::string{};');
-			else if(ref.name === "bytes") output.push("return source.length ? std::vector<uint8_t>(source.data, source.data + source.length) : std::vector<uint8_t>{};");
-			else output.push(`return ${host}{${ref.name === "int" ? "source.negative, " : ""}source.length ? std::vector<uint32_t>(source.data, source.data + source.length) : std::vector<uint32_t>{}};`);
+			else output.push("return source.length ? std::vector<uint8_t>(source.data, source.data + source.length) : std::vector<uint8_t>{};");
 		} else
 		{
 			constructor.push(`value = ${ref.name === "unit" ? "0" : "source"};`);
@@ -71,7 +79,11 @@ export const renderCppCopiedValues = surface => {
 			, "  (void)source;", ...output.map(line => `  ${line}`), "}"].join("\n");
 	});
 	return { records
-		, helpers: `inline void charge(size_t& budget, size_t count, size_t width) {
+		, helpers: `[[noreturn]] inline void invalid(const char* message) {
+  const ${p}_error error{${p.toUpperCase()}_ERROR_INVALID_ARGUMENT, message, std::char_traits<char>::length(message)};
+  throw Error(${p.toUpperCase()}_STATUS_INVALID_ARGUMENT, error);
+}
+inline void charge(size_t& budget, size_t count, size_t width) {
   if (count > budget / width) {
     const ${p}_error error{${p.toUpperCase()}_ERROR_INVALID_ARGUMENT, "16 MiB call limit exceeded", 26};
     throw Error(${p.toUpperCase()}_STATUS_INVALID_ARGUMENT, error);

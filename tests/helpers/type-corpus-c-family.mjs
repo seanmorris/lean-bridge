@@ -58,14 +58,16 @@ export const installedCFamilyCorpus = async ({ library, profile, consumer, hando
 	await saveLakeFile(project, "src/c-family.h", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/c-family.h")));
 	const config = { ...compile, PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
 	const flags = (await run("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], project, config)).stdout.trim().split(/\s+/);
-	assert.equal(flags.length, 4);
-	assert.equal(resolve(flags[0].slice(2)), join(installed, "include"));
-	assert.ok(flags[0].startsWith("-I")); assert.ok(flags[1].startsWith("-L"));
-	assert.equal(resolve(flags[1].slice(2)), join(installed, "lib"));
-	assert.equal(flags[2], `-Wl,-rpath,${flags[1].slice(2)}`);
-	assert.equal(flags[3], `-l${library.cModule}`);
+	assert.equal(flags.length, cpp ? 5 : 4);
+	if(cpp) assert.ok(flags.includes("-DBOOST_MP_STANDALONE"));
+	const integration = flags.filter(flag => flag !== "-DBOOST_MP_STANDALONE");
+	assert.equal(resolve(integration[0].slice(2)), join(installed, "include"));
+	assert.ok(integration[0].startsWith("-I")); assert.ok(integration[1].startsWith("-L"));
+	assert.equal(resolve(integration[1].slice(2)), join(installed, "lib"));
+	assert.equal(integration[2], `-Wl,-rpath,${integration[1].slice(2)}`);
+	assert.equal(integration[3], `-l${library.cModule}`);
 	const standard = cpp ? "c++20" : "c11", options = [`-std=${standard}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG"];
-	await run(compiler, [...options, sourceFile, flags[0], flags[1], flags[3], "-Wl,-rpath,$ORIGIN/lib", "-o", "consumer-pkg-config"], project, compile);
+	await run(compiler, [...options, sourceFile, ...flags.filter(flag => !flag.startsWith("-Wl,-rpath,")), "-Wl,-rpath,$ORIGIN/lib", "-o", "consumer-pkg-config"], project, compile);
 	const negatives = corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "compile-rejection");
 	const negativeCompilerOptions = [...options, ...cpp ? [] : ["-Wconversion", "-Wsign-conversion"], "-fsyntax-only", "-fdiagnostics-format=json"];
 	const rejected = [];
@@ -73,7 +75,7 @@ export const installedCFamilyCorpus = async ({ library, profile, consumer, hando
 	{
 		const source = corpusCFamilyRejection(library, entry, profile), file = `src/reject-${entry.id.split("/")[1]}.${extension}`;
 		await saveLakeFile(project, file, source);
-		const failure = await captureCorpusCompiler(compiler, [...negativeCompilerOptions, flags[0], file], project, compile);
+		const failure = await captureCorpusCompiler(compiler, [...negativeCompilerOptions, ...flags.filter(flag => flag.startsWith("-I") || flag.startsWith("-D")), file], project, compile);
 		assert.equal(failure.code, 1, `${entry.id}: expected compiler rejection: ${failure.stderr}`);
 		const messages = JSON.parse(failure.stderr).filter(message => message.kind === "error");
 		assert.ok(messages.length > 0);

@@ -188,7 +188,7 @@ const cFamilyValidationFixture = (library, profile) => ({
 	, gccDiagnostics: true, installedSourcesRemoved: true, offline: true
 	, runtimeOverridesDisabled: true, publicHeadersOnly: true
 	, compilerFreeExecution: true, repeatExecution: true, localLibraries: true
-	, pkgConfig: { version: "1.8.1", flags: ["-I/validator", "-L/validator", "-Wl,-rpath,/validator", `-l${library.cModule}`], manifestSha256: "f".repeat(64) }
+	, pkgConfig: { version: "1.8.1", flags: ["-I/validator", ...profile === "cpp" ? ["-DBOOST_MP_STANDALONE"] : [], "-L/validator", "-Wl,-rpath,/validator", `-l${library.cModule}`], manifestSha256: "f".repeat(64) }
 	, cmake: { version: "cmake version 3.25.1", manifestSha256: "f".repeat(64), consumerSourceSha256: "f".repeat(64) }
 	, executables: { "pkg-config": "f".repeat(64), cmake: "f".repeat(64) }
 	, integrationExecutions: { "pkg-config": 2, cmake: 2 }
@@ -621,9 +621,10 @@ for(const profile of ["c", "cpp"]) test(`${profile} corpus separates native nume
 	assert.equal(observed.length, 41);
 	const results = runs.flatMap(run => run.observation.results);
 	assert.equal(results.filter(entry => entry.status === "matched").length, profile === "c" ? 94 : 92);
-	assert.equal(results.filter(entry => entry.status === "rejected-at-compile-time").length, profile === "c" ? 30 : 32);
+	assert.equal(results.filter(entry => entry.status === "rejected-at-compile-time").length, profile === "c" ? 30 : 28);
+	assert.equal(results.filter(entry => entry.status === "rejected-as-expected").length, profile === "c" ? 0 : 4);
 	assert.equal(runs.flatMap(run => run.observation.errors).length, profile === "c" ? 42 : 18);
-	assert.ok(observed.every(cell => cell.cases.every(id => corpusHostCase(catalog.cases.find(entry => entry.id === id), profile).expectation.kind === "lean-oracle")));
+	assert.ok(observed.every(cell => cell.cases.every(id => corpusHostCase(catalog.cases.find(entry => entry.id === id), profile).expectation.kind !== "compile-rejection")));
 	for(const library of catalog.libraries)
 	{
 		const source = corpusCFamilySource(library, profile), signatures = corpusCFamilySignatures(library, profile);
@@ -633,7 +634,7 @@ for(const profile of ["c", "cpp"]) test(`${profile} corpus separates native nume
 		assert.match(source, /INVALID_ARGUMENT/);
 		assert.doesNotMatch(source, /__runtime|api::detail|runtime_install|Alpha|validator-only/);
 		if(profile === "c") assert.match(source, /WIRE_WATCH\(result/);
-		else assert.match(source, /result\.(?:units|counter)\.limbs\[0\] \^= 17/);
+		else assert.match(source, /result\.(?:units|counter) \+= 17/);
 		for(const id of ["bool-as-number", "wrong-boolean", "float32-wrong-type", "float64-wrong-type"])
 			assert.equal(corpusHostCase(catalog.cases.find(entry => entry.id === `${library.id}/${id}`), profile).oracleKey, id);
 		assert.equal(corpusHostCase(catalog.cases.find(entry => entry.id === `${library.id}/bad-nested`), profile).expectation.kind, profile === "c" ? "lean-oracle" : "compile-rejection");

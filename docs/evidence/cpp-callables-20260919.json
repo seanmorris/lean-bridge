@@ -1,0 +1,1497 @@
+{
+  "schemaVersion": 1,
+  "profile": "native-library-v1",
+  "wordBits": 64,
+  "compiler": "GCC 12.2.0; C++20",
+  "sources": [
+    {
+      "path": "tests/fixtures/onboarding/callables/Callables.lean",
+      "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+    },
+    {
+      "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+      "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+    },
+    {
+      "path": "tests/fixtures/callable-consumers/Cpp.lean",
+      "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
+    }
+  ],
+  "consumerSha256": "f2e16b029c3aca3782a2bca684e1309bb7715624351896b59bf4c4343d43c79b",
+  "signatures": [
+    {
+      "name": "Callables.callBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.callBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.callChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.callFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.callFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.callInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.callInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.callInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.callInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.callInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.callISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.callNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.callString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.callUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.callUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.callUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.callUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.callUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.callUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.combine",
+      "parameters": [
+        "string",
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "string",
+              "uint64"
+            ],
+            "result": "string"
+          }
+        },
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.makeBool",
+      "parameters": [
+        "bool"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bool"
+          ],
+          "result": "bool"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeBytes",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bytes"
+          ],
+          "result": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeChar",
+      "parameters": [
+        "char"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "char"
+          ],
+          "result": "char"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeFloat",
+      "parameters": [
+        "float64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float64"
+          ],
+          "result": "float64"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeFloat32",
+      "parameters": [
+        "float32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float32"
+          ],
+          "result": "float32"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeInt",
+      "parameters": [
+        "int"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int"
+          ],
+          "result": "int"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeInt16",
+      "parameters": [
+        "int16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int16"
+          ],
+          "result": "int16"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeInt32",
+      "parameters": [
+        "int32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int32"
+          ],
+          "result": "int32"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeInt64",
+      "parameters": [
+        "int64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int64"
+          ],
+          "result": "int64"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeInt8",
+      "parameters": [
+        "int8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int8"
+          ],
+          "result": "int8"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeISize",
+      "parameters": [
+        "isize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "isize"
+          ],
+          "result": "isize"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeNat",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "nat"
+          ],
+          "result": "nat"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeString",
+      "parameters": [
+        "string"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "string"
+          ],
+          "result": "string"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUInt16",
+      "parameters": [
+        "uint16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint16"
+          ],
+          "result": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUInt32",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUInt64",
+      "parameters": [
+        "uint64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint64"
+          ],
+          "result": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUInt8",
+      "parameters": [
+        "uint8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint8"
+          ],
+          "result": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUnit",
+      "parameters": [
+        "unit"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "unit"
+          ],
+          "result": "unit"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeUSize",
+      "parameters": [
+        "usize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "usize"
+          ],
+          "result": "usize"
+        }
+      }
+    },
+    {
+      "name": "Callables.retainCallback",
+      "parameters": [
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.twiceBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.twiceBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.twiceChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.twiceFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.twiceFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.twiceInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.twiceInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.twiceInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.twiceInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.twiceInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.twiceISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.twiceNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.twiceString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.twiceUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.twiceUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.twiceUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.twiceUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.twiceUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.twiceUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "47be584db5445872a6fe79c38c771f1af2b81c4d3679d36d849be57e7afc7c20",
+      "checks": 23896,
+      "compilerFreePath": true,
+      "consumerSha256": "f2e16b029c3aca3782a2bca684e1309bb7715624351896b59bf4c4343d43c79b",
+      "glibcMinimumVersion": "2.38",
+      "modelSha256": "1d24393960e891e5ed8733ec67ec3150bcd314d469801d9572483035cf0bb8cb",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51898471,
+              "path": "archives/callables-api-1.0.0-cpp.tar.gz",
+              "sha256": "d69c8666c0226d10c97bd05c5e27d032ce2a30e14f4855ba1b0513dacfb7c6a9"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "callables-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "428fb9d987306eb9a893c891884cccdec0d177d3c295de236933e86c5e335e5b",
+      "safety": {
+        "boost": {
+          "license": "BSL-1.0",
+          "mode": "BOOST_MP_STANDALONE",
+          "sha256": "6f4b548f393ddcdce8f5d8b3064d2dc58c9d09e856c80d8b37e4748d6c602ffb",
+          "version": "1.90.0"
+        },
+        "boostFiles": 199,
+        "executableSha256": "c26c7d978c1e7ae16981f92f690fa74d8cab38ff768e283787279851fc78c8e9",
+        "rejected": [
+          {
+            "diagnostics": 1,
+            "name": "argument",
+            "sourceSha256": "1f42c2b535aa598df90c63751cb9d2b21b7772fca4671253c26fc1c183d620b1"
+          },
+          {
+            "diagnostics": 1,
+            "name": "result",
+            "sourceSha256": "1191e53f758b64c311f0741d9f270de6be2bb85a60e1689e078e130c38f51c06"
+          },
+          {
+            "diagnostics": 1,
+            "name": "callback-argument",
+            "sourceSha256": "08dc26bd42ddab3a4d59a80b49108092d63bf82028ae223f73f970727b11bc87"
+          },
+          {
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "ab7e20eecc78ba904004887b7bd12eaa342459083f6e14f77cdd6d6632c167ae"
+          },
+          {
+            "diagnostics": 1,
+            "name": "closure-argument",
+            "sourceSha256": "0bfab46b6f341c23c6f082701372482ad2b0fa523bf2291ed509ebf4776114b7"
+          },
+          {
+            "diagnostics": 1,
+            "name": "copy",
+            "sourceSha256": "089d84f7b3f89cd521afa5e06a224aa4bdc8351c94510e62fa06a12290d82e7f"
+          },
+          {
+            "diagnostics": 1,
+            "name": "unit-result",
+            "sourceSha256": "29216154238ec5c6c4098981c8398ba6ce48abb1db62af0d53a1b11301a46564"
+          }
+        ],
+        "sourceFreeChecks": 23896
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2d4a5546e481a87ea0018838d3d5e862f882ff0ad04deb2f92fa3ce329e4778a"
+    },
+    {
+      "bindingIrSha256": "48dd61b3396e989230a771f889679e0164edd994c98fec14a5ec1ab8851153df",
+      "checks": 23896,
+      "compilerFreePath": true,
+      "consumerSha256": "f2e16b029c3aca3782a2bca684e1309bb7715624351896b59bf4c4343d43c79b",
+      "glibcMinimumVersion": "2.38",
+      "modelSha256": "22b1712652b86b212ca806fe2c6f68b3acd533bcce7d5fca35bb922367860c3d",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51907440,
+              "path": "archives/callables-api-1.0.0-cpp.tar.gz",
+              "sha256": "e9e2eff370131edd097d019f7e2bba30f519f8058800198b17f84c25b03759e9"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "callables-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "d0b31dd0bdf9491709fcfb13f5742724c3b4cc6f2e75c5db472bfc095a7f96ae",
+      "safety": {
+        "boost": {
+          "license": "BSL-1.0",
+          "mode": "BOOST_MP_STANDALONE",
+          "sha256": "6f4b548f393ddcdce8f5d8b3064d2dc58c9d09e856c80d8b37e4748d6c602ffb",
+          "version": "1.90.0"
+        },
+        "boostFiles": 199,
+        "executableSha256": "33d3de11718167f417d61bc2565e13f18a97475cec525d199eb87315b18a10cc",
+        "rejected": [
+          {
+            "diagnostics": 1,
+            "name": "argument",
+            "sourceSha256": "1f42c2b535aa598df90c63751cb9d2b21b7772fca4671253c26fc1c183d620b1"
+          },
+          {
+            "diagnostics": 1,
+            "name": "result",
+            "sourceSha256": "1191e53f758b64c311f0741d9f270de6be2bb85a60e1689e078e130c38f51c06"
+          },
+          {
+            "diagnostics": 1,
+            "name": "callback-argument",
+            "sourceSha256": "08dc26bd42ddab3a4d59a80b49108092d63bf82028ae223f73f970727b11bc87"
+          },
+          {
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "ab7e20eecc78ba904004887b7bd12eaa342459083f6e14f77cdd6d6632c167ae"
+          },
+          {
+            "diagnostics": 1,
+            "name": "closure-argument",
+            "sourceSha256": "0bfab46b6f341c23c6f082701372482ad2b0fa523bf2291ed509ebf4776114b7"
+          },
+          {
+            "diagnostics": 1,
+            "name": "copy",
+            "sourceSha256": "089d84f7b3f89cd521afa5e06a224aa4bdc8351c94510e62fa06a12290d82e7f"
+          },
+          {
+            "diagnostics": 1,
+            "name": "unit-result",
+            "sourceSha256": "29216154238ec5c6c4098981c8398ba6ce48abb1db62af0d53a1b11301a46564"
+          }
+        ],
+        "sourceFreeChecks": 23896
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2d5363bc287e78ff312984a8f1210e6eaddf0d54bb72e5570a80177d36acf165"
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.38",
+  "corpora": [
+    {
+      "report": "build/type-corpus/cpp.json",
+      "sha256": "0b32aaab7bbbc439623e1c152dd457746ef6fa61733dcd60aa36579ed346ffed",
+      "summary": {
+        "browserExecutedCases": 0,
+        "browserExecutions": 0,
+        "browserUnsupportedCases": 0,
+        "cFamilyRuntimeRejections": 18,
+        "cases": 124,
+        "compileRejectedCases": 28,
+        "dotnetRuntimeRejections": 0,
+        "executedCases": 96,
+        "gapCells": 6521,
+        "jvmRuntimeRejections": 0,
+        "libraries": 2,
+        "observedCells": 41,
+        "phpExecutedCases": 0,
+        "phpExecutions": 0,
+        "phpRuntimeRejections": 0,
+        "phpWasmExecutedCases": 0,
+        "phpWasmExecutions": 0,
+        "phpWasmRuntimeRejections": 0,
+        "profileRuns": 2,
+        "profiles": 17,
+        "rejectedBuilds": 2,
+        "rustRuntimeRejections": 0,
+        "unsupportedCases": 0,
+        "witRuntimeRejections": 0
+      },
+      "runs": [
+        {
+          "path": "ordinary-source",
+          "library": "shop",
+          "archive": {
+            "bytes": 51782962,
+            "name": "shop-corpus",
+            "path": "archives/shop-corpus-1.0.0-cpp.tar.gz",
+            "sha256": "53390024b239e675ce769a06a4af0dd1aaf81c4b6fe192a5da5aa540468d7172",
+            "target": "cpp",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "98f7dc2930301302bbeb6288a343e11881ad56285104d6d225c5871a13d566b3",
+          "sourceTreeSha256": "217848c01cd8114b3004e4cd488dc07da025be7f4da74187c8070bb80727c054",
+          "receiptSha256": "ae77ea358bbee688411b7aa9bd57faf2c8144f661fac50267d9e9f6e9fade30c",
+          "observationSha256": "d752c0cd2caec9c1b385bd32d08f4fbb1e82938f22aa35b1b98fcbc39adb4699",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "consumerSourceSha256": "d850b1d6476c66a1fc2f7ad960f77b08290e2fce543de7a5d79e6fbfdb315235",
+          "signaturesSha256": "60a0b50fbd8ce15e83b3cff3c9f3c49e8f73d7e8b7ca49b639122799154f4816",
+          "declarationsSha256": "1070672712b3e1adead8b2f351749a7c0c59e15ef4f21a5dfa8feb2a8372f0f6",
+          "packageReceiptSha256": "2999310621dc3107144d761a635d01839a011f6cd8ab59f3118b47e4debc5dfe",
+          "executables": {
+            "cmake": "c2c97cc4ebc5d04ada3449c34f4b894f2102e850a7626cdff9d7011831d81180",
+            "pkg-config": "b33f2f93cd0973faa822f30610622d4a3f0964d361b461a60f58539da04b5441"
+          },
+          "integrationExecutions": {
+            "cmake": 2,
+            "pkg-config": 2
+          },
+          "offline": true,
+          "installedSourcesRemoved": true,
+          "counts": {
+            "matched": 46,
+            "rejected-as-expected": 2,
+            "rejected-at-compile-time": 14
+          }
+        },
+        {
+          "path": "ordinary-source",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51783728,
+            "name": "telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0-cpp.tar.gz",
+            "sha256": "2e453817511ce154cf2b3287bfe628320e8e0e53ed6c03635524f049e6248a55",
+            "target": "cpp",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "d710e33c06a3d5fa9949ef46a953639de785fdcd1e06e69b4bcdf3c01a1d5a65",
+          "sourceTreeSha256": "7a6e8d2df8ec49a1681710db56890e1904eaac24b79101a4f790bbd5a69c1301",
+          "receiptSha256": "63cbf249fad845df6d71b8288dceadae957826d5a492a9b2b69c77657f251c65",
+          "observationSha256": "79877a089654203f9c310660d7603049c82199a4a955c2c6f38d0bd504c31e2b",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "consumerSourceSha256": "c455bcc9369cda943dc7f79a768467cf22321c474d5ffec2e52aa18043f459b1",
+          "signaturesSha256": "bd6a8215db2e97bdb91216404ae1c4701be88750238f690bebefdf9ff6bae59c",
+          "declarationsSha256": "6a5932644a690f7fc880690c95aeee3adbd34bd0c5252b3f7696bd2282befb9f",
+          "packageReceiptSha256": "09fe5a352dc345fea958d128bb8d5cfca37ba69b385d8049cc314dc205fc212c",
+          "executables": {
+            "cmake": "313b3ce48f9d769f6a82e65e45f5a27f51f3b2a8dd33df10a613108570a37275",
+            "pkg-config": "e4b2cbe1ddb04ea74890c2d17e8dd507d16a20698e9c194dba1b61b01fef8bb8"
+          },
+          "integrationExecutions": {
+            "cmake": 2,
+            "pkg-config": 2
+          },
+          "offline": true,
+          "installedSourcesRemoved": true,
+          "counts": {
+            "matched": 46,
+            "rejected-as-expected": 2,
+            "rejected-at-compile-time": 14
+          }
+        }
+      ]
+    },
+    {
+      "report": "build/type-corpus/reviewed-native-cpp.json",
+      "sha256": "9144a6ff625d53b2a49209d9844c37959b5c383a6e02a3f2acec73c76b773f60",
+      "summary": {
+        "catalogCases": 124,
+        "compileRejectedCases": 28,
+        "executedCases": 96,
+        "gapCells": 6521,
+        "installedRuns": 2,
+        "libraries": 2,
+        "observedCells": 41,
+        "profiles": 1
+      },
+      "runs": [
+        {
+          "path": "reviewed-ir",
+          "library": "shop",
+          "archive": {
+            "bytes": 51788242,
+            "name": "shop-corpus",
+            "path": "archives/shop-corpus-1.0.0-cpp.tar.gz",
+            "sha256": "953dbf019e8f9af44f01863cff02f264a4a6d00a5ff700e88dc4f85d97059d3e",
+            "target": "cpp",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "4fc41a92b39af5c972b922b78d3acc071caf0d0e1d02d47a58b04408ef7fddfe",
+          "sourceTreeSha256": "8193688e7142431a2615c0b902c7cd633a219a788af61a5e569ecef5d59d0abe",
+          "receiptSha256": "3f2f1cb06d18b99380b88152b8576535bb73c51032e78dd4f25803ff10426556",
+          "observationSha256": "d752c0cd2caec9c1b385bd32d08f4fbb1e82938f22aa35b1b98fcbc39adb4699",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "consumerSourceSha256": "d850b1d6476c66a1fc2f7ad960f77b08290e2fce543de7a5d79e6fbfdb315235",
+          "signaturesSha256": "60a0b50fbd8ce15e83b3cff3c9f3c49e8f73d7e8b7ca49b639122799154f4816",
+          "declarationsSha256": "7010a919a7fd9d5588f9eca1acf2466231655ad13d2b907b5922456886a90c10",
+          "packageReceiptSha256": "9c470d189afaa6d835ec23580558fbc50fba70980b1efdcc2560dfa15d461fa7",
+          "executables": {
+            "cmake": "78deb8fd7137f2d09a3d80f4a10e0b36e817721a05d1e46df3009efa7cd4fcea",
+            "pkg-config": "e854f81b6b66ebe685d188f3bb0090a3ad991319c003baaf4ec750541deb845a"
+          },
+          "integrationExecutions": {
+            "cmake": 2,
+            "pkg-config": 2
+          },
+          "offline": true,
+          "installedSourcesRemoved": true,
+          "counts": {
+            "matched": 46,
+            "rejected-as-expected": 2,
+            "rejected-at-compile-time": 14
+          }
+        },
+        {
+          "path": "reviewed-ir",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51788903,
+            "name": "telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0-cpp.tar.gz",
+            "sha256": "85dce073f0e50837a49e59a74458b53947e006afe7f4173551971a06e536ebb0",
+            "target": "cpp",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "5d4e87735ea45024d12b1bbaa4e7804ad1a48e978c9ddebae3ee940ac60fca21",
+          "sourceTreeSha256": "e3d27b906e40704472328de5240ce1df7d131b380cbd9215289405af555de38a",
+          "receiptSha256": "cc0fccbb479300fb5bccd249edfed00ce10fc7c074fe95530cc9a780c0ede2e9",
+          "observationSha256": "79877a089654203f9c310660d7603049c82199a4a955c2c6f38d0bd504c31e2b",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "consumerSourceSha256": "c455bcc9369cda943dc7f79a768467cf22321c474d5ffec2e52aa18043f459b1",
+          "signaturesSha256": "bd6a8215db2e97bdb91216404ae1c4701be88750238f690bebefdf9ff6bae59c",
+          "declarationsSha256": "68e410d534c765724a508d8b1034ad611ea705a24e153f79b2d1b17c8b5e0926",
+          "packageReceiptSha256": "4a02f344ea32960aa6f86fb33e4ae86cd7f0b944314fe6d6f7fdb8dbc669edaa",
+          "executables": {
+            "cmake": "de0be2a642adac86a649de73b0e6692888d3f6d1efca27aec096d4675a6bd629",
+            "pkg-config": "5357395ebe7c3c4d45915fa52bab6dcea1905d2749197fec01042c9a8863f5ff"
+          },
+          "integrationExecutions": {
+            "cmake": 2,
+            "pkg-config": 2
+          },
+          "offline": true,
+          "installedSourcesRemoved": true,
+          "counts": {
+            "matched": 46,
+            "rejected-as-expected": 2,
+            "rejected-at-compile-time": 14
+          }
+        }
+      ]
+    }
+  ],
+  "regressions": [
+    {
+      "suite": "tests/native-c-family.test.mjs",
+      "passed": 4,
+      "projects": [
+        {
+          "archives": [
+            {
+              "path": "mosaic-c-2.0.0-c.tar.gz",
+              "sha256": "6c7b38da3cf5dba67c9747b9eb0d67eb84aebc527828c7ff3dc4e4bb02f29bff"
+            },
+            {
+              "path": "mosaic-cpp-2.0.0-cpp.tar.gz",
+              "sha256": "18809eb34a78f327adc222b9695ff0906b267b897467039abfb33f11a9735793"
+            }
+          ],
+          "project": "Mosaic"
+        },
+        {
+          "archives": [
+            {
+              "path": "survey-c-2.0.0-c.tar.gz",
+              "sha256": "e489142f528157c53380f701ad79a972e3a6506e600ec083ce8a0d4a0be0b47a"
+            },
+            {
+              "path": "survey-cpp-2.0.0-cpp.tar.gz",
+              "sha256": "52f2a1bd37f37df871644774d1268c1e11e5b4c6e6d61c2d9f5dd4a40820b4af"
+            }
+          ],
+          "project": "Survey"
+        }
+      ]
+    },
+    {
+      "suite": "tests/native-c-copied.test.mjs",
+      "passed": 3,
+      "projects": [
+        {
+          "archives": [
+            {
+              "path": "parcel-c-1.0.0-c.tar.gz",
+              "sha256": "e85aa9703bdeb76ff6f1f1d0dffa820ee541365e42198621c413900765710c20"
+            },
+            {
+              "path": "parcel-cpp-1.0.0-cpp.tar.gz",
+              "sha256": "fe320a491e05ec6b7655d13e90009038f34ec9931b8cd00e0ef18bdaff16e4f5"
+            }
+          ],
+          "project": "Parcel"
+        },
+        {
+          "archives": [
+            {
+              "path": "archive-c-1.0.0-c.tar.gz",
+              "sha256": "03b64d8f4913149337cc0e255e0171fbf5e43633597e62472c2a41a8e07f6993"
+            },
+            {
+              "path": "archive-cpp-1.0.0-cpp.tar.gz",
+              "sha256": "5b8004092f30519c8f5e3cf7d5e3a8ac099deff3a4b04a64dc3da0f141dab43c"
+            }
+          ],
+          "project": "Archive"
+        }
+      ]
+    }
+  ]
+}

@@ -25,8 +25,8 @@ const scalars = [
 	["unit", "Unit", "std::monostate", "{}"], ["bool", "Bool", "bool", "true"]
 	, ...[8, 16, 32, 64].map(n => [`u${n}`, `UInt${n}`, `uint${n}_t`, `UINT${n}_MAX`])
 	, ...[8, 16, 32, 64].map(n => [`i${n}`, `Int${n}`, `int${n}_t`, `INT${n}_MIN`])
-	, ["nat", "Nat", "api::Nat", "api::Nat{{0, 0, 1}}"]
-	, ["integer", "Int", "api::Int", "api::Int{true, {0, 1}}"]
+	, ["nat", "Nat", "api::Nat", "(api::Nat(1) << 64)"]
+	, ["integer", "Int", "api::Int", "-(api::Int(1) << 32)"]
 	, ["f32", "Float32", "float", "-0.0f"], ["f64", "Float", "double", "-0.0"]
 	, ["text", "String", "std::string", 'std::string("a\\0\\xce\\xbb", 4)']
 	, ["bytes", "ByteArray", "std::vector<uint8_t>", "std::vector<uint8_t>{0, 255}"]
@@ -74,16 +74,16 @@ namespace api = lean_bridge::${p};
 int main() {
   ${scalars.map(([label, , host, value]) => `std::vector<${host}> input_${label}{${value}, ${value}};
   auto copied_${label} = api::echo_${label}(input_${label}); assert(copied_${label}.size() == 2);
-  ${label === "nat" ? `assert(copied_nat[0].limbs == input_nat[0].limbs);` : label === "integer" ? `assert(copied_integer[0].negative && copied_integer[0].limbs == input_integer[0].limbs);` : ["f32", "f64"].includes(label) ? `assert(std::signbit(copied_${label}[0]));` : `assert(copied_${label} == input_${label});`}
+  ${["f32", "f64"].includes(label) ? `assert(std::signbit(copied_${label}[0]));` : `assert(copied_${label} == input_${label});`}
   assert(api::echo_${label}({}).empty());`).join("\n  ")}
   api::ZLeaf leaf{${(p === "archive" ? [...scalars].reverse() : scalars).map(([, , , value]) => value).join(", ")}};
   api::Envelope source{"packet", leaf, {{leaf, leaf}, {}, {leaf}}};
   for (int i = 0; i < 100; ++i) {
     auto result = api::echo_record(source);
     assert(result.title == source.title && result.leaf.v_text == source.leaf.v_text);
-    ${scalars.map(([label]) => label === "nat" ? "assert(result.leaf.v_nat.limbs == leaf.v_nat.limbs);" : label === "integer" ? "assert(result.leaf.v_integer.negative && result.leaf.v_integer.limbs == leaf.v_integer.limbs);" : label.startsWith("f") ? `assert(std::signbit(result.leaf.v_${label}));` : `assert(result.leaf.v_${label} == leaf.v_${label});`).join("\n    ")}
+    ${scalars.map(([label]) => label.startsWith("f") ? `assert(std::signbit(result.leaf.v_${label}));` : `assert(result.leaf.v_${label} == leaf.v_${label});`).join("\n    ")}
     assert(result.rows.size() == 3 && result.rows[0].size() == 2 && result.rows[1].empty());
-    assert(result.rows[2][0].v_nat.limbs == leaf.v_nat.limbs);
+    assert(result.rows[2][0].v_nat == leaf.v_nat);
     result.rows[0][0].v_text = "independent"; assert(source.rows[0][0].v_text == leaf.v_text);
   }
   auto rows = api::echo_rows(source.rows); assert(rows[0][0].v_u64 == UINT64_MAX);
@@ -97,6 +97,14 @@ int main() {
   assert(api::echo_markers({{}, {}}).size() == 2);
   assert(api::matrix({1, 2, 3}) == std::vector<std::vector<uint32_t>>({{1, 2, 3}, {3, 2, 1}}));
   assert(api::grow("hello") == std::vector<std::string>({"hello", "hello"}));
+  bool negative_array = false, negative_field = false;
+  try { (void)api::echo_nat({api::Nat(-1)}); }
+  catch(const api::Error&) { negative_array = true; }
+  auto invalid = source; invalid.rows[0][0].v_nat = -1;
+  try { (void)api::echo_record(invalid); }
+  catch(const api::Error&) { negative_field = true; }
+  assert(negative_array && negative_field);
+  assert(api::echo_record(source).rows[0][0].v_nat == leaf.v_nat);
   bool failed = false;
   try { (void)api::grow(std::string(6 * 1024 * 1024, 'x')); }
   catch(const api::Error& error) { failed = error.status == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT; }

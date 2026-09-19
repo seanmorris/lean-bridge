@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.11.0",
+  "contractVersion": "0.12.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,11 +157,210 @@
   ],
   "evidence": [
     {
+      "id": "cpp-callables-installed",
+      "kind": "installed",
+      "revision": "7d847366237c3c054af14c567008a717c8a08696",
+      "command": "LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs; LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs; npm run test:type-corpus:cpp; LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=cpp node --test tests/type-corpus-reviewed-native.test.mjs",
+      "scope": "Both paths pass installed C++ callable assertions and repeat them after source-free executable/library relocation. All nineteen primitive conversions, exact cpp_int values, original exceptions, reentry, expired borrows, stable creator-thread/fork checks, allocation-failure cleanup, deferred disposal and registry exhaustion. Seven compile-fail consumers reject incompatible signatures and copies. Boost 1.90.0 standalone headers are pinned, bundled and verified. Scalar/nested C/C++ package regressions and independent Shop/Telemetry Lean oracle corpora cover exact bigint fields on both paths. Local host glibc is 2.36; package and CI floor remain 2.38. No other-host callable promotion; exact archive identities are retained in docs/evidence/cpp-callables-20260919.json.",
+      "files": [
+        {
+          "path": "src/backends/cpp/boost.mjs",
+          "sha256": "3743a22d0186963a2100f404b14a19b8fda2554ae497eb83a35f3081f4da914d"
+        },
+        {
+          "path": "src/backends/cpp/boost.source.json",
+          "sha256": "2e5ded51d6fa32f4d06d22eaf0bb10f54bdbfcf17731bea4f1554923a09ce10c"
+        },
+        {
+          "path": "src/backends/cpp/callables.mjs",
+          "sha256": "6ee7287978d83a87c3a32dd07401057a5e02b64257171561f295c69c32d6a4a6"
+        },
+        {
+          "path": "src/backends/cpp/primitives.mjs",
+          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+        },
+        {
+          "path": "src/backends/cpp/generate.mjs",
+          "sha256": "8f285b799ef19a4002f69f7f5f01bde30e1778f058ed6f55b4cc530db527ca68"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "e17fbeadc60c96aa46872882f4f46452b1f6b69214f22775a6b7a66b9694949e"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "096d21bcfa996db4d51278a2642621d76d21160512b7fbfa44cd6b3be0396a95"
+        },
+        {
+          "path": "tests/cpp-callables.test.mjs",
+          "sha256": "9331698b915fb0814bbc2becdd1ff9ad8b0c38d91cb98ab4503e7e4fa33dce03"
+        },
+        {
+          "path": "tests/cpp-callable-contract.test.mjs",
+          "sha256": "063407212d26e4cfccc692144ed35d2985407c885f78257644744b018033ac90"
+        },
+        {
+          "path": "tests/cpp-callable-evidence.test.mjs",
+          "sha256": "8a6978b1143f14c9ac40645b38dbc6eb154e95ef6fd61d462fdfad9adb0e76bc"
+        },
+        {
+          "path": "tests/helpers/cpp-callable-fixture.mjs",
+          "sha256": "cc911ace6dc2c2c5c753de64fc8de1d10936d12fd922c3ff796b02a718c15967"
+        },
+        {
+          "path": "tests/helpers/cpp-callable-install.mjs",
+          "sha256": "773dcb99523899ce6603a1b5ab38edf2b5fc97a1047be48a911b81157596def9"
+        },
+        {
+          "path": "tests/helpers/callable-fixture.mjs",
+          "sha256": "fdfb536780348c73d7dac0c4c4bf246634c99df0e6d16f2b5b0b5cd227df5d84"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/type-corpus-c-source.mjs",
+          "sha256": "2effabebbec650e9ff8af01ecc5c561e23e3384198884c567a6c9d282c857c2b"
+        },
+        {
+          "path": "tests/helpers/type-corpus-c-family.mjs",
+          "sha256": "804f69d9253e6fd39b43f734b7af802d658474e6786334788f40ca374d6aece0"
+        },
+        {
+          "path": "tests/fixtures/type-corpus/cases.mjs",
+          "sha256": "d609cc533e1a5b23580ee7e0fd18712269691d8c2c4d56a983965bd6e33c315b"
+        },
+        {
+          "path": "tests/native-c-family.test.mjs",
+          "sha256": "0cf6bebdcb9c9184051e51b70be92c6f0a2db48a866d8c08061f9b36911e73fa"
+        },
+        {
+          "path": "tests/native-c-copied.test.mjs",
+          "sha256": "7ecfc6efb7387f24e84f639466bfcd7460453889ecaeffc7c9c6a5f642862034"
+        },
+        {
+          "path": "tests/fixtures/onboarding/callables/Callables.lean",
+          "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Cpp.lean",
+          "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+          "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/cpp.cpp",
+          "sha256": "f2e16b029c3aca3782a2bca684e1309bb7715624351896b59bf4c4343d43c79b"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
+        },
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
+        },
+        {
+          "path": "docs/evidence/cpp-callables-20260919.md",
+          "sha256": "4dfaebe61fb8785069030090a61af586c84c1c00f63074010b185befbb5cdba4"
+        },
+        {
+          "path": "docs/evidence/cpp-callables-20260919.json",
+          "sha256": "f7e844451e1e145f4f8a0f112217fb74123d79eb84b2cc842daea6b9904d71da"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/callables-api-1.0.0-cpp.tar.gz",
+          "sha256": "d69c8666c0226d10c97bd05c5e27d032ce2a30e14f4855ba1b0513dacfb7c6a9"
+        },
+        {
+          "path": "reviewed-ir/archives/callables-api-1.0.0-cpp.tar.gz",
+          "sha256": "e9e2eff370131edd097d019f7e2bba30f519f8058800198b17f84c25b03759e9"
+        },
+        {
+          "path": "ordinary-source/archives/shop-corpus-1.0.0-cpp.tar.gz",
+          "sha256": "53390024b239e675ce769a06a4af0dd1aaf81c4b6fe192a5da5aa540468d7172"
+        },
+        {
+          "path": "ordinary-source/archives/telemetry-corpus-1.0.0-cpp.tar.gz",
+          "sha256": "2e453817511ce154cf2b3287bfe628320e8e0e53ed6c03635524f049e6248a55"
+        },
+        {
+          "path": "reviewed-ir/archives/shop-corpus-1.0.0-cpp.tar.gz",
+          "sha256": "953dbf019e8f9af44f01863cff02f264a4a6d00a5ff700e88dc4f85d97059d3e"
+        },
+        {
+          "path": "reviewed-ir/archives/telemetry-corpus-1.0.0-cpp.tar.gz",
+          "sha256": "85dce073f0e50837a49e59a74458b53947e006afe7f4173551971a06e536ebb0"
+        },
+        {
+          "path": "regression/Mosaic/mosaic-c-2.0.0-c.tar.gz",
+          "sha256": "6c7b38da3cf5dba67c9747b9eb0d67eb84aebc527828c7ff3dc4e4bb02f29bff"
+        },
+        {
+          "path": "regression/Mosaic/mosaic-cpp-2.0.0-cpp.tar.gz",
+          "sha256": "18809eb34a78f327adc222b9695ff0906b267b897467039abfb33f11a9735793"
+        },
+        {
+          "path": "regression/Survey/survey-c-2.0.0-c.tar.gz",
+          "sha256": "e489142f528157c53380f701ad79a972e3a6506e600ec083ce8a0d4a0be0b47a"
+        },
+        {
+          "path": "regression/Survey/survey-cpp-2.0.0-cpp.tar.gz",
+          "sha256": "52f2a1bd37f37df871644774d1268c1e11e5b4c6e6d61c2d9f5dd4a40820b4af"
+        },
+        {
+          "path": "regression/Parcel/parcel-c-1.0.0-c.tar.gz",
+          "sha256": "e85aa9703bdeb76ff6f1f1d0dffa820ee541365e42198621c413900765710c20"
+        },
+        {
+          "path": "regression/Parcel/parcel-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "fe320a491e05ec6b7655d13e90009038f34ec9931b8cd00e0ef18bdaff16e4f5"
+        },
+        {
+          "path": "regression/Archive/archive-c-1.0.0-c.tar.gz",
+          "sha256": "03b64d8f4913149337cc0e255e0171fbf5e43633597e62472c2a41a8e07f6993"
+        },
+        {
+          "path": "regression/Archive/archive-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "5b8004092f30519c8f5e3cf7d5e3a8ac099deff3a4b04a64dc3da0f141dab43c"
+        }
+      ]
+    },
+    {
       "id": "rust-callables-installed",
       "kind": "installed",
       "revision": "e7a25782d2978c832622453c7edae8082157e48a",
       "command": "LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs",
-      "scope": "Both source paths pass 35,890 installed Rust assertions each and repeat them after source-free binary relocation. All nineteen primitive callback/closure conversions, exact values, original errors and panic payloads, reentry, expired borrows, thread/fork checks, conversion-failure cleanup, deferred disposal and registry exhaustion. Eight compile-fail consumers per path reject invalid signatures, Send, Sync, Clone and async. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/rust-callables-20260919.json.",
+      "scope": "Both source paths pass 35,890 installed Rust assertions each and repeat them after source-free binary relocation. All nineteen primitive callback/closure conversions, exact values, original errors and panic payloads, reentry, expired borrows, thread/fork checks, conversion-failure cleanup, deferred disposal and registry exhaustion. Eight compile-fail consumers per path reject invalid signatures, Send, Sync, Clone and async. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/rust-callables-20260919.json. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/backends/rust/callables.mjs",
@@ -197,11 +396,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -273,15 +472,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -308,7 +507,7 @@
       "kind": "installed",
       "revision": "f554d863135e43c7928c181d290c5f0cb7ac3dc8",
       "command": "LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs",
-      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -344,11 +543,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -404,15 +603,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -439,7 +638,7 @@
       "kind": "installed",
       "revision": "8f0c94826ce6782d677867e38f2f375aabde7624",
       "command": "LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs",
-      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/backends/python/callables.mjs",
@@ -475,11 +674,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -535,15 +734,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -570,7 +769,7 @@
       "kind": "installed",
       "revision": "2cb189f3eff4ca5acc4f9853edc1d64e374f5e11",
       "command": "LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs",
-      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
@@ -602,15 +801,15 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
+          "sha256": "e17fbeadc60c96aa46872882f4f46452b1f6b69214f22775a6b7a66b9694949e"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -654,15 +853,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -689,7 +888,7 @@
       "kind": "installed",
       "revision": "01f10ed85b75e3676df0eba41de9e8efc89c0dcc",
       "command": "LEAN_BRIDGE_PERL_CALLABLE_TEST=1 LEAN_BRIDGE_CORPUS_PERL=<pinned-Perl> node --test tests/perl-callables.test.mjs",
-      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -765,15 +964,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7ba11ebed4d9756b87cc84b4d7c96c4f0d8f927811a292286caed128c25703f7"
+          "sha256": "7ad3fff31c003f0d4f5d0ebc8725ca8becf39cadbeb88a4222a1e5826abf1198"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -860,11 +1059,11 @@
       "kind": "installed",
       "revision": "f5001a1d0e0cc891798786b197c4f643359cf54d",
       "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=c,python node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=cpp,rust node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=perl,php-native,wit-wasi node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs",
-      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -912,7 +1111,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -948,7 +1147,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "27b65d8a35eeb76dea08cf4cd785b64a45ed04ac181e0608e14856155ee55c19"
+          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -1064,7 +1263,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7ba11ebed4d9756b87cc84b4d7c96c4f0d8f927811a292286caed128c25703f7"
+          "sha256": "7ad3fff31c003f0d4f5d0ebc8725ca8becf39cadbeb88a4222a1e5826abf1198"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -1164,11 +1363,11 @@
         },
         {
           "path": "tests/type-corpus.test.mjs",
-          "sha256": "1a3bd24c583ccbf92428b31a320da548f2108b5ebf3ef51dae8b09a2493bd104"
+          "sha256": "5007f3031171258dc7b2147ecd11453719404f80510a0ce77231278953d232ff"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+          "sha256": "633c81797c3334c5a931e2188c7cf54fe9491398cd78a7cd3514874c5c7fa0a4"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -1235,7 +1434,7 @@
       "kind": "installed",
       "revision": "062757aee17110bf7631b98ab30b2d2888079ad6",
       "command": "LEAN_BRIDGE_CHAR_PROFILES=c,cpp,python,rust node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=perl,php-native,wit-wasi node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs",
-      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/char-native-20260918.json",
@@ -1243,7 +1442,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+          "sha256": "688ffc6ea6e7af8d356bd927ab3f759a9e198404e6578a755231dafae1210acc"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -1255,7 +1454,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+          "sha256": "803ba81cc5db4a138a5ff4fb9fc21617f1678849aa2391752abd3dff28cdcca2"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1271,7 +1470,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "27b65d8a35eeb76dea08cf4cd785b64a45ed04ac181e0608e14856155ee55c19"
+          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -1585,7 +1784,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -1617,11 +1816,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -1740,7 +1939,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -1764,11 +1963,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -1859,7 +2058,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -1911,11 +2110,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -1966,7 +2165,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -2014,11 +2213,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -2057,7 +2256,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -2101,11 +2300,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -2148,7 +2347,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -2196,11 +2395,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -2243,7 +2442,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -2291,11 +2490,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -2350,7 +2549,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -2394,11 +2593,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -2445,7 +2644,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -2473,7 +2672,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "27b65d8a35eeb76dea08cf4cd785b64a45ed04ac181e0608e14856155ee55c19"
+          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -2481,7 +2680,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "8747212d104a359ab8bcc7e321854dc60b4bcd67bf42a022a105a88a672c615a"
+          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -2493,7 +2692,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -2509,11 +2708,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
+          "sha256": "e17fbeadc60c96aa46872882f4f46452b1f6b69214f22775a6b7a66b9694949e"
         },
         {
           "path": "tests/cpp-generator.test.mjs",
@@ -2525,11 +2724,11 @@
         },
         {
           "path": "tests/native-c-copied.test.mjs",
-          "sha256": "56a853cdf8e32c7215df178f7637c7fb29dcb9eb6170a7f96bbe37c75db23513"
+          "sha256": "7ecfc6efb7387f24e84f639466bfcd7460453889ecaeffc7c9c6a5f642862034"
         },
         {
           "path": "tests/native-c-family.test.mjs",
-          "sha256": "4ad0fa58b7d0d8b9e1fc03a524c80970e588baf0ff9bfa2401f8401529ea3d63"
+          "sha256": "0cf6bebdcb9c9184051e51b70be92c6f0a2db48a866d8c08061f9b36911e73fa"
         }
       ],
       "artifacts": [
@@ -2556,7 +2755,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -2584,11 +2783,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+          "sha256": "032f5eeab3f94a1e789bfb364426e41178664a6609cb4ab9d810f0212d48d9f2"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -2612,15 +2811,15 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "8747212d104a359ab8bcc7e321854dc60b4bcd67bf42a022a105a88a672c615a"
+          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "b25b57c1b1a30282cd9ec789e0956c641e08e0138d828eb9fe9509cf1860061d"
+          "sha256": "e17fbeadc60c96aa46872882f4f46452b1f6b69214f22775a6b7a66b9694949e"
         },
         {
           "path": "tests/native-c-family.test.mjs",
-          "sha256": "4ad0fa58b7d0d8b9e1fc03a524c80970e588baf0ff9bfa2401f8401529ea3d63"
+          "sha256": "0cf6bebdcb9c9184051e51b70be92c6f0a2db48a866d8c08061f9b36911e73fa"
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
@@ -2632,7 +2831,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "27b65d8a35eeb76dea08cf4cd785b64a45ed04ac181e0608e14856155ee55c19"
+          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
         },
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -2663,7 +2862,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed.",
       "files": [
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -2811,7 +3010,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+          "sha256": "df35c5e451f4fd720a68290db0f3ad8771a137e01ac760deed2390026c875002"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -3265,6 +3464,892 @@
     }
   ],
   "observations": [
+    {
+      "id": "cpp-primitive-callables-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "std::monostate",
+          "callback-result": "void (no output)"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "uint8_t",
+          "callback-result": "uint8_t"
+        },
+        "uint16": {
+          "callback-parameter": "uint16_t",
+          "callback-result": "uint16_t"
+        },
+        "uint32": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "uint64": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "int8": {
+          "callback-parameter": "int8_t",
+          "callback-result": "int8_t"
+        },
+        "int16": {
+          "callback-parameter": "int16_t",
+          "callback-result": "int16_t"
+        },
+        "int32": {
+          "callback-parameter": "int32_t",
+          "callback-result": "int32_t"
+        },
+        "int64": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        },
+        "nat": {
+          "callback-parameter": "boost::multiprecision::cpp_int",
+          "callback-result": "boost::multiprecision::cpp_int"
+        },
+        "int": {
+          "callback-parameter": "boost::multiprecision::cpp_int",
+          "callback-result": "boost::multiprecision::cpp_int"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "double",
+          "callback-result": "double"
+        },
+        "string": {
+          "callback-parameter": "std::string",
+          "callback-result": "std::string"
+        },
+        "bytes": {
+          "callback-parameter": "std::vector<uint8_t>",
+          "callback-result": "std::vector<uint8_t>"
+        },
+        "char": {
+          "callback-parameter": "char32_t",
+          "callback-result": "char32_t"
+        },
+        "usize": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "isize": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Pass std::monostate; Unit results return void.",
+        "bool": "Typed bool values. Callback result types must match exactly.",
+        "uint8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "nat": "Exact Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers. Negative Nat inputs reject in all positions.",
+        "int": "Exact signed Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers.",
+        "float32": "C++ float values preserve binary32 subnormals, signed zero, infinities and NaN classification. Callback results must return float.",
+        "float64": "C++ double values preserve binary64 subnormals, signed zero, infinities and NaN classification. Callback results must return double.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 rejects. Callback arguments and results own their strings.",
+        "bytes": "Owned `std::vector<uint8_t>` values preserve uninterpreted bytes, including NUL.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. C++ conversions occur before API entry; check wider or signed values before conversion. Lean arithmetic wraps at the compiled width.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. C++ conversions occur before API entry; check wider values before conversion. Lean arithmetic wraps at the compiled width."
+      }
+    },
+    {
+      "id": "cpp-host-callbacks-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "typed C++ callable"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "callback": "Call-scoped borrow; typed owned callback arguments; original C++ exceptions rethrow after native cleanup. Same-thread nested calls are supported."
+      }
+    },
+    {
+      "id": "cpp-closure-leases-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure<Result(Args...)>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "closure": "Move-only typed calls, automatic destruction and idempotent close. Retained creator-thread tokens reject reused thread IDs. Expired borrows and post-fork calls reject."
+      }
+    },
+    {
+      "id": "cpp-primitive-callables-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "std::monostate",
+          "callback-result": "void (no output)"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "uint8_t",
+          "callback-result": "uint8_t"
+        },
+        "uint16": {
+          "callback-parameter": "uint16_t",
+          "callback-result": "uint16_t"
+        },
+        "uint32": {
+          "callback-parameter": "uint32_t",
+          "callback-result": "uint32_t"
+        },
+        "uint64": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "int8": {
+          "callback-parameter": "int8_t",
+          "callback-result": "int8_t"
+        },
+        "int16": {
+          "callback-parameter": "int16_t",
+          "callback-result": "int16_t"
+        },
+        "int32": {
+          "callback-parameter": "int32_t",
+          "callback-result": "int32_t"
+        },
+        "int64": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        },
+        "nat": {
+          "callback-parameter": "boost::multiprecision::cpp_int",
+          "callback-result": "boost::multiprecision::cpp_int"
+        },
+        "int": {
+          "callback-parameter": "boost::multiprecision::cpp_int",
+          "callback-result": "boost::multiprecision::cpp_int"
+        },
+        "float32": {
+          "callback-parameter": "float",
+          "callback-result": "float"
+        },
+        "float64": {
+          "callback-parameter": "double",
+          "callback-result": "double"
+        },
+        "string": {
+          "callback-parameter": "std::string",
+          "callback-result": "std::string"
+        },
+        "bytes": {
+          "callback-parameter": "std::vector<uint8_t>",
+          "callback-result": "std::vector<uint8_t>"
+        },
+        "char": {
+          "callback-parameter": "char32_t",
+          "callback-result": "char32_t"
+        },
+        "usize": {
+          "callback-parameter": "uint64_t",
+          "callback-result": "uint64_t"
+        },
+        "isize": {
+          "callback-parameter": "int64_t",
+          "callback-result": "int64_t"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Pass std::monostate; Unit results return void.",
+        "bool": "Typed bool values. Callback result types must match exactly.",
+        "uint8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "nat": "Exact Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers. Negative Nat inputs reject in all positions.",
+        "int": "Exact signed Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers.",
+        "float32": "C++ float values preserve binary32 subnormals, signed zero, infinities and NaN classification. Callback results must return float.",
+        "float64": "C++ double values preserve binary64 subnormals, signed zero, infinities and NaN classification. Callback results must return double.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 rejects. Callback arguments and results own their strings.",
+        "bytes": "Owned `std::vector<uint8_t>` values preserve uninterpreted bytes, including NUL.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. C++ conversions occur before API entry; check wider or signed values before conversion. Lean arithmetic wraps at the compiled width.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. C++ conversions occur before API entry; check wider values before conversion. Lean arithmetic wraps at the compiled width."
+      }
+    },
+    {
+      "id": "cpp-host-callbacks-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "typed C++ callable"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "callback": "Call-scoped borrow; typed owned callback arguments; original C++ exceptions rethrow after native cleanup. Same-thread nested calls are supported."
+      }
+    },
+    {
+      "id": "cpp-closure-leases-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure<Result(Args...)>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "closure": "Move-only typed calls, automatic destruction and idempotent close. Retained creator-thread tokens reject reused thread IDs. Expired borrows and post-fork calls reject."
+      }
+    },
+    {
+      "id": "cpp-reviewed-callable-inputs",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "std::monostate",
+          "result": "void (no output)"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool"
+        },
+        "uint8": {
+          "parameter": "uint8_t",
+          "result": "uint8_t"
+        },
+        "uint16": {
+          "parameter": "uint16_t",
+          "result": "uint16_t"
+        },
+        "uint32": {
+          "parameter": "uint32_t",
+          "result": "uint32_t"
+        },
+        "uint64": {
+          "parameter": "uint64_t",
+          "result": "uint64_t"
+        },
+        "int8": {
+          "parameter": "int8_t",
+          "result": "int8_t"
+        },
+        "int16": {
+          "parameter": "int16_t",
+          "result": "int16_t"
+        },
+        "int32": {
+          "parameter": "int32_t",
+          "result": "int32_t"
+        },
+        "int64": {
+          "parameter": "int64_t",
+          "result": "int64_t"
+        },
+        "nat": {
+          "parameter": "boost::multiprecision::cpp_int",
+          "result": "boost::multiprecision::cpp_int"
+        },
+        "int": {
+          "parameter": "boost::multiprecision::cpp_int",
+          "result": "boost::multiprecision::cpp_int"
+        },
+        "float32": {
+          "parameter": "float",
+          "result": "float"
+        },
+        "float64": {
+          "parameter": "double",
+          "result": "double"
+        },
+        "string": {
+          "parameter": "std::string",
+          "result": "std::string"
+        },
+        "bytes": {
+          "parameter": "std::vector<uint8_t>",
+          "result": "std::vector<uint8_t>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. C++20, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Pass std::monostate; Unit results return void.",
+        "bool": "Typed bool values. Callback result types must match exactly.",
+        "uint8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "uint64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int8": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int16": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int32": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "int64": "Exact-width C++ integers. C++ conversions occur before API entry; check wider or signed values before conversion. Callback result types must match exactly.",
+        "nat": "Exact Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers. Negative Nat inputs reject in all positions.",
+        "int": "Exact signed Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers.",
+        "float32": "C++ float values preserve binary32 subnormals, signed zero, infinities and NaN classification. Callback results must return float.",
+        "float64": "C++ double values preserve binary64 subnormals, signed zero, infinities and NaN classification. Callback results must return double.",
+        "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 rejects. Callback arguments and results own their strings.",
+        "bytes": "Owned `std::vector<uint8_t>` values preserve uninterpreted bytes, including NUL."
+      }
+    },
+    {
+      "id": "cpp-exact-integers-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "nat",
+        "int"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Exact cpp_int parameters, results and copied fields checked against independent Lean oracles after offline installation.",
+      "hostTypes": {
+        "nat": {
+          "parameter": "boost::multiprecision::cpp_int",
+          "result": "boost::multiprecision::cpp_int",
+          "field": "boost::multiprecision::cpp_int"
+        },
+        "int": {
+          "parameter": "boost::multiprecision::cpp_int",
+          "result": "boost::multiprecision::cpp_int",
+          "field": "boost::multiprecision::cpp_int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "conversionNotes": {
+        "nat": "Exact Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers. Negative Nat inputs reject in all positions.",
+        "int": "Exact signed Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers."
+      },
+      "limitations": [
+        "Native C++20 Linux x86-64. No compound callable or other-host promotion."
+      ]
+    },
+    {
+      "id": "cpp-exact-integers-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "nat",
+        "int"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Exact cpp_int parameters, results and copied fields checked against independent Lean oracles after offline installation.",
+      "hostTypes": {
+        "nat": {
+          "field": "boost::multiprecision::cpp_int"
+        },
+        "int": {
+          "field": "boost::multiprecision::cpp_int"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "cpp-callables-installed"
+          ],
+          "note": "Installed C++20 primitive callables and cpp_int values on both source paths, with offline installation and relocated source-free execution."
+        }
+      },
+      "conversionNotes": {
+        "nat": "Exact Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers. Negative Nat inputs reject in all positions.",
+        "int": "Exact signed Boost.Multiprecision 1.90.0 cpp_int values. Prepared archives include standalone headers."
+      },
+      "limitations": [
+        "Native C++20 Linux x86-64. No compound callable or other-host promotion."
+      ]
+    },
     {
       "id": "rust-primitive-callables-ordinary-source",
       "profiles": [
@@ -7100,8 +8185,8 @@
         }
       },
       "conversionNotes": {
-        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
-        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. C++ conversions occur before API entry; check wider or signed values before conversion. Lean arithmetic wraps at the compiled width.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. C++ conversions occur before API entry; check wider values before conversion. Lean arithmetic wraps at the compiled width."
       },
       "stages": {
         "analysis": {
@@ -7173,8 +8258,8 @@
         }
       },
       "conversionNotes": {
-        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
-        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. C++ conversions occur before API entry; check wider or signed values before conversion. Lean arithmetic wraps at the compiled width.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. C++ conversions occur before API entry; check wider values before conversion. Lean arithmetic wraps at the compiled width."
       },
       "stages": {
         "analysis": {
@@ -12350,8 +13435,6 @@
         "int16",
         "int32",
         "int64",
-        "nat",
-        "int",
         "float32",
         "float64",
         "string",
@@ -12360,7 +13443,7 @@
       "positions": [
         "field"
       ],
-      "scope": "All sixteen primitive fields are constructed and read through compiler-owned record adapters in the relocated Parcel/Archive installed consumers.",
+      "scope": "All sixteen primitive fields are constructed and read through compiler-owned record adapters in the relocated Parcel/Archive installed consumers. Exact cpp_int and primitive callable evidence is recorded separately in cpp-callables-installed.",
       "hostTypes": {
         "unit": {
           "field": "std::monostate"
@@ -12392,12 +13475,6 @@
         "int64": {
           "field": "int64_t"
         },
-        "nat": {
-          "field": "lean_bridge::<prefix>::Nat"
-        },
-        "int": {
-          "field": "lean_bridge::<prefix>::Int"
-        },
         "float32": {
           "field": "float"
         },
@@ -12413,8 +13490,6 @@
       },
       "conversionNotes": {
         "unit": "Pass std::monostate; Unit results return void.",
-        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
-        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
         "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
         "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data."
       }
@@ -12580,8 +13655,6 @@
         "int16",
         "int32",
         "int64",
-        "nat",
-        "int",
         "float32",
         "float64",
         "string",
@@ -12592,7 +13665,7 @@
         "result"
       ],
       "path": "ordinary-source",
-      "scope": "Concrete pure primitive functions, compiled from fresh native metadata and called from relocated installed packages.",
+      "scope": "Concrete pure primitive functions, compiled from fresh native metadata and called from relocated installed packages. Exact cpp_int and primitive callable evidence is recorded separately in cpp-callables-installed.",
       "hostTypes": {
         "unit": {
           "parameter": "std::monostate",
@@ -12633,14 +13706,6 @@
         "int64": {
           "parameter": "int64_t",
           "result": "int64_t"
-        },
-        "nat": {
-          "parameter": "lean_bridge::<prefix>::Nat",
-          "result": "lean_bridge::<prefix>::Nat"
-        },
-        "int": {
-          "parameter": "lean_bridge::<prefix>::Int",
-          "result": "lean_bridge::<prefix>::Int"
         },
         "float32": {
           "parameter": "float",
@@ -12703,8 +13768,6 @@
       ],
       "conversionNotes": {
         "unit": "Pass std::monostate; Unit results return void.",
-        "nat": "Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data.",
-        "int": "Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude.",
         "string": "Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call.",
         "bytes": "Copied uninterpreted bytes. Clear owned C outputs; C++ vectors own their data."
       }
@@ -14391,25 +15454,6 @@
       "limitations": ["This fixed template has no general mapping."]
     },
     {
-      "id": "alpha-u32-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["uint32"],
-      "positions": ["parameter","result","callback-parameter","callback-result"],
-      "path": "reviewed-ir",
-      "scope": "Fixed Alpha Box, withCallback and makeAdder UInt32 signatures.",
-      "hostTypes": {
-        "uint32": {"parameter":"std::uint32_t","result":"std::uint32_t","callback-parameter":"std::uint32_t","callback-result":"std::uint32_t"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"Fixed Alpha Box, withCallback and makeAdder UInt32 signatures."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": ["UInt32 remains 0..4294967295 even when the host type is wider."]
-    },
-    {
       "id": "alpha-record-cpp-1",
       "profiles": ["cpp"],
       "shapes": ["record"],
@@ -14430,72 +15474,139 @@
     },
     {
       "id": "alpha-resource-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["resource","closure"],
-      "positions": ["result"],
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "resource"
+      ],
+      "positions": [
+        "result"
+      ],
       "path": "reviewed-ir",
       "scope": "Alpha's retained Box and returned UInt32 closure; deterministic cleanup is required.",
       "hostTypes": {
-        "resource": {"result":"Box"},
-        "closure": {"result":"Transform"}
+        "resource": {
+          "result": "Box"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"Alpha's retained Box and returned UInt32 closure; deterministic cleanup is required."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": []
-    },
-    {
-      "id": "alpha-callback-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["callback"],
-      "positions": ["parameter"],
-      "path": "reviewed-ir",
-      "scope": "Alpha's synchronous UInt32 -> UInt32 host callback.",
-      "hostTypes": {
-        "callback": {"parameter":"C++ callable"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"Alpha's synchronous UInt32 -> UInt32 host callback."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "cpp-mapping-audit"
+          ],
+          "note": "Alpha's retained Box and returned UInt32 closure; deterministic cleanup is required."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },
     {
       "id": "alpha-other-scalars-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["unit","uint8","uint16","uint64","int8","int16","int32","int64","nat","int","float32","float64"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "unit",
+        "uint8",
+        "uint16",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "float32",
+        "float64"
+      ],
+      "positions": [
+        "field"
+      ],
       "path": "reviewed-ir",
-      "scope": "The fixed Alpha interface has no general mapping for this type.",
+      "scope": "The fixed Alpha interface has no general mapping for this type. Exact cpp_int and primitive callable evidence is recorded separately in cpp-callables-installed.",
       "hostTypes": {
-        "unit": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "uint8": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "uint16": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "uint64": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "int8": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "int16": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "int32": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "int64": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "nat": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "int": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "float32": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "float64": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null}
+        "unit": {
+          "field": null
+        },
+        "uint8": {
+          "field": null
+        },
+        "uint16": {
+          "field": null
+        },
+        "uint64": {
+          "field": null
+        },
+        "int8": {
+          "field": null
+        },
+        "int16": {
+          "field": null
+        },
+        "int32": {
+          "field": null
+        },
+        "int64": {
+          "field": null
+        },
+        "float32": {
+          "field": null
+        },
+        "float64": {
+          "field": null
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"The fixed Alpha interface has no general mapping for this type."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "cpp-mapping-audit"
+          ],
+          "note": "The fixed Alpha interface has no general mapping for this type."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Keeping Alpha declaration names does not make a changed signature executable."]
+      "limitations": [
+        "Keeping Alpha declaration names does not make a changed signature executable."
+      ]
     },
     {
       "id": "alpha-fields-dotnet-1",

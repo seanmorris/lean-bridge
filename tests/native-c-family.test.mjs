@@ -142,13 +142,13 @@ int main() {
   assert(std::signbit(api::echo_f32(-0.0f))); assert(std::isnan(api::echo_f64(std::numeric_limits<double>::quiet_NaN())));
   std::string text("a\\0\\xf0\\x9f\\x8c\\xbf", 6); assert(api::echo_text(text) == text); assert(api::echo_text("").empty());
   assert(api::echo_bytes({0, 255, 128}) == std::vector<uint8_t>({0, 255, 128}));
-  api::Nat nat{{0, 0, 1}}; assert(api::echo_nat(nat).limbs == nat.limbs);
-  api::Int integer{true, {0, 0, 1}}; auto copied = api::echo_int(integer); assert(copied.negative && copied.limbs == integer.limbs);
+  api::Nat nat = api::Nat(1) << 64; assert(api::echo_nat(nat) == nat);
+  api::Int integer = -nat; assert(api::echo_int(integer) == integer);
   bool rejected = false;
   try { (void)api::echo_text(std::string("\\xc0\\x80", 2)); }
   catch(const api::Error& error) { rejected = error.status == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT; }
   assert(rejected);
-  ${p === "survey" ? 'assert(api::score(true, 20, 5) == 25); assert(api::score(false, 20, 5) == 20); assert(api::double_word(21) == 42); assert(api::label("sample:", api::Nat{{37}}) == "sample:37");' : ""}
+  ${p === "survey" ? 'assert(api::score(true, 20, 5) == 25); assert(api::score(false, 20, 5) == 20); assert(api::double_word(21) == 42); assert(api::label("sample:", api::Nat(37)) == "sample:37");' : ""}
   std::vector<std::thread> threads;
   for (int i = 0; i < 4; ++i) threads.emplace_back([&] { for (int j = 0; j < 100; ++j) assert(api::echo_text(text) == text); });
   for (auto& thread : threads) thread.join();
@@ -220,7 +220,7 @@ test("unsupported ordinary C exports fail atomically with source locations", { s
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-c-reject-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
 	const source = join(working, "source"), outputRoot = join(working, "release"); await project(source, "Unsupported");
-	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : UInt32 → UInt32) := a 42\nend Unsupported\n");
+	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : Array UInt32 → Array UInt32) := a #[42]\nend Unsupported\n");
 	await saveLakeFile(source, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Unsupported"], exports: ["Unsupported.values"] }));
 	await assert.rejects(() => buildCanonicalProject({ projectRoot: source, outputRoot, targets: ["c", "cpp"], environment }), error => error.code === "unsupported-native-c-signature" && error.details.source.path === "Unsupported.lean");
 	assert.deepEqual(await readdir(working), ["source"]);
