@@ -16,6 +16,7 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { createNativeModel } from "../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { checkGmpCopiedFaults } from "./helpers/c-gmp-faults.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_C_TEST === "1";
 const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2"), LEAN_BRIDGE_PERLS: '["/must/not/invoke/perl"]' };
@@ -123,19 +124,21 @@ const cConsumer = p => `#include "${p}.h"
 #define OK(call) assert((call) == ${p.toUpperCase()}_STATUS_OK)
 int main(void) {
   ${p}_error error = {0};
-  ${p}_zleaf leaf = {0};
+  ${p}_zleaf leaf; ${p}_zleaf_init(&leaf);
   leaf.v_u64 = UINT64_MAX; leaf.v_i64 = INT64_MIN;
-  uint32_t limbs[] = {0, 0, 1}; leaf.v_nat = (${p}_nat){limbs, 3, NULL, NULL};
+  mpz_setbit(leaf.v_nat, 64);
   const char text[] = "a\\0\\xce\\xbb"; leaf.v_text = (${p}_string){text, 4, NULL, NULL};
   ${p}_array_lean_${p}_zleaf_span row = {&leaf, 1, NULL, NULL};
   ${p}_array_array_lean_${p}_zleaf_span rows = {&row, 1, NULL, NULL}, copied_rows = {0};
-  ${p}_envelope source = {{"packet", 6, NULL, NULL}, leaf, rows}, result = {0};
+  ${p}_envelope source, result; ${p}_envelope_init(&source); ${p}_envelope_init(&result);
+  source.title = (${p}_string){"packet", 6, NULL, NULL}; source.rows = rows;
+  source.leaf.v_u64 = leaf.v_u64; source.leaf.v_i64 = leaf.v_i64; source.leaf.v_text = leaf.v_text;
+  mpz_set(source.leaf.v_nat, leaf.v_nat);
   for (int i = 0; i < 100; ++i) {
     OK(${p}_echo_record(&source, &result, &error));
     assert(result.leaf.v_u64 == UINT64_MAX && result.leaf.v_i64 == INT64_MIN);
     assert(result.rows.length == 1 && result.rows.data[0].length == 1);
-    assert(result.rows.data[0].data[0].v_nat.length == 3);
-    assert(result.rows.data[0].data[0].v_nat.data[2] == 1);
+    assert(mpz_cmp(result.rows.data[0].data[0].v_nat, leaf.v_nat) == 0);
     assert(result.leaf.v_text.data != leaf.v_text.data && memcmp(result.leaf.v_text.data, text, 4) == 0);
     ${p}_envelope_clear(&result); ${p}_envelope_clear(&result);
   }
@@ -150,6 +153,9 @@ int main(void) {
   leaf.v_text = (${p}_string){"\\xed\\xa0\\x80", 3, NULL, NULL};
   assert(${p}_echo_record(&source, &result, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT);
   assert(result.title.length == 9); leaf.v_text = (${p}_string){text, 4, NULL, NULL};
+  mpz_set_si(leaf.v_nat, -1);
+  assert(${p}_echo_record(&source, &result, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT);
+  assert(result.title.length == 9); mpz_set_ui(leaf.v_nat, 0); mpz_setbit(leaf.v_nat, 64);
   source.rows.data = NULL;
   assert(${p}_echo_record(&source, &result, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT);
   ${p}_envelope_clear(&result);
@@ -158,6 +164,16 @@ int main(void) {
 	const type = ({ Unit: "unit", Float32: "float32", Float: "float64", String: "string", ByteArray: "bytes" }[lean] ?? lean.toLowerCase());
 	const aggregate = ["nat", "int", "string", "bytes"].includes(type);
 	const ctype = aggregate ? `${p}_${type}` : ({ unit: "uint8_t", bool: "bool", float32: "float", float64: "double" }[type] ?? `${type}_t`);
+	if(["nat", "int"].includes(type)) return `{ mpz_t values[2]; mpz_init(values[0]); mpz_init(values[1]);
+    mpz_setbit(values[0], 64); mpz_setbit(values[1], 16384); ${type === "int" ? "mpz_neg(values[1], values[1]);" : ""}
+    ${p}_array_${type}_span input = {values, 2, NULL, NULL}, output = {0};
+    OK(${p}_echo_${label}(&input, &output, &error)); assert(output.length == 2);
+    assert(!mpz_cmp(output.data[0], values[0]) && !mpz_cmp(output.data[1], values[1]));
+    ${p}_array_${type}_span_clear(&output); ${p}_array_${type}_span_clear(&output);
+    ${type === "nat" ? `mpz_set_si(values[1], -1); assert(${p}_echo_${label}(&input, &output, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT && !output.data);` : ""}
+    input.data = NULL; input.length = 0; OK(${p}_echo_${label}(&input, &output, &error)); assert(!output.length);
+    ${p}_array_${type}_span_clear(&output); mpz_clear(values[0]); mpz_clear(values[1]);
+  }`;
 	const value = ({ unit: "0", bool: "true", float32: "-0.0f", float64: "-0.0", nat: "{limbs, 3, NULL, NULL}", int: "{limbs, 3, NULL, NULL, true}", string: "{text, 4, NULL, NULL}", bytes: "{octets, 2, NULL, NULL}" }[type] ?? `${type.toUpperCase()}_${type.startsWith("uint") ? "MAX" : "MIN"}`);
 	return `{ ${ctype} values[] = {${value}, ${value}};
     ${p}_array_${type}_span input = {values, 2, NULL, NULL}, output = {0};
@@ -175,6 +191,7 @@ int main(void) {
   ${p}_string big = {buffer, large, NULL, NULL}; ${p}_array_string_span grown = {0};
   assert(${p}_grow(&big, &grown, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT);
   assert(grown.data == NULL); free(buffer);
+  ${p}_envelope_clear(&source); ${p}_zleaf_clear(&leaf);
   return 0;
 }
 `;
@@ -261,7 +278,7 @@ test("copied type identity survives canonical JSON property order", () => {
 	assert.equal(surface.copy({ kind: "apply", constructor: "array", arguments: [{ kind: "named", id: "lean:Sample.Item" }] }).name, "sample_array_lean_sample_item_span");
 });
 
-test("copied native C/C++ packages execute nested records and every primitive array after relocation", { skip: !enabled, timeout: 600_000 }, async t => {
+test("copied native C/C++ packages execute nested records and every primitive array after relocation", { skip: !enabled, timeout: 900_000 }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-c-copied-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
 	for(const name of ["Parcel", "Archive"])
@@ -294,5 +311,7 @@ test("copied native C/C++ packages execute nested records and every primitive ar
 			await run(join(cmakeRoot, "build/consumer"), [], working, env);
 		}
 		await allocationFailures(working, builds[0].output, p);
+		const gmpFaults = await checkGmpCopiedFaults(builds[0].output, join(working, `${p}-gmp-faults`), p, environment);
+		t.diagnostic(`${p}: ${gmpFaults} GMP allocation-failure checks`);
 	}
 });

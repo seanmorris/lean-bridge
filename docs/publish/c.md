@@ -6,9 +6,9 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-Install Node 22, Lean 4.32.2, a C11 compiler, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
+Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. C also accepts synchronous primitive callbacks and returned closures, as described below. C++ and the other copied-value host projections still reject callable signatures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
 
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 
@@ -17,7 +17,7 @@ lean-bridge build --project /path/to/sample \
   --target c --target cpp --output /path/to/new-native-release
 ```
 
-Lean compiles once for both targets. The builder compiles one C adapter, checks the C++ header, then assembles the archives without recompiling Lean. A failed target leaves no partial release directory.
+Lean compiles once for both targets. The builder compiles the shared private C adapter and checks the C++ header. When the C API uses `Nat` or `Int`, it also builds the pinned GMP dependency and a public `mpz_t` adapter. It assembles both archives without recompiling Lean. A failed target leaves no partial release directory.
 
 The default archives are `archives/sample-1.0.0-c.tar.gz` and `archives/sample-1.0.0-cpp.tar.gz`. Override their coordinates under `targets.c` and `targets.cpp`:
 
@@ -43,7 +43,7 @@ Add `--target cpan` to produce Perl archives from that same native compilation. 
 
 Arrays become typed spans with `data`, `length`, `owner` and `release` fields. Records become named C structs with their declared fields. Arrays can contain any admitted copied element, including strings, arbitrary integers, other arrays and records. Records can contain those same types. An empty Lean record has a zero-initialized placeholder byte in C.
 
-Inputs borrow caller storage for the duration of the call. The adapter validates the complete input before calling Lean and ignores input ownership callbacks. Results own independent copies. Zero-initialize result structs and call the generated `<type>_clear` before reusing or discarding them. Clearing an array releases its nested elements; clearing a record releases its fields. Repeated clear is safe. Do not shallow-copy an owned result and clear both copies.
+Inputs borrow caller storage for the duration of the call. The adapter validates the complete input before calling Lean and ignores input ownership callbacks. Results own independent copies. In GMP packages, call the generated `<type>_init` for aggregate structs before their first use. This initializes every nested integer. Clear with `<type>_clear`; it releases storage and resets fields to initialized empty values. Successful calls replace initialized copied outputs. Packages without arbitrary integers retain zero-initialized structs and require clearing outputs before reuse. Repeated clear is safe. Never shallow-copy GMP values or owned results.
 
 The 16 MiB per-call budget covers input and output payloads together, array slots and copied record storage. Array slots cost at least one native pointer each; output arrays also account for their ownership header. It is a conversion limit, not a limit on memory used by the Lean algorithm. Type nesting is limited to 32. Invalid input and conversion failures leave the caller's output slot unchanged; partially built outputs are released internally.
 
@@ -51,7 +51,7 @@ Lean generates the record constructors and field accessors used by the adapter. 
 
 ## Export callbacks and closures
 
-For target `c`, ordinary source and reviewed contracts accept callbacks with one to sixteen primitive arguments and one primitive result. All nineteen primitives use the same C representation as copied values, including exact `Nat`/`Int` limbs, scalar-valued `Char`, and 64-bit `USize`/`ISize`.
+For target `c`, ordinary source and reviewed contracts accept callbacks with one to sixteen primitive arguments and one primitive result. All nineteen primitives use the same C representation as copied values, including GMP `mpz_t` for `Nat`/`Int`, scalar-valued `Char`, and 64-bit `USize`/`ISize`.
 
 ```lean
 namespace Sample
@@ -66,7 +66,15 @@ Select both exports and set `"arities": { "Sample.makeChooser": 1 }` in an ordin
 
 Host functions are borrowed for the synchronous call. Lean must not retain them for later use. Returned Lean closures have explicit leases and generated `_call`/`_dispose` functions. The public header supplies signature-specific callback names. See [C callback ownership](../consume/c.md#callbacks-and-returned-closures) and the [installed acceptance checks](../evidence/c-callables-20260918.md).
 
-These callable signatures do not admit arrays, records, nested callbacks, asynchronous delivery, or retained host functions. Copied arrays and records remain available outside callable signatures. C's `Nat`/`Int` representation remains the existing exact limb-buffer API; this change does not introduce GMP.
+These callable signatures do not admit arrays, records, nested callbacks, asynchronous delivery, or retained host functions. Copied arrays and records remain available outside callable signatures.
+
+## GMP dependency and redistribution
+
+C packages exposing `Nat` or `Int` supply GMP 6.3.0 automatically. Producers compile the pinned source archive offline, run its upstream test suite, and include `gmp.h`, `libgmp.so.10`, source hashes, build settings, complete corresponding source and license notices. CMake and pkg-config link the supplied shared library. Consumers do not install GMP separately.
+
+Keep the archive's `share/lean-bridge/` contents when redistributing it. `gmp.json` identifies the source and configure flags, `sources/gmp-6.3.0.tar.xz` contains the unmodified source, and `licenses/GMP-*` contains the LGPL/GPL notices. Extract the source, configure a separate build directory with the recorded flags (choose your own prefix-map path), then run `make` and `make check` to rebuild it. The shared library remains replaceable. See [GMP's copying terms](https://gmplib.org/manual/Copying).
+
+GMP uses its default allocator. Allocation failure inside GMP aborts the process; the bridge does not install global allocation hooks. The bridge reports failure of its own conversion allocations and leaves initialized outputs unchanged. See [GMP allocation behavior](https://gmplib.org/manual/Custom-Allocation).
 
 ## Build the reviewed Alpha example
 

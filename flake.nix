@@ -31,6 +31,7 @@
             jq
             kotlin
             lld
+            m4
             ninja
             nodejs_22
             openssl
@@ -330,7 +331,12 @@
 
           perl-build-engine = pkgs.writeShellApplication {
             name = "lean-bridge-perl-engine";
-            runtimeInputs = [ pkgs.nodejs_22 pkgs.stdenv.cc pkgs.perl pkgs.gnumake pkgs.gnutar pkgs.gzip pkgs.coreutils pkgs.glibc.bin pkgs.git ];
+            runtimeInputs = [
+              pkgs.nodejs_22 pkgs.stdenv.cc pkgs.binutils pkgs.perl
+              pkgs.gnumake pkgs.gnutar pkgs.gzip pkgs.xz pkgs.m4
+              pkgs.gnused pkgs.gnugrep pkgs.gawk pkgs.diffutils pkgs.findutils
+              pkgs.coreutils pkgs.glibc.bin pkgs.git
+            ];
             text = let perlSource = builtins.path {
               name = "lean-bridge-perl-source";
               path = self;

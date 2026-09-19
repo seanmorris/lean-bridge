@@ -10,11 +10,12 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { callableSignatures } from "./helpers/callable-fixture.mjs";
 import { callableCConsumer, cLifetimeSignature } from "./helpers/callable-c-consumer.mjs";
 
-test("C callable evidence retains both source paths, all primitives and cleanup checks", async () => {
+test("historical raw C callable evidence retains both source paths and archive identities", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/c-callables-20260918.json", "utf8"));
 	assert.equal(record.sourceSha256, sha256(await readFile("tests/fixtures/onboarding/callables/Callables.lean")));
 	assert.equal(record.lifetimeSourceSha256, sha256(await readFile("tests/fixtures/callable-consumers/Lifetimes.lean")));
-	assert.equal(record.consumerSha256, sha256(callableCConsumer()));
+	assert.match(record.consumerSha256, /^[a-f0-9]{64}$/);
+	assert.notEqual(record.consumerSha256, sha256(callableCConsumer()), "The current GMP consumer has its own installed evidence record");
 	assert.deepEqual(record.signatures, [...callableSignatures, cLifetimeSignature]);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.executions)

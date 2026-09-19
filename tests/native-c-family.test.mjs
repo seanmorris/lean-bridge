@@ -113,17 +113,22 @@ int main(void) {
   size_t large = 8 * 1024 * 1024 + 1; uint8_t *buffer = calloc(large, 1); assert(buffer); bytes.data = buffer; bytes.length = large;
   assert(${p}_echo_bytes(&bytes, &copied, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT); assert(copied.data == NULL); free(buffer);
   uint32_t limbs[512]; for (size_t i = 0; i < 512; ++i) limbs[i] = UINT32_MAX - (uint32_t)i;
-  ${p}_nat natural = {limbs, 512, NULL, NULL}, n = {0};
-  OK(${p}_echo_nat(&natural, &n, &error)); assert(n.length == 512 && memcmp(n.data, limbs, sizeof(limbs)) == 0); ${p}_nat_clear(&n);
-  ${p}_int integer = {limbs, 512, NULL, NULL, true}, z = {0};
-  OK(${p}_echo_int(&integer, &z, &error)); assert(z.negative && z.length == 512 && memcmp(z.data, limbs, sizeof(limbs)) == 0); ${p}_int_clear(&z);
-  integer.data = NULL; integer.length = 0; OK(${p}_echo_int(&integer, &z, &error)); assert(z.length == 0 && !z.negative); ${p}_int_clear(&z);
+  mpz_t natural, n, integer, z; mpz_inits(natural, n, integer, z, NULL);
+  mpz_import(natural, 512, -1, sizeof(uint32_t), 0, 0, limbs);
+  OK(${p}_echo_nat(natural, n, &error)); assert(mpz_cmp(n, natural) == 0); ${p}_nat_clear(n);
+  mpz_neg(integer, natural);
+  OK(${p}_echo_int(integer, z, &error)); assert(mpz_cmp(z, integer) == 0); ${p}_int_clear(z);
+  mpz_set_ui(integer, 0); OK(${p}_echo_int(integer, z, &error)); assert(mpz_sgn(z) == 0); ${p}_int_clear(z);
+  mpz_set_si(integer, -1); mpz_set_ui(n, 42);
+  assert(${p}_echo_nat(integer, n, &error) == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT && mpz_cmp_ui(n, 42) == 0);
+  OK(${p}_echo_nat(natural, n, &error));
   assert(error.code == ${p.toUpperCase()}_ERROR_NONE);
   ${p === "survey" ? `OK(survey_score(true, 20, 5, &u64, &error)); assert(u64 == 25);
   OK(survey_score(false, 20, 5, &u64, &error)); assert(u64 == 20);
   OK(survey_double_word(21, &u32, &error)); assert(u32 == 42);
-  uint32_t index_limb = 37; natural = (survey_nat){&index_limb, 1, NULL, NULL}; input = (survey_string){"sample:", 7, NULL, NULL};
-  OK(survey_label(&input, &natural, &output, &error)); assert(output.length == 9 && memcmp(output.data, "sample:37", 9) == 0); survey_string_clear(&output);` : ""}
+  mpz_set_ui(natural, 37); input = (survey_string){"sample:", 7, NULL, NULL};
+  OK(survey_label(&input, natural, &output, &error)); assert(output.length == 9 && memcmp(output.data, "sample:37", 9) == 0); survey_string_clear(&output);` : ""}
+  mpz_clears(natural, n, integer, z, NULL);
   return 0;
 }
 `;
@@ -183,7 +188,7 @@ const consume = async (working, build, name) => {
 	}
 };
 
-test("ordinary C/C++ packages reproduce after relocation and run without Lean or Perl", { skip: !enabled, timeout: 600_000 }, async t => {
+test("ordinary C/C++ packages reproduce after relocation and run without Lean or Perl", { skip: !enabled, timeout: 900_000 }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-c-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
 	for(const name of ["Mosaic", "Survey"])

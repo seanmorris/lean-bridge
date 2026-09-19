@@ -58,14 +58,15 @@ export const installedCFamilyCorpus = async ({ library, profile, consumer, hando
 	await saveLakeFile(project, "src/c-family.h", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/c-family.h")));
 	const config = { ...compile, PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
 	const flags = (await run("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], project, config)).stdout.trim().split(/\s+/);
-	assert.equal(flags.length, cpp ? 5 : 4);
+	assert.equal(flags.length, 5);
 	if(cpp) assert.ok(flags.includes("-DBOOST_MP_STANDALONE"));
 	const integration = flags.filter(flag => flag !== "-DBOOST_MP_STANDALONE");
 	assert.equal(resolve(integration[0].slice(2)), join(installed, "include"));
 	assert.ok(integration[0].startsWith("-I")); assert.ok(integration[1].startsWith("-L"));
 	assert.equal(resolve(integration[1].slice(2)), join(installed, "lib"));
 	assert.equal(integration[2], `-Wl,-rpath,${integration[1].slice(2)}`);
-	assert.equal(integration[3], `-l${library.cModule}`);
+	assert.equal(integration[3], `-l${library.cModule}${cpp ? "" : "_gmp"}`);
+	if(!cpp) assert.equal(integration[4], "-l:libgmp.so.10");
 	const standard = cpp ? "c++20" : "c11", options = [`-std=${standard}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG"];
 	await run(compiler, [...options, sourceFile, ...flags.filter(flag => !flag.startsWith("-Wl,-rpath,")), "-Wl,-rpath,$ORIGIN/lib", "-o", "consumer-pkg-config"], project, compile);
 	const negatives = corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "compile-rejection");

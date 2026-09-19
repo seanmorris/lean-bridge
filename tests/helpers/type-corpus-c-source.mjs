@@ -7,19 +7,13 @@ import assert from "node:assert/strict";
 import { corpusCases, corpusHostCase, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
 
 const aggregate = type => typeof type !== "string" || ["nat", "int", "string", "bytes"].includes(type);
+const gmp = type => ["nat", "int"].includes(type);
 const key = type => typeof type === "string" ? type : type.array ? `array_${key(type.array)}` : type.record.split(".").at(-1).toLowerCase();
 const scalar = { unit: "uint8_t", bool: "bool", float32: "float", float64: "double" };
 const ctype = (library, type) => !aggregate(type) ? scalar[type] ?? `${type}_t` : `${library.cModule}_${key(type)}${type.array ? "_span" : ""}`;
 const cpptype = type => typeof type !== "string" ? type.array ? `std::vector<${cpptype(type.array)}>` : `api::${type.record.split(".").at(-1)}`
 	: ({ unit: "std::monostate", nat: "api::Nat", int: "api::Int", string: "std::string", bytes: "std::vector<uint8_t>" })[type] ?? scalar[type] ?? `${type}_t`;
 const quoted = text => `"${[...Buffer.from(text)].map(byte => `\\${byte.toString(8).padStart(3, "0")}`).join("")}"`;
-const limbs = text => {
-	let value = BigInt(text); if(value < 0n) value = -value;
-	const result = [];
-	while(value)
-	{ result.push(Number(value & 0xffffffffn)); value >>= 32n; }
-	return result;
-};
 const integer = text => {
 	const value = BigInt(text);
 	if(value === -(1n << 63n)) return "INT64_MIN";
@@ -65,10 +59,7 @@ const cValue = (library, wire, type, name) => {
 	{
 		if(["nat", "int"].includes(type))
 		{
-			if(wire.integer.startsWith("-")) actual = "int";
-			const words = limbs(wire.integer);
-			if(words.length) lines.push(`uint32_t ${name}_data[] = {${words.map(value => `UINT32_C(${value})`).join(", ")}};`);
-			expression = `{${words.length ? `${name}_data` : "NULL"}, ${words.length}, NULL, NULL${actual === "int" ? `, ${wire.integer.startsWith("-")}` : ""}}`;
+			return `mpz_t ${name}; assert(mpz_init_set_str(${name}, "${wire.integer}", 10) == 0);`;
 		} else
 		{
 			if(typeof type !== "string" || !/^(?:u?int)\d+$/.test(type)) actual = "int64";
@@ -94,7 +85,9 @@ const cValue = (library, wire, type, name) => {
 	} else if(wire.record)
 	{
 		for(const [field, fieldType] of Object.entries(type.fields)) lines.push(cValue(library, wire.fields[field], fieldType, `${name}_${field}`));
-		expression = `{${Object.keys(type.fields).map(field => `${name}_${field}`).join(", ")}}`;
+		lines.push(`${ctype(library, type)} ${name}; ${ctype(library, type)}_init(&${name});`);
+		for(const [field, fieldType] of Object.entries(type.fields)) lines.push(gmp(fieldType) ? `mpz_set(${name}.${field}, ${name}_${field});` : `${name}.${field} = ${name}_${field};`);
+		return lines.join("\n");
 	} else for(const [kind, bits] of [["float32", 32], ["float64", 64]]) if(wire[kind] !== undefined)
 		expression = `wire_from_f${bits}(UINT${bits}_C(${wire[kind] === "nan" ? bits === 32 ? "2143289344" : "9221120237041090560" : wire[kind]}))`;
 	assert.ok(expression);
@@ -104,10 +97,18 @@ const cValue = (library, wire, type, name) => {
 const bindings = (library, entry, profile) => entry.arguments.map((wire, i) => profile === "cpp"
 	? `auto arg${i} = ${cppValue(wire, signature(library, entry).parameters[i])};`
 	: cValue(library, wire, signature(library, entry).parameters[i], `arg${i}`)).join("\n");
+const cInputCleanup = (library, entry) => {
+	const clear = (wire, type, name) => gmp(type) ? `mpz_clear(${name});` : wire.record
+		? Object.entries(type.fields).map(([field, type]) => `${clear(wire.fields[field], type, `${name}_${field}`)} ${gmp(type) ? `mpz_clear(${name}.${field});` : ""}`).join("\n")
+		: wire.array ? wire.array.map((wire, i) => clear(wire, type.array, `${name}_${i}`)).join("\n") : "";
+	return entry.arguments.map((wire, i) => clear(wire, signature(library, entry).parameters[i], `arg${i}`)).join("\n");
+};
+const cResult = (library, type) => gmp(type) ? `mpz_t result; mpz_init(result);`
+	: type.record ? `${ctype(library, type)} result; ${ctype(library, type)}_init(&result);` : `${ctype(library, type)} result = {0};`;
 const call = (library, entry, profile) => {
 	const sig = signature(library, entry);
-	const args = sig.parameters.map((type, i) => `${profile === "c" && aggregate(type) ? "&" : ""}arg${i}`);
-	if(profile === "c") args.push(...sig.result === "unit" ? [] : ["&result"], "&error");
+	const args = sig.parameters.map((type, i) => `${profile === "c" && aggregate(type) && !gmp(type) ? "&" : ""}arg${i}`);
+	if(profile === "c") args.push(...sig.result === "unit" ? [] : [gmp(sig.result) ? "result" : "&result"], "&error");
 	return `${operation(library, entry, profile)}(${args.join(", ")})`;
 };
 
@@ -119,7 +120,7 @@ const call = (library, entry, profile) => {
  */
 export const corpusCFamilySignatures = (library, profile) => corpusSignatures(library).map((sig, i) => {
 	if(profile === "cpp") return `static_assert(std::is_same_v<decltype(&api::${library.snakeOperations[i]}), ${sig.result === "unit" ? "void" : cpptype(sig.result)} (*)(${sig.parameters.map(type => `${cpptype(type)}${aggregate(type) ? " const&" : ""}`).join(", ")})>);`;
-	const args = [...sig.parameters.map(type => `${aggregate(type) ? "const " : ""}${ctype(library, type)}${aggregate(type) ? " *" : ""}`), ...sig.result === "unit" ? [] : [`${ctype(library, sig.result)} *`], `${library.cModule}_error *`];
+	const args = [...sig.parameters.map(type => gmp(type) ? "mpz_srcptr" : `${aggregate(type) ? "const " : ""}${ctype(library, type)}${aggregate(type) ? " *" : ""}`), ...sig.result === "unit" ? [] : [gmp(sig.result) ? "mpz_ptr" : `${ctype(library, sig.result)} *`], `${library.cModule}_error *`];
 	return `_Static_assert(_Generic(&${library.cModule}_${library.snakeOperations[i]}, ${library.cModule}_status (*)(${args.join(", ")}): 1, default: 0), "exact signature");`;
 }).join("\n");
 
@@ -143,7 +144,7 @@ const encoders = (library, profile) => types(library).map(type => {
 	let body;
 	if(type.array) body = `fputs(${JSON.stringify('{"array":[')}, out); for (size_t i = 0; i < ${cpp ? `${value}.size()` : `${value}.length`}; ++i) { if(i) fputc(',', out); encode_${key(type.array)}(out, &${cpp ? `${value}[i]` : `${value}.data[i]`}); } fputs("]}", out);`;
 	else if(type.record) body = `fputs(${JSON.stringify(`{"record":"${type.record.split(".").at(-1)}","fields":{`)}, out); ${Object.entries(type.fields).map(([name, field], i) => `fputs(${JSON.stringify(`${i ? "," : ""}"${name}":`)}, out); encode_${key(field)}(out, &${value}.${name});`).join(" ")} fputs("}}", out);`;
-	else if(["nat", "int"].includes(type)) body = cpp ? `auto text = value->str(); fputs(${JSON.stringify('{"integer":')}, out); wire_quote(out, text.data(), text.size()); fputc('}', out);` : `wire_big(out, ${data}, ${length}, ${type === "int" ? `${value}.negative` : "false"});`;
+	else if(["nat", "int"].includes(type)) body = cpp ? `auto text = value->str(); fputs(${JSON.stringify('{"integer":')}, out); wire_quote(out, text.data(), text.size()); fputc('}', out);` : `char *text = malloc(mpz_sizeinbase(*value, 10) + 3); assert(text); mpz_get_str(text, 10, *value); fputs(${JSON.stringify('{"integer":')}, out); wire_quote(out, text, strlen(text)); fputc('}', out); free(text);`;
 	else if(type === "string") body = `fputs(${JSON.stringify('{"string":')}, out); wire_quote(out, ${data}, ${length}); fputc('}', out);`;
 	else if(type === "bytes") body = `fputs(${JSON.stringify('{"bytes":[')}, out); for(size_t i = 0; i < ${length}; ++i) { if(i) fputc(',', out); fprintf(out, "%u", (unsigned)${data}[i]); } fputs("]}", out);`;
 	else if(type === "unit") body = `(void)${pointer}; fputs(${JSON.stringify('{"unit":true}')}, out);`;
@@ -182,7 +183,8 @@ export const validateCFamilyDiagnostic = (diagnostic, profile, expected) => {
 
 const clear = (library, type) => {
 	if(!aggregate(type)) return "";
-	const fields = type.record ? Object.entries(type.fields).filter(([, type]) => aggregate(type)).map(([name]) => `.${name}`) : [""];
+	if(gmp(type)) return "mpz_clear(result);";
+	const fields = type.record ? Object.entries(type.fields).filter(([, type]) => aggregate(type) && !gmp(type)).map(([name]) => `.${name}`) : [""];
 	return `${fields.map((field, i) => `WIRE_WATCH(result${field}, watch${i});`).join("\n")}\n${ctype(library, type)}_clear(&result);\n${ctype(library, type)}_clear(&result);\n${fields.map((field, i) => `WIRE_CLEARED(result${field}, watch${i});`).join("\n")}`;
 };
 const runtimeChecks = (library, profile) => {
@@ -195,9 +197,9 @@ const runtimeChecks = (library, profile) => {
 		let setup, invoke, unchanged = "";
 		if(id === "record-utf8")
 		{
-			setup = bindings(library, record, profile) + (cpp ? `\narg0.${title} = std::string("\\300\\200", 2);` : `\narg0.${title}.data = "\\300\\200"; arg0.${title}.length = 2;\n${ctype(library, recType)} result = {0};`);
+			setup = bindings(library, record, profile) + (cpp ? `\narg0.${title} = std::string("\\300\\200", 2);` : `\narg0.${title}.data = "\\300\\200"; arg0.${title}.length = 2;\n${cResult(library, recType)}`);
 			invoke = cpp ? `api::${names[6]}(arg0)` : `${p}_${names[6]}(&arg0, &result, &error)`;
-			if(!cpp) unchanged = `assert(result.${title}.data == NULL); ${p}_${recType.record.split(".").at(-1).toLowerCase()}_clear(&result);`;
+			if(!cpp) unchanged = `assert(result.${title}.data == NULL); ${p}_${recType.record.split(".").at(-1).toLowerCase()}_clear(&result); ${cInputCleanup(library, record)}`;
 		} else if(id === "unit-marker")
 		{
 			setup = ""; invoke = `${p}_${names[10]}(1, &error)`;
@@ -235,14 +237,25 @@ export const corpusCFamilySource = (library, profile) => {
 			const fields = Object.entries(type.fields), matrix = fields.find(([, type]) => type.array)[0];
 			const text = fields.find(([, type]) => type === "string")[0], nat = fields.find(([, type]) => type === "nat")[0], int = fields.find(([, type]) => type === "int")[0];
 			const mutate = name => `for (auto& row : ${name}.${matrix}) { row.push_back(17); } ${name}.${text}[0] = 'X'; ${name}.${nat} += 17; ${name}.${int} -= 17;`;
-			ownership = `char *after = snapshot_${key(type)}(&arg0); assert(strcmp(before, after) == 0); free(before); free(after);\n${cpp ? mutate("arg0") : `assert(result.${matrix}.data != arg0.${matrix}.data && result.${matrix}.data[0].data != arg0.${matrix}.data[0].data);\narg0_${matrix}_0_data[0] ^= 17; arg0_${text}_data[0] = 'X'; arg0_${nat}_data[0] ^= 17; arg0_${int}_data[0] ^= 17;`}\nchar *independent = snapshot_${key(type)}(&result); assert(strcmp(observed, independent) == 0); free(independent);\nchar *changed = snapshot_${key(type)}(&arg0);\n${cpp ? mutate("result") : clear(library, type)}\nchar *still = snapshot_${key(type)}(&arg0); assert(strcmp(changed, still) == 0); free(changed); free(still);`;
+			ownership = `char *after = snapshot_${key(type)}(&arg0); assert(strcmp(before, after) == 0); free(before); free(after);\n${cpp ? mutate("arg0") : `assert(result.${matrix}.data != arg0.${matrix}.data && result.${matrix}.data[0].data != arg0.${matrix}.data[0].data);\narg0_${matrix}_0_data[0] ^= 17; arg0_${text}_data[0] = 'X'; mpz_add_ui(arg0.${nat}, arg0.${nat}, 17); mpz_sub_ui(arg0.${int}, arg0.${int}, 17);`}\nchar *independent = snapshot_${key(type)}(&result); assert(strcmp(observed, independent) == 0); free(independent);\nchar *changed = snapshot_${key(type)}(&arg0);\n${cpp ? mutate("result") : clear(library, type)}\nchar *still = snapshot_${key(type)}(&arg0); assert(strcmp(changed, still) == 0); free(changed); free(still);`;
 		}
-		return `{\n${bindings(library, entry, profile)}\n${copy ? `char *before = snapshot_${key(type)}(&arg0);` : ""}\n${cpp ? type === "unit" ? `${call(library, entry, profile)}; std::monostate result{};` : `auto result = ${call(library, entry, profile)};` : `${p}_error error = {0}; ${ctype(library, type)} result = {0}; assert(${call(library, entry, profile)} == ${p.toUpperCase()}_STATUS_OK); assert(error.code == ${p.toUpperCase()}_ERROR_NONE);`}\nchar *observed = snapshot_${key(type)}(&result);\n${ownership}\nif (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"matched","independentCopy":${copy},"observed":`)}, stdout); fputs(observed, stdout); fputc('}', stdout); free(observed);\n${!cpp && !copy ? clear(library, type) : ""}\n}`;
+		return `{\n${bindings(library, entry, profile)}\n${copy ? `char *before = snapshot_${key(type)}(&arg0);` : ""}\n${cpp ? type === "unit" ? `${call(library, entry, profile)}; std::monostate result{};` : `auto result = ${call(library, entry, profile)};` : `${p}_error error = {0}; ${cResult(library, type)} assert(${call(library, entry, profile)} == ${p.toUpperCase()}_STATUS_OK); assert(error.code == ${p.toUpperCase()}_ERROR_NONE);`}\nchar *observed = snapshot_${key(type)}(&result);\n${ownership}\nif (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"matched","independentCopy":${copy},"observed":`)}, stdout); fputs(observed, stdout); fputc('}', stdout); free(observed);\n${!cpp && !copy ? clear(library, type) : ""}\n${!cpp ? cInputCleanup(library, entry) : ""}\n}`;
 	});
 	if(cpp) for(const entry of corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "host-rejection"))
 		blocks.push(`{\n${bindings(library, entry, profile)}\nbool rejected = false; std::string message;
 try { (void)${call(library, entry, profile)}; } catch(const api::Error& error) { rejected = error.status == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT; message = error.what(); }
 assert(rejected); (void)api::${library.snakeOperations[0]}(7);
 if (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"rejected-as-expected","exception":"Error","recovered":true,"message":`)}, stdout); wire_quote(stdout, message.data(), message.size()); fputc('}', stdout);\n}`);
+	if(!cpp) for(const entry of corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "host-rejection"))
+	{
+		const result = signature(library, entry).result;
+		blocks.push(`{\n${bindings(library, entry, profile)}\n${cResult(library, result)}
+${p}_error error = {0}; assert(${call(library, entry, profile)} == ${p.toUpperCase()}_STATUS_INVALID_ARGUMENT);
+assert(error.code == ${p.toUpperCase()}_ERROR_INVALID_ARGUMENT);
+if (results++) { fputc(',', stdout); } fputs(${JSON.stringify(`{"id":"${entry.id}","status":"rejected-as-expected","exception":"INVALID_ARGUMENT","recovered":true,"message":`)}, stdout);
+wire_quote(stdout, error.message, error.message_length); fputc('}', stdout);
+uint32_t recovered = 0; assert(${p}_${library.snakeOperations[0]}(7, &recovered, &error) == ${p.toUpperCase()}_STATUS_OK);
+${clear(library, result)} ${cInputCleanup(library, entry)}\n}`);
+	}
 	return `${header(library, profile)}#include "c-family.h"\n${corpusCFamilySignatures(library, profile)}\n${encoders(library, profile)}\nint main(void) {\nunsigned results = 0, errors = 0;\nfputs(${JSON.stringify(`{"schemaVersion":1,"profile":"${profile}","module":"${p}","results":[`)}, stdout);\n${blocks.join("\n")}\nfputs(${JSON.stringify('],"errors":[')}, stdout);\n${runtimeChecks(library, profile)}\nfputs("]}\\n", stdout); return 0;\n}\n`;
 };

@@ -14,6 +14,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readReviewedSource } from "../analyze/reviewed-source.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
+import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
@@ -82,7 +83,8 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, validateModel: cTargets.length ? model => {
-				compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo"].includes(target)) });
+				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
 				if(targets.includes("rubygems")) compileCopiedRubyModel(model.bindingIr);

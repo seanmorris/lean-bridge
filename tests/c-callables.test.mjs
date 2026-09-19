@@ -17,6 +17,8 @@ import { callableArities, callableSignatures, callableReviewedIr } from "./helpe
 import { callableCConsumer, cLifetimeSignature } from "./helpers/callable-c-consumer.mjs";
 import { nativeFixtureEnvironment, installCopiedConsumer } from "./helpers/copied-fixture-install.mjs";
 import { checkCCallableFaults } from "./helpers/c-callable-faults.mjs";
+import { checkGmpInstallation } from "./helpers/c-gmp-install.mjs";
+import { checkGmpCallableFaults } from "./helpers/c-gmp-faults.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_C_CALLABLE_TEST === "1";
 const type = value => value.kind === "primitive" ? value.name
@@ -48,6 +50,7 @@ test("installed C callbacks and returned closures preserve all nineteen primitiv
 		const sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 		assert.deepEqual(sort(signatures), sort(expectedSignatures));
 		const allocationFailureChecks = await checkCCallableFaults(outputRoot, join(directory, "faults"), environment);
+		const gmpAllocationFailureChecks = await checkGmpCallableFaults(outputRoot, join(directory, "gmp-faults"), environment);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		await rm(directory, { recursive: true, force: true });
@@ -56,15 +59,19 @@ test("installed C callbacks and returned closures preserve all nineteen primitiv
 			, consumer, handoff
 			, packages: receipt.packages, environment
 			, fixture: { source: callableCConsumer, success: "callable-c-ok" } });
-		const { command, ...observed } = observation; void command;
+		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		const { command, ...observed } = observation;
+		const gmp = await checkGmpInstallation({ consumer, packages: receipt.packages, command });
 		reports.push({ profile: "c", path, signatures
 			, ...observed
 			, allocationFailureChecks
+			, gmpAllocationFailureChecks
+			, gmp
 			, packages: receipt.packages
 			, bindingIrSha256: built.bindingIrSha256
 			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 			, modelSha256: sha256(canonicalJson(model))
-			, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+			, receiptSha256
 			, sourceRemovedBeforeInstallation: true });
 		await rm(consumer, { recursive: true, force: true });
 	}

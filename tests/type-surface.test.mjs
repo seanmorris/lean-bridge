@@ -105,14 +105,15 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("C callable evidence promotes no other host projection or copied field", () => {
+test("historical C callable evidence excludes GMP integers, other hosts and copied fields", () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("c-callables-installed"));
-	assert.equal(observed.length, 112);
+	assert.equal(observed.length, 100);
 	assert.ok(observed.every(cell => cell.profile === "c" && cell.position !== "field" && cell.stages.installedExecution.state === "passed"));
+	assert.ok(observed.every(cell => !["nat", "int"].includes(cell.shape)));
 	for(const path of document.paths)
 	{
-		for(const primitive of document.irFacets.primitive) for(const position of ["callback-parameter", "callback-result"])
+		for(const primitive of document.irFacets.primitive.filter(shape => !["nat", "int"].includes(shape))) for(const position of ["callback-parameter", "callback-result"])
 			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
 		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
 			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
@@ -131,6 +132,20 @@ for(const profile of ["python", "ruby", "rust", "cpp"]) test(`${profile} callabl
 			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
 		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
 			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+test("C exact integers use installed GMP values in every copied and primitive callable position", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "c" && ["nat", "int"].includes(cell.shape));
+	assert.equal(cells.length, 20);
+	for(const cell of cells)
+	{
+		assert.equal(cell.hostType, "mpz_t");
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, ["c-gmp-installed"]);
+		}
 	}
 });
 

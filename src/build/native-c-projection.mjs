@@ -8,6 +8,8 @@ import { dirname, join } from "node:path";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
+import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
+import { buildNativeGmp } from "./native-gmp.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { generateNativePrimitiveC } from "../backends/c/native-primitives.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -66,15 +68,34 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		, "-Wl,-z,nodelete"
 		, `-Wl,-soname,${library}`, "-o", join(root, "lib", library)]);
 	if(targets.includes("cpp")) await run(environment.CXX ?? "c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", ...includes, "-fsyntax-only", join(root, `src/${p}.cpp`)]);
+	const gmp = targets.includes("c") && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)) ? generateGmpProjection(model.bindingIr) : null;
+	if(gmp)
+	{
+		const gmpRoot = join(root, "gmp");
+		await buildNativeGmp({ root: gmpRoot, environment, signal });
+		for(const [path, contents] of Object.entries(gmp.files))
+		{ await mkdir(dirname(join(gmpRoot, path)), { recursive: true }); await writeFile(join(gmpRoot, path), contents); }
+		await run(environment.CC ?? "cc", ["-std=c11", "-O2", "-g0", "-fPIC"
+			, "-shared", "-Wall", "-Wextra", "-Werror"
+			, `-ffile-prefix-map=${working}=/build/native-c`, ...includes
+			, "-I", join(gmpRoot, "include"), join(gmpRoot, `src/${p}_gmp.c`)
+			, "-L", join(root, "lib"), "-L", join(gmpRoot, "lib")
+			, `-l${p}`, "-l:libgmp.so.10", "-Wl,-z,defs", "-Wl,--build-id=none"
+			, "-Wl,-rpath,$ORIGIN", `-Wl,-soname,${gmp.library}`
+			, "-o", join(gmpRoot, "lib", gmp.library)]);
+	}
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/.test(floor)) throw new TypeError("Invalid native glibc floor");
-	for(const path of [join(root, "lib", library), join(nativeRoot, receipt.library), join(runtimeRoot, "lib/libleanshared.so"), join(runtimeRoot, "lib/liblean_bridge_native.so")])
-	{
+	for(const path of [join(root, "lib", library)
+		, join(nativeRoot, receipt.library)
+		, join(runtimeRoot, "lib/libleanshared.so")
+		, join(runtimeRoot, "lib/liblean_bridge_native.so")
+		, ...gmp ? [join(root, "gmp/lib", gmp.library), join(root, "gmp/lib/libgmp.so.10")] : []]) {
 		const report = await run("readelf", ["--version-info", path]);
 		for(const match of report.stdout.matchAll(/GLIBC_(\d+)\.(\d+)(?:\.(\d+))?/g))
 			if(Number(match[1]) > 2 || (Number(match[1]) === 2 && (Number(match[2]) > Number(floor.slice(2)) || (Number(match[2]) === Number(floor.slice(2)) && Number(match[3] ?? 0) > 0))))
 				throw new Error(`Native library requires ${match[0]}, above the package floor ${floor}`);
-	}
+		}
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
@@ -82,7 +103,9 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		schemaVersion: 1, profile: "native-library-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
-		, runtimeIdentity: identity, library, files: inventory }));
+		, runtimeIdentity: identity, library
+		, ...(gmp ? { gmp: { library: gmp.library, version: "6.3.0" } } : {})
+		, files: inventory }));
 	const projections = [];
 	for(const target of targets) projections.push(target === "nuget"
 		? await projectOrdinaryDotnet({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings: settings[target], glibcMinimumVersion: floor, environment, signal })

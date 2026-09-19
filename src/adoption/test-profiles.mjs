@@ -32,6 +32,8 @@ const profileManifest = Object.freeze({
 		, "reviewed-callables"
 		, "c-callable-contract"
 		, "c-callable-evidence"
+		, "c-gmp-contract"
+		, "c-gmp-evidence"
 		, "python-callable-contract"
 		, "python-callable-evidence"
 		, "ruby-callable-contract"

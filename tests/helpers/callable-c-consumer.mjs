@@ -5,6 +5,7 @@
  */
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { callablePrimitives } from "./callable-fixture.mjs";
+import { callableGmpCases } from "./callable-gmp-consumer.mjs";
 
 const callbackName = (parameters, result, owned = false) => `${owned ? "callables_owned_" : "callables_"}callback${sha256(canonicalJson({ parameters: parameters.map(name => ({ kind: "primitive", name })), result: { kind: "primitive", name: result } })).slice(0, 20)}`;
 const cTypes = { unit: "uint8_t", bool: "bool", char: "uint32_t", usize: "uint64_t", isize: "int64_t", float32: "float", float64: "double", string: "callables_string", bytes: "callables_bytes", nat: "callables_nat", int: "callables_int" };
@@ -22,6 +23,10 @@ export const callableCConsumer = () => {
 	for(const [lean, type] of callablePrimitives)
 	{
 		const c = cType(type), cb = callbackName([type], type), closure = callbackName(["bool", type], type, true), f = spelling(lean);
+		if(["nat", "int"].includes(type))
+		{
+			const gmp = callableGmpCases(type, cb, closure); definitions.push(gmp.definitions); suites.push(gmp.suite); continue;
+		}
 		const input = dynamic(type) ? `const ${c} *value` : `${c} value`;
 		const output = type === "unit" ? "" : `${c} *out, `;
 		const arg = dynamic(type) ? "&value" : "value", out = type === "unit" ? "" : "&result, ";
@@ -35,7 +40,6 @@ export const callableCConsumer = () => {
 		else if(type.startsWith("float")) values = `${c} values[] = {0.0, -0.0, 1.25, -1.25, INFINITY, -INFINITY, NAN, ${type === "float32" ? "FLT" : "DBL"}_TRUE_MIN, ${type === "float32" ? "FLT" : "DBL"}_MAX};`;
 		else if(type === "string") values = `${c} values[] = {{0}, {.data="a\\0z", .length=3}, {.data="\\xf0\\x9f\\x99\\x82", .length=4}, {.data="hello", .length=5}};`;
 		else if(type === "bytes") values = `uint8_t data[] = {0, 0xff, 1, 0, 0x80}; ${c} values[] = {{0}, {.data=data, .length=5}};`;
-		else if(type === "nat" || type === "int") values = `uint32_t data[160] = {0xffffffff, 0xffffffff, 0x12345678, 0x87654321, 0, 0, 0, 0x80000000}; data[159] = 0x80000000; ${c} values[] = {{0}, {.data=data, .length=8}, {.data=data, .length=160}${type === "int" ? ", {.data=data, .length=160, .negative=true}" : ""}};`;
 		else if(type.startsWith("u")) values = `${c} values[] = {0, 1, (${c})-1, (${c})-2, (${c})UINT64_C(2147483648), (${c})UINT64_C(4294967296), (${c})UINT64_C(9007199254740991), (${c})UINT64_C(9007199254740992)};`;
 		else values = `${c} values[] = {0, 1, -1, INT${type === "isize" ? "64" : type.slice(3)}_MIN, INT${type === "isize" ? "64" : type.slice(3)}_MAX, (${c})INT64_C(2147483647), (${c})INT64_C(4294967296), (${c})INT64_C(9007199254740991), (${c})INT64_C(9007199254740992)};`;
 		definitions.push(`static callables_status echo_${f}(void *raw, ${input}, ${output}callables_error *error) {

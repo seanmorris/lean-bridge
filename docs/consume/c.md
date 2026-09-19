@@ -125,15 +125,44 @@ Box: 42; payload: 42; callback: 44; closure: 42
 
 ## Values and cleanup
 
-Ordinary-source arrays use typed spans; records use generated structs. Both can nest. Inputs borrow your storage for one call. Zero-initialize outputs and call their generated `_clear` function to release the complete value, including nested arrays and record fields. Do not copy an owned output struct and clear both copies. A failed conversion leaves the output slot unchanged.
+Ordinary-source arrays use typed spans; records use generated structs. Both can nest. Inputs borrow your storage for one call. Packages exposing `Nat` or `Int` provide generated `_init` functions for their aggregate structs. Call `_init` before first use, then `_clear` to release the complete value, including nested integers, arrays and record fields. `_clear` resets fields to initialized empty values. Successful calls replace initialized copied outputs; failed conversions leave them unchanged. Packages without arbitrary integers, including Alpha above, use zero-initialized outputs and require clearing before reuse. Do not shallow-copy an owned output and clear both copies.
 
 The package enforces a shared 16 MiB input/output conversion budget and a maximum type nesting of 32. See [copied arrays and records](../publish/c.md#copied-arrays-and-records) for the accounting rules. These limits do not bound the Lean algorithm's own allocations.
+
+## Exact integers
+
+Prepared C packages expose Lean `Nat` and `Int` as GMP `mpz_t`, including array elements and record fields. The archive supplies GMP 6.3.0 and configures it through CMake and pkg-config. You do not install a separate dependency or construct limb buffers.
+
+Initialize standalone integers with `mpz_init` or `mpz_init_set_str`, and release them with `mpz_clear`. Inputs use `mpz_srcptr`; outputs use `mpz_ptr` and must already be initialized. For a package exporting `Sample.echoNat (value : Nat) : Nat`, a call looks like this:
+
+```c
+#include <sample.h>
+
+int main(void) {
+    mpz_t input, output;
+    mpz_init(input);
+    mpz_init(output);
+    mpz_setbit(input, 16384);
+    sample_error error = {0};
+    sample_status status = sample_echo_nat(input, output, &error);
+    int failed = status != SAMPLE_STATUS_OK || mpz_cmp(input, output) != 0;
+    mpz_clear(output);
+    mpz_clear(input);
+    return failed;
+}
+```
+
+Negative `Nat` inputs return `INVALID_ARGUMENT`. `Int` preserves the sign. Calls can reuse initialized outputs, including the same integer as input and output. GMP integers are owning values: use `mpz_set` to copy, never struct assignment or `memcpy`. The [installed GMP checks](../evidence/c-gmp-20260919.md) cover both source paths, nested values, primitive callables and relocated packages.
+
+The 16 MiB conversion limit still applies. GMP's default allocator aborts if its allocation fails; the bridge does not change its global allocation hooks. See [GMP allocation behavior](https://gmplib.org/manual/Custom-Allocation).
 
 ## Callbacks and returned closures
 
 Ordinary-source and compiler-checked reviewed C packages support synchronous callbacks and returned Lean closures across all nineteen primitives. Use the callback struct and closure functions declared in your package's public header. Their generated names distinguish each complete signature. Alpha's `transform` names above belong to that example, not every package.
 
-A callback struct contains a typed `call` function pointer and a `context` pointer. Both must remain valid until the exporting Lean call returns. Callback arguments borrow storage for that invocation only. Dynamic argument views have null `owner` and `release` fields; do not clear, retain or mutate the underlying buffers. To return an argument unchanged, shallow-copy its borrowed view into `*out`. To return your own allocation, populate `owner` and `release`. The adapter copies the result into Lean and calls your release hook once, including when your callback returns a failure or an invalid value. Use null ownership fields for storage you retain.
+A callback struct contains a typed `call` function pointer and a `context` pointer. Both must remain valid until the exporting Lean call returns. Callback arguments borrow storage for that invocation only. String and byte-array argument views have null `owner` and `release` fields; do not clear, retain or mutate the underlying buffers. To return such an argument unchanged, shallow-copy its borrowed view into `*out`. To return your own buffer, populate `owner` and `release`. The adapter copies and releases the result once, including on failure. Use null ownership fields for storage you retain.
+
+Integer callbacks receive borrowed `mpz_srcptr` arguments and an already initialized `mpz_ptr` output. Assign with `mpz_set(out, value)` or GMP arithmetic. Do not initialize or clear that output yourself, and do not mutate or clear the borrowed arguments. The adapter releases its temporary integers after the callback returns.
 
 Return the package's `_STATUS_OK` on success. On failure, return a non-OK status and optionally fill the error code, message pointer and byte length. Keep that text valid until the callback returns. The adapter preserves the first failure through cleanup, suppresses further host callback invocations for that Lean call, and leaves the caller's output unchanged. Error messages use thread-local storage and are truncated to 1,023 bytes; copy them before the next failing call on that thread. C callbacks and release hooks must return normally. Do not unwind with `longjmp` or a C++ exception across Lean frames.
 
@@ -159,8 +188,8 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Int16` | `int16_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: -32768..32767; reject overflow before narrowing. |
 | `Int32` | `int32_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: -2147483648..2147483647; reject overflow before narrowing. |
 | `Int64` | `int64_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `<prefix>_nat` (input, result, field, callback input, callback result); `<prefix>_nat buffer struct` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Little-endian uint32 limbs; empty means zero. No narrowing through floating point. Clear owned C outputs; C++ vectors own their data. Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `<prefix>_int` (input, result, field, callback input, callback result); `<prefix>_int buffer struct` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Little-endian uint32 magnitude limbs and a negative flag. Zero normalizes to a nonnegative empty magnitude. Reviewed-IR buffer declarations alone do not establish an installed arbitrary-integer transport. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Nat` | `mpz_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact GMP 6.3.0 mpz_t; prepared archives include headers, a shared library, source and licenses. Initialize integers and copied records before use. Negative Nat inputs reject in scalar, field, array and callback positions. Inputs are borrowed; initialized outputs change only on success. Copy with mpz_set and finish standalone values with mpz_clear. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `mpz_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Signed exact GMP 6.3.0 mpz_t with the same initialization, borrowing and cleanup rules. Callback output integers are already initialized; assign with mpz_set without reinitializing or clearing them. No floating-point conversion. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
 | `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
 | `Float` | `double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `<prefix>_string` (input, result, field, callback input, callback result); `<prefix>_string buffer struct` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Length-delimited valid UTF-8, including embedded NUL. Invalid UTF-8 is rejected before the Lean call. Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free(). Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
@@ -169,7 +198,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `<prefix>_<record>` (input, result, field); `Generated copied struct (Alpha: lean_alpha_payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated structs and deep clear functions. Zero-initialize outputs. Empty records contain a placeholder byte; Lean constructors/accessors preserve compiler layout. Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free(). Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `<prefix>_<record>` (input, result, field); `Generated copied struct (Alpha: lean_alpha_payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated structs and deep clear functions. Packages exposing Nat/Int require the generated _init before first use; other packages use zero-initialized outputs. Empty records contain a placeholder byte; Lean constructors/accessors preserve compiler layout. Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free(). Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `opaque resource pointer` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

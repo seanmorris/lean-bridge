@@ -25,7 +25,7 @@ headers, test sources and handoff archives are removed.
 `Nat` and `Int` map to `boost::multiprecision::cpp_int`. Negative `Nat` inputs
 reject before calling Lean, including array elements, record fields, callback
 results and returned-closure arguments. Signed values use the same exact C++
-type. C++ converts through magnitude limbs internally; the C API keeps its
+type. C++ converts through magnitude limbs internally; the private C ABI keeps its
 existing carriers.
 
 Packages include the pinned Boost.Multiprecision and Boost.Config 1.90.0 headers

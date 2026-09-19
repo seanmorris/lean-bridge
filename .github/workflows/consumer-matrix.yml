@@ -177,7 +177,7 @@ jobs:
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd
+          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd m4
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           bash scripts/bootstrap-rust-ci.sh
@@ -475,7 +475,7 @@ jobs:
         env:
           LEAN_BRIDGE_NATIVE_C_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd
+          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd m4
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs

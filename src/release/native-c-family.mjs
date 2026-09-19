@@ -44,6 +44,9 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true }), p = surface.prefix;
 	const bigint = target === "cpp" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
+	const gmp = target === "c" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
+	if(gmp && (adapter.gmp?.library !== `lib${p}_gmp.so` || adapter.gmp.version !== "6.3.0")) throw new Error("C GMP projection is missing or differs");
+	const publicLibrary = gmp ? adapter.gmp.library : adapter.library;
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== 1 || adapter.profile !== "native-library-v1"
 		|| adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt)) || adapter.runtimeIdentity !== runtimeIdentity
@@ -54,7 +57,10 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	const archiveRoot = `${name}-${version}-${target}`, root = join(working, "packages", target, archiveRoot);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => { await mkdir(dirname(join(root, path)), { recursive: true }); await copyFile(from, join(root, path), 1); };
-	await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
+	if(gmp)
+	{
+		for(const path of Object.keys(adapter.files).filter(path => /^gmp\/(include|lib|share)\//.test(path))) await copy(join(adapterRoot, path), path.slice(4));
+	} else await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
 	if(target === "cpp") await copy(join(adapterRoot, `include/${p}.hpp`), `include/${p}.hpp`);
 	if(target === "cpp") for(const path of Object.keys(adapter.files).filter(path => path.startsWith("include/boost/") || path === "share/lean-bridge/boost.json" || path === "share/lean-bridge/licenses/Boost-LICENSE"))
 		await copy(join(adapterRoot, path), path);
@@ -87,7 +93,7 @@ libdir=\${prefix}/lib
 Name: ${name}
 Description: Compiled Lean ${model.component.name} ${target === "cpp" ? "C++20" : "C11"} API
 Version: ${version}
-Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}
+Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${gmp ? "_gmp -l:libgmp.so.10" : ""}
 Cflags: -I\${includedir}${bigint ? " -DBOOST_MP_STANDALONE" : ""}
 `);
 	const callableGuide = surface.callbacks.size
@@ -102,10 +108,11 @@ Cflags: -I\${includedir}${bigint ? " -DBOOST_MP_STANDALONE" : ""}
 if(NOT TARGET ${cmakeTarget})
   add_library(${cmakeTarget} SHARED IMPORTED)
   set_target_properties(${cmakeTarget} PROPERTIES
-    IMPORTED_LOCATION "\${_LB_PREFIX}/lib/${adapter.library}"
+    IMPORTED_LOCATION "\${_LB_PREFIX}/lib/${publicLibrary}"
     INTERFACE_INCLUDE_DIRECTORIES "\${_LB_PREFIX}/include"
     INTERFACE_COMPILE_FEATURES "${target === "cpp" ? "cxx_std_20" : "c_std_11"}"
 ${bigint ? '    INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"\n' : ""}\
+${gmp ? '    INTERFACE_LINK_LIBRARIES "${_LB_PREFIX}/lib/libgmp.so.10"\n' : ""}\
   )
 endif()
 unset(_LB_PREFIX)
@@ -118,14 +125,25 @@ else()
   set(PACKAGE_VERSION_COMPATIBLE FALSE)
 endif()
 `);
-	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\nC inputs borrow caller buffers for one call. Initialize result structs to zero and call the matching ${p}_TYPE_clear function after use, before reusing a result slot. Clear is idempotent. C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. ${target === "cpp" ? "Nat and Int are Boost.Multiprecision cpp_int values. Negative Nat inputs reject. Packages using these types include Boost 1.90.0 standalone headers, license and source hashes; CMake and pkg-config configure them automatically." : "Nat/Int use little-endian uint32 limbs; an empty span is zero, and Int carries a negative flag."} Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}\n\n${surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`).join("\n")}\n`);
+	const cInitialization = gmp
+		? `Initialize Nat/Int with mpz_init and aggregate structs with ${p}_TYPE_init before first use. Never initialize an mpz_t with a shallow struct copy. Nat/Int inputs are borrowed mpz_srcptr values; outputs are initialized mpz_ptr values. Successful calls replace initialized copied outputs; failures leave them unchanged. Clear structs with ${p}_TYPE_clear. Clear resets their fields to initialized empty values and is idempotent. Finish standalone integers with mpz_clear. GMP callback inputs are borrowed read-only values; callback output integers are already initialized, so assign with mpz_set, not mpz_init. Do not clear callback integer arguments or outputs.`
+		: `Initialize C result structs to zero and call the matching ${p}_TYPE_clear function after use, before reusing a result slot. Clear is idempotent.`;
+	const integerGuide = target === "cpp"
+		? "Nat and Int are Boost.Multiprecision cpp_int values. Negative Nat inputs reject. Packages using these types include Boost 1.90.0 standalone headers, license and source hashes; CMake and pkg-config configure them automatically."
+		: gmp ? "Nat and Int are GMP mpz_t values. Negative Nat inputs reject. GMP 6.3.0 headers and a replaceable shared library ship in the archive and link automatically through CMake or pkg-config. Its complete corresponding source, build settings and LGPL/GPL notices are under share/lean-bridge/. GMP allocation failures abort by default; the bridge does not replace GMP allocation hooks."
+			: "This package has no arbitrary-integer values and does not require GMP.";
+	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\nC inputs borrow caller buffers for one call. ${cInitialization} C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. ${integerGuide} Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}\n\n${surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`).join("\n")}\n`);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
 	const manifest = { schemaVersion: 1, kind: "lean-bridge-native-c-package"
 		, ecosystem: target, name, version, component: model.component
 		, profile: "native-library-v1", runtimeIdentity
 		, bindingIrSha256: model.bindingIrSha256
-		, glibcMinimumVersion, cmakePackage, cmakeTarget, pkgConfig: name
+		, glibcMinimumVersion
+		, cmakePackage
+		, cmakeTarget
+		, pkgConfig: name
+		, ...(gmp ? { exactIntegers: "gmp-6.3.0" } : {})
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, adapterReceiptSha256: sha256(canonicalJson(adapter))
 		, files: Object.fromEntries(files.map(file => [file.path, { bytes: file.bytes.length, sha256: sha256(file.bytes) }])) };
