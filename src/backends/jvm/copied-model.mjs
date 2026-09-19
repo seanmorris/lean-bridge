@@ -20,7 +20,7 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedJvmModel = ir => {
-	const surface = compilePrimitiveCSurface(ir);
+	const surface = compilePrimitiveCSurface(ir, { callables: true });
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -60,7 +60,17 @@ export const compileCopiedJvmModel = ir => {
 		if(functionNames.has(fn.publicName) || reserved.has(fn.publicName) || keywords.has(fn.publicName)) fail(fn.declaration, `Java function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
+	const primitiveName = name => ({ uint8: "UInt8", uint16: "UInt16", uint32: "UInt32", uint64: "UInt64", usize: "USize", isize: "ISize" })[name] ?? pascal(name);
+	for(const [index, callback] of [...surface.callbacks.values()].entries())
+	{
+		callback.index = index;
+		const signature = callback.type.callable;
+		callback.publicName = `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join("")}To${primitiveName(signature.result.type.name)}`;
+		if(names.has(callback.publicName)) fail(ir.declarations[0], `Java callable name collides: ${callback.publicName}`);
+		names.add(callback.publicName);
+		Object.assign(callback, { nativeType: "MemorySegment", layout: "ADDRESS", size: 8, alignment: 8 });
+	}
+	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
 	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType };
 };
 

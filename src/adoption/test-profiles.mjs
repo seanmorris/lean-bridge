@@ -43,6 +43,8 @@ const profileManifest = Object.freeze({
 		, "cpp-callable-evidence"
 		, "dotnet-callable-contract"
 		, "dotnet-callable-evidence"
+		, "jvm-callable-contract"
+		, "jvm-callable-evidence"
 		, "rust-callable-evidence"
 		, "callable-evidence"
 		, "publish-configuration"
@@ -148,6 +150,7 @@ const profileManifest = Object.freeze({
 	])
 	, native: Object.freeze([
 		"dotnet-callables"
+		, "jvm-callables"
 		, "c-family-package"
 		, "lake-generated-packages"
 		, "lake-generated-workspace"

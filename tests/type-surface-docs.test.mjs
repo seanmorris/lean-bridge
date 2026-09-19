@@ -62,16 +62,18 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 
-test("Java and Kotlin keep their own host representations without widening Alpha coverage", async () => {
+test("Java and Kotlin document installed primitive callables without promoting fields or async", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");
 	assert.match(row(java, "UInt32"), /`long`/u);
 	assert.match(row(kotlin, "UInt32"), /`Long`/u);
 	for(const source of [java, kotlin])
 	{
-		assert.match(row(source, "Nat"), /`BigInteger`.*Ordinary source: Installed checks passed \(input, result, field\)/u);
-		assert.match(row(source, "Nat"), /Reviewed IR: Inspected: no host mapping/u);
-		assert.doesNotMatch(row(source, "Nat").split("Reviewed IR:")[1], /Installed checks passed/u);
+		assert.match(row(source, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Ordinary source: Installed checks passed\./u);
+		assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Inspected: no host mapping \(field\)/u);
+		assert.match(row(source, "Host function passed to Lean"), /Typed Fn\.\.\.To\.\.\. functional interface/u);
+		assert.match(row(source, "Lean function returned to the host"), /Signature-specific LeanClosure \(AutoCloseable\)/u);
+		assert.match(row(source, "Identity-bearing value"), /Ordinary source: Not audited\./u);
 		assert.match(row(source, "Task α / asynchronous result"), /Generation rejected/u);
 		assert.doesNotMatch(source, /Alpha.*exposes no `Nat`/u);
 	}

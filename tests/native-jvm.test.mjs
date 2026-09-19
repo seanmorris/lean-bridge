@@ -89,9 +89,11 @@ def array_empty (value : Array Empty) := value
 def matrix (value : Array UInt32) := #[value, value]
 def grow (value : String) := #[value, value]
 def answer : UInt32 := 42
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 := callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
 end ${name}
 `);
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [name], exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "answer"].map(label => `${name}.${label}`)], targets: { maven: { name: `com.acme:${name.toLowerCase()}-api`, version: "2.0.0-rc.1" } } }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [name], exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "array_empty", "matrix", "grow", "answer", "call_word", "make_word"].map(label => `${name}.${label}`)], arities: { [`${name}.make_word`]: 1 }, targets: { maven: { name: `com.acme:${name.toLowerCase()}-api`, version: "2.0.0-rc.1" } } }));
 };
 
 const javaConsumer = name => `import org.leanbridge.${name.toLowerCase()}.*;
@@ -116,6 +118,7 @@ ${scalars.map(([label, , , value]) => `    same(output.leaf().v${cap(label)}(), 
     same(Api.arrayEmpty(new Empty[]{new Empty()}), new Empty[]{new Empty()});
     same(Api.matrix(new long[]{1,2})[1], new long[]{1,2});
     same(Api.answer(), 42L);
+    try (var closure = Api.makeWord(2)) { same(Api.callWord(40, closure), 44L); }
     same(Api.echoNat(BigInteger.ZERO), BigInteger.ZERO);
     same(Api.echoInteger(BigInteger.valueOf(-99)), BigInteger.valueOf(-99));
     same(Api.echoF32(Float.NaN), Float.NaN); same(Api.echoF64(Double.POSITIVE_INFINITY), Double.POSITIVE_INFINITY);
@@ -147,6 +150,7 @@ ${scalars.map(([label, , , , value]) => `  same(output.leaf().v${cap(label)}(), 
   same(Api.echoEmpty(Empty()), Empty())
   same(Api.matrix(longArrayOf(1,2))[1], longArrayOf(1,2))
   same(Api.answer(), 42L)
+  Api.makeWord(2).use { same(Api.callWord(40, it), 44L) }
   try { Api.echoNat(BigInteger.valueOf(-1)); error("Accepted negative Nat") } catch (expected: IllegalArgumentException) { }
   println("Kotlin copied values passed")
 }
@@ -200,6 +204,13 @@ test("ordinary Maven archives reproduce and execute installed Java and Kotlin AP
 class Composition {
  public static void main(String[] paths) throws Throwable {
   if (org.leanbridge.maple.Api.answer()!=42 || org.leanbridge.cedar.Api.answer()!=42) throw new AssertionError();
+  try (var closure = org.leanbridge.cedar.Api.makeWord(2)) {
+   if (org.leanbridge.maple.Api.callWord(40, closure::invoke)!=44) throw new AssertionError("Cross-package closure");
+   if (org.leanbridge.maple.Api.callWord(40, value -> org.leanbridge.cedar.Api.callWord(value, x -> x+1))!=44) throw new AssertionError("Nested callback");
+   var original = new Error("cross-package identity");
+   try { org.leanbridge.maple.Api.callWord(1, value -> org.leanbridge.cedar.Api.callWord(value, x -> { throw original; })); throw new AssertionError("Accepted callback failure"); }
+   catch (Error error) { if (error != original) throw error; }
+  }
   var runtime = Class.forName("org.leanbridge.maple.Runtime");
   var field = runtime.getDeclaredField("LOOKUP"); field.setAccessible(true);
   var lookup = (SymbolLookup)field.get(null);

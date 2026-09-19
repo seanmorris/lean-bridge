@@ -119,7 +119,16 @@ LEAN_BRIDGE_NATIVE_JVM_TEST=1 \
   node --test --test-reporter=spec tests/native-jvm.test.mjs
 ```
 
-Set `JAVA_HOME` to JDK 22 first, and set `LEAN_BRIDGE_MAVEN` if `mvn` is not on PATH. The suite compiles Maple and Cedar, compares relocated JAR/POM bytes, hides their sources, installs the archives with Maven and executes Java and Kotlin consumers. It checks exact primitives, nested arrays/records, rejection, cleanup, concurrent calls, tampering, class-loader isolation and two packages sharing one runtime. Maven may download its pinned install plugin; the Lean packages come from the supplied files. See the [JVM acceptance record](../evidence/native-jvm-20260914.md).
+Set `JAVA_HOME` to JDK 22 first, and set `LEAN_BRIDGE_MAVEN` if `mvn` is not on PATH. The suite compiles Maple and Cedar, compares relocated JAR/POM bytes, hides their sources, installs the archives with Maven and executes Java and Kotlin consumers. It checks exact primitives, nested arrays/records, rejection, cleanup, concurrent calls, tampering, class-loader isolation and two packages sharing one runtime. Cross-package callbacks, closures and nested exception identity use that shared runtime. Maven may download its pinned install plugin; the Lean packages come from the supplied files. The [earlier JVM acceptance record](../evidence/native-jvm-20260914.md) retains the copied-value archive hashes; the [callable record](../evidence/jvm-callables-20260919.md) records the rebuilt packages.
+
+Run the independent Java and Kotlin primitive callable consumers on both source paths:
+
+```sh
+LEAN_BRIDGE_JVM_CALLABLE_TEST=1 \
+  node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs
+```
+
+This checks all nineteen primitives, sixteen-argument functions, exact integers, exception identity, copied callback storage, expired borrows, reentry, thread ownership, virtual-thread rejection and deterministic cleanup. Java also checks Cleaner recovery and creator-thread exit. Each language compiles six invalid callers against the installed JAR. Both repeat their assertions using a `jlink` runtime with only `java.base`, after deleting author and consumer sources and the Maven installation/cache. The compiled lifetime contract checks deferred active disposal and a simulated PID change without forking the JVM. Managed CI retains `build/callables/jvm.json`.
 
 ### Ordinary-source RubyGems packages
 

@@ -423,7 +423,7 @@ const pomSource = model => `<project xmlns="http://maven.apache.org/POM/4.0.0" x
  *
  * @param ir - Binding IR document that defines the source types and operations.
  */
-export const compileJvmPackageModel = ir => ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))
+export const compileJvmPackageModel = ir => ir.declarations.every(declaration => declaration.kind === "function") && (ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback")) || ir.declarations.every(declaration => [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
 	? Object.freeze({ ir, copied: compileCopiedJvmModel(ir), model: null })
 	: Object.freeze({ ir, copied: null, model: compileManagedAlphaModel(ir, "jvm") });
 

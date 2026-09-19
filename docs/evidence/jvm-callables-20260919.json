@@ -1,0 +1,3639 @@
+{
+  "schemaVersion": 1,
+  "profile": "native-library-v1",
+  "wordBits": 64,
+  "jdk": "22.0.2",
+  "kotlin": "2.2.0",
+  "maven": "3.9.11",
+  "compiler": "GCC 12.2.0",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.38",
+  "sourceHashes": {
+    "tests/fixtures/onboarding/callables/Callables.lean": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0",
+    "tests/fixtures/callable-consumers/Lifetimes.lean": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a",
+    "tests/fixtures/callable-consumers/Python.lean": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383",
+    "tests/fixtures/callable-consumers/Dotnet.lean": "35e910d444fccff2ebdd09a2021444b9d3ca5412811c8e30b379c014c5650c9a",
+    "tests/fixtures/callable-consumers/Jvm.lean": "841d639d52a99079af66bda768e0db6db344c29293ff676a7e81d8e5ec1babdb"
+  },
+  "consumerHashes": {
+    "java": "9584f68b742b3f5914401b22fa88cdff68b438047158dbdd5ebf38ed523b7381",
+    "kotlin": "0801d07704642510d0efdab392aeae937cd5ead83b2479fda70b89160c76169f"
+  },
+  "signatures": [
+    {
+      "name": "Callables.callUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.twiceUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.makeUnit",
+      "parameters": [
+        "unit"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "unit"
+          ],
+          "result": "unit"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.twiceBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.makeBool",
+      "parameters": [
+        "bool"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bool"
+          ],
+          "result": "bool"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.twiceUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.makeUInt8",
+      "parameters": [
+        "uint8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint8"
+          ],
+          "result": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.twiceUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.makeUInt16",
+      "parameters": [
+        "uint16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint16"
+          ],
+          "result": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.twiceUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.makeUInt32",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.twiceUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.makeUInt64",
+      "parameters": [
+        "uint64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint64"
+          ],
+          "result": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.twiceInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.makeInt8",
+      "parameters": [
+        "int8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int8"
+          ],
+          "result": "int8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.twiceInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.makeInt16",
+      "parameters": [
+        "int16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int16"
+          ],
+          "result": "int16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.twiceInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.makeInt32",
+      "parameters": [
+        "int32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int32"
+          ],
+          "result": "int32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.twiceInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.makeInt64",
+      "parameters": [
+        "int64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int64"
+          ],
+          "result": "int64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.twiceNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.makeNat",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "nat"
+          ],
+          "result": "nat"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.twiceInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.makeInt",
+      "parameters": [
+        "int"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int"
+          ],
+          "result": "int"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.twiceFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.makeFloat32",
+      "parameters": [
+        "float32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float32"
+          ],
+          "result": "float32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.twiceFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.makeFloat",
+      "parameters": [
+        "float64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float64"
+          ],
+          "result": "float64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.twiceString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.makeString",
+      "parameters": [
+        "string"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "string"
+          ],
+          "result": "string"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.twiceBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.makeBytes",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bytes"
+          ],
+          "result": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Callables.callChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.twiceChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.makeChar",
+      "parameters": [
+        "char"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "char"
+          ],
+          "result": "char"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.twiceUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.makeUSize",
+      "parameters": [
+        "usize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "usize"
+          ],
+          "result": "usize"
+        }
+      }
+    },
+    {
+      "name": "Callables.callISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.twiceISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.makeISize",
+      "parameters": [
+        "isize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "isize"
+          ],
+          "result": "isize"
+        }
+      }
+    },
+    {
+      "name": "Callables.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.retainCallback",
+      "parameters": [
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.combine",
+      "parameters": [
+        "string",
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "string",
+              "uint64"
+            ],
+            "result": "string"
+          }
+        },
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.wide",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32",
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.makeWide",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32",
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.makeAdder",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "c006d56ef83a0dba66e9810dee552f8b6cd7b304501d0fc75b784bc75427f227",
+      "checks": 66683,
+      "modelSha256": "bc342fbf60bba0403a608304296cb4799df3b9d7939b66c97b44decdcc042967",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51663533,
+              "path": "archives/callables-1.0.0.jar",
+              "sha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2"
+            },
+            {
+              "bytes": 464,
+              "path": "archives/callables-1.0.0.pom",
+              "sha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:callables",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "0d7f84e05215f878b32b2346ac8f6388fa4c9419bc2d008d1bf4fe69e8132e60",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7f0c36b15cf4467c0047c860eee53bf1dac51d317a662044f8832c6e892e120b",
+      "jvm": {
+        "archiveSha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2",
+        "bindingIrSha256": "c006d56ef83a0dba66e9810dee552f8b6cd7b304501d0fc75b784bc75427f227",
+        "classpathSha256": "ee07b52c67e94b09cd2446af776cad85f6dd3a830c00fac066967daecead8e49",
+        "compiledProjectionSha256": "71ca97633eef520488601d162c4f38232aed97c3fd2c01c48e4125d3370d5574",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "9584f68b742b3f5914401b22fa88cdff68b438047158dbdd5ebf38ed523b7381",
+        "declarationsSha256": "7759f82d6782d0f1b80d7e538b6bb5c8bd07c93492ab7439cc5f6bd41aa955e4",
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 50860,
+            "sha256": "f81189b08fecd2198636b8bd1ba0df94bdfe670cd109e40cd86c76071ae446e4"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51663533,
+            "sha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcallables.so": "c53a8b2b0824db6eab5baac2f3c16918740e31a8162151c5480384049fbe7193",
+          "libcomponent_70529187269721ee540b.so": "1e7810ca09caab79782186d0f4569fe6bc63d6da4567058d9301534e73f6786c",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "513400a3ad95f2aaa73f0193da89f7f0fd66211c449aeab9c5e3e160e58066e5",
+        "pomSha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6",
+        "projectSourceSha256": "df0b919b92e5d2b01d206db558dc15baa8f4c5ca701df6e74a65cd94ff2864ef",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "9075af799632e77061a3e9173ad852056ba174c659804decfbdb7085a26ae8d2",
+        "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+        "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+        }
+      },
+      "observationSha256": "fc3749ca8582259561920ab893c9c5d1cbce3225d13f4cafbef43e12629b4e93",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 12,
+              "file": "src/reject-callback-result.java",
+              "line": 4,
+              "message": "kindname.method, callNat, java.math.BigInteger,org.leanbridge.callables.FnNatToNat, java.math.BigInteger,@29, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.ret.type.in.lambda: (compiler.misc.inconvertible.types: double, java.math.BigInteger)))"
+            }
+          ],
+          "id": "callables/callback-result",
+          "sourceSha256": "c3019ace55297a28d132cee4d03585971613b132d4b7be794d759c41489ad9ce",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-callback-parameter.java",
+              "line": 4,
+              "message": "kindname.method, callUint32, long,org.leanbridge.callables.FnUInt32ToUInt32, int,@19, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.arg.types.in.lambda))"
+            }
+          ],
+          "id": "callables/callback-parameter",
+          "sourceSha256": "6b036d870859da614647db989a2f36043794103c1e9923a9562983402045ccec",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 15,
+              "file": "src/reject-async-result.java",
+              "line": 4,
+              "message": "kindname.method, callUint32, long,org.leanbridge.callables.FnUInt32ToUInt32, int,@19, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.ret.type.in.lambda: (compiler.misc.infer.no.conforming.instance.exists: U, java.util.concurrent.CompletableFuture<U>, long)))"
+            }
+          ],
+          "id": "callables/async-result",
+          "sourceSha256": "e2843c45a0899578c4536f2272023e425a0950396a3ff1f1131ca5c3087c3eaf",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 40,
+              "file": "src/reject-closure-result.java",
+              "line": 4,
+              "message": "(compiler.misc.inconvertible.types: long, java.lang.String)"
+            }
+          ],
+          "id": "callables/closure-result",
+          "sourceSha256": "7351260b6eb55cce94e2f66d2d084cb14860273676e310974d4ef0248a7d1353",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 28,
+              "file": "src/reject-closure-argument.java",
+              "line": 4,
+              "message": "kindname.method, invoke, boolean,java.math.BigInteger, java.lang.String,java.math.BigInteger, kindname.class, org.leanbridge.callables.FnBoolNatToNat.LeanClosure, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, boolean))"
+            }
+          ],
+          "id": "callables/closure-argument",
+          "sourceSha256": "8427629198c0333c8c450682b527607ecbec92966bc9edda5f66b7022db1e95b",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.def.public.cant.access",
+              "column": 1,
+              "file": "src/reject-closure-constructor.java",
+              "line": 4,
+              "message": "org.leanbridge.callables.FnBoolUInt32ToUInt32.LeanClosure(org.leanbridge.callables.Runtime.ClosureLease), org.leanbridge.callables.FnBoolUInt32ToUInt32.LeanClosure"
+            }
+          ],
+          "id": "callables/closure-constructor",
+          "sourceSha256": "0424615798d612a9cab8a5fbead4bdcceab6a39b040e550307350b91bb13e03c",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "c006d56ef83a0dba66e9810dee552f8b6cd7b304501d0fc75b784bc75427f227",
+      "checks": 66655,
+      "modelSha256": "bc342fbf60bba0403a608304296cb4799df3b9d7939b66c97b44decdcc042967",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51663533,
+              "path": "archives/callables-1.0.0.jar",
+              "sha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2"
+            },
+            {
+              "bytes": 464,
+              "path": "archives/callables-1.0.0.pom",
+              "sha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:callables",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "0d7f84e05215f878b32b2346ac8f6388fa4c9419bc2d008d1bf4fe69e8132e60",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7f0c36b15cf4467c0047c860eee53bf1dac51d317a662044f8832c6e892e120b",
+      "jvm": {
+        "archiveSha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2",
+        "bindingIrSha256": "c006d56ef83a0dba66e9810dee552f8b6cd7b304501d0fc75b784bc75427f227",
+        "classpathSha256": "0d2eeb50294449853209a325117a79b135237a053f79db00f355fdf2c235e46f",
+        "compiledProjectionSha256": "71ca97633eef520488601d162c4f38232aed97c3fd2c01c48e4125d3370d5574",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "0801d07704642510d0efdab392aeae937cd5ead83b2479fda70b89160c76169f",
+        "declarationsSha256": "7759f82d6782d0f1b80d7e538b6bb5c8bd07c93492ab7439cc5f6bd41aa955e4",
+        "deployment": {
+          "classes/ConsumerKt$main$alias$1.class": {
+            "bytes": 1499,
+            "sha256": "f713e1e48703bca1f41d85148ce3fbbcfacb6ef2460fcf754566d951536212ed"
+          },
+          "classes/ConsumerKt$main$callBool$1.class": {
+            "bytes": 1576,
+            "sha256": "1b62156995149b69a425efb2ef52e06a653e16d99020cd16afb23548c5f30831"
+          },
+          "classes/ConsumerKt$main$callBytes$1.class": {
+            "bytes": 1395,
+            "sha256": "0b1f288390e8dc06c7b7b99b0c0b3ee429f54403a04b25c11e958f2c24aba8b6"
+          },
+          "classes/ConsumerKt$main$callChar$1.class": {
+            "bytes": 1594,
+            "sha256": "faa845e05cc5e49534241641ee5703a8ff51c2263932bdd1bc5e55ed669ab75d"
+          },
+          "classes/ConsumerKt$main$callFloat$1.class": {
+            "bytes": 1632,
+            "sha256": "ee8ccbc64c3c0961a68339698222cf580168be2ab79c2b3f34174b7f1cf9a659"
+          },
+          "classes/ConsumerKt$main$callFloat32$1.class": {
+            "bytes": 1634,
+            "sha256": "153368f28b9c223c2d01e01cf8a5845aeca7319126bba0b69d75f14e02a2fb7a"
+          },
+          "classes/ConsumerKt$main$callInt$1.class": {
+            "bytes": 1530,
+            "sha256": "6679d9cd3a021caa4554bf02aeebca0c73c3e96f58f2b25f07ba87b75482d4e7"
+          },
+          "classes/ConsumerKt$main$callInt16$1.class": {
+            "bytes": 1602,
+            "sha256": "dfa071313969c7a4c4386a950a292c5645c097ba7c4e0802a14cc73b86910c04"
+          },
+          "classes/ConsumerKt$main$callInt32$1.class": {
+            "bytes": 1610,
+            "sha256": "b152997feab94af3d7dec1ac3728333b6a4e4acb545febacfb57dac5c4af9124"
+          },
+          "classes/ConsumerKt$main$callInt64$1.class": {
+            "bytes": 1596,
+            "sha256": "061fc8c3b4037dfa7e86eab977d68bf980bf0a7c4d411f63c445567b1cac450b"
+          },
+          "classes/ConsumerKt$main$callInt8$1.class": {
+            "bytes": 1580,
+            "sha256": "803a6d63ba278c957bf9fad8c4cda7ac741c32e55266c83b83efa630db2763e3"
+          },
+          "classes/ConsumerKt$main$callIsize$1.class": {
+            "bytes": 1596,
+            "sha256": "21730b9af8a347eac18ede1555fa8372b4f1540805ef3211cac865caff496b80"
+          },
+          "classes/ConsumerKt$main$callNat$1.class": {
+            "bytes": 1530,
+            "sha256": "68b9d438e41db6aeecde34037f62889bd51f9263e2b788af98a2ee84f32f2683"
+          },
+          "classes/ConsumerKt$main$callString$1.class": {
+            "bytes": 1540,
+            "sha256": "5eb4dfa7f6cc23e5df998612c696c5e871bc90b28d16bca36c044db204ecee64"
+          },
+          "classes/ConsumerKt$main$callUint16$1.class": {
+            "bytes": 1626,
+            "sha256": "e31d0d4eafd1f1c670ffad25ba3125cbb5c191ecbdd94854dd2c68c2df68cf78"
+          },
+          "classes/ConsumerKt$main$callUint32$1.class": {
+            "bytes": 1612,
+            "sha256": "5c478e0d150ec888c8ae6708e582975505d296c21bcb5dad6df479112527c354"
+          },
+          "classes/ConsumerKt$main$callUint64$1.class": {
+            "bytes": 1572,
+            "sha256": "341da0aa1b812ddbb67ec4f342c36b7700f2be20efc932e9153f89bfdcd5ce7e"
+          },
+          "classes/ConsumerKt$main$callUint8$1.class": {
+            "bytes": 1610,
+            "sha256": "c0b2814f68c01441d7f180dd8280df5d2b9f351423ee9eef00971cbbcd2f696a"
+          },
+          "classes/ConsumerKt$main$callUnit$1.class": {
+            "bytes": 1584,
+            "sha256": "d8669024416355f6e7131eaff033aa1d4fc56d90405c015cd07f5f50b93c294d"
+          },
+          "classes/ConsumerKt$main$callUsize$1.class": {
+            "bytes": 1558,
+            "sha256": "4b72e3502f45c55794b33b36fd566a3e4cd0b8fe56c12d9a988f0d7542b36057"
+          },
+          "classes/ConsumerKt$main$makeBool$1.class": {
+            "bytes": 1486,
+            "sha256": "801a75194078baa0680916a1c6919376aa7297b6b58ac340ec24b48013275842"
+          },
+          "classes/ConsumerKt$main$makeBytes$1.class": {
+            "bytes": 1432,
+            "sha256": "e0c2bf9fdfb24b1ec3c5a8d98e1499c20885b23fa7b6286234642b90304c0f55"
+          },
+          "classes/ConsumerKt$main$makeChar$1.class": {
+            "bytes": 1481,
+            "sha256": "fc098dcb82063aacc928f80e0cf85f23af0af77fd77cbb333662278dae5c96bf"
+          },
+          "classes/ConsumerKt$main$makeFloat$1.class": {
+            "bytes": 1517,
+            "sha256": "b91a6f9c660238ecaad04182cf06ec7eee525e215c3128174afff4aecaaeb426"
+          },
+          "classes/ConsumerKt$main$makeFloat32$1.class": {
+            "bytes": 1523,
+            "sha256": "9429ea0b0f5c970bd60d45b037c0286a852c7072ec0f7f7b850cb4e38cc72bb9"
+          },
+          "classes/ConsumerKt$main$makeInt$1.class": {
+            "bytes": 1507,
+            "sha256": "f607011da8b8bcbdf5df4cb43e8e109049016452944465870b5326d44766edde"
+          },
+          "classes/ConsumerKt$main$makeInt16$1.class": {
+            "bytes": 1495,
+            "sha256": "bd85e99bb227d99287e0ece87e810fb52214d35f8fd93da75147768a8cd088e1"
+          },
+          "classes/ConsumerKt$main$makeInt32$1.class": {
+            "bytes": 1495,
+            "sha256": "615f977a33d6a9d2c93451c4dfa373a219346950f593f540a29b58574b98aa61"
+          },
+          "classes/ConsumerKt$main$makeInt64$1.class": {
+            "bytes": 1493,
+            "sha256": "e473ca03bd32cb564daf9fd6fa492a52f792f99c1331b0890c60de52a3e3a376"
+          },
+          "classes/ConsumerKt$main$makeInt8$1.class": {
+            "bytes": 1479,
+            "sha256": "c358fb6a8c3b8e074fd4851bb61b6cd6881fe43aa1d9123f6f57f9feeb57ef71"
+          },
+          "classes/ConsumerKt$main$makeIsize$1.class": {
+            "bytes": 1493,
+            "sha256": "00c647667a2b6b11b2b8e64da3a0bb06ad3172b38f5c98c0ab5eafc8d7a1d6ba"
+          },
+          "classes/ConsumerKt$main$makeNat$1.class": {
+            "bytes": 1507,
+            "sha256": "32e3935046b771aa73695cc7387624e1fee96de34683224831d55776f0da2617"
+          },
+          "classes/ConsumerKt$main$makeString$1.class": {
+            "bytes": 1529,
+            "sha256": "263e9ef142dc77485d427dd14d8f73e6167c10b6c96ef39c904e74428f7e5962"
+          },
+          "classes/ConsumerKt$main$makeUint16$1.class": {
+            "bytes": 1509,
+            "sha256": "b2d33827e793c70953bca7b59b69a2e0828b4ea28ba4a39e3eaea12a245028aa"
+          },
+          "classes/ConsumerKt$main$makeUint32$1.class": {
+            "bytes": 1507,
+            "sha256": "106f88ac8d9a078369ad613513d5c0e8284d2c12dda44aecfc54f18de680bc94"
+          },
+          "classes/ConsumerKt$main$makeUint64$1.class": {
+            "bytes": 1549,
+            "sha256": "bd462e0beab9421347178e6f5988b3934bf27dca2f5bd4fb54dfd1206fc42aed"
+          },
+          "classes/ConsumerKt$main$makeUint8$1.class": {
+            "bytes": 1495,
+            "sha256": "8b5b04898110f3b5b86c66b2f69692ba25806d72d1f7082bd32800d3b2fdd3d8"
+          },
+          "classes/ConsumerKt$main$makeUnit$1.class": {
+            "bytes": 1566,
+            "sha256": "535ea7f8f9af23bc2f6b9f88ec4eb8fedaad49693828fe73b08441a073c92011"
+          },
+          "classes/ConsumerKt$main$makeUsize$1.class": {
+            "bytes": 1535,
+            "sha256": "31cf3f00c62e792e50abe6f58fe7543034e0bac23d09e669480ddc7705712564"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 102967,
+            "sha256": "343e24a06586c1b379010893911665906ddb33a8d464d2768a620d55e399f3f6"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51663533,
+            "sha256": "df6ea99e05d008d7a2b988175798d2a3ec5d69a05e32262a87bd6b11f18191b2"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcallables.so": "c53a8b2b0824db6eab5baac2f3c16918740e31a8162151c5480384049fbe7193",
+          "libcomponent_70529187269721ee540b.so": "1e7810ca09caab79782186d0f4569fe6bc63d6da4567058d9301534e73f6786c",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "513400a3ad95f2aaa73f0193da89f7f0fd66211c449aeab9c5e3e160e58066e5",
+        "pomSha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6",
+        "projectSourceSha256": "df0b919b92e5d2b01d206db558dc15baa8f4c5ca701df6e74a65cd94ff2864ef",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "9779ea52cf00147752fb497100116a41a28925245a0e67732cec972b7270e941",
+        "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+        "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+        },
+        "kotlin": {
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+        }
+      },
+      "observationSha256": "f1fb566a830f4f0769028274210fa22217efddde2fc198d5f74cf8bc6f5d6604",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "RETURN_TYPE_MISMATCH",
+              "column": 31,
+              "file": "src/reject-callback-result.kt",
+              "line": 4,
+              "message": "Return type mismatch: expected 'BigInteger!', actual 'Double'."
+            }
+          ],
+          "id": "callables/callback-result",
+          "sourceSha256": "7b350bcafd63a697194b4bf3344822ada7071f141d295591af9acecb4e09979f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-callback-parameter.kt",
+              "line": 4,
+              "message": "Argument type mismatch: actual type is 'Function1<String, Long>', but 'Function1<Long, Long>!' was expected."
+            }
+          ],
+          "id": "callables/callback-parameter",
+          "sourceSha256": "1c6ac7463f293a55316bfc3af92f002c6a1902ceb3e6c8086b45c96e65ea0d48",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "RETURN_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-async-result.kt",
+              "line": 4,
+              "message": "Return type mismatch: expected 'Long', actual 'CompletableFuture<Long!>!'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-async-result.kt",
+              "line": 4,
+              "message": "Type mismatch: inferred type is 'CompletableFuture<Long!>!', but 'Long' was expected."
+            }
+          ],
+          "id": "callables/async-result",
+          "sourceSha256": "830b7322ecd2d0caa9768d65271312a67606de5ac011b43d3c3eb4f52f65cfd1",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-closure-result.kt",
+              "line": 4,
+              "message": "Initializer type mismatch: expected 'String', actual 'Long'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-closure-result.kt",
+              "line": 4,
+              "message": "Type mismatch: inferred type is 'Long', but 'String' was expected."
+            }
+          ],
+          "id": "callables/closure-result",
+          "sourceSha256": "86f93c97491ca87e5081dc03f679660dba7578fd6d6267c3bc491ba7fd311f8f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 36,
+              "file": "src/reject-closure-argument.kt",
+              "line": 4,
+              "message": "Argument type mismatch: actual type is 'String', but 'Boolean' was expected."
+            }
+          ],
+          "id": "callables/closure-argument",
+          "sourceSha256": "6ef593376b260f1390ffe908d6edd83682de048655e917f8774eb6312c26bf1d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INVISIBLE_REFERENCE",
+              "column": 22,
+              "file": "src/reject-closure-constructor.kt",
+              "line": 4,
+              "message": "Cannot access 'constructor(p0: Runtime.ClosureLease!): FnBoolUInt32ToUInt32.LeanClosure': it is package-private in 'org/leanbridge/callables/FnBoolUInt32ToUInt32.LeanClosure'."
+            }
+          ],
+          "id": "callables/closure-constructor",
+          "sourceSha256": "c812100e6725683b7688947f572cc5aad55420cd49e390ccc19c7871cc100575",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "3ce2f6cd55d886fe36c59919caf3c718a18feaabc2441065ef164d72e0c4cc76",
+      "checks": 66683,
+      "modelSha256": "4807e670248a25942372430a88c805153d8625be6b21c3034608235c9b289660",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51678374,
+              "path": "archives/callables-1.0.0.jar",
+              "sha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70"
+            },
+            {
+              "bytes": 464,
+              "path": "archives/callables-1.0.0.pom",
+              "sha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:callables",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "18165c27c7de6bdedc387be611ea5d0515bef9bdec6c0d8dc793a6acd0dc1a50",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ccebcb214909e611863ff6abb250e50d7f101e76d16ede8c20c08c77faa55cce",
+      "jvm": {
+        "archiveSha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70",
+        "bindingIrSha256": "3ce2f6cd55d886fe36c59919caf3c718a18feaabc2441065ef164d72e0c4cc76",
+        "classpathSha256": "4115767157cecec19dd85649640e7cb33481403571b183d970f413025ef757d7",
+        "compiledProjectionSha256": "4121f11d7c3a38ce05bc964dc03fa89ea1cc9c23946f151bec267e83d207ecb1",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "9584f68b742b3f5914401b22fa88cdff68b438047158dbdd5ebf38ed523b7381",
+        "declarationsSha256": "7759f82d6782d0f1b80d7e538b6bb5c8bd07c93492ab7439cc5f6bd41aa955e4",
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 50860,
+            "sha256": "f81189b08fecd2198636b8bd1ba0df94bdfe670cd109e40cd86c76071ae446e4"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51678374,
+            "sha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcallables.so": "c53a8b2b0824db6eab5baac2f3c16918740e31a8162151c5480384049fbe7193",
+          "libcomponent_70529187269721ee540b.so": "1e7810ca09caab79782186d0f4569fe6bc63d6da4567058d9301534e73f6786c",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "e682aac31e4b7f0ab0d2eac52f12c8e15dc7d5bf2a61d6d1b2ec9044e47f1525",
+        "pomSha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6",
+        "projectSourceSha256": "df0b919b92e5d2b01d206db558dc15baa8f4c5ca701df6e74a65cd94ff2864ef",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "9075af799632e77061a3e9173ad852056ba174c659804decfbdb7085a26ae8d2",
+        "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+        "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+        }
+      },
+      "observationSha256": "ab9aa8484b950578f29ecee5e46a2099a3bd60993842d63878557147be651394",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 12,
+              "file": "src/reject-callback-result.java",
+              "line": 4,
+              "message": "kindname.method, callNat, java.math.BigInteger,org.leanbridge.callables.FnNatToNat, java.math.BigInteger,@29, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.ret.type.in.lambda: (compiler.misc.inconvertible.types: double, java.math.BigInteger)))"
+            }
+          ],
+          "id": "callables/callback-result",
+          "sourceSha256": "c3019ace55297a28d132cee4d03585971613b132d4b7be794d759c41489ad9ce",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-callback-parameter.java",
+              "line": 4,
+              "message": "kindname.method, callUint32, long,org.leanbridge.callables.FnUInt32ToUInt32, int,@19, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.arg.types.in.lambda))"
+            }
+          ],
+          "id": "callables/callback-parameter",
+          "sourceSha256": "6b036d870859da614647db989a2f36043794103c1e9923a9562983402045ccec",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 15,
+              "file": "src/reject-async-result.java",
+              "line": 4,
+              "message": "kindname.method, callUint32, long,org.leanbridge.callables.FnUInt32ToUInt32, int,@19, kindname.class, org.leanbridge.callables.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.ret.type.in.lambda: (compiler.misc.infer.no.conforming.instance.exists: U, java.util.concurrent.CompletableFuture<U>, long)))"
+            }
+          ],
+          "id": "callables/async-result",
+          "sourceSha256": "e2843c45a0899578c4536f2272023e425a0950396a3ff1f1131ca5c3087c3eaf",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 40,
+              "file": "src/reject-closure-result.java",
+              "line": 4,
+              "message": "(compiler.misc.inconvertible.types: long, java.lang.String)"
+            }
+          ],
+          "id": "callables/closure-result",
+          "sourceSha256": "7351260b6eb55cce94e2f66d2d084cb14860273676e310974d4ef0248a7d1353",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 28,
+              "file": "src/reject-closure-argument.java",
+              "line": 4,
+              "message": "kindname.method, invoke, boolean,java.math.BigInteger, java.lang.String,java.math.BigInteger, kindname.class, org.leanbridge.callables.FnBoolNatToNat.LeanClosure, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, boolean))"
+            }
+          ],
+          "id": "callables/closure-argument",
+          "sourceSha256": "8427629198c0333c8c450682b527607ecbec92966bc9edda5f66b7022db1e95b",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.def.public.cant.access",
+              "column": 1,
+              "file": "src/reject-closure-constructor.java",
+              "line": 4,
+              "message": "org.leanbridge.callables.FnBoolUInt32ToUInt32.LeanClosure(org.leanbridge.callables.Runtime.ClosureLease), org.leanbridge.callables.FnBoolUInt32ToUInt32.LeanClosure"
+            }
+          ],
+          "id": "callables/closure-constructor",
+          "sourceSha256": "0424615798d612a9cab8a5fbead4bdcceab6a39b040e550307350b91bb13e03c",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "3ce2f6cd55d886fe36c59919caf3c718a18feaabc2441065ef164d72e0c4cc76",
+      "checks": 66655,
+      "modelSha256": "4807e670248a25942372430a88c805153d8625be6b21c3034608235c9b289660",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51678374,
+              "path": "archives/callables-1.0.0.jar",
+              "sha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70"
+            },
+            {
+              "bytes": 464,
+              "path": "archives/callables-1.0.0.pom",
+              "sha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:callables",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "18165c27c7de6bdedc387be611ea5d0515bef9bdec6c0d8dc793a6acd0dc1a50",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ccebcb214909e611863ff6abb250e50d7f101e76d16ede8c20c08c77faa55cce",
+      "jvm": {
+        "archiveSha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70",
+        "bindingIrSha256": "3ce2f6cd55d886fe36c59919caf3c718a18feaabc2441065ef164d72e0c4cc76",
+        "classpathSha256": "5c80290979350546126e26a96601b32cb0a7e7ce0352512ba4c0daf9bdf6fa5a",
+        "compiledProjectionSha256": "4121f11d7c3a38ce05bc964dc03fa89ea1cc9c23946f151bec267e83d207ecb1",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "0801d07704642510d0efdab392aeae937cd5ead83b2479fda70b89160c76169f",
+        "declarationsSha256": "7759f82d6782d0f1b80d7e538b6bb5c8bd07c93492ab7439cc5f6bd41aa955e4",
+        "deployment": {
+          "classes/ConsumerKt$main$alias$1.class": {
+            "bytes": 1499,
+            "sha256": "f713e1e48703bca1f41d85148ce3fbbcfacb6ef2460fcf754566d951536212ed"
+          },
+          "classes/ConsumerKt$main$callBool$1.class": {
+            "bytes": 1576,
+            "sha256": "1b62156995149b69a425efb2ef52e06a653e16d99020cd16afb23548c5f30831"
+          },
+          "classes/ConsumerKt$main$callBytes$1.class": {
+            "bytes": 1395,
+            "sha256": "0b1f288390e8dc06c7b7b99b0c0b3ee429f54403a04b25c11e958f2c24aba8b6"
+          },
+          "classes/ConsumerKt$main$callChar$1.class": {
+            "bytes": 1594,
+            "sha256": "faa845e05cc5e49534241641ee5703a8ff51c2263932bdd1bc5e55ed669ab75d"
+          },
+          "classes/ConsumerKt$main$callFloat$1.class": {
+            "bytes": 1632,
+            "sha256": "ee8ccbc64c3c0961a68339698222cf580168be2ab79c2b3f34174b7f1cf9a659"
+          },
+          "classes/ConsumerKt$main$callFloat32$1.class": {
+            "bytes": 1634,
+            "sha256": "153368f28b9c223c2d01e01cf8a5845aeca7319126bba0b69d75f14e02a2fb7a"
+          },
+          "classes/ConsumerKt$main$callInt$1.class": {
+            "bytes": 1530,
+            "sha256": "6679d9cd3a021caa4554bf02aeebca0c73c3e96f58f2b25f07ba87b75482d4e7"
+          },
+          "classes/ConsumerKt$main$callInt16$1.class": {
+            "bytes": 1602,
+            "sha256": "dfa071313969c7a4c4386a950a292c5645c097ba7c4e0802a14cc73b86910c04"
+          },
+          "classes/ConsumerKt$main$callInt32$1.class": {
+            "bytes": 1610,
+            "sha256": "b152997feab94af3d7dec1ac3728333b6a4e4acb545febacfb57dac5c4af9124"
+          },
+          "classes/ConsumerKt$main$callInt64$1.class": {
+            "bytes": 1596,
+            "sha256": "061fc8c3b4037dfa7e86eab977d68bf980bf0a7c4d411f63c445567b1cac450b"
+          },
+          "classes/ConsumerKt$main$callInt8$1.class": {
+            "bytes": 1580,
+            "sha256": "803a6d63ba278c957bf9fad8c4cda7ac741c32e55266c83b83efa630db2763e3"
+          },
+          "classes/ConsumerKt$main$callIsize$1.class": {
+            "bytes": 1596,
+            "sha256": "21730b9af8a347eac18ede1555fa8372b4f1540805ef3211cac865caff496b80"
+          },
+          "classes/ConsumerKt$main$callNat$1.class": {
+            "bytes": 1530,
+            "sha256": "68b9d438e41db6aeecde34037f62889bd51f9263e2b788af98a2ee84f32f2683"
+          },
+          "classes/ConsumerKt$main$callString$1.class": {
+            "bytes": 1540,
+            "sha256": "5eb4dfa7f6cc23e5df998612c696c5e871bc90b28d16bca36c044db204ecee64"
+          },
+          "classes/ConsumerKt$main$callUint16$1.class": {
+            "bytes": 1626,
+            "sha256": "e31d0d4eafd1f1c670ffad25ba3125cbb5c191ecbdd94854dd2c68c2df68cf78"
+          },
+          "classes/ConsumerKt$main$callUint32$1.class": {
+            "bytes": 1612,
+            "sha256": "5c478e0d150ec888c8ae6708e582975505d296c21bcb5dad6df479112527c354"
+          },
+          "classes/ConsumerKt$main$callUint64$1.class": {
+            "bytes": 1572,
+            "sha256": "341da0aa1b812ddbb67ec4f342c36b7700f2be20efc932e9153f89bfdcd5ce7e"
+          },
+          "classes/ConsumerKt$main$callUint8$1.class": {
+            "bytes": 1610,
+            "sha256": "c0b2814f68c01441d7f180dd8280df5d2b9f351423ee9eef00971cbbcd2f696a"
+          },
+          "classes/ConsumerKt$main$callUnit$1.class": {
+            "bytes": 1584,
+            "sha256": "d8669024416355f6e7131eaff033aa1d4fc56d90405c015cd07f5f50b93c294d"
+          },
+          "classes/ConsumerKt$main$callUsize$1.class": {
+            "bytes": 1558,
+            "sha256": "4b72e3502f45c55794b33b36fd566a3e4cd0b8fe56c12d9a988f0d7542b36057"
+          },
+          "classes/ConsumerKt$main$makeBool$1.class": {
+            "bytes": 1486,
+            "sha256": "801a75194078baa0680916a1c6919376aa7297b6b58ac340ec24b48013275842"
+          },
+          "classes/ConsumerKt$main$makeBytes$1.class": {
+            "bytes": 1432,
+            "sha256": "e0c2bf9fdfb24b1ec3c5a8d98e1499c20885b23fa7b6286234642b90304c0f55"
+          },
+          "classes/ConsumerKt$main$makeChar$1.class": {
+            "bytes": 1481,
+            "sha256": "fc098dcb82063aacc928f80e0cf85f23af0af77fd77cbb333662278dae5c96bf"
+          },
+          "classes/ConsumerKt$main$makeFloat$1.class": {
+            "bytes": 1517,
+            "sha256": "b91a6f9c660238ecaad04182cf06ec7eee525e215c3128174afff4aecaaeb426"
+          },
+          "classes/ConsumerKt$main$makeFloat32$1.class": {
+            "bytes": 1523,
+            "sha256": "9429ea0b0f5c970bd60d45b037c0286a852c7072ec0f7f7b850cb4e38cc72bb9"
+          },
+          "classes/ConsumerKt$main$makeInt$1.class": {
+            "bytes": 1507,
+            "sha256": "f607011da8b8bcbdf5df4cb43e8e109049016452944465870b5326d44766edde"
+          },
+          "classes/ConsumerKt$main$makeInt16$1.class": {
+            "bytes": 1495,
+            "sha256": "bd85e99bb227d99287e0ece87e810fb52214d35f8fd93da75147768a8cd088e1"
+          },
+          "classes/ConsumerKt$main$makeInt32$1.class": {
+            "bytes": 1495,
+            "sha256": "615f977a33d6a9d2c93451c4dfa373a219346950f593f540a29b58574b98aa61"
+          },
+          "classes/ConsumerKt$main$makeInt64$1.class": {
+            "bytes": 1493,
+            "sha256": "e473ca03bd32cb564daf9fd6fa492a52f792f99c1331b0890c60de52a3e3a376"
+          },
+          "classes/ConsumerKt$main$makeInt8$1.class": {
+            "bytes": 1479,
+            "sha256": "c358fb6a8c3b8e074fd4851bb61b6cd6881fe43aa1d9123f6f57f9feeb57ef71"
+          },
+          "classes/ConsumerKt$main$makeIsize$1.class": {
+            "bytes": 1493,
+            "sha256": "00c647667a2b6b11b2b8e64da3a0bb06ad3172b38f5c98c0ab5eafc8d7a1d6ba"
+          },
+          "classes/ConsumerKt$main$makeNat$1.class": {
+            "bytes": 1507,
+            "sha256": "32e3935046b771aa73695cc7387624e1fee96de34683224831d55776f0da2617"
+          },
+          "classes/ConsumerKt$main$makeString$1.class": {
+            "bytes": 1529,
+            "sha256": "263e9ef142dc77485d427dd14d8f73e6167c10b6c96ef39c904e74428f7e5962"
+          },
+          "classes/ConsumerKt$main$makeUint16$1.class": {
+            "bytes": 1509,
+            "sha256": "b2d33827e793c70953bca7b59b69a2e0828b4ea28ba4a39e3eaea12a245028aa"
+          },
+          "classes/ConsumerKt$main$makeUint32$1.class": {
+            "bytes": 1507,
+            "sha256": "106f88ac8d9a078369ad613513d5c0e8284d2c12dda44aecfc54f18de680bc94"
+          },
+          "classes/ConsumerKt$main$makeUint64$1.class": {
+            "bytes": 1549,
+            "sha256": "bd462e0beab9421347178e6f5988b3934bf27dca2f5bd4fb54dfd1206fc42aed"
+          },
+          "classes/ConsumerKt$main$makeUint8$1.class": {
+            "bytes": 1495,
+            "sha256": "8b5b04898110f3b5b86c66b2f69692ba25806d72d1f7082bd32800d3b2fdd3d8"
+          },
+          "classes/ConsumerKt$main$makeUnit$1.class": {
+            "bytes": 1566,
+            "sha256": "535ea7f8f9af23bc2f6b9f88ec4eb8fedaad49693828fe73b08441a073c92011"
+          },
+          "classes/ConsumerKt$main$makeUsize$1.class": {
+            "bytes": 1535,
+            "sha256": "31cf3f00c62e792e50abe6f58fe7543034e0bac23d09e669480ddc7705712564"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 102967,
+            "sha256": "343e24a06586c1b379010893911665906ddb33a8d464d2768a620d55e399f3f6"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51678374,
+            "sha256": "e02638b488f7540ccccfc091d59346013f83ab2749b7b0ec89723b4c874f2f70"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcallables.so": "c53a8b2b0824db6eab5baac2f3c16918740e31a8162151c5480384049fbe7193",
+          "libcomponent_70529187269721ee540b.so": "1e7810ca09caab79782186d0f4569fe6bc63d6da4567058d9301534e73f6786c",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "e682aac31e4b7f0ab0d2eac52f12c8e15dc7d5bf2a61d6d1b2ec9044e47f1525",
+        "pomSha256": "435232a264eb7d05822e4f468afec893b0a1d2104bee6809e18388d1a79974c6",
+        "projectSourceSha256": "df0b919b92e5d2b01d206db558dc15baa8f4c5ca701df6e74a65cd94ff2864ef",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "9779ea52cf00147752fb497100116a41a28925245a0e67732cec972b7270e941",
+        "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+        "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+        },
+        "kotlin": {
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+        }
+      },
+      "observationSha256": "4b5bc0c672914ea370d470d3c5ca4aec6d2c63d9d369b3890eb36a4f6dd7a214",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "RETURN_TYPE_MISMATCH",
+              "column": 31,
+              "file": "src/reject-callback-result.kt",
+              "line": 4,
+              "message": "Return type mismatch: expected 'BigInteger!', actual 'Double'."
+            }
+          ],
+          "id": "callables/callback-result",
+          "sourceSha256": "7b350bcafd63a697194b4bf3344822ada7071f141d295591af9acecb4e09979f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-callback-parameter.kt",
+              "line": 4,
+              "message": "Argument type mismatch: actual type is 'Function1<String, Long>', but 'Function1<Long, Long>!' was expected."
+            }
+          ],
+          "id": "callables/callback-parameter",
+          "sourceSha256": "1c6ac7463f293a55316bfc3af92f002c6a1902ceb3e6c8086b45c96e65ea0d48",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "RETURN_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-async-result.kt",
+              "line": 4,
+              "message": "Return type mismatch: expected 'Long', actual 'CompletableFuture<Long!>!'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-async-result.kt",
+              "line": 4,
+              "message": "Type mismatch: inferred type is 'CompletableFuture<Long!>!', but 'Long' was expected."
+            }
+          ],
+          "id": "callables/async-result",
+          "sourceSha256": "830b7322ecd2d0caa9768d65271312a67606de5ac011b43d3c3eb4f52f65cfd1",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-closure-result.kt",
+              "line": 4,
+              "message": "Initializer type mismatch: expected 'String', actual 'Long'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-closure-result.kt",
+              "line": 4,
+              "message": "Type mismatch: inferred type is 'Long', but 'String' was expected."
+            }
+          ],
+          "id": "callables/closure-result",
+          "sourceSha256": "86f93c97491ca87e5081dc03f679660dba7578fd6d6267c3bc491ba7fd311f8f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 36,
+              "file": "src/reject-closure-argument.kt",
+              "line": 4,
+              "message": "Argument type mismatch: actual type is 'String', but 'Boolean' was expected."
+            }
+          ],
+          "id": "callables/closure-argument",
+          "sourceSha256": "6ef593376b260f1390ffe908d6edd83682de048655e917f8774eb6312c26bf1d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INVISIBLE_REFERENCE",
+              "column": 22,
+              "file": "src/reject-closure-constructor.kt",
+              "line": 4,
+              "message": "Cannot access 'constructor(p0: Runtime.ClosureLease!): FnBoolUInt32ToUInt32.LeanClosure': it is package-private in 'org/leanbridge/callables/FnBoolUInt32ToUInt32.LeanClosure'."
+            }
+          ],
+          "id": "callables/closure-constructor",
+          "sourceSha256": "c812100e6725683b7688947f572cc5aad55420cd49e390ccc19c7871cc100575",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    }
+  ],
+  "corpora": [
+    {
+      "report": "build/type-corpus/java-kotlin.json",
+      "sha256": "8dc02986d62d1b1bafe97357a006e382d6dce52672cf9c4671305cb6ff20e429",
+      "summary": {
+        "browserExecutedCases": 0,
+        "browserExecutions": 0,
+        "browserUnsupportedCases": 0,
+        "cFamilyRuntimeRejections": 0,
+        "cases": 248,
+        "compileRejectedCases": 44,
+        "dotnetRuntimeRejections": 0,
+        "executedCases": 204,
+        "gapCells": 6480,
+        "jvmRuntimeRejections": 144,
+        "libraries": 2,
+        "observedCells": 82,
+        "phpExecutedCases": 0,
+        "phpExecutions": 0,
+        "phpRuntimeRejections": 0,
+        "phpWasmExecutedCases": 0,
+        "phpWasmExecutions": 0,
+        "phpWasmRuntimeRejections": 0,
+        "profileRuns": 4,
+        "profiles": 17,
+        "rejectedBuilds": 2,
+        "rustRuntimeRejections": 0,
+        "unsupportedCases": 0,
+        "witRuntimeRejections": 0
+      },
+      "runs": [
+        {
+          "path": "ordinary-source",
+          "profile": "java",
+          "library": "shop",
+          "archive": {
+            "bytes": 51394892,
+            "name": "org.leanbridge.corpus:shop-corpus",
+            "path": "archives/shop-corpus-1.0.0.jar",
+            "sha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "a80f894496e95924f94fe8be1ec87f44b80de1829442483075f87728c8f0ace4",
+          "sourceTreeSha256": "5e2a22fbe5d626ac816e966d87c7d4a46db6dc56cc3917a1805ac962c4736fb9",
+          "receiptSha256": "a42e61b87b70f968fbbbfb40c1d0c3f4c5388ef7e2bacf97a7e4e39a5c816a55",
+          "observationSha256": "ddcc4f361b39f92702c4bd776ecb5b10ed4d441fb248cf678abb0ba9beec801b",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2",
+            "bindingIrSha256": "a80f894496e95924f94fe8be1ec87f44b80de1829442483075f87728c8f0ace4",
+            "classpathSha256": "79f4fb4fa97f87f749166df200d0879c2cf897a66e7974bc81569db1accb8af1",
+            "compiledProjectionSha256": "0dbaa7a8a0a8eb040d8dc850b5515b0f85ad615c4a304dbec785ae79178cd11f",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "--release",
+              "22",
+              "-g:none",
+              "-proc:none",
+              "-encoding",
+              "UTF-8",
+              "-Xlint:all",
+              "-Werror",
+              "-implicit:none"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "02b483fce6fcf6a7f6dd166a6ec79ddf2162a2045c581d98327e0e249fd91b78",
+            "declarationsSha256": "be2906438f630a705eea1341796dee64581c5f92cb866403989a6dcb18b6f93a",
+            "deployment": {
+              "classes/Consumer.class": {
+                "bytes": 15403,
+                "sha256": "a4c1d11736315de27847b6905c06049e8ca948a568e5272dfce9c5437db9b681"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "package.jar": {
+                "bytes": 51394892,
+                "sha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_438181389df2a872f082.so": "f72e236d51c1182bae1ebbde03febf3f6abdccd1bcfd3115f9ad1881a65de03b",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libshop.so": "1f9ee0152eb39cbd97b25c28126b63b896eb5ae32e42c8b66e1a5c6cbb4fde49"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "e73de1a5ab1ce76940a107c2508a2c383fe0e11847d957ada1ab6668d3215f61",
+            "pomSha256": "84e35abcd92828c2a020764b6a1be024cede1672b1c645013c410a3ce31afefe",
+            "projectSourceSha256": "da93d8a7468d6fa02065d90e2533165fa69a52649463d3d3128be01bf364f664",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "2a1c81f87b0cc9f2d9e93665792dadf5f55e1d66561efc438d9d8690619a7fc8",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            }
+          },
+          "counts": {
+            "matched": 44,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 10
+          }
+        },
+        {
+          "path": "ordinary-source",
+          "profile": "kotlin",
+          "library": "shop",
+          "archive": {
+            "bytes": 51394892,
+            "name": "org.leanbridge.corpus:shop-corpus",
+            "path": "archives/shop-corpus-1.0.0.jar",
+            "sha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "a80f894496e95924f94fe8be1ec87f44b80de1829442483075f87728c8f0ace4",
+          "sourceTreeSha256": "5e2a22fbe5d626ac816e966d87c7d4a46db6dc56cc3917a1805ac962c4736fb9",
+          "receiptSha256": "a42e61b87b70f968fbbbfb40c1d0c3f4c5388ef7e2bacf97a7e4e39a5c816a55",
+          "observationSha256": "d5f39e701a1fe0da8a3356d602da20e671eb3b23270a0e813c5c0059eb387e0d",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2",
+            "bindingIrSha256": "a80f894496e95924f94fe8be1ec87f44b80de1829442483075f87728c8f0ace4",
+            "classpathSha256": "0bd51237cd16f2d35717f3a1692ef5e57fefbcf44c78dab2c086992cbaaf58ae",
+            "compiledProjectionSha256": "0dbaa7a8a0a8eb040d8dc850b5515b0f85ad615c4a304dbec785ae79178cd11f",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "-jvm-target",
+              "22",
+              "-no-stdlib",
+              "-no-reflect",
+              "-Werror",
+              "-Xrender-internal-diagnostic-names"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "847e4142af6d740433c48c66618cb6e0580d1d0648f24c6558381e430dc550c3",
+            "declarationsSha256": "be2906438f630a705eea1341796dee64581c5f92cb866403989a6dcb18b6f93a",
+            "deployment": {
+              "classes/ConsumerKt$main$signature0$1.class": {
+                "bytes": 1272,
+                "sha256": "bf4ce4bc02066ce1442651690bbfb5250a61c40d4720ee4ddb8e2351a84494a3"
+              },
+              "classes/ConsumerKt$main$signature1$1.class": {
+                "bytes": 1422,
+                "sha256": "78a9d7bc5f349d00a052e7edb0c17852b2e6bbe488623482861c52acb68030b6"
+              },
+              "classes/ConsumerKt$main$signature10$1.class": {
+                "bytes": 1314,
+                "sha256": "e31d10219377e810ad49e1406e4f2974215f2ab549e3021e252dd370b7334a5e"
+              },
+              "classes/ConsumerKt$main$signature11$1.class": {
+                "bytes": 1138,
+                "sha256": "1f6463e146e0321fcb9276185abe21244109162f8fd642fadd05702400caeca3"
+              },
+              "classes/ConsumerKt$main$signature12$1.class": {
+                "bytes": 1279,
+                "sha256": "ec64a7b4450904a8420a37e816395655d96f30d48f446d10f4a36dd7b4acd672"
+              },
+              "classes/ConsumerKt$main$signature13$1.class": {
+                "bytes": 1283,
+                "sha256": "3cca53f71d7b07c4af9412ddc9243630ce8f402ce39bd1f12ef7168a140013ec"
+              },
+              "classes/ConsumerKt$main$signature14$1.class": {
+                "bytes": 1276,
+                "sha256": "73fdfe9f9fcfddbd65e1c1ee126ae7c87f4448e84b09dba59cb7cdc1abc619a7"
+              },
+              "classes/ConsumerKt$main$signature15$1.class": {
+                "bytes": 1281,
+                "sha256": "a1390ffd893dea79c9898c6b730d6846ba0a802f073dec62dc7e12bf1a354a39"
+              },
+              "classes/ConsumerKt$main$signature16$1.class": {
+                "bytes": 1289,
+                "sha256": "df32eb9abaf77e2f57d0151d114784815961d6507c7d9b7aacbe265c7ec47124"
+              },
+              "classes/ConsumerKt$main$signature17$1.class": {
+                "bytes": 1281,
+                "sha256": "66491d1ac03a9319e71b22089551c971942d442dbca81f09900cc8787d52df77"
+              },
+              "classes/ConsumerKt$main$signature18$1.class": {
+                "bytes": 1288,
+                "sha256": "e368673f8b58c4058a71bda4e5777ce32f44b2a07909685055f35f86b737f6e8"
+              },
+              "classes/ConsumerKt$main$signature2$1.class": {
+                "bytes": 1403,
+                "sha256": "34dedf63ae178fcf87ad88c94092be94792d7d540c97349a51ad8186e3d4fcd8"
+              },
+              "classes/ConsumerKt$main$signature3$1.class": {
+                "bytes": 1371,
+                "sha256": "bd058fe0d1bcc265494d4566ef1e0e58ff5627fda3c9525ca6fbd8f877bb46b6"
+              },
+              "classes/ConsumerKt$main$signature4$1.class": {
+                "bytes": 1251,
+                "sha256": "6292d652b3a57c0e46e183382f08bb11d790bf95c0b8edfee63733ae6a1b131a"
+              },
+              "classes/ConsumerKt$main$signature5$1.class": {
+                "bytes": 1135,
+                "sha256": "6353b0eb97e7691700bb3e208f5cd88ef84b8ed68b74a7c7062f739d5619c01d"
+              },
+              "classes/ConsumerKt$main$signature6$1.class": {
+                "bytes": 1337,
+                "sha256": "2c3d2790d3a9a976120647ffb876488d7539e07341a2f33250cb9300b22a18f7"
+              },
+              "classes/ConsumerKt$main$signature7$1.class": {
+                "bytes": 1297,
+                "sha256": "996f05f55f3393b2b88237668ab768e1c9bd5618d3d7d173c0a6da32a7f68cb5"
+              },
+              "classes/ConsumerKt$main$signature8$1.class": {
+                "bytes": 1282,
+                "sha256": "0880bb04514ec5607e2a82cf3b0d49d606e65bc6e029333e7fdef6e557d4b142"
+              },
+              "classes/ConsumerKt$main$signature9$1.class": {
+                "bytes": 1259,
+                "sha256": "167a4065d7f1c3180a49d5399feea763906b795aa2b1a455d5c82a95a9d4e12d"
+              },
+              "classes/ConsumerKt.class": {
+                "bytes": 28580,
+                "sha256": "b7bc600e08c82d438bbaddf5029400ede5c354997ac8cff060b55c3133ab0abc"
+              },
+              "classes/META-INF/main.kotlin_module": {
+                "bytes": 40,
+                "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "kotlin-stdlib.jar": {
+                "bytes": 1750373,
+                "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+              },
+              "package.jar": {
+                "bytes": 51394892,
+                "sha256": "1562dd92de28122976ae77cf80b19935f64ebd7da9db8455db4fef6656d1f4f2"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_438181389df2a872f082.so": "f72e236d51c1182bae1ebbde03febf3f6abdccd1bcfd3115f9ad1881a65de03b",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libshop.so": "1f9ee0152eb39cbd97b25c28126b63b896eb5ae32e42c8b66e1a5c6cbb4fde49"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "e73de1a5ab1ce76940a107c2508a2c383fe0e11847d957ada1ab6668d3215f61",
+            "pomSha256": "84e35abcd92828c2a020764b6a1be024cede1672b1c645013c410a3ce31afefe",
+            "projectSourceSha256": "da93d8a7468d6fa02065d90e2533165fa69a52649463d3d3128be01bf364f664",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "76e9d1793c6ae3b416d76db8c21488bc56288df00e26a32cdc7bff58fa14bb17",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            },
+            "kotlin": {
+              "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+              "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+              "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+            }
+          },
+          "counts": {
+            "matched": 42,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 12
+          }
+        },
+        {
+          "path": "ordinary-source",
+          "profile": "java",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51396573,
+            "name": "org.leanbridge.corpus:telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0.jar",
+            "sha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "b82b4fe75b788601e2a427ebd195dc28da002edbfe36441fe6b7cdd266eb2991",
+          "sourceTreeSha256": "fa376026ae393276f13f16c23006a26db723e46d3e13417993f74235b69eb60f",
+          "receiptSha256": "8519d860e75c9cf6718ed989b79cd48f56f772276e1b66f81010806bb1d13ec8",
+          "observationSha256": "a502242e80cf214d0924555c7da36752ddd36a8a7299f947b8e7abb9b95af52c",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507",
+            "bindingIrSha256": "b82b4fe75b788601e2a427ebd195dc28da002edbfe36441fe6b7cdd266eb2991",
+            "classpathSha256": "d12a1f95397668fd79b78ea5122f3403c4a36107c5656a1646c507b191f29b1b",
+            "compiledProjectionSha256": "ee8333c5f292e700522d76143bae93c9c40b1d53a19ca7e7a4a7f58c888bea83",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "--release",
+              "22",
+              "-g:none",
+              "-proc:none",
+              "-encoding",
+              "UTF-8",
+              "-Xlint:all",
+              "-Werror",
+              "-implicit:none"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "fcb54532ab490187bea6ed423642eabd1a325e030fa4722e8bbd8c0756ecacf7",
+            "declarationsSha256": "93d14afd045c7f3261e702afff7417c66307912be6ad5379bc02d7dfb9cd1ce1",
+            "deployment": {
+              "classes/Consumer.class": {
+                "bytes": 15738,
+                "sha256": "a26be2d7ed3adcb1b811a43334d30fd8461abf13f33b4abb6aa83c7d1965df8d"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "package.jar": {
+                "bytes": 51396573,
+                "sha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_deb1527d9da1177c3364.so": "7c6f5b44705bbe54067652409229b16c2b963cd8838f044639f5738db89f3497",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libtelemetry.so": "3ffb4e8f78ff325af8a8ad36cda3034207d05878be0f97f6fb77088c1c45771a"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "c5e713002c3ffd08e0f2bc857986dcd21b77c4592ddde5445393f2ee756f8665",
+            "pomSha256": "f46ae77c0bebd3dce108162bc88dac07fc73990381d05096830e4b01b57bc730",
+            "projectSourceSha256": "ed498f59d0ef8884ed732f241f6f96ae52ede2007ae066e0c276f306acdd28f4",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "f8e6389f1a334805c7cc3580c9ee0657cdfef96f1ae1042c273f0b956fa60459",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            }
+          },
+          "counts": {
+            "matched": 44,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 10
+          }
+        },
+        {
+          "path": "ordinary-source",
+          "profile": "kotlin",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51396573,
+            "name": "org.leanbridge.corpus:telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0.jar",
+            "sha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "b82b4fe75b788601e2a427ebd195dc28da002edbfe36441fe6b7cdd266eb2991",
+          "sourceTreeSha256": "fa376026ae393276f13f16c23006a26db723e46d3e13417993f74235b69eb60f",
+          "receiptSha256": "8519d860e75c9cf6718ed989b79cd48f56f772276e1b66f81010806bb1d13ec8",
+          "observationSha256": "f040e79d740c32ba010234e9600f305366e350245e6a1f6b803ea01db3788cbb",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507",
+            "bindingIrSha256": "b82b4fe75b788601e2a427ebd195dc28da002edbfe36441fe6b7cdd266eb2991",
+            "classpathSha256": "2636de669076c1102bddc85b6c39508751ffeb65509afe4f3f46312aa5cf4577",
+            "compiledProjectionSha256": "ee8333c5f292e700522d76143bae93c9c40b1d53a19ca7e7a4a7f58c888bea83",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "-jvm-target",
+              "22",
+              "-no-stdlib",
+              "-no-reflect",
+              "-Werror",
+              "-Xrender-internal-diagnostic-names"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "e7ab30b2a7febcff0ec60e23813b81d5f779d5746f603713384590fb199c0d62",
+            "declarationsSha256": "93d14afd045c7f3261e702afff7417c66307912be6ad5379bc02d7dfb9cd1ce1",
+            "deployment": {
+              "classes/ConsumerKt$main$signature0$1.class": {
+                "bytes": 1279,
+                "sha256": "e3a20cca90f7b94485115f6d3d50a1277e29b73bd6c3946596679dab6356c33f"
+              },
+              "classes/ConsumerKt$main$signature1$1.class": {
+                "bytes": 1425,
+                "sha256": "2ea5a8550f67d7b3032d9b6eaa9596694c6cc611e3cfacc74ab785c7e009fc93"
+              },
+              "classes/ConsumerKt$main$signature10$1.class": {
+                "bytes": 1346,
+                "sha256": "fb37e83bdc03f6102f6784bac7ba1889fc32c61aee6717eaa5cb224390b5bc62"
+              },
+              "classes/ConsumerKt$main$signature11$1.class": {
+                "bytes": 1147,
+                "sha256": "b1e8ee6e0c106e6048409470023e3d5f910d2533e150f70403e1f466dd18b251"
+              },
+              "classes/ConsumerKt$main$signature12$1.class": {
+                "bytes": 1290,
+                "sha256": "c02ee7f43b0325585ecf75f86d7e0fd31a77486ea84d739cacfc68df85e8c68a"
+              },
+              "classes/ConsumerKt$main$signature13$1.class": {
+                "bytes": 1300,
+                "sha256": "687682e8c937a8e3cb89d0bf7b7ffced3419dc409487817d328c1c97c18b0827"
+              },
+              "classes/ConsumerKt$main$signature14$1.class": {
+                "bytes": 1279,
+                "sha256": "a3570353dfabd14dca3e41eb13f43c3c53afe0678cdc3b0753c3cd1454697e33"
+              },
+              "classes/ConsumerKt$main$signature15$1.class": {
+                "bytes": 1284,
+                "sha256": "56852c2346f2834902c2e12fb46721ef02d7d8020a95a3a855087a8ec8c8c0f3"
+              },
+              "classes/ConsumerKt$main$signature16$1.class": {
+                "bytes": 1296,
+                "sha256": "d662bbf71cecab8a50d38da0ed43e02535a7c521a0c345fca38eae3bb9cf942d"
+              },
+              "classes/ConsumerKt$main$signature17$1.class": {
+                "bytes": 1286,
+                "sha256": "a2c097c08ead6d2f17158496151df7e1724ed82f2542a52e72e75df041d639fd"
+              },
+              "classes/ConsumerKt$main$signature18$1.class": {
+                "bytes": 1293,
+                "sha256": "5c58e50c9732647b64c249bffde150b58e07f71aa9fb0be80c5ef6a4a168b1dc"
+              },
+              "classes/ConsumerKt$main$signature2$1.class": {
+                "bytes": 1414,
+                "sha256": "29ace3bff93dede476f0f8df75eb28ac5725f2fe7ce879c7286145fc4572a5e6"
+              },
+              "classes/ConsumerKt$main$signature3$1.class": {
+                "bytes": 1376,
+                "sha256": "765b5c6d35d722698964f0953dfae9d7761a8e57b4ba4b602efb4ef629cbe87e"
+              },
+              "classes/ConsumerKt$main$signature4$1.class": {
+                "bytes": 1268,
+                "sha256": "f93f83bbc3ca34527de9159b81e5c4e52a1cb9540fd734cc9457431383687f09"
+              },
+              "classes/ConsumerKt$main$signature5$1.class": {
+                "bytes": 1146,
+                "sha256": "c20dc9bed6d658bcd66edb9789730dfeff9ee93402e7717471917155986fb2c8"
+              },
+              "classes/ConsumerKt$main$signature6$1.class": {
+                "bytes": 1386,
+                "sha256": "a6bb7341450308e1ef5f9a6eb197b77a674cd221f5bde627ac36bbdb83dcc981"
+              },
+              "classes/ConsumerKt$main$signature7$1.class": {
+                "bytes": 1300,
+                "sha256": "283a304aa2987accd0cf6c75802dfdc82eac4fc0ed96b2fbb39471c85b09b0d0"
+              },
+              "classes/ConsumerKt$main$signature8$1.class": {
+                "bytes": 1277,
+                "sha256": "3bb0c8b7c7162ef4beb61c843b866d68dbae72c3075d1c565fbcccfff3c35a20"
+              },
+              "classes/ConsumerKt$main$signature9$1.class": {
+                "bytes": 1274,
+                "sha256": "d5b49405096df148805b7d27616505667e6d66055dac45ae436389a6783f1b87"
+              },
+              "classes/ConsumerKt.class": {
+                "bytes": 28909,
+                "sha256": "dfe6fbbe618654eaa79be6e64d47c1c054a4b342f88fcead31ae513a0e44f10a"
+              },
+              "classes/META-INF/main.kotlin_module": {
+                "bytes": 40,
+                "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "kotlin-stdlib.jar": {
+                "bytes": 1750373,
+                "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+              },
+              "package.jar": {
+                "bytes": 51396573,
+                "sha256": "bb48c1af7825b047fa4c0970914360e0edcd7a1e92602ab1872db31fc0ad1507"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_deb1527d9da1177c3364.so": "7c6f5b44705bbe54067652409229b16c2b963cd8838f044639f5738db89f3497",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libtelemetry.so": "3ffb4e8f78ff325af8a8ad36cda3034207d05878be0f97f6fb77088c1c45771a"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "c5e713002c3ffd08e0f2bc857986dcd21b77c4592ddde5445393f2ee756f8665",
+            "pomSha256": "f46ae77c0bebd3dce108162bc88dac07fc73990381d05096830e4b01b57bc730",
+            "projectSourceSha256": "ed498f59d0ef8884ed732f241f6f96ae52ede2007ae066e0c276f306acdd28f4",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "3529d4750eb2f6076d0a5c057dc797f608fd41fc96c97e197c7c950f46238aa3",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            },
+            "kotlin": {
+              "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+              "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+              "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+            }
+          },
+          "counts": {
+            "matched": 42,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 12
+          }
+        }
+      ]
+    },
+    {
+      "report": "build/type-corpus/reviewed-native-java-kotlin.json",
+      "sha256": "f37699656ffad5dd10f0c3cb49c7be7e4a2e4f7fa0e326e49879306b6546f7a2",
+      "summary": {
+        "catalogCases": 248,
+        "compileRejectedCases": 44,
+        "executedCases": 204,
+        "gapCells": 6480,
+        "installedRuns": 4,
+        "libraries": 2,
+        "observedCells": 82,
+        "profiles": 2
+      },
+      "runs": [
+        {
+          "path": "reviewed-ir",
+          "profile": "java",
+          "library": "shop",
+          "archive": {
+            "bytes": 51399562,
+            "name": "org.leanbridge.corpus:shop-corpus",
+            "path": "archives/shop-corpus-1.0.0.jar",
+            "sha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "886ec9d732d5dff24bde1354d4b077b95226e39510bc1403f273201ffbe5f9d7",
+          "sourceTreeSha256": "3b8712bd95bad157bdaf079cad71101c35e5f5feda7bec361bb9dc3aea468db7",
+          "receiptSha256": "c4c81263722f85e49cfbe398bd8c2a27b053b43129287de928cc2e4b7c56d35e",
+          "observationSha256": "958bc4222d42f49669c5677e133e1acad85620684240164a9281956b01e1d035",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f",
+            "bindingIrSha256": "886ec9d732d5dff24bde1354d4b077b95226e39510bc1403f273201ffbe5f9d7",
+            "classpathSha256": "dbf0210a6e88324ba1c84ebbd3d65a8d14aa2afea38b5c8dd82ea5bf364c48d6",
+            "compiledProjectionSha256": "798cbe533d4ae112a7b8aebed60e68231fa56c70f475d07084953cac01210861",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "--release",
+              "22",
+              "-g:none",
+              "-proc:none",
+              "-encoding",
+              "UTF-8",
+              "-Xlint:all",
+              "-Werror",
+              "-implicit:none"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "02b483fce6fcf6a7f6dd166a6ec79ddf2162a2045c581d98327e0e249fd91b78",
+            "declarationsSha256": "be2906438f630a705eea1341796dee64581c5f92cb866403989a6dcb18b6f93a",
+            "deployment": {
+              "classes/Consumer.class": {
+                "bytes": 15403,
+                "sha256": "a4c1d11736315de27847b6905c06049e8ca948a568e5272dfce9c5437db9b681"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "package.jar": {
+                "bytes": 51399562,
+                "sha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_438181389df2a872f082.so": "f72e236d51c1182bae1ebbde03febf3f6abdccd1bcfd3115f9ad1881a65de03b",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libshop.so": "1f9ee0152eb39cbd97b25c28126b63b896eb5ae32e42c8b66e1a5c6cbb4fde49"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "d77a5fe096e63c2d80c4a03137daa7db35068691e7dc06cd23e14fb48280262e",
+            "pomSha256": "84e35abcd92828c2a020764b6a1be024cede1672b1c645013c410a3ce31afefe",
+            "projectSourceSha256": "da93d8a7468d6fa02065d90e2533165fa69a52649463d3d3128be01bf364f664",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "2a1c81f87b0cc9f2d9e93665792dadf5f55e1d66561efc438d9d8690619a7fc8",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            }
+          },
+          "counts": {
+            "matched": 44,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 10
+          }
+        },
+        {
+          "path": "reviewed-ir",
+          "profile": "kotlin",
+          "library": "shop",
+          "archive": {
+            "bytes": 51399562,
+            "name": "org.leanbridge.corpus:shop-corpus",
+            "path": "archives/shop-corpus-1.0.0.jar",
+            "sha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "886ec9d732d5dff24bde1354d4b077b95226e39510bc1403f273201ffbe5f9d7",
+          "sourceTreeSha256": "3b8712bd95bad157bdaf079cad71101c35e5f5feda7bec361bb9dc3aea468db7",
+          "receiptSha256": "c4c81263722f85e49cfbe398bd8c2a27b053b43129287de928cc2e4b7c56d35e",
+          "observationSha256": "8c4f8c2b80668ae5ab273b10b3e9eb38b5bcd93bdb5bf82d3e8657eb93fa63ff",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Units",
+                "sha256": "4cfd4a1b5f2d4f5f70b690ea34edea31110a5df9bca1fbc9c3736e95872557bb"
+              },
+              {
+                "module": "Catalog",
+                "sha256": "ea54d0ca5da113b522bae7fbf73fa6b163372e53eb658a64c0b04119aa7cc487"
+              },
+              {
+                "module": "Shop.Pricing",
+                "sha256": "e898a0ae7ab1671362acae12402f253a9a5b39691f7585259c720e0d0822e1d2"
+              },
+              {
+                "module": "Shop.Pending",
+                "sha256": "2354fc4debdbe688271a7b4fa1b3c6831e31b331dfbfacc416551a62cbd657af"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "33312a158f315152c2d11b10d114224f79ead443b83830b9e22c630d56d7e38e",
+            "sourceSha256": "4a592aa2274ca4b3368d84bf0711583861bbc78d93a56aca98b44c0a73115f4a",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f",
+            "bindingIrSha256": "886ec9d732d5dff24bde1354d4b077b95226e39510bc1403f273201ffbe5f9d7",
+            "classpathSha256": "f880a5bf17d077bfc69f4d3712cda0f373999a60d1525fbb1448f56ee2d6811c",
+            "compiledProjectionSha256": "798cbe533d4ae112a7b8aebed60e68231fa56c70f475d07084953cac01210861",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "-jvm-target",
+              "22",
+              "-no-stdlib",
+              "-no-reflect",
+              "-Werror",
+              "-Xrender-internal-diagnostic-names"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "847e4142af6d740433c48c66618cb6e0580d1d0648f24c6558381e430dc550c3",
+            "declarationsSha256": "be2906438f630a705eea1341796dee64581c5f92cb866403989a6dcb18b6f93a",
+            "deployment": {
+              "classes/ConsumerKt$main$signature0$1.class": {
+                "bytes": 1272,
+                "sha256": "bf4ce4bc02066ce1442651690bbfb5250a61c40d4720ee4ddb8e2351a84494a3"
+              },
+              "classes/ConsumerKt$main$signature1$1.class": {
+                "bytes": 1422,
+                "sha256": "78a9d7bc5f349d00a052e7edb0c17852b2e6bbe488623482861c52acb68030b6"
+              },
+              "classes/ConsumerKt$main$signature10$1.class": {
+                "bytes": 1314,
+                "sha256": "e31d10219377e810ad49e1406e4f2974215f2ab549e3021e252dd370b7334a5e"
+              },
+              "classes/ConsumerKt$main$signature11$1.class": {
+                "bytes": 1138,
+                "sha256": "1f6463e146e0321fcb9276185abe21244109162f8fd642fadd05702400caeca3"
+              },
+              "classes/ConsumerKt$main$signature12$1.class": {
+                "bytes": 1279,
+                "sha256": "ec64a7b4450904a8420a37e816395655d96f30d48f446d10f4a36dd7b4acd672"
+              },
+              "classes/ConsumerKt$main$signature13$1.class": {
+                "bytes": 1283,
+                "sha256": "3cca53f71d7b07c4af9412ddc9243630ce8f402ce39bd1f12ef7168a140013ec"
+              },
+              "classes/ConsumerKt$main$signature14$1.class": {
+                "bytes": 1276,
+                "sha256": "73fdfe9f9fcfddbd65e1c1ee126ae7c87f4448e84b09dba59cb7cdc1abc619a7"
+              },
+              "classes/ConsumerKt$main$signature15$1.class": {
+                "bytes": 1281,
+                "sha256": "a1390ffd893dea79c9898c6b730d6846ba0a802f073dec62dc7e12bf1a354a39"
+              },
+              "classes/ConsumerKt$main$signature16$1.class": {
+                "bytes": 1289,
+                "sha256": "df32eb9abaf77e2f57d0151d114784815961d6507c7d9b7aacbe265c7ec47124"
+              },
+              "classes/ConsumerKt$main$signature17$1.class": {
+                "bytes": 1281,
+                "sha256": "66491d1ac03a9319e71b22089551c971942d442dbca81f09900cc8787d52df77"
+              },
+              "classes/ConsumerKt$main$signature18$1.class": {
+                "bytes": 1288,
+                "sha256": "e368673f8b58c4058a71bda4e5777ce32f44b2a07909685055f35f86b737f6e8"
+              },
+              "classes/ConsumerKt$main$signature2$1.class": {
+                "bytes": 1403,
+                "sha256": "34dedf63ae178fcf87ad88c94092be94792d7d540c97349a51ad8186e3d4fcd8"
+              },
+              "classes/ConsumerKt$main$signature3$1.class": {
+                "bytes": 1371,
+                "sha256": "bd058fe0d1bcc265494d4566ef1e0e58ff5627fda3c9525ca6fbd8f877bb46b6"
+              },
+              "classes/ConsumerKt$main$signature4$1.class": {
+                "bytes": 1251,
+                "sha256": "6292d652b3a57c0e46e183382f08bb11d790bf95c0b8edfee63733ae6a1b131a"
+              },
+              "classes/ConsumerKt$main$signature5$1.class": {
+                "bytes": 1135,
+                "sha256": "6353b0eb97e7691700bb3e208f5cd88ef84b8ed68b74a7c7062f739d5619c01d"
+              },
+              "classes/ConsumerKt$main$signature6$1.class": {
+                "bytes": 1337,
+                "sha256": "2c3d2790d3a9a976120647ffb876488d7539e07341a2f33250cb9300b22a18f7"
+              },
+              "classes/ConsumerKt$main$signature7$1.class": {
+                "bytes": 1297,
+                "sha256": "996f05f55f3393b2b88237668ab768e1c9bd5618d3d7d173c0a6da32a7f68cb5"
+              },
+              "classes/ConsumerKt$main$signature8$1.class": {
+                "bytes": 1282,
+                "sha256": "0880bb04514ec5607e2a82cf3b0d49d606e65bc6e029333e7fdef6e557d4b142"
+              },
+              "classes/ConsumerKt$main$signature9$1.class": {
+                "bytes": 1259,
+                "sha256": "167a4065d7f1c3180a49d5399feea763906b795aa2b1a455d5c82a95a9d4e12d"
+              },
+              "classes/ConsumerKt.class": {
+                "bytes": 28580,
+                "sha256": "b7bc600e08c82d438bbaddf5029400ede5c354997ac8cff060b55c3133ab0abc"
+              },
+              "classes/META-INF/main.kotlin_module": {
+                "bytes": 40,
+                "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "kotlin-stdlib.jar": {
+                "bytes": 1750373,
+                "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+              },
+              "package.jar": {
+                "bytes": 51399562,
+                "sha256": "cdf522852f3ab77d70a0be9c341a077d4e401516e208a6242463157378437f8f"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_438181389df2a872f082.so": "f72e236d51c1182bae1ebbde03febf3f6abdccd1bcfd3115f9ad1881a65de03b",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libshop.so": "1f9ee0152eb39cbd97b25c28126b63b896eb5ae32e42c8b66e1a5c6cbb4fde49"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "d77a5fe096e63c2d80c4a03137daa7db35068691e7dc06cd23e14fb48280262e",
+            "pomSha256": "84e35abcd92828c2a020764b6a1be024cede1672b1c645013c410a3ce31afefe",
+            "projectSourceSha256": "da93d8a7468d6fa02065d90e2533165fa69a52649463d3d3128be01bf364f664",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "76e9d1793c6ae3b416d76db8c21488bc56288df00e26a32cdc7bff58fa14bb17",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            },
+            "kotlin": {
+              "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+              "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+              "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+            }
+          },
+          "counts": {
+            "matched": 42,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 12
+          }
+        },
+        {
+          "path": "reviewed-ir",
+          "profile": "java",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51401218,
+            "name": "org.leanbridge.corpus:telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0.jar",
+            "sha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "04f5128fd452e77c890715017f623a1af6dd975ca5cd5433d84b0fa3005b5822",
+          "sourceTreeSha256": "adf22b6769bc3077f14d646c4c0290874db6e1de71c291890307c78115136f1f",
+          "receiptSha256": "1f10d786ed498158de85a2a7fbaeda193f53919101207b845789b29ac578636f",
+          "observationSha256": "78ec4b7e1f5a2148ac4dc944cd266fc87a2c3602ce878c8379ebb94b012790fe",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492",
+            "bindingIrSha256": "04f5128fd452e77c890715017f623a1af6dd975ca5cd5433d84b0fa3005b5822",
+            "classpathSha256": "e2061e97c2008dc945045cd8962cf21c9f59e59e5cbc95cb70e77022d3cfeea9",
+            "compiledProjectionSha256": "84d32f7fff9a685546d21c41ea8c97cc6282078bdea2641e3752f460aebf26dd",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "--release",
+              "22",
+              "-g:none",
+              "-proc:none",
+              "-encoding",
+              "UTF-8",
+              "-Xlint:all",
+              "-Werror",
+              "-implicit:none"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "fcb54532ab490187bea6ed423642eabd1a325e030fa4722e8bbd8c0756ecacf7",
+            "declarationsSha256": "93d14afd045c7f3261e702afff7417c66307912be6ad5379bc02d7dfb9cd1ce1",
+            "deployment": {
+              "classes/Consumer.class": {
+                "bytes": 15738,
+                "sha256": "a26be2d7ed3adcb1b811a43334d30fd8461abf13f33b4abb6aa83c7d1965df8d"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "package.jar": {
+                "bytes": 51401218,
+                "sha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_deb1527d9da1177c3364.so": "7c6f5b44705bbe54067652409229b16c2b963cd8838f044639f5738db89f3497",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libtelemetry.so": "3ffb4e8f78ff325af8a8ad36cda3034207d05878be0f97f6fb77088c1c45771a"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "c284929474f0e0764ca9d059feffbb32905c7c31e54c0f625cb407e8caef4d90",
+            "pomSha256": "f46ae77c0bebd3dce108162bc88dac07fc73990381d05096830e4b01b57bc730",
+            "projectSourceSha256": "ed498f59d0ef8884ed732f241f6f96ae52ede2007ae066e0c276f306acdd28f4",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "f8e6389f1a334805c7cc3580c9ee0657cdfef96f1ae1042c273f0b956fa60459",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            }
+          },
+          "counts": {
+            "matched": 44,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 10
+          }
+        },
+        {
+          "path": "reviewed-ir",
+          "profile": "kotlin",
+          "library": "telemetry",
+          "archive": {
+            "bytes": 51401218,
+            "name": "org.leanbridge.corpus:telemetry-corpus",
+            "path": "archives/telemetry-corpus-1.0.0.jar",
+            "sha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492",
+            "target": "maven",
+            "version": "1.0.0"
+          },
+          "bindingIrSha256": "04f5128fd452e77c890715017f623a1af6dd975ca5cd5433d84b0fa3005b5822",
+          "sourceTreeSha256": "adf22b6769bc3077f14d646c4c0290874db6e1de71c291890307c78115136f1f",
+          "receiptSha256": "1f10d786ed498158de85a2a7fbaeda193f53919101207b845789b29ac578636f",
+          "observationSha256": "e81e5bbd68a8247fb3ae859a8fdfb8006693ca5fc8b5b28b8d61a8721a64f3ed",
+          "oracleEvidence": {
+            "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "modules": [
+              {
+                "module": "Reading",
+                "sha256": "53ca6efd2508edae443e34f1b6d50729b1d6e8ecdc50b7f6f768a6e2825eabe7"
+              },
+              {
+                "module": "Metrics",
+                "sha256": "d83eca23973d80779b7a9ef6c337a43c9211b99bf18a2c581b570fa27d3fd1ee"
+              },
+              {
+                "module": "Telemetry.Readings",
+                "sha256": "8c66935364972cf08e5830f2397dcf5a382d193acd25aeab464560bad0be8ccb"
+              },
+              {
+                "module": "Telemetry.Pending",
+                "sha256": "a117d27807a1bd4b6ebe1db539465974241c4c66110527039806667804e8b425"
+              },
+              {
+                "module": "Corpus.Wire",
+                "sha256": "bbb0af5e85ffb098e5d2fbe8c1ef50c76be9c3d585aef8267232d170ef87138a"
+              }
+            ],
+            "resultSha256": "57d693058655afd6a8f11f0b29e444fefd567ea7904a138caa05e7a7c3cf4d9f",
+            "sourceSha256": "567db78b862ef034acf8f826d13639e5c41edccc36a4d157dc028aa32fce5f55",
+            "version": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+          },
+          "independentBuilds": 2,
+          "isolation": {
+            "compilerFreeExecution": true,
+            "compilerPathDisabled": true,
+            "consumerCompilerDuringInstall": true,
+            "offlineInstall": true,
+            "sourcesRemovedBeforeInstall": true
+          },
+          "jvm": {
+            "archiveSha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492",
+            "bindingIrSha256": "04f5128fd452e77c890715017f623a1af6dd975ca5cd5433d84b0fa3005b5822",
+            "classpathSha256": "2282313984cb0d0f8bae1a92d90824311669d02bf8ba00c373f5b4c5b21607c3",
+            "compiledProjectionSha256": "84d32f7fff9a685546d21c41ea8c97cc6282078bdea2641e3752f460aebf26dd",
+            "compilerFreeExecution": true,
+            "compilerOptions": [
+              "-jvm-target",
+              "22",
+              "-no-stdlib",
+              "-no-reflect",
+              "-Werror",
+              "-Xrender-internal-diagnostic-names"
+            ],
+            "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+            "consumerSourceSha256": "e7ab30b2a7febcff0ec60e23813b81d5f779d5746f603713384590fb199c0d62",
+            "declarationsSha256": "93d14afd045c7f3261e702afff7417c66307912be6ad5379bc02d7dfb9cd1ce1",
+            "deployment": {
+              "classes/ConsumerKt$main$signature0$1.class": {
+                "bytes": 1279,
+                "sha256": "e3a20cca90f7b94485115f6d3d50a1277e29b73bd6c3946596679dab6356c33f"
+              },
+              "classes/ConsumerKt$main$signature1$1.class": {
+                "bytes": 1425,
+                "sha256": "2ea5a8550f67d7b3032d9b6eaa9596694c6cc611e3cfacc74ab785c7e009fc93"
+              },
+              "classes/ConsumerKt$main$signature10$1.class": {
+                "bytes": 1346,
+                "sha256": "fb37e83bdc03f6102f6784bac7ba1889fc32c61aee6717eaa5cb224390b5bc62"
+              },
+              "classes/ConsumerKt$main$signature11$1.class": {
+                "bytes": 1147,
+                "sha256": "b1e8ee6e0c106e6048409470023e3d5f910d2533e150f70403e1f466dd18b251"
+              },
+              "classes/ConsumerKt$main$signature12$1.class": {
+                "bytes": 1290,
+                "sha256": "c02ee7f43b0325585ecf75f86d7e0fd31a77486ea84d739cacfc68df85e8c68a"
+              },
+              "classes/ConsumerKt$main$signature13$1.class": {
+                "bytes": 1300,
+                "sha256": "687682e8c937a8e3cb89d0bf7b7ffced3419dc409487817d328c1c97c18b0827"
+              },
+              "classes/ConsumerKt$main$signature14$1.class": {
+                "bytes": 1279,
+                "sha256": "a3570353dfabd14dca3e41eb13f43c3c53afe0678cdc3b0753c3cd1454697e33"
+              },
+              "classes/ConsumerKt$main$signature15$1.class": {
+                "bytes": 1284,
+                "sha256": "56852c2346f2834902c2e12fb46721ef02d7d8020a95a3a855087a8ec8c8c0f3"
+              },
+              "classes/ConsumerKt$main$signature16$1.class": {
+                "bytes": 1296,
+                "sha256": "d662bbf71cecab8a50d38da0ed43e02535a7c521a0c345fca38eae3bb9cf942d"
+              },
+              "classes/ConsumerKt$main$signature17$1.class": {
+                "bytes": 1286,
+                "sha256": "a2c097c08ead6d2f17158496151df7e1724ed82f2542a52e72e75df041d639fd"
+              },
+              "classes/ConsumerKt$main$signature18$1.class": {
+                "bytes": 1293,
+                "sha256": "5c58e50c9732647b64c249bffde150b58e07f71aa9fb0be80c5ef6a4a168b1dc"
+              },
+              "classes/ConsumerKt$main$signature2$1.class": {
+                "bytes": 1414,
+                "sha256": "29ace3bff93dede476f0f8df75eb28ac5725f2fe7ce879c7286145fc4572a5e6"
+              },
+              "classes/ConsumerKt$main$signature3$1.class": {
+                "bytes": 1376,
+                "sha256": "765b5c6d35d722698964f0953dfae9d7761a8e57b4ba4b602efb4ef629cbe87e"
+              },
+              "classes/ConsumerKt$main$signature4$1.class": {
+                "bytes": 1268,
+                "sha256": "f93f83bbc3ca34527de9159b81e5c4e52a1cb9540fd734cc9457431383687f09"
+              },
+              "classes/ConsumerKt$main$signature5$1.class": {
+                "bytes": 1146,
+                "sha256": "c20dc9bed6d658bcd66edb9789730dfeff9ee93402e7717471917155986fb2c8"
+              },
+              "classes/ConsumerKt$main$signature6$1.class": {
+                "bytes": 1386,
+                "sha256": "a6bb7341450308e1ef5f9a6eb197b77a674cd221f5bde627ac36bbdb83dcc981"
+              },
+              "classes/ConsumerKt$main$signature7$1.class": {
+                "bytes": 1300,
+                "sha256": "283a304aa2987accd0cf6c75802dfdc82eac4fc0ed96b2fbb39471c85b09b0d0"
+              },
+              "classes/ConsumerKt$main$signature8$1.class": {
+                "bytes": 1277,
+                "sha256": "3bb0c8b7c7162ef4beb61c843b866d68dbae72c3075d1c565fbcccfff3c35a20"
+              },
+              "classes/ConsumerKt$main$signature9$1.class": {
+                "bytes": 1274,
+                "sha256": "d5b49405096df148805b7d27616505667e6d66055dac45ae436389a6783f1b87"
+              },
+              "classes/ConsumerKt.class": {
+                "bytes": 28909,
+                "sha256": "dfe6fbbe618654eaa79be6e64d47c1c054a4b342f88fcead31ae513a0e44f10a"
+              },
+              "classes/META-INF/main.kotlin_module": {
+                "bytes": 40,
+                "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+              },
+              "classes/Wire.class": {
+                "bytes": 10880,
+                "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+              },
+              "kotlin-stdlib.jar": {
+                "bytes": 1750373,
+                "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+              },
+              "package.jar": {
+                "bytes": 51401218,
+                "sha256": "dacecefc59575464434d3d4de7f68f8c63427f5be1354397d95989984a4bf492"
+              }
+            },
+            "emptyRepository": true,
+            "emptyUserHome": true,
+            "exactPublicSignatures": true,
+            "installedSourcesRemoved": true,
+            "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+            "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+            "javacVersion": "javac 22.0.2",
+            "localLibraries": true,
+            "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+            "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+            "nativeLibraries": {
+              "libcomponent_deb1527d9da1177c3364.so": "7c6f5b44705bbe54067652409229b16c2b963cd8838f044639f5738db89f3497",
+              "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+              "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+              "libtelemetry.so": "3ffb4e8f78ff325af8a8ad36cda3034207d05878be0f97f6fb77088c1c45771a"
+            },
+            "normalExitCleanup": true,
+            "offline": true,
+            "packageReceiptSha256": "c284929474f0e0764ca9d059feffbb32905c7c31e54c0f625cb407e8caef4d90",
+            "pomSha256": "f46ae77c0bebd3dce108162bc88dac07fc73990381d05096830e4b01b57bc730",
+            "projectSourceSha256": "ed498f59d0ef8884ed732f241f6f96ae52ede2007ae066e0c276f306acdd28f4",
+            "publicApiOnly": true,
+            "repeatExecution": true,
+            "resolvedClasspathOnly": true,
+            "runtimeModules": [
+              "java.base@22.0.2"
+            ],
+            "runtimeOnlyExecution": true,
+            "runtimeOverridesDisabled": true,
+            "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+            "signaturesSha256": "3529d4750eb2f6076d0a5c057dc797f608fd41fc96c97e197c7c950f46238aa3",
+            "runtimeFilesSha256": "48bdd681218e2687293536f8d05b5fb1388b4974151307ef3f3cdcdb56dc63c2",
+            "mavenFilesSha256": "a004f10098c41463424a4738ed6f2533d53a893a7e2f2861503ba7985bd1b81f",
+            "dependencies": {
+              "archive": "maven-plugin-closure.tar.gz",
+              "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+              "filesSha256": "23eea4ba3e5792d40f5174e178486fd772f09c8383b6d3503c39f3908ca85789"
+            },
+            "kotlin": {
+              "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+              "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+              "compilerFilesSha256": "a93e6a20ab05b0803400f855181d7841ee8ce9209526712a815ccecab6a01b4d"
+            }
+          },
+          "counts": {
+            "matched": 42,
+            "rejected-as-expected": 8,
+            "rejected-at-compile-time": 12
+          }
+        }
+      ]
+    }
+  ],
+  "regression": {
+    "suite": "tests/native-jvm.test.mjs",
+    "passed": 4,
+    "projects": [
+      {
+        "archives": [
+          {
+            "path": "maple-api-2.0.0-rc.1.jar",
+            "sha256": "d3532be5b9b95c4f361d9d7db73c2eb1486b2ab5175237f6b41527cc8df5b417"
+          },
+          {
+            "path": "maple-api-2.0.0-rc.1.pom",
+            "sha256": "1c5b8414ed85705b0f3f13e3fb13fcc59cc647edba80593e6a64e4f8dabe6a8f"
+          },
+          {
+            "path": "maple-0.0.0-local-c.tar.gz",
+            "sha256": "b3c5997752f4ef8484a0c4f4668e85b79a1e595e3f313897d87224a74e780695"
+          }
+        ],
+        "project": "Maple"
+      },
+      {
+        "archives": [
+          {
+            "path": "cedar-api-2.0.0-rc.1.jar",
+            "sha256": "d3d9b260fd534903588f1b129deddc30a9050e6e99ac2163eb50c86fcbff6bf8"
+          },
+          {
+            "path": "cedar-api-2.0.0-rc.1.pom",
+            "sha256": "d6aeba6114aa5fbc008f1997f5842f917ecdfc5eddb79078b69e4c91465e07b8"
+          },
+          {
+            "path": "cedar-0.0.0-local-c.tar.gz",
+            "sha256": "ddc142b4c08cee3c5207734c7b7f4390d0b81ffb9e1fb08edbd88a5a02134596"
+          }
+        ],
+        "project": "Cedar"
+      }
+    ]
+  }
+}

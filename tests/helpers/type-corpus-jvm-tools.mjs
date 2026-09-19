@@ -134,12 +134,13 @@ export const jvmDiagnostics = (result, entry, profile, root, file) => {
 			continue;
 		}
 		const [, path, row, column, code, message] = match;
-		assert.equal(code, entry.expectation.diagnostic, `${entry.id}: ${line}`);
+		assert.equal(code, Array.isArray(entry.expectation.diagnostic) ? entry.expectation.diagnostic[diagnostics.length] : entry.expectation.diagnostic, `${entry.id}: ${line}`);
 		const actual = path.startsWith("file:") ? fileURLToPath(path) : resolve(root, profile === "java" && path === basename(file) ? file : path);
 		assert.equal(actual, join(root, file));
 		assert.ok(Number(row) > 0 && Number(column) > 0);
 		diagnostics.push({ code, file, line: Number(row), column: Number(column), message });
 	}
 	assert.ok(diagnostics.length > 0, `${entry.id}: missing source-located diagnostics: ${result.stdout} ${result.stderr}`);
+	if(Array.isArray(entry.expectation.diagnostic)) assert.deepEqual(diagnostics.map(diagnostic => diagnostic.code), entry.expectation.diagnostic);
 	return diagnostics;
 };

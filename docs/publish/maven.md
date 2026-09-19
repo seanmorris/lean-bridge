@@ -32,9 +32,27 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes compiled Java 22 classes, native libraries, generated sources, compiler evidence and dependency license notices. Its README names the generated Java package and API. Changing the Maven coordinate does not rename the Lean-derived Java package.
 
-Calls accept concrete, pure copied values. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Optional values, variants, resources, callbacks and effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
+Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Optional values, variants, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm for APIs supported by its primitive-only profile; that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export callbacks and returned functions
+
+Select primitive callable exports in `lean-bridge.exports.json`:
+
+```lean
+namespace Maple
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
+end Maple
+```
+
+Include both exports and set `"arities": { "Maple.make_word": 1 }` to return a function after accepting the captured value. For reviewed Binding IR, the outer parameter count makes that decision; do not also configure `arities`.
+
+Callbacks accept one to sixteen primitive arguments and a primitive result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement that interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
+
+Both source paths use the existing private C callable ABI. A combined build rejects the complete request if a selected target does not support its callable signatures.
 
 ## Build the repository layout
 

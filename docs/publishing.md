@@ -12,7 +12,7 @@ Select the languages your library will serve, then follow each target's build an
 | C | [C package and CMake integration](publish/c.md) | An ordinary Lake project with pure copied primitive, array or record exports; CLI target `c`. Reviewed Alpha inputs remain supported. |
 | C++ | [C++ package and CMake integration](publish/cpp.md) | The same ordinary native source profile; CLI target `cpp`. Reviewed Alpha inputs remain supported. |
 | C# / .NET | [NuGet](publish/nuget.md) | An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `nuget`. |
-| Java and Kotlin | [Maven](publish/maven.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `maven`. |
+| Java and Kotlin | [Maven](publish/maven.md) | An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `maven`. |
 | Ruby | [RubyGems](publish/rubygems.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`. |
 | Perl | [CPAN](publish/cpan.md) | An ordinary Lean project plus shared export configuration; CLI target `cpan` (alias `perl`). |
 | PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | Ordinary pure copied source with CLI target `php-native` or `php-wasm`. PHP-Wasm uses its own compiler inputs and npm/Composer coordinates. Alpha recipes retain separate manifests. |

@@ -39,8 +39,9 @@ const inventory = async root => {
  * @param options.dependencies - Hashed Maven build-tool plugin closure.
  * @param options.environment - Selected compiler tools.
  * @param options.clean - Compiler-free runtime environment.
+ * @param options.fixture - Optional independent callable source/signature/rejection catalog.
  */
-export const installedJvmCorpus = async ({ library, profile, consumer, handoff, pkg, dependencies, environment, clean }) => {
+export const installedJvmCorpus = async ({ library, profile, consumer, handoff, pkg, dependencies, environment, clean, fixture }) => {
 	const root = join(consumer, profile), project = join(root, "project");
 	const tools = await jvmTools(environment), javaProfile = profile === "java";
 	await mkdir(join(project, "repository"), { recursive: true });
@@ -75,7 +76,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	assert.match(javacVersion, /^javac 22(?:\.|$)/);
 	const javaVersion = (await jvmRun(tools.java, ["-version"], project, clean)).stderr.trim();
 	assert.match(javaVersion, /version "22[."]/);
-	const source = corpusJvmSource(library, profile), file = `src/Consumer.${javaProfile ? "java" : "kt"}`;
+	const source = fixture ? fixture.source(profile) : corpusJvmSource(library, profile), file = `src/Consumer.${javaProfile ? "java" : "kt"}`;
 	await saveLakeFile(project, file, source);
 	await saveLakeFile(project, "src/Wire.java", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/Wire.java")));
 	const javacArgs = [...javaCompilerOptions, "-sourcepath", "empty-source", "-classpath", installedJar, "-d", "classes"];
@@ -93,9 +94,9 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		kotlin = { version, compilerFiles, stdlib: join(lib, "kotlin-stdlib.jar") };
 	}
 	const rejected = [];
-	for(const entry of corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "compile-rejection"))
+	for(const entry of fixture ? fixture.rejections(profile) : corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "compile-rejection"))
 	{
-		const invalidFile = `src/reject-${entry.id.split("/")[1]}.${javaProfile ? "java" : "kt"}`, invalidSource = corpusJvmRejection(library, entry, profile);
+		const invalidFile = `src/reject-${entry.id.split("/")[1]}.${javaProfile ? "java" : "kt"}`, invalidSource = fixture ? entry.source : corpusJvmRejection(library, entry, profile);
 		await saveLakeFile(project, invalidFile, invalidSource);
 		const result = await captureCorpusCompiler(javaProfile ? tools.javac : tools.java, javaProfile ? [...javacArgs, "-XDrawDiagnostics", invalidFile] : [...kotlinArgs, invalidFile], project, clean);
 		rejected.push({ id: entry.id, status: "rejected-at-compile-time", sourceSha256: sha256(invalidSource), diagnostics: jvmDiagnostics(result, entry, profile, project, invalidFile) });
@@ -116,7 +117,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		, mavenBootSha256: await jvmDigest(tools.boot)
 		, mavenFiles
 		, consumerSourceSha256: sha256(source)
-		, signaturesSha256: sha256(corpusJvmSignatures(library, profile))
+		, signaturesSha256: sha256(fixture ? fixture.signatures(profile) : corpusJvmSignatures(library, profile))
 		, declarationsSha256: await jvmDigest(join(extracted, `META-INF/lean-bridge/jvm/src/main/java/${library.jvmModule.replaceAll(".", "/")}/Api.java`))
 		, packageReceiptSha256: await jvmDigest(join(extracted, receiptPath))
 		, compiledProjectionSha256: receipt.compiledProjectionSha256
