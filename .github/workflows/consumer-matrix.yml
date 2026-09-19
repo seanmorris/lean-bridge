@@ -562,6 +562,7 @@ jobs:
           npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=rust node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=rust node --test tests/native-words.test.mjs
+          LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs
           test -s build/type-corpus/rust.json
           test -s build/type-corpus/reviewed-native-rust.json
       - name: Upload installed Rust corpus observations
@@ -574,6 +575,7 @@ jobs:
             build/type-corpus/reviewed-native-rust.json
             build/char-native/rust.json
             build/word-native/rust.json
+            build/callables/rust.json
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
@@ -606,6 +608,7 @@ jobs:
             fi
             if [ "$consumer" = rust ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs && npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed
                 installed=false

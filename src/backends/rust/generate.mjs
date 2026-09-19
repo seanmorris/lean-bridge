@@ -808,7 +808,7 @@ Binding IR SHA-256: \`${hashBindingIr(ir)}\`
  */
 export const compileRustPackageModel = ir => {
 	validateBindingIr(ir);
-	if(ir.declarations.every(declaration => declaration.kind === "function" && [...declaration.parameters, declaration.result].every(site => site.ownership === "copy")))
+	if(ir.declarations.every(declaration => declaration.kind === "function") && (ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback")) || ir.declarations.every(declaration => [...declaration.parameters, declaration.result].every(site => site.ownership === "copy"))))
 		return Object.freeze({ ir, copied: compileCopiedRustModel(ir) });
 	validateCoverage(ir);
 	return Object.freeze({ ir });

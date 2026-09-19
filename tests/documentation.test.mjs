@@ -335,6 +335,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"));
+  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
@@ -405,7 +407,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-rust-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:browser"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:npm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");

@@ -31,7 +31,7 @@ lean-bridge build --project ./iris --target pypi --output ./release-iris
 
 Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if Python is not available as `python3`. The build checks generated Python syntax without loading ambient Python modules. It creates `release-iris/archives/iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl`. The wheel contains generated functions, frozen record classes, stubs, verified native libraries, compiler receipts and license notices. It needs no extension build or setuptools at installation. This path emits a wheel, not an sdist.
 
-Repeat `--target` to combine PyPI with npm, CPAN, C, C++, NuGet, Maven, RubyGems or WIT/WASI when their type profiles all accept the exports. Lean compiles once per required native/Wasm profile. A failed projection leaves no partial release directory.
+Repeat `--target` to combine PyPI with npm, CPAN, C, C++, Cargo, NuGet, Maven, RubyGems or WIT/WASI when their type profiles all accept the exports. Lean compiles once per required native/Wasm profile. A failed projection leaves no partial release directory.
 
 Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
@@ -53,7 +53,7 @@ end Callables
 
 Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-bridge.exports.json`. That arity leaves the final two arguments in the returned closure. For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`.
 
-Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. Combined callable builds can select C, CPAN and PyPI; the other targets still reject these signatures.
+Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. Combined callable builds can select C, CPAN, PyPI, RubyGems and Cargo; the other targets still reject these signatures.
 
 Run the [installed callable example](../consume/python.md#callbacks-and-returned-lean-closures) before publishing. The [acceptance record](../evidence/python-callables-20260918.md) includes exact wheel identities, source-hidden offline installation and lifetime checks.
 

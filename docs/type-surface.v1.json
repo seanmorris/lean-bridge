@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.10.0",
+  "contractVersion": "0.11.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,11 +157,158 @@
   ],
   "evidence": [
     {
+      "id": "rust-callables-installed",
+      "kind": "installed",
+      "revision": "e7a25782d2978c832622453c7edae8082157e48a",
+      "command": "LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs",
+      "scope": "Both source paths pass 35,890 installed Rust assertions each and repeat them after source-free binary relocation. All nineteen primitive callback/closure conversions, exact values, original errors and panic payloads, reentry, expired borrows, thread/fork checks, conversion-failure cleanup, deferred disposal and registry exhaustion. Eight compile-fail consumers per path reject invalid signatures, Send, Sync, Clone and async. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/rust-callables-20260919.json.",
+      "files": [
+        {
+          "path": "src/backends/rust/callables.mjs",
+          "sha256": "9f8abbf0da0c2f469ad9e647775a08933473467080b1a6e46abd6e0f470668db"
+        },
+        {
+          "path": "src/backends/rust/copied-model.mjs",
+          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
+        },
+        {
+          "path": "src/backends/rust/copied-values.mjs",
+          "sha256": "d71ebe100731297b0e28635197c071bcdb12db84ec295724a8aa3a36b645590a"
+        },
+        {
+          "path": "src/backends/rust/copied-conversions.mjs",
+          "sha256": "c4004ae70b7ae734e309214d7b7c8e6f2ef8f5a91750090724d394b2786fa3ed"
+        },
+        {
+          "path": "src/backends/rust/copied-assets.mjs",
+          "sha256": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f"
+        },
+        {
+          "path": "src/backends/rust/generate.mjs",
+          "sha256": "e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "ca58ead5e7758163ace20c76fad09788b6514063b696e35b0f316ca1c46775de"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
+        },
+        {
+          "path": "src/build/native-rust-projection.mjs",
+          "sha256": "d6b33cdfc5404fa16e81a7ce44033ab6b2cef02f584c4a2fe979dfcf0e2c9fea"
+        },
+        {
+          "path": "src/build/native-rust-artifacts.mjs",
+          "sha256": "1276d918c58370151d76fba63f01a31ec1defd366472f4faebbcc5507d17fd0c"
+        },
+        {
+          "path": "src/release/native-cargo.mjs",
+          "sha256": "451a93d27536c64951394821540ac2a737448f74b0403c6a499804ca5b91a56c"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "096d21bcfa996db4d51278a2642621d76d21160512b7fbfa44cd6b3be0396a95"
+        },
+        {
+          "path": "tests/rust-callables.test.mjs",
+          "sha256": "4e3f4d7bc3c95a9ffa861a4b6b74108eadb20e67473629f509b8100368bea6d8"
+        },
+        {
+          "path": "tests/rust-callable-contract.test.mjs",
+          "sha256": "02c7be7e7531974613b7f87c998b72c8f76a7421618e6eb17f3c5b4bdb7cbd77"
+        },
+        {
+          "path": "tests/rust-callable-evidence.test.mjs",
+          "sha256": "48052cb4f4cabee28e7ad0e3b8b8ed7516a2c4c676b91cbad41d57238310b3cf"
+        },
+        {
+          "path": "tests/helpers/rust-callable-fixture.mjs",
+          "sha256": "6b0f2761eb6eb11929afd9e4ba70f4479991ae3a32050e5ac766333ab846d3be"
+        },
+        {
+          "path": "tests/helpers/rust-callable-install.mjs",
+          "sha256": "4ebae4f813faaa865b6c9521a7c64cc2a33a8d3b0b75f2d26bf0af7da14f4acf"
+        },
+        {
+          "path": "tests/helpers/callable-fixture.mjs",
+          "sha256": "fdfb536780348c73d7dac0c4c4bf246634c99df0e6d16f2b5b0b5cd227df5d84"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/type-corpus-rust.mjs",
+          "sha256": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53"
+        },
+        {
+          "path": "tests/fixtures/onboarding/callables/Callables.lean",
+          "sha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Rust.lean",
+          "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/Lifetimes.lean",
+          "sha256": "ae7c0524f473a9493f02cad70cf7d7b0320777de14548be2607c9bfc0317263a"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/rust.rs",
+          "sha256": "d2ac7f3b1428dd33fd101fb75a0e68b5f053daf39df2697715448e03bf6c2269"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/rust-faults.rs",
+          "sha256": "65cd1b3290b11c566dcf484ea7bca68bf5ba9d748598abb2ccdf0aff7fd66d2e"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
+        },
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
+        },
+        {
+          "path": "docs/evidence/rust-callables-20260919.md",
+          "sha256": "0ee9b53b1414c51aa89f4e5f84cb567d526daac372c779849ed0a6ca3eb16ad3"
+        },
+        {
+          "path": "docs/evidence/rust-callables-20260919.json",
+          "sha256": "be77b712b41cd83f69f8c4fdcb4b9a87a99dec95e5ea17e95221ba5e95450cef"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/callables-api-1.0.0.crate",
+          "sha256": "6f41e84961f10d9a0c0905219809a15755ca2ed450311a1efa051e0a88abb74a"
+        },
+        {
+          "path": "reviewed-ir/archives/callables-api-1.0.0.crate",
+          "sha256": "bba8e010f814833f2575f8c507fc22d2b951eb2e69ac16f3247dfb46fc385cb1"
+        }
+      ]
+    },
+    {
       "id": "ruby-callables-installed",
       "kind": "installed",
       "revision": "f554d863135e43c7928c181d290c5f0cb7ac3dc8",
       "command": "LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs",
-      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json.",
+      "scope": "Both source paths pass 50,912 installed MRI Ruby 3.3.12 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions and non-local exits, reentry, expired borrows, thread/fiber/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/ruby-callables-20260919.json. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -197,11 +344,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -257,15 +404,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "204ce85315ef8bf820c57de5770ce76354a4e9ee9af39bab7ef096e8dde85ba0"
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "291baf8351b4a18a81f5e4d2b27f322353b239f8a311f90d9442a545b747d4a6"
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -292,7 +439,7 @@
       "kind": "installed",
       "revision": "8f0c94826ce6782d677867e38f2f375aabde7624",
       "command": "LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs",
-      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "src/backends/python/callables.mjs",
@@ -328,11 +475,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -388,15 +535,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "204ce85315ef8bf820c57de5770ce76354a4e9ee9af39bab7ef096e8dde85ba0"
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "291baf8351b4a18a81f5e4d2b27f322353b239f8a311f90d9442a545b747d4a6"
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -423,7 +570,7 @@
       "kind": "installed",
       "revision": "2cb189f3eff4ca5acc4f9853edc1d64e374f5e11",
       "command": "LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs",
-      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Both source paths pass 47,329 installed C11 assertions and 25 allocation-failure checks each. All nineteen primitive callback/closure conversions, exact values, nested errors, expired callbacks, signatures, thread confinement, disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No C++ or other copied-host callable promotion; exact archive identities are retained in docs/evidence/c-callables-20260918.json. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
@@ -455,11 +602,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -507,15 +654,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "204ce85315ef8bf820c57de5770ce76354a4e9ee9af39bab7ef096e8dde85ba0"
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "291baf8351b4a18a81f5e4d2b27f322353b239f8a311f90d9442a545b747d4a6"
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -542,7 +689,7 @@
       "kind": "installed",
       "revision": "01f10ed85b75e3676df0eba41de9e8efc89c0dcc",
       "command": "LEAN_BRIDGE_PERL_CALLABLE_TEST=1 LEAN_BRIDGE_CORPUS_PERL=<pinned-Perl> node --test tests/perl-callables.test.mjs",
-      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Both source paths execute 8,756 assertions on each of four pinned Perl ABIs (5.36.3/5.38.2, threaded/unthreaded). Nineteen primitive callback/closure conversions, boundaries, invalid results, re-entry, exception recovery, explicit cleanup and reviewed compiler rejection tests pass. Local glibc floor 2.36; CI retains 2.38. Source and exact archive identities are retained in docs/evidence/perl-callables-20260918.json. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -618,15 +765,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "204ce85315ef8bf820c57de5770ce76354a4e9ee9af39bab7ef096e8dde85ba0"
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "ca97e0b392a8ff2dce949d0db64437a9ae50501876d7363abb259a04610445c8"
+          "sha256": "7ba11ebed4d9756b87cc84b4d7c96c4f0d8f927811a292286caed128c25703f7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -713,11 +860,11 @@
       "kind": "installed",
       "revision": "f5001a1d0e0cc891798786b197c4f643359cf54d",
       "command": "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=c,python node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=cpp,rust node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=perl,php-native,wit-wasi node --test tests/native-words.test.mjs; LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs",
-      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "VO1218 USize/ISize milestone. Ordinary-source and independently reviewed Words packages execute exact platform integers across seventeen consumer profiles. npm/PHP-Wasm use 32-bit Lean; native and native-backed WIT use 64-bit Lean, checked by the compiled wordBits function. npm callers run 2217 checks in Node and each page/React/worker realm in Chromium, Firefox and WebKit, plus executed strict TypeScript. Twelve native/PHP-Wasm profiles cover scalar inputs/results, arrays, nested arrays and copied record fields after source removal and offline installation. Boundary values, decimal text, Lean arithmetic wraparound, invalid input rejection and repeated calls are checked. PHP-Wasm runs twelve startup/lazy, weak/strict, embedded/Composer/bundled arrangements per source path. Local Linux x86-64 tests use glibc floor 2.36 and Perl 5.36; remote CI retains floor 2.38. This adds no callback/closure, npm-container or Alpha identity claims. Exact observations and archives are retained in docs/evidence/platform-words-20260918.json. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "291baf8351b4a18a81f5e4d2b27f322353b239f8a311f90d9442a545b747d4a6"
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -765,7 +912,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -865,7 +1012,7 @@
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "7295f03054524d1274f49ebebceb0c0ea611c42b50ed6f1483afa31c1766a06c"
+          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -917,7 +1064,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "ca97e0b392a8ff2dce949d0db64437a9ae50501876d7363abb259a04610445c8"
+          "sha256": "7ba11ebed4d9756b87cc84b4d7c96c4f0d8f927811a292286caed128c25703f7"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -1021,7 +1168,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "204ce85315ef8bf820c57de5770ce76354a4e9ee9af39bab7ef096e8dde85ba0"
+          "sha256": "f42877cef4905adda231943eed6d17794af1d189f1bcaadfd69255d83e04e1a9"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -1088,7 +1235,7 @@
       "kind": "installed",
       "revision": "062757aee17110bf7631b98ab30b2d2888079ad6",
       "command": "LEAN_BRIDGE_CHAR_PROFILES=c,cpp,python,rust node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=dotnet,java,kotlin,ruby node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=perl,php-native,wit-wasi node --test tests/native-char.test.mjs; LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs",
-      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "VO1218 native/PHP-Wasm Char milestone based on 062757a. Fresh ordinary-source and compiler-checked reviewed Glyphs packages execute Char parameters, results, arrays, nested arrays and record fields after source removal and offline archive installation. Twelve consumer profiles use scalar-preserving host representations. Shared C validation exhausts 0..0x110000. Invalid text/code points and nested values reject with recovery; repeated copied calls test cleanup. Native PHP checks strict/weak callers. PHP-Wasm checks twelve Node/Chromium arrangements per source path, including Composer and bundled APIs and startup/lazy loading. Local Linux x86-64 native tests use explicit glibc floor 2.36; CI keeps 2.38. Perl execution evidence is local Perl 5.36, not a claim of a completed four-ABI CI matrix. No callable, npm container, Alpha identity or USize/ISize promotion. Exact observations and archive identities are retained in docs/evidence/char-native-20260918.json. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/char-native-20260918.json",
@@ -1096,7 +1243,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "291baf8351b4a18a81f5e4d2b27f322353b239f8a311f90d9442a545b747d4a6"
+          "sha256": "b1214715846e3456d7fb9011eecffd1008871b36c12a633630062d2601112836"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -1108,7 +1255,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "a77596036478db3ba3399765abaa3d85419f0de0eac14ea938e4ecca8edf4750"
+          "sha256": "121717691cc875f1054ad17221eb99eaa789511699aa16cea1eb7ca1927b3721"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1188,7 +1335,7 @@
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "7295f03054524d1274f49ebebceb0c0ea611c42b50ed6f1483afa31c1766a06c"
+          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -1438,7 +1585,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$PWD/build/type-corpus/php-wasm-runtime\" PLAYWRIGHT_BROWSERS_PATH=\"$PWD/.toolchains/playwright\" node --test tests/php-wasm-ordinary.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Five tests pass. Willow and Aspen each compile 44 ordinary Lean exports twice through an installed CLI; relocated npm and Composer archives reproduce. Fourteen compiler-free Node routes and four network-isolated Chromium routes execute 115 primitive vectors plus maximum-decimal cases through scalar inputs/results, array elements, record fields and nested record arrays, with weak and strict PHP callers. PHP-Wasm 0.1.0, PHP 8.4.1 wasm32, Node 22.23.2, Chromium 152.0.7977.75. Brick Math 1.0.0 installs automatically through Composer or bundled npm sources. Cross-package integers and arithmetic, integer boundaries, binary32 rounding, signed zero, NaN classification, subnormals, UTF-8/NUL, bytes, invalid input, copy budgets and recovery are checked. No reviewed-IR, callback, closure, optional, variant, resource, effect, Char or platform-word promotion. See docs/evidence/php-brick-math-20260918.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/php-wasm-primitive-boundaries-20260918.md",
@@ -1470,11 +1617,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -1593,7 +1740,7 @@
       "kind": "installed",
       "revision": "dc641ecd3160b03eef32bb7413d16d274bcb3f99",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PHP_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-php.test.mjs",
-      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "VO1218 Brick Math milestone based on dc641ec, bound by source hashes. Four tests pass. Clover and Juniper each expose 43 functions and reproduce relocated Composer ZIPs. Offline Composer consumers automatically install Brick Math 1.0.0 and execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact wide integers, cross-package integer objects and arithmetic, weak-mode validation, scratch and output failure cleanup, automatic shared loading, fork rejection and tampered artifacts. PHP 8.2.33 NTS CLI, Composer 2.5.5, GCC 12 and glibc 2.36 locally; production floor 2.38. No PHP-Wasm, server SAPI, callback, optional, variant or reviewed-IR promotion. See docs/evidence/php-brick-math-20260918.md for current checks and artifacts; prior milestone records retain their original evidence. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-php-copied-20260915.md",
@@ -1617,11 +1764,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -1712,7 +1859,7 @@
       "kind": "installed",
       "revision": "787bc203888d58a47c00c29561a5482bab68a7f7",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUST_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-rust.test.mjs",
-      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary Rust milestone based on 787bc20, bound by source hashes. Cedar and Hazel each expose 42 functions and produce reproducible relocated crates. Offline Cargo consumers execute all 16 primitive input/result/field and array-element mappings, nested arrays, acyclic records, exact integers, failure and unwind cleanup, relocated binaries, concurrent shared runtime loading, fork rejection and tampered artifacts. Rust/Cargo 1.90.0, GCC 12 and glibc 2.36 locally; production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-rust-20260915.md",
@@ -1736,7 +1883,7 @@
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "7295f03054524d1274f49ebebceb0c0ea611c42b50ed6f1483afa31c1766a06c"
+          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
         },
         {
           "path": "src/backends/rust/copied-assets.mjs",
@@ -1748,11 +1895,11 @@
         },
         {
           "path": "src/backends/rust/copied-values.mjs",
-          "sha256": "413fea97541ac7fbda9ae407211c722b8c4a26e5823f9c9d1524b9ad46209194"
+          "sha256": "d71ebe100731297b0e28635197c071bcdb12db84ec295724a8aa3a36b645590a"
         },
         {
           "path": "src/backends/rust/generate.mjs",
-          "sha256": "cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"
+          "sha256": "e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"
         },
         {
           "path": "src/backends/rust/package-audit.mjs",
@@ -1764,11 +1911,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -1819,7 +1966,7 @@
       "kind": "installed",
       "revision": "4af02158a4b6e3a7aa2ff20b363ad4cad3acb32f",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-python.test.mjs",
-      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary Python milestone based on 4af0215, bound by these source hashes. Iris and Lotus each expose 42 functions, reproduce relocated wheels and execute pip-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, strict rejection, scratch and result failure cleanup, wheel RECORD validation, concurrency, runtime composition, uninstall independence, post-fork rejection and artifact tampering are tested. CPython 3.11.2 and pip 23.0.1 on Linux x86-64; local glibc 2.36, production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-python-20260915.md",
@@ -1867,11 +2014,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -1910,7 +2057,7 @@
       "kind": "installed",
       "revision": "55fb1765d5bdf8db590fdffe9e65394e44e7d8f3",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_WIT_TEST=1 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-wit.test.mjs",
-      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary WIT milestone based on 55fb176, bound by these source hashes. Cobalt and Saffron each expose 40 functions, reproduce relocated archives and execute installed Component Model APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, exact integers, invalid-kind/encoding/budget rejection, allocation-failure cleanup, store recovery after traps, external component loading, documentation execution, tampering and two packages sharing one runtime are checked. Wasmtime 42.0.1, wasm-tools 1.245.1, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-wit-20260914.md",
@@ -1954,11 +2101,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -2001,7 +2148,7 @@
       "kind": "installed",
       "revision": "b78844ba12ff4947e1741e5ad206adb489318690",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_RUBY_TEST=1 LEAN_BRIDGE_RUBY=/app/.toolchains/ruby33/bin/ruby LEAN_BRIDGE_GEM=/app/.toolchains/ruby33/bin/gem LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-ruby.test.mjs",
-      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary Ruby milestone based on b78844b, bound by these source hashes. Willow and Aspen each expose 41 functions, reproduce relocated gems and execute RubyGems-installed APIs after source paths are hidden. All sixteen primitive input/result/field and array-element mappings, nested arrays, acyclic and scalar-represented records, different field layouts, exact integers, encoding/range/budget rejection, allocation-failure cleanup, concurrency, GC compaction, tampering and two packages sharing one runtime are checked. MRI Ruby 3.3.12, RubyGems 3.5.22, Fiddle 1.1.2, Linux x86-64, local glibc 2.36 and production floor 2.38. No callback, optional, variant, WIT/WASI or reviewed-IR promotion. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-ruby-20260914.md",
@@ -2049,11 +2196,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -2096,7 +2243,7 @@
       "kind": "installed",
       "revision": "9acb78a806770ac0a1673db232f8d9e8f1dce190",
       "command": "source scripts/env.sh; JAVA_HOME=/app/.toolchains/jdk22 LEAN_BRIDGE_NATIVE_JVM_TEST=1 LEAN_BRIDGE_JAVAC=/app/.toolchains/jdk22/bin/javac LEAN_BRIDGE_JAVA=/app/.toolchains/jdk22/bin/java LEAN_BRIDGE_KOTLINC=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc LEAN_BRIDGE_KOTLIN=/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlin LEAN_BRIDGE_MAVEN=/app/.toolchains/apache-maven-3.9.11/bin/mvn LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-jvm.test.mjs",
-      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary JVM milestone based on 9acb78a, bound by these source hashes. Maple and Cedar each reproduce JAR/POM bytes after relocation and execute Maven-installed Java and Kotlin APIs after source paths are hidden. Both languages test all sixteen primitive input/result/field and array-element mappings, nested arrays and acyclic records with different layouts. Java additionally checks rejection, native budgets, concurrency, tampering, temporary-file cleanup and two components with isolated class loaders sharing one native runtime. Linux x86-64, Temurin 22.0.2+9, Kotlin 2.2.0, Maven 3.9.11, local glibc 2.36 and production floor 2.38. No callback, optional, variant, Ruby, WIT/WASI or reviewed-IR promotion. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-jvm-20260914.md",
@@ -2144,11 +2291,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -2203,7 +2350,7 @@
       "kind": "installed",
       "revision": "3dd498065dbc058d55120eb0495d689f44d68ffb",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 LEAN_BRIDGE_DOTNET=/app/.toolchains/dotnet/dotnet LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-dotnet.test.mjs",
-      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Ordinary-source C# milestone based on 3dd4980, bound by these source hashes. Aurora and Boreal each reproduce relocated NuGet archives and execute installed named APIs after their original source paths are hidden. All sixteen primitive argument/result/field and array-element types, nested arrays and acyclic records, exact BigInteger values, strict text, copy independence, budget failures, concurrency, two-component shared runtime, artifact tampering and atomic compiler failure are checked. Linux x86-64, .NET SDK 8.0.424, local glibc 2.36 and production floor 2.38. No callback, optional, variant, other managed profile or reviewed-IR promotion. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-dotnet-20260914.md",
@@ -2247,11 +2394,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -2298,7 +2445,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-reporter=spec tests/native-c-copied.test.mjs; node --test tests/cpp-generator.test.mjs",
-      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Working-tree follow-up to 3320e4d, bound by these source hashes. Parcel and Archive compile different record layouts and scalar representations, reproduce after relocation, and execute installed C11/C++20 through pkg-config and CMake without Lean or Perl. Covers all 16 primitive fields and array elements, nested copied arrays/records, empty/scalar records, atomic rejection, concurrent calls and C/C++ allocation-failure cleanup. Linux x86-64, local glibc 2.36, production floor 2.38. No callback, optional, variant, Wasm, managed-language or other-platform promotion. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -2346,7 +2493,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -2362,7 +2509,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2409,7 +2556,7 @@
       "kind": "installed",
       "revision": "3320e4db8b5370d1102e56a69a998b938821a040",
       "command": "source scripts/env.sh; LEAN_BRIDGE_NATIVE_C_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test tests/native-c-family.test.mjs",
-      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Copied-value regression follow-up based on 3320e4d, bound by the source hashes below. The four Mosaic/Survey checks pass: sixteen primitive input/result types, relocated deterministic C/C++ archives, installed CMake/pkg-config consumers without Lean or Perl. The follow-up evidence records regenerated archive hashes; the original milestone document is retained as history. Linux x86-64 with local glibc 2.36 and production floor 2.38. This entry does not promote fields, callbacks, other type families or platforms. The ordinary .NET follow-up based on 3dd4980 reruns both C/C++ suites with unchanged archive hashes and the five-target Shop regression; the source hashes reflect this shared-build change. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "docs/evidence/native-c-family-20260914.md",
@@ -2437,11 +2584,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "15e2d00ee6ee19f9ab6d2e7f05f3c77046fa1b5ce8eb9ad1721e458581abffdd"
+          "sha256": "f0a1999b1fa4c9edfcd78be7f8ae1e4a9e794e7bf38aa15bf2d4691e0d95c764"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -2516,7 +2663,7 @@
       "kind": "installed",
       "revision": "e6e99d422396ed3d12bf376e7a2ee29cb1a13192",
       "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node scripts/test-perl-consumers.mjs; prepare the four-ABI release with scripts/run-perl-engine.mjs and scripts/prepare-perl-platform-packages.mjs; run scripts/check-perl-prepared-install.mjs on glibc 2.39 in prebuilt-only and build-xs modes.",
-      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed.",
+      "scope": "Shared configuration baseline at 69079cd: Workshop, Other and selected-export projects pass on all four pinned Perl ABIs; eight production-floor installations pass 173 Workshop checks and the documentation example. Locked Lake, custom root layout, and declared C-input follow-ups rerun all three native groups on Perl 5.38.2-threaded, including the 183-check installed suite, and add 52 dependency workspace checks as root and unprivileged nobody. C inputs compile with checked include and object identities; unreviewed foreign calls remain rejected. Native build input resolution and source identity changed; ABI conversion, XS, runtime and CPAN projection implementations did not. The 2026-09-13 compiler-owned discovery follow-up reruns the 183-check installed program and the relocated Shop/Telemetry CPAN group on Perl 5.38.2-threaded. Source hashes include that follow-up; it does not rerun the historical four-ABI production-floor matrix or claim new type/profile support or publication. The shared native metadata cutover reruns the installed consumer on Perl 5.38.2-threaded, preserves native type/ownership rules, and adds compiler documentation, theorem-reference, relocation, input-drift and C-ABI disagreement checks. Its closed report and native type validators are included in the source evidence. The 2026-09-14 shared-model slice preserves Perl call names while moving semantic lowering into a common module. Native model version 2 retains profile-specific ABI evidence. Relocated Shop and Telemetry builds produce matching npm/CPAN archives and run both installed APIs without their source trees. This adds multi-profile orchestration evidence, not new type-family coverage or a fresh four-ABI production-floor claim. The ordinary .NET follow-up reruns relocated Shop npm/CPAN/C/CPP/NuGet and Telemetry npm/CPAN on Perl 5.38.2-threaded. Only shared build orchestration changes; this does not rerun the historical four-ABI matrix. The JVM/Maven follow-up based on 9acb78a is bound by the refreshed shared-build hashes. It adds the six-target Shop regression without changing this profile's conversion implementation or promoting additional types. RubyGems routing follow-up refreshes shared build/test hashes; it does not widen this observation's profile or type scope. The package-set milestone based on 58dab60 refreshes shared build and mixed-test hashes for additive receipts, without changing conversions or type-support claims. Its checks are recorded in docs/evidence/package-set-verification-20260915.md. The source-notice packaging follow-up based on 2dd2df4 refreshes package/shared-build evidence without changing conversion code or type-support claims. Its archive, installed-consumer and notice-integrity checks are recorded in docs/evidence/source-notices-20260915.md. The shared publisher-metadata follow-up based on 73ff439 refreshes package and source-provenance hashes without changing conversion behavior or type-support claims. Acceptance is recorded in docs/evidence/package-metadata-20260916.md. The shared license-declaration follow-up based on 496b185 refreshes packaging, source-inventory and fixture hashes without changing conversion behavior or type-support claims. Its acceptance is recorded in docs/evidence/package-licenses-20260916.md. The CPAN runtime-coordinate follow-up based on fb4d9ab refreshes package, installer and acceptance hashes without changing conversion behavior or type-support claims. Its checks are recorded in docs/evidence/cpan-runtime-coordinates-20260916.md. The runtime-packing follow-up based on 31c920e binds producer environment and package bytes without changing conversions or type-support claims. Checks are recorded in docs/evidence/runtime-packing-identities-20260916.md. The additive Char npm milestone refreshes shared primitive classification and explicit native Char rejection guards. Existing sixteen-scalar native conversion branches are unchanged. This refresh does not rerun the historical installed native matrices or promote Char for those profiles; npm Char has separate installed evidence. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The offline-Composer follow-up refreshes test-source hashes for the pinned Brick Math feed, empty-cache installation and missing-feed regression. Historical artifact identities and type claims are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. Source references refreshed after reviewed primitive callable admission; historical archive identities are unchanged. New callable acceptance is recorded separately in perl-callables-installed. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate. Source digests refreshed after Python callable integration; historical archive identities and coverage remain unchanged. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
         {
           "path": "src/analyze/semantic-model.mjs",
@@ -2664,7 +2811,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "e7182d3979b173a89c63cca98b3025b74648b08ef01182d107bb36ae38e59e8d"
+          "sha256": "67ca7348024c2c0da8eb45813006b331a0747a59d6b56935440d414e5755615e"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -2826,9 +2973,9 @@
       "kind": "inspection",
       "revision": "eb3d862e598524a75409386955dd3a742c7b4da0",
       "command": "Inspect rustType in src/backends/rust/generate.mjs.",
-      "scope": "The generator explicitly rejects Nat and Int with unsupported-arbitrary-integer. This required mapping remains assigned to VO1218.",
+      "scope": "The generator explicitly rejects Nat and Int with unsupported-arbitrary-integer. This required mapping remains assigned to VO1218. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
-        {"path":"src/backends/rust/generate.mjs","sha256":"cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"}
+        {"path":"src/backends/rust/generate.mjs","sha256":"e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"}
       ],
       "artifacts": []
     },
@@ -3036,9 +3183,9 @@
       "kind": "inspection",
       "revision": "78cbc7278fa0c2ffd2be09df5660f05628397310",
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
-      "scope": "Rust generator type spellings, arbitrary-integer rejection and synchronous result handling.",
+      "scope": "Rust generator type spellings, arbitrary-integer rejection and synchronous result handling. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed.",
       "files": [
-        {"path":"src/backends/rust/generate.mjs","sha256":"cf89fe18e157c4b2807755ddbc6df1baf243c5f2f34addadab7a268fcd430839"}
+        {"path":"src/backends/rust/generate.mjs","sha256":"e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"}
       ],
       "artifacts": []
     },
@@ -3118,6 +3265,752 @@
     }
   ],
   "observations": [
+    {
+      "id": "rust-primitive-callables-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "()",
+          "callback-result": "()"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "u8",
+          "callback-result": "u8"
+        },
+        "uint16": {
+          "callback-parameter": "u16",
+          "callback-result": "u16"
+        },
+        "uint32": {
+          "callback-parameter": "u32",
+          "callback-result": "u32"
+        },
+        "uint64": {
+          "callback-parameter": "u64",
+          "callback-result": "u64"
+        },
+        "int8": {
+          "callback-parameter": "i8",
+          "callback-result": "i8"
+        },
+        "int16": {
+          "callback-parameter": "i16",
+          "callback-result": "i16"
+        },
+        "int32": {
+          "callback-parameter": "i32",
+          "callback-result": "i32"
+        },
+        "int64": {
+          "callback-parameter": "i64",
+          "callback-result": "i64"
+        },
+        "nat": {
+          "callback-parameter": "BigUint",
+          "callback-result": "BigUint"
+        },
+        "int": {
+          "callback-parameter": "BigInt",
+          "callback-result": "BigInt"
+        },
+        "float32": {
+          "callback-parameter": "f32",
+          "callback-result": "f32"
+        },
+        "float64": {
+          "callback-parameter": "f64",
+          "callback-result": "f64"
+        },
+        "string": {
+          "callback-parameter": "String",
+          "callback-result": "String"
+        },
+        "bytes": {
+          "callback-parameter": "Vec<u8>",
+          "callback-result": "Vec<u8>"
+        },
+        "char": {
+          "callback-parameter": "char",
+          "callback-result": "char"
+        },
+        "usize": {
+          "callback-parameter": "u64",
+          "callback-result": "u64"
+        },
+        "isize": {
+          "callback-parameter": "i64",
+          "callback-result": "i64"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Unit uses () in every position.",
+        "bool": "Rust bool accepts no numeric coercion.",
+        "uint8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "nat": "Callback arguments and results use owned `BigUint` values. Returned closures borrow aggregate inputs and return owned values.",
+        "int": "Callback arguments and results use owned `BigInt` values. Returned closures borrow aggregate inputs and return owned values.",
+        "float32": "Rust f32 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "float64": "Rust f64 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "string": "Callback arguments and results use owned `String` values. Returned closures borrow aggregate inputs and return owned values.",
+        "bytes": "Callback arguments and results use owned `Vec<u8>` values. Returned closures borrow aggregate inputs and return owned values.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+      }
+    },
+    {
+      "id": "rust-host-callbacks-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "FnMut(owned primitives) -> Result<T, Error>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "callback": "Call-scoped borrow; typed owned callback arguments; original errors and unwinding panic payloads return after native cleanup. Same-thread nested calls are supported."
+      }
+    },
+    {
+      "id": "rust-closure-leases-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure<fn(...) -> T> with call, close and Drop"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "closure": "Typed calls, automatic Drop and idempotent close. Creator-thread confined; neither Send, Sync nor Clone. Native identity and stale-borrow checks remain enforced."
+      }
+    },
+    {
+      "id": "rust-primitive-callables-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "callback-parameter": "()",
+          "callback-result": "()"
+        },
+        "bool": {
+          "callback-parameter": "bool",
+          "callback-result": "bool"
+        },
+        "uint8": {
+          "callback-parameter": "u8",
+          "callback-result": "u8"
+        },
+        "uint16": {
+          "callback-parameter": "u16",
+          "callback-result": "u16"
+        },
+        "uint32": {
+          "callback-parameter": "u32",
+          "callback-result": "u32"
+        },
+        "uint64": {
+          "callback-parameter": "u64",
+          "callback-result": "u64"
+        },
+        "int8": {
+          "callback-parameter": "i8",
+          "callback-result": "i8"
+        },
+        "int16": {
+          "callback-parameter": "i16",
+          "callback-result": "i16"
+        },
+        "int32": {
+          "callback-parameter": "i32",
+          "callback-result": "i32"
+        },
+        "int64": {
+          "callback-parameter": "i64",
+          "callback-result": "i64"
+        },
+        "nat": {
+          "callback-parameter": "BigUint",
+          "callback-result": "BigUint"
+        },
+        "int": {
+          "callback-parameter": "BigInt",
+          "callback-result": "BigInt"
+        },
+        "float32": {
+          "callback-parameter": "f32",
+          "callback-result": "f32"
+        },
+        "float64": {
+          "callback-parameter": "f64",
+          "callback-result": "f64"
+        },
+        "string": {
+          "callback-parameter": "String",
+          "callback-result": "String"
+        },
+        "bytes": {
+          "callback-parameter": "Vec<u8>",
+          "callback-result": "Vec<u8>"
+        },
+        "char": {
+          "callback-parameter": "char",
+          "callback-result": "char"
+        },
+        "usize": {
+          "callback-parameter": "u64",
+          "callback-result": "u64"
+        },
+        "isize": {
+          "callback-parameter": "i64",
+          "callback-result": "i64"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Unit uses () in every position.",
+        "bool": "Rust bool accepts no numeric coercion.",
+        "uint8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "nat": "Callback arguments and results use owned `BigUint` values. Returned closures borrow aggregate inputs and return owned values.",
+        "int": "Callback arguments and results use owned `BigInt` values. Returned closures borrow aggregate inputs and return owned values.",
+        "float32": "Rust f32 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "float64": "Rust f64 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "string": "Callback arguments and results use owned `String` values. Returned closures borrow aggregate inputs and return owned values.",
+        "bytes": "Callback arguments and results use owned `Vec<u8>` values. Returned closures borrow aggregate inputs and return owned values.",
+        "char": "Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String.",
+        "usize": "64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound."
+      }
+    },
+    {
+      "id": "rust-host-callbacks-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "callback"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "callback": {
+          "parameter": "FnMut(owned primitives) -> Result<T, Error>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "callback": "Call-scoped borrow; typed owned callback arguments; original errors and unwinding panic payloads return after native cleanup. Same-thread nested calls are supported."
+      }
+    },
+    {
+      "id": "rust-closure-leases-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "closure"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "closure": {
+          "result": "LeanClosure<fn(...) -> T> with call, close and Drop"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "closure": "Typed calls, automatic Drop and idempotent close. Creator-thread confined; neither Send, Sync nor Clone. Native identity and stale-borrow checks remain enforced."
+      }
+    },
+    {
+      "id": "rust-reviewed-callable-inputs",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution.",
+      "hostTypes": {
+        "unit": {
+          "parameter": "()",
+          "result": "()"
+        },
+        "bool": {
+          "parameter": "bool",
+          "result": "bool"
+        },
+        "uint8": {
+          "parameter": "u8",
+          "result": "u8"
+        },
+        "uint16": {
+          "parameter": "u16",
+          "result": "u16"
+        },
+        "uint32": {
+          "parameter": "u32",
+          "result": "u32"
+        },
+        "uint64": {
+          "parameter": "u64",
+          "result": "u64"
+        },
+        "int8": {
+          "parameter": "i8",
+          "result": "i8"
+        },
+        "int16": {
+          "parameter": "i16",
+          "result": "i16"
+        },
+        "int32": {
+          "parameter": "i32",
+          "result": "i32"
+        },
+        "int64": {
+          "parameter": "i64",
+          "result": "i64"
+        },
+        "nat": {
+          "parameter": "&BigUint",
+          "result": "BigUint"
+        },
+        "int": {
+          "parameter": "&BigInt",
+          "result": "BigInt"
+        },
+        "float32": {
+          "parameter": "f32",
+          "result": "f32"
+        },
+        "float64": {
+          "parameter": "f64",
+          "result": "f64"
+        },
+        "string": {
+          "parameter": "&str",
+          "result": "String"
+        },
+        "bytes": {
+          "parameter": "&[u8]",
+          "result": "Vec<u8>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-callables-installed"
+          ],
+          "note": "Installed Rust 1.90.0 primitive callables on both source paths, with offline Cargo installation and relocated source-free execution."
+        }
+      },
+      "limitations": [
+        "Synchronous primitive callables only. No compound callable, resource, async or other-host promotion. Rust 1.90+, Linux x86-64 with glibc."
+      ],
+      "conversionNotes": {
+        "unit": "Unit uses () in every position.",
+        "bool": "Rust bool accepts no numeric coercion.",
+        "uint8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "uint64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int8": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int16": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int32": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "int64": "Rust fixed-width integer types preserve exact values in direct calls and callable values.",
+        "nat": "Callback arguments and results use owned `BigUint` values. Returned closures borrow aggregate inputs and return owned values.",
+        "int": "Callback arguments and results use owned `BigInt` values. Returned closures borrow aggregate inputs and return owned values.",
+        "float32": "Rust f32 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "float64": "Rust f64 preserves NaN classification, infinities and signed zero; NaN payload identity is not claimed.",
+        "string": "Callback arguments and results use owned `String` values. Returned closures borrow aggregate inputs and return owned values.",
+        "bytes": "Callback arguments and results use owned `Vec<u8>` values. Returned closures borrow aggregate inputs and return owned values."
+      }
+    },
     {
       "id": "ruby-primitive-callables-ordinary-source",
       "profiles": [
@@ -12329,26 +13222,6 @@
       "conversionNotes": {"nat":"The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.","int":"The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence."}
     },
     {
-      "id": "rust-arbitrary-integers-rejected",
-      "profiles": ["rust"],
-      "shapes": ["nat","int"],
-      "positions": ["parameter","result"],
-      "path": "reviewed-ir",
-      "scope": "Explicit arbitrary-integer value types passed to the Rust generator.",
-      "hostTypes": {
-        "nat": {"parameter":null,"result":null},
-        "int": {"parameter":null,"result":null}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "generation": {"state":"rejected","evidence":["rust-integer-rejection"],"note":"unsupported-arbitrary-integer: no lossless host mapping currently selected."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific audit is recorded for this stage and position."}
-      },
-      "limitations": ["This is required implementation work, not an approved Rust profile exclusion."]
-    },
-    {
       "id": "wit-missing-primitive-values",
       "profiles": ["wit-wasi"],
       "shapes": ["unit","nat","int"],
@@ -13154,53 +14027,155 @@
     },
     {
       "id": "rust-primitives-rust-1",
-      "profiles": ["rust"],
-      "shapes": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","float32","float64","string","bytes"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
       "path": "reviewed-ir",
-      "scope": "Generated Rust scalar spelling only; no installed archive-wide scalar acceptance.",
+      "scope": "Generated Rust scalar spelling only; no installed archive-wide scalar acceptance. Historical Alpha field inspection only; installed primitive callable positions are recorded separately.",
       "hostTypes": {
-        "unit": {"parameter":"()","result":"()","field":"()","callback-parameter":"()","callback-result":"()"},
-        "bool": {"parameter":"bool","result":"bool","field":"bool","callback-parameter":"bool","callback-result":"bool"},
-        "uint8": {"parameter":"u8","result":"u8","field":"u8","callback-parameter":"u8","callback-result":"u8"},
-        "uint16": {"parameter":"u16","result":"u16","field":"u16","callback-parameter":"u16","callback-result":"u16"},
-        "uint32": {"parameter":"u32","result":"u32","field":"u32","callback-parameter":"u32","callback-result":"u32"},
-        "uint64": {"parameter":"u64","result":"u64","field":"u64","callback-parameter":"u64","callback-result":"u64"},
-        "int8": {"parameter":"i8","result":"i8","field":"i8","callback-parameter":"i8","callback-result":"i8"},
-        "int16": {"parameter":"i16","result":"i16","field":"i16","callback-parameter":"i16","callback-result":"i16"},
-        "int32": {"parameter":"i32","result":"i32","field":"i32","callback-parameter":"i32","callback-result":"i32"},
-        "int64": {"parameter":"i64","result":"i64","field":"i64","callback-parameter":"i64","callback-result":"i64"},
-        "float32": {"parameter":"f32","result":"f32","field":"f32","callback-parameter":"f32","callback-result":"f32"},
-        "float64": {"parameter":"f64","result":"f64","field":"f64","callback-parameter":"f64","callback-result":"f64"},
-        "string": {"parameter":"String","result":"String","field":"String","callback-parameter":"String","callback-result":"String"},
-        "bytes": {"parameter":"Vec<u8>","result":"Vec<u8>","field":"Vec<u8>","callback-parameter":"Vec<u8>","callback-result":"Vec<u8>"}
+        "unit": {
+          "field": "()"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "u8"
+        },
+        "uint16": {
+          "field": "u16"
+        },
+        "uint32": {
+          "field": "u32"
+        },
+        "uint64": {
+          "field": "u64"
+        },
+        "int8": {
+          "field": "i8"
+        },
+        "int16": {
+          "field": "i16"
+        },
+        "int32": {
+          "field": "i32"
+        },
+        "int64": {
+          "field": "i64"
+        },
+        "float32": {
+          "field": "f32"
+        },
+        "float64": {
+          "field": "f64"
+        },
+        "string": {
+          "field": "String"
+        },
+        "bytes": {
+          "field": "Vec<u8>"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["rust-mapping-audit"],"note":"Generated Rust scalar spelling only; no installed archive-wide scalar acceptance."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "rust-mapping-audit"
+          ],
+          "note": "Generated Rust scalar spelling only; no installed archive-wide scalar acceptance."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },
     {
       "id": "rust-bigints-rust-1",
-      "profiles": ["rust"],
-      "shapes": ["nat","int"],
-      "positions": ["field","callback-parameter","callback-result"],
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "nat",
+        "int"
+      ],
+      "positions": [
+        "field"
+      ],
       "path": "reviewed-ir",
-      "scope": "Rust has no arbitrary-precision integer backend mapping.",
+      "scope": "Rust has no arbitrary-precision integer backend mapping. Historical Alpha field inspection only; installed primitive callable positions are recorded separately.",
       "hostTypes": {
-        "nat": {"field":null,"callback-parameter":null,"callback-result":null},
-        "int": {"field":null,"callback-parameter":null,"callback-result":null}
+        "nat": {
+          "field": null
+        },
+        "int": {
+          "field": null
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"rejected","evidence":["rust-mapping-audit"],"note":"unsupported-arbitrary-integer; required work remains in VO1218."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "rejected",
+          "evidence": [
+            "rust-mapping-audit"
+          ],
+          "note": "unsupported-arbitrary-integer; required work remains in VO1218."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },
@@ -14141,41 +15116,51 @@
       "limitations": []
     },
     {
-      "id": "identity-input-rust-1",
-      "profiles": ["rust"],
-      "shapes": ["callback"],
-      "positions": ["parameter"],
-      "path": "reviewed-ir",
-      "scope": "Generated synchronous callback interface; installed Alpha uses UInt32.",
-      "hostTypes": {
-        "callback": {"parameter":"FnMut with bridge Result"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["rust-mapping-audit"],"note":"Generated synchronous callback interface; installed Alpha uses UInt32."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": []
-    },
-    {
       "id": "identity-output-rust-1",
-      "profiles": ["rust"],
-      "shapes": ["resource","closure"],
-      "positions": ["result"],
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "resource"
+      ],
+      "positions": [
+        "result"
+      ],
       "path": "reviewed-ir",
       "scope": "Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance.",
       "hostTypes": {
-        "resource": {"result":"Box / generated owned wrapper"},
-        "closure": {"result":"Transform with call/close"}
+        "resource": {
+          "result": "Box / generated owned wrapper"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["rust-mapping-audit"],"note":"Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "rust-mapping-audit"
+          ],
+          "note": "Generated retained wrapper with explicit cleanup; Alpha's signature is not general acceptance."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },
