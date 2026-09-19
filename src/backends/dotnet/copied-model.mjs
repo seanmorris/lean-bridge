@@ -6,7 +6,7 @@
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
-const reserved = new Set(["Api", "Unit", "LeanBridgeException", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
+const reserved = new Set(["Api", "Unit", "LeanBridgeException", "LeanClosure", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
 const runtimeNames = new Set(("Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding Span ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison").split(" "));
 const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", uint8: "byte", uint16: "ushort", uint32: "uint", uint64: "ulong", int8: "sbyte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double", string: "string", bytes: "byte[]", nat: "global::System.Numerics.BigInteger", int: "global::System.Numerics.BigInteger" };
 
@@ -16,7 +16,7 @@ const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", u
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedDotnetModel = ir => {
-	const surface = compilePrimitiveCSurface(ir), componentName = pascal(surface.prefix);
+	const surface = compilePrimitiveCSurface(ir, { callables: true }), componentName = pascal(surface.prefix);
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-dotnet-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -26,7 +26,7 @@ export const compileCopiedDotnetModel = ir => {
 	for(const copy of surface.copies.filter(copy => copy.record))
 	{
 		copy.publicName = pascal(copy.record.name);
-		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^N\d+$/.test(copy.publicName)) fail(ir.declarations[0], `C# record name collides with a generated identifier: ${copy.publicName}`);
+		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^(?:N|B|Callback)\d+$/.test(copy.publicName) || ["CallbackFrame", "ClosureLease", "ActiveCall", "ProcessGuard", "Marshal", "Exception", "Math"].includes(copy.publicName)) fail(ir.declarations[0], `C# record name collides with a generated identifier: ${copy.publicName}`);
 		names.add(copy.publicName);
 		const fields = new Set([...reserved, copy.publicName]);
 		for(const field of copy.fields)
@@ -43,8 +43,15 @@ export const compileCopiedDotnetModel = ir => {
 		if(functionNames.has(fn.publicName)) fail(fn.declaration, `C# function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
-	const nativeType = copy => copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.scalarName) ? "byte" : copy.scalarName === "char" ? "uint" : scalar[copy.scalarName];
+	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
+	const nativeType = copy => copy.type?.callable ? `B${copy.index}` : copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.scalarName) ? "byte" : copy.scalarName === "char" ? "uint" : scalar[copy.scalarName];
+	for(const [index, callback] of [...surface.callbacks.values()].entries())
+	{
+		callback.index = index;
+		const signature = callback.type.callable, result = surface.copy(signature.result.type);
+		const types = signature.parameters.map(site => publicType(surface.copy(site.type)));
+		callback.delegateType = result.scalarName === "unit" ? `global::System.Action<${types.join(", ")}>` : `global::System.Func<${[...types, publicType(result)].join(", ")}>`;
+	}
 	return { ir, surface, componentName, namespace: `LeanBridge.${componentName}`, assembly: `LeanBridge.${componentName}`, publicType, nativeType };
 };
 

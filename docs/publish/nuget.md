@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, and acyclic copied records. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, acyclic copied records, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,11 +32,29 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete, pure functions with copied parameters and results. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Optional values, variants, resources, callbacks and effects remain outside this ordinary NuGet profile.
+The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Optional values, variants, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API also fits its primitive-only source profile; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export callbacks and returned functions
+
+Select functions with primitive callback parameters in the same export configuration:
+
+```lean
+namespace Aurora
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
+end Aurora
+```
+
+Include both exports and set `"arities": { "Aurora.make_word": 1 }` to leave the final argument on the returned closure. For a reviewed Binding IR, its outer parameter count supplies that decision; do not also configure `arities`.
+
+Callbacks accept one to sixteen primitive arguments and a primitive result. They borrow one synchronous call. C# uses `Func` or `Action` delegates and `LeanClosure<TDelegate>` with `Invoke`, `IsClosed` and `Dispose`. `Nat`/`Int` stay exact `BigInteger` values, and temporary native buffers remain private. See [consumer ownership and exception behavior](../consume/dotnet.md#callbacks-and-returned-lean-functions).
+
+A combined build rejects the complete request if any selected target does not support its callable signatures. Ordinary-source and reviewed NuGet packages run through the same private C callable ABI and shared runtime.
 
 ## Build and inspect the package
 

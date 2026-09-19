@@ -84,7 +84,15 @@ LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
   node --test --test-reporter=spec tests/native-dotnet.test.mjs
 ```
 
-Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. The [NuGet acceptance record](../evidence/native-dotnet-20260914.md) includes the exact locally tested archive hashes.
+Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. Cross-package callbacks, returned closures and nested exception identity use the same runtime. The [earlier NuGet acceptance record](../evidence/native-dotnet-20260914.md) retains the original copied-value archive hashes; the [callable record](../evidence/dotnet-callables-20260919.md) includes the rebuilt packages.
+
+Run primitive callable acceptance on both ordinary-source and independently reviewed NuGet packages:
+
+```sh
+LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs
+```
+
+This checks nineteen primitive mappings, one- and sixteen-argument callbacks and returned closures, exception identity/stack preservation, async delegate rejection, reentry limits, expired borrows, GC rooting, finalization, thread ownership and lease exhaustion. Seven invalid C# consumers must fail compilation. Installed executables repeat their checks with a relocated runtime containing no SDK or sources. Results are recorded in `build/callables/dotnet.json` and uploaded by the managed consumer CI job. A separate compiled contract test checks deferred active disposal and the process-change guard without forking the CLR.
 
 For ordinary Rust crates, install Rust 1.90+ and Cargo. `scripts/bootstrap-rust-ci.sh` installs the SHA-256-pinned CI toolchain. Set `LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` when they are not on `PATH`, then run:
 

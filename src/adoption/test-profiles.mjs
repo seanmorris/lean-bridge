@@ -41,6 +41,8 @@ const profileManifest = Object.freeze({
 		, "rust-callable-contract"
 		, "cpp-callable-contract"
 		, "cpp-callable-evidence"
+		, "dotnet-callable-contract"
+		, "dotnet-callable-evidence"
 		, "rust-callable-evidence"
 		, "callable-evidence"
 		, "publish-configuration"
@@ -145,7 +147,8 @@ const profileManifest = Object.freeze({
 		, "php-zend-extension"
 	])
 	, native: Object.freeze([
-		"c-family-package"
+		"dotnet-callables"
+		, "c-family-package"
 		, "lake-generated-packages"
 		, "lake-generated-workspace"
 		, "lake-generators"

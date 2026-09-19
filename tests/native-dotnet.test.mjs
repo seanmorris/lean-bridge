@@ -89,13 +89,16 @@ def echo_markers (value : Array Empty) := value
 def grow (value : String) : Array String := #[value, value]
 def matrix (value : Array UInt32) : Array (Array UInt32) := #[value, value.reverse]
 def answer : UInt64 := 18446744073709551615
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 := callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
 def duplicate {α : Type} [Add α] (value : α) : α := value + value
 theorem echo_rows_spec (value : Array (Array Leaf)) : echo_rows value = value := rfl
 end ${name}
 `);
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({
 		schemaVersion: 1, modules: [name]
-		, exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "echo_words", "echo_markers", "grow", "matrix", "answer", "double_word"].map(fn => `${name}.${fn}`)]
+		, exports: [...scalars.flatMap(([label]) => [`${name}.echo_${label}`, `${name}.array_${label}`]), ...["echo_record", "choose", "echo_rows", "echo_word", "echo_empty", "echo_words", "echo_markers", "grow", "matrix", "answer", "double_word", "call_word", "make_word"].map(fn => `${name}.${fn}`)]
+		, arities: { [`${name}.make_word`]: 1 }
 		, specializations: [{ name: `${name}.double_word`, declaration: `${name}.duplicate`, types: ["UInt32"] }]
 		, targets: { nuget: { name: `Acme.${name}`, version: "2.0.0-rc.1" }, c: { name: `${name.toLowerCase()}-c`, version: "1.0.0" } } }));
 };
@@ -122,6 +125,7 @@ ${scalars.map(([label, , type, value]) => `        var input${cap(label)} = new 
         Check(!ReferenceEquals(copied${cap(label)}, input${cap(label)}));
         Check(Api.Array${cap(label)}(Array.Empty<${type}>()).Length == 0);`).join("\n")}
         Check(Api.Answer() == ulong.MaxValue); Check(Api.DoubleWord(21) == 42);
+        using (var closure = Api.MakeWord(2)) Check(Api.CallWord(40, closure.Invoke) == 44);
         for (int i = 0; i < 2000; i++) Check(Api.EchoU32(42) == 42);
         var allocated = GC.GetAllocatedBytesForCurrentThread();
         for (int i = 0; i < 10000; i++) Check(Api.EchoU32(42) == 42);
@@ -202,6 +206,13 @@ static class Program {
   static void Main() {
     Parallel.Invoke(() => { if (LeanBridge.Aurora.Api.EchoNat(BigInteger.One << 200) != BigInteger.One << 200) throw new Exception(); },
       () => { if (LeanBridge.Boreal.Api.EchoInteger(-99) != -99) throw new Exception(); });
+    using (var closure = LeanBridge.Boreal.Api.MakeWord(2)) {
+      if (LeanBridge.Aurora.Api.CallWord(40, closure.Invoke) != 44) throw new Exception("cross-package closure");
+      if (LeanBridge.Aurora.Api.CallWord(40, value => LeanBridge.Boreal.Api.CallWord(value, x => x + 1)) != 44) throw new Exception("cross-package reentry");
+      var original = new Exception("cross-package error");
+      try { LeanBridge.Aurora.Api.CallWord(40, value => LeanBridge.Boreal.Api.CallWord(value, _ => throw original)); throw new Exception("accepted failure"); }
+      catch (Exception error) { if (!ReferenceEquals(error, original)) throw; }
+    }
     var registry = (Dictionary<string, object>)AppDomain.CurrentDomain.GetData("lean-bridge.native-library-v1.dotnet")!;
     var snapshot = Marshal.GetDelegateForFunctionPointer<Snapshot>(NativeLibrary.GetExport((nint)registry["broker"], "lean_bridge_native_snapshot_read"));
     var bytes = Marshal.AllocHGlobal(40);

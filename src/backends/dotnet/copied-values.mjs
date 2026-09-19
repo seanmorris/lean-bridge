@@ -6,11 +6,12 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedDotnetModel } from "./copied-model.mjs";
 import { copiedConversions, copiedNativeTypes, copiedScope } from "./copied-conversions.mjs";
+import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
 
-const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(model.surface.copy(site.type))} @${fn.parameters[index].name}`).join(", ");
+const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
 const args = fn => fn.parameters.map(parameter => `@${parameter.name}`).join(", ");
 const returnsUnit = fn => fn.resultType === "void";
-const resultType = (model, fn) => returnsUnit(fn) ? "void" : model.publicType(model.surface.copy(fn.declaration.result.type));
+const resultType = (model, fn) => dotnetResult(model, dotnetValue(model, fn.declaration.result.type));
 
 const loader = evidence => !evidence ? `    static Native() => throw new InvalidOperationException("Generate a compiled NuGet release before calling this API");` : `    private static readonly nint Handle = Load();
     static Native() => NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, (name, assembly, searchPath) => name == Library ? Handle : 0);
@@ -85,6 +86,8 @@ internal struct NativeError
 }
 
 ${copiedScope}
+${surface.callbacks.size ? dotnetCallableState : ""}
+${dotnetCallableTypes(model)}
 
 internal static unsafe class Runtime
 {
@@ -97,22 +100,8 @@ internal static unsafe class Runtime
         throw new LeanBridgeException(status, message);
     }
 ${copiedConversions(model)}
-${surface.functions.map((fn, index) => {
-	const result = surface.copy(fn.declaration.result.type), unit = returnsUnit(fn);
-	return `    internal static ${resultType(model, fn)} Call${index}(${parameters(model, fn)})
-    {
-        ${fn.declaration.parameters.some(site => surface.copy(site.type).aggregate) ? "using var scope = new Scope();" : ""}
-${fn.declaration.parameters.map((site, n) => `        var input${n} = To${surface.copy(site.type).index}(@${fn.parameters[n].name}${surface.copy(site.type).aggregate ? ", scope" : ""});`).join("\n")}
-        ${unit ? "" : `${model.nativeType(result)} output = default;`}
-        try
-        {
-            var status = Native.Call${index}(${fn.declaration.parameters.map((site, n) => `${surface.copy(site.type).aggregate ? "in " : ""}input${n}`).concat(unit ? [] : ["ref output"]).concat("out var error").join(", ")});
-            Check(status, error);
-            ${unit ? "" : `return From${result.index}(output);`}
-        }
-        finally { ${result.aggregate ? `Native.Clear${result.index}(ref output);` : ""} }
-    }`;
-}).join("\n")}
+${dotnetCallableSupport(model)}
+${surface.functions.map((fn, index) => dotnetNativeCall(model, { name: `Call${index}`, native: `Call${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result })).join("\n")}
 }
 
 internal static class Native
@@ -120,7 +109,8 @@ internal static class Native
     private const string Library = ${JSON.stringify(evidence?.library ?? `lib${surface.prefix}.so`)};
 ${loader(evidence)}
 ${surface.functions.map((fn, index) => `    [DllImport(Library, EntryPoint = "${fn.name}", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-    internal static extern int Call${index}(${fn.declaration.parameters.map((site, n) => { const copy = surface.copy(site.type); return `${copy.aggregate ? "in " : ""}${model.nativeType(copy)} input${n}`; }).concat(returnsUnit(fn) ? [] : [`ref ${model.nativeType(surface.copy(fn.declaration.result.type))} output`]).concat("out NativeError error").join(", ")});`).join("\n")}
+    internal static extern int Call${index}(${fn.declaration.parameters.map((site, n) => { const copy = dotnetValue(model, site.type); return `${copy.aggregate || copy.type?.callable ? "in " : ""}${model.nativeType(copy)} input${n}`; }).concat(returnsUnit(fn) ? [] : [`ref ${dotnetValue(model, fn.declaration.result.type).type?.callable ? "nint" : model.nativeType(dotnetValue(model, fn.declaration.result.type))} output`]).concat("out NativeError error").join(", ")});`).join("\n")}
+${dotnetCallableImports(model)}
 ${surface.copies.filter(copy => copy.aggregate).map(copy => `    [DllImport(Library, EntryPoint = "${copy.name}_clear", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     internal static extern void Clear${copy.index}(ref ${model.nativeType(copy)} value);`).join("\n")}
 }
@@ -147,6 +137,7 @@ public sealed class LeanBridgeException : global::System.Exception
     internal LeanBridgeException(int status, string message) : base(message) => Status = status;
 }
 ${model.surface.copies.filter(copy => copy.record).map(copy => `/// <summary>A copied Lean record.</summary>\npublic sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")});`).join("\n")}
+${model.surface.callbacks.size ? dotnetClosurePublic : ""}
 /// <summary>The functions selected by the Lean package author.</summary>
 public static class Api
 {
@@ -172,9 +163,9 @@ ${model.surface.functions.map((fn, index) => `    public static ${resultType(mod
 </Project>
 `
 		, "NuGet.Config": '<configuration><packageSources><clear /></packageSources></configuration>\n'
-		, "README.md": `# ${model.assembly}\n\nGenerated C# API: ${model.namespace}.Api. Nat and Int use System.Numerics.BigInteger; arrays and byte arrays own copied managed storage. Strings use strict UTF-8 and preserve embedded NUL. Unit parameters use default(Unit); Unit results return void. Native conversions share a 16 MiB per-call copy budget and accept nested arrays/acyclic records up to 32 types deep. Null records, strings and arrays, negative Nat values and invalid UTF-16 fail before invoking Lean. The compiled NuGet release includes its runtime and checks native library hashes when loading.\n`
+		, "README.md": `# ${model.assembly}\n\nGenerated C# API: ${model.namespace}.Api. Nat and Int use System.Numerics.BigInteger; arrays and byte arrays own copied managed storage. Strings use strict UTF-8 and preserve embedded NUL. Unit parameters use default(Unit); Unit results return void. Native conversions share a 16 MiB per-call copy budget and accept nested arrays/acyclic records up to 32 types deep. Null records, strings and arrays, negative Nat values and invalid UTF-16 fail before invoking Lean. Callbacks use typed Func/Action delegates and borrow the synchronous call. Async delegates are rejected; callback arguments are independent managed copies. Callback exceptions retain identity and their original stack after native cleanup. Returned LeanClosure<TDelegate> values expose Invoke and IsClosed; use using/Dispose to release them. Invocation requires the creating thread; disposal can run on another thread and defers until active invocation finishes. Finalization is a fallback. Retaining Invoke retains the same lease, and all aliases reject after disposal. Calls after fork require a fresh process. The compiled NuGet release includes its runtime and checks native library hashes when loading.\n`
 	};
-	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close"], capabilityGaps: [{ feature: "identity-and-effects", reason: "This ordinary-source profile admits pure copied values only." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
+	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };
 
