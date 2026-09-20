@@ -6,10 +6,12 @@ import gc
 import math
 import os
 import pickle
+import signal
 import sys
 import threading
 import typing
 import weakref
+import warnings
 
 import lean_callables as api
 from lean_callables import _native as native
@@ -358,10 +360,29 @@ check(live() == baseline)
 with api.make_unit(None) as closure:
     check(closure(True, None) is None)
 
-# The GIL-enabled parent can continue after a fork; the child cannot use a lease.
+# Deliberately fork with inherited locks held. The child must reject every call
+# before acquiring a lock. CPython 3.12+ warns about this unsupported operation.
 closure = api.make_uint32(42)
-child = os.fork()
+locked, release = threading.Event(), threading.Event()
+
+
+def hold_fork_locks():
+    with native._state.lock, closure._lease.lock:
+        locked.set()
+        check(release.wait(10))
+
+
+worker = threading.Thread(target=hold_fork_locks)
+worker.start()
+check(locked.wait(10))
+try:
+    with warnings.catch_warnings(record=True) as fork_warnings:
+        warnings.simplefilter("always")
+        child = os.fork()
+finally:
+    release.set()
 if child == 0:
+    signal.alarm(5)
     try:
         rejects(RuntimeError, lambda: closure(True, 0))
         rejects(RuntimeError, closure.close)
@@ -369,7 +390,16 @@ if child == 0:
     except BaseException:
         os._exit(1)
     os._exit(0)
+worker.join(10)
+check(not worker.is_alive())
 check(os.waitpid(child, 0)[1] == 0)
+check(len(fork_warnings) == (1 if sys.version_info >= (3, 12) else 0))
+for warning in fork_warnings:
+    check(warning.category is DeprecationWarning)
+    check(str(warning.message) == (
+        f"This process (pid={os.getpid()}) is multi-threaded, "
+        "use of fork() may lead to deadlocks in the child."
+    ))
 check(closure(True, 0) == 42)
 closure.close()
 

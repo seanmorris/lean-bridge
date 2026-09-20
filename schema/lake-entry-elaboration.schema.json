@@ -81,7 +81,18 @@
           "const": []
         },
         "arities": {
-          "const": []
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              { "$ref": "#/$defs/name" },
+              { "type": "integer", "minimum": 0, "maximum": 32 }
+            ],
+            "items": false
+          }
         },
         "specializations": { "$ref": "lean-export-configuration.schema.json#/$defs/specializations" },
         "contracts": { "$ref": "lean-export-configuration.schema.json#/$defs/contracts" },

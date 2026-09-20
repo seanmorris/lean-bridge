@@ -1941,9 +1941,9 @@
     {
       "id": "python-callables-installed",
       "kind": "installed",
-      "revision": "8f0c94826ce6782d677867e38f2f375aabde7624",
+      "revision": "09b532e9ed86169a0604a902800dcc0c4bbd32aa",
       "command": "LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs",
-      "scope": "Both source paths pass 49,933 installed CPython 3.11.2 checks each. All nineteen primitive callback/closure conversions, exact values, original exceptions, reentry, expired borrows, thread/fork checks, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. Local glibc floor 2.36; CI retains 2.38. No other-host callable or copied-field promotion; exact archive identities are retained in docs/evidence/python-callables-20260918.json. Ruby callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Ruby primitive callable promotion is recorded separately in ruby-callables-installed. Rust callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. Rust primitive callable promotion is recorded separately in rust-callables-installed. C++ callable milestone: generator/CI source hashes refreshed; earlier archive identities and installed scopes remain historical. C++ primitive callable promotion is recorded separately in cpp-callables-installed. C/GMP milestone: generator and corpus source hashes refreshed; earlier archive identities remain historical. Fresh GMP evidence is recorded separately in c-gmp-installed. .NET callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in dotnet-callables-installed. JVM callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in jvm-callables-installed. Native PHP callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-native-callables-installed. PHP-Wasm callable milestone: generator and fixture source hashes refreshed; earlier archive identities remain historical. Fresh callable evidence is recorded separately in php-wasm-callables-installed. WIT callable projection milestone: shared generator, test-manifest and CI source hashes refreshed. Historical archive identities and installed scopes are unchanged; synthetic Component Model probes add no installed callable coverage. See docs/evidence/wit-callable-projection-20260919.md. WIT native-callable milestone: shared generator and gate source hashes refreshed; historical archive identities and installed scopes remain unchanged. New WIT callable evidence is recorded separately in wit-wasi-callables-installed. npm transport staging: shared source hashes refreshed; historical archive identities and installed scopes remain unchanged. See docs/evidence/npm-callable-transport-20260919.md. npm callable integration: shared source hashes refreshed; historical archive identities and installed scopes unchanged. See docs/evidence/npm-callables-20260919.md. GCC 13 frame fix: shared source hashes refreshed without changing historical archive identities or type coverage. See docs/evidence/c-callable-frames-20260919.md.",
+      "scope": "Both source paths pass 49,939 installed CPython 3.12.14 checks each after the 20 September CI repair; CPython 3.11.16 passes 49,937 each. All nineteen primitive callable conversions, exact values, original exceptions, reentry, expired borrows, allocation-failure cleanup, deferred/concurrent disposal and registry exhaustion. The fork-negative test checks CPython warnings explicitly and rejects inherited calls before acquiring held runtime/closure locks. Ordinary and reviewed wheels install offline after author/build removal, without compilers on consumer PATH. Explicit local glibc floor 2.36; CI retains 2.38. Current archive and receipt identities are in docs/evidence/python-callables-20260918.json. No new type-coverage cells.",
       "files": [
         {
           "path": "src/backends/python/callables.mjs",
@@ -2007,7 +2007,7 @@
         },
         {
           "path": "tests/python-callable-evidence.test.mjs",
-          "sha256": "6f231fb15d214a6618559e74fbbf4ec3b1b476d9ff05c097d1e5c59e27c6b185"
+          "sha256": "d2cc19d53aeb0ed7f6d5607d8666dca8f990034d284c76f260fab82bad4f5b4c"
         },
         {
           "path": "tests/helpers/python-callable-fixture.mjs",
@@ -2035,7 +2035,7 @@
         },
         {
           "path": "tests/fixtures/callable-consumers/python.py",
-          "sha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476"
+          "sha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517"
         },
         {
           "path": "tests/type-surface.test.mjs",
@@ -2051,21 +2051,21 @@
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
-          "sha256": "38c1cefcca2ca44d8604bbde876c6b3c27de8c67df38ab6de2493424551dfd58"
+          "sha256": "9a7a52acd0d488a4b931b170b07f2a7e6eeff01fc73e0fa7d5af23d0ea0f6f82"
         },
         {
           "path": "docs/evidence/python-callables-20260918.json",
-          "sha256": "1d039215c81b61a70939511d13ec35e6116efd0d4496f87dbaa9b9cdbdfe0036"
+          "sha256": "3f441e6e2a2e787f2f6567871bc8915802efa6f4b97328285be430f07ba058cc"
         }
       ],
       "artifacts": [
         {
           "path": "ordinary-source/archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
-          "sha256": "00e18f2d6b11b7b1d22fb7b6f400b5563cef57337b4e91cb7db0a1e73de64b29"
+          "sha256": "104984a709cd22edc1aadda50b4cbdddfaaea20038222eec435edecf1197d175"
         },
         {
           "path": "reviewed-ir/archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
-          "sha256": "cf461b9b249c343b1f3ffd6ada5fcc3184148dd4709cca64ddefe007b4f3f09e"
+          "sha256": "ae1c90efc0b6a96f3d6f317871a83ea01d851309efe48084eda6f322ed613207"
         }
       ]
     },

@@ -387,7 +387,7 @@ test("compiler-time cancellation and dependency drift release no report", { skip
 	await assert.rejects(() => readdir(staging), { code: "ENOENT" });
 });
 
-test("analysis reports configured resources and closure arities instead of ignoring them", { skip: !enabled }, async t => {
+test("analysis preserves closure arities while reporting unsupported resources", { skip: !enabled }, async t => {
 	const { root } = await fixture(t);
 	await saveLakeFile(root, "lean-bridge.exports.json", JSON.stringify({ schemaVersion: 1
 		, exports: ["OnboardingSmall.add"]
@@ -399,6 +399,34 @@ test("analysis reports configured resources and closure arities instead of ignor
 	await assertJsonSchema("project-analysis", result.response.result);
 	assert.equal(result.response.result.bindingIr, null);
 	assert.deepEqual(result.response.result.proposedExports, []);
-	assert.equal(result.response.result.diagnostics.filter(item => item.code === "analysis-configuration-unsupported").length, 2);
+	assert.deepEqual(result.response.result.elaboration.request.arities, [["OnboardingSmall.add", 1]]);
+	const diagnostics = result.response.result.diagnostics.filter(item => item.code === "analysis-configuration-unsupported");
+	assert.equal(diagnostics.length, 1);
+	assert.match(diagnostics[0].message, /resources/);
+	assert.deepEqual(await lakeInputState(root), before);
+});
+
+test("analysis accepts configured returned closures and validates their arity evidence", { skip: !enabled }, async t => {
+	const { root } = await fixture(t);
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
+		, exports: ["OnboardingSmall.add"], arities: { "OnboardingSmall.add": 1 } }));
+	const before = await lakeInputState(root);
+	const result = await runCli({ argv: ["analyze", "--project", root, "--json"], handlers: handlers(transport()) });
+	assert.equal(result.exitCode, 0, JSON.stringify(result.response.diagnostics));
+	const analysis = result.response.result;
+	await assertJsonSchema("project-analysis", analysis);
+	assert.deepEqual(analysis.elaboration.request.arities, [["OnboardingSmall.add", 1]]);
+	assert.deepEqual(analysis.proposedExports, ["lean:OnboardingSmall.add"]);
+	assert.equal(analysis.bindingIr.document.declarations[0].parameters.length, 1);
+	assert.equal(analysis.bindingIr.document.declarations[0].result.type.kind, "named");
+	for(const arities of [
+		[["OnboardingSmall.add", -1]], [["OnboardingSmall.add", 33]]
+		, [["OnboardingSmall.add", 1.5]], [["OnboardingSmall.add", "1"]]
+		, [["OnboardingSmall.add"]], [["OnboardingSmall.add", 1, 2]]
+		, [["bad name", 1]], [["OnboardingSmall.add", 1], ["OnboardingSmall.add", 1]]
+	]) {
+		const invalid = structuredClone(analysis); invalid.elaboration.request.arities = arities;
+		await assert.rejects(() => assertJsonSchema("project-analysis", invalid));
+	}
 	assert.deepEqual(await lakeInputState(root), before);
 });

@@ -1,7 +1,7 @@
 # Python primitive callbacks and returned closures
 
-Ordinary-source and independently reviewed wheels each pass 49,933 installed
-checks on CPython 3.11.2. The [acceptance record](python-callables-20260918.json)
+Ordinary-source and independently reviewed wheels each pass 49,939 installed
+checks on CPython 3.12.14 after the 20 September CI repair. The [acceptance record](python-callables-20260918.json)
 retains the source, independent consumer, compiler model, receipt and archive
 identities for both paths.
 
@@ -35,7 +35,10 @@ adapter, compiled component and compatible shared runtime.
   suppresses later callbacks; nested calls can catch failures and recover.
   The native 64-call re-entry limit rejects and recovers.
 - Expired host callbacks remain invalid after token-slot reuse. Closures reject
-  wrong-thread invocation and post-fork use. Independent calls and constant
+  wrong-thread invocation and post-fork use, including when another thread
+  holds the inherited runtime and closure locks. The fork-rejection test checks
+  CPython's expected deprecation warning locally; other stderr still fails the
+  installed consumer check. Independent calls and constant
   Unit closures execute concurrently on their own threads.
 - Context managers, repeated close, garbage collection, deferred self-close,
   concurrent close and 4,096-lease exhaustion return the shared broker to its

@@ -3,7 +3,7 @@
   "profile": "native-library-v1",
   "wordBits": 64,
   "glibcFloor": "2.36",
-  "interpreter": "CPython 3.11.2",
+  "interpreter": "CPython 3.12.14",
   "sources": [
     {
       "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -18,7 +18,7 @@
       "sha256": "fb6224e528cddbc16d93f0279379bd666f9be9d5c8f55e91dd1e6787dd1ff383"
     }
   ],
-  "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
+  "consumerSha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517",
   "signatures": [
     {
       "name": "Callables.callUnit",
@@ -929,19 +929,19 @@
   ],
   "executions": [
     {
-      "bindingIrSha256": "0024b533cb7b9282f52505051bf849a1324a5bd0be43f0075ab2a350f85c77e6",
-      "checks": 49933,
+      "bindingIrSha256": "cf4fff2cb6d68ce7fcdf546b611e6f49614068d6fa23461ee020f773d710e848",
+      "checks": 49939,
       "compilerFreePath": true,
-      "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
-      "modelSha256": "34952f4f1ae08e25185d550c1311fb39e509d3bf77ac0619fe069cf9d0f7098d",
+      "consumerSha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517",
+      "modelSha256": "20f4c3340960a711c4e39734adfa666a57c11d6dad75c2334049b689c59c6685",
       "offlineInstall": true,
       "packages": [
         {
           "artifacts": [
             {
-              "bytes": 51490285,
+              "bytes": 51490004,
               "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
-              "sha256": "00e18f2d6b11b7b1d22fb7b6f400b5563cef57337b4e91cb7db0a1e73de64b29"
+              "sha256": "104984a709cd22edc1aadda50b4cbdddfaaea20038222eec435edecf1197d175"
             }
           ],
           "ecosystem": "pypi",
@@ -957,24 +957,24 @@
       ],
       "path": "ordinary-source",
       "profile": "python",
-      "receiptSha256": "731a732e72fccf4bebf04f4c52e48db21dc646aeb909e068d779fdccbf7af4f0",
+      "receiptSha256": "49afb70d49ab2e4e8fdef762cb8d417c945130e88ed0e746bae9b0366a1c0e01",
       "sourceRemovedBeforeInstallation": true,
       "sourceTreeSha256": "9b113e305b1192719c354075b5a6237d7e5488ac456c0dff9c7d88ab6b3ee93d"
     },
     {
-      "bindingIrSha256": "e214243b9fd7bf7f18d8f8d9c47b27e6bdc0381607aef616ceff3b94baef4a3d",
-      "checks": 49933,
+      "bindingIrSha256": "fd057020470c2e0cbe73739a9946ac4c1264444eb86ef0b362a1c63017d513c0",
+      "checks": 49939,
       "compilerFreePath": true,
-      "consumerSha256": "8eca44b73bb6fca5e26a63bbd1812ca6a1b3949d9896b9f14fdd9d2b4e774476",
-      "modelSha256": "33eb0f8cc5f4ff31576a18089070e67486531be306e6538fc00789228c7b9aa7",
+      "consumerSha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517",
+      "modelSha256": "7fdc4a291efadc2dba27cc36f7a8ef24e4a122fe0a34dd4e08a4ed60352e1a0e",
       "offlineInstall": true,
       "packages": [
         {
           "artifacts": [
             {
-              "bytes": 51504320,
+              "bytes": 51504043,
               "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
-              "sha256": "cf461b9b249c343b1f3ffd6ada5fcc3184148dd4709cca64ddefe007b4f3f09e"
+              "sha256": "ae1c90efc0b6a96f3d6f317871a83ea01d851309efe48084eda6f322ed613207"
             }
           ],
           "ecosystem": "pypi",
@@ -990,9 +990,81 @@
       ],
       "path": "reviewed-ir",
       "profile": "python",
-      "receiptSha256": "12360c829e9a5715ff1b7bc5f84390d1fd3b0861ab1a7b93b8743d143477ebd2",
+      "receiptSha256": "e66efcfea4ade4fd72b95e7f911253c339840c3fcb840fad185edf5085bb2a84",
       "sourceRemovedBeforeInstallation": true,
       "sourceTreeSha256": "778cb30011bcd734195d53d85e069a0738857670d6226b73c72c1cabc7769d68"
     }
-  ]
+  ],
+  "refreshed": "2026-09-20",
+  "compatibilityExecutions": {
+    "interpreter": "CPython 3.11.16",
+    "executions": [
+      {
+        "bindingIrSha256": "cf4fff2cb6d68ce7fcdf546b611e6f49614068d6fa23461ee020f773d710e848",
+        "checks": 49937,
+        "compilerFreePath": true,
+        "consumerSha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517",
+        "modelSha256": "20f4c3340960a711c4e39734adfa666a57c11d6dad75c2334049b689c59c6685",
+        "offlineInstall": true,
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51490004,
+                "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "104984a709cd22edc1aadda50b4cbdddfaaea20038222eec435edecf1197d175"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "callables-api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ],
+        "path": "ordinary-source",
+        "profile": "python",
+        "receiptSha256": "49afb70d49ab2e4e8fdef762cb8d417c945130e88ed0e746bae9b0366a1c0e01",
+        "sourceRemovedBeforeInstallation": true,
+        "sourceTreeSha256": "9b113e305b1192719c354075b5a6237d7e5488ac456c0dff9c7d88ab6b3ee93d"
+      },
+      {
+        "bindingIrSha256": "fd057020470c2e0cbe73739a9946ac4c1264444eb86ef0b362a1c63017d513c0",
+        "checks": 49937,
+        "compilerFreePath": true,
+        "consumerSha256": "d0d2a54a230dac528999465904577b06fe3c5151476d376fd939c4463299d517",
+        "modelSha256": "7fdc4a291efadc2dba27cc36f7a8ef24e4a122fe0a34dd4e08a4ed60352e1a0e",
+        "offlineInstall": true,
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51504043,
+                "path": "archives/callables_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "ae1c90efc0b6a96f3d6f317871a83ea01d851309efe48084eda6f322ed613207"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "callables-api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ],
+        "path": "reviewed-ir",
+        "profile": "python",
+        "receiptSha256": "e66efcfea4ade4fd72b95e7f911253c339840c3fcb840fad185edf5085bb2a84",
+        "sourceRemovedBeforeInstallation": true,
+        "sourceTreeSha256": "778cb30011bcd734195d53d85e069a0738857670d6226b73c72c1cabc7769d68"
+      }
+    ]
+  }
 }
