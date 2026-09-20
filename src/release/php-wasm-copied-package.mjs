@@ -51,7 +51,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
-	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
+	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, compounds: false });
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
 	const phpDependencies = { ...brickMath, "bootstrap.php": "<?php\ndeclare(strict_types=1);\nrequire_once __DIR__ . '/dependencies/brick-math/autoload.php';\nrequire_once __DIR__ . '/src/Api.php';\n" };
 	const runtimeIndex = `import { createPhpWasmCopiedDescriptor } from './host.mjs';

@@ -13,7 +13,7 @@ import { phpValue, phpCallableDefinitions } from "./callables.mjs";
 export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
-		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.record ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
+		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
 		, ...surface.callbacks.size ? [phpCallableDefinitions(model)] : []
 		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return copy.ctype + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${result.ctype} *`]).concat("BridgeError *").join(", ")});`; })
 	].join("\n");
@@ -44,9 +44,23 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 	else if(name === "char") lines.push("if (!is_string($value)) throw new \\TypeError('Char requires a string');", "if (strlen($value) < 1 || strlen($value) > 4 || preg_match('/\\\\A.\\\\z/us', $value) !== 1) throw new \\ValueError('Char requires one Unicode scalar');");
 	else if(name === "string") lines.push("if (!is_string($value)) throw new \\TypeError('Expected a UTF-8 string');", "$budget->charge(strlen($value));", "if (preg_match('//u', $value) !== 1) throw new \\ValueError('String requires valid UTF-8');");
 	else if(name === "bytes") lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected Bytes');`, "$budget->charge(strlen($value->toString()));");
+	else if(copy.compound === "option" || copy.compound === "result")
+	{
+		if(copy.compound === "option") lines.push("if ($value === null) return null;");
+		const branches = copy.compound === "option" ? ["Some"] : ["Ok", "Err"];
+		branches.forEach((branch, i) => lines.push(`if ($value instanceof \\${model.namespace}\\${branch}) {`
+			, `    if (array_keys(get_object_vars($value)) !== ['value']) throw new \\TypeError('${branch} requires one initialized value field');`
+			, `    return new \\${model.namespace}\\${branch}(self::check${copy.fields[i].type.index}($value->value, $budget));`, "}"));
+		lines.push(`throw new \\TypeError('Expected ${branches.join(" or ")}');`);
+	} else if(copy.compound === "tuple")
+	{
+		lines.push("if (!is_array($value) || !array_is_list($value) || count($value) !== 2) throw new \\TypeError('Prod requires a two-element list');"
+			, "$budget->charge(2, 32);"
+			, `return [${copy.fields.map((field, i) => `self::check${field.type.index}($value[${i}], $budget)`).join(", ")}];`);
+	}
 	else if(copy.record) lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected ${copy.publicType}');`, ...copy.fields.map(field => `self::check${field.type.index}($value->${field.name}, $budget);`));
 	else lines.push("if (!is_array($value) || !array_is_list($value)) throw new \\TypeError('Expected a list with consecutive integer keys');", "$budget->charge(count($value), 32);", "$result = [];", `foreach ($value as $item) $result[] = self::check${copy.element.index}($item, $budget);`, "return $result;");
-	if(!copy.element) lines.push("return $value;");
+	if(!copy.element && !copy.compound) lines.push("return $value;");
 	return `    public static function check${copy.index}(mixed $value, Budget $budget): mixed {\n        $budget->charge(1, 16);\n${lines.map(line => `        ${line}`).join("\n")}\n    }`;
 }).join("\n");
 
@@ -81,6 +95,26 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 			else output.push(`return ${ns}Bytes::fromString($bytes);`);
 		}
 		input.push("$out->data = $scope->buffer($bytes);");
+	} else if(copy.compound)
+	{
+		const to = (field, value) => [`$item = self::to${field.type.index}(${value}, $scope);`, `$out->${field.name} = $item${field.type.aggregate ? "" : "->cdata"};`];
+		const from = field => `self::from${field.type.index}($value->${field.name}, $scope)`;
+		if(copy.compound === "option")
+		{
+			input.push("if ($value !== null) {", "    $out->has_value = 1;", ...to(copy.fields[0], "$value->value").map(line => `    ${line}`), "}");
+			output.push("if ($value->has_value !== 0 && $value->has_value !== 1) throw new \\RuntimeException('Invalid native Option flag');"
+				, `return $value->has_value === 0 ? null : new ${ns}Some(${from(copy.fields[0])});`);
+		} else if(copy.compound === "result")
+		{
+			input.push(`if ($value instanceof ${ns}Ok) {`, "    $out->is_ok = 1;", ...to(copy.fields[0], "$value->value").map(line => `    ${line}`)
+				, "} else {", ...to(copy.fields[1], "$value->value").map(line => `    ${line}`), "}");
+			output.push("if ($value->is_ok !== 0 && $value->is_ok !== 1) throw new \\RuntimeException('Invalid native Except flag');"
+				, `return $value->is_ok === 1 ? new ${ns}Ok(${from(copy.fields[0])}) : new ${ns}Err(${from(copy.fields[1])});`);
+		} else
+		{
+			input.push("$scope->budget->charge(2, 32);", ...copy.fields.flatMap((field, i) => to(field, `$value[${i}]`)));
+			output.push("$scope->budget->charge(2, 32);", `return [${copy.fields.map(from).join(", ")}];`);
+		}
 	} else if(copy.record)
 	{
 		for(const field of copy.fields) input.push(`$field${field.type.index}_${field.name} = self::to${field.type.index}($value->${field.name}, $scope);`, `$out->${field.name} = $field${field.type.index}_${field.name}${field.type.aggregate ? "" : "->cdata"};`);

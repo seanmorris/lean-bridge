@@ -164,6 +164,24 @@ LEAN_BRIDGE_PHP_CALLABLE_TEST=1 \
 
 This checks all nineteen primitive signatures and sixteen-argument functions on ordinary-source and independently reviewed Composer paths. Weak and strict callers each run twice after relocation, without author sources, compilers, Composer caches or runtime overrides. It checks exact values, exception identity, borrowed lifetime, reentry, alias lifetime, deterministic disposal, destructor recovery, capacity limits, fiber rejection and post-fork rejection. A 20,000-callback stress test checks retained memory after warm-up. A separate production-state contract checks deferred active close. CI retains `build/callables/php-native.json`; the [acceptance record](../evidence/php-callables-20260919.md) identifies the installed archives.
 
+Run the independent native compound acceptance with the same PHP and Composer tools:
+
+```sh
+LEAN_BRIDGE_PHP_COMPOUND_TEST=1 \
+  node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs
+```
+
+Both source paths build 64 exports covering nineteen primitives in options,
+results and nested binary products, including arrays and record fields. Weak
+and strict callers each run twice after offline Composer installation and
+relocation, with producer sources and archive handoffs removed. A separate
+in-memory probe injects conversion failures and checks scratch/output cleanup;
+both public callers then repeat against the unchanged installation. The suite
+checks malformed values, native flags, inactive payloads, copy limits and
+recovery. CI retains `build/compounds/php-native.json`. The
+[native compound record](../evidence/php-native-compounds-20260920.md) records
+the exact installed packages. PHP-Wasm compounds remain a separate milestone.
+
 The generic Zend adapter has a separate real PHP-Wasm check:
 
 ```sh

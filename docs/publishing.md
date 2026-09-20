@@ -18,7 +18,7 @@ Select the languages your library will serve, then follow each target's build an
 | PHP, native or Wasm | [Composer / Packagist and npm](publish/php.md) | An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `php-native` or `php-wasm`. PHP-Wasm uses its own compiler inputs and npm/Composer coordinates. Alpha recipes retain separate manifests. |
 | WIT / WASI | [Component and archive distribution](publish/wit-wasi.md) | An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `wit-wasi`. |
 
-Options, results and nested binary products can target npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby and Perl. See the [conversion tables](reference/types.md) for each language's mappings and tested positions. npm copied containers and primitive callables currently require separate components.
+Options, results and nested binary products can target npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl and native PHP. See the [conversion tables](reference/types.md) for each language's mappings and tested positions. npm copied containers and primitive callables currently require separate components.
 
 Ordinary source builds and package projections are different stages. The Alpha recipes for Python, Rust, C, C++, managed runtimes, PHP, and WASI use this repository's target-specific inputs. They do not make every Lake project buildable for those languages. Each target guide names its current inputs and checks.
 

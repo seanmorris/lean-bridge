@@ -27,16 +27,20 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
  * @param options.callables - Admit synchronous primitive callables for FFI or Zend.
+ * @param options.compounds - Admit the implemented FFI compound projection; Zend opts out.
  */
-export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true } = {}) => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true, compounds = true } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
-	const surface = compilePrimitiveCSurface(ir, { wordBits, callables });
+	const surface = compilePrimitiveCSurface(ir, { wordBits, callables, compounds });
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-php-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
 	const names = new Set(reserved);
+	const branches = [...(surface.copies.some(copy => copy.compound === "option") ? ["Some"] : [])
+		, ...(surface.copies.some(copy => copy.compound === "result") ? ["Ok", "Err"] : [])];
+	branches.forEach(name => names.add(name.toLowerCase()));
 	for(const copy of surface.copies)
 	{
 		if(copy.record)
@@ -46,9 +50,14 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 			names.add(copy.publicName.toLowerCase());
 			for(const field of copy.fields) if(reserved.has(field.name.toLowerCase())) fail(ir.declarations[0], `PHP field name is reserved: ${field.name}`);
 		}
-		copy.publicType = copy.record ? copy.publicName : copy.element ? "array" : primitives[copy.scalarName];
+		copy.publicType = copy.record ? copy.publicName : copy.compound
+			? { option: "Some|null", result: "Ok|Err", tuple: "array" }[copy.compound]
+			: copy.element ? "array" : primitives[copy.scalarName];
 		if(integerBits === 32 && ["uint32", "int64"].includes(copy.scalarName)) copy.publicType = bigInteger;
-		copy.docType = copy.element ? `list<${copy.element.docType}>` : copy.publicType;
+		copy.docType = copy.compound === "option" ? `Some<${copy.fields[0].type.docType}>|null`
+			: copy.compound === "result" ? `Ok<${copy.fields[0].type.docType}>|Err<${copy.fields[1].type.docType}>`
+				: copy.compound === "tuple" ? `array{${copy.fields.map(field => field.type.docType).join(", ")}}`
+					: copy.element ? `list<${copy.element.docType}>` : copy.publicType;
 		copy.ctype = copy.aggregate ? copy.name : copy.scalarName === "unit" ? "uint8_t" : copy.name;
 	}
 	for(const fn of surface.functions)
@@ -64,5 +73,5 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 			, ownedType: `${surface.prefix}_owned_${callback.field}`
 			, docType: `callable(${callback.type.callable.parameters.map(site => doc(site.type)).join(", ")}): ${doc(callback.type.callable.result.type)}` });
 	}
-	return { ir, surface, namespace };
+	return { ir, surface, namespace, branches };
 };

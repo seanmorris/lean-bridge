@@ -173,6 +173,26 @@ test("npm compound mappings have installed value coverage without promoting nati
 		assert.notEqual(cell.stages.installedExecution.state, "passed");
 });
 
+test("native PHP compound docs do not borrow installed coverage for PHP-Wasm", async () => {
+	const source = await readFile("docs/php.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+	{
+		assert.match(row(source, lean), /Native PHP: Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /PHP-Wasm: Not audited/u);
+	}
+	assert.match(row(source, "Option α"), /null.*Some/u);
+	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
+	assert.match(source, /new Some\(new Some\(null\)\)/u);
+	assert.match(source, /PHP `===` compares object identity/u);
+	for(const path of ["ordinary-source", "reviewed-ir"]) for(const shape of ["option", "result", "tuple"])
+		for(const position of ["callback-parameter", "callback-result"])
+		{
+			const cell = cells.find(cell => cell.id === `php-native/${shape}/${path}/${position}`);
+			assert.equal(cell.stages.compilation.state, "rejected");
+			assert.notEqual(cell.stages.installedExecution.state, "passed");
+		}
+});
+
 test("Perl compound docs preserve presence, branch identity and nested products", async () => {
 	const source = await readFile("docs/consume/perl.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])

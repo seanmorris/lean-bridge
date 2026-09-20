@@ -153,6 +153,7 @@ export const installedPhpCorpus = async ({ library, consumer, handoff, pkg, envi
 	await saveLakeFile(deployment, "request.json", request);
 	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", source(mode));
 	await rm(project, { recursive: true, force: true });
+	if(fixture?.removeHandoff) await rm(handoff, { recursive: true, force: true });
 	assert.deepEqual(await readdir(root), ["relocated"]);
 	evidence.deployment = await inventory(deployment);
 	for(const [path, identity] of Object.entries(generatedFiles)) assert.deepEqual(evidence.deployment[path], identity);

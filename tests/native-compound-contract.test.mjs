@@ -74,7 +74,7 @@ test("native helpers call typed Lean constructors and projections without constr
 });
 
 test("host projections without compound adapters reject these shapes before generation", () => {
-	assert.throws(() => compileCopiedPhpModel(compoundReviewedIr()), /compound values are not implemented/);
+	assert.throws(() => compileCopiedPhpModel(compoundReviewedIr(), { compounds: false }), /compound values are not implemented/);
 	assert.throws(() => compilePrimitiveCSurface(compoundReviewedIr()), /compound values are not implemented/);
 });
 

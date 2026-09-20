@@ -40,7 +40,16 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, acyclic records and synchronous primitive callables. FPM, ZTS, resources, asynchronous delivery and compound callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md) and [callable record](../evidence/php-callables-20260919.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, acyclic records, options, results, nested binary products and synchronous primitive callables. FPM, ZTS, resources, asynchronous delivery and compound callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [callable record](../evidence/php-callables-20260919.md) record installed checks and archive identities.
+
+Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
+`Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
+are final readonly, with one `$value` property. The generated API checks concrete
+payload types without weak-mode coercion and copies nested values. Both ordinary
+source and [reviewed contracts](../lean/existing-package.md#compile-a-reviewed-contract)
+support these shapes. See the [consumer mappings](../php.md#native-options-results-and-products).
+This compound support is native FFI only; PHP-Wasm's Zend adapter still rejects
+these signatures. Every selected target must admit the whole API in a combined build.
 
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 

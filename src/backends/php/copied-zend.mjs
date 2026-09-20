@@ -139,7 +139,7 @@ static ZEND_FUNCTION(lb_call${index}) {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
 export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
-	const model = compileCopiedPhpModel(ir, { integerBits }), identity = hashBindingIr(ir);
+	const model = compileCopiedPhpModel(ir, { integerBits, compounds: false }), identity = hashBindingIr(ir);
 	const stem = `lb_${model.surface.prefix}_${identity.slice(0, 16)}`;
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);
