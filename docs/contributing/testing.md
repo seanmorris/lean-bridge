@@ -459,6 +459,22 @@ consumer runs twice in a relocated deployment with only a `java.base` runtime.
 A separate instrumented adapter checks scoped cleanup and malformed output;
 the installed release JAR stays unchanged. CI retains `build/compounds/jvm.json`.
 
+Run the installed Ruby compound checks with MRI Ruby 3.3 and RubyGems:
+
+```sh
+LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs
+node --test tests/ruby-compound-contract.test.mjs
+```
+
+Set `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to the selected executables. The
+[Ruby suite](../evidence/ruby-compounds-20260920.md) builds all nineteen primitives
+inside options, results and products, plus mixed records and deep nesting, on
+both source paths. It installs each gem offline, removes producer inputs and the
+archive handoff, relocates the installation, and executes an independent public
+consumer twice without compilers. A separate process injects conversion failures
+and checks cleanup without changing installed files. Ruby source files remain
+part of the installed package. CI retains `build/compounds/ruby.json`.
+
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.

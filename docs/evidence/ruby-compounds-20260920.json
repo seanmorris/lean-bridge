@@ -1,0 +1,1557 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "6f423172f8dfa2b48805ad6e7c5e381325d3f5f6",
+  "profiles": [
+    "ruby"
+  ],
+  "wordBits": 64,
+  "ruby": "3.3.12",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "a568ad7135bf23d355b5468cf8916605ddc8473254745aae6c251492c5b7e7d4",
+  "sourceHashes": {
+    "tests/ruby-compounds.test.mjs": "3db08a97a293917f31ded2219af72dae38ff5e065b07b48e1777030491ee6cd5",
+    "tests/helpers/compound-fixture.mjs": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488",
+    "tests/helpers/ruby-compound-install.mjs": "40110d683a22fce52b0b10d7c6a0ad7b2a7d5d5f41c572d433ff5186f3600a3b",
+    "tests/fixtures/compound-consumers/ruby.rb": "a9d45e63cdf5aec3c42b152c6cd6f118eba91668e4063cc3486c07fbc6a78e1e",
+    "tests/fixtures/compound-consumers/ruby-faults.rb": "2da7d1a20f4fc1c084e8828eb5de1387d8aedfe54d964effe991d4e7524ce667",
+    "tests/fixtures/onboarding/npm-compounds/Compounds.lean": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+  },
+  "signatures": [
+    {
+      "name": "Compounds.option_unit",
+      "parameters": [
+        {
+          "option": "unit"
+        }
+      ],
+      "result": {
+        "option": "unit"
+      }
+    },
+    {
+      "name": "Compounds.result_unit",
+      "parameters": [
+        {
+          "result": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_unit",
+      "parameters": [
+        {
+          "tuple": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_bool",
+      "parameters": [
+        {
+          "option": "bool"
+        }
+      ],
+      "result": {
+        "option": "bool"
+      }
+    },
+    {
+      "name": "Compounds.result_bool",
+      "parameters": [
+        {
+          "result": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bool",
+      "parameters": [
+        {
+          "tuple": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_uint8",
+      "parameters": [
+        {
+          "option": "uint8"
+        }
+      ],
+      "result": {
+        "option": "uint8"
+      }
+    },
+    {
+      "name": "Compounds.result_uint8",
+      "parameters": [
+        {
+          "result": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint8",
+      "parameters": [
+        {
+          "tuple": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_uint16",
+      "parameters": [
+        {
+          "option": "uint16"
+        }
+      ],
+      "result": {
+        "option": "uint16"
+      }
+    },
+    {
+      "name": "Compounds.result_uint16",
+      "parameters": [
+        {
+          "result": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint16",
+      "parameters": [
+        {
+          "tuple": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_uint32",
+      "parameters": [
+        {
+          "option": "uint32"
+        }
+      ],
+      "result": {
+        "option": "uint32"
+      }
+    },
+    {
+      "name": "Compounds.result_uint32",
+      "parameters": [
+        {
+          "result": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint32",
+      "parameters": [
+        {
+          "tuple": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_uint64",
+      "parameters": [
+        {
+          "option": "uint64"
+        }
+      ],
+      "result": {
+        "option": "uint64"
+      }
+    },
+    {
+      "name": "Compounds.result_uint64",
+      "parameters": [
+        {
+          "result": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint64",
+      "parameters": [
+        {
+          "tuple": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_int8",
+      "parameters": [
+        {
+          "option": "int8"
+        }
+      ],
+      "result": {
+        "option": "int8"
+      }
+    },
+    {
+      "name": "Compounds.result_int8",
+      "parameters": [
+        {
+          "result": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int8",
+      "parameters": [
+        {
+          "tuple": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_int16",
+      "parameters": [
+        {
+          "option": "int16"
+        }
+      ],
+      "result": {
+        "option": "int16"
+      }
+    },
+    {
+      "name": "Compounds.result_int16",
+      "parameters": [
+        {
+          "result": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int16",
+      "parameters": [
+        {
+          "tuple": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_int32",
+      "parameters": [
+        {
+          "option": "int32"
+        }
+      ],
+      "result": {
+        "option": "int32"
+      }
+    },
+    {
+      "name": "Compounds.result_int32",
+      "parameters": [
+        {
+          "result": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int32",
+      "parameters": [
+        {
+          "tuple": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_int64",
+      "parameters": [
+        {
+          "option": "int64"
+        }
+      ],
+      "result": {
+        "option": "int64"
+      }
+    },
+    {
+      "name": "Compounds.result_int64",
+      "parameters": [
+        {
+          "result": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int64",
+      "parameters": [
+        {
+          "tuple": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_nat",
+      "parameters": [
+        {
+          "option": "nat"
+        }
+      ],
+      "result": {
+        "option": "nat"
+      }
+    },
+    {
+      "name": "Compounds.result_nat",
+      "parameters": [
+        {
+          "result": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_nat",
+      "parameters": [
+        {
+          "tuple": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_int",
+      "parameters": [
+        {
+          "option": "int"
+        }
+      ],
+      "result": {
+        "option": "int"
+      }
+    },
+    {
+      "name": "Compounds.result_int",
+      "parameters": [
+        {
+          "result": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int",
+      "parameters": [
+        {
+          "tuple": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_float32",
+      "parameters": [
+        {
+          "option": "float32"
+        }
+      ],
+      "result": {
+        "option": "float32"
+      }
+    },
+    {
+      "name": "Compounds.result_float32",
+      "parameters": [
+        {
+          "result": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float32",
+      "parameters": [
+        {
+          "tuple": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_float64",
+      "parameters": [
+        {
+          "option": "float64"
+        }
+      ],
+      "result": {
+        "option": "float64"
+      }
+    },
+    {
+      "name": "Compounds.result_float64",
+      "parameters": [
+        {
+          "result": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float64",
+      "parameters": [
+        {
+          "tuple": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_string",
+      "parameters": [
+        {
+          "option": "string"
+        }
+      ],
+      "result": {
+        "option": "string"
+      }
+    },
+    {
+      "name": "Compounds.result_string",
+      "parameters": [
+        {
+          "result": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_string",
+      "parameters": [
+        {
+          "tuple": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_bytes",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "option": "bytes"
+      }
+    },
+    {
+      "name": "Compounds.result_bytes",
+      "parameters": [
+        {
+          "result": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bytes",
+      "parameters": [
+        {
+          "tuple": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_char",
+      "parameters": [
+        {
+          "option": "char"
+        }
+      ],
+      "result": {
+        "option": "char"
+      }
+    },
+    {
+      "name": "Compounds.result_char",
+      "parameters": [
+        {
+          "result": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_char",
+      "parameters": [
+        {
+          "tuple": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_usize",
+      "parameters": [
+        {
+          "option": "usize"
+        }
+      ],
+      "result": {
+        "option": "usize"
+      }
+    },
+    {
+      "name": "Compounds.result_usize",
+      "parameters": [
+        {
+          "result": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_usize",
+      "parameters": [
+        {
+          "tuple": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.option_isize",
+      "parameters": [
+        {
+          "option": "isize"
+        }
+      ],
+      "result": {
+        "option": "isize"
+      }
+    },
+    {
+      "name": "Compounds.result_isize",
+      "parameters": [
+        {
+          "result": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_isize",
+      "parameters": [
+        {
+          "tuple": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.classify",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Compounds.next",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": "unit"
+        }
+      }
+    },
+    {
+      "name": "Compounds.flip",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                "uint32",
+                {
+                  "option": "unit"
+                }
+              ]
+            },
+            {
+              "option": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": "string"
+          },
+          {
+            "tuple": [
+              "uint32",
+              {
+                "option": "unit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Compounds.transform",
+      "parameters": [
+        {
+          "record": "Compounds.Packet",
+          "fields": {
+            "choice": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            },
+            "products": {
+              "tuple": [
+                {
+                  "tuple": [
+                    "uint32",
+                    "string"
+                  ]
+                },
+                {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              ]
+            },
+            "rows": {
+              "array": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "string",
+                        "uint64"
+                      ]
+                    },
+                    {
+                      "tuple": [
+                        "bytes",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "nested": {
+              "result": [
+                {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "uint32",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                },
+                {
+                  "option": "nat"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "result": {
+        "record": "Compounds.Packet",
+        "fields": {
+          "choice": {
+            "option": {
+              "result": [
+                {
+                  "tuple": [
+                    "nat",
+                    "unit"
+                  ]
+                },
+                "string"
+              ]
+            }
+          },
+          "products": {
+            "tuple": [
+              {
+                "tuple": [
+                  "uint32",
+                  "string"
+                ]
+              },
+              {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            ]
+          },
+          "rows": {
+            "array": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "string",
+                      "uint64"
+                    ]
+                  },
+                  {
+                    "tuple": [
+                      "bytes",
+                      "int"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "nested": {
+            "result": [
+              {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "uint32",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              },
+              {
+                "option": "nat"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.duplicate",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": {
+              "array": "bytes"
+            }
+          },
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.deep",
+      "parameters": [
+        {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "option": {
+                                                          "result": [
+                                                            {
+                                                              "tuple": [
+                                                                "uint32",
+                                                                "unit"
+                                                              ]
+                                                            },
+                                                            "string"
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "result": [
+                                                          {
+                                                            "tuple": [
+                                                              "uint32",
+                                                              "unit"
+                                                            ]
+                                                          },
+                                                          "string"
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.make",
+      "parameters": [],
+      "result": {
+        "option": {
+          "result": [
+            {
+              "tuple": [
+                "uint64",
+                "unit"
+              ]
+            },
+            "string"
+          ]
+        }
+      }
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "77d5233b33b82ed611a3e5d528e0df0fa2fb7b0406c53819f3e9bb72e35281bb",
+      "checks": 38664,
+      "compilerFreeExecution": true,
+      "consumerSha256": "a9d45e63cdf5aec3c42b152c6cd6f118eba91668e4063cc3486c07fbc6a78e1e",
+      "faults": {
+        "checks": 199,
+        "conversion_probes": 250,
+        "flags": 9,
+        "partial_inputs": 16
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 5751,
+          "sha256": "b41d51f38d71b62b0a3f83d050222a853bd8c7d97e8ef2357a98d5717e103c2c"
+        },
+        "binding-manifest.json": {
+          "bytes": 1084,
+          "sha256": "88227f62aad29b42f8a830c3d47d44b60ea095be4992776c8f6833410c709a41"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1399,
+          "sha256": "61daff4217e07c5ddfc16fce042712a80da276286cd22401da1bcd385800e60b"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 152577,
+          "sha256": "4a2c435a687ee650bbfa64f1a684755c968a80522b50215fa2f866545d77a794"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 30585,
+          "sha256": "fcb2d9432c2f01d3f39702f996bd1fcbcaca97a57906d246c26dc3857246c905"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 127710,
+          "sha256": "38ade52f3dc403e8ea13d3335ead83e0e549194b2dc1700112c6c292df67d9bf"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 246917,
+          "sha256": "a7256b2cd3ba430d9ea206e59cc1885d2f8c8892899cad72730aebf31735d70d"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 599697,
+          "sha256": "c6ee0bcf99c5ce67aac0165e6d59423079569ede21fc8c8b6d56311d3efa664e"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 13868,
+          "sha256": "2800692f13cf872ca7fbc7e35895522a9da2c0121935fa1e523f5293d2a50612"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3963,
+          "sha256": "a702cc11249dc2a9e286be3957396202f48bcf57cae2d1f7c76831e9cdd4a816"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1358,
+          "sha256": "93daaee621cdbcf5846d53bf9c1a6920c4280261f13b2201410094d4eb468adc"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/compounds.rb": {
+          "bytes": 4889,
+          "sha256": "e083da531e9f43360f732f6652a151c4317451c3efafab213af8e4d2cb3e2104"
+        },
+        "lib/lean_bridge/compounds/native.rb": {
+          "bytes": 131344,
+          "sha256": "2ef103ce899879ecb1232e0a7de712b0c5fbf1a3e8ad3d344ab9dbfbf69e12d8"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libcomponent_b98e04e5612654a9d0b5.so": {
+          "bytes": 259864,
+          "sha256": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libcompounds.so": {
+          "bytes": 246304,
+          "sha256": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "fe2d35423d19a2adae2b15601dac7a45fe41d80be732feaf90db4387fceba99e",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "c6ee0bcf99c5ce67aac0165e6d59423079569ede21fc8c8b6d56311d3efa664e",
+      "nativeLibraries": {
+        "lib/lean_bridge/compounds/native/linux-x64/libcomponent_b98e04e5612654a9d0b5.so": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e",
+        "lib/lean_bridge/compounds/native/linux-x64/libcompounds.so": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5",
+        "lib/lean_bridge/compounds/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/compounds/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50260480,
+              "path": "archives/compounds-api-1.0.0-x86_64-linux.gem",
+              "sha256": "39b25f067fd2060aaadd431d93cf11532882efa8486ba7bc67dd74ce85c58d50"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "probeSha256": "2da7d1a20f4fc1c084e8828eb5de1387d8aedfe54d964effe991d4e7524ce667",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "c637667b0a566e1c7f0f5be8ff1ff8f709ffbcff434abeadd894c244759de535",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a86d95ae904e0ba151d421949a34c833ac3e5d4d52668ef2273e2adb78faa13f"
+    },
+    {
+      "bindingIrSha256": "142a5bc2da04fc4829e62548583977735028cb15150f533d608ccec8f3a5ca4f",
+      "checks": 38664,
+      "compilerFreeExecution": true,
+      "consumerSha256": "a9d45e63cdf5aec3c42b152c6cd6f118eba91668e4063cc3486c07fbc6a78e1e",
+      "faults": {
+        "checks": 199,
+        "conversion_probes": 250,
+        "flags": 9,
+        "partial_inputs": 16
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 5751,
+          "sha256": "b41d51f38d71b62b0a3f83d050222a853bd8c7d97e8ef2357a98d5717e103c2c"
+        },
+        "binding-manifest.json": {
+          "bytes": 1084,
+          "sha256": "9472e500c5c83e55e28995a56c517373e7318125c405e511f7ef8d48623f8222"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1400,
+          "sha256": "dbcb9b36e1cce4e1182e7933ef9333dff4b56b5429d25f7310a789cc99e9e3b8"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 152839,
+          "sha256": "d999ba5ddae4e8ae49712a75ba535814202532e2aaa6ad7b6f9d3516c35b67e6"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 30585,
+          "sha256": "fcb2d9432c2f01d3f39702f996bd1fcbcaca97a57906d246c26dc3857246c905"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 127710,
+          "sha256": "38ade52f3dc403e8ea13d3335ead83e0e549194b2dc1700112c6c292df67d9bf"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 246917,
+          "sha256": "4c2058a38a5a08f34eede354f8a31328bf6f1981067ef2a9a477c13a1846757d"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 749702,
+          "sha256": "0528cb6086c675c10975bdf7245e7a8e8e3ec2177496188ead56f79a73cae10c"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 163611,
+          "sha256": "0ba580e229f2c390a854db3bf11548cdb2e71e78e6aaba1b3fd9caf738f1b59b"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2079,
+          "sha256": "395c5b0d37b800e5ce81745c0c91dd0bfaae5cdd470678414019e6f49285cdbd"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1358,
+          "sha256": "f9fd06ff055992ce05339487394fa529fea1a62f1d9a485e660f7a6fd28f1306"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/compounds.rb": {
+          "bytes": 4889,
+          "sha256": "e083da531e9f43360f732f6652a151c4317451c3efafab213af8e4d2cb3e2104"
+        },
+        "lib/lean_bridge/compounds/native.rb": {
+          "bytes": 131344,
+          "sha256": "84a11c0d0e85f974333f3c88d83757ba1a9ee89d19172f94162e15ccff4d70f9"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libcomponent_b98e04e5612654a9d0b5.so": {
+          "bytes": 259864,
+          "sha256": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libcompounds.so": {
+          "bytes": 246304,
+          "sha256": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/compounds/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "2924747db7d62df98ab9c8ae20edeae41f2958ba12d76f1025d1e3f1f92dd3ff",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "0528cb6086c675c10975bdf7245e7a8e8e3ec2177496188ead56f79a73cae10c",
+      "nativeLibraries": {
+        "lib/lean_bridge/compounds/native/linux-x64/libcomponent_b98e04e5612654a9d0b5.so": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e",
+        "lib/lean_bridge/compounds/native/linux-x64/libcompounds.so": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5",
+        "lib/lean_bridge/compounds/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/compounds/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50276864,
+              "path": "archives/compounds-api-1.0.0-x86_64-linux.gem",
+              "sha256": "8cfa84d1e330dc17e3daa53f8dd7f45241a5f0d3103c61f5dd427d99ddccede6"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "probeSha256": "2da7d1a20f4fc1c084e8828eb5de1387d8aedfe54d964effe991d4e7524ce667",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "c064b8424d0554fce01e6ecb8e23d848fd1124d1a409d827d7c0fa084e77759a",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "46d927bde1425bd5d29362274b3a3d43e4bbcc4a2e65d0092e605f92a1bf3c1b"
+    }
+  ]
+}

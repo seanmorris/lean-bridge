@@ -22,7 +22,50 @@ export const readRubyValue = (copy, value) => read(copy, value);
  */
 export const copiedRubyConversions = model => model.surface.copies.map(copy => {
 	let input, output;
-	if(copy.record)
+	if(copy.compound)
+	{
+		const to = (field, expression) => write(field.type, "result", field.offset, `to${field.type.index}(${expression}${field.type.aggregate ? ", scope" : ""})`);
+		const from = field => `from${field.type.index}(${read(field.type, "value", field.offset)})`;
+		if(copy.compound === "option")
+		{
+			input = `raise TypeError, "Option requires nil or Some(value)" unless value.equal?(nil) || value.instance_of?(Some)
+        result = scope.allocate(${copy.size})
+        unless value.equal?(nil)
+          result[0, 1] = [1].pack("C")
+          ${to(copy.fields[0], "value.value")}
+        end
+        result`;
+			output = `case value[0, 1].unpack1("C")
+        when 0 then nil
+        when 1 then Some.new(${from(copy.fields[0])})
+        else raise RangeError, "Invalid native Option flag"
+        end`;
+		} else if(copy.compound === "result")
+		{
+			input = `raise TypeError, "Result requires Ok(value) or Err(error)" unless value.instance_of?(Ok) || value.instance_of?(Err)
+        result = scope.allocate(${copy.size})
+        if value.instance_of?(Ok)
+          result[0, 1] = [1].pack("C")
+          ${to(copy.fields[0], "value.value")}
+        else
+          ${to(copy.fields[1], "value.value")}
+        end
+        result`;
+			output = `case value[0, 1].unpack1("C")
+        when 1 then Ok.new(${from(copy.fields[0])})
+        when 0 then Err.new(${from(copy.fields[1])})
+        else raise RangeError, "Invalid native Except flag"
+        end`;
+		} else
+		{
+			input = `raise TypeError, "Prod requires a two-element Array" unless value.instance_of?(::Array)
+        raise ArgumentError, "Prod requires exactly two elements" unless value.length == 2
+        result = scope.allocate(${copy.size})
+${copy.fields.map((field, index) => `        ${to(field, `value[${index}]`)}`).join("\n")}
+        result`;
+			output = `[${copy.fields.map(from).join(", ")}]`;
+		}
+	} else if(copy.record)
 	{
 		input = `raise TypeError, "Expected ${copy.publicName}" unless value.instance_of?(${copy.publicName})
         result = scope.allocate(${copy.size})

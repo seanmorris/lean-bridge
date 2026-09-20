@@ -169,8 +169,21 @@ test("npm compound mappings have installed value coverage without promoting nati
 						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
 					}
 				}
-	for(const cell of cells.filter(cell => ["php-wasm", "ruby"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
+	for(const cell of cells.filter(cell => ["php-wasm", "perl"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
 		assert.notEqual(cell.stages.installedExecution.state, "passed");
+});
+
+test("Ruby compound docs distinguish absent options, Unit and result branches", async () => {
+	const source = await readFile("docs/consume/ruby.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /Some/u);
+	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
+	assert.match(row(source, "Prod α β / tuples"), /two.*Array|Array.*two/u);
+	assert.match(source, /Some\.new\(nil\)/u);
+	assert.match(source, /Some\.new\(Some\.new\(API::UNIT\)\)/u);
+	assert.match(source, /in Err\(value\)/u);
+	assert.match(source, /Ruby object-identity equality/u);
 });
 
 test("Python compound docs retain presence and branch identity in installed mappings", async () => {

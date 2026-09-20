@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays, acyclic copied records, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays, acyclic copied records, options, results, nested binary products, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,9 +32,33 @@ lean-bridge build --project /absolute/path/to/willow --target rubygems \
 
 The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
 
-Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Optional values, variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
+Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Lists, arbitrary variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export options, results and products
+
+Add these definitions to `Compounds.lean`:
+
+```lean
+namespace Compounds
+def classify (value : Option (Option Unit)) : UInt32 :=
+  match value with
+  | none => 0
+  | some none => 1
+  | some (some ()) => 2
+def result_nat (value : Except Nat Nat) : Except Nat Nat :=
+  match value with
+  | .ok value => .error value
+  | .error error => .ok error
+def tuple_nat (value : Nat × Nat) : Nat × Nat :=
+  (value.2, value.1)
+end Compounds
+```
+
+Select `Compounds` in `modules` and its three functions in `exports`. Set the RubyGems name and version, then use the ordinary build command above. The [consumer example](../consume/ruby.md#options-results-and-products) calls this API without native glue.
+
+Ruby maps `Option` to `nil` or `Some`, `Except` to `Ok` or `Err`, and each `Prod` to an exactly two-element array. Constructors are generated inside the package's public module only when needed. Each call checks the concrete payload types and preserves nested options and products. Mutable payloads are copied. Both ordinary source and [reviewed contracts](../lean/existing-package.md#compile-a-reviewed-contract) have [installed package evidence](../evidence/ruby-compounds-20260920.md); compiler validation still checks reviewed contracts against the Lean definitions.
 
 ## Export callbacks and closures
 

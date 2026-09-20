@@ -38,7 +38,41 @@ ruby example.rb
 
 Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact without a fixed bit-width limit; Nat rejects negatives. Floating-point values use `Float`, and Float32 rounds to binary32. Text must be valid UTF-8 or US-ASCII. ByteArray uses binary `String`, arrays use `Array`, and copied structures become keyword-initialized record classes. Unit uses the generated `UNIT` singleton in every position, including results; `nil` is not Unit.
 
-Calls copy nested values. Invalid types, numeric ranges, encodings and nested `nil` values throw. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
+Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
+
+### Options, results and products
+
+`Option` uses `nil` for None and the generated `Some.new(value)` for Some. `Some.new(nil)` preserves an outer Some containing an inner None. `Some.new(UNIT)` preserves a present Unit value. These are three different values, not interchangeable spellings of absence.
+
+`Except` uses `Ok.new(value)` or `Err.new(error)`. Both expose `value`; the class identifies the branch even when their payload types match. Domain errors return `Err`. Invalid host values and bridge failures raise exceptions.
+
+For the package in the [author example](../publish/rubygems.md#export-options-results-and-products), save `compounds.rb`:
+
+```ruby
+require "lean_bridge/compounds"
+
+API = LeanBridge::Compounds
+Some, Ok, Err = API::Some, API::Ok, API::Err
+
+p API.classify(nil)                          # 0
+p API.classify(Some.new(nil))                # 1
+p API.classify(Some.new(Some.new(API::UNIT))) # 2
+
+case API.result_nat(Ok.new(2**200))
+in Err(value)
+  puts value # the Lean function flips Ok to Err, preserving the exact Nat
+else
+  raise "Expected Err"
+end
+
+p API.tuple_nat([10, 20]) # [20, 10]
+```
+
+Run `ruby compounds.rb`. Products use exactly two `Array` elements. Nested products keep their binary structure: `(a × b) × c` becomes `[[a, b], c]`, not `[a, b, c]`. Every element is validated against its Lean type when the function is called.
+
+`Some`, `Ok` and `Err` are frozen Ruby `Data` classes with value equality, hashing and positional or keyword pattern matching. Freezing the wrapper does not freeze its nested arrays or strings. Calls copy those payloads, and returned buffers do not alias the input or one another. Generated record classes are also frozen but retain Ruby object-identity equality.
+
+Copied types must be acyclic and no more than 32 levels deep. The budgets above cover conversion storage, not all Ruby allocations or Lean working memory. Resources and callbacks cannot be stored inside copied compounds; compound callback arguments and results are not supported. The [installed compound checks](../evidence/ruby-compounds-20260920.md) cover ordinary-source and reviewed-IR builds.
 
 ### Callbacks and returned Lean closures
 
@@ -180,10 +214,10 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Float` | `Float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | The same exact Ruby representation and validation apply to direct calls, callback arguments/results and returned-closure arguments/results. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `String` (input, result, field, callback input, callback result); `String (UTF-8)` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Require valid UTF-8 or US-ASCII, preserving embedded NUL. Nil, malformed text and incompatible encodings throw. The same exact Ruby representation and validation apply to direct calls, callback arguments/results and returned-closure arguments/results. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `Binary String` (input, result, field, callback input, callback result); `String (ASCII-8BIT)` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Binary String with independent returned storage; no text decoding. The same exact Ruby representation and validation apply to direct calls, callback arguments/results and returned-closure arguments/results. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `Array` (input, result, field); `Array of Integer` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Array elements are recursively checked and copied. Nested nil values throw. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Array α` | `Array` (input, result, field); `Array of Integer` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Array elements are recursively checked and copied. Nil is admitted only at Option positions. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `nil or Some` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | None is nil; Some.new(value) retains presence. Some.new(nil) represents an outer Some of an inner None; Some.new(UNIT) preserves present Unit. Some is a frozen Data class with equality and pattern matching. Concrete payload types are validated at the call; nil is valid only in Option positions. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Ok or Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` becomes Ok.new(value) or Err.new(error), both exposing value. Exact branch classes preserve success/error identity, including same-typed payloads. Frozen Data wrappers support equality and patterns. Domain errors return Err; bridge failures raise. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Array (exactly two elements, nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes retain object-identity equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Ruby record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated keyword-initialized record classes preserve field order through compiler-owned accessors. Nested returned arrays and strings are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
