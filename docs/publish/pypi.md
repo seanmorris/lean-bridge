@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays and acyclic records, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -37,6 +37,26 @@ Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-rece
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
 
+## Export options, results and products
+
+Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T`
+and `A × B`. Their contents can use all nineteen primitives, arrays, acyclic
+records and these constructors recursively, within the 32-level type limit.
+Python receives generated `Some`, `Ok` and `Err` wrappers and binary tuples.
+Unit and nested options retain their presence; success and error retain their
+branch when payload types match. `Except` errors remain returned values.
+
+The wheel includes the wrappers, type aliases and stubs. Consumers need no
+constructor numbers, serialization layer or manual runtime configuration.
+Python conversions and native copies each have a 16 MiB call budget. Resources,
+callbacks inside copied values, lists and recursive data types are not admitted.
+Compound arguments/results inside callables remain unsupported.
+
+Run the [compound consumer example](../consume/python.md#options-results-and-products)
+before publishing. The [acceptance record](../evidence/python-compounds-20260920.md)
+covers both source paths, offline installation, nested values and cleanup.
+Combined builds require every selected target to support the same API.
+
 ## Export callbacks and closures
 
 Callback arguments and results can use any of the nineteen primitives. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
@@ -53,7 +73,7 @@ end Callables
 
 Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-bridge.exports.json`. That arity leaves the final two arguments in the returned closure. For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`.
 
-Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. Combined callable builds can select C, CPAN, PyPI, RubyGems and Cargo; the other targets still reject these signatures.
+Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. All native-runtime targets admit primitive callables. Combined builds still require every selected target to accept the same API and author configuration.
 
 Run the [installed callable example](../consume/python.md#callbacks-and-returned-lean-closures) before publishing. The [acceptance record](../evidence/python-callables-20260918.md) includes exact wheel identities, source-hidden offline installation and lifetime checks.
 

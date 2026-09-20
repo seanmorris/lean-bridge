@@ -169,8 +169,17 @@ test("npm compound mappings have installed value coverage without promoting nati
 						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
 					}
 				}
-	for(const cell of cells.filter(cell => ["php-wasm", "python"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
+	for(const cell of cells.filter(cell => ["php-wasm", "ruby"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
 		assert.notEqual(cell.stages.installedExecution.state, "passed");
+});
+
+test("Python compound docs retain presence and branch identity in installed mappings", async () => {
+	const source = await readFile("docs/consume/python.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /Some\[T\]/u);
+	assert.doesNotMatch(row(source, "Option α"), /collapses nested Option/u);
+	assert.match(source, /Some\(Some\(None\)\)/u);
 });
 
 test("recorded result and arbitrary-integer rejections exercise real generator guards", () => {

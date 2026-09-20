@@ -141,6 +141,19 @@ test("native compound evidence promotes exactly C/C++ copied positions on both p
 	}
 });
 
+test("Python compound evidence promotes exactly eighteen copied positions on both paths", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("python-compounds-installed"));
+	assert.equal(observed.length, 18);
+	for(const cell of observed)
+	{
+		assert.equal(cell.profile, "python");
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
 test("npm callable evidence covers five installed profiles without claiming fields or compound values", () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-callables-installed"));
@@ -239,15 +252,16 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
-	assert.equal(observed.length, 63);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record"].sort());
+	const compounds = profile === "python" ? ["option", "result", "tuple"] : [];
+	assert.equal(observed.length, 63 + 3 * compounds.length);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds].sort());
 	for(const cell of observed)
 	{
 		assert.ok(["parameter", "result", "field"].includes(cell.position));
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			assert.deepEqual(stage.evidence, [compounds.includes(cell.shape) ? "python-compounds-installed" : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

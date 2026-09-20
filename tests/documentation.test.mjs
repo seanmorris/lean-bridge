@@ -337,6 +337,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"));
+  assert.match(workflow, /test -s build\/compounds\/python\.json/);
+  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"));
   assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*if-no-files-found: error/);
@@ -441,7 +444,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_ruby/);
   assert.match(workflow, /npm run test:type-corpus:ruby/);
   assert.match(workflow, /steps\.type_corpus_ruby\.outcome != 'success'/);

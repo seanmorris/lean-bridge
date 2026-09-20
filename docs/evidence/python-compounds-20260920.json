@@ -1,0 +1,1302 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "bff0ef063fa9dbfa19adf67678c867f400891b49",
+  "interpreter": "CPython 3.11.2",
+  "signatures": [
+    {
+      "name": "Compounds.classify",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Compounds.deep",
+      "parameters": [
+        {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "option": {
+                                                          "result": [
+                                                            {
+                                                              "tuple": [
+                                                                "uint32",
+                                                                "unit"
+                                                              ]
+                                                            },
+                                                            "string"
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "result": [
+                                                          {
+                                                            "tuple": [
+                                                              "uint32",
+                                                              "unit"
+                                                            ]
+                                                          },
+                                                          "string"
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.duplicate",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": {
+              "array": "bytes"
+            }
+          },
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.flip",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                "uint32",
+                {
+                  "option": "unit"
+                }
+              ]
+            },
+            {
+              "option": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": "string"
+          },
+          {
+            "tuple": [
+              "uint32",
+              {
+                "option": "unit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Compounds.make",
+      "parameters": [],
+      "result": {
+        "option": {
+          "result": [
+            {
+              "tuple": [
+                "uint64",
+                "unit"
+              ]
+            },
+            "string"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Compounds.next",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": "unit"
+        }
+      }
+    },
+    {
+      "name": "Compounds.option_bool",
+      "parameters": [
+        {
+          "option": "bool"
+        }
+      ],
+      "result": {
+        "option": "bool"
+      }
+    },
+    {
+      "name": "Compounds.option_bytes",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "option": "bytes"
+      }
+    },
+    {
+      "name": "Compounds.option_char",
+      "parameters": [
+        {
+          "option": "char"
+        }
+      ],
+      "result": {
+        "option": "char"
+      }
+    },
+    {
+      "name": "Compounds.option_float32",
+      "parameters": [
+        {
+          "option": "float32"
+        }
+      ],
+      "result": {
+        "option": "float32"
+      }
+    },
+    {
+      "name": "Compounds.option_float64",
+      "parameters": [
+        {
+          "option": "float64"
+        }
+      ],
+      "result": {
+        "option": "float64"
+      }
+    },
+    {
+      "name": "Compounds.option_int",
+      "parameters": [
+        {
+          "option": "int"
+        }
+      ],
+      "result": {
+        "option": "int"
+      }
+    },
+    {
+      "name": "Compounds.option_int16",
+      "parameters": [
+        {
+          "option": "int16"
+        }
+      ],
+      "result": {
+        "option": "int16"
+      }
+    },
+    {
+      "name": "Compounds.option_int32",
+      "parameters": [
+        {
+          "option": "int32"
+        }
+      ],
+      "result": {
+        "option": "int32"
+      }
+    },
+    {
+      "name": "Compounds.option_int64",
+      "parameters": [
+        {
+          "option": "int64"
+        }
+      ],
+      "result": {
+        "option": "int64"
+      }
+    },
+    {
+      "name": "Compounds.option_int8",
+      "parameters": [
+        {
+          "option": "int8"
+        }
+      ],
+      "result": {
+        "option": "int8"
+      }
+    },
+    {
+      "name": "Compounds.option_isize",
+      "parameters": [
+        {
+          "option": "isize"
+        }
+      ],
+      "result": {
+        "option": "isize"
+      }
+    },
+    {
+      "name": "Compounds.option_nat",
+      "parameters": [
+        {
+          "option": "nat"
+        }
+      ],
+      "result": {
+        "option": "nat"
+      }
+    },
+    {
+      "name": "Compounds.option_string",
+      "parameters": [
+        {
+          "option": "string"
+        }
+      ],
+      "result": {
+        "option": "string"
+      }
+    },
+    {
+      "name": "Compounds.option_uint16",
+      "parameters": [
+        {
+          "option": "uint16"
+        }
+      ],
+      "result": {
+        "option": "uint16"
+      }
+    },
+    {
+      "name": "Compounds.option_uint32",
+      "parameters": [
+        {
+          "option": "uint32"
+        }
+      ],
+      "result": {
+        "option": "uint32"
+      }
+    },
+    {
+      "name": "Compounds.option_uint64",
+      "parameters": [
+        {
+          "option": "uint64"
+        }
+      ],
+      "result": {
+        "option": "uint64"
+      }
+    },
+    {
+      "name": "Compounds.option_uint8",
+      "parameters": [
+        {
+          "option": "uint8"
+        }
+      ],
+      "result": {
+        "option": "uint8"
+      }
+    },
+    {
+      "name": "Compounds.option_unit",
+      "parameters": [
+        {
+          "option": "unit"
+        }
+      ],
+      "result": {
+        "option": "unit"
+      }
+    },
+    {
+      "name": "Compounds.option_usize",
+      "parameters": [
+        {
+          "option": "usize"
+        }
+      ],
+      "result": {
+        "option": "usize"
+      }
+    },
+    {
+      "name": "Compounds.result_bool",
+      "parameters": [
+        {
+          "result": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_bytes",
+      "parameters": [
+        {
+          "result": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_char",
+      "parameters": [
+        {
+          "result": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float32",
+      "parameters": [
+        {
+          "result": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float64",
+      "parameters": [
+        {
+          "result": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int",
+      "parameters": [
+        {
+          "result": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int16",
+      "parameters": [
+        {
+          "result": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int32",
+      "parameters": [
+        {
+          "result": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int64",
+      "parameters": [
+        {
+          "result": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int8",
+      "parameters": [
+        {
+          "result": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_isize",
+      "parameters": [
+        {
+          "result": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_nat",
+      "parameters": [
+        {
+          "result": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_string",
+      "parameters": [
+        {
+          "result": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint16",
+      "parameters": [
+        {
+          "result": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint32",
+      "parameters": [
+        {
+          "result": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint64",
+      "parameters": [
+        {
+          "result": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint8",
+      "parameters": [
+        {
+          "result": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_unit",
+      "parameters": [
+        {
+          "result": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_usize",
+      "parameters": [
+        {
+          "result": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.transform",
+      "parameters": [
+        {
+          "fields": {
+            "choice": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            },
+            "nested": {
+              "result": [
+                {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "uint32",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                },
+                {
+                  "option": "nat"
+                }
+              ]
+            },
+            "products": {
+              "tuple": [
+                {
+                  "tuple": [
+                    "uint32",
+                    "string"
+                  ]
+                },
+                {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              ]
+            },
+            "rows": {
+              "array": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "string",
+                        "uint64"
+                      ]
+                    },
+                    {
+                      "tuple": [
+                        "bytes",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "record": "Compounds.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "choice": {
+            "option": {
+              "result": [
+                {
+                  "tuple": [
+                    "nat",
+                    "unit"
+                  ]
+                },
+                "string"
+              ]
+            }
+          },
+          "nested": {
+            "result": [
+              {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "uint32",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              },
+              {
+                "option": "nat"
+              }
+            ]
+          },
+          "products": {
+            "tuple": [
+              {
+                "tuple": [
+                  "uint32",
+                  "string"
+                ]
+              },
+              {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            ]
+          },
+          "rows": {
+            "array": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "string",
+                      "uint64"
+                    ]
+                  },
+                  {
+                    "tuple": [
+                      "bytes",
+                      "int"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "record": "Compounds.Packet"
+      }
+    },
+    {
+      "name": "Compounds.tuple_bool",
+      "parameters": [
+        {
+          "tuple": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bytes",
+      "parameters": [
+        {
+          "tuple": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_char",
+      "parameters": [
+        {
+          "tuple": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float32",
+      "parameters": [
+        {
+          "tuple": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float64",
+      "parameters": [
+        {
+          "tuple": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int",
+      "parameters": [
+        {
+          "tuple": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int16",
+      "parameters": [
+        {
+          "tuple": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int32",
+      "parameters": [
+        {
+          "tuple": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int64",
+      "parameters": [
+        {
+          "tuple": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int8",
+      "parameters": [
+        {
+          "tuple": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_isize",
+      "parameters": [
+        {
+          "tuple": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_nat",
+      "parameters": [
+        {
+          "tuple": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_string",
+      "parameters": [
+        {
+          "tuple": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint16",
+      "parameters": [
+        {
+          "tuple": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint32",
+      "parameters": [
+        {
+          "tuple": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint64",
+      "parameters": [
+        {
+          "tuple": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint8",
+      "parameters": [
+        {
+          "tuple": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_unit",
+      "parameters": [
+        {
+          "tuple": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_usize",
+      "parameters": [
+        {
+          "tuple": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "usize",
+          "usize"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "bindingIrSha256": "7aee05919550a65c2ff9668424a613b3541b281b284eb1421cf3f90ef94c0951",
+      "checks": 11293,
+      "compilerFreePath": true,
+      "consumerSha256": "ee29c436041a087a7420134b02c7a4d747dccfdd867615a66c2571d5a55875c0",
+      "modelSha256": "a838d22fd257bbbd3cb6b58c79599e38fcdfb2cd36d04e75c22a4f3d6f3cb2f7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51537661,
+              "path": "archives/compounds_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "c7422d126df540f4b11ffef6191bc3059cc94970e12a6882a80f557f017c0523"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "eb93dbfd10f6fbc28a15d8bbad313418e07a7c98ddde22dc480d024407e0f458",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "00c20715d5635da033e119bb1d527cf553fe619c8ee7e08d97c0ce95bd8df640"
+    },
+    {
+      "bindingIrSha256": "bf96c47aae62ffe9d0f7eec2285c25206ba017369c5eeba6b6b5287969a08340",
+      "checks": 11293,
+      "compilerFreePath": true,
+      "consumerSha256": "ee29c436041a087a7420134b02c7a4d747dccfdd867615a66c2571d5a55875c0",
+      "modelSha256": "b7f7e8b22095aefb5a8f3824c82368bc0879264fdb60d5a18992f855365532d1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51549383,
+              "path": "archives/compounds_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "58b782f15dadde7572f7d510cb04aa12f8d30222847d99fbe1a1a8f12011684d"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "5aa694441a2f2c912df3f9b801321cd5a4768e52eceb3a5ec3615d8723074de6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1d2902e27b5a6257cc8895696df3d21d264dbe63ad410292d9c9153831e15638"
+    }
+  ]
+}

@@ -67,7 +67,8 @@ def _check(status, error, scope=None):
  * @param model - Admitted copied Python model.
  */
 export const copiedPythonTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => {
-	const fields = copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
+	const fields = copy.compound ? [...copy.compound === "tuple" ? [] : [[copy.compound === "option" ? "has_value" : "is_ok", "_c.c_uint8"]], ...copy.fields.map(field => [field.name, field.type.ctype])]
+		: copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
 		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.scalarName === "int" ? [["negative", "_c.c_bool"]] : [])];
 	return `class ${copy.ctype}(_c.Structure):\n    _fields_ = [${fields.map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]\n`;
 }).join("\n");
@@ -110,6 +111,20 @@ export const copiedPythonConversions = model => model.surface.copies.map(copy =>
 	{
 		input.push(`_integer(value, ${name === "nat" ? "0" : "None"}, None)`, "length = (value.bit_length() + 31) // 32", "scope.charge(length, 4)", 'data = abs(value).to_bytes(length * 4, "little")', `return ${copy.ctype}(_buffer(data, scope), length, None, None${name === "int" ? ", value < 0" : ""})`);
 		output.push('magnitude = int.from_bytes(_read(value.data, value.length * 4, scope, 2), "little")', `return ${name === "int" ? "-magnitude if value.negative else magnitude" : "magnitude"}`);
+	} else if(copy.compound === "option")
+	{
+		const child = copy.fields[0].type;
+		input.push(`if value is None: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError("Option requires None or Some(value)")', `return ${copy.ctype}(1, _to${child.index}(value.value, scope))`);
+		output.push('if value.has_value > 1: raise LeanBridgeError(5, "Invalid native option flag")', `return Some(_from${child.index}(value.value, scope)) if value.has_value else None`);
+	} else if(copy.compound === "result")
+	{
+		const [ok, error] = copy.fields.map(field => field.type);
+		input.push(`if type(value) is Ok: return ${copy.ctype}(is_ok=1, ok=_to${ok.index}(value.value, scope))`, `if type(value) is Err: return ${copy.ctype}(error=_to${error.index}(value.value, scope))`, 'raise TypeError("Result requires Ok(value) or Err(value)")');
+		output.push('if value.is_ok > 1: raise LeanBridgeError(5, "Invalid native result flag")', `return Ok(_from${ok.index}(value.ok, scope)) if value.is_ok else Err(_from${error.index}(value.error, scope))`);
+	} else if(copy.compound === "tuple")
+	{
+		input.push('if type(value) is not tuple: raise TypeError("Prod requires a two-element tuple")', 'if len(value) != 2: raise ValueError("Prod requires exactly two elements")', `return ${copy.ctype}(${copy.fields.map((field, index) => `_to${field.type.index}(value[${index}], scope)`).join(", ")})`);
+		output.push(`return (${copy.fields.map(field => `_from${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
 	} else if(copy.record)
 	{
 		input.push(`if type(value) is not ${copy.publicName}: raise TypeError("Expected ${copy.publicName}")`, `return ${copy.ctype}(${copy.fields.map(field => `_to${field.type.index}(value.${field.name}, scope)`).join(", ")})`);

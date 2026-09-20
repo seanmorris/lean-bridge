@@ -22,6 +22,12 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 
 Task 1219 now has [compiled npm nested arrays](../evidence/npm-arrays-20260920.md) across all nineteen primitive element types. The versioned transport validates descriptors against Binding IR, bounds recursive copies and clears partial output. Node, strict TypeScript, browser pages, React and workers exercise installed archives on both source paths. Nested binary products, explicit Option tags and Except branches now have [installed compiler-backed npm checks](../evidence/npm-compounds-20260920.md), including mixtures with arrays and records. [Named copied records](../evidence/npm-records-20260920.md) now compile through Lean-generated constructors and field accessors. Variants and recursive copied types remain later steps in the same task.
 
+Prepared [C/C++ packages](../evidence/native-compounds-20260920.md) and
+[Python wheels](../evidence/python-compounds-20260920.md) also compile options,
+results and binary products on both source paths. Python uses explicit `Some`,
+`Ok` and `Err` values, preserving Unit and nested options. The remaining compound
+adapters are C#, Java, Kotlin, Ruby, Rust, Perl, native PHP, PHP-Wasm and WIT/WASI.
+
 ## Shared configuration and Perl cutover
 
 `lean-bridge.exports.json` holds language-neutral author intent. Module and export selection apply before host-language projection. Package-specific names and versions belong under canonical target keys. Machine paths and credentials stay outside source configuration.
@@ -34,7 +40,7 @@ The [contract acceptance record](../evidence/export-contracts-20260914.md) cover
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters: copied primitives, nested arrays, acyclic records, Option, Except, nested products and synchronous primitive callables for npm, C and C++; copied primitives/arrays/records and primitive callables for other native targets and PHP-Wasm. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters: copied primitives, nested arrays, acyclic records, Option, Except, nested products and synchronous primitive callables for npm, C, C++ and Python; copied primitives/arrays/records and primitive callables for other native targets and PHP-Wasm. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
 
 ## Shared semantic model and combined builds
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.23.0",
+  "contractVersion": "0.24.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,165 @@
   ],
   "evidence": [
     {
+      "id": "python-compounds-installed",
+      "kind": "installed",
+      "revision": "bff0ef063fa9dbfa19adf67678c867f400891b49",
+      "command": "LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs; node --test tests/python-compound-contract.test.mjs",
+      "scope": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation.",
+      "files": [
+        {
+          "path": "docs/evidence/python-compounds-20260920.json",
+          "sha256": "3ec1f37372e654d0f5bab1e1b580a5a3db93bb8071474a60eeafaab888ca3aeb"
+        },
+        {
+          "path": "docs/evidence/python-compounds-20260920.md",
+          "sha256": "c117abe8975358e395e2afe6986b067524e11bb126a6286b67dc8c27b4de1b63"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
+        },
+        {
+          "path": "src/backends/python/callables.mjs",
+          "sha256": "3ee191c8489b51d8ddba6fb14930d774e0ad181c7bc68f33452da7c161a093d0"
+        },
+        {
+          "path": "src/backends/python/compounds.mjs",
+          "sha256": "56d7dccee4c415e121f6f811c8e95a4fd72b038c0336def4ff54217e8d7b0f64"
+        },
+        {
+          "path": "src/backends/python/copied-assets.mjs",
+          "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
+        },
+        {
+          "path": "src/backends/python/package-audit.mjs",
+          "sha256": "99d4d9344c2b248e98d1f5be26348456a3c94c0c021177e622c3f3e29695b2d9"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/python.py",
+          "sha256": "ee29c436041a087a7420134b02c7a4d747dccfdd867615a66c2571d5a55875c0"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/Compounds.lean",
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lakefile.toml",
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/package.json",
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "tests/helpers/compound-fixture.mjs",
+          "sha256": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/python-compound-contract.test.mjs",
+          "sha256": "4f696824fa12696cd080985b758f69d39ad6214d43d61cd410b4b89e5a20a5f2"
+        },
+        {
+          "path": "tests/python-compounds.test.mjs",
+          "sha256": "d00e5595e389ea3796212cb0d7be68e157921f84a282dd42833440d781cdd6dd"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/ordinary-source/archives/compounds_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "c7422d126df540f4b11ffef6191bc3059cc94970e12a6882a80f557f017c0523"
+        },
+        {
+          "path": "python/reviewed-ir/archives/compounds_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "58b782f15dadde7572f7d510cb04aa12f8d30222847d99fbe1a1a8f12011684d"
+        }
+      ]
+    },
+    {
       "id": "native-compounds-installed",
       "kind": "installed",
       "revision": "d08dcb11dc621c2662acbef8c1fb7e51d12342ee",
@@ -237,7 +396,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -249,7 +408,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -305,7 +464,7 @@
         },
         {
           "path": "tests/native-compound-contract.test.mjs",
-          "sha256": "54061e399aeef158810e7d77c923e03eb21d69b5618a3d3b828e406ab94e7d9f"
+          "sha256": "e62c5d1e8866b8cd127cce7a85e1161fad19eb2dd4ce542dbcd69aafe848dcf3"
         },
         {
           "path": "tests/native-compounds.test.mjs",
@@ -340,7 +499,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -543,7 +702,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -706,7 +865,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -754,7 +913,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -977,11 +1136,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -1096,11 +1255,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -1116,11 +1275,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -1235,15 +1394,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "646be59aa27712313cfaf56c9d82b090972ff6fd9acb4ab36877fa180b22f652"
+          "sha256": "6386160b254cc48fa9a4268035828d3585b160b70bd4150fe6f593585dc56b73"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -1271,7 +1430,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -1426,11 +1585,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -1474,15 +1633,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "646be59aa27712313cfaf56c9d82b090972ff6fd9acb4ab36877fa180b22f652"
+          "sha256": "6386160b254cc48fa9a4268035828d3585b160b70bd4150fe6f593585dc56b73"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -1510,7 +1669,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -1601,11 +1760,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -1665,11 +1824,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1693,7 +1852,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -1828,11 +1987,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -1888,11 +2047,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1912,7 +2071,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -1999,11 +2158,11 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2083,15 +2242,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "flake.nix",
@@ -2214,11 +2373,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2294,15 +2453,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -2413,11 +2572,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -2489,15 +2648,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -2560,11 +2719,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -2620,15 +2779,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -2663,15 +2822,15 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "c96612641f1144c2c6eb2460c8cfebdf0e590a133ad5bf339289ffe2ab949a30"
+          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "9013ffb42ae949f8dc4cc83b290bbf52e097ba49963e00660f6b749936fabf77"
+          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "a287713a21cf3b0e94f2c74e02514779c6ea3458e350ce3a3c5878b9975e0761"
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -2691,11 +2850,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -2751,15 +2910,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -2818,11 +2977,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2870,15 +3029,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -2981,15 +3140,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "17a4e490dbbbd27e130cebb688b094051e07cc885f0c049188a61a434619d7dc"
+          "sha256": "68d16d4d05985f2d396a04d0db6a13a6277d5b7c4923b36b4b56418e06b06295"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3080,7 +3239,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3128,7 +3287,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -3208,11 +3367,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "a287713a21cf3b0e94f2c74e02514779c6ea3458e350ce3a3c5878b9975e0761"
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "c96612641f1144c2c6eb2460c8cfebdf0e590a133ad5bf339289ffe2ab949a30"
+          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -3280,7 +3439,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "17a4e490dbbbd27e130cebb688b094051e07cc885f0c049188a61a434619d7dc"
+          "sha256": "68d16d4d05985f2d396a04d0db6a13a6277d5b7c4923b36b4b56418e06b06295"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -3384,7 +3543,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
+          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -3459,7 +3618,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
+          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3471,7 +3630,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
+          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -3531,11 +3690,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "a287713a21cf3b0e94f2c74e02514779c6ea3458e350ce3a3c5878b9975e0761"
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "c96612641f1144c2c6eb2460c8cfebdf0e590a133ad5bf339289ffe2ab949a30"
+          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -3833,11 +3992,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -3980,11 +4139,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -4127,11 +4286,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -4206,7 +4365,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "c96612641f1144c2c6eb2460c8cfebdf0e590a133ad5bf339289ffe2ab949a30"
+          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -4214,11 +4373,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "a287713a21cf3b0e94f2c74e02514779c6ea3458e350ce3a3c5878b9975e0761"
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "9013ffb42ae949f8dc4cc83b290bbf52e097ba49963e00660f6b749936fabf77"
+          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
         },
         {
           "path": "src/backends/python/generate.mjs",
@@ -4230,11 +4389,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -4317,11 +4476,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -4412,11 +4571,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4507,11 +4666,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -4610,11 +4769,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -4709,7 +4868,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4725,7 +4884,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4800,11 +4959,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -5027,7 +5186,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -22772,7 +22931,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++ compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "npm wasm32 evidence only. C/C++ and Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -23113,7 +23272,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++ compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "npm wasm32 evidence only. C/C++ and Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -23608,30 +23767,380 @@
       ]
     },
     {
+      "id": "python-compounds-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation.",
+      "hostTypes": {
+        "option": {
+          "parameter": "Option[T] = Some[T] | None",
+          "result": "Option[T] = Some[T] | None",
+          "field": "Option[T] = Some[T] | None"
+        },
+        "result": {
+          "parameter": "Result[T, E] = Ok[T] | Err[E]",
+          "result": "Result[T, E] = Ok[T] | Err[E]",
+          "field": "Result[T, E] = Ok[T] | Err[E]"
+        },
+        "tuple": {
+          "parameter": "tuple[A, B] (nested binary products)",
+          "result": "tuple[A, B] (nested binary products)",
+          "field": "tuple[A, B] (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "CPython 3.11+ Linux x86-64 native wheels; free-threaded interpreters and post-fork calls reject.",
+        "Python conversions and native input/output copies each have a 16 MiB budget. Type nesting stops at 32; Lean working memory and all Python object overhead are not bounded.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules.",
+        "result": "Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions.",
+        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Lists are accepted for Lean arrays, not products."
+      }
+    },
+    {
+      "id": "python-compound-callables-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Compiled Python callables require primitive arguments and results. Copied compounds are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Native callable admission rejects compound parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
+      "id": "python-compounds-reviewed-ir",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation.",
+      "hostTypes": {
+        "option": {
+          "parameter": "Option[T] = Some[T] | None",
+          "result": "Option[T] = Some[T] | None",
+          "field": "Option[T] = Some[T] | None"
+        },
+        "result": {
+          "parameter": "Result[T, E] = Ok[T] | Err[E]",
+          "result": "Result[T, E] = Ok[T] | Err[E]",
+          "field": "Result[T, E] = Ok[T] | Err[E]"
+        },
+        "tuple": {
+          "parameter": "tuple[A, B] (nested binary products)",
+          "result": "tuple[A, B] (nested binary products)",
+          "field": "tuple[A, B] (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Installed Python wheels built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 11293 checks, including 48 injected output-conversion failures. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "CPython 3.11+ Linux x86-64 native wheels; free-threaded interpreters and post-fork calls reject.",
+        "Python conversions and native input/output copies each have a 16 MiB budget. Type nesting stops at 32; Lean working memory and all Python object overhead are not bounded.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules.",
+        "result": "Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions.",
+        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Lists are accepted for Lean arrays, not products."
+      }
+    },
+    {
+      "id": "python-compound-callables-reviewed-ir",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Compiled Python callables require primitive arguments and results. Copied compounds are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "python-compounds-installed"
+          ],
+          "note": "Native callable admission rejects compound parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
       "id": "python-values-python-1",
-      "profiles": ["python"],
-      "shapes": ["array","option","result","tuple","record","alias","variant"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "array",
+        "record",
+        "alias",
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
       "scope": "Generated copied-value annotations only.",
       "hostTypes": {
-        "array": {"parameter":"tuple[T, ...]","result":"tuple[T, ...]","field":"tuple[T, ...]","callback-parameter":"tuple[T, ...]","callback-result":"tuple[T, ...]"},
-        "option": {"parameter":"T | None","result":"T | None","field":"T | None","callback-parameter":"T | None","callback-result":"T | None"},
-        "result": {"parameter":"Ok[T] | Err[E]","result":"Ok[T] | Err[E]","field":"Ok[T] | Err[E]","callback-parameter":"Ok[T] | Err[E]","callback-result":"Ok[T] | Err[E]"},
-        "tuple": {"parameter":"tuple[T, U, ...]","result":"tuple[T, U, ...]","field":"tuple[T, U, ...]","callback-parameter":"tuple[T, U, ...]","callback-result":"tuple[T, U, ...]"},
-        "record": {"parameter":"Generated frozen dataclass (Alpha: Payload)","result":"Generated frozen dataclass (Alpha: Payload)","field":"Generated frozen dataclass (Alpha: Payload)","callback-parameter":"Generated frozen dataclass (Alpha: Payload)","callback-result":"Generated frozen dataclass (Alpha: Payload)"},
-        "alias": {"parameter":"Resolved target type","result":"Resolved target type","field":"Resolved target type","callback-parameter":"Resolved target type","callback-result":"Resolved target type"},
-        "variant": {"parameter":"Generated case classes","result":"Generated case classes","field":"Generated case classes","callback-parameter":"Generated case classes","callback-result":"Generated case classes"}
+        "array": {
+          "parameter": "tuple[T, ...]",
+          "result": "tuple[T, ...]",
+          "field": "tuple[T, ...]",
+          "callback-parameter": "tuple[T, ...]",
+          "callback-result": "tuple[T, ...]"
+        },
+        "record": {
+          "parameter": "Generated frozen dataclass (Alpha: Payload)",
+          "result": "Generated frozen dataclass (Alpha: Payload)",
+          "field": "Generated frozen dataclass (Alpha: Payload)",
+          "callback-parameter": "Generated frozen dataclass (Alpha: Payload)",
+          "callback-result": "Generated frozen dataclass (Alpha: Payload)"
+        },
+        "alias": {
+          "parameter": "Resolved target type",
+          "result": "Resolved target type",
+          "field": "Resolved target type",
+          "callback-parameter": "Resolved target type",
+          "callback-result": "Resolved target type"
+        },
+        "variant": {
+          "parameter": "Generated case classes",
+          "result": "Generated case classes",
+          "field": "Generated case classes",
+          "callback-parameter": "Generated case classes",
+          "callback-result": "Generated case classes"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["python-mapping-audit"],"note":"Generated copied-value annotations only."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "python-mapping-audit"
+          ],
+          "note": "Generated copied-value annotations only."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["The nullable spelling cannot distinguish nested Option or Option Unit without tags."],
-      "conversionNotes": {"option":"The current nullable annotation collapses nested Option and Option Unit; lossless tagged conversion remains work."}
+      "limitations": [
+        "Legacy Alpha annotations do not establish installed support for additional copied shapes."
+      ],
+      "conversionNotes": {
+        "alias": "Resolved target annotations alone do not establish compiled alias support."
+      }
     },
     {
       "id": "rust-primitives-rust-1",
@@ -24016,7 +24525,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24098,7 +24607,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24180,7 +24689,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24262,7 +24771,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
