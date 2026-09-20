@@ -562,6 +562,8 @@ jobs:
           test -s build/callables/python.json
           LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs
           test -s build/compounds/python.json
+          LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
+          test -s build/lists/python.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -576,6 +578,7 @@ jobs:
             build/word-native/python.json
             build/callables/python.json
             build/compounds/python.json
+            build/lists/python.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -645,6 +648,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

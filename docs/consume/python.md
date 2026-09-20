@@ -29,9 +29,9 @@ print("42; exact integers and copied arrays")
 
 Run `./.venv/bin/python ordinary.py`. The wheel supplies type annotations, type stubs and a `py.typed` marker. Importing it verifies its native libraries and loads a compatible shared runtime automatically. There is no runtime path or `ctypes` setup in application code.
 
-Ordinary packages support pure functions over 19 primitive types, arrays, acyclic records, options, results and nested binary products. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays accept lists or tuples and return tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
+Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, options, results and nested binary products. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
 
-Python conversion and native input/output copying each have a 16 MiB budget. Array conversion counts at least eight bytes per element, and text counts encoding/decoding storage. These budgets do not bound all Python object overhead or the Lean algorithm's working memory. Inputs raise `TypeError`, `ValueError` or an encoding error when invalid. Native failures raise the package's `LeanBridgeError`. Native results and temporary buffers are released even if Python result conversion fails.
+Python conversion and native input/output copying each have a 16 MiB budget. Array and List conversion count at least eight bytes per element, and text counts encoding/decoding storage. These budgets do not bound all Python object overhead or the Lean algorithm's working memory. Inputs raise `TypeError`, `ValueError` or an encoding error when invalid. Native failures raise the package's `LeanBridgeError`. Native results and temporary buffers are released even if Python result conversion fails.
 
 Calls can run on separate threads. Do not mutate inputs during conversion. The loader rejects free-threaded interpreters and calls after `fork`; start a fresh interpreter in the child process. Subinterpreters and non-CPython implementations have not been accepted. See the [installed-wheel evidence](../evidence/native-python-20260915.md) for tested versions and cases.
 
@@ -59,14 +59,37 @@ assert tuple_uint32((1, 2)) == (2, 1)
 Run `./.venv/bin/python compounds.py` after installing that package's wheel.
 Generated annotations use `Option[T]`, `Result[T, E]` and `tuple[A, B]`.
 `A × (B × C)` remains `(a, (b, c))`, not a flat three-element tuple. Products
-require exactly two elements in a tuple; lists are accepted only for Lean arrays.
+require exactly two elements in a tuple; Python lists are accepted for Lean arrays and Lists.
 Options and results require their explicit wrappers, not bare payloads or dicts.
 An `Err` is a returned domain value; conversion and runtime failures raise
 exceptions separately.
 
-These types can contain arrays, copied records and each other, within the
+These types can contain arrays, Lists, copied records and each other, within the
 32-level type limit and existing copy budgets. Resources and callbacks cannot
 be placed inside copied values. See the [installed compound checks](../evidence/python-compounds-20260920.md).
+
+### Lists
+
+Lean `List T` accepts a Python `list[T]` or `tuple[T, ...]` and returns an owned
+`tuple[T, ...]`. Empty Lists, duplicates and order are preserved. Elements can
+contain the supported copied types, including arrays, options, results, products
+and records. Lists and arrays remain distinct in the reviewed contract. Container
+subclasses and arbitrary iterators are rejected.
+
+For the Lists acceptance package, save this as `lists.py`:
+
+```python
+from lean_lists import reverse_uint32, mix
+
+assert reverse_uint32([1, 2, 2, 3]) == (3, 2, 2, 1)
+assert reverse_uint32(()) == ()
+assert mix([[1, 2], [], [3]]) == ((3,), (), (2, 1))
+```
+
+Run `./.venv/bin/python lists.py` after installing its prepared wheel. Native
+output cleanup is automatic, including if a nested Python conversion fails.
+The [installed List checks](../evidence/python-lists-20260920.md) cover both source
+paths. List callback payloads remain unsupported.
 
 ### Callbacks and returned Lean closures
 
@@ -191,13 +214,13 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Array α` | `tuple[T, ...] (also list[T] input)` (input, field); `tuple[T, ...]` (result, input, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Exact list or tuple inputs are snapshotted and recursively checked. Returned tuples own their elements; conversion budgets apply at every level. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | `Option[T] = Some[T] \| None` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | `Result[T, E] = Ok[T] \| Err[E]` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `tuple[A, B] (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Lists are accepted for Lean arrays, not products. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Prod α β / tuples` | `tuple[A, B] (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Python lists are accepted for Lean arrays and Lists, not products. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated frozen dataclass` (input, result, field); `Generated frozen dataclass (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated frozen dataclasses use compiler-owned accessors. Returned nested arrays, records and byte values are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Resolved target annotations alone do not establish compiled alias support. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated case classes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated resource class` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Callable[[...], R]` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `tuple[T, ...] \| list[T]` (input); `tuple[T, ...]` (result); `tuple[T, ...] \| list[T] (input); tuple[T, ...] (output)` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Exact Python lists or tuples are accepted; results and returned record fields hold independent tuples. Preserve order, duplicates and nesting. Reject container subclasses, iterators, cycles and coercible elements; native results and scratch clear even if Python conversion raises. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `str` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with range checks for the 64-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with signed range checks for the 64-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

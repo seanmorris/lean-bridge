@@ -455,6 +455,19 @@ arrays/records. It removes producer files before offline wheel installation and
 tests malformed values, conversion limits and cleanup after injected failures.
 CI retains `build/compounds/python.json`.
 
+Run the installed Python List checks on both source paths:
+
+```sh
+LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
+node --test tests/python-list-contract.test.mjs
+```
+
+The [Python List suite](../evidence/python-lists-20260920.md) installs prepared
+wheels after removing producer files. It checks all nineteen primitive elements,
+nested arrays/Lists/options/results/products, copied record fields, exact public
+annotations, conversion failures, allocation limits and concurrent calls.
+CI retains `build/lists/python.json`.
+
 Run the installed Rust compound checks on both source paths:
 
 ```sh

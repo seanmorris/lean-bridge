@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays, Lists, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -40,7 +40,7 @@ Use the Twine upload and download checks below for an ordinary wheel too. The Al
 ## Export options, results and products
 
 Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T`
-and `A × B`. Their contents can use all nineteen primitives, arrays, acyclic
+and `A × B`. Their contents can use all nineteen primitives, arrays, Lists, acyclic
 records and these constructors recursively, within the 32-level type limit.
 Python receives generated `Some`, `Ok` and `Err` wrappers and binary tuples.
 Unit and nested options retain their presence; success and error retain their
@@ -49,13 +49,23 @@ branch when payload types match. `Except` errors remain returned values.
 The wheel includes the wrappers, type aliases and stubs. Consumers need no
 constructor numbers, serialization layer or manual runtime configuration.
 Python conversions and native copies each have a 16 MiB call budget. Resources,
-callbacks inside copied values, lists and recursive data types are not admitted.
+callbacks inside copied values and recursive data types are not admitted.
 Compound arguments/results inside callables remain unsupported.
 
 Run the [compound consumer example](../consume/python.md#options-results-and-products)
 before publishing. The [acceptance record](../evidence/python-compounds-20260920.md)
 covers both source paths, offline installation, nested values and cleanup.
 Combined builds require every selected target to support the same API.
+
+## Export copied Lists
+
+Export `List` parameters, results or record fields without a target-specific
+annotation. Python accepts exact lists or tuples and returns owned tuples.
+Lists can nest with arrays, copied records, options, results and binary products.
+Their conversion limits match the other copied containers. List and Array keep
+distinct contract types even though both use Python sequences. List callback
+payloads remain unsupported. See the [consumer example](../consume/python.md#lists)
+and [installed checks on both source paths](../evidence/python-lists-20260920.md).
 
 ## Export callbacks and closures
 

@@ -312,7 +312,9 @@ a truncated list. A valid call can follow a budget rejection.
 
 [Installed List checks](evidence/npm-lists-20260920.md) cover both source paths in
 Node, strict TypeScript, Chromium, Firefox and WebKit, including React and workers.
-C and C++ also have [installed List adapters](evidence/native-lists-20260920.md). Other native hosts and PHP-Wasm remain pending. Lists cannot contain callbacks
+C and C++ also have [installed List adapters](evidence/native-lists-20260920.md),
+as does [Python](evidence/python-lists-20260920.md). Other native hosts and
+PHP-Wasm remain pending. Lists cannot contain callbacks
 or resources, or share a component with callable exports yet.
 
 ### Copied records

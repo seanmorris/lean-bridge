@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.34.0",
+  "contractVersion": "0.35.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,169 @@
   ],
   "evidence": [
     {
+      "id": "python-lists-installed",
+      "kind": "installed",
+      "revision": "8ade84bd5d499571d62b204c730a8f95363c5c79",
+      "command": "LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs; node --test tests/python-list-contract.test.mjs",
+      "scope": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state.",
+      "files": [
+        {
+          "path": "docs/evidence/python-lists-20260920.json",
+          "sha256": "46676da92c0a1749a4a2f718e84f382ca94ba1c38ba22230064376f083a38f34"
+        },
+        {
+          "path": "docs/evidence/python-lists-20260920.md",
+          "sha256": "4e1a99bd1e5cb8bc4a424f271f7bd6172f50764ca9f7931b583f2fabf34bc83b"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "fec3a0f5a025d93c4e4dc9ac3d2e1fc68aee5995728f2c88b086a6f3e9d4b048"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "c471836195e5cd29915e94b6023659b276b947b57715129a9485b3c1969e7974"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "7ab0d6c15caf440db88af321359224526566c942f08a6e634947b6a7f507ed50"
+        },
+        {
+          "path": "src/backends/python/callables.mjs",
+          "sha256": "3ee191c8489b51d8ddba6fb14930d774e0ad181c7bc68f33452da7c161a093d0"
+        },
+        {
+          "path": "src/backends/python/compounds.mjs",
+          "sha256": "56d7dccee4c415e121f6f811c8e95a4fd72b038c0336def4ff54217e8d7b0f64"
+        },
+        {
+          "path": "src/backends/python/copied-assets.mjs",
+          "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
+        },
+        {
+          "path": "src/backends/python/package-audit.mjs",
+          "sha256": "99d4d9344c2b248e98d1f5be26348456a3c94c0c021177e622c3f3e29695b2d9"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/python.py",
+          "sha256": "deb17c258164fd3e0dd564a595fc48133831402755ec5c85b6bef9d932b53160"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/Lists.lean",
+          "sha256": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lakefile.toml",
+          "sha256": "15b55c2569ab80e5d5cdde5e50f55800b06a80dba48bcebc6a664bbbcfec80d4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/package.json",
+          "sha256": "6e15912b4c0824b727f128749fcbd80f2cf45b97727236ee46a85dc6ed33f657"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/python-list-contract.test.mjs",
+          "sha256": "5b714900dc9f6048b38f774fd10d95fbe575692ab6c42b22295e4b3972e1e7fb"
+        },
+        {
+          "path": "tests/python-lists.test.mjs",
+          "sha256": "64bdde413064e60b4fce5b806708b4922bc8eab331647db9e2edc1aa93f7eaea"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/ordinary-source/archives/lists_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "a32caf024fee3763cd143fd59bf91d7ef7e1d3e269a9e14f7a16c004e3d3023c"
+        },
+        {
+          "path": "python/reviewed-ir/archives/lists_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "896ead3d2e4edc9a5218cf8292eb48c97961bb05591d9a9341a49368bac35a10"
+        }
+      ]
+    },
+    {
       "id": "native-lists-installed",
       "kind": "installed",
       "revision": "aea13255a77c7b4598fc1fad8517af3e6cffa1f9",
@@ -237,7 +400,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -249,7 +412,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -340,7 +503,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -372,7 +535,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -479,7 +642,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -495,7 +658,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -698,7 +861,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -714,7 +877,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -786,7 +949,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -798,7 +961,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -913,7 +1076,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -977,7 +1140,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1124,7 +1287,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -1140,7 +1303,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1212,7 +1375,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1224,7 +1387,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -1303,7 +1466,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -1319,7 +1482,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1391,7 +1554,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1411,7 +1574,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -1510,7 +1673,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -1526,7 +1689,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1594,7 +1757,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1614,7 +1777,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -1769,7 +1932,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1781,7 +1944,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -1928,11 +2091,11 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
+          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -1940,7 +2103,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1952,7 +2115,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -2091,7 +2254,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2103,7 +2266,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2194,7 +2357,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -2397,7 +2560,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -2560,7 +2723,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -2600,7 +2763,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "590a5f875c6e4140c1a514365aa06820bfc1d66b69020460a72947e1c4663f26"
+          "sha256": "2ea807605998010cbbcc05c7246cbab6b3c525e980f6ec3d66edfec236dcd34c"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -2608,7 +2771,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2831,11 +2994,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -2950,11 +3113,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -2970,11 +3133,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -3089,7 +3252,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -3097,7 +3260,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -3125,7 +3288,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -3280,11 +3443,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -3328,7 +3491,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -3336,7 +3499,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -3364,7 +3527,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -3455,11 +3618,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -3519,11 +3682,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -3547,7 +3710,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -3682,11 +3845,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -3742,11 +3905,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -3766,7 +3929,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -3857,11 +4020,11 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -3941,15 +4104,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "flake.nix",
@@ -4072,11 +4235,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4152,15 +4315,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -4271,11 +4434,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -4347,15 +4510,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -4418,11 +4581,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4478,15 +4641,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -4521,11 +4684,11 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
+          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -4549,11 +4712,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -4609,15 +4772,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -4676,11 +4839,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4728,15 +4891,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -4839,15 +5002,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7c4f8d1a951e5561ac71cf54d763be198d695b67b696f65eb0ffecad96907e12"
+          "sha256": "7e5a7a9d40e6dee5cd9943dd32bd7244baf1f1ff10000e8faf442c618bd129bc"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4938,7 +5101,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4978,7 +5141,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "590a5f875c6e4140c1a514365aa06820bfc1d66b69020460a72947e1c4663f26"
+          "sha256": "2ea807605998010cbbcc05c7246cbab6b3c525e980f6ec3d66edfec236dcd34c"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -4986,7 +5149,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -5070,7 +5233,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -5138,7 +5301,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7c4f8d1a951e5561ac71cf54d763be198d695b67b696f65eb0ffecad96907e12"
+          "sha256": "7e5a7a9d40e6dee5cd9943dd32bd7244baf1f1ff10000e8faf442c618bd129bc"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -5242,7 +5405,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b43555a506a676eba3e3ccd185b083478eb306f078c4905314325f213b92b7e8"
+          "sha256": "1774a726ac28dfc3ac67f93b172b442fb93ce8447f0bf49ce0910b253ff68827"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -5317,7 +5480,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5329,7 +5492,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -5393,7 +5556,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -5691,11 +5854,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -5838,11 +6001,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -5985,11 +6148,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -6064,7 +6227,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "0a8e6c4a6b42c5281e200d9b2c23312447738c7beab66a3d5e3b255863391338"
+          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -6076,7 +6239,7 @@
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "c1caa9e9306527ce5454661b713a9a60943752a00c709c9827858b02e70d799e"
+          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
         },
         {
           "path": "src/backends/python/generate.mjs",
@@ -6088,11 +6251,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -6135,7 +6298,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "19bb7fa2319536e1a059efebc62a307f7e9f2cfd852ae9d74dde69fd1d9de019"
+          "sha256": "2aff323598e9f3b72ff4631acf243b14640b6325a43c4928273d61f5200d4c0c"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -6151,7 +6314,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "faf51317aec08e52ebb91b4e3c604b2dc42ca166f79554dd2c95badfcc70fdd1"
+          "sha256": "5911795b7caff90a55d3184175247d096ec1a4ed589f4381ce9bda9135962ce6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6215,7 +6378,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -6223,7 +6386,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -6350,11 +6513,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -6445,11 +6608,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -6540,11 +6703,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -6643,11 +6806,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -6742,7 +6905,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -6758,7 +6921,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -6833,11 +6996,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "5ea02894cc211b5fb5e605277bfb9d06d4549516dcd1ac50c4f00059f5138951"
+          "sha256": "a908945b7dd52853478522ec7e6aa2f0111944bd479b103d53ee5512ead621bf"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -7060,7 +7223,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "479bdcb133be33963b5b82075f0e757ba0384fc3136dbdcf74bc324e929731d5"
+          "sha256": "ab7b896fac56b21606e95cb9f62326d4a9354bbf18ef40f85b3c82c2cb737a52"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -7572,6 +7735,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "python-lists-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state.",
+      "hostTypes": {
+        "list": {
+          "parameter": "tuple[T, ...] | list[T]",
+          "result": "tuple[T, ...]",
+          "field": "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        }
+      },
+      "limitations": [
+        "GIL-enabled CPython 3.11+ on Linux x86-64; other runtimes remain separate work.",
+        "Python conversion scopes and native input/output copies each enforce 16 MiB; 32 type levels. Lean working memory is outside these limits.",
+        "List callback payloads remain unsupported. Copied values cannot contain callbacks or resources."
+      ],
+      "conversionNotes": {
+        "list": "Exact Python lists or tuples are accepted; results and returned record fields hold independent tuples. Preserve order, duplicates and nesting. Reject container subclasses, iterators, cycles and coercible elements; native results and scratch clear even if Python conversion raises."
+      }
+    },
+    {
+      "id": "python-lists-reviewed-ir",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state.",
+      "hostTypes": {
+        "list": {
+          "parameter": "tuple[T, ...] | list[T]",
+          "result": "tuple[T, ...]",
+          "field": "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-lists-installed"
+          ],
+          "note": "Installed Python wheels preserve List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, owned tuple results and copy-budget recovery. Both ordinary-source and independently reviewed builds install offline after producer source/build removal. Partial input and returned-value conversion failures release scratch and native output, followed by successful public calls. Four concurrent workers preserve independent call state."
+        }
+      },
+      "limitations": [
+        "GIL-enabled CPython 3.11+ on Linux x86-64; other runtimes remain separate work.",
+        "Python conversion scopes and native input/output copies each enforce 16 MiB; 32 type levels. Lean working memory is outside these limits.",
+        "List callback payloads remain unsupported. Copied values cannot contain callbacks or resources."
+      ],
+      "conversionNotes": {
+        "list": "Exact Python lists or tuples are accepted; results and returned record fields hold independent tuples. Preserve order, duplicates and nesting. Reject container subclasses, iterators, cycles and coercible elements; native results and scratch clear even if Python conversion raises."
+      }
+    },
     {
       "id": "native-lists-c-ordinary-source",
       "profiles": [
@@ -28026,7 +28325,7 @@
       "conversionNotes": {
         "option": "None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules.",
         "result": "Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions.",
-        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Lists are accepted for Lean arrays, not products."
+        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Python lists are accepted for Lean arrays and Lists, not products."
       }
     },
     {
@@ -28171,7 +28470,7 @@
       "conversionNotes": {
         "option": "None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules.",
         "result": "Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions.",
-        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Lists are accepted for Lean arrays, not products."
+        "tuple": "Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Python lists are accepted for Lean arrays and Lists, not products."
       }
     },
     {

@@ -25,7 +25,7 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  */
 export const compileCopiedPythonModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), packageDir = `lean_${surface.prefix}`;
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), packageDir = `lean_${surface.prefix}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });

@@ -107,19 +107,20 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers npm and C/C++ copied values without promoting other hosts or callables", () => {
+test("List evidence covers npm, C/C++ and Python copied values without promoting other hosts or callables", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 42);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 48);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
-		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile);
-		if((npm || native) && copied)
+		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile), python = cell.profile === "python";
+		if((npm || native || python) && copied)
 		{
-			assert.equal(cell.hostType, npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
+			const pythonType = { parameter: "tuple[T, ...] | list[T]", result: "tuple[T, ...]", field: "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)" };
+			assert.equal(cell.hostType, python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
-			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [npm ? "npm-lists-installed" : "native-lists-installed"]); }
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
 		} else
 		{
 			assert.equal(cell.stages.installedExecution.state, "unreviewed");
@@ -275,16 +276,17 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
 	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const lists = profile === "python" ? ["list"] : [];
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
-	assert.equal(observed.length, 63 + 3 * compounds.length);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds].sort());
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length));
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists].sort());
 	for(const cell of observed)
 	{
 		assert.ok(["parameter", "result", "field"].includes(cell.position));
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			assert.deepEqual(stage.evidence, [lists.includes(cell.shape) ? "python-lists-installed" : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
