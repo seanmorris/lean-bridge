@@ -145,6 +145,20 @@ export const validateElaboratedMetadata = (report, request) => {
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
 				const copied = (type, depth = 0) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
+					if(type?.kind === "record")
+					{
+						closed(type, ["kind", "name", "fields"]);
+						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
+							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
+						const names = new Set();
+						for(const field of type.fields)
+						{
+							closed(field, ["name", "type"]);
+							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
+							names.add(field.name); copied(field.type, depth + 1);
+						}
+						return;
+					}
 					if(type?.kind !== "array") return scalar(type);
 					closed(type, ["kind", "element"]);
 					copied(type.element, depth + 1);

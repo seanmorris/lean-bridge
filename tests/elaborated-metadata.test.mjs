@@ -252,6 +252,7 @@ initialize IO.FS.writeFile ${JSON.stringify(join(context.directory, "initializer
 namespace Shop
 universe u v
 abbrev Word := UInt32
+abbrev Words := Array UInt32
 /-- Keep the chosen concrete value. -/
 def keep {α : Type u} (value : α) : α := value
 theorem keep_eq {α : Type u} (value : α) : keep value = value := rfl
@@ -263,6 +264,7 @@ end Shop
 `);
 	const specializations = [
 		{ name: "Shop.keepWord", declaration: "Shop.keep", types: ["Shop.Word"] }
+		, { name: "Shop.keepWords", declaration: "Shop.keep", types: ["Shop.Words"] }
 		, { name: "Shop.keepText", declaration: "Shop.keep", types: ["String"] }
 		, { name: "Shop.pickWord", declaration: "Shop.pick", types: ["UInt32"] }
 		, { name: "Shop.firstWord", declaration: "Shop.first", types: ["UInt32", "String"] }
@@ -273,7 +275,10 @@ end Shop
 	await assertJsonSchema("elaborated-export-metadata", first.elaboration.metadata);
 	await assertJsonSchema("lake-entry-elaboration", first.elaboration);
 	const definitions = first.bindingIr.document.declarations;
-	assert.deepEqual(definitions.map(item => item.name), ["firstWord", "keepText", "keepWord", "pickWord"]);
+	assert.deepEqual(definitions.map(item => item.name), ["firstWord", "keepText", "keepWord", "keepWords", "pickWord"]);
+	const words = definitions.find(item => item.name === "keepWords");
+	assert.deepEqual(words.parameters[0].type, { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] });
+	assert.deepEqual(words.result.type, words.parameters[0].type);
 	assert.deepEqual(definitions.find(item => item.name === "firstWord").parameters.map(item => item.type.name), ["uint32", "string"]);
 	const keep = definitions.find(item => item.name === "keepWord");
 	assert.equal(keep.source.declaration, "Shop.keep");
@@ -314,7 +319,7 @@ def needsMissing {α : Type} [Missing α] : α := Missing.value
 class UnsafeDefault (α : Type) where value : α
 instance : UnsafeDefault UInt32 := ⟨by sorry⟩
 def needsUnsafe {α : Type} [UnsafeDefault α] : α := UnsafeDefault.value
-abbrev Words := Array UInt32
+abbrev Words := List UInt32
 end Shop
 `);
 	const cases = [

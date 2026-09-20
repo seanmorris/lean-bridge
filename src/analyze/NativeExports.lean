@@ -199,7 +199,13 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "array" then
     return obj [("kind", str "array"),
       ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
-  throwError "component copied values require primitives or nested arrays"
+  if (value.getObjValAs? String "kind").toOption == some "record" then
+    let fields ← ofExcept <| value.getObjValAs? (Array Json) "fields"
+    let fields ← fields.mapM fun (field : Json) => do
+      pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
+        ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
+    return obj [("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name"), ("fields", toJson fields)]
+  throwError "component copied values require primitives, arrays or records"
 
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then

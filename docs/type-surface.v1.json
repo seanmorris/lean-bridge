@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.20.0",
+  "contractVersion": "0.21.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,169 @@
   ],
   "evidence": [
     {
+      "id": "npm-records-installed",
+      "kind": "installed",
+      "revision": "70dca0cfc164fa4afb7bd9826dac99fec39c6d80",
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-records.test.mjs; node --test tests/component-record-contract.test.mjs",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
+        },
+        {
+          "path": "docs/evidence/npm-records-20260920.json",
+          "sha256": "70cbf4817ba46e998dd48959a665d89f72489d86c315f8984b56010b325fccb9"
+        },
+        {
+          "path": "docs/evidence/npm-records-20260920.md",
+          "sha256": "3d2f5a9006886d102b3beba5052216595d768f60236c36d80d447cf9c447a1e0"
+        },
+        {
+          "path": "nix/component-engine-source-boundary.json",
+          "sha256": "feee53be8f7e5a85effbfb7c40c9a61561ebabaebff9995f54f8648b8ae00a96"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.cpp",
+          "sha256": "5537cc1c6ef9e210c3381677d2b37f9c61435dd7cda9cc2566984fdec72b71c8"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.h",
+          "sha256": "3931ee099be551681d68de12386336edb84c826eb82e4c3f396876c6f070d222"
+        },
+        {
+          "path": "schema/compiler-adapter-plan.schema.json",
+          "sha256": "ae4d7fce42c1e69cd529269e2fda99250545fcf6c2a0693e7b741af7af06b557"
+        },
+        {
+          "path": "schema/elaborated-export-metadata.schema.json",
+          "sha256": "1ae7f576d9a6e2e77d174752813d41ee8a2df4150e39ad7e40c989914be432cf"
+        },
+        {
+          "path": "scripts/build-lean-link-spike.sh",
+          "sha256": "9ac470e9b9d72fd412c59d813cfc07bfe554bd6ed31fba1d4354bcbaed3807f3"
+        },
+        {
+          "path": "src/abi/component-copied.mjs",
+          "sha256": "29b59ed2540d9908e282aa97f468b495889b0b064cd85d9cbfcc3e756666af02"
+        },
+        {
+          "path": "src/abi/component-records.mjs",
+          "sha256": "02aca059d9b451c0d88b06fdffde11b0afb2efcda0f20885f630ad83b34002e5"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8b65a0921d843876492815fefee7d3514fe3faaff740d42eb5d6354ce855f1c9"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"
+        },
+        {
+          "path": "src/build/compiler-adapters.mjs",
+          "sha256": "c99ab2aad5a9bdc8dcfa8ffacd01392fb8b1d042e567354722dce6580bfb8020"
+        },
+        {
+          "path": "src/build/component-callable-adapters.mjs",
+          "sha256": "f377e77e5ab1cff4888dc2ce82b93d5b3774d531e2c4c4faf94500ed008d672a"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "930547da45d90571c78404f30f3e7736ef01e050ebd120115c814377a45375d2"
+        },
+        {
+          "path": "src/build/lean-component-compiler.mjs",
+          "sha256": "7a86b8f5975437be60b5d3a92e72a674fcd1a53042f0f074eb0c3bcdb2915648"
+        },
+        {
+          "path": "src/build/side-module-audit.mjs",
+          "sha256": "3f49f501848d5c2d86b1e22c1ce4cdea51ba67610e85a7a49a24ec2511f37e0b"
+        },
+        {
+          "path": "src/release/component-copied-codec.mjs",
+          "sha256": "387a518016918edb9f33a3d131f171d9d535444c6e82d8fc3bae9615d8f882e6"
+        },
+        {
+          "path": "src/release/component-copied-runtime.mjs",
+          "sha256": "be1aeb1e73027fd7cf7c42ad1c67e477571581b3f8b6c202d3bcece10f215f12"
+        },
+        {
+          "path": "src/release/component-npm-package.mjs",
+          "sha256": "ac0b6fe130cd95f873df0407f4505c0813cd728a862cc57a79f41d35fd0c2989"
+        },
+        {
+          "path": "src/release/component-runtime.mjs",
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
+        },
+        {
+          "path": "tests/component-record-contract.test.mjs",
+          "sha256": "5cf3869d1bd7bb2ed065977b89fe682c61afd429a24f8cafb04050cb5dab3bec"
+        },
+        {
+          "path": "tests/component-records.test.mjs",
+          "sha256": "ad64d387c2e5bdbd9a894645f5d50a2d750bc9d1f58f6f5a55b4d3a146582cd4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/LICENSE",
+          "sha256": "1bde92057c7d9be85c67032ca8f45c61663f439e1a1bf8b91b0629f4ce71f71d"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/lakefile.toml",
+          "sha256": "d1550eee68aad341f673490391877059a0990138f280e808859534f5675cb268"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/package.json",
+          "sha256": "faf401a1a37d7164758d6c407a35d956c28bfee53f71103ee9f678fcb003c0ab"
+        },
+        {
+          "path": "tests/fixtures/record-consumers/npm.mjs",
+          "sha256": "28de4e0f266392879de720536971a9761cf92dc52504fa21053503c33e5f7383"
+        },
+        {
+          "path": "tests/helpers/component-scalar-install.mjs",
+          "sha256": "23f401dbf1fd3b195759658cf33a09c957dc4007ca067ba857648a6b15ec86fd"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "ec05f027595b928ebe13808eb25ead99973620589c94546affd0fabdb4e8f8a7"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/records-1.0.0.tgz",
+          "sha256": "a68c14fa81878eec61f85a2302c25667648f9d14c9827b53cf13a3c61a872edd"
+        },
+        {
+          "path": "ordinary-source/lean-bridge-runtime-0.0.0-abi2.892a1ae576d41a60270c25e18acbcf1f7182d8179d52820f4520fcd2ec5019a1.tgz",
+          "sha256": "c28186ba18f58351afb76901af9d810e136e314731f6e74d66c9bffdbe4c40a0"
+        },
+        {
+          "path": "reviewed-ir/records-1.0.0.tgz",
+          "sha256": "dba4acbc59e22a0aa445b6117f73c0b1b34ed9f201f8f4575e8a104704dec9f0"
+        },
+        {
+          "path": "reviewed-ir/lean-bridge-runtime-0.0.0-abi2.892a1ae576d41a60270c25e18acbcf1f7182d8179d52820f4520fcd2ec5019a1.tgz",
+          "sha256": "c28186ba18f58351afb76901af9d810e136e314731f6e74d66c9bffdbe4c40a0"
+        }
+      ]
+    },
+    {
       "id": "npm-arrays-installed",
       "kind": "installed",
       "revision": "b868bc3c1eb6b672b5d4be11f65c6182902fb1f8",
@@ -165,7 +328,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -177,63 +340,63 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "ab9628956e52c997a345380f723673356ff4265a43f82e00c9aaab1d970b748a"
+          "sha256": "feee53be8f7e5a85effbfb7c40c9a61561ebabaebff9995f54f8648b8ae00a96"
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
-          "sha256": "4d27e236caa0e64ed7ac16a5b066933fc9dea0cccc30699e5d0a5dedbd622708"
+          "sha256": "c6443d040ce0cc90ff66415206a4edb48137efa2f3fc84558897b13674d9a2b7"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "5172efa520105e50ce783bc3229bbb4eab61392f08c618c94febc6c165c4c22b"
+          "sha256": "5537cc1c6ef9e210c3381677d2b37f9c61435dd7cda9cc2566984fdec72b71c8"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "742b7649293e0a2c89e7bf1ee95cccbdc3e4f9f6e4920805d73639580c8f2d55"
+          "sha256": "3931ee099be551681d68de12386336edb84c826eb82e4c3f396876c6f070d222"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "b54bdbdc00704118eef978488867e74219371bd7d109e98913cfdf931de17657"
+          "sha256": "ae4d7fce42c1e69cd529269e2fda99250545fcf6c2a0693e7b741af7af06b557"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "daa96d84ff935a1a123e3c89d67cdeedc21ec6af930baca818fffb67457fce0a"
+          "sha256": "1ae7f576d9a6e2e77d174752813d41ee8a2df4150e39ad7e40c989914be432cf"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "97a90e9851126ef09fc816920111542dcc7894a8b8798740ef4b411a89a4ab84"
+          "sha256": "9ac470e9b9d72fd412c59d813cfc07bfe554bd6ed31fba1d4354bcbaed3807f3"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "f4473e1a5f516bb14f267c80ad6801aa9406276828cf53e2c13935072a143c45"
+          "sha256": "db4214890946a168dde23c82af73c268bb015c872db4f02ad6d24db09133a42e"
         },
         {
           "path": "src/abi/component-copied.mjs",
-          "sha256": "b6ebf1e06f55eadae3c492cb0daa1b6b2f29fdba27162291b0f9dbd0c7034372"
+          "sha256": "29b59ed2540d9908e282aa97f468b495889b0b064cd85d9cbfcc3e756666af02"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "a0e24b2101183a7e4f515934fc6466216bc2989e7b1e962d4e6038b4a38b0316"
+          "sha256": "8b65a0921d843876492815fefee7d3514fe3faaff740d42eb5d6354ce855f1c9"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "5afb544389d1db0c88c2c7dec0cfba3b975daee92e5f249540dff364b091ed10"
+          "sha256": "c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "6fc295d5ac386c79625b68826c8ab2943395e1210086de36942cb1f3d0986622"
+          "sha256": "c99ab2aad5a9bdc8dcfa8ffacd01392fb8b1d042e567354722dce6580bfb8020"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "d23c95a57a2cb64b0b39587553a9fe40c1194f3d0d832f3e1f0cb63162c40a11"
+          "sha256": "f377e77e5ab1cff4888dc2ce82b93d5b3774d531e2c4c4faf94500ed008d672a"
         },
         {
           "path": "src/build/component-copied-adapters.mjs",
@@ -241,27 +404,27 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "f927b5b4d08a3720dbb04cff51a07e5379251f177c905e1d1b094c0d8333cc00"
+          "sha256": "7a86b8f5975437be60b5d3a92e72a674fcd1a53042f0f074eb0c3bcdb2915648"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "8a62640c598638eb89234f82ea72482f79b18bd228107519df5a5d51fb3fa509"
+          "sha256": "3f49f501848d5c2d86b1e22c1ce4cdea51ba67610e85a7a49a24ec2511f37e0b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
-          "sha256": "124463d5e58f786e1652e399d488ed0407e9d3f42627d59622565cd7aee43482"
+          "sha256": "387a518016918edb9f33a3d131f171d9d535444c6e82d8fc3bae9615d8f882e6"
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "4bfb49f90b04fdf9718120adf89e4c5f12d2380af6b55b0de74b901a17a90cee"
+          "sha256": "be1aeb1e73027fd7cf7c42ad1c67e477571581b3f8b6c202d3bcece10f215f12"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "472aa950f69b9eaddc10318727e12ab61050019ea42f6eeecc7c9024b0ef45c5"
+          "sha256": "ac0b6fe130cd95f873df0407f4505c0813cd728a862cc57a79f41d35fd0c2989"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "2736bc969f10e74f1b1a72726c4e513a33742eb1aad60d1f71f10270426afbfc"
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
         },
         {
           "path": "tests/component-array-contract.test.mjs",
@@ -273,7 +436,7 @@
         },
         {
           "path": "tests/component-copied-codec.test.mjs",
-          "sha256": "738c66727c2cba6f5c0a43e03dab214ecf5435d24e85109bfa48d012b03131de"
+          "sha256": "88aabd70c321d14a9c168d150e13a10c7b96c13648ae02372684a1b224ee8ad6"
         },
         {
           "path": "tests/fixtures/array-consumers/npm.mjs",
@@ -289,15 +452,15 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "51512b206d4d6bb51e846cb01176aeec495e371e6b6405a87208515b7baccc0e"
+          "sha256": "23f401dbf1fd3b195759658cf33a09c957dc4007ca067ba857648a6b15ec86fd"
         },
         {
           "path": "tests/helpers/type-corpus-node.mjs",
-          "sha256": "d2944bd8b4cd49480b699a5ccf129102a4556e362bdcf8b92bb2be9c5ffed733"
+          "sha256": "ec22766b5fde95944795eef89eb9b95616dbc3162723869f4a6f97f44caf5731"
         },
         {
           "path": "tests/helpers/type-corpus.mjs",
-          "sha256": "977558ba59fe796815f5553dd12b52a4e14c1cc10f53fa167ed14c7f5d490c75"
+          "sha256": "09d362abbe6a2657fbdeb7c3dd7e339950c86a2c726a71e97ffb997b8a6c4724"
         },
         {
           "path": "tests/lake-entry-modules.test.mjs",
@@ -305,7 +468,7 @@
         },
         {
           "path": "tests/type-corpus.test.mjs",
-          "sha256": "33f90ae8527b13dd3f78a7fc94d16171907fdc9fd219fd2b65683e86796e9d3b"
+          "sha256": "3336b5eb07b000ce5b99991f7d02492ce3d919829df348a23be5c15dd38c9968"
         }
       ],
       "artifacts": [
@@ -352,7 +515,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "51512b206d4d6bb51e846cb01176aeec495e371e6b6405a87208515b7baccc0e"
+          "sha256": "23f401dbf1fd3b195759658cf33a09c957dc4007ca067ba857648a6b15ec86fd"
         },
         {
           "path": "tests/component-callables.test.mjs",
@@ -376,23 +539,23 @@
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "d23c95a57a2cb64b0b39587553a9fe40c1194f3d0d832f3e1f0cb63162c40a11"
+          "sha256": "f377e77e5ab1cff4888dc2ce82b93d5b3774d531e2c4c4faf94500ed008d672a"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "6fc295d5ac386c79625b68826c8ab2943395e1210086de36942cb1f3d0986622"
+          "sha256": "c99ab2aad5a9bdc8dcfa8ffacd01392fb8b1d042e567354722dce6580bfb8020"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "f927b5b4d08a3720dbb04cff51a07e5379251f177c905e1d1b094c0d8333cc00"
+          "sha256": "7a86b8f5975437be60b5d3a92e72a674fcd1a53042f0f074eb0c3bcdb2915648"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "a0e24b2101183a7e4f515934fc6466216bc2989e7b1e962d4e6038b4a38b0316"
+          "sha256": "8b65a0921d843876492815fefee7d3514fe3faaff740d42eb5d6354ce855f1c9"
         },
         {
           "path": "src/analyze/project-analysis.mjs",
@@ -404,7 +567,7 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "2736bc969f10e74f1b1a72726c4e513a33742eb1aad60d1f71f10270426afbfc"
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
         },
         {
           "path": "src/release/component-callable-runtime.mjs",
@@ -412,35 +575,35 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "472aa950f69b9eaddc10318727e12ab61050019ea42f6eeecc7c9024b0ef45c5"
+          "sha256": "ac0b6fe130cd95f873df0407f4505c0813cd728a862cc57a79f41d35fd0c2989"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "5172efa520105e50ce783bc3229bbb4eab61392f08c618c94febc6c165c4c22b"
+          "sha256": "5537cc1c6ef9e210c3381677d2b37f9c61435dd7cda9cc2566984fdec72b71c8"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "742b7649293e0a2c89e7bf1ee95cccbdc3e4f9f6e4920805d73639580c8f2d55"
+          "sha256": "3931ee099be551681d68de12386336edb84c826eb82e4c3f396876c6f070d222"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "97a90e9851126ef09fc816920111542dcc7894a8b8798740ef4b411a89a4ab84"
+          "sha256": "9ac470e9b9d72fd412c59d813cfc07bfe554bd6ed31fba1d4354bcbaed3807f3"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "b54bdbdc00704118eef978488867e74219371bd7d109e98913cfdf931de17657"
+          "sha256": "ae4d7fce42c1e69cd529269e2fda99250545fcf6c2a0693e7b741af7af06b557"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "daa96d84ff935a1a123e3c89d67cdeedc21ec6af930baca818fffb67457fce0a"
+          "sha256": "1ae7f576d9a6e2e77d174752813d41ee8a2df4150e39ad7e40c989914be432cf"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -575,11 +738,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -694,15 +857,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "8a2bc297660cbce92f43d0de52f0b96f19f2225a41a331b05f070ac454e81cb3"
+          "sha256": "725cb531fe319b6c2b0e8bb9dc618904e056bc323fc6d55ab942ebc3216f4ccf"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -730,7 +893,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -933,15 +1096,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "8a2bc297660cbce92f43d0de52f0b96f19f2225a41a331b05f070ac454e81cb3"
+          "sha256": "725cb531fe319b6c2b0e8bb9dc618904e056bc323fc6d55ab942ebc3216f4ccf"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -969,7 +1132,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -1124,11 +1287,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1152,7 +1315,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -1347,11 +1510,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1371,7 +1534,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -1526,7 +1689,7 @@
         },
         {
           "path": "tests/helpers/type-corpus.mjs",
-          "sha256": "977558ba59fe796815f5553dd12b52a4e14c1cc10f53fa167ed14c7f5d490c75"
+          "sha256": "09d362abbe6a2657fbdeb7c3dd7e339950c86a2c726a71e97ffb997b8a6c4724"
         },
         {
           "path": "tests/fixtures/type-corpus/cases.mjs",
@@ -1542,15 +1705,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "flake.nix",
@@ -1753,15 +1916,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -1948,15 +2111,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -2079,15 +2242,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -2210,15 +2373,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -2329,15 +2492,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -2376,7 +2539,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/analyze/native-types.mjs",
@@ -2440,15 +2603,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "8be0a139a78be5b4ac26026f324b398b512a8f7faa1c29e781a24159d96441af"
+          "sha256": "7d828e8f2bd25b4b89de7477522422f23e233556084106275f25e8ec7adbbdc8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2539,7 +2702,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2555,15 +2718,15 @@
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
-          "sha256": "4d27e236caa0e64ed7ac16a5b066933fc9dea0cccc30699e5d0a5dedbd622708"
+          "sha256": "c6443d040ce0cc90ff66415206a4edb48137efa2f3fc84558897b13674d9a2b7"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "5172efa520105e50ce783bc3229bbb4eab61392f08c618c94febc6c165c4c22b"
+          "sha256": "5537cc1c6ef9e210c3381677d2b37f9c61435dd7cda9cc2566984fdec72b71c8"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "742b7649293e0a2c89e7bf1ee95cccbdc3e4f9f6e4920805d73639580c8f2d55"
+          "sha256": "3931ee099be551681d68de12386336edb84c826eb82e4c3f396876c6f070d222"
         },
         {
           "path": "schema/binding-ir.schema.json",
@@ -2575,11 +2738,11 @@
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "97a90e9851126ef09fc816920111542dcc7894a8b8798740ef4b411a89a4ab84"
+          "sha256": "9ac470e9b9d72fd412c59d813cfc07bfe554bd6ed31fba1d4354bcbaed3807f3"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "f4473e1a5f516bb14f267c80ad6801aa9406276828cf53e2c13935072a143c45"
+          "sha256": "db4214890946a168dde23c82af73c268bb015c872db4f02ad6d24db09133a42e"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -2587,7 +2750,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -2603,7 +2766,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -2635,7 +2798,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "5afb544389d1db0c88c2c7dec0cfba3b975daee92e5f249540dff364b091ed10"
+          "sha256": "c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -2707,7 +2870,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "6fc295d5ac386c79625b68826c8ab2943395e1210086de36942cb1f3d0986622"
+          "sha256": "c99ab2aad5a9bdc8dcfa8ffacd01392fb8b1d042e567354722dce6580bfb8020"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -2719,11 +2882,11 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "472aa950f69b9eaddc10318727e12ab61050019ea42f6eeecc7c9024b0ef45c5"
+          "sha256": "ac0b6fe130cd95f873df0407f4505c0813cd728a862cc57a79f41d35fd0c2989"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "2736bc969f10e74f1b1a72726c4e513a33742eb1aad60d1f71f10270426afbfc"
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
         },
         {
           "path": "tests/component-scalars.test.mjs",
@@ -2739,7 +2902,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "8be0a139a78be5b4ac26026f324b398b512a8f7faa1c29e781a24159d96441af"
+          "sha256": "7d828e8f2bd25b4b89de7477522422f23e233556084106275f25e8ec7adbbdc8"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -2815,7 +2978,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "51512b206d4d6bb51e846cb01176aeec495e371e6b6405a87208515b7baccc0e"
+          "sha256": "23f401dbf1fd3b195759658cf33a09c957dc4007ca067ba857648a6b15ec86fd"
         },
         {
           "path": "tests/helpers/copied-fixture-install.mjs",
@@ -2839,11 +3002,11 @@
         },
         {
           "path": "tests/type-corpus.test.mjs",
-          "sha256": "33f90ae8527b13dd3f78a7fc94d16171907fdc9fd219fd2b65683e86796e9d3b"
+          "sha256": "3336b5eb07b000ce5b99991f7d02492ce3d919829df348a23be5c15dd38c9968"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "67b93174bbd27e7ea8183de7e1826aec7c345c4c387e844b6db6125fda3c8dc7"
+          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -2918,7 +3081,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "0d2b9a4ce01b4ac2c1604a429b463ca11565e31f38459c73363a024dc3b85dae"
+          "sha256": "feb477893dc4ff9c72dffb091a684753daa8bb95b90e3acc796a77e5636caf75"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2930,7 +3093,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "624956d3fb2a37e2c08d6424c44fb2c303b155ba8079219ab350b46b4e4cce1a"
+          "sha256": "44c0aea08d97874cbe607bbb2ed0352a19adfa60949ca0e6668c4fbc90590f6c"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -3153,7 +3316,7 @@
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "daa96d84ff935a1a123e3c89d67cdeedc21ec6af930baca818fffb67457fce0a"
+          "sha256": "1ae7f576d9a6e2e77d174752813d41ee8a2df4150e39ad7e40c989914be432cf"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
@@ -3161,7 +3324,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/analyze/native-types.mjs",
@@ -3173,7 +3336,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "6fc295d5ac386c79625b68826c8ab2943395e1210086de36942cb1f3d0986622"
+          "sha256": "c99ab2aad5a9bdc8dcfa8ffacd01392fb8b1d042e567354722dce6580bfb8020"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -3181,15 +3344,15 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "2736bc969f10e74f1b1a72726c4e513a33742eb1aad60d1f71f10270426afbfc"
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "5afb544389d1db0c88c2c7dec0cfba3b975daee92e5f249540dff364b091ed10"
+          "sha256": "c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "5172efa520105e50ce783bc3229bbb4eab61392f08c618c94febc6c165c4c22b"
+          "sha256": "5537cc1c6ef9e210c3381677d2b37f9c61435dd7cda9cc2566984fdec72b71c8"
         },
         {
           "path": "tests/component-char.test.mjs",
@@ -4446,7 +4609,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "9962297458e3436f6a320fa568f1117f23a08092b754700466b62838441357e3"
+          "sha256": "51a46dd95de5ba88127523d63f1b43f7317bac99e7a38ae2627c006a71755528"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -4458,11 +4621,11 @@
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "a0e24b2101183a7e4f515934fc6466216bc2989e7b1e962d4e6038b4a38b0316"
+          "sha256": "8b65a0921d843876492815fefee7d3514fe3faaff740d42eb5d6354ce855f1c9"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "daa96d84ff935a1a123e3c89d67cdeedc21ec6af930baca818fffb67457fce0a"
+          "sha256": "1ae7f576d9a6e2e77d174752813d41ee8a2df4150e39ad7e40c989914be432cf"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
@@ -4641,7 +4804,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "5afb544389d1db0c88c2c7dec0cfba3b975daee92e5f249540dff364b091ed10"
+          "sha256": "c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -4653,7 +4816,7 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "2736bc969f10e74f1b1a72726c4e513a33742eb1aad60d1f71f10270426afbfc"
+          "sha256": "6316d821359f7b7ff338f8b44b4db33fce9efcd4ff1ae146ab7008c6c3c351f1"
         },
         {
           "path": "src/release/component-scalar-codec.mjs",
@@ -4661,7 +4824,7 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "472aa950f69b9eaddc10318727e12ab61050019ea42f6eeecc7c9024b0ef45c5"
+          "sha256": "ac0b6fe130cd95f873df0407f4505c0813cd728a862cc57a79f41d35fd0c2989"
         }
       ],
       "artifacts": []
@@ -4859,7 +5022,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "Reviewed IR projection. Array is the only admitted anonymous constructor; Option, result and tuple are rejected before rendering. The Char milestone adds string projection with single-Unicode-scalar runtime validation. Installed Char evidence is recorded separately in npm-installed-char. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged.",
       "files": [
-        {"path":"src/backends/javascript/generate.mjs","sha256":"5afb544389d1db0c88c2c7dec0cfba3b975daee92e5f249540dff364b091ed10"},
+        {"path":"src/backends/javascript/generate.mjs","sha256":"c3515528f5d968aa8086020a7b758d44409f6f177cb84e9483809ca5a0527493"},
         {"path":"src/backends/javascript/coverage.mjs","sha256":"d8c382ff01b45226468254a24c484f189aa73f11c4c9761656e309b5d15c144e"}
       ],
       "artifacts": []
@@ -4993,6 +5156,590 @@
   ],
   "observations": [
     {
+      "id": "npm-records-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "hostTypes": {
+        "record": {
+          "parameter": "Named readonly interface; copied plain object",
+          "result": "Named readonly interface; copied plain object",
+          "field": "Named readonly interface; copied plain object"
+        }
+      },
+      "conversionNotes": {
+        "record": "Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access."
+      }
+    },
+    {
+      "id": "npm-primitive-fields-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "field"
+      ],
+      "hostTypes": {
+        "unit": {
+          "field": "undefined"
+        },
+        "bool": {
+          "field": "boolean"
+        },
+        "uint8": {
+          "field": "number"
+        },
+        "uint16": {
+          "field": "number"
+        },
+        "uint32": {
+          "field": "number"
+        },
+        "uint64": {
+          "field": "bigint"
+        },
+        "int8": {
+          "field": "number"
+        },
+        "int16": {
+          "field": "number"
+        },
+        "int32": {
+          "field": "number"
+        },
+        "int64": {
+          "field": "bigint"
+        },
+        "nat": {
+          "field": "bigint"
+        },
+        "int": {
+          "field": "bigint"
+        },
+        "float32": {
+          "field": "number"
+        },
+        "float64": {
+          "field": "number"
+        },
+        "string": {
+          "field": "string"
+        },
+        "bytes": {
+          "field": "Uint8Array"
+        },
+        "char": {
+          "field": "string"
+        },
+        "usize": {
+          "field": "number"
+        },
+        "isize": {
+          "field": "number"
+        }
+      },
+      "conversionNotes": {
+        "unit": "The JavaScript value is undefined. Generated TypeScript uses void in every position.",
+        "nat": "Exact nonnegative bigint, including 16,385-bit samples; conversion budgets apply.",
+        "int": "Exact signed bigint, including 16,385-bit samples; conversion budgets apply.",
+        "float32": "IEEE binary32 projected as number; preserves NaN classification, infinities and signed zero.",
+        "float64": "IEEE binary64 projected as number; preserves NaN classification, infinities and signed zero.",
+        "string": "Copied UTF-8 text, including BOM, NUL and supplementary characters.",
+        "bytes": "Copied Uint8Array; no view into Lean memory.",
+        "usize": "32-bit compiled Lean target, 0..4294967295. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "32-bit compiled Lean target, -2147483648..2147483647. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "char": "Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation."
+      }
+    },
+    {
+      "id": "npm-array-fields-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "array"
+      ],
+      "positions": [
+        "field"
+      ],
+      "hostTypes": {
+        "array": {
+          "field": "ReadonlyArray<T> (copied primitive or record elements)"
+        }
+      },
+      "conversionNotes": {
+        "array": "Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal."
+      }
+    },
+    {
+      "id": "npm-records-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "hostTypes": {
+        "record": {
+          "parameter": "Named readonly interface; copied plain object",
+          "result": "Named readonly interface; copied plain object",
+          "field": "Named readonly interface; copied plain object"
+        }
+      },
+      "conversionNotes": {
+        "record": "Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access."
+      }
+    },
+    {
+      "id": "npm-primitive-fields-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "positions": [
+        "field"
+      ],
+      "hostTypes": {
+        "unit": {
+          "field": "undefined"
+        },
+        "bool": {
+          "field": "boolean"
+        },
+        "uint8": {
+          "field": "number"
+        },
+        "uint16": {
+          "field": "number"
+        },
+        "uint32": {
+          "field": "number"
+        },
+        "uint64": {
+          "field": "bigint"
+        },
+        "int8": {
+          "field": "number"
+        },
+        "int16": {
+          "field": "number"
+        },
+        "int32": {
+          "field": "number"
+        },
+        "int64": {
+          "field": "bigint"
+        },
+        "nat": {
+          "field": "bigint"
+        },
+        "int": {
+          "field": "bigint"
+        },
+        "float32": {
+          "field": "number"
+        },
+        "float64": {
+          "field": "number"
+        },
+        "string": {
+          "field": "string"
+        },
+        "bytes": {
+          "field": "Uint8Array"
+        },
+        "char": {
+          "field": "string"
+        },
+        "usize": {
+          "field": "number"
+        },
+        "isize": {
+          "field": "number"
+        }
+      },
+      "conversionNotes": {
+        "unit": "The JavaScript value is undefined. Generated TypeScript uses void in every position.",
+        "nat": "Exact nonnegative bigint, including 16,385-bit samples; conversion budgets apply.",
+        "int": "Exact signed bigint, including 16,385-bit samples; conversion budgets apply.",
+        "float32": "IEEE binary32 projected as number; preserves NaN classification, infinities and signed zero.",
+        "float64": "IEEE binary64 projected as number; preserves NaN classification, infinities and signed zero.",
+        "string": "Copied UTF-8 text, including BOM, NUL and supplementary characters.",
+        "bytes": "Copied Uint8Array; no view into Lean memory.",
+        "usize": "32-bit compiled Lean target, 0..4294967295. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "isize": "32-bit compiled Lean target, -2147483648..2147483647. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound.",
+        "char": "Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation."
+      }
+    },
+    {
+      "id": "npm-array-fields-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery.",
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-records-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages execute seven acyclic records, arrays of records and all nineteen primitive field types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Each JavaScript context passes 4257 checks covering values, nested copy independence, malformed input and oversized-result recovery."
+        }
+      },
+      "limitations": [
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
+      ],
+      "shapes": [
+        "array"
+      ],
+      "positions": [
+        "field"
+      ],
+      "hostTypes": {
+        "array": {
+          "field": "ReadonlyArray<T> (copied primitive or record elements)"
+        }
+      },
+      "conversionNotes": {
+        "array": "Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal."
+      }
+    },
+    {
       "id": "npm-primitive-arrays-reviewed-ir",
       "profiles": [
         "node-javascript",
@@ -5009,57 +5756,63 @@
         "result"
       ],
       "path": "reviewed-ir",
-      "scope": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context.",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields.",
       "hostTypes": {
         "array": {
-          "parameter": "ReadonlyArray<T> (nested primitive elements)",
-          "result": "ReadonlyArray<T> (nested primitive elements)"
+          "parameter": "ReadonlyArray<T> (copied primitive or record elements)",
+          "result": "ReadonlyArray<T> (copied primitive or record elements)"
         }
       },
       "stages": {
         "analysis": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "generation": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "compilation": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "installedExecution": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         }
       },
       "limitations": [
-        "Primitive elements and nested arrays only. No record, field, Option, Except, tuple or compound-callable promotion.",
-        "Arrays and primitive callables cannot share one component yet.",
-        "wasm32 Lean; 32 array levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory."
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
       ],
       "conversionNotes": {
-        "array": "Dense ordinary JavaScript arrays, recursively; holes, getters, cycles and extra properties reject. No Wasm views or disposal. ByteArray elements use independent Uint8Array copies."
+        "array": "Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal."
       }
     },
     {
@@ -5079,57 +5832,63 @@
         "result"
       ],
       "path": "ordinary-source",
-      "scope": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context.",
+      "scope": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields.",
       "hostTypes": {
         "array": {
-          "parameter": "ReadonlyArray<T> (nested primitive elements)",
-          "result": "ReadonlyArray<T> (nested primitive elements)"
+          "parameter": "ReadonlyArray<T> (copied primitive or record elements)",
+          "result": "ReadonlyArray<T> (copied primitive or record elements)"
         }
       },
       "stages": {
         "analysis": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "generation": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "compilation": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         },
         "installedExecution": {
           "state": "passed",
           "evidence": [
-            "npm-arrays-installed"
+            "npm-arrays-installed",
+            "npm-records-installed"
           ],
-          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context."
+          "note": "Installed ordinary-source and independently reviewed npm packages execute nested arrays of all nineteen primitive types in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers. Dense arrays and byte buffers are independent copies; exact values and error recovery pass 1278 JavaScript checks per context. Installed record fixtures also exercise arrays containing named records, including nested record fields."
         }
       },
       "limitations": [
-        "Primitive elements and nested arrays only. No record, field, Option, Except, tuple or compound-callable promotion.",
-        "Arrays and primitive callables cannot share one component yet.",
-        "wasm32 Lean; 32 array levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory."
+        "Concrete acyclic copied records and dense arrays only. No generic, inherited, dependent or recursive records, variants, aliases, List, Option, Except or tuple promotion.",
+        "Copied containers and primitive callables cannot share one component yet; fields cannot contain callbacks or resources.",
+        "wasm32 Lean; 32 container levels and 16 MiB of copied slots/payloads across all inputs and output per call. This does not bound Lean working memory.",
+        "Plain or null-prototype objects with exactly the declared own data fields. Supported ASCII names only; __proto__, prototype and constructor fields reject."
       ],
       "conversionNotes": {
-        "array": "Dense ordinary JavaScript arrays, recursively; holes, getters, cycles and extra properties reject. No Wasm views or disposal. ByteArray elements use independent Uint8Array copies."
+        "array": "Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal."
       }
     },
     {
@@ -5145,15 +5904,13 @@
         "array"
       ],
       "positions": [
-        "field",
         "callback-parameter",
         "callback-result"
       ],
       "path": "reviewed-ir",
-      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution.",
+      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution. Installed npm copied-record and field coverage is recorded separately.",
       "hostTypes": {
         "array": {
-          "field": "readonly T[]; UInt32 arrays use readonly number[]",
           "callback-parameter": "readonly T[]; UInt32 arrays use readonly number[]",
           "callback-result": "readonly T[]; UInt32 arrays use readonly number[]"
         }
@@ -21716,7 +22473,7 @@
       }
     },
     {
-      "id": "js-primitives-node-javascript-1-remaining-1",
+      "id": "js-values-node-javascript-1",
       "profiles": [
         "node-javascript",
         "node-typescript",
@@ -21725,76 +22482,18 @@
         "browser-worker"
       ],
       "shapes": [
-        "unit",
-        "bool",
-        "uint8",
-        "uint16",
-        "uint32",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "nat",
-        "int",
-        "float32",
-        "float64",
-        "string",
-        "bytes"
+        "record"
       ],
       "positions": [
-        "field"
+        "callback-parameter",
+        "callback-result"
       ],
       "path": "reviewed-ir",
-      "scope": "Generated primitive syntax and validators; installed ordinary scalar evidence is on its separate source path. Primitive callable coverage and newly installed primitive input/result coverage are recorded separately.",
+      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution. Installed npm copied-record and field coverage is recorded separately.",
       "hostTypes": {
-        "unit": {
-          "field": "undefined"
-        },
-        "bool": {
-          "field": "boolean"
-        },
-        "uint8": {
-          "field": "number"
-        },
-        "uint16": {
-          "field": "number"
-        },
-        "uint32": {
-          "field": "number"
-        },
-        "uint64": {
-          "field": "bigint"
-        },
-        "int8": {
-          "field": "number"
-        },
-        "int16": {
-          "field": "number"
-        },
-        "int32": {
-          "field": "number"
-        },
-        "int64": {
-          "field": "bigint"
-        },
-        "nat": {
-          "field": "bigint"
-        },
-        "int": {
-          "field": "bigint"
-        },
-        "float32": {
-          "field": "number"
-        },
-        "float64": {
-          "field": "number"
-        },
-        "string": {
-          "field": "string"
-        },
-        "bytes": {
-          "field": "Uint8Array"
+        "record": {
+          "callback-parameter": "Generated readonly record (Alpha: Payload)",
+          "callback-result": "Generated readonly record (Alpha: Payload)"
         }
       },
       "stages": {
@@ -21808,7 +22507,7 @@
           "evidence": [
             "javascript-mapping-audit"
           ],
-          "note": "Generated primitive syntax and validators; installed ordinary scalar evidence is on its separate source path."
+          "note": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution."
         },
         "compilation": {
           "state": "unreviewed",
@@ -21827,14 +22526,12 @@
         }
       },
       "limitations": [
-        "A callback's scalar spelling does not test its compiled callback transport."
-      ],
-      "conversionNotes": {
-        "unit": "The JavaScript value is undefined. Generated TypeScript uses void in every position."
-      }
+        "Array elements must pass the JavaScript coverage guard.",
+        "Copied structures cannot contain unowned identity-bearing values."
+      ]
     },
     {
-      "id": "js-values-node-javascript-1",
+      "id": "js-values-node-javascript-1-record-remainder-1",
       "profiles": [
         "node-javascript",
         "node-typescript",
@@ -21843,7 +22540,6 @@
         "browser-worker"
       ],
       "shapes": [
-        "record",
         "alias",
         "variant"
       ],
@@ -21855,15 +22551,8 @@
         "callback-result"
       ],
       "path": "reviewed-ir",
-      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution.",
+      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution. Installed npm copied-record and field coverage is recorded separately.",
       "hostTypes": {
-        "record": {
-          "parameter": "Generated readonly record (Alpha: Payload)",
-          "result": "Generated readonly record (Alpha: Payload)",
-          "field": "Generated readonly record (Alpha: Payload)",
-          "callback-parameter": "Generated readonly record (Alpha: Payload)",
-          "callback-result": "Generated readonly record (Alpha: Payload)"
-        },
         "alias": {
           "parameter": "Resolved target type",
           "result": "Resolved target type",
@@ -23727,7 +24416,64 @@
         "browser-worker"
       ],
       "shapes": [
-        "array",
+        "array"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Installed npm copied-record and field coverage is recorded separately.",
+      "hostTypes": {
+        "array": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "The ordinary component signature guard does not compile this runtime type or callable shape."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Proof-only declarations require elaborator-guided erasure, not a runtime proof value.",
+        "Reviewed IR profiles are audited separately."
+      ]
+    },
+    {
+      "id": "ordinary-compiler-node-javascript-1-record-remainder-1",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
         "option",
         "result"
       ],
@@ -23737,13 +24483,8 @@
         "callback-result"
       ],
       "path": "ordinary-source",
-      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here.",
+      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Installed npm copied-record and field coverage is recorded separately.",
       "hostTypes": {
-        "array": {
-          "field": null,
-          "callback-parameter": null,
-          "callback-result": null
-        },
         "option": {
           "field": null,
           "callback-parameter": null,
@@ -23800,7 +24541,6 @@
       ],
       "shapes": [
         "tuple",
-        "record",
         "alias",
         "variant",
         "resource"
@@ -23813,16 +24553,9 @@
         "callback-result"
       ],
       "path": "ordinary-source",
-      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Primitive callable coverage and newly installed primitive input/result coverage are recorded separately.",
+      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Primitive callable coverage and newly installed primitive input/result coverage are recorded separately. Installed npm copied-record and field coverage is recorded separately.",
       "hostTypes": {
         "tuple": {
-          "parameter": null,
-          "result": null,
-          "field": null,
-          "callback-parameter": null,
-          "callback-result": null
-        },
-        "record": {
           "parameter": null,
           "result": null,
           "field": null,
@@ -23847,6 +24580,64 @@
           "parameter": null,
           "result": null,
           "field": null,
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "The ordinary component signature guard does not compile this runtime type or callable shape."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Proof-only declarations require elaborator-guided erasure, not a runtime proof value.",
+        "Reviewed IR profiles are audited separately."
+      ]
+    },
+    {
+      "id": "ordinary-compiler-node-javascript-2-remaining-1-record-remainder-1",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "record"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Primitive callable coverage and newly installed primitive input/result coverage are recorded separately. Installed npm copied-record and field coverage is recorded separately.",
+      "hostTypes": {
+        "record": {
           "callback-parameter": null,
           "callback-result": null
         }

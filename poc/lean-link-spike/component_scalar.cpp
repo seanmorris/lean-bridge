@@ -127,12 +127,22 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_encode_object(bridge_scal
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_abi(void) { return 1; }
 
-extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+static uint32_t copied_frame_validate(bridge_scalar_frame *frame, uint32_t argc, uint32_t version) {
   if (!frame || (uintptr_t)frame % 8 || !in_heap((uintptr_t)frame, 32) || argc > 32) return 1;
   uint32_t bytes = 32 + 16 * argc;
-  if (frame->version != 4 || frame->bytes != bytes || frame->argc != argc || frame->status ||
+  if (frame->version != version || frame->bytes != bytes || frame->argc != argc || frame->status ||
       frame->result.kind || frame->result.flags || frame->result.bits || !in_heap((uintptr_t)frame, bytes)) return 1;
   return bridge_lean_runtime_status() == 2 ? 0 : 2;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+  return copied_frame_validate(frame, argc, 4);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_abi(void) { return 1; }
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+  return copied_frame_validate(frame, argc, 5);
 }
 
 static bool copied_charge(uint32_t *budget, uint64_t bytes) {
@@ -208,7 +218,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE lean_object *bridge_copied_decode(bridge_scalar_
 static void copied_clear(bridge_scalar_slot *slot) {
   if (slot->flags & 2) {
     void *pointer = (void *)(uintptr_t)(uint32_t)slot->bits;
-    if (slot->kind == 32) {
+    if (slot->kind == 32 || slot->kind == 36) {
       auto children = (bridge_scalar_slot *)pointer;
       uint32_t count = slot->bits >> 32;
       for (uint32_t i = 0; i < count; ++i) copied_clear(children + i);
@@ -267,6 +277,43 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_encode(bridge_scalar_slot
 
 extern "C" EMSCRIPTEN_KEEPALIVE void bridge_copied_frame_clear(bridge_scalar_frame *frame) {
   copied_clear(&frame->result);
+}
+
+/* Generated typed walkers validate every node before allocating Lean objects.
+   A container charges its own slot here; each child validator charges its slot. */
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_children_validate(bridge_scalar_slot const *slot, uint32_t kind, uint32_t expected, uint32_t *budget) {
+  if ((kind != 32 && kind != 36) || !slot || (uintptr_t)slot % 8 || !in_heap((uintptr_t)slot, 16)) return 3;
+  if (slot->kind != kind || slot->flags) return 3;
+  uint32_t pointer = (uint32_t)slot->bits, count = slot->bits >> 32;
+  if ((expected != UINT32_MAX && count != expected) || (!count && pointer) || (count && !pointer) || pointer % 8) return 3;
+  uint64_t bytes = 16ull * count;
+  if (!in_heap(pointer, bytes)) return 3;
+  if (!copied_charge(budget, 16) || bytes > *budget) return 4;
+  return 0;
+}
+
+/* The result root is prepaid by the adapter. Each parent prepays all child
+   slots before allocating their zeroed table; leaf encoders charge payloads. */
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_children_allocate(bridge_scalar_slot *slot, uint32_t kind, uint32_t count, uint32_t *budget) {
+  *slot = {};
+  if (kind != 32 && kind != 36) return 6;
+  if (!copied_charge(budget, 16ull * count)) return 4;
+  void *children = count ? calloc(count, 16) : nullptr;
+  if (count && !children) return 5;
+  slot->kind = kind;
+  slot->flags = count ? 2 : 0;
+  slot->bits = ((uint64_t)count << 32) | (uint32_t)(uintptr_t)children;
+  return 0;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_encode_leaf(bridge_scalar_slot *slot, uint32_t kind, lean_object *value, uint32_t *budget) {
+  *slot = {};
+  if (kind > 18) { lean_dec(value); return 6; }
+  return copied_encode_node(slot, kind, 0, value, budget);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE void bridge_record_slot_clear(bridge_scalar_slot *slot) {
+  copied_clear(slot);
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_call(char const *symbol, bridge_scalar_frame *frame) {

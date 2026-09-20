@@ -6,6 +6,7 @@
 import { scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { componentCopiedAbi, componentArrayShape, createComponentCopyBudget } from "../abi/component-copied.mjs";
 import { compileComponentCopiedCodec } from "./component-copied-codec.mjs";
+import { componentRecordAbi, resolveComponentRecordType } from "../abi/component-records.mjs";
 
 /**
  * Compile a call's codecs once, sharing input/result limits and runtime poison.
@@ -14,11 +15,14 @@ import { compileComponentCopiedCodec } from "./component-copied-codec.mjs";
  * @param operation - Generated typed C adapter.
  * @param signature - Authenticated copied-array signature.
  * @param poison - Retire the shared runtime after a trap or malformed output.
+ * @param version - Validated wire ABI version.
+ * @param records - Authenticated nominal record definitions for ABI five.
  */
-export const compileComponentCopiedCall = (module, operation, signature, poison) => {
+export const compileComponentCopiedCall = (module, operation, signature, poison, version = componentCopiedAbi, records = []) => {
 	const types = [...signature.parameters, signature.result];
-	for(const type of types) componentArrayShape(type);
-	const codecs = types.map(compileComponentCopiedCodec);
+	if(![componentCopiedAbi, componentRecordAbi].includes(version)) throw new TypeError("Invalid copied call ABI");
+	if(version === componentCopiedAbi) for(const type of types) componentArrayShape(type);
+	const codecs = types.map(type => compileComponentCopiedCodec(version === componentRecordAbi ? resolveComponentRecordType(type, records) : type));
 	return args => {
 		if(args.length !== signature.parameters.length) throw new TypeError(`Expected ${signature.parameters.length} arguments`);
 		const allocations = [], budget = createComponentCopyBudget();
@@ -50,7 +54,7 @@ export const compileComponentCopiedCall = (module, operation, signature, poison)
 			const size = scalarFrameHeaderBytes + scalarSlotBytes * args.length;
 			frame = allocate(size);
 			module.HEAP8.fill(0, frame, frame + size);
-			view().setUint32(frame, componentCopiedAbi, true);
+			view().setUint32(frame, version, true);
 			view().setUint32(frame + 4, size, true);
 			view().setUint32(frame + 12, args.length, true);
 			args.forEach((value, index) => codecs[index].write(module, frame + scalarFrameHeaderBytes + index * scalarSlotBytes, value, allocate, budget));
@@ -59,7 +63,7 @@ export const compileComponentCopiedCall = (module, operation, signature, poison)
 			{ status = operation(frame); }
 			catch(error)
 			{ unsafe = true; poison(); throw error; }
-			if(view().getUint32(frame, true) !== componentCopiedAbi || view().getUint32(frame + 4, true) !== size
+			if(view().getUint32(frame, true) !== version || view().getUint32(frame + 4, true) !== size
 				|| view().getUint32(frame + 12, true) !== args.length || view().getUint32(frame + 8, true) !== status){ unsafe = true; poison(); throw new Error("Invalid component copied frame result"); }
 			if(status)
 			{

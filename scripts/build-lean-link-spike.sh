@@ -150,6 +150,12 @@ BRIDGE_EXPORTS=(
   _bridge_copied_decode
   _bridge_copied_encode
   _bridge_copied_frame_clear
+  _bridge_record_abi
+  _bridge_record_frame_validate
+  _bridge_record_children_validate
+  _bridge_record_children_allocate
+  _bridge_record_encode_leaf
+  _bridge_record_slot_clear
   _bridge_callable_abi
   _bridge_callable_store
   _bridge_callable_invoke

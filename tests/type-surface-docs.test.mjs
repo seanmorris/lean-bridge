@@ -115,19 +115,20 @@ test("installed primitive coverage stays separate from field audits and other pr
 	const field = cells.find(cell => cell.id === "node-javascript/nat/ordinary-source/field");
 	assert.equal(cellTypeCoverage(node), "Installed checks passed");
 	assert.equal(cellTypeCoverage(reviewed), "Installed checks passed");
-	assert.equal(cellTypeCoverage(field), "Not audited");
-	assert.equal(cellTypeCoverage(cells.find(cell => cell.id === "node-javascript/nat/reviewed-ir/field")), "Generator inspected");
+	assert.equal(cellTypeCoverage(field), "Installed checks passed");
+	assert.deepEqual(field.stages.installedExecution.evidence, ["npm-records-installed"]);
+	assert.equal(cellTypeCoverage(cells.find(cell => cell.id === "node-javascript/nat/reviewed-ir/field")), "Installed checks passed");
 	const profiles = typeGuideProfiles["docs/javascript-typescript.md"];
 	const combined = row(renderTypeTable(inventory, profiles, "reference/types.md"), "Nat");
-	assert.match(combined, /Ordinary source: Installed checks passed \(input, result, callback input, callback result\)/u);
+	assert.match(combined, /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
 	assert.equal(combined.split("Reviewed IR:").length, 2, "Shared reviewed evidence appears once");
 	const candidate = structuredClone(inventory);
 	const observed = candidate.document.observations.find(observation => observation.id === node.observation);
 	observed.stages.installedExecution = { state: "unreviewed", evidence: [], note: "Archive execution evidence removed." };
 	const source = renderTypeTable(candidate, ["node-javascript"], "reference/types.md");
 	assert.match(row(source, "Nat"), /Ordinary source: Packaged; execution unaudited \(input, result\)/u);
-	assert.match(row(source, "Nat"), /Installed checks passed \(callback input, callback result\)/u);
-	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\)/u);
+	assert.match(row(source, "Nat"), /Installed checks passed \(field, callback input, callback result\)/u);
+	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed/u);
 });
 
 test("table generation rejects missing, overlapping and foreign conversion-note claims", () => {

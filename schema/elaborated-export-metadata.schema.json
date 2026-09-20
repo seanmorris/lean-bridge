@@ -292,6 +292,15 @@
         { "$ref": "#/$defs/scalarType" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "element"],
           "properties": { "kind": { "const": "array" }, "element": { "$ref": "#/$defs/copiedType" } }
+        },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "name", "fields"],
+          "properties": {
+            "kind": { "const": "record" }, "name": { "type": "string", "minLength": 1 },
+            "fields": { "type": "array", "maxItems": 1024, "items": {
+              "type": "object", "additionalProperties": false, "required": ["name", "type"],
+              "properties": { "name": { "type": "string", "minLength": 1 }, "type": { "$ref": "#/$defs/copiedType" } }
+            } }
+          }
         }
       ]
     },

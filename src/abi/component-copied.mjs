@@ -6,7 +6,7 @@
 import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
 
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
-export const componentCopiedTags = Object.freeze({ array: 32, tuple: 33, option: 34, result: 35 });
+export const componentCopiedTags = Object.freeze({ array: 32, tuple: 33, option: 34, result: 35, record: 36 });
 export const componentCopiedDepth = 32;
 export const componentCopiedAbi = 4;
 export const componentCopiedDispatch = "copied-array-frame-v1";
@@ -23,7 +23,7 @@ const fields = (value, keys) => {
 
 /**
  * Snapshot a bounded semantic type tree without trusting names or host coercions.
- * Named records, variants, identity types and recursive descriptors are deferred.
+ * Records use expanded nominal descriptors; identity and recursion are rejected.
  *
  * @param type - Semantic primitive or applied Binding IR type reference.
  */
@@ -41,8 +41,33 @@ export const snapshotComponentCopiedType = type => {
 			if(!componentScalarTypes.includes(value.name)) invalid("unknown primitive");
 			return Object.freeze({ kind: "primitive", name: value.name });
 		}
+		if(kind.value === "record")
+		{
+			fields(value, ["kind", "id", "fields"]);
+			if(typeof value.id !== "string" || !/^lean:[A-Za-z_][A-Za-z0-9_'.]*$/.test(value.id)) invalid("invalid record identity");
+			if(!Array.isArray(value.fields) || value.fields.length > 1024
+				|| Reflect.ownKeys(value.fields).length !== value.fields.length + 1) invalid("invalid record fields");
+			active.add(value);
+			try
+			{
+				const names = new Set(), result = [];
+				for(let index = 0; index < value.fields.length; index++)
+				{
+					const property = Object.getOwnPropertyDescriptor(value.fields, index);
+					if(!property || !Object.hasOwn(property, "value")) invalid("record fields must be dense data values");
+					const field = property.value;
+					fields(field, ["name", "type"]);
+					if(typeof field.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(field.name)
+						|| ["__proto__", "prototype", "constructor"].includes(field.name) || names.has(field.name)) invalid("invalid record field name");
+					names.add(field.name);
+					result.push(Object.freeze({ name: field.name, type: visit(field.type, depth + 1) }));
+				}
+				return Object.freeze({ kind: "record", id: value.id, fields: Object.freeze(result) });
+			} finally
+			{ active.delete(value); }
+		}
 		fields(value, ["kind", "constructor", "arguments"]);
-		if(kind.value !== "apply" || !Object.hasOwn(componentCopiedTags, value.constructor)) invalid("unsupported constructor");
+		if(kind.value !== "apply" || !["array", "tuple", "option", "result"].includes(value.constructor)) invalid("unsupported constructor");
 		const args = value.arguments;
 		if(!Array.isArray(args) || args.length > 32 || Reflect.ownKeys(args).length !== args.length + 1) invalid("invalid type arguments");
 		const count = value.constructor === "tuple" ? args.length : value.constructor === "result" ? 2 : 1;
@@ -77,6 +102,7 @@ export const componentArrayShape = type => {
 		depth++;
 		value = value.arguments[0];
 	}
+	if(value.kind !== "primitive") invalid("compiled array leaves must be primitive");
 	return { kind: componentScalarTypes.indexOf(value.name), depth };
 };
 
@@ -111,11 +137,22 @@ export const assertComponentCopiedAbi = abi => {
  */
 export const assertComponentCopiedBindings = (abi, ir) => {
 	assertComponentCopiedAbi(abi);
-	if(ir.types.length || ir.errors.length || ir.capabilities.length || ir.declarations.length !== abi.exports.length) invalid("unsupported copied binding tables");
+	if(ir.types.length) invalid("unsupported copied binding tables");
+	assertComponentCopySemantics(abi, ir, componentArrayShape);
+};
+
+/**
+ * Check pure copied call semantics after the versioned ABI has been validated.
+ *
+ * @param abi - Validated private copied descriptor.
+ * @param ir - Binding IR to authenticate.
+ * @param resolve - Closed type resolver preserving nominal identities.
+ */
+export const assertComponentCopySemantics = (abi, ir, resolve) => {
+	if(ir.errors.length || ir.capabilities.length || ir.declarations.length !== abi.exports.length) invalid("unsupported copied binding tables");
 	const seen = new Set();
 	const site = (value, type) => {
-		const actual = componentArrayShape(value.type), expected = componentArrayShape(type);
-		if(actual.kind !== expected.kind || actual.depth !== expected.depth || value.ownership !== "copy" || value.lifetime !== null) invalid("binding type or ownership mismatch");
+		if(JSON.stringify(resolve(value.type)) !== JSON.stringify(resolve(type)) || value.ownership !== "copy" || value.lifetime !== null) invalid("binding type or ownership mismatch");
 	};
 	for(const declaration of ir.declarations)
 	{

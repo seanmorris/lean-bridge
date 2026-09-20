@@ -7,6 +7,8 @@
 	],
 	"deferred": [
 		{ "path": "src/build/component-copied-adapters.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/component-record-adapters.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/abi/component-records.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-copied-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-copied.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-copied-codec.mjs", "classification": "strict-migration-backlog" },

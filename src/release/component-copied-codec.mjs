@@ -1,6 +1,6 @@
 /**
  * Recursive copied slots, reusing the installed primitive wire codecs.
- * Arrays are compiled; tuple, Option and Except codecs remain staged.
+ * Arrays and records share slots; tuple, Option and Except remain staged.
  *
  * @file
  */
@@ -72,9 +72,16 @@ export const compileComponentCopiedCodec = descriptor => {
 			active.add(value);
 			try
 			{
-				const kind = type.constructor;
+				const kind = type.kind === "record" ? "record" : type.constructor;
 				let count, branch = 0, childValue, childType;
-				if(kind === "array" || kind === "tuple")
+				if(kind === "record")
+				{
+					count = type.fields.length;
+					budget.charge(count * scalarSlotBytes);
+					const values = record(value, type.fields.map(field => field.name));
+					childValue = index => values[index]; childType = index => type.fields[index].type;
+				}
+				else if(kind === "array" || kind === "tuple")
 				{
 					if(!Array.isArray(value)) throw new TypeError("Expected a copied array or tuple");
 					count = value.length;
@@ -126,18 +133,19 @@ export const compileComponentCopiedCodec = descriptor => {
 			active.add(slot);
 			try
 			{
-				const data = view(module), kind = type.constructor;
+				const data = view(module), kind = type.kind === "record" ? "record" : type.constructor;
 				if(data.getUint32(slot, true) !== componentCopiedTags[kind]) throw new TypeError("Component copied type mismatch");
 				const flags = data.getUint32(slot + 4, true), branch = flags & 1;
 				const pointer = data.getUint32(slot + 8, true), count = data.getUint32(slot + 12, true);
 				if(flags & ~(kind === "option" || kind === "result" ? 3 : 2)) throw new TypeError("Invalid component copied flags");
-				if((kind === "tuple" && count !== type.arguments.length)
+				if((kind === "record" && count !== type.fields.length) || (kind === "tuple" && count !== type.arguments.length)
 					|| (kind === "option" && count !== branch) || (kind === "result" && count !== 1)
 					|| (!count && (pointer || (flags & 2)))) throw new TypeError("Invalid component copied shape");
 				const bytes = count * scalarSlotBytes;
 				span(module, pointer, bytes); budget.charge(bytes);
 				if(kind === "option") return branch ? { tag: "some", value: visit(type.arguments[0], pointer) } : { tag: "none" };
 				if(kind === "result") return { [branch ? "error" : "ok"]: visit(type.arguments[branch], pointer) };
+				if(kind === "record") return Object.fromEntries(type.fields.map((field, index) => [field.name, visit(field.type, pointer + index * scalarSlotBytes)]));
 				const values = new Array(count);
 				for(let index = 0; index < count; index++) values[index] = visit(type.arguments[kind === "array" ? 0 : index], pointer + index * scalarSlotBytes);
 				return values;

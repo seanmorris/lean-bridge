@@ -14,7 +14,7 @@ import { writeEngineExecutionRequest } from "../../src/build/engine-execution-re
 import { executeComponentEngineRequest } from "../../src/build/component-engine.mjs";
 import { buildComponentNpmPackages } from "../../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
-import { corpusCases, corpusHostCase, corpusSignatures } from "../fixtures/type-corpus/cases.mjs";
+import { corpusCases, corpusHostCase } from "../fixtures/type-corpus/cases.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { leanCorpusOracle, prepareCorpusSources } from "./type-corpus-source.mjs";
 import { corpusCaseSupported, corpusProfiles, corpusProfileSignatures, validateCorpusDeclarations, validateCorpusObservation } from "./type-corpus.mjs";
@@ -210,11 +210,9 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 	for(const archive of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][archive]), await readFile(releases[1][archive]));
 
-	// This historical corpus release still selects primitives. Arrays now have
-	// their own nineteen-element installed suite, so only records remain an
-	// unsupported selection here. Include one admitted export for exact hints.
-	const unsupported = corpusSignatures(library).filter(signature => [...signature.parameters, signature.result].some(type => type.record)).map(signature => signature.name);
-	const rejectedExports = [...unsupported, library.pendingExport];
+	// The historical corpus selects primitives. Arrays and records have separate
+	// installed fixtures; only its pending Option/Except export remains rejected.
+	const rejectedExports = [library.pendingExport];
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
@@ -222,7 +220,7 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 		, ...(path === "ordinary-source" ? { exports: [signatures[0].name, ...rejectedExports] } : {}), targets }));
 	if(path === "reviewed-ir")
 	{
-		const document = corpusReviewedIr(library, [signatures[0], ...corpusSignatures(library).filter(signature => unsupported.includes(signature.name))]);
+		const document = corpusReviewedIr(library, [signatures[0]]);
 		const template = document.declarations[0];
 		document.declarations.push({ ...template, id: `lean:${library.pendingExport}`
 			, name: library.pendingExport.split(".").at(-1)

@@ -19,8 +19,13 @@ const typeReference = type => typeof type === "string" ? { kind: "primitive", na
  * @param signatures - Optional independently selected signatures for a narrower ABI.
  */
 export const corpusReviewedIr = (library, signatures = corpusSignatures(library)) => {
-	const records = new Map(signatures.flatMap(signature => [...signature.parameters, signature.result])
-		.filter(type => type.record).map(type => [type.record, type]));
+	const records = new Map();
+	const visit = type => {
+		if(type.array) visit(type.array);
+		if(type.record && !records.has(type.record))
+		{ records.set(type.record, type); Object.values(type.fields).forEach(visit); }
+	};
+	signatures.flatMap(signature => [...signature.parameters, signature.result]).forEach(visit);
 	return { schemaVersion: 3
 		, component: { id: `${library.id}@1.0.0`, name: library.id, version: "1.0.0" }
 		, producers: [{ id: "corpusReview"

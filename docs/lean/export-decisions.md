@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives and nested arrays of primitives. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; arrays and callables cannot yet share one component.
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and acyclic copied records. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -58,7 +58,8 @@ Ordinary npm components support synchronous functions with zero to 32 arguments.
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
 | `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
-| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be primitives or nested arrays |
+| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be primitives, nested arrays or copied records |
+| Acyclic copied structure | Plain objects with exact own fields; named readonly TypeScript interfaces |
 
 Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Array calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 array levels. Arrays and byte buffers are independent copies and need no disposal.
 
@@ -113,9 +114,9 @@ The compiler-backed analyzer projects:
 - `USize` and `ISize`, with the compiled target's width;
 - `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
-Nested arrays of these primitives, synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, other collections, records and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
+Nested arrays, acyclic copied records with these primitives, synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, other collections and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or primitives, nested primitive arrays and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or copied primitives, arrays, records and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 

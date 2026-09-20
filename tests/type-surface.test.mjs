@@ -64,25 +64,25 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("Char installed evidence distinguishes npm scalars from native copied positions", () => {
+test("Char installed evidence distinguishes npm record fields from scalar and callable evidence", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
 	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(observed.length, 160);
+	assert.equal(observed.length, 170);
 	for(const cell of cells)
 	{
 		const npm = profiles.includes(cell.profile);
 		const callable = cell.position.startsWith("callback-");
 		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
-		const covered = callable || (npm ? ["parameter", "result"] : ["parameter", "result", "field"]).includes(cell.position);
+		const covered = callable || ["parameter", "result", "field"].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
 		if(!covered) continue;
 		assert.equal(cell.hostType, npm ? "string" : hosts[cell.profile]);
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [callable ? callableEvidence : npm ? "npm-installed-char" : "native-installed-char"]);
+			assert.deepEqual(stage.evidence, [callable ? callableEvidence : npm ? cell.position === "field" ? "npm-records-installed" : "npm-installed-char" : "native-installed-char"]);
 		}
 	}
 });
@@ -90,20 +90,41 @@ test("Char installed evidence distinguishes npm scalars from native copied posit
 test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
 	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 320);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 340);
 	for(const cell of cells)
 	{
 		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
 		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
 		const callable = cell.position.startsWith("callback-");
 		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
-		const audited = callable || ["parameter", "result", ...npm ? [] : ["field"]].includes(cell.position);
+		const audited = callable || ["parameter", "result", "field"].includes(cell.position);
 		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
 		if(audited)
 		{
-			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? callableEvidence : "platform-words-installed"]);
+			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? callableEvidence : npm && cell.position === "field" ? "npm-records-installed" : "platform-words-installed"]);
 			assert.ok(cell.conversionNote.includes(`${cell.wordBits}-bit compiled Lean target`));
 		}
+	}
+});
+
+test("npm record evidence covers only copied positions and all nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-records-installed"));
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	assert.equal(observed.length, 250);
+	for(const cell of observed)
+	{
+		assert.ok(profiles.includes(cell.profile));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["array", "record"].includes(cell.shape) || cell.position === "field" && document.irFacets.primitive.includes(cell.shape));
+	}
+	for(const profile of profiles) for(const path of document.paths)
+	{
+		for(const shape of document.irFacets.primitive)
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === "field"));
+		for(const shape of ["record", "array"]) for(const position of ["parameter", "result", "field"])
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === position));
 	}
 });
 
