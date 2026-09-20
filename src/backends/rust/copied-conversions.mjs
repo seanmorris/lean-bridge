@@ -91,8 +91,9 @@ unsafe fn checked_slice<'a, T>(data: *const T, length: usize) -> Result<&'a [T],
 export const copiedRustTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => `#[repr(C)]
 #[derive(Clone, Copy, Default)]
 struct ${copy.ctype} {
-${copy.record ? copy.fields.length ? copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n") : "    empty: u8,"
-	: `    data: *const ${copy.element?.ctype ?? (copy.scalarName === "nat" || copy.scalarName === "int" ? "u32" : "u8")},
+${copy.compound ? `${copy.compound === "tuple" ? "" : `    ${copy.compound === "option" ? "has_value" : "is_ok"}: u8,\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n")}`
+	: copy.record ? copy.fields.length ? copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n") : "    empty: u8,"
+		: `    data: *const ${copy.element?.ctype ?? (copy.scalarName === "nat" || copy.scalarName === "int" ? "u32" : "u8")},
     length: usize,
     owner: *mut std::ffi::c_void,
     release: Option<unsafe extern "C" fn(*mut std::ffi::c_void)>,${copy.scalarName === "int" ? "\n    negative: bool," : ""}`}
@@ -123,6 +124,20 @@ export const copiedRustConversions = model => model.surface.copies.map(copy => {
 		output.push("scope.charge(value.length, 8)?;", "let digits = unsafe { checked_slice(value.data, value.length)? };", "if digits.last() == Some(&0) { return Err(Error::InvalidNative); }");
 		if(name === "int") output.push("if digits.is_empty() && value.negative { return Err(Error::InvalidNative); }");
 		output.push(name === "nat" ? "Ok(BigUint::from_slice(digits))" : "Ok(BigInt::from_slice(if value.negative { num_bigint::Sign::Minus } else { num_bigint::Sign::Plus }, digits))");
+	} else if(copy.compound === "option")
+	{
+		const child = copy.fields[0].type;
+		input.push(`match value { None => Ok(${copy.ctype}::default()), Some(inner) => Ok(${copy.ctype} { has_value: 1, value: to${child.index}(inner, scope)? }) }`);
+		output.push(`match value.has_value { 0 => Ok(None), 1 => Ok(Some(from${child.index}(&value.value, scope)?)), _ => Err(Error::InvalidNative) }`);
+	} else if(copy.compound === "result")
+	{
+		const [ok, error] = copy.fields.map(field => field.type);
+		input.push(`match value { Ok(inner) => Ok(${copy.ctype} { is_ok: 1, ok: to${ok.index}(inner, scope)?, ..Default::default() }), Err(inner) => Ok(${copy.ctype} { error: to${error.index}(inner, scope)?, ..Default::default() }) }`);
+		output.push(`match value.is_ok { 1 => Ok(Ok(from${ok.index}(&value.ok, scope)?)), 0 => Ok(Err(from${error.index}(&value.error, scope)?)), _ => Err(Error::InvalidNative) }`);
+	} else if(copy.compound === "tuple")
+	{
+		input.push(`Ok(${copy.ctype} { ${copy.fields.map((field, i) => `${field.name}: to${field.type.index}(&value.${i}, scope)?`).join(", ")} })`);
+		output.push(`Ok((${copy.fields.map(field => `from${field.type.index}(&value.${field.name}, scope)?`).join(", ")}))`);
 	} else if(copy.record)
 	{
 		input.push(`Ok(${copy.ctype} { ${copy.fields.length ? copy.fields.map(field => `${field.name}: to${field.type.index}(&value.${field.name}, scope)?`).join(", ") : "empty: 0"} })`);

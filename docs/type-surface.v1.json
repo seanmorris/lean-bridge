@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.24.0",
+  "contractVersion": "0.25.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,169 @@
   ],
   "evidence": [
     {
+      "id": "rust-compounds-installed",
+      "kind": "installed",
+      "revision": "d480dd32bcbea9985869a2db495f65ed2c767e7a",
+      "command": "LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs; node --test tests/rust-compound-contract.test.mjs",
+      "scope": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal.",
+      "files": [
+        {
+          "path": "docs/evidence/rust-compounds-20260920.json",
+          "sha256": "66d508d09d319b208530dea3c45202a7074df1f5c07d9dd8f16894803fbc77a8"
+        },
+        {
+          "path": "docs/evidence/rust-compounds-20260920.md",
+          "sha256": "d6db967b13289996ecdd2efe5a2af2392f3f80954914e7b8c9a7890b77d1c819"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
+        },
+        {
+          "path": "src/backends/rust/callables.mjs",
+          "sha256": "9f8abbf0da0c2f469ad9e647775a08933473467080b1a6e46abd6e0f470668db"
+        },
+        {
+          "path": "src/backends/rust/copied-assets.mjs",
+          "sha256": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f"
+        },
+        {
+          "path": "src/backends/rust/copied-conversions.mjs",
+          "sha256": "6321e8ed2e10d1da3eb8b8e768ebc3da72e59e41c6890973bfa184b44bf50d73"
+        },
+        {
+          "path": "src/backends/rust/copied-model.mjs",
+          "sha256": "3946dc5f1757abd64db9abda8d20772ed869ddf1c965f1415e63da5079ca9b71"
+        },
+        {
+          "path": "src/backends/rust/copied-values.mjs",
+          "sha256": "d8105ac5ea16ffe5e11b45ee5314468c40236f8f9b39787b4de9cc08dce86bb6"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
+        },
+        {
+          "path": "src/release/native-cargo.mjs",
+          "sha256": "451a93d27536c64951394821540ac2a737448f74b0403c6a499804ca5b91a56c"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/rust-faults.rs",
+          "sha256": "6140e9d7036b7ec8306f106956c34ef0481600e887df0fa9ae65e5ad8f7dec13"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/rust.rs",
+          "sha256": "89ee696a144c05f5ae529f46d83f50d7626f409a895fd79be30559bbede197e0"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/Compounds.lean",
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lakefile.toml",
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/package.json",
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "tests/helpers/compound-fixture.mjs",
+          "sha256": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/rust-compound-install.mjs",
+          "sha256": "6bdd473d2abeacbfac8d765a178da013ab75a10db2ff7ffc8ad685c8cfd95557"
+        },
+        {
+          "path": "tests/helpers/type-corpus-rust.mjs",
+          "sha256": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53"
+        },
+        {
+          "path": "tests/rust-compound-contract.test.mjs",
+          "sha256": "0319d7087ba4f2a1f49e15ebc7b98a5fa4b34b632c7d9090198860694b885f5c"
+        },
+        {
+          "path": "tests/rust-compounds.test.mjs",
+          "sha256": "1ea9273086163c1804f4020f341f2eaa0329ac86ef761ddcb48d5c9203b79204"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "rust/ordinary-source/archives/compounds-api-1.0.0.crate",
+          "sha256": "9ac4a339c03383b53ec58b269f81868d62d8c684e68f46b510d955e2646498d6"
+        },
+        {
+          "path": "rust/reviewed-ir/archives/compounds-api-1.0.0.crate",
+          "sha256": "0f58dc9ecef6ed95b1fc4042a823ce61fd56d2a08e064da4349c69e5635c0394"
+        }
+      ]
+    },
+    {
       "id": "python-compounds-installed",
       "kind": "installed",
       "revision": "bff0ef063fa9dbfa19adf67678c867f400891b49",
@@ -245,7 +408,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -257,7 +420,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -396,7 +559,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -408,7 +571,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -464,7 +627,7 @@
         },
         {
           "path": "tests/native-compound-contract.test.mjs",
-          "sha256": "e62c5d1e8866b8cd127cce7a85e1161fad19eb2dd4ce542dbcd69aafe848dcf3"
+          "sha256": "f366d225048252766bc1f246094577a1bfd6df7f4de3ae59a129ab5c36b3caa1"
         },
         {
           "path": "tests/native-compounds.test.mjs",
@@ -499,7 +662,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -702,7 +865,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -865,7 +1028,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -905,7 +1068,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "bfe93566e442df012cc793450b7baf3fc6b1799d73e627acb50c27d233025d6f"
+          "sha256": "ff9e6f0377d3c8d8aff696d399ed52614ca02cb22fdc9445d47df00d75bd7189"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -913,7 +1076,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1136,11 +1299,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -1255,11 +1418,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -1275,11 +1438,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -1394,15 +1557,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "6386160b254cc48fa9a4268035828d3585b160b70bd4150fe6f593585dc56b73"
+          "sha256": "682dc522546bfe2dd5095163416d39b221f80b74616d3faedf1994d31362034c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -1430,7 +1593,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -1585,11 +1748,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -1633,15 +1796,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "6386160b254cc48fa9a4268035828d3585b160b70bd4150fe6f593585dc56b73"
+          "sha256": "682dc522546bfe2dd5095163416d39b221f80b74616d3faedf1994d31362034c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -1669,7 +1832,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -1760,11 +1923,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -1824,11 +1987,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1852,7 +2015,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -1987,11 +2150,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -2047,11 +2210,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -2071,7 +2234,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -2158,11 +2321,11 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2242,15 +2405,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "flake.nix",
@@ -2373,11 +2536,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2453,15 +2616,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -2544,15 +2707,15 @@
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
+          "sha256": "3946dc5f1757abd64db9abda8d20772ed869ddf1c965f1415e63da5079ca9b71"
         },
         {
           "path": "src/backends/rust/copied-values.mjs",
-          "sha256": "d71ebe100731297b0e28635197c071bcdb12db84ec295724a8aa3a36b645590a"
+          "sha256": "d8105ac5ea16ffe5e11b45ee5314468c40236f8f9b39787b4de9cc08dce86bb6"
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
-          "sha256": "c4004ae70b7ae734e309214d7b7c8e6f2ef8f5a91750090724d394b2786fa3ed"
+          "sha256": "6321e8ed2e10d1da3eb8b8e768ebc3da72e59e41c6890973bfa184b44bf50d73"
         },
         {
           "path": "src/backends/rust/copied-assets.mjs",
@@ -2572,11 +2735,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -2648,15 +2811,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -2719,11 +2882,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -2779,15 +2942,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -2850,11 +3013,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -2910,15 +3073,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -2977,11 +3140,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -3029,15 +3192,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -3140,15 +3303,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "68d16d4d05985f2d396a04d0db6a13a6277d5b7c4923b36b4b56418e06b06295"
+          "sha256": "323540ea420dec646b00c4dca79a3f57555f1af5a3e5baf9bf7f07483286c28e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3239,7 +3402,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3279,7 +3442,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "bfe93566e442df012cc793450b7baf3fc6b1799d73e627acb50c27d233025d6f"
+          "sha256": "ff9e6f0377d3c8d8aff696d399ed52614ca02cb22fdc9445d47df00d75bd7189"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -3287,7 +3450,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -3383,11 +3546,11 @@
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
-          "sha256": "c4004ae70b7ae734e309214d7b7c8e6f2ef8f5a91750090724d394b2786fa3ed"
+          "sha256": "6321e8ed2e10d1da3eb8b8e768ebc3da72e59e41c6890973bfa184b44bf50d73"
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
+          "sha256": "3946dc5f1757abd64db9abda8d20772ed869ddf1c965f1415e63da5079ca9b71"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -3439,7 +3602,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "68d16d4d05985f2d396a04d0db6a13a6277d5b7c4923b36b4b56418e06b06295"
+          "sha256": "323540ea420dec646b00c4dca79a3f57555f1af5a3e5baf9bf7f07483286c28e"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -3543,7 +3706,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "353693e439e3dbb354e74b55741718f93b615d6af6edbb8cba0e88c1f046823d"
+          "sha256": "9ac4353a15662b8c72e070507e3cdeb85b5ef044a8cdc9b231bfa7f3add7c06c"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -3618,7 +3781,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a3cf7126cda79e82d6e1797bb3109b9c13ff9acdbb052ffb6d5ec40269816be5"
+          "sha256": "355dd4f13df4d68206644e57b6e206ea6fb75112e29ee474315a5bc4b9d59cbe"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3630,7 +3793,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "21fe3c47c7318df53dba3bfe6385750f19680a00ea4c06dd1ed7c2d5d5fc8576"
+          "sha256": "494eb2ebfa3729599c89c15afd7aec5aaff354a9dcd56bc2dcc0000f922553cd"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -3706,11 +3869,11 @@
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
-          "sha256": "c4004ae70b7ae734e309214d7b7c8e6f2ef8f5a91750090724d394b2786fa3ed"
+          "sha256": "6321e8ed2e10d1da3eb8b8e768ebc3da72e59e41c6890973bfa184b44bf50d73"
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
+          "sha256": "3946dc5f1757abd64db9abda8d20772ed869ddf1c965f1415e63da5079ca9b71"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -3992,11 +4155,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4139,11 +4302,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -4258,7 +4421,7 @@
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
-          "sha256": "0698a20cb5da2e8b48c3c640434cee50ee76a3b730a25c394bbc074ec4bdf3de"
+          "sha256": "3946dc5f1757abd64db9abda8d20772ed869ddf1c965f1415e63da5079ca9b71"
         },
         {
           "path": "src/backends/rust/copied-assets.mjs",
@@ -4266,11 +4429,11 @@
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
-          "sha256": "c4004ae70b7ae734e309214d7b7c8e6f2ef8f5a91750090724d394b2786fa3ed"
+          "sha256": "6321e8ed2e10d1da3eb8b8e768ebc3da72e59e41c6890973bfa184b44bf50d73"
         },
         {
           "path": "src/backends/rust/copied-values.mjs",
-          "sha256": "d71ebe100731297b0e28635197c071bcdb12db84ec295724a8aa3a36b645590a"
+          "sha256": "d8105ac5ea16ffe5e11b45ee5314468c40236f8f9b39787b4de9cc08dce86bb6"
         },
         {
           "path": "src/backends/rust/generate.mjs",
@@ -4286,11 +4449,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -4389,11 +4552,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -4476,11 +4639,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -4571,11 +4734,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4666,11 +4829,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -4769,11 +4932,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -4868,7 +5031,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4884,7 +5047,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4959,11 +5122,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "0d44a6077a0344c807746fe6d2587c6ecc275504b2f6569743791cdbad24f9f3"
+          "sha256": "ccbef5ec307be37ea9ba48f6332a8c7e19ba2839ed46c2dec82e0e2363492d3b"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -5186,7 +5349,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8e82eb3a806880e163f1d88900e1acfb5ea963bfed5ea1a4e433941858dfa408"
+          "sha256": "9ad0720d3b0c620fb0a5f29a187273b91e3dc208ae71de53bc27ddf8c4a70ee2"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -22931,7 +23094,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++ and Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "npm wasm32 evidence only. C/C++, Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -23272,7 +23435,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++ and Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "npm wasm32 evidence only. C/C++, Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -24297,30 +24460,380 @@
       "limitations": []
     },
     {
-      "id": "rust-values-rust-1",
-      "profiles": ["rust"],
-      "shapes": ["array","option","result","tuple","record","alias","variant"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
-      "path": "reviewed-ir",
-      "scope": "Rust generated copied-value types; transport failure may add an outer Result<..., Error>.",
+      "id": "rust-compounds-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal.",
       "hostTypes": {
-        "array": {"parameter":"Vec<T>","result":"Vec<T>","field":"Vec<T>","callback-parameter":"Vec<T>","callback-result":"Vec<T>"},
-        "option": {"parameter":"Option<T>","result":"Option<T>","field":"Option<T>","callback-parameter":"Option<T>","callback-result":"Option<T>"},
-        "result": {"parameter":"Result<T, E>","result":"Result<T, E>","field":"Result<T, E>","callback-parameter":"Result<T, E>","callback-result":"Result<T, E>"},
-        "tuple": {"parameter":"(T, U, ...)","result":"(T, U, ...)","field":"(T, U, ...)","callback-parameter":"(T, U, ...)","callback-result":"(T, U, ...)"},
-        "record": {"parameter":"Generated owned struct (Alpha: Payload)","result":"Generated owned struct (Alpha: Payload)","field":"Generated owned struct (Alpha: Payload)","callback-parameter":"Generated owned struct (Alpha: Payload)","callback-result":"Generated owned struct (Alpha: Payload)"},
-        "alias": {"parameter":"Resolved target type","result":"Resolved target type","field":"Resolved target type","callback-parameter":"Resolved target type","callback-result":"Resolved target type"},
-        "variant": {"parameter":"Generated enum","result":"Generated enum","field":"Generated enum","callback-parameter":"Generated enum","callback-result":"Generated enum"}
+        "option": {
+          "parameter": "&Option<T>",
+          "result": "Option<T>",
+          "field": "Option<T>"
+        },
+        "result": {
+          "parameter": "&Result<T, E>",
+          "result": "Result<T, E>",
+          "field": "Result<T, E>"
+        },
+        "tuple": {
+          "parameter": "&(A, B) (nested binary products)",
+          "result": "(A, B) (nested binary products)",
+          "field": "(A, B) (nested binary products)"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["rust-mapping-audit"],"note":"Rust generated copied-value types; transport failure may add an outer Result<..., Error>."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        }
       },
-      "limitations": ["An inner Except result differs from the outer bridge failure result."],
-      "conversionNotes": {"result":"The inner Result<T, E> represents Except; an outer Result<..., Error> can report bridge failures."}
+      "limitations": [
+        "Rust 1.90+ Linux x86-64 native crates; other platforms are not promoted.",
+        "Rust conversions and native input/output copies each have a 16 MiB accounting budget. Type nesting stops at 32; Lean working memory and all Rust allocations are not bounded. Process abort cannot run destructors.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Standard Rust Option preserves None, Some(None) and Some(Some(())). Inputs borrow the container; results and fields own their copied payloads.",
+        "result": "The inner `Result<T, E>` carries Lean Except. The function returns `Result<Result<T, E>, Error>` to distinguish bridge failures. One `?` propagates only the bridge error.",
+        "tuple": "Exactly two statically typed elements, preserving binary nesting. Inputs borrow the tuple; returned tuples own their payloads."
+      }
+    },
+    {
+      "id": "rust-compound-callables-ordinary-source",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Compiled Rust callables require primitive arguments and results. Copied compounds are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Native callable admission rejects compound parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
+      "id": "rust-compounds-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal.",
+      "hostTypes": {
+        "option": {
+          "parameter": "&Option<T>",
+          "result": "Option<T>",
+          "field": "Option<T>"
+        },
+        "result": {
+          "parameter": "&Result<T, E>",
+          "result": "Result<T, E>",
+          "field": "Result<T, E>"
+        },
+        "tuple": {
+          "parameter": "&(A, B) (nested binary products)",
+          "result": "(A, B) (nested binary products)",
+          "field": "(A, B) (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Installed Rust crates built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 5311 consumer checks, eleven compiler rejection cases and 126 injected failure/panic checks. Author sources are removed before offline installation; relocated binaries repeat the consumer checks after crate and dependency source removal."
+        }
+      },
+      "limitations": [
+        "Rust 1.90+ Linux x86-64 native crates; other platforms are not promoted.",
+        "Rust conversions and native input/output copies each have a 16 MiB accounting budget. Type nesting stops at 32; Lean working memory and all Rust allocations are not bounded. Process abort cannot run destructors.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Standard Rust Option preserves None, Some(None) and Some(Some(())). Inputs borrow the container; results and fields own their copied payloads.",
+        "result": "The inner `Result<T, E>` carries Lean Except. The function returns `Result<Result<T, E>, Error>` to distinguish bridge failures. One `?` propagates only the bridge error.",
+        "tuple": "Exactly two statically typed elements, preserving binary nesting. Inputs borrow the tuple; returned tuples own their payloads."
+      }
+    },
+    {
+      "id": "rust-compound-callables-reviewed-ir",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Compiled Rust callables require primitive arguments and results. Copied compounds are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "rust-compounds-installed"
+          ],
+          "note": "Native callable admission rejects compound parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
+      "id": "rust-values-rust-1",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "array",
+        "record",
+        "alias",
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Legacy Rust Alpha generated copied-value types; ordinary installed types have separate evidence.",
+      "hostTypes": {
+        "array": {
+          "parameter": "Vec<T>",
+          "result": "Vec<T>",
+          "field": "Vec<T>",
+          "callback-parameter": "Vec<T>",
+          "callback-result": "Vec<T>"
+        },
+        "record": {
+          "parameter": "Generated owned struct (Alpha: Payload)",
+          "result": "Generated owned struct (Alpha: Payload)",
+          "field": "Generated owned struct (Alpha: Payload)",
+          "callback-parameter": "Generated owned struct (Alpha: Payload)",
+          "callback-result": "Generated owned struct (Alpha: Payload)"
+        },
+        "alias": {
+          "parameter": "Resolved target type",
+          "result": "Resolved target type",
+          "field": "Resolved target type",
+          "callback-parameter": "Resolved target type",
+          "callback-result": "Resolved target type"
+        },
+        "variant": {
+          "parameter": "Generated enum",
+          "result": "Generated enum",
+          "field": "Generated enum",
+          "callback-parameter": "Generated enum",
+          "callback-result": "Generated enum"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "rust-mapping-audit"
+          ],
+          "note": "Rust generated copied-value types; transport failure may add an outer Result<..., Error>."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Legacy Alpha declarations do not establish installed support for additional copied shapes."
+      ],
+      "conversionNotes": {
+        "alias": "Legacy Alpha aliases resolve to their target types; this inspection does not establish installed support for additional copied shapes."
+      }
     },
     {
       "id": "c-primitives-c-1",
@@ -24525,7 +25038,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "Linux x86-64 native packages only. Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24607,7 +25120,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "Linux x86-64 native packages only. Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24689,7 +25202,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "Linux x86-64 native packages only. Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -24771,7 +25284,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
+        "Linux x86-64 native packages only. Python and Rust compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],

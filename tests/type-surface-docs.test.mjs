@@ -182,6 +182,16 @@ test("Python compound docs retain presence and branch identity in installed mapp
 	assert.match(source, /Some\(Some\(None\)\)/u);
 });
 
+test("Rust compound docs distinguish domain results from bridge errors", async () => {
+	const source = await readFile("docs/consume/rust.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /`&Option<T>`/u);
+	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
+	assert.match(source, /Result<Result<T, E>, Error>/u);
+	assert.match(source, /Some\(Some\(\(\)\)\)/u);
+});
+
 test("recorded result and arbitrary-integer rejections exercise real generator guards", () => {
 	const apply = constructor => ({ kind: "apply", constructor, arguments: [{ kind: "primitive", name: "uint32" }, { kind: "primitive", name: "string" }] });
 	for(const [generate, type, code] of [

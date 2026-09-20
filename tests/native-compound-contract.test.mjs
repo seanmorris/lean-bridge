@@ -12,7 +12,6 @@ import { createNativeModel, generateNativeLeanAdapters } from "../src/build/nati
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
-import { compileCopiedRustModel } from "../src/backends/rust/copied-model.mjs";
 import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
@@ -79,7 +78,7 @@ test("native helpers call typed Lean constructors and projections without constr
 });
 
 test("host projections without compound adapters reject these shapes before generation", () => {
-	for(const compile of [compileCopiedRustModel, compileCopiedDotnetModel, compileCopiedJvmModel, compileCopiedRubyModel, compileCopiedPhpModel])
+	for(const compile of [compileCopiedDotnetModel, compileCopiedJvmModel, compileCopiedRubyModel, compileCopiedPhpModel])
 		assert.throws(() => compile(compoundReviewedIr()), /compound values are not implemented/);
 	assert.throws(() => compilePrimitiveCSurface(compoundReviewedIr()), /compound values are not implemented/);
 	assert.throws(() => generatePerlBindingPackage(model(), {}), /Perl compound values are not implemented/);

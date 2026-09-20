@@ -31,9 +31,15 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays, acyclic records and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays, acyclic records, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
+
+## Export options, results and products
+
+Ordinary-source and reviewed-IR builds compile `Option`, `Except` and nested binary `Prod` values, including mixtures with all nineteen primitives, arrays and acyclic record fields. Consumers use Rust `Option<T>`, `Result<T, E>` and `(A, B)` without native declarations. Inputs borrow the container; results own their copied data. The function's outer `Result<_, Error>` reports bridge failures separately from a Lean `Except` value.
+
+Use concrete signatures and select the exports in `lean-bridge.exports.json`. A [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract) receives the same fresh compiler checks. See the [consumer example](../consume/rust.md#options-results-and-products) and [installed crate evidence](../evidence/rust-compounds-20260920.md). Copied compounds cannot contain resources or callbacks; compound callable signatures require separate support.
 
 ## Export callbacks and closures
 
@@ -51,7 +57,7 @@ Select those exports in `lean-bridge.exports.json`, set `"arities": { "Callables
 
 For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity; omit configuration `arities`. Primitive callbacks require repeated invocation, same-agent re-entry, deferred self-disposal, synchronous value delivery and the native callback failure policy. Host arguments borrow the call, while returned closures own explicit leases. Both source paths receive fresh Lean compiler checks before linking.
 
-You can combine Cargo with C, CPAN, PyPI and RubyGems when every selected target accepts the callable API. Adding a target without callable support rejects the build before packaging. Consumers need no native declarations or Lean toolchain; Cargo compiles only Rust and links the packaged libraries.
+You can combine Cargo with other native targets when every selected target accepts the API and export configuration. All native profiles support primitive callables; compound values have a narrower target set. Consumers need no native declarations or Lean toolchain; Cargo compiles only Rust and links the packaged libraries.
 
 ## Package identity and publisher prerequisites
 

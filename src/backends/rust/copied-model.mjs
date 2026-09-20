@@ -25,7 +25,7 @@ export const validateOrdinaryCargoSettings = (settings = {}) => {
  * @param ir - Compiler-derived Binding IR.
  */
 export const compileCopiedRustModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true }), names = new Set(reserved);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), names = new Set(reserved);
 	if(surface.callbacks.size) names.add("LeanClosure");
 	const fail = (declaration, message) => {
 		const source = declaration.source?.extensions?.["lean-lang.org/source-position"];
@@ -40,7 +40,10 @@ export const compileCopiedRustModel = ir => {
 			names.add(copy.publicName);
 			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Rust field is reserved: ${field.name}`);
 		}
-		copy.publicType = copy.record ? copy.publicName : copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
+		const children = copy.fields?.map(field => field.type.publicType).join(", ");
+		copy.publicType = copy.record ? copy.publicName : copy.compound === "option" ? `Option<${children}>`
+			: copy.compound === "result" ? `Result<${children}>` : copy.compound === "tuple" ? `(${children})`
+				: copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
 		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.scalarName === "unit" ? "u8" : copy.scalarName === "char" ? "u32" : copy.publicType;
 		copy.inputType = copy.scalarName === "string" ? "&str" : copy.scalarName === "bytes" ? "&[u8]" : copy.element ? `&[${copy.element.publicType}]` : copy.aggregate ? `&${copy.publicType}` : copy.publicType;
 	}
