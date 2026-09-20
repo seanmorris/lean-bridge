@@ -36,6 +36,22 @@ const example = () => ({ schemaVersion: 1, profile: "native-library-v1"
 		, object: "0.o", bytes: 20, sha256: digest
 		, inputs: [{ path: "snapshot/root/native.c", bytes: 5, sha256: digest }] }] });
 
+for(const profile of ["native-library-v1", "side-module-2"]) for(const schemaVersion of [1, 2])
+	test(`C compilation schema and runtime agree on exact ${profile} v${schemaVersion} flags`, async () => {
+		const document = { ...example(), profile, schemaVersion };
+		if(profile === "side-module-2") document.flags.push("-fwasm-exceptions", "-flto", "-ffp-contract=off", "-DLEAN_EMSCRIPTEN");
+		if(schemaVersion === 2) document.overlaySha256 = "3".repeat(64);
+		const expected = { snapshotSha256, profile, ...(schemaVersion === 2 ? { overlaySha256: document.overlaySha256 } : {}) };
+		assert.equal(validateLakeNativeCompilation(document, expected), true);
+		await assertJsonSchema("lake-native-compilation", document);
+		for(const flags of [document.flags.slice(0, -1), [...document.flags, "-I/unrecorded"], [...document.flags].reverse(), document.flags.map(flag => flag === "-O2" ? "-O3" : flag)])
+		{
+			const invalid = { ...document, flags };
+			assert.throws(() => validateLakeNativeCompilation(invalid, expected), { code: "lake-native-input-invalid" });
+			await assert.rejects(() => assertJsonSchema("lake-native-compilation", invalid), /must be equal to constant/);
+		}
+	});
+
 test("C compilation metadata binds profile, compiler, objects, and the include closure", async () => {
 	const expected = { snapshotSha256, profile: "native-library-v1" };
 	validateLakeNativeCompilation(example(), expected);

@@ -55,6 +55,6 @@
   }, {
     "if": { "properties": { "profile": { "const": "native-library-v1" } } },
     "then": { "properties": { "flags": { "const": ["-O2", "-g0", "-fPIC", "-Werror=date-time"] } } },
-    "else": { "properties": { "flags": { "const": ["-O2", "-g0", "-fPIC", "-Werror=date-time", "-fwasm-exceptions", "-flto", "-ffp-contract=off"] } } }
+    "else": { "properties": { "flags": { "const": ["-O2", "-g0", "-fPIC", "-Werror=date-time", "-fwasm-exceptions", "-flto", "-ffp-contract=off", "-DLEAN_EMSCRIPTEN"] } } }
   }]
 }
