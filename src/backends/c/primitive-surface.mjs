@@ -33,8 +33,9 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
  * @param options.callables - Admit the synchronous primitive callable adapter for implemented host projections.
  * @param options.compounds - Admit options, results and binary products only for implemented host projections.
+ * @param options.lists - Admit copied Lists only for implemented host projections.
  */
-export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false } = {}) => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false, lists = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const callbacks = new Map();
@@ -46,7 +47,7 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		visiting.add(key);
 		let fields = [], element = null, record = null, compound = null;
 		if(ref.kind === "primitive" && componentScalarTypes.includes(ref.name)) { /* Closed copied leaf. */ }
-		else if(ref.kind === "apply" && ref.constructor === "array" && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
+		else if(ref.kind === "apply" && (ref.constructor === "array" || lists && ref.constructor === "list") && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
 		else if(compounds && ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor) && ref.arguments.length === (ref.constructor === "option" ? 1 : 2))
 		{
 			compound = ref.constructor;

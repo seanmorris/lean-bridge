@@ -49,7 +49,9 @@ WIT/WASI uses native option, result and tuple types, retaining explicit presence
 Lists have a distinct `constructor:list` in the shared compiler and Binding IR.
 The five npm profiles have installed checks on both source paths, using ordinary
 host arrays and typed Lean sequence conversions. Lists retain order and nest with
-the existing copied types. Native and PHP-Wasm List adapters, aliases, arbitrary
+the existing copied types. [C/C++ packages](../evidence/native-lists-20260920.md)
+also have installed List checks on both paths, using typed C spans and owned
+C++ vectors. Other native hosts and PHP-Wasm List adapters, aliases, arbitrary
 and recursive variants, and compound callables remain open.
 
 ## Shared configuration and Perl cutover

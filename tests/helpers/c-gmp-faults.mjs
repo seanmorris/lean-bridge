@@ -70,6 +70,40 @@ export const checkGmpCompoundFaults = (output, working, environment) => probe(ou
 }`, environment);
 
 /**
+ * Check List input, output and nested payload allocation cleanup.
+ *
+ * @param output - Fresh List release.
+ * @param working - Isolated probe directory.
+ * @param environment - Producer compiler environment.
+ */
+export const checkGmpListFaults = (output, working, environment) => probe(output, working, "lists", `int main(void) {
+  lists_packet value, out; lists_packet_init(&value); lists_packet_init(&out);
+  lists_option_result_tuple_nat_unit_string_value branches[2];
+  for (unsigned i = 0; i < 2; ++i) lists_option_result_tuple_nat_unit_string_value_init(&branches[i]);
+  branches[0].has_value = 1; branches[0].value.is_ok = 1; mpz_setbit(branches[0].value.ok.fst, 100);
+  branches[1].has_value = 1; branches[1].value.error = (lists_string){"bad", 3, NULL, NULL};
+  value.branches = (lists_list_option_result_tuple_nat_unit_string_span){branches, 2, NULL, NULL};
+  uint8_t bytes[] = {0,255}; lists_bytes buffers[] = {{bytes, 2, NULL, NULL}};
+  value.buffers = (lists_list_bytes_span){buffers, 1, NULL, NULL};
+  out.buffers = value.buffers;
+  lists_error error = {0}; int succeeded = 0;
+  for (int limit = 0; limit < 80; ++limit) {
+    remaining = limit; lists_status status = lists_transform(&value, &out, &error);
+    if (status == LISTS_STATUS_OK) {
+      CHECK(out.branches.length == 2 && out.branches.data[1].has_value && out.branches.data[1].value.is_ok);
+      CHECK(mpz_tstbit(out.branches.data[1].value.ok.fst, 100) && mpz_tstbit(out.branches.data[1].value.ok.fst, 0));
+      CHECK(out.branches.data[0].value.error.length == 4 && out.buffers.data[0].data != bytes);
+      lists_packet_clear(&out); lists_packet_clear(&out); CHECK(live == 0); succeeded = 1; break;
+    }
+    CHECK(status == LISTS_STATUS_UNEXPECTED_ERROR && live == 0);
+    CHECK(!out.branches.length && out.buffers.data == buffers);
+  }
+  CHECK(succeeded); remaining = -1; lists_packet_clear(&value);
+  for (unsigned i = 0; i < 2; ++i) lists_option_result_tuple_nat_unit_string_value_clear(&branches[i]);
+  printf("gmp-fault-ok:%u\\n", checks);
+}`, environment);
+
+/**
  * Check callback conversions at every facade allocation checkpoint.
  *
  * @param output - Fresh native release.

@@ -59,7 +59,7 @@ const wrapper = (surface, fn) => {
  * @param ir - Canonical Binding IR.
  */
 export const compilePrimitiveCppModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true });
 	if(surface.copies.some(copy => ["LeanClosure", "Ok", "Err", "Result"].includes(copy.record?.name))) throw new TypeError("C++ record name collides with a generated callable or compound type");
 	for(const [index, callback] of [...surface.callbacks.values()].entries()) callback.cppIndex = index;
 	return { kind: "copied-primitives", surface };

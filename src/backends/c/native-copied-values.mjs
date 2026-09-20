@@ -13,7 +13,7 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
  */
 export const nativeCReference = type => type.kind === "primitive" ? { kind: "primitive", name: type.name }
 	: type.kind === "callback" ? { kind: "named", id: `bridge:Callback${sha256(canonicalJson({ parameters: type.parameters.map(nativeCReference), result: nativeCReference(type.result) })).slice(0, 20)}` }
-		: ["array", "option"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: [nativeCReference(type.element)] }
+		: ["array", "list", "option"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: [nativeCReference(type.element)] }
 			: ["result", "tuple"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: type.arguments.map(nativeCReference) }
 				: { kind: "named", id: `lean:${type.name}` };
 const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
@@ -71,27 +71,31 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			else if(type.name === "isize") output.push(`int${model.pointerBits}_t signed_value; memcpy(&signed_value, &value, sizeof(value));`, "*out = signed_value;");
 			else if(/^int\d/.test(type.name)) output.push("memcpy(out, &value, sizeof(value));");
 			else output.push(`*out = (${c.name})value;`);
-		} else if(type.kind === "array")
+		} else if(type.kind === "array" || type.kind === "list")
 		{
 			const element = copy(type.element), child = id(type.element);
+			const list = type.kind === "list", helper = `lb_t${nativeTypeKey(type)}`;
+			const items = list ? "items" : "value", release = list ? "lean_dec(items); " : "";
 			const width = `((sizeof(${element.name}) > sizeof(void *)) ? sizeof(${element.name}) : sizeof(void *))`;
 			check.push(`if ((value->length && !value->data) || !lb_charge(budget, value->length, ${width})) return 0;`
 				, `for (size_t i = 0; i < value->length; ++i) if (!${child}_check(&value->data[i], budget)) return 0;`);
 			input.push("lean_object *result = lean_alloc_array(value->length, value->length);"
 				, `for (size_t i = 0; i < value->length; ++i) lean_array_set_core(result, i, ${boxed(type.element, `${child}_in(&value->data[i])`)});`
-				, "return result;");
+				, list ? `return ${helper}_from_array(result);` : "return result;");
 			extra.push(`typedef struct { size_t length; ${element.name} data[]; } ${key}_owner;`
 				, `static void ${key}_release(void *raw) {`, `  ${key}_owner *owner = raw;`
 				, ...(element.aggregate ? [`  for (size_t i = 0; i < owner->length; ++i) ${element.name}_clear(&owner->data[i]);`] : [])
 				, "  free(owner);", "}");
-			output.push("size_t length = lean_array_size(value);"
-				, `if (!lb_charge(budget, length, ${width}) || !lb_charge(budget, 1, sizeof(${key}_owner))) return 0;`
-				, `if (!length) { *out = (${c.name}){0}; return 1; }`
+			if(list) output.push("lean_inc(value);", `lean_object *items = ${helper}_to_array(value);`);
+			output.push(`size_t length = lean_array_size(${items});`
+				, `if (!lb_charge(budget, length, ${width}) || !lb_charge(budget, 1, sizeof(${key}_owner))) { ${release}return 0; }`
+				, `if (!length) { ${release}*out = (${c.name}){0}; return 1; }`
 				, `${key}_owner *owner = calloc(1, sizeof(*owner) + length * sizeof(${element.name}));`
-				, "if (!owner) return -1;", "owner->length = length;"
+				, `if (!owner) { ${release}return -1; }`, "owner->length = length;"
 				, "for (size_t i = 0; i < length; ++i) {"
-				, `  int status = ${child}_out(${unboxed(type.element, "lean_array_get_core(value, i)")}, &owner->data[i], budget);`
-				, `  if (status != 1) { ${key}_release(owner); return status; }`, "}"
+				, `  int status = ${child}_out(${unboxed(type.element, `lean_array_get_core(${items}, i)`)}, &owner->data[i], budget);`
+				, `  if (status != 1) { ${release}${key}_release(owner); return status; }`, "}"
+				, ...(list ? ["lean_dec(items);"] : [])
 				, `*out = (${c.name}){owner->data, length, owner, ${key}_release};`);
 		} else
 		{

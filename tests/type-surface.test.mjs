@@ -107,19 +107,19 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers copied npm values without promoting other profiles or callables", () => {
+test("List evidence covers npm and C/C++ copied values without promoting other hosts or callables", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 30);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 42);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
-		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile);
-		if(npm && copied)
+		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile);
+		if((npm || native) && copied)
 		{
-			assert.equal(cell.hostType, "ReadonlyArray<T> (ordinary dense Array)");
+			assert.equal(cell.hostType, npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
-			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["npm-lists-installed"]); }
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [npm ? "npm-lists-installed" : "native-lists-installed"]); }
 		} else
 		{
 			assert.equal(cell.stages.installedExecution.state, "unreviewed");

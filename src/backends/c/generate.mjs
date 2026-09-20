@@ -226,7 +226,7 @@ const validateCoverage = ir => {
 		}
 		if(resolved.kind === "apply")
 		{
-			if(!["array", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "option"].includes(resolved.constructor) ? 1 : 2))
+			if(!["array", "list", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "list", "option"].includes(resolved.constructor) ? 1 : 2))
 			{
 				fail("unsupported-type-application", `C projection does not support ${resolved.constructor}`, {
 					constructor: resolved.constructor
@@ -235,7 +235,7 @@ const validateCoverage = ir => {
 			const copied = (ref, seen = new Set()) => {
 				const value = resolveAlias(ir, ref);
 				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
-				if(value.kind === "apply") return ["array", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
+				if(value.kind === "apply") return ["array", "list", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "list", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
 				const type = value.kind === "named" && namedType(ir, value.id);
 				if(!type || type.kind !== "record" || seen.has(type.id)) return false;
 				return type.fields.every(field => copied(field.type, new Set([...seen, type.id])));
@@ -362,7 +362,7 @@ const cType = (ir, ref) => {
 	}
 	if(resolved.kind === "apply")
 	{
-		return `${prefix(ir)}_${typeKey(resolved)}${resolved.constructor === "array" ? "_span" : "_value"}`;
+		return `${prefix(ir)}_${typeKey(resolved)}${["array", "list"].includes(resolved.constructor) ? "_span" : "_value"}`;
 	}
 	fail("unresolved-generic", `C projection cannot name ${resolved.id}`);
 };
@@ -488,7 +488,7 @@ const runtimeParameters = (ir, variant) => {
 
 const dynamicTypes = ir => collectUsedTypes(ir).filter(ref => {
   const resolved = resolveAlias(ir, ref);
-  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || (resolved.kind === "apply" && resolved.constructor === "array");
+  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || (resolved.kind === "apply" && ["array", "list"].includes(resolved.constructor));
 });
 
 const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor)), ref => cType(ir, ref));
@@ -559,7 +559,7 @@ const emitPublicHeader = ir => {
 		{
 			const ref = resolveAlias(ir, field.type);
 			if(ref.kind === "named" && namedType(ir, ref.id)?.kind === "record") visitRecord(namedType(ir, ref.id));
-			if(ref.kind === "apply" && ref.constructor !== "array") visitRecord(compound(ref));
+			if(ref.kind === "apply" && !["array", "list"].includes(ref.constructor)) visitRecord(compound(ref));
 		}
 		records.push(type);
 	};

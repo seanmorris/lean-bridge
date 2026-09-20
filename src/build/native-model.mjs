@@ -25,6 +25,7 @@ const fail = message => { throw new TypeError(`native-library-v1: ${message}`); 
  */
 export const nativeLeanType = type => {
 	if(type.kind === "array") return `(Array ${nativeLeanType(type.element)})`;
+	if(type.kind === "list") return `(List ${nativeLeanType(type.element)})`;
 	if(type.kind === "option") return `(Option ${nativeLeanType(type.element)})`;
 	if(type.kind === "result") return `(Except ${nativeLeanType(type.arguments[1])} ${nativeLeanType(type.arguments[0])})`;
 	if(type.kind === "tuple") return `(Prod ${type.arguments.map(nativeLeanType).join(" ")})`;
@@ -33,6 +34,7 @@ export const nativeLeanType = type => {
 };
 const absoluteLeanType = type => {
 	if(type.kind === "array") return `(_root_.Array ${absoluteLeanType(type.element)})`;
+	if(type.kind === "list") return `(_root_.List ${absoluteLeanType(type.element)})`;
 	if(type.kind === "option") return `(_root_.Option ${absoluteLeanType(type.element)})`;
 	if(type.kind === "result") return `(_root_.Except ${absoluteLeanType(type.arguments[1])} ${absoluteLeanType(type.arguments[0])})`;
 	if(type.kind === "tuple") return `(_root_.Prod ${type.arguments.map(absoluteLeanType).join(" ")})`;
@@ -79,6 +81,7 @@ export const nativeObjectType = type => nativeCType(type) === "lean_object *";
  */
 export const nativeCallbackDefault = type => {
 	if(type.kind === "array") return "lean_mk_empty_array()";
+	if(type.kind === "list") return `lb_t${nativeTypeKey(type)}_from_array(lean_mk_empty_array())`;
 	if(type.kind === "record") return `lb_t${nativeTypeKey(type)}_make(${type.fields.map(f => nativeCallbackDefault(f.type)).join(", ") || "lean_box(0)"})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values; identity results need a failure representation");
 	if(type.name === "string") return 'lean_mk_string("")';
@@ -88,6 +91,7 @@ export const nativeCallbackDefault = type => {
 
 const callbackLeanDefault = type => {
 	if(type.kind === "array") return "#[]";
+	if(type.kind === "list") return "[]";
 	if(type.kind === "option") return "_root_.Option.none";
 	if(type.kind === "result") return `(_root_.Except.ok ${callbackLeanDefault(type.arguments[0])})`;
 	if(type.kind === "tuple") return `(_root_.Prod.mk ${type.arguments.map(callbackLeanDefault).join(" ")})`;
@@ -118,10 +122,9 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
-		if(type.kind === "list") throw Object.assign(new TypeError("List is not yet implemented for native or PHP-Wasm packages"), { code: "unsupported-native-list" });
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
-		if(["array", "option"].includes(type.kind)) visit(type.element);
+		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
 		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
 		if(type.kind === "callback")
@@ -209,6 +212,17 @@ export const generateNativeLeanAdapters = model => {
 	for(const type of model.types)
 	{
 		const bool = { kind: "primitive", name: "bool", lean: "Bool" };
+		if(type.kind === "list")
+		{
+			const array = { kind: "array", element: type.element };
+			emit(`lb_t${type.key}_from_array`, [{ name: "value", type: array }], type, "value.toList");
+			// One excess pointer makes any truncated result exceed the copy budget.
+			// The tail-recursive walker avoids allocating an intermediate List.
+			emit(`lb_t${type.key}_to_array`, [{ name: "value", type }], array,
+				`let rec loop : _root_.Nat → ${absoluteLeanType(type)} → ${absoluteLeanType(array)} → ${absoluteLeanType(array)}\n`
+				+ "    | 0, _, acc => acc\n    | _, [], acc => acc\n    | fuel + 1, head :: tail, acc => loop fuel tail (acc.push head)\n"
+				+ `  loop ${nativeCopyLimit / (model.pointerBits / 8) + 1} value #[]`);
+		}
 		if(type.kind === "option")
 		{
 			emit(`lb_t${type.key}_none`, [], type, "_root_.Option.none");

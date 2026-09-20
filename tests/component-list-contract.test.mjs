@@ -69,7 +69,7 @@ test("typed List adapters never inspect cons tags and bound intermediate output"
 	}
 });
 
-test("native, PHP-Wasm and callable List admission stays closed", () => {
+test("native Lists require an implemented host; PHP-Wasm and callable admission stays closed", () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
 	const type = { kind: "list", element: projection.result, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
 	validateNativeType(type);
@@ -78,8 +78,8 @@ test("native, PHP-Wasm and callable List admission stays closed", () => {
 		projection.result = nested;
 		const semantic = createElaboratedSemanticModel({ metadata: input.metadata, request: input.sourceIdentity.request, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }, elaborationSha256: "1".repeat(64) });
 		assert.ok(JSON.stringify(semantic.document).includes('"constructor":"list"'));
-		for(const create of [createNativeModel, createPhpWasmCopiedModel])
-			assert.throws(() => create({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }), { code: "unsupported-native-list" });
+		assert.ok(createNativeModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }).types.some(value => value.kind === "list"));
+		assert.throws(() => createPhpWasmCopiedModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }), { code: "unsupported-php-wasm-signature" });
 	}
 	assert.throws(() => compilePrimitiveCSurface(listReviewedIr(), { compounds: true, callables: true }), { code: "unsupported-native-c-signature" });
 	for(const position of ["parameter", "result"])
