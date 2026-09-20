@@ -99,6 +99,53 @@ const conversion = (model, type) => {
 	let from, to;
 	if(type.kind === "primitive")
 	{ from = fromPrimitive(type); to = toPrimitive(type); }
+	if(type.kind === "option" || type.kind === "result")
+	{
+		const optional = type.kind === "option";
+		const branches = optional ? [["Some", type.element, "some"]] : [["Ok", type.arguments[0], "ok"], ["Err", type.arguments[1], "error"]];
+		from = `
+      SvGETMAGIC(value); lbp_budget(scope, sizeof(void *));
+      ${optional ? `if (!SvOK(value)) return ${keep(`lb_t${type.key}_none(lean_box(0))`)};` : ""}
+      ${branches.map(([branch, child, constructor]) => `if (lbp_is_branch(value, ${q(`${model.moduleName}::${branch}`)})) {
+        ${nativeCType(child)} item = ${read(child)}(aTHX_ scope, lbp_branch_value(aTHX_ value, ${q(`${model.moduleName}::${branch}`)}));
+        ${retain(child, "item")}
+        return ${keep(`lb_t${type.key}_${constructor}(item)`)};
+      }`).join("\n      ")}
+      croak("${optional ? "Option requires undef or the generated Some class" : "Except requires the generated Ok or Err class"}");`;
+		to = `
+      lbp_budget(scope, sizeof(void *));
+      ${retain(type, "value")} uint8_t present = lb_t${type.key}_has(value);
+      ${optional ? "if (!present) return &PL_sv_undef;" : ""}
+      ${branches.map(([branch, child], i) => `${optional ? "" : i === 0 ? "if (present)" : "else"} {
+        ${retain(type, "value")} ${nativeCType(child)} item = lb_t${type.key}_get${i}(value);
+        ${nativeObjectType(child) ? "lbp_keep(scope, item);" : ""}
+        return lbp_branch(aTHX_ ${q(`${model.moduleName}::${branch}`)}, ${write(child)}(aTHX_ scope, item));
+      }`).join("\n      ")}`;
+	}
+	if(type.kind === "tuple")
+	{
+		from = `
+      SvGETMAGIC(value);
+      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVAV || SvOBJECT(SvRV(value)) || SvMAGICAL(SvRV(value))) croak("Prod requires a plain two-element array reference");
+      AV *input = (AV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));
+      if (av_count(input) != 2) croak("Prod requires exactly two elements");
+      lbp_budget(scope, 2 * sizeof(void *));
+      /* Pin both slots before a child converter can invoke Perl code. */
+      SV **entry0 = av_fetch(input, 0, 0); if (!entry0) croak("sparse Perl products are unsupported");
+      SV *slot0 = sv_2mortal(SvREFCNT_inc(*entry0));
+      SV **entry1 = av_fetch(input, 1, 0); if (!entry1) croak("sparse Perl products are unsupported");
+      SV *slot1 = sv_2mortal(SvREFCNT_inc(*entry1));
+      ${type.arguments.map((child, i) => `${nativeCType(child)} a${i} = ${read(child)}(aTHX_ scope, slot${i});`).join("\n      ")}
+      ${type.arguments.map((child, i) => retain(child, `a${i}`)).join(" ")}
+      return ${keep(`lb_t${type.key}_make(a0, a1)`)};`;
+		to = `
+      lbp_budget(scope, 2 * sizeof(void *));
+      AV *output = (AV *)sv_2mortal((SV *)newAV());
+      ${type.arguments.map((child, i) => `${retain(type, "value")} ${nativeCType(child)} a${i} = lb_t${type.key}_get${i}(value);
+      ${nativeObjectType(child) ? `lbp_keep(scope, a${i});` : ""}
+      av_push(output, SvREFCNT_inc(${write(child)}(aTHX_ scope, a${i})));`).join("\n      ")}
+      return lbp_mortal(newRV_inc((SV *)output));`;
+	}
 	if(type.kind === "array")
 	{
 		from = `
@@ -106,8 +153,10 @@ const conversion = (model, type) => {
       AV *array = (AV *)sv_2mortal(SvREFCNT_inc(SvRV(value))); size_t length = av_count(array);
       if (length > 16 * 1024 * 1024 / sizeof(void *)) croak("native copied array exceeds the 16 MiB per-call limit");
       lbp_budget(scope, length * sizeof(void *));
-      lean_object *result = ${keep("lean_alloc_array(length, length)")};
+      lean_object *result = lean_alloc_array(length, length);
+      /* Registration can fail and release result; every slot must already be valid. */
       for (size_t i = 0; i < length; ++i) lean_array_set_core(result, i, lean_box(0));
+      lbp_keep(scope, result);
       for (size_t i = 0; i < length; ++i) {
         SV **entry = av_fetch(array, i, 0); if (!entry) croak("sparse Perl arrays are unsupported");
         ${nativeCType(type.element)} item = ${read(type.element)}(aTHX_ scope, sv_2mortal(SvREFCNT_inc(*entry)));
@@ -190,25 +239,41 @@ ${name}(...)
 };
 
 /**
- * Generate public functions and private XS converters from canonical native metadata.
+ * Check Perl admission and namespace collisions before native linking.
  *
  * @param model - Compiler-checked native model and Binding IR.
- * @param receipt - Native compilation receipt with exact library and runtime identities.
  */
-export const generatePerlBindingPackage = (model, receipt) => {
+export const validatePerlModel = model => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
+	const containsCompound = type => ["option", "result", "tuple"].includes(type.kind)
+		|| (type.kind === "array" && containsCompound(type.element))
+		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
 	model.types.forEach(({ key, ...type }) => {
     validateNativeType(type);
-    if(["option", "result", "tuple"].includes(type.kind)) throw Object.assign(new TypeError("Perl compound values are not implemented for this target"), { code: "unsupported-perl-signature" });
+    if(type.kind === "callback" && [...type.parameters, type.result].some(containsCompound))
+      throw Object.assign(new TypeError("Perl compound callbacks are not implemented"), { code: "unsupported-perl-signature" });
     if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
-	const classes = new Set();
+	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
+		, ...(model.types.some(type => type.kind === "result") ? ["Ok", "Err"] : [])];
+	const classes = new Set(branches.map(name => `${model.moduleName}::${name}`));
 	for(const type of model.types.filter(type => ["record", "resource", "callback"].includes(type.kind)))
 	{
 		const name = typeClass(model, type);
 		if(classes.has(name)) throw new TypeError(`Perl class name collision: ${name}`);
 		classes.add(name);
 	}
+	return branches;
+};
+
+/**
+ * Generate public functions and private XS converters from canonical native metadata.
+ *
+ * @param model - Compiler-checked native model and Binding IR.
+ * @param receipt - Native compilation receipt with exact library and runtime identities.
+ */
+export const generatePerlBindingPackage = (model, receipt) => {
+	const branches = validatePerlModel(model);
 	const lines = ['#include "runtime.h"', '#include "component.h"', ""];
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
@@ -275,6 +340,14 @@ _callback_${type.key}(...)
 		, "sub false () { !!0 }"
 		, "sub CLONE_SKIP { 1 }"
 		, ""];
+	for(const branch of branches)
+	{
+		const name = `${model.moduleName}::${branch}`;
+		pm.push(`package ${name};`, "sub new {"
+			, `  die "${name}->new expects one payload\\n" unless @_ == 2 && $_[0] eq '${name}';`
+			, `  return bless { value => $_[1] }, '${name}';`, "}"
+			, "sub value { $_[0]->{value} }", "");
+	}
 	for(const type of model.types.filter(t => ["record", "resource", "callback"].includes(t.kind)))
 	{
 		pm.push(`package ${typeClass(model, type)};`);
@@ -288,6 +361,9 @@ _callback_${type.key}(...)
 	}
 	pm.push("1;", "", "__END__", "=head1 NAME", "", `${model.moduleName} - Generated functions from ${model.component.name}`, "", "=head1 API", "");
 	for(const item of model.exports) pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
+	if(branches.length) pm.push("=head1 COPIED VALUES", ""
+		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
+		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

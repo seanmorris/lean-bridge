@@ -24,6 +24,7 @@ import { compileCopiedWitModel, validateOrdinaryWasiSettings } from "../backends
 import { compileCopiedPythonModel, validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { compileCopiedRustModel, validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
+import { validatePerlModel } from "../backends/perl/generate.mjs";
 import { writeNativePackageSet } from "../release/package-set-assembly.mjs";
 
 /**
@@ -83,10 +84,9 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, validateModel: model => {
-				if(targets.includes("cpan") && model.types.some(type => ["option", "result", "tuple"].includes(type.kind)))
-					throw Object.assign(new TypeError("Perl compound values are not implemented for this target"), { code: "unsupported-perl-signature" });
+				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);

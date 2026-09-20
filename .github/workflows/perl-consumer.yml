@@ -142,8 +142,10 @@ jobs:
           LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs
           LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs
+          LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
           test -s build/type-corpus/perl.json
           test -s build/type-corpus/reviewed-native-perl.json
+          test -s build/compounds/perl.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -155,6 +157,7 @@ jobs:
             build/char-native/perl.json
             build/word-native/perl.json
             build/callables/perl.json
+            build/compounds/perl.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

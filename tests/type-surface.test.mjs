@@ -141,7 +141,7 @@ test("native compound evidence promotes exactly C/C++ copied positions on both p
 	}
 });
 
-for(const profile of ["python", "rust", "dotnet", "java", "kotlin", "ruby"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
+for(const profile of ["python", "rust", "dotnet", "java", "kotlin", "ruby", "perl"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));

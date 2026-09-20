@@ -70,6 +70,44 @@ die $error unless $ok;
 
 Run `perl consumer.pl`. Expected output is `42`, `42`, `42`, then `41`, each on its own line. Imports and calls use the generated public API only.
 
+### Options, results and products
+
+`Option` uses `undef` for None and the generated `Some->new($value)` for Some. Unit also uses `undef`: `Some->new(undef)` preserves a present Unit or an outer Some containing an inner None, according to the declared type. Nested options keep every layer.
+
+`Except` uses distinct `Ok->new($value)` and `Err->new($error)` classes. Both expose `->value`. Domain errors return `Err`; invalid host values and bridge failures throw exceptions.
+
+For the package in the [author example](../publish/cpan.md#export-options-results-and-products), save `compounds.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::Compounds;
+
+my $some = 'LeanBridge::Compounds::Some';
+print LeanBridge::Compounds::classify(undef), "\n";                   # 0
+print LeanBridge::Compounds::classify($some->new(undef)), "\n";       # 1
+print LeanBridge::Compounds::classify($some->new($some->new(undef))), "\n"; # 2
+
+my $value = Math::BigInt->new(2)->bpow(200);
+my $result = LeanBridge::Compounds::result_nat(
+  LeanBridge::Compounds::Ok->new($value)
+);
+die "Expected Err" unless ref($result) eq 'LeanBridge::Compounds::Err';
+print $result->value->bstr, "\n"; # the Lean function flips Ok to Err
+
+my $pair = LeanBridge::Compounds::tuple_nat([
+  Math::BigInt->new(10), Math::BigInt->new(20)
+]);
+print join(', ', map { $_->bstr } @$pair), "\n"; # 20, 10
+```
+
+Run `perl compounds.pl`. Products require a plain, dense two-element array reference. Nested products stay nested: `(a × b) × c` becomes `[[$a, $b], $c]`.
+
+Branch classes live under the generated component namespace. They are mutable blessed hashes with exactly one `value` field; constructors require one payload even when it is `undef`. Calls check the exact class, fields and concrete payload type. Tied branches, tied products, subclass wrappers and sparse products are rejected. Calls copy nested arrays, records, bytes and `Math::BigInt` values. Mutating a returned value does not change the input or another returned copy. Perl reference equality is not deep value equality.
+
+Input and output conversion share a 16 MiB copied-value budget. Type nesting is limited to 32 levels. These limits cover conversion payloads and slots, not all Perl allocations or Lean working memory. Resources and callbacks cannot appear inside copied values; compound callback arguments and results remain unsupported. The [installed checks](../evidence/perl-compounds-20260920.md) cover both source paths and all four pinned Perl ABIs.
+
 ## Values and cleanup
 
 ### Type conversions
@@ -97,9 +135,9 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `String` | `Unicode scalar string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Not audited (field) | Preserves Unicode scalar values and embedded NUL; rejects invalid Unicode. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `Octet scalar string, UTF-8 flag off` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Not audited (field) | Requires an unflagged octet string; copies owned result bytes. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
 | `Array α` | `Array reference of generated copied element values` (input, result, field, callback input, callback result) | Ordinary source: Installed checks: limited. Reviewed IR: Not audited | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Option α` | `undef or Some` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | None is undef; Some->new(value) retains presence. Some->new(undef) preserves present Unit or an outer Some containing None, according to the declared payload type. Some->new(Some->new(undef)) preserves two layers. Branches are exact generated classes with one mutable value field; subclasses, tied hashes and malformed field sets are rejected. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Ok or Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean Except E T becomes Ok->new(value) or Err->new(error), both exposing ->value. Exact classes preserve the success/error branch, including same-typed payloads. Payloads are copied and checked against the concrete Lean type. Domain errors return Err; bridge failures throw. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Plain two-element array reference (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two dense elements in an unblessed, untied array reference, preserving binary nesting and per-position validation. Inputs and outputs share a 16 MiB copied-value budget. Returned arrays, records, branch payloads and Math::BigInt values are independently owned. Perl reference equality is not deep value equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated blessed record with named fields` (input, result, field, callback input, callback result) | Ordinary source: Installed checks: limited. Reviewed IR: Not audited | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
@@ -151,7 +189,7 @@ Float parameters accept integer or floating-point scalars. Native boolean scalar
 
 ## Ownership and failures
 
-Arrays and finite acyclic records are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
+Arrays, finite acyclic records, options, results and products are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
 
 Callbacks may reenter the generated API. A callback can close the resource or closure involved in its own call; the active call retains what it needs until it returns. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a host callback beyond that call. An expired callback fails safely when invoked later.
 

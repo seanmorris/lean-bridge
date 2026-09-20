@@ -26,8 +26,9 @@ Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),
 [Rust crates](../evidence/rust-compounds-20260920.md),
 [NuGet packages](../evidence/dotnet-compounds-20260920.md),
-[Maven packages](../evidence/jvm-compounds-20260920.md) and
-[RubyGems](../evidence/ruby-compounds-20260920.md) also compile options,
+[Maven packages](../evidence/jvm-compounds-20260920.md),
+[RubyGems](../evidence/ruby-compounds-20260920.md) and
+[CPAN packages](../evidence/perl-compounds-20260920.md) also compile options,
 results and binary products on both source paths. Python uses explicit `Some`,
 `Ok` and `Err` wrappers. Rust uses its standard `Option`, `Result` and tuples,
 with an outer `Result` for bridge failures. C# uses generated `Option<T>` and
@@ -36,9 +37,10 @@ exceptions. Java and Kotlin share generated sealed `Option<T>` and
 `Result<T, E>` types and a `Pair<A, B>` record, with boxed primitive payloads.
 Ruby uses `nil` or `Some`, `Ok` or `Err`, and two-element arrays. Branch wrappers
 are frozen `Data` classes with pattern matching; nested mutable payloads are copied.
+Perl uses `undef` or `Some`, `Ok` or `Err`, and two-element array references.
+Its mutable branch objects preserve presence even when the payload is `undef`.
 These adapters preserve Unit and nested options.
-The remaining compound adapters are Perl, native PHP,
-PHP-Wasm and WIT/WASI.
+The remaining compound adapters are native PHP, PHP-Wasm and WIT/WASI.
 
 ## Shared configuration and Perl cutover
 
@@ -52,7 +54,7 @@ The [contract acceptance record](../evidence/export-contracts-20260914.md) cover
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters: copied primitives, nested arrays, acyclic records, Option, Except, nested products and synchronous primitive callables for npm, C, C++, Python, Rust, C#, Java, Kotlin and Ruby; copied primitives/arrays/records and primitive callables for other native targets and PHP-Wasm. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters: copied primitives, nested arrays, acyclic records, Option, Except, nested products and synchronous primitive callables for npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby and Perl; copied primitives/arrays/records and primitive callables for other native targets and PHP-Wasm. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
 
 ## Shared semantic model and combined builds
 

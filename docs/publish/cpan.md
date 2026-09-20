@@ -121,6 +121,32 @@ Missing pins, changed Git inputs, ambiguous modules, package overrides, symlinks
 
 Lake configuration and Lean elaboration execute code. Private staging keeps normal builds out of the author tree; it is not an operating-system sandbox for hostile source. Use an isolated build environment for projects you do not trust.
 
+## Export options, results and products
+
+Add these definitions to `Compounds.lean`:
+
+```lean
+namespace Compounds
+def classify (value : Option (Option Unit)) : UInt32 :=
+  match value with
+  | none => 0
+  | some none => 1
+  | some (some ()) => 2
+def result_nat (value : Except Nat Nat) : Except Nat Nat :=
+  match value with
+  | .ok value => .error value
+  | .error error => .ok error
+def tuple_nat (value : Nat × Nat) : Nat × Nat :=
+  (value.2, value.1)
+end Compounds
+```
+
+Select `Compounds` in `modules` and its three functions in `exports`. Set `targets.cpan.module` to `LeanBridge::Compounds` and choose a decimal component version, then use the ordinary build command above. The [consumer example](../consume/perl.md#options-results-and-products) calls this API through the installed module.
+
+Perl uses `undef` or `Some` for options, distinct `Ok` and `Err` wrappers for results, and two-element array references for binary products. Constructors appear under the component namespace when needed; record or resource names that collide with them are rejected before linking. All nineteen primitives work inside these copied types, including `Math::BigInt`, Unit, Unicode strings and octet strings. Fields and arrays may contain compounds.
+
+Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Lists, recursive copied types, arbitrary variants and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+
 ## Verify the release candidate
 
 Before publication:

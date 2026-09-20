@@ -169,8 +169,27 @@ test("npm compound mappings have installed value coverage without promoting nati
 						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
 					}
 				}
-	for(const cell of cells.filter(cell => ["php-wasm", "perl"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
+	for(const cell of cells.filter(cell => cell.profile === "php-wasm" && ["option", "result", "tuple"].includes(cell.shape)))
 		assert.notEqual(cell.stages.installedExecution.state, "passed");
+});
+
+test("Perl compound docs preserve presence, branch identity and nested products", async () => {
+	const source = await readFile("docs/consume/perl.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /undef.*Some/u);
+	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
+	assert.match(row(source, "Prod α β / tuples"), /two-element array reference/u);
+	assert.match(source, /Some->new\(undef\)/u);
+	assert.match(source, /\$some->new\(\$some->new\(undef\)\)/u);
+	assert.match(source, /reference equality is not deep value equality/u);
+	for(const path of ["ordinary-source", "reviewed-ir"]) for(const shape of ["option", "result", "tuple"])
+		for(const position of ["callback-parameter", "callback-result"])
+		{
+			const cell = cells.find(cell => cell.id === `perl/${shape}/${path}/${position}`);
+			assert.equal(cell.stages.compilation.state, "rejected");
+			assert.notEqual(cell.stages.installedExecution.state, "passed");
+		}
 });
 
 test("Ruby compound docs distinguish absent options, Unit and result branches", async () => {

@@ -60,6 +60,23 @@ static inline SV *lbp_field(pTHX_ HV *value, const char *field, I32 length) {
   if (!entry) croak("missing record field %s", field);
   return sv_2mortal(SvREFCNT_inc(*entry));
 }
+/* Branches have one payload, even when it is undef. No coercion or inheritance. */
+static inline int lbp_is_branch(SV *value, const char *package) {
+  return SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVHV &&
+    !SvMAGICAL(SvRV(value)) && SvOBJECT(SvRV(value)) &&
+    HvNAME(SvSTASH(SvRV(value))) && strEQ(HvNAME(SvSTASH(SvRV(value))), package);
+}
+static inline SV *lbp_branch_value(pTHX_ SV *value, const char *package) {
+  if (!lbp_is_branch(value, package)) croak("expected %s", package);
+  HV *input = (HV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));
+  if (HvUSEDKEYS(input) != 1) croak("branch requires exactly one value field");
+  return lbp_field(aTHX_ input, "value", 5);
+}
+static inline SV *lbp_branch(pTHX_ const char *package, SV *value) {
+  HV *output = (HV *)sv_2mortal((SV *)newHV());
+  hv_store(output, "value", 5, SvREFCNT_inc(value), 0);
+  return sv_bless(lbp_mortal(newRV_inc((SV *)output)), gv_stashpv(package, GV_ADD));
+}
 #define LBP_ENTER() ENTER; SAVETMPS; lbp_scope *scope = lbp_begin(aTHX); SAVEDESTRUCTOR_X(lbp_end, scope)
 #define LBP_LEAVE() FREETMPS; LEAVE
 #endif

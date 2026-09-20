@@ -192,6 +192,9 @@ test("Perl CI runs four independent ABI jobs and gates its single observation on
 	for(const name of ["benchmark", "acceptance", "perl"])
 		assert.ok(matrix.includes(`build/consumer-ci/perl/*/${name}.json`));
 	assert.match(matrix, /if-no-files-found: error/);
+	assert.match(matrix, /LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests\/perl-compounds\.test\.mjs/);
+	assert.match(matrix, /test -s build\/compounds\/perl\.json/);
+	assert.match(matrix, /^ {12}build\/compounds\/perl\.json$/m);
 	assert.doesNotMatch(shared, /test:consumer:perl|matrix:/);
 	assert.ok(shared.includes("unlocked builds reject (new dependencies|target metadata|export contract)"));
 	for(const name of [

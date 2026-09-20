@@ -475,6 +475,24 @@ consumer twice without compilers. A separate process injects conversion failures
 and checks cleanup without changing installed files. Ruby source files remain
 part of the installed package. CI retains `build/compounds/ruby.json`.
 
+Run the installed Perl compound checks with a selected supported interpreter:
+
+```sh
+export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/5.38.2-threaded/bin/perl"
+LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
+node --test tests/perl-compound-contract.test.mjs
+```
+
+Set `LEAN_BRIDGE_PERLS` to a JSON array of absolute interpreter paths to test
+several ABIs against one Lean build. The [Perl suite](../evidence/perl-compounds-20260920.md)
+checks ordinary and reviewed packages, all nineteen primitive payloads, mixed
+records, deep options, malformed values, copy independence and conversion limits.
+It installs the runtime and component offline in `prebuilt-only` mode, relocates
+the installation, removes the producer and archive handoff, and runs the public
+consumer twice without compilers. A separately compiled test-only XS copy injects
+conversion failures and exercises cleanup. Installed files remain unchanged.
+CI runs this suite for all four pinned ABIs and retains `build/compounds/perl.json`.
+
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.

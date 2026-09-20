@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.28.0",
+  "contractVersion": "0.29.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,233 @@
   ],
   "evidence": [
     {
+      "id": "perl-compounds-installed",
+      "kind": "installed",
+      "revision": "0d89349d770088bde8179bfdd9df965950f3a98e",
+      "command": "LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs; node --test tests/perl-compound-contract.test.mjs",
+      "scope": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38.",
+      "files": [
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "50cd473cfaca5c9500a390a28833b9782040af69957d103065110b249eefa478"
+        },
+        {
+          "path": "docs/evidence/perl-compounds-20260920.json",
+          "sha256": "14988e56102fc9fc2b7af4ba0370195fa349675a0daf5daf0656305be45c81db"
+        },
+        {
+          "path": "docs/evidence/perl-compounds-20260920.md",
+          "sha256": "6d130da3148d15b2b569d46ee2281f2510ab811b266457410b017eda7707e6ad"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+        },
+        {
+          "path": "src/backends/perl/Build.pm",
+          "sha256": "387080389beba7a6b423dd14ef051da9989d71cbe62b605ddfa2e89e17183afb"
+        },
+        {
+          "path": "src/backends/perl/Runtime.pm",
+          "sha256": "b6b4ace67b0d73e53505d1c88df386c10f5c5f38eeef14e3778140c794e741c1"
+        },
+        {
+          "path": "src/backends/perl/Runtime.xs",
+          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
+        },
+        {
+          "path": "src/backends/perl/naming.mjs",
+          "sha256": "e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"
+        },
+        {
+          "path": "src/backends/perl/runtime.h",
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        {
+          "path": "src/build/cpan-projection.mjs",
+          "sha256": "cf907d35628abb2f5d56550b986a1ce954c7fd4a2fa006c4dcd885fa4f0214d4"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
+        },
+        {
+          "path": "src/build/perl-xs.mjs",
+          "sha256": "3ee79018362d3b99ae5fa351351f3d2160dc12ff35edb82707e5092be6cb8836"
+        },
+        {
+          "path": "src/release/cpan-install.mjs",
+          "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "85299faf4476621826c9c9adeff0a76c650b88080c1124aa7395fc63dc84d289"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/perl-faults.pl",
+          "sha256": "682cc2918964d3ce48d9227b3a590acd27e44d1de0cca15ec82662ff10dd32d7"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/perl-probe-build.pl",
+          "sha256": "1326e0d8bfb9e4e35c0f58acd51dfb798379f3d6c0819915669ab690c39656b9"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/perl-probe.h",
+          "sha256": "1f946b4c2a2ffeffddc222635ebeb1ea44c95349ccdcf95ad24f134b01b9689f"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/perl.pl",
+          "sha256": "6af211017d50c2e2c5bb11f501cd9f886b1d9b473791c55e1ae53f92270e92e0"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/Compounds.lean",
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lakefile.toml",
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/package.json",
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "tests/helpers/compound-fixture.mjs",
+          "sha256": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/perl-compound-install.mjs",
+          "sha256": "b872d504a6ee024c4fd71053f3656897878242e46b2ede258b2fb30fec855c2e"
+        },
+        {
+          "path": "tests/perl-compound-contract.test.mjs",
+          "sha256": "b083af11aee131074b92f0038affdb4e9f632be11bbeae79ee9943028f8eec7d"
+        },
+        {
+          "path": "tests/perl-compounds.test.mjs",
+          "sha256": "32024c640d72c4f129f853a616e0b12c69cb12ab24cb8fcd4b5782fcff55576b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "perl/ordinary-source/v5.36.3-threaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "0d01ac60901140ddbc06c96e36f94696efced6970d2d7ab171e70b2ff1477dd3"
+        },
+        {
+          "path": "perl/ordinary-source/v5.36.3-threaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/ordinary-source/v5.36.3-unthreaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "0d01ac60901140ddbc06c96e36f94696efced6970d2d7ab171e70b2ff1477dd3"
+        },
+        {
+          "path": "perl/ordinary-source/v5.36.3-unthreaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-threaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "0d01ac60901140ddbc06c96e36f94696efced6970d2d7ab171e70b2ff1477dd3"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-threaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-unthreaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "0d01ac60901140ddbc06c96e36f94696efced6970d2d7ab171e70b2ff1477dd3"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-unthreaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-threaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "ee4e7d242ffa74e22514245182490d39469f34a1bb7fe0603b4b7963c4b99bc6"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-threaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-unthreaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "ee4e7d242ffa74e22514245182490d39469f34a1bb7fe0603b4b7963c4b99bc6"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-unthreaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-threaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "ee4e7d242ffa74e22514245182490d39469f34a1bb7fe0603b4b7963c4b99bc6"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-threaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-unthreaded/archives/LeanBridge-Compounds-1.000.tar.gz",
+          "sha256": "ee4e7d242ffa74e22514245182490d39469f34a1bb7fe0603b4b7963c4b99bc6"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-unthreaded/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        }
+      ]
+    },
+    {
       "id": "ruby-compounds-installed",
       "kind": "installed",
       "revision": "6f423172f8dfa2b48805ad6e7c5e381325d3f5f6",
@@ -181,7 +408,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -265,7 +492,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -360,7 +587,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -452,7 +679,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -567,7 +794,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -655,7 +882,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -822,7 +1049,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -993,7 +1220,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -1128,7 +1355,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -1144,7 +1371,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -1200,7 +1427,7 @@
         },
         {
           "path": "tests/native-compound-contract.test.mjs",
-          "sha256": "b3106f02956290e4e02252ff2bbe5088930c4805024ee675871aa885e8b6a10e"
+          "sha256": "22a80302260426ef0ae9608743cd987ab6a7374bf8bc25a796c3bdb05e5c7ba0"
         },
         {
           "path": "tests/native-compounds.test.mjs",
@@ -1641,7 +1868,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "1bdbc98afb993aa90786f33bf0e9be83860bdadbf025d9afcbee5bdb46ce58fa"
+          "sha256": "2321ce52ee7fe180ee9714f90889957d069e32b519b532276dcab63baa015baa"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -1649,7 +1876,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1872,7 +2099,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -1991,7 +2218,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2011,7 +2238,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -2130,15 +2357,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "046b3906d7db80d117038019deae70922bccc05be8fafd47cee2c72e68c70d11"
+          "sha256": "07761b84e92d0a3ec5c60bc9e5e4b54e653201284b22269c620f1bfaa6627460"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -2321,7 +2548,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2369,15 +2596,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "046b3906d7db80d117038019deae70922bccc05be8fafd47cee2c72e68c70d11"
+          "sha256": "07761b84e92d0a3ec5c60bc9e5e4b54e653201284b22269c620f1bfaa6627460"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -2496,7 +2723,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2560,11 +2787,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -2723,7 +2950,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2783,11 +3010,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -2902,7 +3129,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2982,11 +3209,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3113,7 +3340,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3193,11 +3420,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3312,7 +3539,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3388,11 +3615,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3459,7 +3686,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3519,11 +3746,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3590,7 +3817,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3650,11 +3877,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3717,7 +3944,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3769,11 +3996,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -3840,7 +4067,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -3848,7 +4075,7 @@
         },
         {
           "path": "src/backends/perl/runtime.h",
-          "sha256": "7731519eff572a66a7c3932d25b6b0f5b4e0e65667994979695bf64e2b0f708c"
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
         },
         {
           "path": "tests/perl-callables.test.mjs",
@@ -3880,19 +4107,19 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "511ae437d4cf8a6d9851e994a4584034df97677a190ae8024ab4b6f24141d3d1"
+          "sha256": "6fd31d582a19fb0572eba8834988379849196baf6ddae875f703811cead45cf0"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d1f90efa2ddabc850edd69f74e12e10e348db093bcf388b6b11731fc987611ad"
+          "sha256": "50cd473cfaca5c9500a390a28833b9782040af69957d103065110b249eefa478"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -3983,7 +4210,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d1f90efa2ddabc850edd69f74e12e10e348db093bcf388b6b11731fc987611ad"
+          "sha256": "50cd473cfaca5c9500a390a28833b9782040af69957d103065110b249eefa478"
         },
         {
           "path": "docs/evidence/platform-words-20260918.json",
@@ -4019,7 +4246,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "1bdbc98afb993aa90786f33bf0e9be83860bdadbf025d9afcbee5bdb46ce58fa"
+          "sha256": "2321ce52ee7fe180ee9714f90889957d069e32b519b532276dcab63baa015baa"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -4027,7 +4254,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -4087,7 +4314,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -4179,7 +4406,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "511ae437d4cf8a6d9851e994a4584034df97677a190ae8024ab4b6f24141d3d1"
+          "sha256": "6fd31d582a19fb0572eba8834988379849196baf6ddae875f703811cead45cf0"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -4283,7 +4510,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "4ba4e54124a209408776fb0fdcb29965dcfa8b48f217b8a9c5101ccb6ef6cb95"
+          "sha256": "aa0a0149a12aead0da58bc1bd88221068e0fb086ab05c3ec29cd490de92cf5c3"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -4362,7 +4589,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d1f90efa2ddabc850edd69f74e12e10e348db093bcf388b6b11731fc987611ad"
+          "sha256": "50cd473cfaca5c9500a390a28833b9782040af69957d103065110b249eefa478"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -4370,7 +4597,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "4013e55057d6d3f26c44e6fa75157f4979dc1754a0b3d65f57df7bab742b71fe"
+          "sha256": "8bdd21915527180c8dc6fd0582a4468c9b5332ca3ededff8add573236430859f"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -4406,7 +4633,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -4732,7 +4959,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -4879,7 +5106,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5026,7 +5253,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5129,7 +5356,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5216,7 +5443,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5311,7 +5538,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5406,7 +5633,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5509,7 +5736,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5624,7 +5851,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -5699,7 +5926,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5926,7 +6153,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "f4bf60983a162935b0d678f8fa7f2f277a0b30da68bb690428d395b8aa54ebe2"
+          "sha256": "f8d4bb97fdee02eafe676bd34eb4dfc7e73b602a68c9686b5737a0f05a30dee0"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -5938,7 +6165,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+          "sha256": "6935204053ed7be40d2ccfdb9fdff7f45b0dfb15abccf8cc986990e48d880712"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -5946,7 +6173,7 @@
         },
         {
           "path": "src/backends/perl/runtime.h",
-          "sha256": "7731519eff572a66a7c3932d25b6b0f5b4e0e65667994979695bf64e2b0f708c"
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
         },
         {
           "path": "src/backends/perl/Runtime.pm",
@@ -17562,6 +17789,296 @@
       ]
     },
     {
+      "id": "perl-compounds-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38.",
+      "hostTypes": {
+        "option": {
+          "parameter": "undef or Some",
+          "result": "undef or Some",
+          "field": "undef or Some"
+        },
+        "result": {
+          "parameter": "Ok or Err",
+          "result": "Ok or Err",
+          "field": "Ok or Err"
+        },
+        "tuple": {
+          "parameter": "Plain two-element array reference (nested binary products)",
+          "result": "Plain two-element array reference (nested binary products)",
+          "field": "Plain two-element array reference (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        }
+      },
+      "limitations": [
+        "Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64 native CPAN packages; other platforms are not promoted.",
+        "Input and output conversions share a 16 MiB copied-value budget. Type nesting stops at 32; not every Perl allocation or Lean working-memory allocation is bounded.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "None is undef; Some->new(value) retains presence. Some->new(undef) preserves present Unit or an outer Some containing None, according to the declared payload type. Some->new(Some->new(undef)) preserves two layers. Branches are exact generated classes with one mutable value field; subclasses, tied hashes and malformed field sets are rejected.",
+        "result": "Lean Except E T becomes Ok->new(value) or Err->new(error), both exposing ->value. Exact classes preserve the success/error branch, including same-typed payloads. Payloads are copied and checked against the concrete Lean type. Domain errors return Err; bridge failures throw.",
+        "tuple": "Exactly two dense elements in an unblessed, untied array reference, preserving binary nesting and per-position validation. Inputs and outputs share a 16 MiB copied-value budget. Returned arrays, records, branch payloads and Math::BigInt values are independently owned. Perl reference equality is not deep value equality."
+      }
+    },
+    {
+      "id": "perl-compound-callables-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Perl callable admission rejects Option, Except and Prod payloads, including nested compounds. Copied compound values are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Perl native admission rejects compound parameters and results in callback signatures."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
+      "id": "perl-compounds-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38.",
+      "hostTypes": {
+        "option": {
+          "parameter": "undef or Some",
+          "result": "undef or Some",
+          "field": "undef or Some"
+        },
+        "result": {
+          "parameter": "Ok or Err",
+          "result": "Ok or Err",
+          "field": "Ok or Err"
+        },
+        "tuple": {
+          "parameter": "Plain two-element array reference (nested binary products)",
+          "result": "Plain two-element array reference (nested binary products)",
+          "field": "Plain two-element array reference (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Prepared CPAN packages from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each of eight path/ABI executions passes 78980 public assertions twice after offline prebuilt-only installation and relocation, with compilers and producer files unavailable. A separate test-only XS copy injects 242 conversion failures and checks sixteen partial inputs, four original host exceptions and reentrant product conversion. Installed files and loaded native-library hashes remain unchanged. Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64; local glibc floor 2.36, CI 2.38."
+        }
+      },
+      "limitations": [
+        "Perl 5.36.3 and 5.38.2, threaded and unthreaded, Linux x86-64 native CPAN packages; other platforms are not promoted.",
+        "Input and output conversions share a 16 MiB copied-value budget. Type nesting stops at 32; not every Perl allocation or Lean working-memory allocation is bounded.",
+        "Copied values cannot contain resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "None is undef; Some->new(value) retains presence. Some->new(undef) preserves present Unit or an outer Some containing None, according to the declared payload type. Some->new(Some->new(undef)) preserves two layers. Branches are exact generated classes with one mutable value field; subclasses, tied hashes and malformed field sets are rejected.",
+        "result": "Lean Except E T becomes Ok->new(value) or Err->new(error), both exposing ->value. Exact classes preserve the success/error branch, including same-typed payloads. Payloads are copied and checked against the concrete Lean type. Domain errors return Err; bridge failures throw.",
+        "tuple": "Exactly two dense elements in an unblessed, untied array reference, preserving binary nesting and per-position validation. Inputs and outputs share a 16 MiB copied-value budget. Returned arrays, records, branch payloads and Math::BigInt values are independently owned. Perl reference equality is not deep value equality."
+      }
+    },
+    {
+      "id": "perl-compound-callables-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Perl callable admission rejects Option, Except and Prod payloads, including nested compounds. Copied compound values are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "perl-compounds-installed"
+          ],
+          "note": "Perl native admission rejects compound parameters and results in callback signatures."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed compound callable support is claimed."
+        }
+      },
+      "limitations": [
+        "Compound callable signatures require separate ownership and conversion work."
+      ]
+    },
+    {
       "id": "perl-primitive-callables-ordinary-source",
       "profiles": [
         "perl"
@@ -24545,7 +25062,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++, Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "npm wasm32 evidence only. C/C++, Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -24886,7 +25403,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 evidence only. C/C++, Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "npm wasm32 evidence only. C/C++, Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -26489,7 +27006,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -26571,7 +27088,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -26653,7 +27170,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
@@ -26735,7 +27252,7 @@
         }
       },
       "limitations": [
-        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin and Ruby compound evidence is recorded separately; Perl, native PHP, PHP-Wasm and WIT/WASI require separate work.",
+        "Linux x86-64 native packages only. Python, Rust, C#, Java/Kotlin, Ruby and Perl compound evidence is recorded separately; native PHP, PHP-Wasm and WIT/WASI require separate work.",
         "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
         "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
       ],
