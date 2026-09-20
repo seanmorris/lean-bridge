@@ -52,8 +52,9 @@ const checkReview = document => {
 	const type = (value, path, copied = true) => {
 		reject(copied && isCallback(value), path);
 		if(value.kind === "primitive" || value.kind === "named") return;
-		reject(value.kind !== "apply" || value.constructor !== "array" || value.arguments.length !== 1, path);
-		type(value.arguments[0], `${path}.element`);
+		const arity = { array: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
+		reject(value.kind !== "apply" || !arity || value.arguments.length !== arity, path);
+		value.arguments.forEach((argument, index) => type(argument, `${path}.arguments[${index}]`));
 	};
 	const site = (value, path, result = false) => {
 		const identity = isCallback(value.type);

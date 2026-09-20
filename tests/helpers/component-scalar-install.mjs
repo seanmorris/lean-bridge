@@ -58,7 +58,7 @@ const compile = async (fixture, projectRoot, root, local = false) => {
 		// Rename the export without changing the module's binary section lengths.
 		wasm[at] = "x".charCodeAt(0);
 		await writeFile(join(oldRuntime, "main.wasm"), wasm);
-		await assert.rejects(() => buildComponentNpmPackages({ bundleRoot, runtimeRoot: oldRuntime, outputRoot: join(root, "rejected-npm") }), /cannot resolve component import|lacks the component (copied|record) ABI/);
+		await assert.rejects(() => buildComponentNpmPackages({ bundleRoot, runtimeRoot: oldRuntime, outputRoot: join(root, "rejected-npm") }), /cannot resolve component import|lacks the component (copied|record|compound) ABI/);
 	}
 	return release;
 };

@@ -14,6 +14,7 @@ import { compileGenericSpecializationV1 } from "../../abi/generic-specialization
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
+import { sha256 } from "../../capsule/node.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -40,7 +41,7 @@ const typeScriptType = (typeRef, typeMap) => {
 	}
 	if(typeRef.constructor === "option")
 	{
-		return `${typeScriptType(typeRef.arguments[0], typeMap)} | null`;
+		return `Readonly<{ tag: "none" }> | Readonly<{ tag: "some"; value: ${typeScriptType(typeRef.arguments[0], typeMap)} }>`;
 	}
 	if(typeRef.constructor === "result")
 	{
@@ -572,6 +573,8 @@ const validatorName = (typeRef, typeMap) => {
 	{
 		return `assertArrayOf${validatorName(typeRef.arguments[0], typeMap).slice("assert".length)}`;
 	}
+	if(typeRef.kind === "apply" && ["option", "result", "tuple"].includes(typeRef.constructor))
+		return `assertApplied$${sha256(canonicalizeJsonValue(typeRef, "validator")).slice(0, 20)}`;
 	fail("unsupported-validator", "The JavaScript POC cannot emit this validator", { typeRef });
 };
 
@@ -604,11 +607,41 @@ const emitValidators = (ir, typeMap) => {
 	];
 	const emittedArrays = new Set();
 	const emitArray = typeRef => {
-		if(typeRef.kind !== "apply" || typeRef.constructor !== "array") return;
-		emitArray(typeRef.arguments[0]);
+		if(typeRef.kind !== "apply") return;
+		typeRef.arguments.forEach(emitArray);
 		const name = validatorName(typeRef, typeMap);
 		if(emittedArrays.has(name)) return;
 		emittedArrays.add(name);
+		if(typeRef.constructor !== "array")
+		{
+			lines.push(`export const ${name} = (value, path) => {`);
+			if(typeRef.constructor === "tuple")
+			{
+				lines.push(`  if (!Array.isArray(value) || value.length !== ${typeRef.arguments.length} || Reflect.ownKeys(value).length !== ${typeRef.arguments.length + 1}) invalid(path, "exact data tuple");`);
+				typeRef.arguments.forEach((argument, index) => lines.push(
+					`  const field${index} = Object.getOwnPropertyDescriptor(value, ${index});`,
+					`  if (!field${index} || !Object.hasOwn(field${index}, "value")) invalid(path, "own data fields");`,
+					`  ${validatorName(argument, typeMap)}(field${index}.value, path + "[${index}]");`,
+				));
+			}
+			else
+			{
+				lines.push('  if (!value || typeof value !== "object" || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) invalid(path, "plain tagged object");');
+				if(typeRef.constructor === "option") lines.push(
+					'  const tag = Object.getOwnPropertyDescriptor(value, "tag");',
+					'  if (!tag || !Object.hasOwn(tag, "value") || !["none", "some"].includes(tag.value)) invalid(path, "Option tag");',
+					'  const key = "value", expected = tag.value === "none" ? ["tag"] : ["tag", "value"];',
+				);
+				else lines.push('  const key = Object.hasOwn(value, "error") ? "error" : "ok", expected = [key];');
+				lines.push('  const own = Reflect.ownKeys(value);', '  if (own.length !== expected.length || own.some(key => !expected.includes(key))) invalid(path, "exact tagged fields");');
+				if(typeRef.constructor === "option") lines.push('  if (tag.value === "none") return value;');
+				lines.push('  const field = Object.getOwnPropertyDescriptor(value, key);', '  if (!field || !Object.hasOwn(field, "value")) invalid(path, "own data payload");');
+				if(typeRef.constructor === "option") lines.push(`  ${validatorName(typeRef.arguments[0], typeMap)}(field.value, path + ".value");`);
+				else lines.push(`  (key === "ok" ? ${validatorName(typeRef.arguments[0], typeMap)} : ${validatorName(typeRef.arguments[1], typeMap)})(field.value, path + "." + key);`);
+			}
+			lines.push("  return value;", "};", "");
+			return;
+		}
 		const itemValidator = validatorName(typeRef.arguments[0], typeMap);
 		lines.push(
 			`export const ${name} = (value, path) => {`,

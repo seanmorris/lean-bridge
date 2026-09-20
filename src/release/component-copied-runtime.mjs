@@ -1,28 +1,28 @@
 /**
- * Call arenas for the compiled copied-array ABI. No Wasm views escape a call.
+ * Call arenas for compiled copied-value ABIs. No Wasm views escape a call.
  *
  * @file
  */
 import { scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { componentCopiedAbi, componentArrayShape, createComponentCopyBudget } from "../abi/component-copied.mjs";
 import { compileComponentCopiedCodec } from "./component-copied-codec.mjs";
-import { componentRecordAbi, resolveComponentRecordType } from "../abi/component-records.mjs";
+import { componentRecordAbi, componentCompoundAbi, resolveComponentRecordType } from "../abi/component-records.mjs";
 
 /**
  * Compile a call's codecs once, sharing input/result limits and runtime poison.
  *
  * @param module - Shared Emscripten runtime.
  * @param operation - Generated typed C adapter.
- * @param signature - Authenticated copied-array signature.
+ * @param signature - Authenticated copied-value signature.
  * @param poison - Retire the shared runtime after a trap or malformed output.
  * @param version - Validated wire ABI version.
- * @param records - Authenticated nominal record definitions for ABI five.
+ * @param records - Authenticated nominal record definitions for ABIs five and six.
  */
 export const compileComponentCopiedCall = (module, operation, signature, poison, version = componentCopiedAbi, records = []) => {
 	const types = [...signature.parameters, signature.result];
-	if(![componentCopiedAbi, componentRecordAbi].includes(version)) throw new TypeError("Invalid copied call ABI");
+	if(![componentCopiedAbi, componentRecordAbi, componentCompoundAbi].includes(version)) throw new TypeError("Invalid copied call ABI");
 	if(version === componentCopiedAbi) for(const type of types) componentArrayShape(type);
-	const codecs = types.map(type => compileComponentCopiedCodec(version === componentRecordAbi ? resolveComponentRecordType(type, records) : type));
+	const codecs = types.map(type => compileComponentCopiedCodec(version === componentCopiedAbi ? type : resolveComponentRecordType(type, records, version === componentCompoundAbi)));
 	return args => {
 		if(args.length !== signature.parameters.length) throw new TypeError(`Expected ${signature.parameters.length} arguments`);
 		const allocations = [], budget = createComponentCopyBudget();

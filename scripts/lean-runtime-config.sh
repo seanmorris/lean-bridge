@@ -36,6 +36,7 @@ LEAN_WASM_PROFILE_CC_FLAGS=(
   -flto
   -fPIC
   -ffp-contract=off
+  -DLEAN_EMSCRIPTEN
   "-ffile-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"
   "-fdebug-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"
   "-fmacro-prefix-map=$LEAN_WASM_PROJECT_ROOT=/workspace"

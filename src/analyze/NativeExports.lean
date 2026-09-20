@@ -115,6 +115,17 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
     return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+  if request.profile.getD "component-scalars-v1" != "native-library-v1" then
+    if e.isAppOfArity ``Option 1 then
+      return obj [("kind", str "option"), ("element", ← shape request e.appArg! seen (depth + 1) true)]
+    if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
+      let args := e.getAppArgs
+      let first ← shape request args[0]! seen (depth + 1) true
+      let second ← shape request args[1]! seen (depth + 1) true
+      -- IR result arguments are [success, error]; Lean's Except is [error, success].
+      let result := e.isAppOfArity ``Except 2
+      return obj [("kind", str (if result then "result" else "tuple")),
+        ("arguments", toJson (if result then #[second, first] else #[first, second]))]
   if e.isForall then
     if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e
@@ -196,16 +207,20 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
 partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
-  if (value.getObjValAs? String "kind").toOption == some "array" then
-    return obj [("kind", str "array"),
+  let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "array" || kind == "option" then
+    return obj [("kind", str kind),
       ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
+  if kind == "result" || kind == "tuple" then
+    let args ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
+    return obj [("kind", str kind), ("arguments", toJson (← args.mapM componentCopiedType))]
   if (value.getObjValAs? String "kind").toOption == some "record" then
     let fields ← ofExcept <| value.getObjValAs? (Array Json) "fields"
     let fields ← fields.mapM fun (field : Json) => do
       pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
         ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
     return obj [("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name"), ("fields", toJson fields)]
-  throwError "component copied values require primitives, arrays or records"
+  throwError "component copied values require primitives, arrays, records, Option, Except or Prod"
 
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then

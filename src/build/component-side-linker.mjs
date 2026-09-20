@@ -248,6 +248,7 @@ export const linkComponentSideModule = async ({
 				, includeRoots: includes, runner, environment }) : null;
 			const flags = [
 				"-O2", "-fwasm-exceptions", "-flto", "-fPIC", "-ffp-contract=off"
+				, "-DLEAN_EMSCRIPTEN"
 				, `-I${join(resolve(engineRoot), "poc/lean-link-spike")}`
 				, `-ffile-prefix-map=${targetC}=/workspace/target-c`
 				, `-fdebug-prefix-map=${targetC}=/workspace/target-c`

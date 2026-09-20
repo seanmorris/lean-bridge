@@ -12,7 +12,6 @@ import { docPages } from "../site/registry.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { cellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection, typeGuideProfiles } from "../scripts/generate-type-docs.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
-import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
@@ -153,11 +152,31 @@ test("regeneration cannot rewrite installation commands or swallow the next sect
 	assert.doesNotMatch(result, /old table/u);
 });
 
+test("npm compound mappings have installed value coverage without promoting native or callable positions", async () => {
+	const source = await readFile("docs/javascript-typescript.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	for(const profile of ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"])
+		for(const path of ["ordinary-source", "reviewed-ir"])
+			for(const shape of ["option", "result", "tuple"])
+				for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
+				{
+					const cell = cells.find(cell => cell.id === `${profile}/${shape}/${path}/${position}`);
+					if(position.startsWith("callback")) assert.notEqual(cell.stages.installedExecution.state, "passed");
+					else
+					{
+						assert.equal(cell.stages.installedExecution.state, "passed");
+						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
+					}
+				}
+	for(const cell of cells.filter(cell => ["php-wasm", "python"].includes(cell.profile) && ["option", "result", "tuple"].includes(cell.shape)))
+		assert.notEqual(cell.stages.installedExecution.state, "passed");
+});
+
 test("recorded result and arbitrary-integer rejections exercise real generator guards", () => {
 	const apply = constructor => ({ kind: "apply", constructor, arguments: [{ kind: "primitive", name: "uint32" }, { kind: "primitive", name: "string" }] });
 	for(const [generate, type, code] of [
-		[generateJavaScriptPackage, apply("result"), "unsupported-type-constructor"]
-		, [generatePhpBindingPackage, apply("result"), "unsupported-result-type"]
+		[generatePhpBindingPackage, apply("result"), "unsupported-result-type"]
 		, [generateRustBindingPackage, { kind: "primitive", name: "nat" }, "unsupported-arbitrary-integer"]
 		, [generateCBindingPackage, apply("result"), "unsupported-type-application"]
 	]){

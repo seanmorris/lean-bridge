@@ -145,6 +145,13 @@ export const validateElaboratedMetadata = (report, request) => {
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
 				const copied = (type, depth = 0) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
+					if(["result", "tuple"].includes(type?.kind))
+					{
+						closed(type, ["kind", "arguments"]);
+						if(!Array.isArray(type.arguments) || type.arguments.length !== 2) fail("Component product/result requires two types");
+						type.arguments.forEach(argument => copied(argument, depth + 1));
+						return;
+					}
 					if(type?.kind === "record")
 					{
 						closed(type, ["kind", "name", "fields"]);
@@ -159,7 +166,7 @@ export const validateElaboratedMetadata = (report, request) => {
 						}
 						return;
 					}
-					if(type?.kind !== "array") return scalar(type);
+					if(!["array", "option"].includes(type?.kind)) return scalar(type);
 					closed(type, ["kind", "element"]);
 					copied(type.element, depth + 1);
 				};

@@ -210,11 +210,14 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 	for(const archive of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][archive]), await readFile(releases[1][archive]));
 
-	// The historical corpus selects primitives. Arrays and records have separate
-	// installed fixtures; only its pending Option/Except export remains rejected.
-	const rejectedExports = [library.pendingExport];
+	// The historical corpus selects primitives. Copied aggregates have separate
+	// installed fixtures. Keep an actual unsupported List as the negative probe.
+	const rejectedName = `${library.pendingExport}List`, rejectedExports = [rejectedName];
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
+	const pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
+	await saveLakeFile(join(pending, "project"), pendingSource,
+		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.module, library.pendingModule]
 		, ...(path === "ordinary-source" ? { exports: [signatures[0].name, ...rejectedExports] } : {}), targets }));
@@ -222,10 +225,10 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 	{
 		const document = corpusReviewedIr(library, [signatures[0]]);
 		const template = document.declarations[0];
-		document.declarations.push({ ...template, id: `lean:${library.pendingExport}`
-			, name: library.pendingExport.split(".").at(-1)
-			, overloadKey: library.pendingExport
-			, source: { ...template.source, declaration: library.pendingExport } });
+		document.declarations.push({ ...template, id: `lean:${rejectedName}`
+			, name: rejectedName.split(".").at(-1)
+			, overloadKey: rejectedName
+			, source: { ...template.source, declaration: rejectedName } });
 		await saveLakeFile(join(pending, "project"), "reviewed.binding-ir.json", canonicalJson(document));
 	}
 	const rejectedInput = await capture(join(pending, "project"), join(context.directory, "rejected-input"));
@@ -237,7 +240,7 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 	{
 		assert.equal(error.code, "component-adapter-hints-required", "Toolchain failures are not unsupported-type evidence");
 		const hints = error.details.hints.sort();
-		assert.deepEqual(hints, rejectedExports.map(name => `hint:${name}:unsupported-${name === library.pendingExport ? "result" : "parameter"}-type`).sort());
+		assert.deepEqual(hints, rejectedExports.map(name => `hint:${name}:unsupported-result-type`).sort());
 		rejection = { code: error.code, exports: rejectedExports, hints };
 	}
 	assert.ok(rejection, "A projection was admitted; replace the gap with installed cases");

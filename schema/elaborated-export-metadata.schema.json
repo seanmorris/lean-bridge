@@ -291,7 +291,12 @@
       "oneOf": [
         { "$ref": "#/$defs/scalarType" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "element"],
-          "properties": { "kind": { "const": "array" }, "element": { "$ref": "#/$defs/copiedType" } }
+          "properties": { "kind": { "enum": ["array", "option"] }, "element": { "$ref": "#/$defs/copiedType" } }
+        },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
+          "properties": { "kind": { "enum": ["tuple", "result"] }, "arguments": {
+            "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/copiedType" }
+          } }
         },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "fields"],
           "properties": {

@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and acyclic copied records. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays, acyclic copied records, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -58,10 +58,13 @@ Ordinary npm components support synchronous functions with zero to 32 arguments.
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
 | `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
-| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be primitives, nested arrays or copied records |
+| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be any supported copied value |
 | Acyclic copied structure | Plain objects with exact own fields; named readonly TypeScript interfaces |
+| `Option α` | `{ tag: "none" }` or `{ tag: "some", value: T }`; Unit payloads and nested options retain their tags |
+| `Except ε α` | `{ ok: T }` or `{ error: E }`, exactly one own branch |
+| `α × β` | Exact two-element ordinary array; readonly TypeScript tuple retaining Lean's product nesting |
 
-Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Array calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 array levels. Arrays and byte buffers are independent copies and need no disposal.
+Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Container calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 container levels. Returned copied values own their storage and need no disposal. Native and PHP-Wasm builds do not yet admit options, results or products; selecting them alongside npm restricts the API to their shared supported types.
 
 `Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
 
@@ -114,9 +117,9 @@ The compiler-backed analyzer projects:
 - `USize` and `ISize`, with the compiled target's width;
 - `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
-Nested arrays, acyclic copied records with these primitives, synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, other collections and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
+Nested arrays, acyclic copied records, Option, Except, nested binary products, synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, other collections and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or copied primitives, arrays, records and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or copied primitives, arrays, records, Option, Except, nested products and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 

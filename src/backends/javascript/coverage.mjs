@@ -50,7 +50,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		if(typeRef.kind === "apply")
 		{
-			if(typeRef.constructor !== "array")
+			if(!["array", "option", "result", "tuple"].includes(typeRef.constructor))
 			{
 				report(
 					"unsupported-type-constructor",
@@ -59,7 +59,7 @@ export const analyzeJavaScriptCoverage = ir => {
 				);
 				return;
 			}
-			inspectTypeRef(typeRef.arguments[0], `${path}.items`);
+			typeRef.arguments.forEach((argument, index) => inspectTypeRef(argument, `${path}.items[${index}]`));
 			return;
 		}
 		const type = typeMap.get(typeRef.id);

@@ -12,7 +12,7 @@ import { assertComponentSignature } from "../abi/component-scalars.mjs";
 import { assertComponentCallableAbi } from "../abi/component-callables.mjs";
 import { assertComponentCopiedAbi, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { componentCallableLeanPrelude, createComponentPrivateAbi } from "./component-callable-adapters.mjs";
-import { assertComponentRecordAbi, componentRecordAbi } from "../abi/component-records.mjs";
+import { assertComponentRecordAbi, componentRecordAbi, componentCompoundAbi } from "../abi/component-records.mjs";
 import { componentRecordLeanSource } from "./component-record-adapters.mjs";
 
 const primitiveLeanTypes = new Map([
@@ -125,9 +125,9 @@ export const validateCompilerAdapterPlan = plan => {
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
 	}
-	const callable = plan.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi].includes(plan.privateAbi.version);
+	const callable = plan.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi].includes(plan.privateAbi.version);
 	if(callable) assertComponentCallableAbi(plan.privateAbi);
-	else if(plan.privateAbi.version === componentRecordAbi) assertComponentRecordAbi(plan.privateAbi);
+	else if([componentRecordAbi, componentCompoundAbi].includes(plan.privateAbi.version)) assertComponentRecordAbi(plan.privateAbi);
 	else if(copied) assertComponentCopiedAbi(plan.privateAbi);
 	else
 	{
@@ -155,7 +155,7 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 		, `namespace ${module}`
 		, ""
 	];
-	if(privateAbi.version === componentRecordAbi)
+	if([componentRecordAbi, componentCompoundAbi].includes(privateAbi.version))
 	{
 		lines.push(...componentRecordLeanSource(privateAbi, exports, leanType), `end ${module}`, "");
 		return lines.join("\n");
@@ -190,7 +190,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	const document = analysis.bindingIr.document;
 	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
 	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");
-	if([componentCopiedAbi, componentRecordAbi].includes(privateAbi.version) && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Copied adapters require freshly elaborated Binding IR");
+	if([componentCopiedAbi, componentRecordAbi, componentCompoundAbi].includes(privateAbi.version) && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Copied adapters require freshly elaborated Binding IR");
 	const callbackTypes = new Map(callbacks.map(type => [type.id, type]));
 	const exports = analysis.bindingIr.document.declarations.map(declaration => {
     if(privateAbi.version === 2) assertComponentSignature(declaration);

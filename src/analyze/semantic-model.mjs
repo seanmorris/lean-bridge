@@ -65,7 +65,8 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
 	const reference = type => {
 		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
-		if(type.kind === "array") return { kind: "apply", constructor: "array", arguments: [reference(type.element)] };
+		if(["array", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
+		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(reference) };
 		// Callback identity describes its semantic signature, not native boxing or C layout.
 		const signature = type.kind === "callback" ? { parameters: type.parameters.map(reference), result: reference(type.result) } : null;
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;

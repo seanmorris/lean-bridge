@@ -91,8 +91,8 @@ const validationFixture = (profile = "python", libraryId = "shop") => {
 		, ...(profile === "perl" ? { perlAbi: { abi, abiKey }, runtimeArchive: { target: "cpan", sha256: "e".repeat(64) } } : {})
 		, ...(wasm ? { runtimeArchive: { target: "npm", sha256: "e".repeat(64) }
 			, rejection: { code: "component-adapter-hints-required"
-				, exports: [library.pendingExport]
-				, hints: [`hint:${library.pendingExport}:unsupported-result-type`] }
+				, exports: [`${library.pendingExport}List`]
+				, hints: [`hint:${library.pendingExport}List:unsupported-result-type`] }
 		} : {})
 		, ...(profile === "node-typescript" ? { typescript: { strict: true
 			, skipLibCheck: false, version: "Version 5.9.3"

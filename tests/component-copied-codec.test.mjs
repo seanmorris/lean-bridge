@@ -6,9 +6,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { componentScalarTypes, scalarCopyLimit } from "../src/abi/component-scalars.mjs";
-import { componentCopiedTags, createComponentCopyBudget, snapshotComponentCopiedType } from "../src/abi/component-copied.mjs";
+import { componentArrayShape, componentCopiedTags, createComponentCopyBudget, snapshotComponentCopiedType } from "../src/abi/component-copied.mjs";
 import { compileComponentCopiedCodec } from "../src/release/component-copied-codec.mjs";
-import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 
 const primitive = name => ({ kind: "primitive", name });
 const apply = (constructor, ...arguments_) => ({ kind: "apply", constructor, arguments: arguments_ });
@@ -61,7 +60,7 @@ const values = {
 	, usize: [0, 0xffffffff], isize: [-0x80000000, -1, 0x7fffffff]
 };
 
-test("copied descriptors are closed and snapshotted; non-array admission remains blocked", () => {
+test("copied descriptors are closed and snapshotted; the array-only ABI stays closed", () => {
 	const input = array(option(u32)), codec = compileComponentCopiedCodec(input);
 	assert.deepEqual(codec.type, input);
 	input.arguments.length = 0;
@@ -69,11 +68,7 @@ test("copied descriptors are closed and snapshotted; non-array admission remains
 	assert.deepEqual(roundTrip(codec.type, [none(), some(42)]), [none(), some(42)]);
 	for(const type of [tuple(u32, bool), option(unit), result(u32, primitive("string"))])
 	{
-		const document = {
-			component: { id: "copied-test" }, types: []
-			, declarations: [{ id: "lean:test", kind: "function", parameters: [{ type }], result: { type }, resultMode: "value" }]
-		};
-		assert.throws(() => createComponentPrivateAbi(document), /compiled copied values currently require arrays/);
+		assert.throws(() => componentArrayShape(type), /compiled copied values currently require arrays/);
 	}
 	for(const invalid of [
 		{ kind: "primitive", name: "future" }, { ...u32, extra: true }

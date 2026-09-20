@@ -388,7 +388,21 @@ After validating a library's observations and rechecking its receipts, the harne
 
 Native builds discard the duplicate release immediately after comparing archive bytes, binding IR and declarations. Only the first verified release supplies the consumer handoff. This avoids retaining two full package sets while copying archives and preparing offline build dependencies.
 
-The catalog contains 124 cases across both libraries. Python, Ruby, Perl and native PHP execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. PHP repeats the catalog in weak and strict caller modes. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm corpus package selects scalar exports, executes 112 cases and leaves 12 unselected array/record cases as gaps for that release. Its rejection probe checks `Option Nat` and `Except String Nat`; Lean itself checks all these source modules. The separate [npm array](../evidence/npm-arrays-20260920.md) and [record suites](../evidence/npm-records-20260920.md) exercise nested copied values and all nineteen primitives on both source paths in Node, strict TypeScript and three browser engines, including React and workers. Native admission also rejects the separate `Option` and `Except` exports.
+The catalog contains 124 cases across both libraries. Python, Ruby, Perl and native PHP execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. PHP repeats the catalog in weak and strict caller modes. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm corpus package selects scalar exports, executes 112 cases and leaves 12 unselected array/record cases as gaps for that release. Its negative-build copy adds an unsupported `List UInt32` export; the original oracle modules are unchanged. The separate [npm array](../evidence/npm-arrays-20260920.md), [record](../evidence/npm-records-20260920.md) and [compound suites](../evidence/npm-compounds-20260920.md) exercise nested copied values and all nineteen primitives on both source paths in Node, strict TypeScript and three browser engines, including React and workers. Native admission still rejects the separate `Option` and `Except` exports.
+
+Run the npm compound suite against the prepared shared runtime:
+
+```sh
+LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit \
+  node --test tests/component-compounds.test.mjs
+node --test tests/component-compound-contract.test.mjs
+```
+
+The installed checks preserve none/some Unit, nested options, asymmetric result
+branches, product nesting and mixtures with arrays and records. They also test
+recordless packages, malformed inputs, cleanup after partial output, and a
+compile-time UInt64 constant that detects missing wasm32 static-layout flags.
+CI retains `build/compounds/npm/` and `build/compounds/recordless/`.
 
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 

@@ -30,7 +30,7 @@ const runtimeSource = `${brokerSource}\n${phpWasmCallbackBroker}`;
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 const save = async (root, path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes); };
-const flags = ["-O2", "-g0", "-fPIC", "-fvisibility=hidden", "-ffp-contract=off", "-Werror=date-time"];
+const flags = ["-O2", "-g0", "-fPIC", "-fvisibility=hidden", "-ffp-contract=off", "-Werror=date-time", "-DLEAN_EMSCRIPTEN"];
 const includes = roots => roots.flatMap(root => ["-I", root]);
 const requireAbsent = async output => {
 	try

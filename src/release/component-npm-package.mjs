@@ -132,7 +132,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		for(const signature of abi.callbacks) if(sha256(componentCallableSignatureText(signature)).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
 	}
 	else if(abi.version === 4) assertComponentCopiedBindings(abi, ir);
-	else if(abi.version === 5) assertComponentRecordBindings(abi, ir);
+	else if([5, 6].includes(abi.version)) assertComponentRecordBindings(abi, ir);
 	else
 	{
 		if(abi.version !== componentScalarAbi || abi.dispatch !== "scalar-frame-v2") throw new Error("Rebuild this component for scalar ABI 2");
@@ -146,9 +146,10 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
 	if(abi.version === 3 && ["bridge_callable_abi", "bridge_callable_invoke", "bridge_callable_release", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component callable ABI; rebuild the shared runtime");
-	if([4, 5].includes(abi.version) && ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode", "bridge_copied_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component copied ABI; rebuild the shared runtime");
-	if(abi.version === 5 && ["bridge_record_abi", "bridge_record_frame_validate", "bridge_record_children_validate", "bridge_record_children_allocate", "bridge_record_encode_leaf", "bridge_record_slot_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component record ABI; rebuild the shared runtime");
+	if([4, 5, 6].includes(abi.version) && ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode", "bridge_copied_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component copied ABI; rebuild the shared runtime");
+	if([5, 6].includes(abi.version) && ["bridge_record_abi", "bridge_record_frame_validate", "bridge_record_children_validate", "bridge_record_children_allocate", "bridge_record_encode_leaf", "bridge_record_slot_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component record ABI; rebuild the shared runtime");
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
+	if(abi.version === 6 && ["bridge_compound_abi", "bridge_compound_frame_validate", "bridge_compound_children_validate", "bridge_compound_children_allocate"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component compound ABI; rebuild the shared runtime");
 	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => `${item.kind}:${item.name}`));
 	for(const item of WebAssembly.Module.imports(side))
 	{

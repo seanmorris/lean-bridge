@@ -140,6 +140,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_frame_validate(bridge_sca
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_abi(void) { return 1; }
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_abi(void) { return 1; }
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+  return copied_frame_validate(frame, argc, 6);
+}
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
   return copied_frame_validate(frame, argc, 5);
@@ -218,7 +223,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE lean_object *bridge_copied_decode(bridge_scalar_
 static void copied_clear(bridge_scalar_slot *slot) {
   if (slot->flags & 2) {
     void *pointer = (void *)(uintptr_t)(uint32_t)slot->bits;
-    if (slot->kind == 32 || slot->kind == 36) {
+    if (slot->kind >= 32 && slot->kind <= 36) {
       auto children = (bridge_scalar_slot *)pointer;
       uint32_t count = slot->bits >> 32;
       for (uint32_t i = 0; i < count; ++i) copied_clear(children + i);
@@ -282,9 +287,16 @@ extern "C" EMSCRIPTEN_KEEPALIVE void bridge_copied_frame_clear(bridge_scalar_fra
 /* Generated typed walkers validate every node before allocating Lean objects.
    A container charges its own slot here; each child validator charges its slot. */
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_children_validate(bridge_scalar_slot const *slot, uint32_t kind, uint32_t expected, uint32_t *budget) {
-  if ((kind != 32 && kind != 36) || !slot || (uintptr_t)slot % 8 || !in_heap((uintptr_t)slot, 16)) return 3;
-  if (slot->kind != kind || slot->flags) return 3;
+  if (kind != 32 && kind != 36) return 3;
+  return bridge_compound_children_validate(slot, kind, expected, budget);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_children_validate(bridge_scalar_slot const *slot, uint32_t kind, uint32_t expected, uint32_t *budget) {
+  if (kind < 32 || kind > 36 || !slot || (uintptr_t)slot % 8 || !in_heap((uintptr_t)slot, 16)) return 3;
+  bool sum = kind == 34 || kind == 35;
+  if (slot->kind != kind || (sum ? slot->flags > 1 : slot->flags != 0)) return 3;
   uint32_t pointer = (uint32_t)slot->bits, count = slot->bits >> 32;
+  if ((kind == 34 && count != slot->flags) || (kind == 35 && count != 1) || (kind == 33 && count != 2)) return 3;
   if ((expected != UINT32_MAX && count != expected) || (!count && pointer) || (count && !pointer) || pointer % 8) return 3;
   uint64_t bytes = 16ull * count;
   if (!in_heap(pointer, bytes)) return 3;
@@ -297,11 +309,18 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_children_validate(bridge_
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_children_allocate(bridge_scalar_slot *slot, uint32_t kind, uint32_t count, uint32_t *budget) {
   *slot = {};
   if (kind != 32 && kind != 36) return 6;
+  return bridge_compound_children_allocate(slot, kind, count, 0, budget);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_children_allocate(bridge_scalar_slot *slot, uint32_t kind, uint32_t count, uint32_t branch, uint32_t *budget) {
+  *slot = {};
+  if (kind < 32 || kind > 36 || branch > 1 || ((kind != 34 && kind != 35) && branch)
+      || (kind == 34 && count != branch) || (kind == 35 && count != 1) || (kind == 33 && count != 2)) return 6;
   if (!copied_charge(budget, 16ull * count)) return 4;
   void *children = count ? calloc(count, 16) : nullptr;
   if (count && !children) return 5;
   slot->kind = kind;
-  slot->flags = count ? 2 : 0;
+  slot->flags = (count ? 2 : 0) | branch;
   slot->bits = ((uint64_t)count << 32) | (uint32_t)(uintptr_t)children;
   return 0;
 }

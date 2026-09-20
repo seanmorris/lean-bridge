@@ -35,6 +35,10 @@ lean_object *bridge_copied_decode(bridge_scalar_slot const *, uint32_t, uint32_t
 uint32_t bridge_copied_encode(bridge_scalar_slot *, uint32_t, uint32_t, lean_object *, uint32_t *);
 void bridge_copied_frame_clear(bridge_scalar_frame *);
 uint32_t bridge_record_abi(void);
+uint32_t bridge_compound_abi(void);
+uint32_t bridge_compound_frame_validate(bridge_scalar_frame *, uint32_t);
+uint32_t bridge_compound_children_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
+uint32_t bridge_compound_children_allocate(bridge_scalar_slot *, uint32_t, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_record_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_record_children_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_record_children_allocate(bridge_scalar_slot *, uint32_t, uint32_t, uint32_t *);

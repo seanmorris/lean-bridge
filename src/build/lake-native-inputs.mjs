@@ -17,7 +17,7 @@ const inside = (root, path) => path === root || path.startsWith(`${root}${sep}`)
 const portable = path => path.split(sep).join("/");
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const flagsFor = profile => ["-O2", "-g0", "-fPIC", "-Werror=date-time"
-	, ...(profile === "side-module-2" ? ["-fwasm-exceptions", "-flto", "-ffp-contract=off"] : [])];
+	, ...(profile === "side-module-2" ? ["-fwasm-exceptions", "-flto", "-ffp-contract=off", "-DLEAN_EMSCRIPTEN"] : [])];
 
 /**
  * Validate recorded C compilation before it enters downstream build evidence.

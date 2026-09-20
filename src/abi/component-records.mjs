@@ -1,5 +1,5 @@
 /**
- * Nominal copied-record admission, separate from scalar/array/callable ABIs.
+ * Copied-record and compound admission, separate from scalar/array/callable ABIs.
  *
  * @file
  */
@@ -7,6 +7,8 @@ import { snapshotComponentCopiedType, assertComponentCopySemantics } from "./com
 
 export const componentRecordAbi = 5;
 export const componentRecordDispatch = "copied-record-frame-v1";
+export const componentCompoundAbi = 6;
+export const componentCompoundDispatch = "copied-compound-frame-v1";
 const invalid = message => { throw new TypeError(`Invalid component record ABI: ${message}`); };
 const closed = (value, keys) => {
 	if(!value || typeof value !== "object" || Array.isArray(value)
@@ -26,8 +28,9 @@ const dense = (values, limit) => {
  *
  * @param type - Semantic Binding IR reference.
  * @param records - Closed private record definitions.
+ * @param compounds - Admit Option, result and binary product constructors.
  */
-export const resolveComponentRecordType = (type, records) => {
+export const resolveComponentRecordType = (type, records, compounds = false) => {
 	let nodes = 0;
 	const active = new Set();
 	const visit = (value, depth) => {
@@ -38,9 +41,11 @@ export const resolveComponentRecordType = (type, records) => {
 		if(kind.value === "apply")
 		{
 			closed(value, ["kind", "constructor", "arguments"]);
-			dense(value.arguments, 1);
-			if(value.constructor !== "array" || value.arguments.length !== 1) invalid("only copied arrays and records are compiled");
-			return { kind: "apply", constructor: "array", arguments: [visit(value.arguments[0], depth + 1)] };
+			dense(value.arguments, 2);
+			const allowed = compounds ? ["array", "option", "result", "tuple"] : ["array"];
+			const count = ["tuple", "result"].includes(value.constructor) ? 2 : 1;
+			if(!allowed.includes(value.constructor) || value.arguments.length !== count) invalid("unsupported copied constructor or arity");
+			return { kind: "apply", constructor: value.constructor, arguments: value.arguments.map(argument => visit(argument, depth + 1)) };
 		}
 		closed(value, ["kind", "id"]);
 		if(kind.value !== "named" || active.has(value.id)) invalid("recursive or unsupported record reference");
@@ -68,15 +73,16 @@ export const componentRecordDefinitions = ir => ir.types.map(type => {
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 /**
- * Authenticate a closed version-five descriptor before loading component code.
+ * Authenticate a closed version-five or version-six descriptor before loading code.
  *
  * @param abi - Private record transport descriptor.
  */
 export const assertComponentRecordAbi = abi => {
 	closed(abi, ["version", "dispatch", "records", "exports"]);
-	if(abi.version !== componentRecordAbi || abi.dispatch !== componentRecordDispatch) invalid("unsupported version or dispatch");
+	const compounds = abi.version === componentCompoundAbi;
+	if(compounds ? abi.dispatch !== componentCompoundDispatch : abi.version !== componentRecordAbi || abi.dispatch !== componentRecordDispatch) invalid("unsupported version or dispatch");
 	dense(abi.records, 1024); dense(abi.exports, 10000);
-	if(!abi.records.length || !abi.exports.length) invalid("records and exports must be nonempty");
+	if((!compounds && !abi.records.length) || !abi.exports.length) invalid("records and exports must be nonempty");
 	const ids = new Set(), bindings = new Set(), symbols = new Set();
 	for(const record of abi.records)
 	{
@@ -85,7 +91,14 @@ export const assertComponentRecordAbi = abi => {
 		ids.add(record.id);
 		for(const field of record.fields) closed(field, ["name", "type"]);
 	}
-	for(const record of abi.records) resolveComponentRecordType({ kind: "named", id: record.id }, abi.records);
+	let hasCompound = false;
+	const inspect = type => {
+		if(type.kind === "apply")
+		{ hasCompound ||= type.constructor !== "array"; type.arguments.forEach(inspect); }
+		if(type.kind === "record") type.fields.forEach(field => inspect(field.type));
+	};
+	const resolve = type => { const value = resolveComponentRecordType(type, abi.records, compounds); inspect(value); return value; };
+	for(const record of abi.records) resolve({ kind: "named", id: record.id });
 	for(const item of abi.exports)
 	{
 		closed(item, ["bindingId", "symbol", "parameters", "result", "resultMode"]); dense(item.parameters, 32);
@@ -93,8 +106,9 @@ export const assertComponentRecordAbi = abi => {
 			|| typeof item.symbol !== "string" || !/^lean_bridge_[a-f0-9]{24}$/.test(item.symbol) || symbols.has(item.symbol)) invalid("invalid export identity");
 		bindings.add(item.bindingId); symbols.add(item.symbol);
 		if(item.resultMode !== "value") invalid("records require synchronous results");
-		for(const type of [...item.parameters, item.result]) resolveComponentRecordType(type, abi.records);
+		for(const type of [...item.parameters, item.result]) resolve(type);
 	}
+	if(compounds && !hasCompound) invalid("compound ABI requires an Option, result or product");
 };
 
 /**
@@ -105,7 +119,8 @@ export const assertComponentRecordAbi = abi => {
  */
 export const assertComponentRecordBindings = (abi, ir) => {
 	assertComponentRecordAbi(abi);
-	const expanded = records => records.map(record => resolveComponentRecordType({ kind: "named", id: record.id }, records));
+	const compounds = abi.version === componentCompoundAbi;
+	const expanded = records => records.map(record => resolveComponentRecordType({ kind: "named", id: record.id }, records, compounds));
 	if(JSON.stringify(expanded(abi.records)) !== JSON.stringify(expanded(componentRecordDefinitions(ir)))) invalid("record field or identity mismatch");
-	assertComponentCopySemantics(abi, ir, type => resolveComponentRecordType(type, abi.records));
+	assertComponentCopySemantics(abi, ir, type => resolveComponentRecordType(type, abi.records, compounds));
 };

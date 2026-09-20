@@ -208,10 +208,10 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Float` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | IEEE binary64 projected as number; preserves NaN classification, infinities and signed zero. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied UTF-8 text, including BOM, NUL and supplementary characters. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `Uint8Array` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied Uint8Array; no view into Lean memory. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `ReadonlyArray<T> (copied primitive or record elements)` (input, result, field); `readonly T[]; UInt32 arrays use readonly number[]` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Array α` | `ReadonlyArray<T> (supported copied elements)` (input, result, field); `readonly T[]; UInt32 arrays use readonly number[]` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `{ readonly tag: "none" } \| { readonly tag: "some"; readonly value: T }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact own tags preserve none, some Unit and every nested option. Null and omitted payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `{ readonly ok: T } \| { readonly error: E }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly one own data property selects ok or error, including Unit payloads. IR arguments are [success, error]; a domain error returns a value. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Generated readonly record (Alpha: Payload)` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated tagged readonly union` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
@@ -269,7 +269,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, nested arrays, acyclic copied records, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, nested arrays, acyclic copied records, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -281,21 +281,23 @@ Pass ordinary dense arrays for `Array`; typed arrays are only used for `ByteArra
 
 Arrays and byte buffers are copied in both directions. Returned values share no
 storage with inputs or the Lean heap and need no disposal. Holes, extra fields,
-getters, cycles and incorrectly typed elements are rejected. Limits are 32 array
+getters, cycles and incorrectly typed elements are rejected. Limits are 32 container
 levels and a cumulative 16 MiB of slot storage and copied payloads across all
 arguments and the result. A result that exceeds the limit throws `RangeError`;
 the runtime releases partial output and remains usable.
 
 The installed-package checks cover ordinary Lean source and independently
 reviewed IR in Node, strict TypeScript, browser pages, React and workers. See the
-[array execution evidence](evidence/npm-arrays-20260920.md). Arrays can also contain [copied records](#copied-records). Options, results and
-callables are not admitted as array elements yet.
+[array execution evidence](evidence/npm-arrays-20260920.md). Arrays can also contain
+[copied records](#copied-records), options, results and products. Callables and
+resources are not admitted as array elements.
 
 ### Copied records
 
 Lean structures become named TypeScript interfaces with readonly fields and plain
-JavaScript objects. Fields may contain any supported primitive, nested arrays or
-other acyclic copied records. Empty and single-field structures work too.
+JavaScript objects. Fields may contain any supported primitive, nested arrays,
+options, results, products or other acyclic copied records. Empty and single-field
+structures work too.
 
 Pass every declared field as an own data property. Missing or extra fields,
 getters, symbols, custom prototypes and cycles are rejected; plain objects with
@@ -312,6 +314,29 @@ in Node, strict TypeScript and three browser engines, including React and worker
 Generic, inherited, dependent and recursive records are not supported by this
 profile. Records cannot contain callbacks or resources, or share a component
 with callable exports yet.
+
+### Options, results and products
+
+`Option α` uses `{ tag: "none" }` or `{ tag: "some", value: T }`.
+`some ()` retains its `value: undefined` property. Nested options keep every tag:
+`none`, `some none` and `some (some ())` are three distinct values.
+
+`Except ε α` uses `{ ok: T }` for success or `{ error: E }` for failure.
+Pass exactly one branch as an own data property, even when its payload is Unit.
+An error branch is a returned value, not a JavaScript exception. The generated
+TypeScript declarations narrow on `tag` or on `"ok" in result`.
+
+`α × β` uses a two-element ordinary array and a readonly TypeScript tuple.
+Products keep their Lean nesting: `(UInt32 × String) × Bool` becomes
+`readonly [readonly [number, string], boolean]`, not a flat three-element array.
+
+These values can nest with arrays and acyclic records. They are copied, need no
+disposal, and share the 32-container-depth and cumulative 16 MiB copy limits.
+Missing or extra properties, accessors, sparse tuples and invalid tags fail
+before Lean runs. Plain and null-prototype objects are accepted for tagged values.
+See the [installed compound checks](evidence/npm-compounds-20260920.md) for both
+source paths in Node, strict TypeScript and Chromium, Firefox and WebKit pages,
+React and workers. Native and PHP-Wasm profiles do not yet admit these constructors.
 
 ### Validate numeric inputs
 

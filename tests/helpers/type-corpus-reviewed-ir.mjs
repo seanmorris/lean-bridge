@@ -10,7 +10,10 @@ const documentation = () => ({ summary: "Independent corpus contract.", details:
 const source = declaration => ({ producer: "corpusReview", declaration, extensions: {} });
 const typeReference = type => typeof type === "string" ? { kind: "primitive", name: type }
 	: type.array ? { kind: "apply", constructor: "array", arguments: [typeReference(type.array)] }
-		: { kind: "named", id: `lean:${type.record}` };
+		: type.option ? { kind: "apply", constructor: "option", arguments: [typeReference(type.option)] }
+			: type.result ? { kind: "apply", constructor: "result", arguments: type.result.map(typeReference) }
+				: type.tuple ? { kind: "apply", constructor: "tuple", arguments: type.tuple.map(typeReference) }
+					: { kind: "named", id: `lean:${type.record}` };
 
 /**
  * Describe the catalog API without importing a compiler model or Alpha fixture.
@@ -22,6 +25,8 @@ export const corpusReviewedIr = (library, signatures = corpusSignatures(library)
 	const records = new Map();
 	const visit = type => {
 		if(type.array) visit(type.array);
+		if(type.option) visit(type.option);
+		if(type.result || type.tuple) (type.result ?? type.tuple).forEach(visit);
 		if(type.record && !records.has(type.record))
 		{ records.set(type.record, type); Object.values(type.fields).forEach(visit); }
 	};

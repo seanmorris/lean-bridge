@@ -1,15 +1,26 @@
 /**
- * Typed record bridges. Lean constructs/projects records; C only sees arrays
- * and boxed primitives, never compiler-dependent record offsets or layouts.
+ * Typed record and compound bridges. Lean constructs, matches and projects;
+ * C only sees arrays and boxed primitives, never constructor tags or offsets.
  *
  * @file
  */
-import { sha256 } from "../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
-import { assertComponentRecordAbi } from "../abi/component-records.mjs";
+import { assertComponentRecordAbi, componentCompoundAbi } from "../abi/component-records.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
+const compound = type => type.kind === "apply" && type.constructor !== "array";
+const carried = type => type.kind === "named" || compound(type);
+const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
+const childrenOf = (type, records) => type.kind === "apply" ? type.arguments : type.kind === "named" ? records.get(type.id).fields.map(field => field.type) : [];
+const allTypes = abi => {
+	const records = new Map(abi.records.map(record => [record.id, record])), types = new Map();
+	const add = type => { if(types.has(identity(type))) return; types.set(identity(type), type); childrenOf(type, records).forEach(add); };
+	for(const item of abi.exports) [...item.parameters, item.result].forEach(add);
+	for(const record of abi.records) add({ kind: "named", id: record.id });
+	return [...types.values()];
+};
 const object = type => type.kind !== "primitive" || ["unit", "nat", "int", "string", "bytes"].includes(type.name);
 const cType = type => object(type) ? "lean_object *" : ["usize", "isize"].includes(type.name) ? "size_t"
 	: type.name === "bool" ? "uint8_t" : type.name === "char" ? "uint32_t"
@@ -18,14 +29,14 @@ const suffix = type => ["uint32", "int32", "char"].includes(type.name) ? "_uint3
 	: ["uint64", "int64"].includes(type.name) ? "_uint64" : ["usize", "isize"].includes(type.name) ? "_usize"
 		: type.name === "float32" ? "_float32" : type.name === "float64" ? "_float" : "";
 const box = (type, expression) => object(type) ? expression : `lean_box${suffix(type)}(${expression})`;
-const containsRecord = type => type.kind === "named" || (type.kind === "apply" && containsRecord(type.arguments[0]));
+const containsRecord = type => carried(type) || (type.kind === "apply" && type.arguments.some(containsRecord));
 
 /**
  * Generate total Lean conversion functions and typed public-call wrappers.
- * A one-element Array carries each record across C regardless of its native
+ * A one-element Array carries each record or compound across C regardless of its native
  * representation. Array access is bounds checked with a proved local bound.
  *
- * @param abi - Validated private record descriptor.
+ * @param abi - Validated private record or compound descriptor.
  * @param exports - Compiler-selected declarations and applications.
  * @param leanType - Source Lean type renderer.
  */
@@ -33,18 +44,40 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 	assertComponentRecordAbi(abi);
 	const records = new Map(abi.records.map(record => [record.id, record]));
 	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
-	const transportType = type => type.kind === "named" ? `(_root_.Array ${sourceType(type)})`
+	const transportType = type => carried(type) ? `(_root_.Array ${sourceType(type)})`
 		: type.kind === "apply" ? `(_root_.Array ${transportType(type.arguments[0])})` : leanType(type);
-	const convert = (type, value, input) => type.kind === "named" ? input ? `(unpack${key(type.id)} ${value})` : `#[${value}]`
+	const convert = (type, value, input) => carried(type) ? input ? `(unpack${key(identity(type))} ${value})` : `#[${value}]`
 		: type.kind === "apply" && containsRecord(type) ? `((${value}).map (fun element => ${convert(type.arguments[0], "element", input)}))` : value;
 	const defaultValue = type => type.kind === "primitive" ? ({ unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" })[type.name] ?? "0"
-		: type.kind === "apply" ? "#[]" : `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
+		: type.kind === "apply" ? type.constructor === "array" ? "#[]" : type.constructor === "option" ? "_root_.Option.none"
+			: type.constructor === "result" ? `(_root_.Except.ok ${defaultValue(type.arguments[0])})`
+				: `(${defaultValue(type.arguments[0])}, ${defaultValue(type.arguments[1])})`
+			: `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
 	const lines = [];
-	for(const record of abi.records)
+	for(const type of allTypes(abi).filter(carried))
 	{
-		const type = { kind: "named", id: record.id };
-		lines.push(`def unpack${key(record.id)} (value : ${transportType(type)}) : ${sourceType(type)} :=`
+		lines.push(`def unpack${key(identity(type))} (value : ${transportType(type)}) : ${sourceType(type)} :=`
 			, `  if bound : 0 < value.size then value[0]'bound else ${defaultValue(type)}`, "");
+	}
+	for(const type of allTypes(abi).filter(compound))
+	{
+		const id = identity(type), hash = key(id), symbol = prefix(abi, id), args = type.arguments;
+		const emit = (name, parameters, result, body) => lines.push(`@[export ${symbol}_${name}]`, `def ${name}${hash} ${parameters} : ${result} :=`, `  ${body}`, "");
+		const input = `(value : ${transportType(type)})`, unpack = `(unpack${hash} value)`;
+		if(type.constructor === "tuple")
+		{
+			emit("make", args.map((child, i) => `(a${i} : ${transportType(child)})`).join(" "), transportType(type), `#[(${convert(args[0], "a0", true)}, ${convert(args[1], "a1", true)})]`);
+			args.forEach((child, i) => emit(`field${i}`, input, transportType(child), convert(child, `${unpack}.${i ? "snd" : "fst"}`, false)));
+			continue;
+		}
+		const option = type.constructor === "option", names = option ? ["none", "some"] : ["ok", "error"];
+		emit("branch", input, "_root_.UInt32", `match ${unpack} with | .${names[0]}${option ? "" : " _"} => 0 | .${names[1]} _ => 1`);
+		if(option) emit("none", "(_bridgeUnit : _root_.Unit)", transportType(type), "#[.none]");
+		args.forEach((child, i) => {
+			const name = option ? "some" : names[i];
+			emit(`make${i}`, `(value : ${transportType(child)})`, transportType(type), `#[.${name} ${convert(child, "value", true)}]`);
+			emit(`field${i}`, input, transportType(child), `match ${unpack} with | .${name} field => ${convert(child, "field", false)} | _ => ${convert(child, defaultValue(child), false)}`);
+		});
 	}
 	for(const record of abi.records)
 	{
@@ -73,22 +106,32 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
  * Generate bounded typed walkers and calls to the compiler-emitted record API.
  * Every encoder consumes its owned Lean input on success or ordinary failure.
  *
- * @param abi - Closed private record descriptor.
+ * @param abi - Closed private record or compound descriptor.
  */
 export const generateComponentRecordAdapters = abi => {
 	assertComponentRecordAbi(abi);
-	const records = new Map(abi.records.map(record => [record.id, record])), types = new Map();
+	const records = new Map(abi.records.map(record => [record.id, record]));
 	const identify = type => `copied_${key(JSON.stringify(type))}`;
-	const childrenOf = type => type.kind === "apply" ? [type.arguments[0]] : type.kind === "named" ? records.get(type.id).fields.map(field => field.type) : [];
-	const add = type => { if(types.has(identify(type))) return; types.set(identify(type), type); childrenOf(type).forEach(add); };
-	for(const item of abi.exports) [...item.parameters, item.result].forEach(add);
-	for(const record of abi.records) add({ kind: "named", id: record.id });
+	const types = new Map(allTypes(abi).map(type => [identify(type), type]));
+	const mode = abi.version === componentCompoundAbi ? "compound" : "record";
 	const lines = ['#include "component_scalar.h"', '_Static_assert(sizeof(size_t) == 4, "record frames require wasm32 Lean");', ""];
 	for(const record of abi.records)
 	{
 		const symbol = prefix(abi, record.id);
 		lines.push(`extern lean_object *${symbol}_make(${record.fields.length ? record.fields.map(field => cType(field.type)).join(", ") : "lean_object *"});`);
 		for(const [index, field] of record.fields.entries()) lines.push(`extern ${cType(field.type)} ${symbol}_field${index}(lean_object *);`);
+	}
+	for(const type of allTypes(abi).filter(compound))
+	{
+		const symbol = prefix(abi, identity(type)), args = type.arguments;
+		if(type.constructor === "tuple") lines.push(`extern lean_object *${symbol}_make(${args.map(cType).join(", ")});`);
+		else
+		{
+			lines.push(`extern uint32_t ${symbol}_branch(lean_object *);`);
+			if(type.constructor === "option") lines.push(`extern lean_object *${symbol}_none(lean_object *);`);
+			args.forEach((child, i) => lines.push(`extern lean_object *${symbol}_make${i}(${cType(child)});`));
+		}
+		args.forEach((child, i) => lines.push(`extern ${cType(child)} ${symbol}_field${i}(lean_object *);`));
 	}
 	for(const id of types.keys()) lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *, uint32_t *);`
 		, `static lean_object *${id}_decode(bridge_scalar_slot const *);`
@@ -106,39 +149,54 @@ export const generateComponentRecordAdapters = abi => {
 				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) { return bridge_record_encode_leaf(slot, ${tag}, value, budget); }`);
 			continue;
 		}
-		const array = type.kind === "apply", record = records.get(type.id), children = childrenOf(type), tag = array ? 32 : 36;
-		const count = array ? "(uint32_t)(slot->bits >> 32)" : String(children.length);
+		const array = type.kind === "apply" && type.constructor === "array", option = type.constructor === "option", sum = option || type.constructor === "result";
+		const children = childrenOf(type, records), tag = type.kind === "named" ? 36 : ({ array: 32, tuple: 33, option: 34, result: 35 })[type.constructor];
+		const count = array ? "(uint32_t)(slot->bits >> 32)" : option ? "(slot->flags & 1u)" : sum ? "1" : String(children.length);
+		const symbol = prefix(abi, identity(type));
 		lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t *budget) {`
-			, `  uint32_t status = bridge_record_children_validate(slot, ${tag}, ${array ? "UINT32_MAX" : count}, budget);`
+			, `  uint32_t status = bridge_${mode}_children_validate(slot, ${tag}, ${array || option ? "UINT32_MAX" : count}, budget);`
 			, "  if (status) return status;", "  bridge_scalar_slot const *children = (bridge_scalar_slot const *)(uintptr_t)(uint32_t)slot->bits;");
 		if(array) lines.push(`  for (uint32_t i = 0; i < ${count}; ++i) if ((status = ${identify(children[0])}_validate(children + i, budget))) return status;`);
+		else if(sum) lines.push(option ? `  if (slot->flags & 1u) return ${identify(children[0])}_validate(children, budget);`
+			: `  return (slot->flags & 1u) ? ${identify(children[1])}_validate(children, budget) : ${identify(children[0])}_validate(children, budget);`);
 		else for(const [index, child] of children.entries()) lines.push(`  if ((status = ${identify(child)}_validate(children + ${index}, budget))) return status;`);
 		lines.push("  return 0;", "}", `static lean_object *${id}_decode(bridge_scalar_slot const *slot) {`
 			, "  bridge_scalar_slot const *children = (bridge_scalar_slot const *)(uintptr_t)(uint32_t)slot->bits;");
 		if(array) lines.push(`  uint32_t count = ${count};`, "  lean_object *value = lean_alloc_array(count, count);"
 			, `  for (uint32_t i = 0; i < count; ++i) lean_array_set_core(value, i, ${identify(children[0])}_decode(children + i));`, "  return value;");
+		else if(sum)
+		{
+			if(option) lines.push(`  if (!(slot->flags & 1u)) return ${symbol}_none(lean_box(0));`);
+			children.forEach((child, i) => {
+				lines.push(option ? "  {" : `  if ((slot->flags & 1u) == ${i}) {`, ...decode(child, "children", `a${i}`), `  return ${symbol}_make${i}(a${i});`, "  }");
+			});
+			lines.push("  return lean_box(0); /* unreachable after complete input validation */");
+		}
 		else
 		{
 			for(const [index, child] of children.entries()) lines.push(...decode(child, `children + ${index}`, `a${index}`));
-			lines.push(`  return ${prefix(abi, record.id)}_make(${children.length ? children.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`);
+			lines.push(`  return ${symbol}_make(${children.length ? children.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`);
 		}
 		lines.push("}", `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) {`
-			, `  if (!lean_is_array(value)${array ? "" : " || lean_array_size(value) != 1"}) { lean_dec(value); return 6; }`
-			, `  uint32_t count = ${array ? "lean_array_size(value)" : count};`
-			, `  uint32_t status = bridge_record_children_allocate(slot, ${tag}, count, budget);`
+			, `  if (!lean_is_array(value)${array ? "" : " || lean_array_size(value) != 1"}) { lean_dec(value); return 6; }`);
+		if(sum) lines.push("  lean_inc(value);", `  uint32_t branch = ${symbol}_branch(value);`, "  if (branch > 1) { lean_dec(value); return 6; }");
+		lines.push(`  uint32_t count = ${array ? "lean_array_size(value)" : option ? "branch" : count};`
+			, `  uint32_t status = bridge_${mode}_children_allocate(slot, ${tag}, count, ${mode === "compound" ? `${sum ? "branch" : "0"}, ` : ""}budget);`
 			, "  if (status) { lean_dec(value); return status; }", "  bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
 		if(array) lines.push("  for (uint32_t i = 0; i < count; ++i) {", "    lean_object *child = lean_array_get_core(value, i); lean_inc(child);"
 			, `    status = ${identify(children[0])}_encode(children + i, child, budget);`, "    if (status) break;", "  }");
+		else if(sum) children.forEach((child, i) => lines.push(`  if (branch == ${option ? 1 : i}) {`, "    lean_inc(value);"
+			, `    ${cType(child)} field = ${symbol}_field${i}(value);`, `    status = ${identify(child)}_encode(children, ${box(child, "field")}, budget);`, "  }"));
 		else for(const [index, child] of children.entries()) lines.push("  if (!status) {", "    lean_inc(value);"
-			, `    ${cType(child)} field = ${prefix(abi, record.id)}_field${index}(value);`
+			, `    ${cType(child)} field = ${symbol}_field${index}(value);`
 			, `    status = ${identify(child)}_encode(children + ${index}, ${box(child, "field")}, budget);`, "  }");
 		lines.push("  lean_dec(value);", "  if (status) bridge_record_slot_clear(slot);", "  return status;", "}");
 	}
 	for(const item of abi.exports)
 	{
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
-			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`, `  uint32_t status = bridge_record_frame_validate(frame, ${item.parameters.length});`
-			, "  if (status) return status;", "  if (bridge_record_abi() != 1) return 6;", "  uint32_t budget = 16u * 1024u * 1024u;");
+			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`, `  uint32_t status = bridge_${mode}_frame_validate(frame, ${item.parameters.length});`
+			, "  if (status) return status;", `  if (bridge_${mode}_abi() != 1) return 6;`, "  uint32_t budget = 16u * 1024u * 1024u;");
 		for(const [index, type] of item.parameters.entries()) lines.push(`  if ((status = ${identify(type)}_validate(&frame->args[${index}], &budget))) return status;`);
 		for(const [index, type] of item.parameters.entries()) lines.push(...decode(type, `&frame->args[${index}]`, `a${index}`));
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`

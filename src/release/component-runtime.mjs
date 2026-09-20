@@ -12,7 +12,7 @@ import { assertComponentCallableBindings, componentCallableSignatureText } from 
 import { createComponentCallableRuntime } from "./component-callable-runtime.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { compileComponentCopiedCall } from "./component-copied-runtime.mjs";
-import { componentRecordAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
+import { componentRecordAbi, componentCompoundAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -98,7 +98,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
-			const callable = descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi].includes(descriptor.privateAbi.version);
+			const callable = descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi].includes(descriptor.privateAbi.version);
 			if(callable)
 			{
 				if(!callables) throw new Error("Shared runtime lacks the component callable ABI; rebuild it");
@@ -109,9 +109,10 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			else if(copied)
 			{
 				if(!module._bridge_copied_frame_clear || !module._bridge_copied_abi || module._bridge_copied_abi() !== 1) throw new Error("Shared runtime lacks the component copied ABI; rebuild it");
-				if(descriptor.privateAbi.version === componentRecordAbi)
+				if([componentRecordAbi, componentCompoundAbi].includes(descriptor.privateAbi.version))
 				{
 					if(!module._bridge_record_abi || module._bridge_record_abi() !== 1) throw new Error("Shared runtime lacks the component record ABI; rebuild it");
+					if(descriptor.privateAbi.version === componentCompoundAbi && (!module._bridge_compound_abi || module._bridge_compound_abi() !== 1)) throw new Error("Shared runtime lacks the component compound ABI; rebuild it");
 					assertComponentRecordBindings(descriptor.privateAbi, descriptor.bindingIr);
 				}
 				else assertComponentCopiedBindings(descriptor.privateAbi, descriptor.bindingIr);
