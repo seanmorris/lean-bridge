@@ -169,8 +169,24 @@ test("npm compound mappings have installed value coverage without promoting nati
 						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
 					}
 				}
+});
+
+test("WIT compound docs preserve presence, success/error order and binary products", async () => {
+	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed \(input, result, field\).*Reviewed IR: Installed checks passed \(input, result, field\)/u);
+	assert.match(source, /result<Success, Error>/u);
+	assert.match(source, /wasmtime_component_val_new\(&absent\)/u);
+	assert.match(source, /singleton enum `unit`/u);
 	for(const cell of cells.filter(cell => cell.profile === "wit-wasi" && ["option", "result", "tuple"].includes(cell.shape)))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		if(cell.position.startsWith("callback"))
+		{
+			assert.equal(cell.stages.compilation.state, "rejected");
+			assert.notEqual(cell.stages.installedExecution.state, "passed");
+		}
+		else assert.deepEqual(cell.stages.installedExecution.evidence, ["wit-wasi-compounds-installed"]);
+	}
 });
 
 test("PHP compound docs record independent native and PHP-Wasm coverage", async () => {

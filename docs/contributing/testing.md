@@ -687,6 +687,30 @@ This test supplies synthetic native imports to the generated component. It check
 
 The WIT consumer CI job runs both suites alongside the installed copied-value tests. The synthetic probe isolates Component Model ownership and includes compile checks against the generated native C API. The installed suite exercises real Lean callbacks. The [earlier projection milestone](../evidence/wit-callable-projection-20260919.md) records the work before native-host integration.
 
+Run the copied compound acceptance with the same pinned Wasmtime C API:
+
+```sh
+LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test \
+  tests/wit-compounds.test.mjs \
+  tests/wit-compound-contract.test.mjs \
+  tests/wit-compound-conversions.test.mjs
+```
+
+Both source paths build 64 Lean exports. The test checks parsed WIT and compiled
+component signatures against an independent catalog, installs the original
+archive offline, and relocates the application. Producer sources, the handoff
+and installation project are removed before two compiler-free executions.
+The consumer checks nineteen primitive payloads, nested options and Unit,
+success/error order, binary products, arrays, record fields, malformed values,
+copy limits and recovery. Loaded native libraries must match the package receipt.
+
+A separate synthetic conversion probe uses AddressSanitizer, LeakSanitizer and
+UndefinedBehaviorSanitizer. It checks injected scratch failures, partial output
+cleanup, malformed native flags and unreadable inactive payloads. It does not
+claim Lean execution. Required WIT CI retains `build/compounds/wit.json` and
+`build/compounds/wit-conversions.json`. The [acceptance record](../evidence/wit-compounds-20260920.md)
+identifies the installed archives and probe results.
+
 ### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:

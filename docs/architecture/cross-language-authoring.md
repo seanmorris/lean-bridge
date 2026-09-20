@@ -44,7 +44,7 @@ Its mutable branch objects preserve presence even when the payload is `undef`.
 Native PHP and PHP-Wasm use `null` or `Some`, `Ok` or `Err`, and two-element arrays;
 final readonly branch wrappers retain present `null` payloads.
 These adapters preserve Unit and nested options.
-WIT/WASI is the remaining profile in this compound-adapter round.
+WIT/WASI uses native option, result and tuple types, retaining explicit presence and binary nesting. All seventeen consumer profiles now have installed checks for this Option/Except/Prod round. Lists, aliases, arbitrary and recursive variants, and compound callables remain open.
 
 ## Shared configuration and Perl cutover
 

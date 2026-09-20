@@ -31,8 +31,9 @@ const digest = async path => sha256(await readFile(path));
  * @param options.pkg - Verified package-set entry.
  * @param options.environment - Selected author tools for declaration inspection.
  * @param options.clean - Compiler-free execution environment.
+ * @param options.fixture - Optional independent consumer and WIT signature checker.
  */
-export const installedWitCorpus = async ({ library, consumer, handoff, pkg, environment, clean }) => {
+export const installedWitCorpus = async ({ library, consumer, handoff, pkg, environment, clean, fixture = null }) => {
 	const root = join(consumer, "wit-wasi"), project = join(root, "project"), tools = join(project, "tools");
 	const deployment = join(root, "relocated"), p = library.cModule;
 	await mkdir(tools, { recursive: true });
@@ -62,11 +63,11 @@ export const installedWitCorpus = async ({ library, consumer, handoff, pkg, envi
 	{
 		if(name === "component") await run(wasmTools, ["validate", "--features", "component-model", join(installed, file)], project, clean);
 		const document = JSON.parse((await run(wasmTools, ["component", "wit", join(installed, file), "--json"], project, clean)).stdout);
-		declarations[name] = { inputSha256: receipt.files[file].sha256, document, signatures: validateWitSignatures(document, library) };
+		declarations[name] = { inputSha256: receipt.files[file].sha256, document, signatures: fixture ? fixture.validateSignatures(document) : validateWitSignatures(document, library) };
 	}
-	const source = corpusWitSource(library);
+	const source = fixture?.source ?? corpusWitSource(library);
 	await saveLakeFile(project, "src/main.c", source);
-	for(const header of ["c-family.h", "wit.h"])
+	for(const header of fixture ? [] : ["c-family.h", "wit.h"])
 		await saveLakeFile(project, `src/${header}`, await readFile(join(repository, "tests/fixtures/type-corpus/consumers", header)));
 	const config = { ...compile, PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
 	const flags = (await run("/usr/bin/pkg-config", ["--cflags", "--libs", `${pkg.name}-wit`], project, config)).stdout.trim().split(/\s+/);
@@ -78,7 +79,7 @@ export const installedWitCorpus = async ({ library, consumer, handoff, pkg, envi
 	await run(compiler, [...witCompilerOptions, "src/main.c", flags[0], flags[1], ...flags.slice(3), "-Wl,-rpath,$ORIGIN/lib", "-o", "consumer"], project, compile);
 	const negativeCompilerOptions = [...witCompilerOptions, "-Wconversion", "-Wsign-conversion", "-fsyntax-only", "-fdiagnostics-format=json"];
 	const rejected = [];
-	for(const entry of corpusCases(library).map(entry => corpusHostCase(entry, "wit-wasi")).filter(entry => entry.expectation.kind === "compile-rejection"))
+	for(const entry of fixture ? [] : corpusCases(library).map(entry => corpusHostCase(entry, "wit-wasi")).filter(entry => entry.expectation.kind === "compile-rejection"))
 	{
 		const source = corpusWitRejection(library, entry), file = `src/reject-${entry.id.split("/")[1]}.c`;
 		await saveLakeFile(project, file, source);
@@ -115,6 +116,7 @@ export const installedWitCorpus = async ({ library, consumer, handoff, pkg, envi
 		, pkgConfig: { version: (await run("/usr/bin/pkg-config", ["--version"], project, compile)).stdout.trim(), flags, manifestSha256: receipt.files[`lib/pkgconfig/${pkg.name}-wit.pc`].sha256 } };
 	assert.equal(wit.packageReceiptSha256, sha256(canonicalJson(receipt)));
 	await rm(project, { recursive: true, force: true });
+	if(fixture?.removeHandoff) await rm(handoff, { recursive: true, force: true });
 	assert.deepEqual(await readdir(root), ["relocated"]);
 	assert.deepEqual(await nativeArtifactPaths(deployment), [...Object.keys(libraries), "consumer", "component.wasm"].sort());
 	const observations = [];

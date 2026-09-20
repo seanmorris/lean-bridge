@@ -68,6 +68,53 @@ Keep the installed libraries together. Arguments borrow caller-owned Wasmtime va
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
 
+### Options, results and products
+
+Prepared packages from ordinary source and reviewed IR use WIT's `option<T>`,
+`result<Success, Error>` and `tuple<A, B>` types. Products retain their binary
+nesting. `Except Error Success` becomes `result<Success, Error>`; the error branch
+is a normal returned value, separate from a failed bridge call.
+
+The public Wasmtime C values keep each constructor explicit:
+
+| Lean value | Wasmtime value |
+| --- | --- |
+| `Option.none` | `WASMTIME_COMPONENT_OPTION` with `.of.option = NULL` |
+| `Option.some value` | `WASMTIME_COMPONENT_OPTION` with a non-null payload pointer |
+| `Except.ok value` | `WASMTIME_COMPONENT_RESULT` with `.of.result.is_ok = true` and a payload |
+| `Except.error error` | `WASMTIME_COMPONENT_RESULT` with `.of.result.is_ok = false` and a payload |
+| `(first, second)` | `WASMTIME_COMPONENT_TUPLE` with exactly two ordered entries |
+
+`Unit` remains the singleton enum `unit`, including inside a branch. It is not an
+absent payload. For example, construct `some none` with two option values:
+
+```c
+wasmtime_component_val_t absent = {.kind = WASMTIME_COMPONENT_OPTION};
+wasmtime_component_val_t present_absent = {
+    .kind = WASMTIME_COMPONENT_OPTION,
+    .of.option = wasmtime_component_val_new(&absent)
+};
+/* Borrow &present_absent for a call accepting Option (Option T). */
+wasmtime_component_val_delete(&present_absent);
+```
+
+`wasmtime_component_val_new` transfers its argument's contents into a Wasmtime
+allocation. Delete the outer value once; it owns its nested payloads. Do not
+shallow-copy owned pointers into multiple values. Use
+`wasmtime_component_val_clone` when both copies must own their storage.
+
+These types compose with all nineteen primitives, arrays and acyclic copied
+records. The compiled Lean target still uses 64-bit `USize` and `ISize`. Type
+nesting stops at 32. Input validation, host conversion and native copying enforce
+their conversion budgets; these do not bound all Lean or Wasmtime allocations.
+The host validates branch payloads and tuple arity before Wasmtime copies them.
+Caller-provided pointers must reference valid C storage for the call. Wasmtime's
+allocation API does not provide recoverable out-of-memory errors.
+
+The [compound acceptance record](../evidence/wit-compounds-20260920.md) includes
+both installed source paths, malformed inputs, copy independence and trap
+recovery. Compound payloads inside callback signatures remain unsupported.
+
 ### Callbacks and returned Lean functions
 
 Callable packages add a checked session API. Each callable signature has a WIT `resource function-*` type and an `invoke-function-*` export. Lean borrows host callbacks for one exporting call. Returned Lean functions remain available until you close their tokens or their session.
@@ -191,9 +238,9 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Ordinary packages validate UTF-8 before Wasmtime copies it, preserving embedded NUL. The Alpha executable adapter does not expose this type. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `list<u8>` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Ordinary packages copy byte lists with independent returned storage. The Alpha executable adapter does not expose this type. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
 | `Array α` | `list<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages check and copy every nested element. Conversion budgets count Wasmtime slots and native scratch. The Alpha executable adapter does not expose this type. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | `option<T>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | `result<T, E>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `tuple<T, U>` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Option α` | `option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | None is an absent option payload. Some Unit contains the singleton unit enum; Some None contains another option value. Presence is preserved at every nesting level. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `result<Success, Error>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | WIT result arguments are [success, error], reversing Lean Except error/success parameters. Both branches contain typed payloads, including Unit. Domain errors remain separate from bridge-call failures. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `tuple<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two ordered WIT tuple entries preserve binary nesting and per-position types. All compounds compose with copied arrays and acyclic records. Conversion accounts for slots and payloads with a 16 MiB limit; C callers supply valid borrowed storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated WIT record (empty: single-case enum)` (input, result, field); `Generated WIT record` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages use WIT field order and compiler-owned Lean accessors. Empty records use a single-case enum; returned values remain valid after closing the session. The Alpha executable adapter does not expose this type. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Generated WIT type alias` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |

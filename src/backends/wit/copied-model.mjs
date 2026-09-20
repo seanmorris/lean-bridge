@@ -30,7 +30,7 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  * @param options.callables - Admit the primitive callable resource contract.
  */
 export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
-	const surface = compilePrimitiveCSurface(ir, { callables });
+	const surface = compilePrimitiveCSurface(ir, { callables, compounds: true });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
 	const fail = (declaration, message) => {
@@ -78,6 +78,9 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 	];
 	const types = surface.copies.filter(copy => copy.witName);
 	const witType = copy => {
+		if(copy.compound === "option") return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;
+		if(copy.compound === "result") return `type ${copy.witName} = result<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
+		if(copy.compound === "tuple") return `type ${copy.witName} = tuple<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.element) return `type ${copy.witName} = list<${copy.element.wit}>;`;
 		if(copy.record) return copy.fields.length ? `record ${copy.witName} { ${copy.fields.map(field => `${field.witName}: ${field.type.wit}`).join(", ")} }` : `enum ${copy.witName} { empty }`;
 		if(copy.scalarName === "unit") return `enum ${copy.witName} { unit }`;
@@ -85,6 +88,9 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		return `type ${copy.witName} = list<${copy.scalarName === "nat" ? "u32" : "u8"}>;`;
 	};
 	const watType = copy => {
+		if(copy.compound === "option") return `(option ${copy.fields[0].type.wat})`;
+		if(copy.compound === "result") return `(result ${copy.fields[0].type.wat} (error ${copy.fields[1].type.wat}))`;
+		if(copy.compound === "tuple") return `(tuple ${copy.fields.map(field => field.type.wat).join(" ")})`;
 		if(copy.element) return `(list ${copy.element.wat})`;
 		if(copy.record) return copy.fields.length ? `(record ${copy.fields.map(field => `(field "${field.witName}" ${field.type.wat})`).join(" ")})` : '(enum "empty")';
 		if(copy.scalarName === "unit") return '(enum "unit")';

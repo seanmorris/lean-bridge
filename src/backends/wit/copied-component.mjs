@@ -21,7 +21,24 @@ const leaf = {
 const layout = (copy, cache) => {
 	if(copy.resource) return { flat: ["i32"], size: 4, alignment: 4 };
 	if(cache.has(copy)) return cache.get(copy);
-	if(copy.record && copy.fields.length)
+	if(copy.compound === "option" || copy.compound === "result")
+	{
+		const cases = copy.fields.map(field => layout(field.type, cache));
+		const alignment = Math.max(...cases.map(value => value.alignment));
+		// Canonical variants place their payload after an aligned one-byte tag.
+		const size = align(align(1, alignment) + Math.max(...cases.map(value => value.size)), alignment);
+		if(!Number.isSafeInteger(size) || size > 16 * 1024 * 1024) throw new TypeError("WIT variant layout exceeds the 16 MiB copied-value limit");
+		const payload = [];
+		for(const value of cases) for(const [index, type] of value.flat.entries())
+		{
+			const previous = payload[index];
+			payload[index] = !previous || previous === type ? type
+				: [previous, type].every(type => type === "i32" || type === "f32") ? "i32" : "i64";
+		}
+		const result = { flat: ["i32", ...payload].slice(0, 17), alignment, size };
+		cache.set(copy, result); return result;
+	}
+	if((copy.record && copy.fields.length) || copy.compound === "tuple")
 	{
 		const fields = copy.fields.map(field => layout(field.type, cache));
 		const alignment = Math.max(...fields.map(field => field.alignment));

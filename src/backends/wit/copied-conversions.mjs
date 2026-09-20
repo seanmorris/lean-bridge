@@ -59,6 +59,7 @@ static inline bool lb_limbs_in(const wasmtime_component_val_t *value, lb_scope *
 }
 static inline bool lb_limbs_out(const uint32_t *data, size_t length, lb_scope *scope, wasmtime_component_val_t *out) {
   if (!lb_charge(scope, length, sizeof(wasmtime_component_val_t))) return false;
+  if (length && (!data || !data[length - 1])) return false;
   out->kind = WASMTIME_COMPONENT_LIST;
   wasmtime_component_vallist_new_uninit(&out->of.list, length);
   for (size_t i = 0; i < length; ++i) out->of.list.data[i] = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_U32, .of.u32 = data[i]};
@@ -89,17 +90,36 @@ export const renderWitConversions = ({ surface }) => surface.copies.map(copy => 
 	} else if(name === "unit")
 	{
 		input.push('if (value->kind != WASMTIME_COMPONENT_ENUM || !lb_name(&value->of.enumeration, "unit")) return false;', "if (out) *out = 0;");
-		output.push('out->kind = WASMTIME_COMPONENT_ENUM; wasm_name_new(&out->of.enumeration, 4, "unit");');
+		output.push('if (*value) return false;', 'out->kind = WASMTIME_COMPONENT_ENUM; wasm_name_new(&out->of.enumeration, 4, "unit");');
 	} else if(name === "string")
 	{
 		input.push("if (value->kind != WASMTIME_COMPONENT_STRING || !lb_charge(scope, value->of.string.size, 1) || !lb_utf8(value->of.string.data, value->of.string.size)) return false;", `if (out) *out = (${copy.name}){.data = value->of.string.data, .length = value->of.string.size};`);
-		output.push("if (!lb_charge(scope, value->length, 1)) return false;", "out->kind = WASMTIME_COMPONENT_STRING; wasm_name_new(&out->of.string, value->length, value->data);");
+		output.push("if (!lb_charge(scope, value->length, 1) || !lb_utf8(value->data, value->length)) return false;", "out->kind = WASMTIME_COMPONENT_STRING; wasm_name_new(&out->of.string, value->length, value->data);");
 	} else if(name === "nat" || name === "int")
 	{
 		if(name === "int") input.push('if (value->kind != WASMTIME_COMPONENT_RECORD || value->of.record.size != 2 || !value->of.record.data || !lb_name(&value->of.record.data[0].name, "negative") || !lb_name(&value->of.record.data[1].name, "limbs") || value->of.record.data[0].val.kind != WASMTIME_COMPONENT_BOOL) return false;', "bool negative = value->of.record.data[0].val.of.boolean;", "value = &value->of.record.data[1].val;", "if (negative && value->kind == WASMTIME_COMPONENT_LIST && !value->of.list.size) return false;");
 		input.push("uint32_t *limbs = NULL; size_t length = 0;", "if (!lb_limbs_in(value, scope, out ? &limbs : NULL, &length)) return false;", `if (out) *out = (${copy.name}){.data = limbs, .length = length${name === "int" ? ", .negative = negative" : ""}};`);
 		if(name === "nat") output.push("return lb_limbs_out(value->data, value->length, scope, out);");
-		else output.push("out->kind = WASMTIME_COMPONENT_RECORD; wasmtime_component_valrecord_new_uninit(&out->of.record, 2);", "memset(out->of.record.data, 0, 2 * sizeof(*out->of.record.data));", 'wasm_name_new(&out->of.record.data[0].name, 8, "negative"); wasm_name_new(&out->of.record.data[1].name, 5, "limbs");', "out->of.record.data[0].val = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_BOOL, .of.boolean = value->negative};", "return lb_limbs_out(value->data, value->length, scope, &out->of.record.data[1].val);");
+		else output.push("if (value->negative && !value->length) return false;", "out->kind = WASMTIME_COMPONENT_RECORD; wasmtime_component_valrecord_new_uninit(&out->of.record, 2);", "memset(out->of.record.data, 0, 2 * sizeof(*out->of.record.data));", 'wasm_name_new(&out->of.record.data[0].name, 8, "negative"); wasm_name_new(&out->of.record.data[1].name, 5, "limbs");', "out->of.record.data[0].val = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_BOOL, .of.boolean = value->negative};", "return lb_limbs_out(value->data, value->length, scope, &out->of.record.data[1].val);");
+	} else if(copy.compound === "option")
+	{
+		const child = copy.fields[0].type;
+		input.push("if (value->kind != WASMTIME_COMPONENT_OPTION) return false;", "if (out) out->has_value = value->of.option != NULL;", `if (value->of.option && !lb_in_${child.index}(value->of.option, scope, out ? &out->value : NULL)) return false;`);
+		output.push("if (value->has_value > 1) return false;", "out->kind = WASMTIME_COMPONENT_OPTION; out->of.option = NULL;", "if (value->has_value) {", "  wasmtime_component_val_t empty = {0}; out->of.option = wasmtime_component_val_new(&empty);", `  if (!lb_out_${child.index}(&value->value, scope, out->of.option)) return false;`, "}");
+	} else if(copy.compound === "result")
+	{
+		const [ok, error] = copy.fields;
+		input.push("if (value->kind != WASMTIME_COMPONENT_RESULT || !value->of.result.val) return false;", "if (out) out->is_ok = value->of.result.is_ok;", `if (value->of.result.is_ok) { if (!lb_in_${ok.type.index}(value->of.result.val, scope, out ? &out->ok : NULL)) return false; }`, `else if (!lb_in_${error.type.index}(value->of.result.val, scope, out ? &out->error : NULL)) return false;`);
+		output.push("if (value->is_ok > 1) return false;", "out->kind = WASMTIME_COMPONENT_RESULT; out->of.result.is_ok = value->is_ok;", "wasmtime_component_val_t empty = {0}; out->of.result.val = wasmtime_component_val_new(&empty);", `if (value->is_ok) { if (!lb_out_${ok.type.index}(&value->ok, scope, out->of.result.val)) return false; }`, `else if (!lb_out_${error.type.index}(&value->error, scope, out->of.result.val)) return false;`);
+	} else if(copy.compound === "tuple")
+	{
+		input.push("if (value->kind != WASMTIME_COMPONENT_TUPLE || value->of.tuple.size != 2 || !value->of.tuple.data) return false;");
+		output.push("out->kind = WASMTIME_COMPONENT_TUPLE; wasmtime_component_valtuple_new_uninit(&out->of.tuple, 2);", "memset(out->of.tuple.data, 0, 2 * sizeof(*out->of.tuple.data));");
+		for(const [index, field] of copy.fields.entries())
+		{
+			input.push(`if (!lb_in_${field.type.index}(&value->of.tuple.data[${index}], scope, out ? &out->${field.name} : NULL)) return false;`);
+			output.push(`if (!lb_out_${field.type.index}(&value->${field.name}, scope, &out->of.tuple.data[${index}])) return false;`);
+		}
 	} else if(copy.record)
 	{
 		if(!copy.fields.length)
@@ -120,7 +140,7 @@ export const renderWitConversions = ({ surface }) => surface.copies.map(copy => 
 	{
 		const element = copy.element, type = element?.name ?? "uint8_t";
 		input.push(`if (value->kind != WASMTIME_COMPONENT_LIST || (${data}.size && !${data}.data) || !lb_charge(scope, ${data}.size, sizeof(wasmtime_component_val_t) + sizeof(${type}))) return false;`, `${type} *items = out ? lb_alloc(scope, ${data}.size, sizeof(${type})) : NULL;`, `if (out && ${data}.size && !items) return false;`, `for (size_t i = 0; i < ${data}.size; ++i) {`, element ? `  if (!lb_in_${element.index}(&${data}.data[i], scope, out ? &items[i] : NULL)) return false;` : `  if (${data}.data[i].kind != WASMTIME_COMPONENT_U8) return false;\n    if (out) items[i] = ${data}.data[i].of.u8;`, "}", `if (out) *out = (${copy.name}){.data = items, .length = ${data}.size};`);
-		output.push("if (!lb_charge(scope, value->length, sizeof(wasmtime_component_val_t))) return false;", "out->kind = WASMTIME_COMPONENT_LIST; wasmtime_component_vallist_new_uninit(&out->of.list, value->length);", "if (value->length) memset(out->of.list.data, 0, value->length * sizeof(*out->of.list.data));", "for (size_t i = 0; i < value->length; ++i) {", element ? `  if (!lb_out_${element.index}(&value->data[i], scope, &out->of.list.data[i])) return false;` : "  out->of.list.data[i] = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_U8, .of.u8 = value->data[i]};", "}");
+		output.push("if (!lb_charge(scope, value->length, sizeof(wasmtime_component_val_t)) || (value->length && !value->data)) return false;", "out->kind = WASMTIME_COMPONENT_LIST; wasmtime_component_vallist_new_uninit(&out->of.list, value->length);", "if (value->length) memset(out->of.list.data, 0, value->length * sizeof(*out->of.list.data));", "for (size_t i = 0; i < value->length; ++i) {", element ? `  if (!lb_out_${element.index}(&value->data[i], scope, &out->of.list.data[i])) return false;` : "  out->of.list.data[i] = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_U8, .of.u8 = value->data[i]};", "}");
 	}
 	return `static inline bool lb_in_${copy.index}(const wasmtime_component_val_t *value, lb_scope *scope, ${copy.name} *out) {
   (void)out;

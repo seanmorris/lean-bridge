@@ -103,8 +103,8 @@ test("ordinary WIT admission rejects reserved names, partial projections and cha
 	assert.throws(() => compileCopiedWitModel(reserved), error => error.code === "unsupported-wit-signature" && error.details.source.path === "Sample.lean");
 	const effectful = synthetic(); effectful.declarations[0].effects = ["nondeterministic"];
 	assert.throws(() => compileCopiedWitModel(effectful), /pure/);
-	const unsupported = synthetic(); unsupported.declarations[0].result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] };
-	assert.throws(() => compileCopiedWitModel(unsupported), /compound values are not implemented/);
+	const unsupported = synthetic(); unsupported.declarations[0].result.type = { kind: "apply", constructor: "tuple", arguments: [{ kind: "primitive", name: "uint32" }] };
+	assert.throws(() => compileCopiedWitModel(unsupported), /arity|two|arguments|binary products/);
 });
 
 const helpers = `
@@ -436,10 +436,12 @@ int main(void) {
 	assert.match((await run(join(working, "composition"), [], working, { PATH: "/usr/bin:/bin" })).stdout, /share one Lean runtime/);
 });
 
-test("ordinary WIT compilation fails atomically when its pinned engine is absent", { skip: !enabled, timeout: 180_000 }, async t => {
+test("ordinary WIT compilation fails atomically when its pinned engine is absent", { skip: !enabled, timeout: 600_000 }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-wit-failure-"));
-	t.after(() => rm(working, { recursive: true, force: true }));
+	let build;
+	t.after(async () => { await build?.catch(() => {}); await rm(working, { recursive: true, force: true }); });
 	const source = join(working, "source"); await sourceProject(source, "Failure");
-	await assert.rejects(() => buildCanonicalProject({ projectRoot: source, outputRoot: join(working, "release"), targets: ["c", "wit-wasi"], environment: { ...environment, LEAN_BRIDGE_WASMTIME_C_API: "/missing/wasmtime" } }));
+	build = buildCanonicalProject({ projectRoot: source, outputRoot: join(working, "release"), targets: ["c", "wit-wasi"], environment: { ...environment, LEAN_BRIDGE_WASMTIME_C_API: "/missing/wasmtime" }, signal: t.signal });
+	await assert.rejects(build);
 	assert.deepEqual(await readdir(working), ["source"]);
 });

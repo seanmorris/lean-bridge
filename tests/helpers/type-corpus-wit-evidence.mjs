@@ -30,15 +30,16 @@ const fileMap = files => {
  *
  * @param run - Full installed corpus report entry.
  * @param library - Independent catalog library.
+ * @param fixture - Optional independent source, signature and observation checks.
  */
-export const validateWitEvidence = (run, library) => {
+export const validateWitEvidence = (run, library, fixture = null) => {
 	const evidence = run.wit, p = library.cModule, receipt = evidence.packageReceipt;
 	for(const flag of witIsolationFlags) assert.equal(evidence[flag], true, flag);
 	assert.equal(evidence.repeatExecutions, 2);
 	assert.match(evidence.compilerVersion, /^\d+\.\d+(?:\.\d+)?$/);
 	assert.ok(Number(evidence.compilerVersion.split(".")[0]) >= 12);
 	for(const name of ["compilerSha256", "compilerMacrosSha256", "sourceSha256", "executableSha256", "wasmToolsSha256"]) hash(evidence[name]);
-	assert.equal(evidence.sourceSha256, sha256(corpusWitSource(library)));
+	assert.equal(evidence.sourceSha256, sha256(fixture?.source ?? corpusWitSource(library)));
 	assert.deepEqual(evidence.compilerOptions, [...witCompilerOptions]);
 	assert.deepEqual(evidence.negativeCompilerOptions, [...witCompilerOptions, "-Wconversion", "-Wsign-conversion", "-fsyntax-only", "-fdiagnostics-format=json"]);
 	assert.match(evidence.wasmToolsVersion, /^wasm-tools 1\.245\.1(?: \([a-f0-9]+ \d{4}-\d{2}-\d{2}\))?$/);
@@ -91,7 +92,7 @@ export const validateWitEvidence = (run, library) => {
 	{
 		const declaration = evidence.declarations[name];
 		assert.equal(declaration.inputSha256, files[path].sha256);
-		assert.deepEqual(declaration.signatures, validateWitSignatures(declaration.document, library));
+		assert.deepEqual(declaration.signatures, fixture ? fixture.validateSignatures(declaration.document) : validateWitSignatures(declaration.document, library));
 		const packages = declaration.document.packages.map(pkg => pkg.name);
 		assert.ok(packages.includes(`lean-bridge:${receipt.name}@${receipt.version}`));
 	}
@@ -114,6 +115,10 @@ export const validateWitEvidence = (run, library) => {
 	assert.equal(resolve(flags[0].slice(2)), installed + "/include");
 	assert.equal(resolve(flags[1].slice(2)), installed + "/lib");
 	assert.deepEqual(flags.slice(2), ["-Wl,-rpath," + flags[1].slice(2), `-l${p}_wasmtime`, "-lwasmtime"]);
+	if(fixture)
+	{
+		fixture.validateObservation(run.observation); return;
+	}
 	const expected = Object.entries(witRuntimeCases).flatMap(([id, message]) => Array.from({ length: 3 }, (_, iteration) => ({ id, iteration, message })));
 	assert.equal(run.observation.errors.length, expected.length);
 	for(const [index, entry] of expected.entries())
