@@ -66,14 +66,14 @@ test("copied descriptors are closed and snapshotted; the array-only ABI stays cl
 	input.arguments.length = 0;
 	assert.equal(Object.isFrozen(codec.type.arguments[0].arguments), true);
 	assert.deepEqual(roundTrip(codec.type, [none(), some(42)]), [none(), some(42)]);
-	for(const type of [tuple(u32, bool), option(unit), result(u32, primitive("string"))])
+	for(const type of [tuple(u32, bool), option(unit), result(u32, primitive("string")), apply("list", u32)])
 	{
 		assert.throws(() => componentArrayShape(type), /compiled copied values currently require arrays/);
 	}
 	for(const invalid of [
 		{ kind: "primitive", name: "future" }, { ...u32, extra: true }
 		, { kind: "named", id: "lean:Record" }, { kind: "parameter", id: "T" }
-		, apply("callback", u32), apply("resource", u32), apply("list", u32)
+		, apply("callback", u32), apply("resource", u32), apply("list", u32, bool)
 		, apply("array"), apply("option", u32, bool), apply("result", u32)
 		, tuple(u32), tuple(...Array(33).fill(u32))
 		, { kind: "apply", constructor: "array", arguments: new Array(1) }
@@ -280,7 +280,7 @@ test("partial input failures leave every allocation with the caller's arena", ()
 });
 
 test("the independent slot layout keeps constructor tags private", () => {
-	assert.deepEqual(componentCopiedTags, { array: 32, tuple: 33, option: 34, result: 35, record: 36 });
+	assert.deepEqual(componentCopiedTags, { array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36 });
 	const f = fixture(), codec = compileComponentCopiedCodec(option(u32));
 	try
 	{

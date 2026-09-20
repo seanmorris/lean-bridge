@@ -118,6 +118,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
+		if(type.kind === "list") throw Object.assign(new TypeError("List is not yet implemented for native or PHP-Wasm packages"), { code: "unsupported-native-list" });
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
 		if(["array", "option"].includes(type.kind)) visit(type.element);

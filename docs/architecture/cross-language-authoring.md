@@ -44,7 +44,13 @@ Its mutable branch objects preserve presence even when the payload is `undef`.
 Native PHP and PHP-Wasm use `null` or `Some`, `Ok` or `Err`, and two-element arrays;
 final readonly branch wrappers retain present `null` payloads.
 These adapters preserve Unit and nested options.
-WIT/WASI uses native option, result and tuple types, retaining explicit presence and binary nesting. All seventeen consumer profiles now have installed checks for this Option/Except/Prod round. Lists, aliases, arbitrary and recursive variants, and compound callables remain open.
+WIT/WASI uses native option, result and tuple types, retaining explicit presence and binary nesting. All seventeen consumer profiles now have installed checks for this Option/Except/Prod round.
+
+Lists have a distinct `constructor:list` in the shared compiler and Binding IR.
+The five npm profiles have installed checks on both source paths, using ordinary
+host arrays and typed Lean sequence conversions. Lists retain order and nest with
+the existing copied types. Native and PHP-Wasm List adapters, aliases, arbitrary
+and recursive variants, and compound callables remain open.
 
 ## Shared configuration and Perl cutover
 

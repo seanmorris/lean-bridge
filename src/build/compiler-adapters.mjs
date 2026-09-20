@@ -81,6 +81,7 @@ const leanType = (type, callbacks = new Map()) => {
 	{
 		const arguments_ = type.arguments.map(type => leanType(type, callbacks));
 		if(type.constructor === "array" && arguments_.length === 1) return `(_root_.Array ${arguments_[0]})`;
+		if(type.constructor === "list" && arguments_.length === 1) return `(_root_.List ${arguments_[0]})`;
 		if(type.constructor === "option" && arguments_.length === 1) return `(_root_.Option ${arguments_[0]})`;
 		if(type.constructor === "result" && arguments_.length === 2) return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;
 		if(type.constructor === "tuple" && arguments_.length >= 2) return `(${arguments_.join(" × ")})`;

@@ -217,7 +217,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Inductive sum` | `Generated tagged readonly union` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Synchronous JavaScript function` (input) | Ordinary source: Installed checks passed (input); Compilation rejected (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Borrowed until the outer call returns. A Promise result is rejected; the first thrown value is preserved. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering. |
+| `List α` | `ReadonlyArray<T> (ordinary dense Array)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation. Exactly one Unicode scalar in a string; surrogates and multiple scalars reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 32-bit compiled Lean target, 0..4294967295. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Unsigned number in the range of the 32-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 32-bit compiled Lean target, -2147483648..2147483647. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed number in the range of the 32-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
@@ -269,7 +269,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, nested arrays, acyclic copied records, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, nested arrays and Lists, acyclic copied records, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -292,10 +292,33 @@ reviewed IR in Node, strict TypeScript, browser pages, React and workers. See th
 [copied records](#copied-records), options, results and products. Callables and
 resources are not admitted as array elements.
 
+### Lists
+
+Lean `List α` uses an ordinary JavaScript array and TypeScript `ReadonlyArray<T>`.
+Pass `[]` for the empty list. For `List Nat`, pass values such as `[0n, 42n]`.
+The adapter preserves order, duplicates and every nesting level. Lists can contain
+all nineteen primitives, arrays, acyclic copied records, options, results and products.
+These values can also contain Lists.
+
+Both `List α` and `Array α` use host arrays, but remain distinct in the package's
+Binding IR. A reviewed contract must match the Lean declaration's constructor.
+Consumers do not construct cons cells or handle Lean pointers. Returned arrays and
+their copied contents own independent storage and need no disposal.
+
+Lists share the copied-container rules above: dense own data elements, no typed
+arrays, getters, extra properties or cycles, at most 32 nesting levels, and a
+16 MiB copy budget across the call. Oversized results throw instead of returning
+a truncated list. A valid call can follow a budget rejection.
+
+[Installed List checks](evidence/npm-lists-20260920.md) cover both source paths in
+Node, strict TypeScript, Chromium, Firefox and WebKit, including React and workers.
+Native and PHP-Wasm List adapters remain pending. Lists cannot contain callbacks
+or resources, or share a component with callable exports yet.
+
 ### Copied records
 
 Lean structures become named TypeScript interfaces with readonly fields and plain
-JavaScript objects. Fields may contain any supported primitive, nested arrays,
+JavaScript objects. Fields may contain any supported primitive, nested arrays and Lists,
 options, results, products or other acyclic copied records. Empty and single-field
 structures work too.
 
@@ -330,13 +353,14 @@ TypeScript declarations narrow on `tag` or on `"ok" in result`.
 Products keep their Lean nesting: `(UInt32 × String) × Bool` becomes
 `readonly [readonly [number, string], boolean]`, not a flat three-element array.
 
-These values can nest with arrays and acyclic records. They are copied, need no
+These values can nest with arrays, Lists and acyclic records. They are copied, need no
 disposal, and share the 32-container-depth and cumulative 16 MiB copy limits.
 Missing or extra properties, accessors, sparse tuples and invalid tags fail
 before Lean runs. Plain and null-prototype objects are accepted for tagged values.
 See the [installed compound checks](evidence/npm-compounds-20260920.md) for both
 source paths in Node, strict TypeScript and Chromium, Firefox and WebKit pages,
-React and workers. Native and PHP-Wasm profiles do not yet admit these constructors.
+React and workers. Native and PHP-Wasm profiles also support these constructors;
+their consumer guides describe the host representations.
 
 ### Validate numeric inputs
 

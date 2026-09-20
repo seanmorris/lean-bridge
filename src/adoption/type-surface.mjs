@@ -16,8 +16,7 @@ const root = path.resolve(import.meta.dirname, "../..");
 const validateSchema = new Ajv({ allErrors: true, strict: true }).compile(schema);
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const sourceShapes = [
-	"list"
-	, "fin"
+	"fin"
 	, "subtype"
 	, "dependent"
 	, "recursive"

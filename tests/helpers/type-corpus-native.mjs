@@ -196,13 +196,13 @@ export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ord
 	assert.ok(model.sourceIdentity.modules.some(module => module.module === context.names.remote));
 
 	// Compound values have dedicated installed fixtures. Keep this historical
-	// primitive corpus's negative probe on an unsupported List.
-	const rejectedName = `${library.pendingExport}List`;
+	// primitive corpus's negative probe on an unsupported arbitrary variant.
+	const rejectedName = `${library.pendingExport}Variant`;
 	const pendingWorkspace = join(context.directory, "pending");
 	await cp(context.workspace, pendingWorkspace, { recursive: true });
 	const pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
 	await saveLakeFile(join(pendingWorkspace, "project"), pendingSource,
-		`${await readFile(join(pendingWorkspace, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
+		`${await readFile(join(pendingWorkspace, "project", pendingSource), "utf8")}\ndef ${rejectedName} : Sum UInt32 UInt32 := .inl 0\n`);
 	await saveLakeFile(join(pendingWorkspace, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.pendingModule]
 		, ...(path === "ordinary-source" ? { exports: [rejectedName] } : {})
@@ -210,7 +210,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ord
 	if(path === "reviewed-ir")
 	{
 		const document = corpusReviewedIr(library), declaration = document.declarations[0];
-		// Claiming a primitive result cannot authorize the source's List.
+		// Claiming a primitive result cannot authorize the source's variant.
 		document.types = [];
 		document.declarations = [{ ...declaration, id: `lean:${rejectedName}`
 			, name: rejectedName.split(".").at(-1)
@@ -227,7 +227,7 @@ export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ord
 	{
 		assert.equal(error.code, "native-elaboration-unsupported", "A toolchain or source failure is not a type-admission rejection");
 		assert.ok(error.message.includes(`${rejectedName}: unsupported-native-type`));
-		rejection = { shape: "list", stage: "source-elaboration"
+		rejection = { shape: "variant", stage: "source-elaboration"
 			, status: "unsupported", export: rejectedName
 			, code: error.code, message: error.message };
 	}

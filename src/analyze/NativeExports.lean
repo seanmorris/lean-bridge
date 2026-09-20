@@ -115,6 +115,8 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
     return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+  if e.isAppOfArity ``List 1 then
+    return obj [("kind", str "list"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
     return obj [("kind", str "option"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
@@ -207,7 +209,7 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
-  if kind == "array" || kind == "option" then
+  if kind == "array" || kind == "list" || kind == "option" then
     return obj [("kind", str kind),
       ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
   if kind == "result" || kind == "tuple" then
@@ -219,7 +221,7 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
       pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
         ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
     return obj [("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name"), ("fields", toJson fields)]
-  throwError "component copied values require primitives, arrays, records, Option, Except or Prod"
+  throwError "component copied values require primitives, arrays, lists, records, Option, Except or Prod"
 
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then

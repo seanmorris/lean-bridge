@@ -28,7 +28,7 @@ const dense = (values, limit) => {
  *
  * @param type - Semantic Binding IR reference.
  * @param records - Closed private record definitions.
- * @param compounds - Admit Option, result and binary product constructors.
+ * @param compounds - Admit List, Option, result and binary product constructors.
  */
 export const resolveComponentRecordType = (type, records, compounds = false) => {
 	let nodes = 0;
@@ -42,7 +42,7 @@ export const resolveComponentRecordType = (type, records, compounds = false) => 
 		{
 			closed(value, ["kind", "constructor", "arguments"]);
 			dense(value.arguments, 2);
-			const allowed = compounds ? ["array", "option", "result", "tuple"] : ["array"];
+			const allowed = compounds ? ["array", "list", "option", "result", "tuple"] : ["array"];
 			const count = ["tuple", "result"].includes(value.constructor) ? 2 : 1;
 			if(!allowed.includes(value.constructor) || value.arguments.length !== count) invalid("unsupported copied constructor or arity");
 			return { kind: "apply", constructor: value.constructor, arguments: value.arguments.map(argument => visit(argument, depth + 1)) };
@@ -108,7 +108,7 @@ export const assertComponentRecordAbi = abi => {
 		if(item.resultMode !== "value") invalid("records require synchronous results");
 		for(const type of [...item.parameters, item.result]) resolve(type);
 	}
-	if(compounds && !hasCompound) invalid("compound ABI requires an Option, result or product");
+	if(compounds && !hasCompound) invalid("compound ABI requires a List, Option, result or product");
 };
 
 /**

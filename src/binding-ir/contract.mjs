@@ -31,7 +31,7 @@ const PRIMITIVES = new Set([
 	, "usize"
 	, "isize"
 ]);
-const TYPE_APPLICATIONS = new Set(["array", "option", "result", "tuple"]);
+const TYPE_APPLICATIONS = new Set(["array", "list", "option", "result", "tuple"]);
 const OWNERSHIP = new Set(["copy", "borrow", "lease", "transfer"]);
 const MUTABILITY = new Set(["immutable", "read", "write"]);
 const EFFECTS = new Set([
@@ -210,9 +210,9 @@ const validateTypeRef = (value, path, typeParameters = new Set()) => {
 			(argument, index) =>
 				validateTypeRef(argument, `${path}.arguments[${index}]`, typeParameters),
 		);
-		if(value.constructor === "option" && value.arguments.length !== 1)
+		if(["array", "list", "option"].includes(value.constructor) && value.arguments.length !== 1)
 		{
-			fail("generic-arity", `${path} option requires one argument`, { path });
+			fail("generic-arity", `${path} ${value.constructor} requires one argument`, { path });
 		}
 		if(value.constructor === "result" && value.arguments.length !== 2)
 		{

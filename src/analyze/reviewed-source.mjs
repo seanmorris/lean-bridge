@@ -52,7 +52,7 @@ const checkReview = document => {
 	const type = (value, path, copied = true) => {
 		reject(copied && isCallback(value), path);
 		if(value.kind === "primitive" || value.kind === "named") return;
-		const arity = { array: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
+		const arity = { array: 1, list: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
 		reject(value.kind !== "apply" || !arity || value.arguments.length !== arity, path);
 		value.arguments.forEach((argument, index) => type(argument, `${path}.arguments[${index}]`));
 	};

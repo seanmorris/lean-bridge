@@ -76,9 +76,9 @@ export const runPhpWasmCorpusLibrary = async (t, library, { path = "ordinary-sou
 	const packageSet = await json(join(packageRoot, "php-wasm-package-set.json"));
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
-	const rejectedName = `${library.pendingExport}List`, pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
+	const rejectedName = `${library.pendingExport}Variant`, pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
 	await saveLakeFile(join(pending, "project"), pendingSource,
-		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
+		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : Sum UInt32 UInt32 := .inl 0\n`);
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.pendingModule]
 		, ...(path === "ordinary-source" ? { exports: [rejectedName] } : {}), targets }));
@@ -101,7 +101,7 @@ export const runPhpWasmCorpusLibrary = async (t, library, { path = "ordinary-sou
 	{
 		assert.equal(error.code, "native-elaboration-unsupported", "Toolchain failures are not type-admission rejections");
 		assert.ok(error.message.includes(`${rejectedName}: unsupported-native-type`));
-		rejection = { shape: "list", stage: "source-elaboration"
+		rejection = { shape: "variant", stage: "source-elaboration"
 			, status: "unsupported"
 			, export: rejectedName, code: error.code, message: error.message };
 	}

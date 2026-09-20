@@ -5,12 +5,13 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { componentScalarTypes, scalarCopyLimit, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { assertComponentRecordAbi, componentCompoundAbi } from "../abi/component-records.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
-const compound = type => type.kind === "apply" && type.constructor !== "array";
+const sequence = type => type.kind === "apply" && ["array", "list"].includes(type.constructor);
+const compound = type => type.kind === "apply" && !sequence(type);
 const carried = type => type.kind === "named" || compound(type);
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
 const childrenOf = (type, records) => type.kind === "apply" ? type.arguments : type.kind === "named" ? records.get(type.id).fields.map(field => field.type) : [];
@@ -29,7 +30,7 @@ const suffix = type => ["uint32", "int32", "char"].includes(type.name) ? "_uint3
 	: ["uint64", "int64"].includes(type.name) ? "_uint64" : ["usize", "isize"].includes(type.name) ? "_usize"
 		: type.name === "float32" ? "_float32" : type.name === "float64" ? "_float" : "";
 const box = (type, expression) => object(type) ? expression : `lean_box${suffix(type)}(${expression})`;
-const containsRecord = type => carried(type) || (type.kind === "apply" && type.arguments.some(containsRecord));
+const needsConversion = type => carried(type) || type.constructor === "list" || (type.kind === "apply" && type.arguments.some(needsConversion));
 
 /**
  * Generate total Lean conversion functions and typed public-call wrappers.
@@ -46,14 +47,30 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
 	const transportType = type => carried(type) ? `(_root_.Array ${sourceType(type)})`
 		: type.kind === "apply" ? `(_root_.Array ${transportType(type.arguments[0])})` : leanType(type);
-	const convert = (type, value, input) => carried(type) ? input ? `(unpack${key(identity(type))} ${value})` : `#[${value}]`
-		: type.kind === "apply" && containsRecord(type) ? `((${value}).map (fun element => ${convert(type.arguments[0], "element", input)}))` : value;
+	const convert = (type, value, input) => {
+		if(carried(type)) return input ? `(unpack${key(identity(type))} ${value})` : `#[${value}]`;
+		if(!sequence(type)) return value;
+		// One slot costs 16 bytes. Retaining one excess element guarantees that
+		// an oversized List fails the 16 MiB wire budget, never returns a prefix.
+		// Bound this intermediate conversion before traversing an arbitrary List.
+		let result = type.constructor === "list" && !input ? `(listToTransportArray (${value}))` : value;
+		if(needsConversion(type.arguments[0])) result = `((${result}).map (fun element => ${convert(type.arguments[0], "element", input)}))`;
+		return type.constructor === "list" && input ? `((${result}).toList)` : result;
+	};
 	const defaultValue = type => type.kind === "primitive" ? ({ unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" })[type.name] ?? "0"
-		: type.kind === "apply" ? type.constructor === "array" ? "#[]" : type.constructor === "option" ? "_root_.Option.none"
+		: type.kind === "apply" ? type.constructor === "array" ? "#[]" : type.constructor === "list" ? "[]" : type.constructor === "option" ? "_root_.Option.none"
 			: type.constructor === "result" ? `(_root_.Except.ok ${defaultValue(type.arguments[0])})`
 				: `(${defaultValue(type.arguments[0])}, ${defaultValue(type.arguments[1])})`
 			: `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
 	const lines = [];
+	if(allTypes(abi).some(type => type.constructor === "list")) lines.push(
+		"def listToTransportArray {α : Type} (values : _root_.List α) : _root_.Array α :="
+		, "  let rec loop : _root_.Nat → _root_.List α → _root_.Array α → _root_.Array α"
+		, "    | 0, _, acc => acc"
+		, "    | _, [], acc => acc"
+		, "    | fuel + 1, head :: tail, acc => loop fuel tail (acc.push head)"
+		, `  loop ${Math.floor(scalarCopyLimit / scalarSlotBytes) + 1} values #[]`, ""
+	);
 	for(const type of allTypes(abi).filter(carried))
 	{
 		lines.push(`def unpack${key(identity(type))} (value : ${transportType(type)}) : ${sourceType(type)} :=`
@@ -149,8 +166,8 @@ export const generateComponentRecordAdapters = abi => {
 				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) { return bridge_record_encode_leaf(slot, ${tag}, value, budget); }`);
 			continue;
 		}
-		const array = type.kind === "apply" && type.constructor === "array", option = type.constructor === "option", sum = option || type.constructor === "result";
-		const children = childrenOf(type, records), tag = type.kind === "named" ? 36 : ({ array: 32, tuple: 33, option: 34, result: 35 })[type.constructor];
+		const array = sequence(type), option = type.constructor === "option", sum = option || type.constructor === "result";
+		const children = childrenOf(type, records), tag = type.kind === "named" ? 36 : ({ array: 32, list: 32, tuple: 33, option: 34, result: 35 })[type.constructor];
 		const count = array ? "(uint32_t)(slot->bits >> 32)" : option ? "(slot->flags & 1u)" : sum ? "1" : String(children.length);
 		const symbol = prefix(abi, identity(type));
 		lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t *budget) {`

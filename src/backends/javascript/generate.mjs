@@ -35,7 +35,7 @@ const typeScriptType = (typeRef, typeMap) => {
 	}
 	if(typeRef.kind === "named") return typeMap.get(typeRef.id)?.name ?? "never";
 	if(typeRef.kind === "parameter") return typeRef.id;
-	if(typeRef.constructor === "array")
+	if(["array", "list"].includes(typeRef.constructor))
 	{
 		return `ReadonlyArray<${typeScriptType(typeRef.arguments[0], typeMap)}>`;
 	}
@@ -573,7 +573,7 @@ const validatorName = (typeRef, typeMap) => {
 	{
 		return `assertArrayOf${validatorName(typeRef.arguments[0], typeMap).slice("assert".length)}`;
 	}
-	if(typeRef.kind === "apply" && ["option", "result", "tuple"].includes(typeRef.constructor))
+	if(typeRef.kind === "apply" && ["list", "option", "result", "tuple"].includes(typeRef.constructor))
 		return `assertApplied$${sha256(canonicalizeJsonValue(typeRef, "validator")).slice(0, 20)}`;
 	fail("unsupported-validator", "The JavaScript POC cannot emit this validator", { typeRef });
 };
@@ -612,7 +612,7 @@ const emitValidators = (ir, typeMap) => {
 		const name = validatorName(typeRef, typeMap);
 		if(emittedArrays.has(name)) return;
 		emittedArrays.add(name);
-		if(typeRef.constructor !== "array")
+		if(!["array", "list"].includes(typeRef.constructor))
 		{
 			lines.push(`export const ${name} = (value, path) => {`);
 			if(typeRef.constructor === "tuple")
@@ -645,7 +645,8 @@ const emitValidators = (ir, typeMap) => {
 		const itemValidator = validatorName(typeRef.arguments[0], typeMap);
 		lines.push(
 			`export const ${name} = (value, path) => {`,
-			"  if (!Array.isArray(value) && !(value instanceof Uint32Array)) invalid(path, \"array\");",
+			typeRef.constructor === "list" ? "  if (!Array.isArray(value)) invalid(path, \"list array\");"
+				: "  if (!Array.isArray(value) && !(value instanceof Uint32Array)) invalid(path, \"array\");",
 			"  if (value.length > 4194304) invalid(path, \"bounded array\");",
 			"  if (Array.isArray(value) && Reflect.ownKeys(value).length !== value.length + 1) invalid(path, \"dense data array\");",
 			"  for (let index = 0; index < value.length; index += 1) {",

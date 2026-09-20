@@ -1,6 +1,6 @@
 /**
  * Recursive copied slots, reusing the installed primitive wire codecs.
- * Arrays and records share slots; tuple, Option and Except remain staged.
+ * Arrays and Lists share sequence slots; records, tuples, Option and Except compose.
  *
  * @file
  */
@@ -81,7 +81,7 @@ export const compileComponentCopiedCodec = descriptor => {
 					const values = record(value, type.fields.map(field => field.name));
 					childValue = index => values[index]; childType = index => type.fields[index].type;
 				}
-				else if(kind === "array" || kind === "tuple")
+				else if(kind === "array" || kind === "list" || kind === "tuple")
 				{
 					if(!Array.isArray(value)) throw new TypeError("Expected a copied array or tuple");
 					count = value.length;
@@ -90,7 +90,7 @@ export const compileComponentCopiedCodec = descriptor => {
 					budget.charge(count * scalarSlotBytes);
 					if(Reflect.ownKeys(value).length !== count + 1) throw new TypeError("Copied arrays must be dense and have no extra fields");
 					childValue = index => dataField(value, index);
-					childType = index => type.arguments[kind === "array" ? 0 : index];
+					childType = index => type.arguments[kind === "tuple" ? index : 0];
 				}
 				else if(kind === "option")
 				{
@@ -147,7 +147,7 @@ export const compileComponentCopiedCodec = descriptor => {
 				if(kind === "result") return { [branch ? "error" : "ok"]: visit(type.arguments[branch], pointer) };
 				if(kind === "record") return Object.fromEntries(type.fields.map((field, index) => [field.name, visit(field.type, pointer + index * scalarSlotBytes)]));
 				const values = new Array(count);
-				for(let index = 0; index < count; index++) values[index] = visit(type.arguments[kind === "array" ? 0 : index], pointer + index * scalarSlotBytes);
+				for(let index = 0; index < count; index++) values[index] = visit(type.arguments[kind === "tuple" ? index : 0], pointer + index * scalarSlotBytes);
 				return values;
 			} finally
 			{ active.delete(slot); }

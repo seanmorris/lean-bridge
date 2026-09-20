@@ -50,7 +50,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		if(typeRef.kind === "apply")
 		{
-			if(!["array", "option", "result", "tuple"].includes(typeRef.constructor))
+			if(!["array", "list", "option", "result", "tuple"].includes(typeRef.constructor))
 			{
 				report(
 					"unsupported-type-constructor",

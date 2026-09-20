@@ -58,7 +58,7 @@
       ],
       "properties": {
         "kind": {
-          "enum": ["array", "option"]
+          "enum": ["array", "list", "option"]
         },
         "element": {
           "$ref": "#"

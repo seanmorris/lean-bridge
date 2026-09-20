@@ -107,6 +107,27 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
+test("List evidence covers copied npm values without promoting other profiles or callables", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 30);
+	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
+	for(const cell of cells)
+	{
+		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile);
+		if(npm && copied)
+		{
+			assert.equal(cell.hostType, "ReadonlyArray<T> (ordinary dense Array)");
+			for(const stage of Object.values(cell.stages))
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["npm-lists-installed"]); }
+		} else
+		{
+			assert.equal(cell.stages.installedExecution.state, "unreviewed");
+			if(npm && cell.position.startsWith("callback-")) assert.equal(cell.stages.compilation.state, "rejected");
+		}
+	}
+});
+
 test("npm record evidence covers only copied positions and all nineteen primitive fields", () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-records-installed"));

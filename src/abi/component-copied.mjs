@@ -6,7 +6,8 @@
 import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
 
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
-export const componentCopiedTags = Object.freeze({ array: 32, tuple: 33, option: 34, result: 35, record: 36 });
+// Lists retain their semantic constructor but share the ordered sequence wire layout.
+export const componentCopiedTags = Object.freeze({ array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36 });
 export const componentCopiedDepth = 32;
 export const componentCopiedAbi = 4;
 export const componentCopiedDispatch = "copied-array-frame-v1";
@@ -67,7 +68,7 @@ export const snapshotComponentCopiedType = type => {
 			{ active.delete(value); }
 		}
 		fields(value, ["kind", "constructor", "arguments"]);
-		if(kind.value !== "apply" || !["array", "tuple", "option", "result"].includes(value.constructor)) invalid("unsupported constructor");
+		if(kind.value !== "apply" || !["array", "list", "tuple", "option", "result"].includes(value.constructor)) invalid("unsupported constructor");
 		const args = value.arguments;
 		if(!Array.isArray(args) || args.length > 32 || Reflect.ownKeys(args).length !== args.length + 1) invalid("invalid type arguments");
 		const count = value.constructor === "tuple" ? args.length : value.constructor === "result" ? 2 : 1;

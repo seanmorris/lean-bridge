@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.32.0",
+  "contractVersion": "0.33.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -15,7 +15,7 @@
   "irFacets": {
     "typeReference": ["primitive","named","parameter","apply"],
     "primitive": ["unit","bool","uint8","uint16","uint32","uint64","int8","int16","int32","int64","nat","int","float32","float64","string","bytes","char","usize","isize"],
-    "constructor": ["array","option","result","tuple"],
+    "constructor": ["array","list","option","result","tuple"],
     "namedKind": ["record","resource","alias","callback","variant"],
     "declaration": ["function","constructor","method","static-method","property"],
     "representation": ["copied","identity"],
@@ -112,7 +112,7 @@
     {"id":"variant","lean":"Inductive sum","family":"collection","ir":"namedKind:variant","meaning":"One named constructor with its typed fields.","bounds":"Preserve constructor identity and payloads without exposing Lean constructor numbers."},
     {"id":"resource","lean":"Identity-bearing value","family":"identity","ir":"namedKind:resource","meaning":"A nominal value retained in the shared runtime.","bounds":"Preserve cross-component identity and explicit disposal; reject stale or foreign resources."},
     {"id":"callback","lean":"Host function passed to Lean","family":"identity","ir":"namedKind:callback","meaning":"A host callable with a declared signature and lifetime.","bounds":"Preserve argument/result types, re-entry, invocation count, self-disposal and errors."},
-    {"id":"list","lean":"List α","family":"collection","ir":null,"meaning":"A finite ordered Lean list.","bounds":"Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering."},
+    {"id":"list","lean":"List α","family":"collection","ir":"constructor:list","meaning":"A finite ordered Lean list.","bounds":"Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells."},
     {"id":"char","lean":"Char","family":"primitive","ir":"primitive:char","meaning":"A Unicode scalar value.","bounds":"0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string."},
     {"id":"usize","lean":"USize","family":"primitive","ir":"primitive:usize","meaning":"An unsigned platform-sized Lean integer.","bounds":"Bind width to the compiled Lean target, not the consumer process; reject out-of-range values."},
     {"id":"isize","lean":"ISize","family":"primitive","ir":"primitive:isize","meaning":"A signed platform-sized Lean integer.","bounds":"Bind signed width to the compiled Lean target and record architecture explicitly."},
@@ -157,6 +157,145 @@
   ],
   "evidence": [
     {
+      "id": "npm-lists-installed",
+      "kind": "installed",
+      "revision": "70ede8eba911b1ae549059aaae482160233843b8",
+      "command": "CHROMIUM_PATH=/usr/lib/chromium/chromium LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-lists.test.mjs; node --test tests/component-list-contract.test.mjs",
+      "scope": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
+        },
+        {
+          "path": "docs/evidence/npm-lists-20260920.json",
+          "sha256": "7ab4b091a7b8fc596d314d3e97eaf0d735c4442b5fa83ca330da1845aa4cb6af"
+        },
+        {
+          "path": "docs/evidence/npm-lists-20260920.md",
+          "sha256": "c65009897d406c568315069e1b26e37c87b7d9847c7c68e848cd879ad50efc9f"
+        },
+        {
+          "path": "schema/binding-ir.schema.json",
+          "sha256": "64613b3ff777375594d9b68662f477b97be4278b0a29219358d038ca20c54350"
+        },
+        {
+          "path": "schema/elaborated-export-metadata.schema.json",
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
+        },
+        {
+          "path": "src/abi/component-copied.mjs",
+          "sha256": "b6cf65c34663f4447f237a7fab475c8a4d775c5cb644aa22fe6e8e4bd62c5cdb"
+        },
+        {
+          "path": "src/abi/component-records.mjs",
+          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
+        },
+        {
+          "path": "src/backends/javascript/coverage.mjs",
+          "sha256": "69f4f73299557ee03efe68958c74f9b8e10b6813f92de5f2b0612b6837315f89"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+        },
+        {
+          "path": "src/binding-ir/contract.mjs",
+          "sha256": "cb542be8b7980108098d86a27249bd8916b00fa4e7965ad82a406363d49b6d75"
+        },
+        {
+          "path": "src/build/compiler-adapters.mjs",
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
+        },
+        {
+          "path": "src/release/component-copied-codec.mjs",
+          "sha256": "3d8a19e3c9f5c36378858de0b8f2ea880de53a17e1f8e50e3943c5e62303ee55"
+        },
+        {
+          "path": "tests/component-list-contract.test.mjs",
+          "sha256": "016fb4603675c858a60e5726cdb49d3c4e7bae3ee4d1cd12228159758bc9bdf3"
+        },
+        {
+          "path": "tests/component-lists.test.mjs",
+          "sha256": "fa846b6ef356a67bdca7dff76d9cbf7cf214e8eae45b4d35d2a172acd0f60383"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/npm.mjs",
+          "sha256": "cecc03ec97de102d98629941c85420778faebbd51ca06e273b99fd95a3098e74"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/Lists.lean",
+          "sha256": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+        },
+        {
+          "path": "tests/helpers/component-scalar-install.mjs",
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "npm/ordinary-source/lists-1.0.0.tgz",
+          "sha256": "a39793cbe8b6605845ed9ff56687272e3053f17efef6d0d4b2ed76a48d4e810b"
+        },
+        {
+          "path": "npm/ordinary-source/lean-bridge-runtime-0.0.0-abi2.58a4fe7157a826838400dc62e9db866868ca9d9cf3bb6508d637b786b501c6e3.tgz",
+          "sha256": "8d0b974323ad4cb6e8c37bfae2c61ee2982ff9402c7b23b69b4406d5fea8c259"
+        },
+        {
+          "path": "npm/reviewed-ir/lists-1.0.0.tgz",
+          "sha256": "9b50edab08486d8da5899eb2ed0d6455edf55399296698e120ffe5f5175fa4ad"
+        },
+        {
+          "path": "npm/reviewed-ir/lean-bridge-runtime-0.0.0-abi2.58a4fe7157a826838400dc62e9db866868ca9d9cf3bb6508d637b786b501c6e3.tgz",
+          "sha256": "8d0b974323ad4cb6e8c37bfae2c61ee2982ff9402c7b23b69b4406d5fea8c259"
+        }
+      ]
+    },
+    {
       "id": "php-wasm-compounds-installed",
       "kind": "installed",
       "revision": "020f682d98f1ef00c1d3c1ad5e8d685dc6b3fb26",
@@ -165,7 +304,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -177,19 +316,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -197,15 +336,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -257,7 +396,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/php-wasm-copied-artifacts.mjs",
@@ -325,7 +464,7 @@
         },
         {
           "path": "tests/helpers/type-corpus-php-wasm-evidence.mjs",
-          "sha256": "ba2d590a4b5d499d5e4ce9d85d41bd550ce5f8d1890b8ed4c72727d192ee6fe2"
+          "sha256": "708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1"
         },
         {
           "path": "tests/helpers/type-corpus-php-wasm-install.mjs",
@@ -384,7 +523,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -396,19 +535,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -416,15 +555,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -480,7 +619,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -595,19 +734,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -615,15 +754,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/perl/Build.pm",
@@ -659,7 +798,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -810,7 +949,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -822,19 +961,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -842,15 +981,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -906,7 +1045,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -989,7 +1128,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -1001,19 +1140,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -1021,15 +1160,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1093,7 +1232,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1196,7 +1335,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -1208,19 +1347,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -1228,15 +1367,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1296,7 +1435,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1391,15 +1530,15 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -1407,15 +1546,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1463,7 +1602,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1554,15 +1693,15 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -1570,15 +1709,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1634,7 +1773,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1713,15 +1852,15 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -1729,15 +1868,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -1785,7 +1924,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1880,7 +2019,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -1908,7 +2047,7 @@
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -1920,39 +2059,39 @@
         },
         {
           "path": "src/abi/component-copied.mjs",
-          "sha256": "29b59ed2540d9908e282aa97f468b495889b0b064cd85d9cbfcc3e756666af02"
+          "sha256": "b6cf65c34663f4447f237a7fab475c8a4d775c5cb644aa22fe6e8e4bd62c5cdb"
         },
         {
           "path": "src/abi/component-records.mjs",
-          "sha256": "2ce250cbb72788887ed5261e88bf0a2fdf774a065a78531a63edbf8b26025477"
+          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/javascript/coverage.mjs",
-          "sha256": "30a34cbd01c025f2612102d18bacaf824749bed0e44fd88cabdd2293c8494a93"
+          "sha256": "69f4f73299557ee03efe68958c74f9b8e10b6813f92de5f2b0612b6837315f89"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
@@ -1960,7 +2099,7 @@
         },
         {
           "path": "src/build/component-record-adapters.mjs",
-          "sha256": "090530330493ff22920fd5a215d5d4a6556c2866838f93ff0230cfa5a960f6eb"
+          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
         },
         {
           "path": "src/build/component-side-linker.mjs",
@@ -1980,7 +2119,7 @@
         },
         {
           "path": "src/release/component-copied-codec.mjs",
-          "sha256": "387a518016918edb9f33a3d131f171d9d535444c6e82d8fc3bae9615d8f882e6"
+          "sha256": "3d8a19e3c9f5c36378858de0b8f2ea880de53a17e1f8e50e3943c5e62303ee55"
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
@@ -2028,7 +2167,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "10e63aa228951720b4e67198c72429a7339e15800f3ded363a4a91ca6a92d721"
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
         },
         {
           "path": "tests/helpers/compound-fixture.mjs",
@@ -2036,7 +2175,7 @@
         },
         {
           "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
-          "sha256": "c7394fcdaf02e46a5887a1c3a1392198894f5ffa68d7920ff6adb87dea546931"
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
         }
       ],
       "artifacts": [
@@ -2083,7 +2222,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -2111,7 +2250,7 @@
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -2119,27 +2258,27 @@
         },
         {
           "path": "src/abi/component-copied.mjs",
-          "sha256": "29b59ed2540d9908e282aa97f468b495889b0b064cd85d9cbfcc3e756666af02"
+          "sha256": "b6cf65c34663f4447f237a7fab475c8a4d775c5cb644aa22fe6e8e4bd62c5cdb"
         },
         {
           "path": "src/abi/component-records.mjs",
-          "sha256": "2ce250cbb72788887ed5261e88bf0a2fdf774a065a78531a63edbf8b26025477"
+          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
@@ -2147,7 +2286,7 @@
         },
         {
           "path": "src/build/component-record-adapters.mjs",
-          "sha256": "090530330493ff22920fd5a215d5d4a6556c2866838f93ff0230cfa5a960f6eb"
+          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
@@ -2159,7 +2298,7 @@
         },
         {
           "path": "src/release/component-copied-codec.mjs",
-          "sha256": "387a518016918edb9f33a3d131f171d9d535444c6e82d8fc3bae9615d8f882e6"
+          "sha256": "3d8a19e3c9f5c36378858de0b8f2ea880de53a17e1f8e50e3943c5e62303ee55"
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
@@ -2207,7 +2346,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "10e63aa228951720b4e67198c72429a7339e15800f3ded363a4a91ca6a92d721"
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
         },
         {
           "path": "tests/helpers/record-fixture.mjs",
@@ -2215,7 +2354,7 @@
         },
         {
           "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
-          "sha256": "c7394fcdaf02e46a5887a1c3a1392198894f5ffa68d7920ff6adb87dea546931"
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
         }
       ],
       "artifacts": [
@@ -2246,7 +2385,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -2278,7 +2417,7 @@
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -2286,31 +2425,31 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "b17dc18afa9cd840d3e2704c8f26b7d6d75a27424bfbc796b614d4aa07775af2"
+          "sha256": "427dd0dc3905d8407e7b81f8f75e5ec439c2118dfb4cb6706164011fe4341029"
         },
         {
           "path": "src/abi/component-copied.mjs",
-          "sha256": "29b59ed2540d9908e282aa97f468b495889b0b064cd85d9cbfcc3e756666af02"
+          "sha256": "b6cf65c34663f4447f237a7fab475c8a4d775c5cb644aa22fe6e8e4bd62c5cdb"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
@@ -2330,7 +2469,7 @@
         },
         {
           "path": "src/release/component-copied-codec.mjs",
-          "sha256": "387a518016918edb9f33a3d131f171d9d535444c6e82d8fc3bae9615d8f882e6"
+          "sha256": "3d8a19e3c9f5c36378858de0b8f2ea880de53a17e1f8e50e3943c5e62303ee55"
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
@@ -2354,7 +2493,7 @@
         },
         {
           "path": "tests/component-copied-codec.test.mjs",
-          "sha256": "43645f385dd49d68c48783978b4d70aecc34877460c377d87ef296ad0da1c510"
+          "sha256": "0c3afa1183af7fe03ffc9aa4924c869aa13fefe343c27a1ab563568ac5635b98"
         },
         {
           "path": "tests/fixtures/array-consumers/npm.mjs",
@@ -2370,15 +2509,15 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "10e63aa228951720b4e67198c72429a7339e15800f3ded363a4a91ca6a92d721"
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
         },
         {
           "path": "tests/helpers/type-corpus-node.mjs",
-          "sha256": "838f806ad5a3fae3046b8a807bec1ef9fe2ff02b3ce828a05a3a64d87bd8166c"
+          "sha256": "7d95467dbd22a2458ffaafb2109501fa79920100b3521570f7ac33033ddbbc0e"
         },
         {
           "path": "tests/helpers/type-corpus.mjs",
-          "sha256": "7d08eba720755d8b82b0cea1d31b2ba55ed8642aff786e38933919d3973ce2c8"
+          "sha256": "2414d3e2d7d9b780d3db6b87788c455347c497ae1b95ba98e5a4fe04771d042e"
         },
         {
           "path": "tests/lake-entry-modules.test.mjs",
@@ -2386,7 +2525,7 @@
         },
         {
           "path": "tests/type-corpus.test.mjs",
-          "sha256": "5222e852ca6996a3f48cb493538561f5570d7a967843238da622a57346994645"
+          "sha256": "41a9911b5ba0d56016453911f8dd6d9edf0e7f9713a4dd474d3f5fc219b94b39"
         }
       ],
       "artifacts": [
@@ -2433,7 +2572,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "10e63aa228951720b4e67198c72429a7339e15800f3ded363a4a91ca6a92d721"
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
         },
         {
           "path": "tests/component-callables.test.mjs",
@@ -2461,7 +2600,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
@@ -2469,11 +2608,11 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/project-analysis.mjs",
@@ -2513,15 +2652,15 @@
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -2656,11 +2795,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -2723,7 +2862,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/php-wasm-project.mjs",
@@ -2775,7 +2914,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -2783,7 +2922,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -2811,7 +2950,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -3014,7 +3153,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -3022,7 +3161,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -3050,7 +3189,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -3205,11 +3344,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -3233,7 +3372,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -3428,11 +3567,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -3452,7 +3591,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -3611,7 +3750,7 @@
         },
         {
           "path": "tests/helpers/type-corpus.mjs",
-          "sha256": "7d08eba720755d8b82b0cea1d31b2ba55ed8642aff786e38933919d3973ce2c8"
+          "sha256": "2414d3e2d7d9b780d3db6b87788c455347c497ae1b95ba98e5a4fe04771d042e"
         },
         {
           "path": "tests/fixtures/type-corpus/cases.mjs",
@@ -3627,15 +3766,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "flake.nix",
@@ -3770,7 +3909,7 @@
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "tests/cpp-callables.test.mjs",
@@ -3838,15 +3977,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -3977,7 +4116,7 @@
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "tests/rust-callables.test.mjs",
@@ -4033,15 +4172,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -4120,7 +4259,7 @@
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "tests/ruby-callables.test.mjs",
@@ -4164,15 +4303,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -4251,7 +4390,7 @@
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "tests/python-callables.test.mjs",
@@ -4295,15 +4434,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -4354,7 +4493,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4374,7 +4513,7 @@
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "tests/c-callables.test.mjs",
@@ -4414,15 +4553,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -4453,19 +4592,19 @@
       "files": [
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4477,7 +4616,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4525,15 +4664,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "0211355ea96de26f4b50b87c77a0b9353458fbc8891743c8902fad5c8fd70757"
+          "sha256": "0a33640ba7fb373ad3fb97ff1d2ea7af221f8d69f3494864a1a396fd2224bed8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4624,7 +4763,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4652,11 +4791,11 @@
         },
         {
           "path": "schema/binding-ir.schema.json",
-          "sha256": "6c24cfbfd7929293cc1743f21400381819ba4ebe1b0f926090b13f1d3537ecd6"
+          "sha256": "64613b3ff777375594d9b68662f477b97be4278b0a29219358d038ca20c54350"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -4664,7 +4803,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "b17dc18afa9cd840d3e2704c8f26b7d6d75a27424bfbc796b614d4aa07775af2"
+          "sha256": "427dd0dc3905d8407e7b81f8f75e5ec439c2118dfb4cb6706164011fe4341029"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -4672,11 +4811,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/adoption/type-surface.mjs",
-          "sha256": "019f3cdbb545cb23876ac20c8832e9d8828b03767b44c9870eadfe177c69e1ad"
+          "sha256": "9e2b9afed7f5e6f820ac4d484f6279701aa06df793208185b0392759e60ee181"
         },
         {
           "path": "src/analyze/lean-project.mjs",
@@ -4684,11 +4823,11 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -4720,7 +4859,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -4788,11 +4927,11 @@
         },
         {
           "path": "src/binding-ir/contract.mjs",
-          "sha256": "6457f6bac7501c9d0a7f1daf04de3aa78b725b36cf9a5684f6e1398ceb344034"
+          "sha256": "cb542be8b7980108098d86a27249bd8916b00fa4e7965ad82a406363d49b6d75"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -4800,7 +4939,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/release/component-npm-package.mjs",
@@ -4824,7 +4963,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "0211355ea96de26f4b50b87c77a0b9353458fbc8891743c8902fad5c8fd70757"
+          "sha256": "0a33640ba7fb373ad3fb97ff1d2ea7af221f8d69f3494864a1a396fd2224bed8"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -4900,7 +5039,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "10e63aa228951720b4e67198c72429a7339e15800f3ded363a4a91ca6a92d721"
+          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
         },
         {
           "path": "tests/helpers/copied-fixture-install.mjs",
@@ -4924,11 +5063,11 @@
         },
         {
           "path": "tests/type-corpus.test.mjs",
-          "sha256": "5222e852ca6996a3f48cb493538561f5570d7a967843238da622a57346994645"
+          "sha256": "41a9911b5ba0d56016453911f8dd6d9edf0e7f9713a4dd474d3f5fc219b94b39"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3b6dbedd694a9c2e4310dede2f4a8b42f5994f319c09fedf61069b8d1d3379d0"
+          "sha256": "c0ae6729735552dbd3f764948171e3c8a21f8f6403e6621f260fab6447b5b84a"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -5003,7 +5142,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5015,7 +5154,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -5111,7 +5250,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "tests/fixtures/char-consumers/c.c",
@@ -5230,27 +5369,27 @@
         },
         {
           "path": "src/binding-ir/contract.mjs",
-          "sha256": "6457f6bac7501c9d0a7f1daf04de3aa78b725b36cf9a5684f6e1398ceb344034"
+          "sha256": "cb542be8b7980108098d86a27249bd8916b00fa4e7965ad82a406363d49b6d75"
         },
         {
           "path": "schema/binding-ir.schema.json",
-          "sha256": "6c24cfbfd7929293cc1743f21400381819ba4ebe1b0f926090b13f1d3537ecd6"
+          "sha256": "64613b3ff777375594d9b68662f477b97be4278b0a29219358d038ca20c54350"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/lean-project.mjs",
@@ -5258,7 +5397,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "13808449a772e92db680d5fccb13cf385e39956efa8e7f4b222a5085a57a0704"
+          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -5270,7 +5409,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
@@ -5357,7 +5496,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -5373,7 +5512,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -5508,7 +5647,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -5627,7 +5766,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -5734,7 +5873,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -5821,7 +5960,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "a5fbf0251c349764bf8f930064aa710543197a2b10e80014a6d60ad9bcf41066"
+          "sha256": "4dae91a2f04e0b10e07c6ff4233a1c3f19ec8fe147901d73e129167bea327583"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -5833,19 +5972,19 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "515f691e83dd24ee29fa63fc2186f9e70061b0adce148d0925dbd9322bfae48b"
+          "sha256": "05aea64ddd39d66b277a4336cf61783b12c6229e122cf43da5597cc1e04d6d6c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -5853,15 +5992,15 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
-          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -5905,7 +6044,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6000,7 +6139,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -6091,7 +6230,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -6186,7 +6325,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -6293,7 +6432,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
@@ -6388,7 +6527,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -6440,7 +6579,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6499,7 +6638,7 @@
         },
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -6511,7 +6650,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -6602,7 +6741,7 @@
       "files": [
         {
           "path": "src/analyze/semantic-model.mjs",
-          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -6706,7 +6845,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -6714,19 +6853,19 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
-          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
-          "sha256": "549aff37479e7197bd9904955215ea65b3b2e687fde4fd91957f3a819bd3f503"
+          "sha256": "1579e86754a02df66abe1cd4e89a0b0bdb5234be767ac7c75cc87dd9f2939543"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -6738,7 +6877,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "6b79cd120f1a99c8232b13418a2fd7bbdb3805feaf5f77b03452c9b701a7dc0e"
+          "sha256": "142507c904834af156f677114ea83da3ee17881a5b5e949f6550c048bd6a4fce"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -6897,11 +7036,11 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "0b5362f3753f48cb29c66aa82470115bdfb8208ed57efb9dbc0965c1935aac61"
+          "sha256": "4b95dc1cdc20a3fe5776cd0320e4c7740bbdd8d94461181d15e3a1888ba9ec11"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -7121,11 +7260,11 @@
       "files": [
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "446d063c2a378dfd8087f577fd59fbfd32b27f454eb9c774e95c4873deac6443"
+          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
         },
         {
           "path": "src/backends/javascript/coverage.mjs",
-          "sha256": "30a34cbd01c025f2612102d18bacaf824749bed0e44fd88cabdd2293c8494a93"
+          "sha256": "69f4f73299557ee03efe68958c74f9b8e10b6813f92de5f2b0612b6837315f89"
         }
       ],
       "artifacts": []
@@ -7258,6 +7397,264 @@
     }
   ],
   "observations": [
+    {
+      "id": "npm-lists-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases.",
+      "hostTypes": {
+        "list": {
+          "parameter": "ReadonlyArray<T> (ordinary dense Array)",
+          "result": "ReadonlyArray<T> (ordinary dense Array)",
+          "field": "ReadonlyArray<T> (ordinary dense Array)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        }
+      },
+      "limitations": [
+        "npm wasm32 only; native and PHP-Wasm List adapters are not promoted.",
+        "32 container levels, 4096 expanded type nodes and 16 MiB across input/output slots and payloads; Lean working memory is outside this limit.",
+        "Copied containers and callables cannot share a component. No resources or callbacks inside copied values."
+      ],
+      "conversionNotes": {
+        "list": "Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject."
+      }
+    },
+    {
+      "id": "npm-list-callables-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Compiled callable admission rejects List payloads. Installed copied Lists are audited separately.",
+      "hostTypes": {
+        "list": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "The callable ABI accepts only primitive payloads and rejects List parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        }
+      },
+      "limitations": [
+        "List callables need a separate ownership and conversion contract."
+      ]
+    },
+    {
+      "id": "npm-lists-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases.",
+      "hostTypes": {
+        "list": {
+          "parameter": "ReadonlyArray<T> (ordinary dense Array)",
+          "result": "ReadonlyArray<T> (ordinary dense Array)",
+          "field": "ReadonlyArray<T> (ordinary dense Array)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm Lists preserve all nineteen primitive elements and nested copied values, including arrays, records, options, results and binary products. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 30226 checks and 25 rejection cases."
+        }
+      },
+      "limitations": [
+        "npm wasm32 only; native and PHP-Wasm List adapters are not promoted.",
+        "32 container levels, 4096 expanded type nodes and 16 MiB across input/output slots and payloads; Lean working memory is outside this limit.",
+        "Copied containers and callables cannot share a component. No resources or callbacks inside copied values."
+      ],
+      "conversionNotes": {
+        "list": "Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject."
+      }
+    },
+    {
+      "id": "npm-list-callables-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Compiled callable admission rejects List payloads. Installed copied Lists are audited separately.",
+      "hostTypes": {
+        "list": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-lists-installed"
+          ],
+          "note": "The callable ABI accepts only primitive payloads and rejects List parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No installed List callable support is claimed."
+        }
+      },
+      "limitations": [
+        "List callables need a separate ownership and conversion contract."
+      ]
+    },
     {
       "id": "npm-records-ordinary-source",
       "profiles": [

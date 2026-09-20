@@ -166,7 +166,7 @@ export const validateElaboratedMetadata = (report, request) => {
 						}
 						return;
 					}
-					if(!["array", "option"].includes(type?.kind)) return scalar(type);
+					if(!["array", "list", "option"].includes(type?.kind)) return scalar(type);
 					closed(type, ["kind", "element"]);
 					copied(type.element, depth + 1);
 				};
@@ -181,7 +181,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					validateNativeType(type);
 					const check = value => {
 						if(value.kind === "resource" && (!request.resources.includes(value.name) || !request.modules.includes(value.module))) fail("Native resource lacks its configured source identity");
-						if(value.kind === "array") check(value.element);
+						if(["array", "list", "option"].includes(value.kind)) check(value.element);
+						if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(check);
 						if(value.kind === "record") value.fields.forEach(field => check(field.type));
 						if(value.kind === "callback")
 						{ value.parameters.forEach(check); check(value.result); }

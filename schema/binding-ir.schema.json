@@ -188,7 +188,7 @@
           "required": ["kind", "constructor", "arguments"],
           "properties": {
             "kind": { "const": "apply" },
-            "constructor": { "enum": ["array", "option", "result", "tuple"] },
+            "constructor": { "enum": ["array", "list", "option", "result", "tuple"] },
             "arguments": {
               "type": "array",
               "minItems": 1,

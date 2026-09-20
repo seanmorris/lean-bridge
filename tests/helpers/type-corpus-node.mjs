@@ -211,13 +211,13 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 		assert.deepEqual(await readFile(releases[0][archive]), await readFile(releases[1][archive]));
 
 	// The historical corpus selects primitives. Copied aggregates have separate
-	// installed fixtures. Keep an actual unsupported List as the negative probe.
-	const rejectedName = `${library.pendingExport}List`, rejectedExports = [rejectedName];
+	// installed fixtures. Keep an unsupported arbitrary variant as the negative probe.
+	const rejectedName = `${library.pendingExport}Variant`, rejectedExports = [rejectedName];
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
 	const pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
 	await saveLakeFile(join(pending, "project"), pendingSource,
-		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
+		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : Sum UInt32 UInt32 := .inl 0\n`);
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.module, library.pendingModule]
 		, ...(path === "ordinary-source" ? { exports: [signatures[0].name, ...rejectedExports] } : {}), targets }));

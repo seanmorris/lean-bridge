@@ -291,7 +291,7 @@
       "oneOf": [
         { "$ref": "#/$defs/scalarType" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "element"],
-          "properties": { "kind": { "enum": ["array", "option"] }, "element": { "$ref": "#/$defs/copiedType" } }
+          "properties": { "kind": { "enum": ["array", "list", "option"] }, "element": { "$ref": "#/$defs/copiedType" } }
         },
         { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
           "properties": { "kind": { "enum": ["tuple", "result"] }, "arguments": {

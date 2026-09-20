@@ -73,6 +73,13 @@ The Alpha fixture declares this copied record:
 
 The shortened example omits required documentation and mutability fields. The complete fixture is the executable contract. A JavaScript backend can project `bytes` as `Uint8Array` and `values` as an array or typed array after recording that target choice. A C backend can project fixed-width fields and explicit spans. Both projections originate from the same record definition and must round-trip the same values.
 
+`List α` uses `{ "kind": "apply", "constructor": "list", "arguments": [α] }`,
+with exactly one type argument. `list` and `array` remain different source types
+even when a host represents both with an array. Reviewed-source reconciliation
+rejects substituting one for the other. npm's copied transport uses the same
+ordered sequence slot layout for both; typed Lean adapters perform the List
+conversion. Other compiled targets reject List until their adapters are available.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

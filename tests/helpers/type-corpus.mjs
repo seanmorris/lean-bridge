@@ -577,7 +577,9 @@ export const corpusCoverage = (inventory, catalog, runs = []) => {
 			assert.equal(run.runtimeArchive.target, "npm");
 			assert.match(run.runtimeArchive.sha256, /^[a-f0-9]{64}$/);
 			assert.notEqual(run.runtimeArchive.sha256, run.archiveSha256);
-			assert.deepEqual(run.rejection.exports, [`${library.pendingExport}List`]);
+			// Preserve historical List rejections; current runs probe arbitrary variants.
+			const suffix = run.rejection.exports?.[0] === `${library.pendingExport}Variant` ? "Variant" : "List";
+			assert.deepEqual(run.rejection.exports, [`${library.pendingExport}${suffix}`]);
 			assert.equal(run.rejection.code, "component-adapter-hints-required");
 			assert.deepEqual(run.rejection.hints, run.rejection.exports.map(name => `hint:${name}:unsupported-result-type`).sort());
 			if(run.profile === "node-typescript")

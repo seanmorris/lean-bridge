@@ -99,7 +99,7 @@ Promise.all([worker, react]).then(([worker, react]) => { globalThis.scalarResult
 	{
 		for(const name of browserNames)
 		{
-			const browser = await engines[name].launch({ headless: true });
+			const browser = await engines[name].launch({ headless: true, ...(name === "chromium" && process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) });
 			try
 			{
 				const context = await browser.newContext({ serviceWorkers: "block" }), errors = [], traces = [];

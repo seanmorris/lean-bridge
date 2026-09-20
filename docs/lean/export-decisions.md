@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays, acyclic copied records, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and Lists, acyclic copied records, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -59,6 +59,7 @@ Ordinary npm components support synchronous functions with zero to 32 arguments.
 | `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
 | `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be any supported copied value |
+| `List α` | The same host array representation, preserving order and nesting; the reviewed contract retains `constructor:list` |
 | Acyclic copied structure | Plain objects with exact own fields; named readonly TypeScript interfaces |
 | `Option α` | `{ tag: "none" }` or `{ tag: "some", value: T }`; Unit payloads and nested options retain their tags |
 | `Except ε α` | `{ ok: T }` or `{ error: E }`, exactly one own branch |

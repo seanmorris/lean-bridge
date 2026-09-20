@@ -319,7 +319,7 @@ def needsMissing {α : Type} [Missing α] : α := Missing.value
 class UnsafeDefault (α : Type) where value : α
 instance : UnsafeDefault UInt32 := ⟨by sorry⟩
 def needsUnsafe {α : Type} [UnsafeDefault α] : α := UnsafeDefault.value
-abbrev Words := List UInt32
+abbrev Words := Sum UInt32 UInt32
 end Shop
 `);
 	const cases = [

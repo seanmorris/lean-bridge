@@ -210,6 +210,7 @@ export const validatePhpWasmEvidence = (run, library, validate) => {
 	assert.deepEqual(run.observation, evidence.executions.find(execution => execution.realm === "node" && execution.arrangement === "embedded" && execution.loading === "startup" && execution.mode === "weak").observation);
 	assert.equal(run.rejection.code, "native-elaboration-unsupported");
 	const listProbe = run.rejection.export === `${library.pendingExport}List`;
-	assert.equal(run.rejection.export, `${library.pendingExport}${listProbe ? "List" : ""}`);
-	assert.equal(run.rejection.shape, listProbe ? "list" : library.pendingShape); assert.equal(run.rejection.stage, "source-elaboration"); assert.equal(run.rejection.status, "unsupported");
+	const variantProbe = run.rejection.export === `${library.pendingExport}Variant`;
+	assert.equal(run.rejection.export, `${library.pendingExport}${listProbe ? "List" : variantProbe ? "Variant" : ""}`);
+	assert.equal(run.rejection.shape, listProbe ? "list" : variantProbe ? "variant" : library.pendingShape); assert.equal(run.rejection.stage, "source-elaboration"); assert.equal(run.rejection.status, "unsupported");
 };
