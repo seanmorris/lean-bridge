@@ -20,6 +20,8 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 | Packages and verification | 1240, 1224 | Produce native ecosystem packages and generic local receipts, verify exact installed archives, and retain signed-receipt compatibility. |
 | Documentation and acceptance | 1227, 1225, 1226 | Execute documentation examples, pass the complete matrix and latency/throughput thresholds, and reconcile every remaining gap. |
 
+Task 1219 has begun with a [copied-value transport prototype](../evidence/npm-copied-transport-20260920.md) for nested arrays, tuples, explicit Option tags and Except branches. It reuses the nineteen scalar codecs and checks memory bounds, cumulative copy limits and malformed values. npm compiler admission remains closed for these compound types until generated Lean/C adapters and installed-package acceptance pass. Named records, variants and recursive copied types are later steps in the same task.
+
 ## Shared configuration and Perl cutover
 
 `lean-bridge.exports.json` holds language-neutral author intent. Module and export selection apply before host-language projection. Package-specific names and versions belong under canonical target keys. Machine paths and credentials stay outside source configuration.

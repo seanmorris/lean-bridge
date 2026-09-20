@@ -26,6 +26,7 @@ const profileManifest = Object.freeze({
 		, "component-consumer-docs"
 		, "component-runtime"
 		, "component-scalar-codec"
+		, "component-copied-codec"
 		, "component-callable-runtime"
 		, "component-callable-contract"
 		, "component-char-contract"
