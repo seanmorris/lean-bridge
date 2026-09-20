@@ -72,22 +72,31 @@ export const renderGmpValues = surface => {
 			from.push("if (!lb_gmp_charge(budget, value->length, sizeof(uint32_t))) return 0;"
 				, "mpz_import(out, value->length, -1, sizeof(uint32_t), 0, 0, value->data);");
 			if(copy.scalarName === "int") from.push("if (value->negative) mpz_neg(out, out);");
-		} else if(copy.record)
+		} else if(copy.record || copy.compound)
 		{
-			declarations.push(`struct ${n} {\n${copy.fields.length ? copy.fields.map(field => `  ${gmpName(surface, field.type)} ${field.name};`).join("\n") : "  uint8_t empty;"}\n};`);
+			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
+			declarations.push(`struct ${n} {\n${flag ? `  uint8_t ${flag};\n` : ""}${copy.fields.length ? copy.fields.map(field => `  ${gmpName(surface, field.type)} ${field.name};`).join("\n") : "  uint8_t empty;"}\n};`);
 			init.push("memset(value, 0, sizeof(*value));");
 			to.push(`if (!lb_gmp_charge(budget, 1, sizeof(${raw}))) return 0;`);
 			from.push(`if (!lb_gmp_charge(budget, 1, sizeof(${n}))) return 0;`);
+			if(flag)
+			{
+				for(const lines of [to, from]) lines.push(`if (value->${flag} > 1) return 0;`, `out->${flag} = value->${flag};`);
+				clear.push(`value->${flag} = 0;`);
+				swap.push(`uint8_t flag = left->${flag}; left->${flag} = right->${flag}; right->${flag} = flag;`);
+			}
 			for(const field of copy.fields)
 			{
 				const child = field.type, address = pubChild(child, `value->${field.name}`);
 				init.push(`lb_gmp_init${child.index}(${address});`);
 				clear.push(`lb_gmp_clear${child.index}(${address});`);
 				swap.push(`lb_gmp_swap${child.index}(${pubChild(child, `left->${field.name}`)}, ${pubChild(child, `right->${field.name}`)});`);
+				if(flag) for(const lines of [to, from]) lines.push(`if (${field.name === "error" ? "!" : ""}value->${flag}) {`);
 				to.push(`int status${child.index}_${field.name} = lb_gmp_to${child.index}(${address}, &out->${field.name}, budget);`
 					, `if (status${child.index}_${field.name} != 1) return status${child.index}_${field.name};`);
 				from.push(`int status${child.index}_${field.name} = lb_gmp_from${child.index}(&value->${field.name}, ${pubChild(child, `out->${field.name}`)}, budget);`
 					, `if (status${child.index}_${field.name} != 1) return status${child.index}_${field.name};`);
+				if(flag) for(const lines of [to, from]) lines.push("}");
 			}
 		} else if(copy.aggregate)
 		{

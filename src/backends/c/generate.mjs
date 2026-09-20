@@ -226,7 +226,7 @@ const validateCoverage = ir => {
 		}
 		if(resolved.kind === "apply")
 		{
-			if(resolved.constructor !== "array" || resolved.arguments.length !== 1)
+			if(!["array", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "option"].includes(resolved.constructor) ? 1 : 2))
 			{
 				fail("unsupported-type-application", `C projection does not support ${resolved.constructor}`, {
 					constructor: resolved.constructor
@@ -235,12 +235,12 @@ const validateCoverage = ir => {
 			const copied = (ref, seen = new Set()) => {
 				const value = resolveAlias(ir, ref);
 				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
-				if(value.kind === "apply") return value.constructor === "array" && value.arguments.length === 1 && copied(value.arguments[0], seen);
+				if(value.kind === "apply") return ["array", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
 				const type = value.kind === "named" && namedType(ir, value.id);
 				if(!type || type.kind !== "record" || seen.has(type.id)) return false;
 				return type.fields.every(field => copied(field.type, new Set([...seen, type.id])));
 			};
-			if(!copied(resolved.arguments[0])) fail("unsupported-array-element", "C arrays require acyclic copied elements");
+			if(!resolved.arguments.every(child => copied(child))) fail("unsupported-array-element", "C containers require acyclic copied elements");
 		}
 	}
 	for(const declaration of ir.declarations)
@@ -362,7 +362,7 @@ const cType = (ir, ref) => {
 	}
 	if(resolved.kind === "apply")
 	{
-		return `${prefix(ir)}_${typeKey(resolved)}_span`;
+		return `${prefix(ir)}_${typeKey(resolved)}${resolved.constructor === "array" ? "_span" : "_value"}`;
 	}
 	fail("unresolved-generic", `C projection cannot name ${resolved.id}`);
 };
@@ -488,8 +488,12 @@ const runtimeParameters = (ir, variant) => {
 
 const dynamicTypes = ir => collectUsedTypes(ir).filter(ref => {
   const resolved = resolveAlias(ir, ref);
-  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || resolved.kind === "apply";
+  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || (resolved.kind === "apply" && resolved.constructor === "array");
 });
+
+const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor)), ref => cType(ir, ref));
+const compoundFields = ref => ref.arguments.map((type, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[ref.constructor][i], type }));
+const compoundFlag = kind => ({ option: "has_value", result: "is_ok" })[kind];
 
 const uniqueBy = (items, key) => {
 	const seen = new Set();
@@ -546,7 +550,8 @@ const emitPublicHeader = ir => {
 	];
 
 	const dynamic = uniqueBy(dynamicTypes(ir), ref => cType(ir, ref));
-	const records = [], visited = new Set();
+	const records = [], visited = new Set(), compounds = compoundTypes(ir);
+	const compound = ref => ({ id: cType(ir, ref), ref, fields: compoundFields(ref) });
 	const visitRecord = type => {
 		if(visited.has(type.id)) return;
 		visited.add(type.id);
@@ -554,15 +559,17 @@ const emitPublicHeader = ir => {
 		{
 			const ref = resolveAlias(ir, field.type);
 			if(ref.kind === "named" && namedType(ir, ref.id)?.kind === "record") visitRecord(namedType(ir, ref.id));
+			if(ref.kind === "apply" && ref.constructor !== "array") visitRecord(compound(ref));
 		}
 		records.push(type);
 	};
 	ir.types.filter(type => type.kind === "record").forEach(visitRecord);
+	compounds.forEach(ref => visitRecord(compound(ref)));
 	// Array elements may be records or other arrays. Pointers need declarations,
 	// while by-value record fields need definitions in dependency order.
 	if(dynamic.some(ref => resolveAlias(ir, ref).kind === "apply" && isAggregate(ir, resolveAlias(ir, ref).arguments[0])))
 	{
-		for(const ref of [...dynamic, ...records.map(type => ({ kind: "named", id: type.id }))])
+		for(const ref of [...dynamic, ...records.map(type => type.ref ?? ({ kind: "named", id: type.id }))])
 			lines.push(`typedef struct ${cType(ir, ref)} ${cType(ir, ref)};`);
 		lines.push("");
 	}
@@ -589,8 +596,9 @@ const emitPublicHeader = ir => {
 
 	for(const type of records)
 	{
-		const name = cType(ir, { kind: "named", id: type.id });
+		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
 		lines.push(`typedef struct ${name} {`);
+		if(compoundFlag(type.ref?.constructor)) lines.push(`  uint8_t ${compoundFlag(type.ref.constructor)};`);
 		if(!type.fields.length) lines.push("  uint8_t empty;");
 		for(const field of type.fields)
 		{
@@ -797,9 +805,9 @@ const emitImplementation = ir => {
 		);
 	}
 
-	for(const type of ir.types.filter(type => type.kind === "record"))
+	for(const type of [...ir.types.filter(type => type.kind === "record"), ...compoundTypes(ir).map(ref => ({ ref, fields: compoundFields(ref) }))])
 	{
-		const name = cType(ir, { kind: "named", id: type.id });
+		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
 		const clearable = type.fields.filter(field => {
       const resolved = resolveAlias(ir, field.type);
       if((resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || resolved.kind === "apply") return true;

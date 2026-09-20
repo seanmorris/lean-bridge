@@ -23,6 +23,9 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
 		, array: ["kind", "element", "abi"]
+		, option: ["kind", "element", "abi"]
+		, result: ["kind", "arguments", "abi"]
+		, tuple: ["kind", "arguments", "abi"]
 		, record: ["kind", "name", "lean", "constructor", "fields", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
 		, callback: ["kind", "parameters", "result", "abi"] }[type.kind];
@@ -43,7 +46,12 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");
 		if(["usize", "isize"].includes(type.name) && (type.abi.cType !== "size_t" || type.abi.heap)) fail("platform integer requires the compiler's size_t representation");
 		if(type.abi.cType === "size_t" && !["usize", "isize"].includes(type.name)) fail("size_t is not a fixed-width primitive representation");
-	} else if(type.kind === "array") recurse(type.element, true);
+	} else if(["array", "option"].includes(type.kind)) recurse(type.element, true);
+	else if(["result", "tuple"].includes(type.kind))
+	{
+		if(!Array.isArray(type.arguments) || type.arguments.length !== 2 || !Object.hasOwn(type.arguments, 0) || !Object.hasOwn(type.arguments, 1)) fail("native results and products require two arguments");
+		type.arguments.forEach(child => recurse(child, true));
+	}
 	else if(type.kind === "record")
 	{
 		if(!identifier.test(type.name) || type.name !== type.lean || !identifier.test(type.constructor)) fail("invalid record identity");

@@ -26,7 +26,7 @@ export const validateGmpSurface = surface => {
  * @param ir - Compiler-checked Binding IR.
  */
 export const generateGmpProjection = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
 	validateGmpSurface(surface);
 	const copied = renderGmpValues(surface), functions = [], implementations = [], callbacks = [];
 	const site = ref => surface.callbacks.get(ref.id) ?? surface.copy(ref);

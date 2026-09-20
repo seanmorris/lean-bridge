@@ -32,8 +32,9 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param options - Fixed compiled Lean profile, independent of the consumer process.
  * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
  * @param options.callables - Admit the synchronous primitive callable adapter for implemented host projections.
+ * @param options.compounds - Admit options, results and binary products only for implemented host projections.
  */
-export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false } = {}) => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const callbacks = new Map();
@@ -43,9 +44,14 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false 
 		if(depth > 32 || visiting.has(key)) rejectPrimitiveSurface(declaration, "C/C++ copied values must be acyclic and at most 32 types deep");
 		if(copies.has(key)) return copies.get(key);
 		visiting.add(key);
-		let fields = [], element = null, record = null;
+		let fields = [], element = null, record = null, compound = null;
 		if(ref.kind === "primitive" && componentScalarTypes.includes(ref.name)) { /* Closed copied leaf. */ }
 		else if(ref.kind === "apply" && ref.constructor === "array" && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
+		else if(compounds && ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor) && ref.arguments.length === (ref.constructor === "option" ? 1 : 2))
+		{
+			compound = ref.constructor;
+			fields = ref.arguments.map((argument, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[compound][i], type: visit(argument, declaration, depth + 1) }));
+		}
 		else if(ref.kind === "named" && (record = ir.types.find(type => type.id === ref.id))?.kind === "record" && !record.typeParameters.length)
 		{
 			const name = cIdentifier(record.name), names = new Set();
@@ -57,9 +63,9 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false 
 				names.add(name);
 				return { name, type: visit(field.type, declaration, depth + 1) };
 			});
-		} else rejectPrimitiveSurface(declaration, "ordinary C/C++ adapters require concrete, pure, copied primitives, arrays or acyclic records");
+		} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? ", options, results and binary products" : "; compound values are not implemented for this target"}`);
 		visiting.delete(key);
-		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, index: copies.size };
+		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, compound, index: copies.size };
 		if(copy.aggregate)
 		{
 			if(cTypeNames.has(copy.name) || cTypeNames.has(`${copy.name}_clear`)) rejectPrimitiveSurface(declaration, "C/C++ copied type name collides with another generated type");

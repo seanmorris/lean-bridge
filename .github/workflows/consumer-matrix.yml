@@ -504,6 +504,8 @@ jobs:
           npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=c,cpp node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=c,cpp node --test tests/native-words.test.mjs
+          LEAN_BRIDGE_NATIVE_COMPOUND_TEST=1 node --test tests/native-compounds.test.mjs
+          test -s build/compounds/native.json
           LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs
           test -s build/callables/c.json
           LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
@@ -522,6 +524,7 @@ jobs:
             build/word-native/c-cpp.json
             build/callables/c.json
             build/callables/cpp.json
+            build/compounds/native.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

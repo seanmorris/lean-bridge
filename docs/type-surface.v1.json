@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.22.0",
+  "contractVersion": "0.23.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,181 @@
   ],
   "evidence": [
     {
+      "id": "native-compounds-installed",
+      "kind": "installed",
+      "revision": "d08dcb11dc621c2662acbef8c1fb7e51d12342ee",
+      "command": "LEAN_BRIDGE_NATIVE_COMPOUND_TEST=1 node --test tests/native-compounds.test.mjs; node --test tests/native-compound-contract.test.mjs",
+      "scope": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation.",
+      "files": [
+        {
+          "path": "docs/evidence/native-compounds-20260920.json",
+          "sha256": "f67d8ca5a807b89b4888c5cd850e1229482d63f622aa9b65e2d8f478dcbd1bc0"
+        },
+        {
+          "path": "docs/evidence/native-compounds-20260920.md",
+          "sha256": "063e4ae82c62ec9be7d865325d18ee1d989f7d4acbc4c3cf1ec0f886901b2bad"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "c70a7461825e185c125ffdd4c5f032723a8460048aa7b7a07f1ac97359838e79"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d4494d48f09f8677cfb34d553a635be0559459b8eba1a4bb9472256621da67d6"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "9b541f0f3289a8810b05100b93cb1d96d2c243e9d10da7930ab1471a2280d584"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
+        },
+        {
+          "path": "src/backends/c/gmp-projection.mjs",
+          "sha256": "f5ba2ef21e05a8a3a4b35321f37130354f042a75995fbebb1cc2321c9dd8c08a"
+        },
+        {
+          "path": "src/backends/c/gmp-values.mjs",
+          "sha256": "bba97f80ce4fc3092ad24693e13b8e65f59c1689d34bcbfb5ae1209d17a8b58f"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
+        },
+        {
+          "path": "src/backends/cpp/primitives.mjs",
+          "sha256": "57883de6ecdfe24886dd2f750e55164e1ca388beaf896bb991ff397592c8ad57"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/c.c",
+          "sha256": "b116c0450eaeb4d4468018bed921f362d8bccc0e0096aa4cb80f8777b204dacc"
+        },
+        {
+          "path": "tests/fixtures/compound-consumers/cpp.cpp",
+          "sha256": "f39d0995ef102fa5d8c1fe43db4506d14bb58271d410556241782677858cb998"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/Compounds.lean",
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lakefile.toml",
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-compounds/package.json",
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "tests/helpers/c-gmp-faults.mjs",
+          "sha256": "e7d0a32c60b86f93cb32fc910d13e9b2f0957db4e5d67cf08e9452524c5c91c6"
+        },
+        {
+          "path": "tests/helpers/compound-fixture.mjs",
+          "sha256": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-compound-consumers.mjs",
+          "sha256": "63dbd6a8bde39d926138d2e6de288aa4e7cda2a90f244ceabbdf92d6c517aee6"
+        },
+        {
+          "path": "tests/helpers/native-compound-faults.mjs",
+          "sha256": "bd64915f19506242370e046d6cb5ca3e9c2c2c92373b33adcbc2335d2e4dc78a"
+        },
+        {
+          "path": "tests/native-compound-contract.test.mjs",
+          "sha256": "54061e399aeef158810e7d77c923e03eb21d69b5618a3d3b828e406ab94e7d9f"
+        },
+        {
+          "path": "tests/native-compounds.test.mjs",
+          "sha256": "71abbe8a5c17f0e33cbffd13d493fed30592722308f501880263997b71eb84fc"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "c/ordinary-source/archives/compounds-1.0.0-c.tar.gz",
+          "sha256": "5a4e370057d746a3d17b9f3d4af9fc67ad34eb8d85a9357bef17d2433cb03735"
+        },
+        {
+          "path": "cpp/ordinary-source/archives/compounds-1.0.0-cpp.tar.gz",
+          "sha256": "9b129ed47dfee3c32e037c894ddc1f59b5b3bbe91b9e3de7120757f9ca1f241c"
+        },
+        {
+          "path": "c/reviewed-ir/archives/compounds-1.0.0-c.tar.gz",
+          "sha256": "2d03de29ddaeea44dcea9f9d9b8b66d5b5f967f2b9049d636a3890aeb7355c9e"
+        },
+        {
+          "path": "cpp/reviewed-ir/archives/compounds-1.0.0-cpp.tar.gz",
+          "sha256": "adc1daf0b11f2548fdfe322c924a0b52d901ce1de8f7d59f769796f0c7e35c58"
+        }
+      ]
+    },
+    {
       "id": "npm-compounds-installed",
       "kind": "installed",
       "revision": "e76c60797771ea59f702234a3dbbe90a7b176e96",
@@ -165,7 +340,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -213,7 +388,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -368,7 +543,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -412,7 +587,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -531,7 +706,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -579,11 +754,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -754,7 +929,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -802,11 +977,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -921,11 +1096,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -941,11 +1116,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -1008,7 +1183,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/php-wasm-project.mjs",
@@ -1060,15 +1235,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "2c9bdf76d5a356da3d751e7d1c4a3b50d40b2deeb1fa569994cc510568356ae0"
+          "sha256": "646be59aa27712313cfaf56c9d82b090972ff6fd9acb4ab36877fa180b22f652"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -1096,7 +1271,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -1251,11 +1426,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -1299,15 +1474,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "2c9bdf76d5a356da3d751e7d1c4a3b50d40b2deeb1fa569994cc510568356ae0"
+          "sha256": "646be59aa27712313cfaf56c9d82b090972ff6fd9acb4ab36877fa180b22f652"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -1335,7 +1510,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -1426,11 +1601,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -1490,11 +1665,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1518,7 +1693,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -1653,11 +1828,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -1713,11 +1888,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -1737,7 +1912,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -1804,15 +1979,15 @@
         },
         {
           "path": "src/backends/c/gmp-values.mjs",
-          "sha256": "49663a9686f097beb5b346a4a529cd1ee8668a38df2b884a51832081b48d0f18"
+          "sha256": "bba97f80ce4fc3092ad24693e13b8e65f59c1689d34bcbfb5ae1209d17a8b58f"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
-          "sha256": "16238c598f36d4478579836dce694c831af4e1b46392fb3917f045d3fde8701f"
+          "sha256": "f5ba2ef21e05a8a3a4b35321f37130354f042a75995fbebb1cc2321c9dd8c08a"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -1824,15 +1999,15 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "fc3598b921f95a3d046c3b702e795a8a1be6af5f9898dc76dbbf027147c79661"
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
         },
         {
           "path": "tests/c-gmp-contract.test.mjs",
@@ -1860,7 +2035,7 @@
         },
         {
           "path": "tests/helpers/c-gmp-faults.mjs",
-          "sha256": "91a54f35074a912723bedb760dc1d7c8fba5f4e26d2a1f83fb41b180743abf05"
+          "sha256": "e7d0a32c60b86f93cb32fc910d13e9b2f0957db4e5d67cf08e9452524c5c91c6"
         },
         {
           "path": "tests/helpers/c-callable-faults.mjs",
@@ -1908,15 +2083,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "flake.nix",
@@ -2019,11 +2194,11 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
+          "sha256": "57883de6ecdfe24886dd2f750e55164e1ca388beaf896bb991ff397592c8ad57"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -2035,19 +2210,19 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "fc3598b921f95a3d046c3b702e795a8a1be6af5f9898dc76dbbf027147c79661"
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -2119,15 +2294,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -2234,15 +2409,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -2314,15 +2489,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -2381,15 +2556,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -2445,15 +2620,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -2512,15 +2687,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -2576,15 +2751,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -2615,19 +2790,19 @@
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -2635,7 +2810,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2643,15 +2818,15 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "fc3598b921f95a3d046c3b702e795a8a1be6af5f9898dc76dbbf027147c79661"
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -2695,15 +2870,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -2742,11 +2917,11 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "073f2d5d375fd11904c21fbba81ac0f5a12321c02c237a3bd8993839b39150f6"
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -2758,7 +2933,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2766,7 +2941,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "25bac477e3aa6d28d1742b70abcb517b72a96896f998b88db94193d7591c6a7d"
+          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -2806,15 +2981,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "5fbeccd38072ee5d56b2e3d392ce2a3c05790d3587335b5403799c957768c73a"
+          "sha256": "17a4e490dbbbd27e130cebb688b094051e07cc885f0c049188a61a434619d7dc"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2905,7 +3080,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2937,7 +3112,7 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "c58c9b3e86a34388956b2d80bcd79d825ace0daacc7cc6e8925c35106c94df47"
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -2953,7 +3128,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -2965,31 +3140,31 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "073f2d5d375fd11904c21fbba81ac0f5a12321c02c237a3bd8993839b39150f6"
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -3013,7 +3188,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "25bac477e3aa6d28d1742b70abcb517b72a96896f998b88db94193d7591c6a7d"
+          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -3081,7 +3256,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/release/component-npm-package.mjs",
@@ -3105,7 +3280,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "5fbeccd38072ee5d56b2e3d392ce2a3c05790d3587335b5403799c957768c73a"
+          "sha256": "17a4e490dbbbd27e130cebb688b094051e07cc885f0c049188a61a434619d7dc"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -3209,7 +3384,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "fc428573e076af3f45bd1873ec041679e7da5857730870a74638ef5eb9ae33b1"
+          "sha256": "d52e46a2ece3ba42a5e274769d773170ba3536deb5433bfb7b66d0ef1a834d9e"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -3284,7 +3459,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9c25704c83bfd777d69653ae20ff6616cf7819f470cc3c217737e97cc619b853"
+          "sha256": "c28972e68a224c1900c415486354021e99a667eaba1d71d991505bd945969bd8"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -3296,23 +3471,23 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "54f63e836f9b4403650b93a900259d36899609c78cc9d1d0d0a1ab6045e413f8"
+          "sha256": "1a30944a4a4eab5ccc466d0909fd12010442a01818f5c62f1c3ad5a94aff23b2"
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -3332,7 +3507,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "25bac477e3aa6d28d1742b70abcb517b72a96896f998b88db94193d7591c6a7d"
+          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -3392,7 +3567,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "tests/fixtures/char-consumers/c.c",
@@ -3523,15 +3698,15 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "c58c9b3e86a34388956b2d80bcd79d825ace0daacc7cc6e8925c35106c94df47"
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "073f2d5d375fd11904c21fbba81ac0f5a12321c02c237a3bd8993839b39150f6"
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
         },
         {
           "path": "src/analyze/lean-project.mjs",
@@ -3642,27 +3817,27 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -3793,23 +3968,23 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -3912,15 +4087,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/rust/copied-model.mjs",
@@ -3952,11 +4127,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -4019,15 +4194,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
@@ -4055,11 +4230,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -4110,15 +4285,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
@@ -4142,11 +4317,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -4166,7 +4341,7 @@
         },
         {
           "path": "tests/native-wit.test.mjs",
-          "sha256": "a5130de7627c867dae84cbe4171771cc1676303d95125116397fa3ae34d1f542"
+          "sha256": "e37bef98e8d555cfb0dc08d2767107fe56ede1a9b99a6f7f78784d06e6eeaf45"
         },
         {
           "path": "tests/fixtures/documentation/consumers/wit-wasi/ordinary.c",
@@ -4201,15 +4376,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
@@ -4237,11 +4412,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4296,15 +4471,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
@@ -4332,11 +4507,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -4403,15 +4578,15 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
@@ -4435,11 +4610,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -4498,23 +4673,23 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -4522,7 +4697,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
+          "sha256": "57883de6ecdfe24886dd2f750e55164e1ca388beaf896bb991ff397592c8ad57"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -4534,7 +4709,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4546,15 +4721,15 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "fc3598b921f95a3d046c3b702e795a8a1be6af5f9898dc76dbbf027147c79661"
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
         },
         {
           "path": "tests/cpp-generator.test.mjs",
@@ -4617,7 +4792,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -4625,11 +4800,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "dd97682a812c179ea9ef59ae801ab7c9efe3dd9bc4c832af73f254d674733d97"
+          "sha256": "2a76af01fa6c0285e836d95d14aefb1a54faff632253cc26e4a0e45c5c627798"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -4637,15 +4812,15 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"
+          "sha256": "ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "0828a40935d4b034c69930d0fb4111d1732556700ec4b5b5183c834e44ac0594"
+          "sha256": "3ecd6f2a8e2cd0bf2d021799452e2767b9be77488ec3a9fedf0180e53f93b5dc"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
-          "sha256": "1650f06e1b62062fce584bd3754d292ef5d850f44c9c9a464e1e9ce5798fc795"
+          "sha256": "fdafe4703640182183eb44178cfadb49213771d0d034e109e5b5a368531091e4"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -4653,11 +4828,11 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "b529f89700c940b4a0e561e188be565ae29a8febbbb9d713ba43f0945cd66dfd"
+          "sha256": "57883de6ecdfe24886dd2f750e55164e1ca388beaf896bb991ff397592c8ad57"
         },
         {
           "path": "src/release/native-c-family.mjs",
-          "sha256": "fc3598b921f95a3d046c3b702e795a8a1be6af5f9898dc76dbbf027147c79661"
+          "sha256": "8122a559a9737c48255217580334465e1d236defbd72f78af4f97a3454ca9c9e"
         },
         {
           "path": "tests/native-c-family.test.mjs",
@@ -4669,11 +4844,11 @@
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
-          "sha256": "85cc5f1394b4f832e26505a63e4719a66017ae2fc79773ef6971c741f8b76d70"
+          "sha256": "ff7bd74d90666a7d5dcc36f69c8ace0f4e2205f379d24d0dad9da61285f7ea80"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "4224b4f95c42ead887bf2f6136dcc88d12a7db6adcfe0e49ca40776d9b869733"
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
         },
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -4812,7 +4987,7 @@
         },
         {
           "path": "src/analyze/NativeExports.lean",
-          "sha256": "f2cbbe2c0131a68ada3bca5c1a5656e3889ba36872a2c8fd7e1ef45e1fe0f425"
+          "sha256": "235f5fb4fb80539c0f70eeceb8120025df207f06ce5dbf9f99cba43bb1aa3415"
         },
         {
           "path": "src/analyze/native-metadata.mjs",
@@ -4820,7 +4995,7 @@
         },
         {
           "path": "src/analyze/native-types.mjs",
-          "sha256": "073f2d5d375fd11904c21fbba81ac0f5a12321c02c237a3bd8993839b39150f6"
+          "sha256": "f2d78cc71366feef5d1ca7cfeedf04c0ca6596edff405ddc2f30a0a2301c356a"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -4832,7 +5007,7 @@
         },
         {
           "path": "schema/native-metadata-type.schema.json",
-          "sha256": "c58c9b3e86a34388956b2d80bcd79d825ace0daacc7cc6e8925c35106c94df47"
+          "sha256": "a73c0f4c99bad643e24ff6c497cb1c6fbaf37468566dfc9bf3c7df3b343c8770"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -4844,7 +5019,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "c37703f163cf953d09f099394fb41f59c1d0a901a5f3a3520c1709afc29dbb0c"
+          "sha256": "6a57ed3f67fc30cee976731c03066737af81e059675ce06e539ca577bd741d66"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -4852,7 +5027,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "79cac53aecbd3a88bb3de9c38e7beb61f9c165a6316fdf1218cdfd6bd0c944a9"
+          "sha256": "bebfa15acd8b48fec18a404ecc9491b26c11520a0806c429ec8e9379a5a412eb"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -4864,7 +5039,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "25bac477e3aa6d28d1742b70abcb517b72a96896f998b88db94193d7591c6a7d"
+          "sha256": "b068e954d9b5e1f332f5b325e83373a9df359552d0e17da63cae91aa4ed1bdba"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -5283,7 +5458,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"3a0a38439f3afbca25453c3d51d0ed918c3531d3928c9da8aade54f4dd3f56f7"}
+        {"path":"src/backends/c/generate.mjs","sha256":"ffb4f0abf6ca22e2df1e87a3a3eeaefd4dbd878d53e5f4fcfe6f12c2259a3671"}
       ],
       "artifacts": []
     },
@@ -22597,7 +22772,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 only. Native and PHP-Wasm constructors require separate work.",
+        "npm wasm32 evidence only. C/C++ compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -22938,7 +23113,7 @@
         }
       },
       "limitations": [
-        "npm wasm32 only. Native and PHP-Wasm constructors require separate work.",
+        "npm wasm32 evidence only. C/C++ compound evidence is recorded separately; other native hosts and PHP-Wasm require separate work.",
         "32 container levels and 16 MiB of copied slots and payloads across all inputs and output; these limits do not bound Lean working memory.",
         "Copied containers and primitive callables cannot share a component. No callbacks or resources inside copied values.",
         "Binary products only, preserving nesting. List, variant and recursive copied types are not promoted."
@@ -23770,23 +23945,391 @@
       "conversionNotes": {"array":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().","record":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."}
     },
     {
-      "id": "c-constructors-c-1",
-      "profiles": ["c"],
-      "shapes": ["option","result","tuple"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
-      "path": "reviewed-ir",
-      "scope": "C supports array as its only constructed-value application.",
+      "id": "native-compounds-c-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation.",
       "hostTypes": {
-        "option": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "result": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null},
-        "tuple": {"parameter":null,"result":null,"field":null,"callback-parameter":null,"callback-result":null}
+        "option": {
+          "parameter": "Generated struct with uint8_t has_value and typed value",
+          "result": "Generated struct with uint8_t has_value and typed value",
+          "field": "Generated struct with uint8_t has_value and typed value"
+        },
+        "result": {
+          "parameter": "Generated struct with uint8_t is_ok, typed ok and error",
+          "result": "Generated struct with uint8_t is_ok, typed ok and error",
+          "field": "Generated struct with uint8_t is_ok, typed ok and error"
+        },
+        "tuple": {
+          "parameter": "Generated struct with typed fst and snd",
+          "result": "Generated struct with typed fst and snd",
+          "field": "Generated struct with typed fst and snd"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"rejected","evidence":["c-mapping-audit"],"note":"unsupported-type-application."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
+        "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Flag 0 selects none; 1 selects some, including Unit or another none. Other flag values reject. Initialize all fields; generated clear releases owned results.",
+        "result": "is_ok=1 selects ok; 0 selects error. Only the selected payload crosses into Lean, but initialize both fields for cleanup. Domain errors return values with successful boundary status.",
+        "tuple": "fst/snd retain arity, types and binary nesting. GMP packages supply recursive init/clear; other packages use zero initialization and clear-before-reuse."
+      }
+    },
+    {
+      "id": "native-compounds-c-reviewed-ir",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation.",
+      "hostTypes": {
+        "option": {
+          "parameter": "Generated struct with uint8_t has_value and typed value",
+          "result": "Generated struct with uint8_t has_value and typed value",
+          "field": "Generated struct with uint8_t has_value and typed value"
+        },
+        "result": {
+          "parameter": "Generated struct with uint8_t is_ok, typed ok and error",
+          "result": "Generated struct with uint8_t is_ok, typed ok and error",
+          "field": "Generated struct with uint8_t is_ok, typed ok and error"
+        },
+        "tuple": {
+          "parameter": "Generated struct with typed fst and snd",
+          "result": "Generated struct with typed fst and snd",
+          "field": "Generated struct with typed fst and snd"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
+        "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Flag 0 selects none; 1 selects some, including Unit or another none. Other flag values reject. Initialize all fields; generated clear releases owned results.",
+        "result": "is_ok=1 selects ok; 0 selects error. Only the selected payload crosses into Lean, but initialize both fields for cleanup. Domain errors return values with successful boundary status.",
+        "tuple": "fst/snd retain arity, types and binary nesting. GMP packages supply recursive init/clear; other packages use zero initialization and clear-before-reuse."
+      }
+    },
+    {
+      "id": "native-compounds-cpp-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation.",
+      "hostTypes": {
+        "option": {
+          "parameter": "std::optional<T>",
+          "result": "std::optional<T>",
+          "field": "std::optional<T>"
+        },
+        "result": {
+          "parameter": "Result<T, E> = std::variant<Ok<T>, Err<E>>",
+          "result": "Result<T, E> = std::variant<Ok<T>, Err<E>>",
+          "field": "Result<T, E> = std::variant<Ok<T>, Err<E>>"
+        },
+        "tuple": {
+          "parameter": "std::pair<A, B> (nested binary products)",
+          "result": "std::pair<A, B> (nested binary products)",
+          "field": "std::pair<A, B> (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
+        "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Disengaged, engaged Unit and engaged empty optional remain distinct. Returned payloads own their storage.",
+        "result": "`Ok<T>` and `Err<E>` wrappers each hold value, preserving branch identity even for equal payload types. Domain errors do not throw boundary exceptions.",
+        "tuple": "std::pair retains binary nesting, per-position types and owned copied contents."
+      }
+    },
+    {
+      "id": "native-compounds-cpp-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation.",
+      "hostTypes": {
+        "option": {
+          "parameter": "std::optional<T>",
+          "result": "std::optional<T>",
+          "field": "std::optional<T>"
+        },
+        "result": {
+          "parameter": "Result<T, E> = std::variant<Ok<T>, Err<E>>",
+          "result": "Result<T, E> = std::variant<Ok<T>, Err<E>>",
+          "field": "Result<T, E> = std::variant<Ok<T>, Err<E>>"
+        },
+        "tuple": {
+          "parameter": "std::pair<A, B> (nested binary products)",
+          "result": "std::pair<A, B> (nested binary products)",
+          "field": "std::pair<A, B> (nested binary products)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "Installed C and C++ packages built from ordinary source and independent reviewed IR preserve Option, Except and nested binary products, including all nineteen primitives, arrays and copied record fields. Each source path passes 1549 C and 1008 C++ checks, 306 private native allocation-fault checks and 11 GMP facade checks. Author sources and build staging are removed before offline installation."
+        }
+      },
+      "limitations": [
+        "Linux x86-64 native packages only; other native hosts and PHP-Wasm still reject these constructors.",
+        "16 MiB shared conversion budget and 32 levels; no bound on Lean working memory. GMP facades also budget public/private conversion.",
+        "Copied values cannot hide resources or callbacks. Compound callable signatures, lists, tagged variants and recursive copied types are not promoted."
+      ],
+      "conversionNotes": {
+        "option": "Disengaged, engaged Unit and engaged empty optional remain distinct. Returned payloads own their storage.",
+        "result": "`Ok<T>` and `Err<E>` wrappers each hold value, preserving branch identity even for equal payload types. Domain errors do not throw boundary exceptions.",
+        "tuple": "std::pair retains binary nesting, per-position types and owned copied contents."
+      }
+    },
+    {
+      "id": "c-constructors-c-1",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "option",
+        "result",
+        "tuple"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Compiled C callables require primitive arguments and results. Copied compound values are installed-tested separately.",
+      "hostTypes": {
+        "option": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "result": {
+          "callback-parameter": null,
+          "callback-result": null
+        },
+        "tuple": {
+          "callback-parameter": null,
+          "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "Standalone C syntax does not establish compiled callable support."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "native-compounds-installed"
+          ],
+          "note": "The native callable projection accepts only primitive parameters and results."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },

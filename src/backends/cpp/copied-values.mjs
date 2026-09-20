@@ -10,6 +10,8 @@
  * @param copy - Admitted copied type.
  */
 export const copiedCppType = copy => {
+	if(copy.compound === "option") return `std::optional<${copiedCppType(copy.fields[0].type)}>`;
+	if(copy.compound) return `${copy.compound === "tuple" ? "std::pair" : "Result"}<${copy.fields.map(field => copiedCppType(field.type)).join(", ")}>`;
 	if(copy.element) return `std::vector<${copiedCppType(copy.element)}>`;
 	if(copy.record) return copy.record.name;
 	const name = copy.scalarName;
@@ -38,12 +40,29 @@ export const renderCppCopiedValues = surface => {
 				, `for (const auto& item : source) check${element.index}(item, budget);`);
 			output.push(`${host} result; result.reserve(source.length);`
 				, `for (size_t i = 0; i < source.length; ++i) result.push_back(from${element.index}(source.data[i]));`, "return result;");
-		} else if(record)
+		} else if(copy.compound && copy.compound !== "tuple")
+		{
+			const option = copy.compound === "option", flag = option ? "has_value" : "is_ok";
+			check.push(`charge(budget, 1, sizeof(${name}));`);
+			if(!option) check.push('if (source.valueless_by_exception()) invalid("Result has no active branch");');
+			fields.forEach((field, i) => {
+				const child = field.type, condition = option ? "source.has_value()" : `source.index() == ${i}`;
+				const payload = option ? "*source" : `std::get<${i}>(source).value`;
+				view.push(`std::unique_ptr<View${child.index}> field${i};`);
+				constructor.push(`if (${condition}) { field${i} = std::make_unique<View${child.index}>(${payload}); value.${field.name} = field${i}->value; }`);
+				check.push(`if (${condition}) check${child.index}(${payload}, budget);`);
+			});
+			constructor.push(`value.${flag} = ${option ? "source.has_value()" : "source.index() == 0"};`);
+			if(option) output.push(`if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);
+			else output.push(`if (source.is_ok) return ${host}{Ok<${copiedCppType(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`
+				, `return ${host}{Err<${copiedCppType(fields[1].type)}>{from${fields[1].type.index}(source.error)}};`);
+		} else if(record || copy.compound === "tuple")
 		{
 			fields.forEach((field, i) => {
+				const member = record ? field.name : ["first", "second"][i];
 				view.push(`View${field.type.index} field${i};`);
-				initializers.push(`field${i}(source.${field.name})`);
-				check.push(`check${field.type.index}(source.${field.name}, budget);`);
+				initializers.push(`field${i}(source.${member})`);
+				check.push(`check${field.type.index}(source.${member}, budget);`);
 			});
 			constructor.push(`value = ${name}{${fields.map((_, i) => `field${i}.value`).join(", ")}};`);
 			check.unshift(`charge(budget, 1, sizeof(${name}));`);

@@ -58,7 +58,7 @@
       ],
       "properties": {
         "kind": {
-          "const": "array"
+          "enum": ["array", "option"]
         },
         "element": {
           "$ref": "#"
@@ -66,6 +66,16 @@
         "abi": {
           "$ref": "#/$defs/abi"
         }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "arguments", "abi"],
+      "properties": {
+        "kind": {"enum": ["result", "tuple"]},
+        "arguments": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#"}},
+        "abi": {"$ref": "#/$defs/abi"}
       }
     },
     {

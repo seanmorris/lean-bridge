@@ -76,17 +76,20 @@ export const runPhpWasmCorpusLibrary = async (t, library, { path = "ordinary-sou
 	const packageSet = await json(join(packageRoot, "php-wasm-package-set.json"));
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });
+	const rejectedName = `${library.pendingExport}List`, pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
+	await saveLakeFile(join(pending, "project"), pendingSource,
+		`${await readFile(join(pending, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
 	await saveLakeFile(join(pending, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.pendingModule]
-		, ...(path === "ordinary-source" ? { exports: [library.pendingExport] } : {}), targets }));
+		, ...(path === "ordinary-source" ? { exports: [rejectedName] } : {}), targets }));
 	if(path === "reviewed-ir")
 	{
 		const document = corpusReviewedIr(library), template = document.declarations[0];
 		document.types = [];
-		document.declarations = [{ ...template, id: `lean:${library.pendingExport}`
-			, name: library.pendingExport.split(".").at(-1)
-			, overloadKey: library.pendingExport
-			, source: { ...template.source, declaration: library.pendingExport } }];
+		document.declarations = [{ ...template, id: `lean:${rejectedName}`
+			, name: rejectedName.split(".").at(-1)
+			, overloadKey: rejectedName
+			, source: { ...template.source, declaration: rejectedName } }];
 		await saveLakeFile(join(pending, "project"), "reviewed.binding-ir.json", canonicalJson(document));
 	}
 	let rejection;
@@ -97,10 +100,10 @@ export const runPhpWasmCorpusLibrary = async (t, library, { path = "ordinary-sou
 	catch(error)
 	{
 		assert.equal(error.code, "native-elaboration-unsupported", "Toolchain failures are not type-admission rejections");
-		assert.ok(error.message.includes(`${library.pendingExport}: unsupported-native-type`));
-		rejection = { shape: library.pendingShape, stage: "source-elaboration"
+		assert.ok(error.message.includes(`${rejectedName}: unsupported-native-type`));
+		rejection = { shape: "list", stage: "source-elaboration"
 			, status: "unsupported"
-			, export: library.pendingExport, code: error.code, message: error.message };
+			, export: rejectedName, code: error.code, message: error.message };
 	}
 	assert.ok(rejection, "Pending type was admitted; add installed corpus cases");
 	await assert.rejects(lstat(join(context.directory, "pending-release")), { code: "ENOENT" });

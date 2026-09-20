@@ -10,6 +10,8 @@ Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` f
 
 Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
 
+`Option`, `Except` and binary products also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. Other native targets and PHP-Wasm still reject these constructors. Select only C, C++ and/or npm for a combined compound-value release.
+
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 
 ```sh
@@ -46,6 +48,8 @@ Arrays become typed spans with `data`, `length`, `owner` and `release` fields. R
 Inputs borrow caller storage for the duration of the call. The adapter validates the complete input before calling Lean and ignores input ownership callbacks. Results own independent copies. In GMP packages, call the generated `<type>_init` for aggregate structs before their first use. This initializes every nested integer. Clear with `<type>_clear`; it releases storage and resets fields to initialized empty values. Successful calls replace initialized copied outputs. Packages without arbitrary integers retain zero-initialized structs and require clearing outputs before reuse. Repeated clear is safe. Never shallow-copy GMP values or owned results.
 
 The 16 MiB per-call budget covers input and output payloads together, array slots and copied record storage. Array slots cost at least one native pointer each; output arrays also account for their ownership header. It is a conversion limit, not a limit on memory used by the Lean algorithm. Type nesting is limited to 32. Invalid input and conversion failures leave the caller's output slot unchanged; partially built outputs are released internally.
+
+Compound structs use `has_value` plus `value` for options, `is_ok` plus `ok` and `error` for results, and `fst`/`snd` for products. Flags must be 0 or 1. Lean's `Except E T` maps to success type `T` and error type `E`. Only the active branch crosses into Lean; both fields must be initialized for cleanup. The conversion budget charges compound struct storage and the active payload. GMP packages also budget the public-to-private conversion. Returned inactive fields remain initialized and empty. `_clear` traverses both fields, including nested GMP integers. C++ maps these types to `std::optional`, tagged `Result` and `std::pair`; see the [consumer guide](../consume/cpp.md#options-results-and-products).
 
 Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. See the [installed array and record acceptance](../evidence/native-c-copied-20260914.md) for nested structures, exact values and allocation-failure checks.
 

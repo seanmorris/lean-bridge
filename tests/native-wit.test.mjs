@@ -104,7 +104,7 @@ test("ordinary WIT admission rejects reserved names, partial projections and cha
 	const effectful = synthetic(); effectful.declarations[0].effects = ["nondeterministic"];
 	assert.throws(() => compileCopiedWitModel(effectful), /pure/);
 	const unsupported = synthetic(); unsupported.declarations[0].result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] };
-	assert.throws(() => compileCopiedWitModel(unsupported), /ordinary C\/C\+\+/);
+	assert.throws(() => compileCopiedWitModel(unsupported), /compound values are not implemented/);
 });
 
 const helpers = `

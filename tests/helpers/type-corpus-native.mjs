@@ -195,23 +195,27 @@ export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ord
 	assert.ok(model.sourceIdentity.modules.some(module => module.module === context.names.local));
 	assert.ok(model.sourceIdentity.modules.some(module => module.module === context.names.remote));
 
-	// The pending module was typechecked by the oracle, but this target cannot
-	// currently package its shape. A newly admitted shape must get real cases.
+	// Compound values have dedicated installed fixtures. Keep this historical
+	// primitive corpus's negative probe on an unsupported List.
+	const rejectedName = `${library.pendingExport}List`;
 	const pendingWorkspace = join(context.directory, "pending");
 	await cp(context.workspace, pendingWorkspace, { recursive: true });
+	const pendingSource = `${library.pendingModule.replaceAll(".", "/")}.lean`;
+	await saveLakeFile(join(pendingWorkspace, "project"), pendingSource,
+		`${await readFile(join(pendingWorkspace, "project", pendingSource), "utf8")}\ndef ${rejectedName} : List UInt32 := []\n`);
 	await saveLakeFile(join(pendingWorkspace, "project"), "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: [library.pendingModule]
-		, ...(path === "ordinary-source" ? { exports: [library.pendingExport] } : {})
+		, ...(path === "ordinary-source" ? { exports: [rejectedName] } : {})
 		, targets: targetSettings(library, profiles, "pending") }));
 	if(path === "reviewed-ir")
 	{
 		const document = corpusReviewedIr(library), declaration = document.declarations[0];
-		// Claiming a copied result cannot authorize the source's Option/Except.
+		// Claiming a primitive result cannot authorize the source's List.
 		document.types = [];
-		document.declarations = [{ ...declaration, id: `lean:${library.pendingExport}`
-			, name: library.pendingExport.split(".").at(-1)
-			, overloadKey: library.pendingExport
-			, source: { ...declaration.source, declaration: library.pendingExport } }];
+		document.declarations = [{ ...declaration, id: `lean:${rejectedName}`
+			, name: rejectedName.split(".").at(-1)
+			, overloadKey: rejectedName
+			, source: { ...declaration.source, declaration: rejectedName } }];
 		await saveLakeFile(join(pendingWorkspace, "project"), "reviewed.binding-ir.json", canonicalJson(document));
 	}
 	let rejection;
@@ -222,9 +226,9 @@ export const runNativeCorpusLibrary = async (t, library, profiles, { path = "ord
 	catch(error)
 	{
 		assert.equal(error.code, "native-elaboration-unsupported", "A toolchain or source failure is not a type-admission rejection");
-		assert.ok(error.message.includes(`${library.pendingExport}: unsupported-native-type`));
-		rejection = { shape: library.pendingShape, stage: "source-elaboration"
-			, status: "unsupported", export: library.pendingExport
+		assert.ok(error.message.includes(`${rejectedName}: unsupported-native-type`));
+		rejection = { shape: "list", stage: "source-elaboration"
+			, status: "unsupported", export: rejectedName
 			, code: error.code, message: error.message };
 	}
 	assert.ok(rejection, "Pending type was admitted; replace its rejection with installed corpus cases");

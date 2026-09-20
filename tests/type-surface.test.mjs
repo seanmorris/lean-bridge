@@ -128,6 +128,19 @@ test("npm record evidence covers only copied positions and all nineteen primitiv
 	}
 });
 
+test("native compound evidence promotes exactly C/C++ copied positions on both paths", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("native-compounds-installed"));
+	assert.equal(observed.length, 36);
+	for(const cell of observed)
+	{
+		assert.ok(["c", "cpp"].includes(cell.profile));
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
 test("npm callable evidence covers five installed profiles without claiming fields or compound values", () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-callables-installed"));

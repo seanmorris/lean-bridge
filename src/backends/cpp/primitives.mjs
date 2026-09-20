@@ -59,8 +59,8 @@ const wrapper = (surface, fn) => {
  * @param ir - Canonical Binding IR.
  */
 export const compilePrimitiveCppModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true });
-	if(surface.copies.some(copy => copy.record?.name === "LeanClosure")) throw new TypeError("C++ record name collides with LeanClosure");
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true });
+	if(surface.copies.some(copy => ["LeanClosure", "Ok", "Err", "Result"].includes(copy.record?.name))) throw new TypeError("C++ record name collides with a generated callable or compound type");
 	for(const [index, callback] of [...surface.callbacks.values()].entries()) callback.cppIndex = index;
 	return { kind: "copied-primitives", surface };
 };
@@ -82,6 +82,7 @@ export const renderPrimitiveCppPackage = ({ surface }) => {
 #include <memory>
 #include <string>
 #include <variant>
+#include <optional>
 #include <vector>
 #include <utility>
 ${surface.callbacks.size ? `#include <concepts>
@@ -96,6 +97,9 @@ ${bigint ? `#ifndef BOOST_MP_STANDALONE
 #include <boost/multiprecision/cpp_int.hpp>` : ""}
 
 namespace lean_bridge::${p} {
+${surface.copies.some(copy => copy.compound === "result") ? `template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };
+template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };
+template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;` : ""}
 ${bigint ? "using Nat = boost::multiprecision::cpp_int;\nusing Int = boost::multiprecision::cpp_int;" : ""}
 ${values.records}
 class Error final : public std::runtime_error {

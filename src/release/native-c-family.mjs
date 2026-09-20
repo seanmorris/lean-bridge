@@ -41,7 +41,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity);
-	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true }), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true, compounds: true }), p = surface.prefix;
 	const bigint = target === "cpp" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const gmp = target === "c" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));

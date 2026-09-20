@@ -15,7 +15,7 @@ import { generateNativeCallables } from "./native-callables.mjs";
  * @param receipt - Verified native component compilation receipt.
  */
 export const generateNativePrimitiveC = (model, receipt) => {
-	const surface = compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true }), p = surface.prefix, macro = p.toUpperCase();
+	const surface = compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true, compounds: true }), p = surface.prefix, macro = p.toUpperCase();
 	const callables = generateNativeCallables(model, surface);
 	if(!/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(receipt.initializer)) throw new TypeError("Invalid native initializer identity");
 	return `#include "${p}_runtime.h"

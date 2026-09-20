@@ -199,6 +199,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
 	model.types.forEach(({ key, ...type }) => {
     validateNativeType(type);
+    if(["option", "result", "tuple"].includes(type.kind)) throw Object.assign(new TypeError("Perl compound values are not implemented for this target"), { code: "unsupported-perl-signature" });
     if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
 	const classes = new Set();

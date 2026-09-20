@@ -115,17 +115,16 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
     return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
-  if request.profile.getD "component-scalars-v1" != "native-library-v1" then
-    if e.isAppOfArity ``Option 1 then
-      return obj [("kind", str "option"), ("element", ← shape request e.appArg! seen (depth + 1) true)]
-    if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
-      let args := e.getAppArgs
-      let first ← shape request args[0]! seen (depth + 1) true
-      let second ← shape request args[1]! seen (depth + 1) true
-      -- IR result arguments are [success, error]; Lean's Except is [error, success].
-      let result := e.isAppOfArity ``Except 2
-      return obj [("kind", str (if result then "result" else "tuple")),
-        ("arguments", toJson (if result then #[second, first] else #[first, second]))]
+  if e.isAppOfArity ``Option 1 then
+    return obj [("kind", str "option"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+  if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
+    let args := e.getAppArgs
+    let first ← shape request args[0]! seen (depth + 1) true
+    let second ← shape request args[1]! seen (depth + 1) true
+    -- IR result arguments are [success, error]; Lean's Except is [error, success].
+    let result := e.isAppOfArity ``Except 2
+    return obj [("kind", str (if result then "result" else "tuple")),
+      ("arguments", toJson (if result then #[second, first] else #[first, second])), ("abi", ← abi e)]
   if e.isForall then
     if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e

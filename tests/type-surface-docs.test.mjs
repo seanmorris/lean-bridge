@@ -178,10 +178,12 @@ test("recorded result and arbitrary-integer rejections exercise real generator g
 	for(const [generate, type, code] of [
 		[generatePhpBindingPackage, apply("result"), "unsupported-result-type"]
 		, [generateRustBindingPackage, { kind: "primitive", name: "nat" }, "unsupported-arbitrary-integer"]
-		, [generateCBindingPackage, apply("result"), "unsupported-type-application"]
 	]){
 		const ir = structuredClone(alpha.bindingIr);
 		ir.types.find(type => type.name === "Payload").fields[1].type = type;
 		assert.throws(() => generate(ir), error => error.code === code, code);
 	}
+	const ir = structuredClone(alpha.bindingIr);
+	ir.types.find(type => type.name === "Payload").fields[1].type = apply("result");
+	assert.match(generateCBindingPackage(ir)["include/lean_alpha.h"], /uint8_t is_ok;/);
 });

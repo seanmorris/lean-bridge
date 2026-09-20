@@ -13,8 +13,9 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
  */
 export const nativeCReference = type => type.kind === "primitive" ? { kind: "primitive", name: type.name }
 	: type.kind === "callback" ? { kind: "named", id: `bridge:Callback${sha256(canonicalJson({ parameters: type.parameters.map(nativeCReference), result: nativeCReference(type.result) })).slice(0, 20)}` }
-		: type.kind === "array" ? { kind: "apply", constructor: "array", arguments: [nativeCReference(type.element)] }
-			: { kind: "named", id: `lean:${type.name}` };
+		: ["array", "option"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: [nativeCReference(type.element)] }
+			: ["result", "tuple"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: type.arguments.map(nativeCReference) }
+				: { kind: "named", id: `lean:${type.name}` };
 const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
 
 /**
@@ -94,17 +95,31 @@ export const generateCopiedNativeCalls = (model, surface) => {
 				, `*out = (${c.name}){owner->data, length, owner, ${key}_release};`);
 		} else
 		{
+			const fields = type.kind === "record" ? type.fields : (type.element ? [type.element] : type.arguments).map(type => ({ type }));
+			const flag = { option: "has_value", result: "is_ok" }[type.kind];
+			const condition = i => flag ? `${i === 1 ? "!" : ""}value->${flag}` : "1";
 			check.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`);
-			for(const [i, field] of type.fields.entries()) check.push(`if (!${id(field.type)}_check(&value->${c.fields[i].name}, budget)) return 0;`);
-			input.push(`return lb_t${nativeTypeKey(type)}_make(${type.fields.map((field, i) => `${id(field.type)}_in(&value->${c.fields[i].name})`).join(", ") || "lean_box(0)"});`);
+			if(flag) check.push(`if (value->${flag} > 1) return 0;`);
+			for(const [i, field] of fields.entries()) check.push(`if (${condition(i)} && !${id(field.type)}_check(&value->${c.fields[i].name}, budget)) return 0;`);
+			const args = fields.map((field, i) => `${id(field.type)}_in(&value->${c.fields[i].name})`), helper = `lb_t${nativeTypeKey(type)}`;
+			if(type.kind === "option") input.push(`return value->has_value ? ${helper}_some(${args[0]}) : ${helper}_none(lean_box(0));`);
+			else if(type.kind === "result") input.push(`return value->is_ok ? ${helper}_ok(${args[0]}) : ${helper}_error(${args[1]});`);
+			else input.push(`return ${helper}_make(${args.join(", ") || "lean_box(0)"});`);
 			output.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`, `*out = (${c.name}){0};`);
-			for(const [i, field] of type.fields.entries())
+			if(flag)
 			{
+				if(nativeObjectType(type)) output.push("lean_inc(value);");
+				output.push(`out->${flag} = ${helper}_has(value);`);
+			}
+			for(const [i, field] of fields.entries())
+			{
+				if(flag) output.push(`if (${i === 1 ? "!" : ""}out->${flag}) {`);
 				if(nativeObjectType(type)) output.push("lean_inc(value);");
 				output.push(`${nativeCType(field.type)} field${i} = lb_t${nativeTypeKey(type)}_get${i}(value);`
 					, `int status${i} = ${id(field.type)}_out(field${i}, &out->${c.fields[i].name}, budget);`);
 				if(nativeObjectType(field.type)) output.push(`lean_dec(field${i});`);
 				output.push(`if (status${i} != 1) { ${c.name}_clear(out); return status${i}; }`);
+				if(flag) output.push("}");
 			}
 		}
 		return [...extra

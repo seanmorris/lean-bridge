@@ -44,6 +44,32 @@ ${body}
 };
 
 /**
+ * Fail every facade allocation while transporting active and inactive branches.
+ *
+ * @param output - Fresh compound release.
+ * @param working - Isolated probe directory.
+ * @param environment - Producer compiler environment.
+ */
+export const checkGmpCompoundFaults = (output, working, environment) => probe(output, working, "compounds", `int main(void) {
+  compounds_packet value, out; compounds_packet_init(&value); compounds_packet_init(&out);
+  value.choice.has_value = 1; value.choice.value.is_ok = 1; mpz_setbit(value.choice.value.ok.fst, 100);
+  value.products.fst.snd = (compounds_string){"packet", 6, NULL, NULL}; value.products.snd.snd = 65;
+  value.nested.is_ok = 0; value.nested.error.has_value = 1; mpz_setbit(value.nested.error.value, 100);
+  compounds_error error = {0}; int succeeded = 0;
+  for (int limit = 0; limit < 80; ++limit) {
+    remaining = limit; compounds_status status = compounds_transform(&value, &out, &error);
+    if (status == COMPOUNDS_STATUS_OK) {
+      CHECK(out.choice.has_value && out.choice.value.is_ok && mpz_tstbit(out.choice.value.ok.fst, 100));
+      compounds_packet_clear(&out); compounds_packet_clear(&out); CHECK(live == 0); succeeded = 1; break;
+    }
+    CHECK(status == COMPOUNDS_STATUS_UNEXPECTED_ERROR && live == 0);
+    CHECK(!out.choice.has_value && !out.products.fst.snd.data);
+  }
+  CHECK(succeeded); remaining = -1; compounds_packet_clear(&value);
+  printf("gmp-fault-ok:%u\\n", checks);
+}`, environment);
+
+/**
  * Check callback conversions at every facade allocation checkpoint.
  *
  * @param output - Fresh native release.

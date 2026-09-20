@@ -25,11 +25,17 @@ const fail = message => { throw new TypeError(`native-library-v1: ${message}`); 
  */
 export const nativeLeanType = type => {
 	if(type.kind === "array") return `(Array ${nativeLeanType(type.element)})`;
+	if(type.kind === "option") return `(Option ${nativeLeanType(type.element)})`;
+	if(type.kind === "result") return `(Except ${nativeLeanType(type.arguments[1])} ${nativeLeanType(type.arguments[0])})`;
+	if(type.kind === "tuple") return `(Prod ${type.arguments.map(nativeLeanType).join(" ")})`;
 	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(nativeLeanType).join(" → ")})`;
 	return type.lean;
 };
 const absoluteLeanType = type => {
 	if(type.kind === "array") return `(_root_.Array ${absoluteLeanType(type.element)})`;
+	if(type.kind === "option") return `(_root_.Option ${absoluteLeanType(type.element)})`;
+	if(type.kind === "result") return `(_root_.Except ${absoluteLeanType(type.arguments[1])} ${absoluteLeanType(type.arguments[0])})`;
+	if(type.kind === "tuple") return `(_root_.Prod ${type.arguments.map(absoluteLeanType).join(" ")})`;
 	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(absoluteLeanType).join(" → ")})`;
 	return `_root_.${type.lean}`;
 };
@@ -82,6 +88,9 @@ export const nativeCallbackDefault = type => {
 
 const callbackLeanDefault = type => {
 	if(type.kind === "array") return "#[]";
+	if(type.kind === "option") return "_root_.Option.none";
+	if(type.kind === "result") return `(_root_.Except.ok ${callbackLeanDefault(type.arguments[0])})`;
+	if(type.kind === "tuple") return `(_root_.Prod.mk ${type.arguments.map(callbackLeanDefault).join(" ")})`;
 	if(type.kind === "record") return `(_root_.${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values");
 	return { unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
@@ -111,7 +120,8 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		validateNativeType(type);
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
-		if(type.kind === "array") visit(type.element);
+		if(["array", "option"].includes(type.kind)) visit(type.element);
+		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
 		if(type.kind === "callback")
 		{ type.parameters.forEach(visit); visit(type.result); }
@@ -196,6 +206,28 @@ export const generateNativeLeanAdapters = model => {
 	for(const item of model.exports) emit(item.symbol, item.parameters.map((p, i) => ({ name: `a${i}`, type: p.type })), item.result, `${item.specialization ? `(${item.specialization.application})` : `_root_.${item.name}`} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
 	for(const type of model.types)
 	{
+		const bool = { kind: "primitive", name: "bool", lean: "Bool" };
+		if(type.kind === "option")
+		{
+			emit(`lb_t${type.key}_none`, [], type, "_root_.Option.none");
+			emit(`lb_t${type.key}_some`, [{ name: "value", type: type.element }], type, "_root_.Option.some value");
+			emit(`lb_t${type.key}_has`, [{ name: "value", type }], bool, "match value with | .none => false | .some _ => true");
+			emit(`lb_t${type.key}_get0`, [{ name: "value", type }], type.element, `match value with | .none => ${callbackLeanDefault(type.element)} | .some item => item`);
+		}
+		if(type.kind === "result")
+		{
+			emit(`lb_t${type.key}_has`, [{ name: "value", type }], bool, "match value with | .ok _ => true | .error _ => false");
+			for(const [i, branch] of ["ok", "error"].entries())
+			{
+				emit(`lb_t${type.key}_${branch}`, [{ name: "value", type: type.arguments[i] }], type, `_root_.Except.${branch} value`);
+				emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], type.arguments[i], `match value with | .${branch} item => item | _ => ${callbackLeanDefault(type.arguments[i])}`);
+			}
+		}
+		if(type.kind === "tuple")
+		{
+			emit(`lb_t${type.key}_make`, type.arguments.map((child, i) => ({ name: `a${i}`, type: child })), type, "_root_.Prod.mk a0 a1");
+			type.arguments.forEach((child, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], child, `value.${i + 1}`));
+		}
 		if(type.kind === "record")
 		{
 			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `_root_.${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
