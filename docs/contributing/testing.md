@@ -481,6 +481,19 @@ threaded calls. Each path also compiles eleven invalid consumer programs,
 injects allocation failures and panics, and runs the relocated executable after
 removing the crate and dependency sources. CI retains `build/compounds/rust.json`.
 
+Run the installed Rust List checks on both source paths:
+
+```sh
+LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
+node --test tests/rust-list-contract.test.mjs
+```
+
+The [Rust List suite](../evidence/rust-lists-20260920.md) checks all nineteen
+primitive elements, nested copied values, slice input types and owned results.
+It compiles invalid consumers, injects conversion errors and panics, and checks
+malformed private output layouts. The public consumer reruns after removal of
+crate and dependency sources. CI retains `build/lists/rust.json`.
+
 Run the installed .NET compound checks on both source paths:
 
 ```sh

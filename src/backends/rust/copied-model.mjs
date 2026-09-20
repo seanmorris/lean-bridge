@@ -25,7 +25,7 @@ export const validateOrdinaryCargoSettings = (settings = {}) => {
  * @param ir - Compiler-derived Binding IR.
  */
 export const compileCopiedRustModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), names = new Set(reserved);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), names = new Set(reserved);
 	if(surface.callbacks.size) names.add("LeanClosure");
 	const fail = (declaration, message) => {
 		const source = declaration.source?.extensions?.["lean-lang.org/source-position"];

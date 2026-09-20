@@ -30,6 +30,8 @@ test("every consumer table is generated and includes all 48 source forms exactly
 	assert.match(rendered.reference, /ordinary-source and compiler-checked reviewed packages.*all seventeen consumer profiles/u);
 	assert.match(rendered.reference, /reviewed-native-20260918\.md.*reviewed-wasm-20260918\.md/u);
 	assert.doesNotMatch(rendered.reference, /currently use fixed Alpha projections|Rust rejects arbitrary-precision integers/u);
+	assert.doesNotMatch(rendered.reference, /Rust's standalone generator rejects arbitrary-precision integers/u);
+	assert.match(rendered.reference, /Rust's older Alpha resource projection rejects arbitrary-precision integers.*copied-value generator.*BigUint and BigInt/u);
 	assert.deepEqual(new Set(Object.values(typeGuideProfiles).flat()), new Set(document.profiles.map(profile => profile.id)));
 	for(const [filename, profiles] of Object.entries(typeGuideProfiles))
 	{

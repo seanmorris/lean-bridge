@@ -31,15 +31,29 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays, acyclic records, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays and Lists, acyclic records, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
 ## Export options, results and products
 
-Ordinary-source and reviewed-IR builds compile `Option`, `Except` and nested binary `Prod` values, including mixtures with all nineteen primitives, arrays and acyclic record fields. Consumers use Rust `Option<T>`, `Result<T, E>` and `(A, B)` without native declarations. Inputs borrow the container; results own their copied data. The function's outer `Result<_, Error>` reports bridge failures separately from a Lean `Except` value.
+Ordinary-source and reviewed-IR builds compile `Option`, `Except` and nested binary `Prod` values, including mixtures with all nineteen primitives, arrays, Lists and acyclic record fields. Consumers use Rust `Option<T>`, `Result<T, E>` and `(A, B)` without native declarations. Inputs borrow the container; results own their copied data. The function's outer `Result<_, Error>` reports bridge failures separately from a Lean `Except` value.
 
 Use concrete signatures and select the exports in `lean-bridge.exports.json`. A [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract) receives the same fresh compiler checks. See the [consumer example](../consume/rust.md#options-results-and-products) and [installed crate evidence](../evidence/rust-compounds-20260920.md). Copied compounds cannot contain resources or callbacks; compound callable signatures require separate support.
+
+## Export copied Lists
+
+Export concrete `List` parameters, results and record fields through the shared
+configuration. No Cargo-specific type annotation is needed. Rust inputs borrow
+slices; outputs and record fields use owned vectors. Lists can nest with the
+other supported copied types within the existing 32-level and 16 MiB limits.
+They retain a distinct contract identity from Arrays. The generated adapter
+handles native cleanup on conversion failure and panic unwinding.
+
+See the [consumer example](../consume/rust.md#lists) and
+[installed crate checks](../evidence/rust-lists-20260920.md). List payloads in
+callbacks remain unsupported. Combined packages require every selected target
+to accept the same API.
 
 ## Export callbacks and closures
 

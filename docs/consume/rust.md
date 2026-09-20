@@ -43,15 +43,15 @@ fn main() -> Result<(), cedar_api::Error> {
 
 Run `cargo run --release`. Cargo resolves the crate's normal Rust dependencies, `num-bigint` and `sha2`; it does not compile Lean or a C extension. For an offline build, cache or vendor the dependencies first and use `--offline`. For a registry release, replace the path dependency with your publisher's exact version and registry settings. See [Cargo publication and installation](../publish/cargo.md#verify-the-published-crate-and-consumer).
 
-Ordinary packages support pure functions over 19 primitive types, arrays, acyclic records, options, results and nested binary products. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
+Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, options, results and nested binary products. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
 
-Rust conversion and native copying each use a 16 MiB accounting budget. Array conversion counts at least eight bytes per element. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
+Rust conversion and native copying each use a 16 MiB accounting budget. Array and List conversion count at least eight bytes per element. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
 
 Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
 
 ### Options, results and products
 
-Lean `Option T` uses Rust `Option<T>`, `Except E T` uses `Result<T, E>`, and `A × B` uses `(A, B)`. Products keep their binary nesting. Inputs borrow these containers; returned values own their payloads, including nested arrays and record fields.
+Lean `Option T` uses Rust `Option<T>`, `Except E T` uses `Result<T, E>`, and `A × B` uses `(A, B)`. Products keep their binary nesting. Inputs borrow these containers; returned values own their payloads, including nested arrays, Lists and record fields.
 
 For the `compounds-api` acceptance package, use its prepared crate in your Cargo dependency and save this as `src/main.rs`:
 
@@ -74,6 +74,34 @@ fn main() -> Result<(), Error> {
 Run `cargo run --release`. `None`, `Some(())` and `Some(None)` retain their declared option structure. `Ok` and `Err` stay distinct even when their payload types match. A function returning Lean `Except E T` has Rust return type `Result<Result<T, E>, Error>`: one `?` handles loading or conversion failure and leaves the domain result for your application.
 
 Rust rejects wrong payload types, tuple arities and missing borrows at compile time. The existing 16 MiB conversion budgets also cover compounds; type nesting stops at 32 levels. [Installed compound checks](../evidence/rust-compounds-20260920.md) cover both source paths, compiler rejections, allocation failures, panic cleanup and source-free executables. Compound callbacks and resource-containing copies remain unsupported.
+
+### Lists
+
+Lean `List T` inputs borrow Rust slices, `&[T]`. Results and record fields use
+owned `Vec<T>` values. Lists preserve empty values, order, duplicates and nesting
+with arrays, options, results, binary products and copied records. List and Array
+remain distinct contract types even though both use Rust slices and vectors.
+
+For the `lists-api` acceptance package, use its prepared crate as your dependency
+and save this as `src/main.rs`:
+
+```rust
+use lists_api::{mix, reverse_uint32, Error};
+
+fn main() -> Result<(), Error> {
+    assert_eq!(reverse_uint32(&[1, 2, 2, 3])?, vec![3, 2, 2, 1]);
+    assert!(reverse_uint32(&[])?.is_empty());
+    assert_eq!(mix(&[vec![1, 2], vec![], vec![3]])?,
+               vec![vec![3], vec![], vec![2, 1]]);
+    Ok(())
+}
+```
+
+Run `cargo run --release`. The compiler rejects wrong element types or nesting.
+The generated adapter checks copy budgets and releases native results on errors
+and unwinding. [Installed List checks](../evidence/rust-lists-20260920.md) cover
+both source paths, including executables moved away from their crate sources.
+List callback payloads remain unsupported.
 
 ### Callbacks and returned Lean closures
 
@@ -222,7 +250,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | `Generated enum` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated owned wrapper` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `FnMut(owned primitives) -> Result<T, Error>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Call-scoped borrow; typed owned callback arguments; original errors and unwinding panic payloads return after native cleanup. Same-thread nested calls are supported. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `&[T]` (input); `Vec<T>` (result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Inputs borrow typed slices; outputs and record fields use owned `Vec<T>` values. Preserve order, duplicates and nesting; copies remain independent. Types reject invalid elements and shapes; runtime budgets reject oversized copies. RAII releases native output and scratch after errors or unwinding, but not process abort. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `char` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `u64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `i64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

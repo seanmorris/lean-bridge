@@ -1,0 +1,1750 @@
+{
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Lists.reverse_unit",
+      "parameters": [
+        {
+          "list": "unit"
+        }
+      ],
+      "result": {
+        "list": "unit"
+      }
+    },
+    {
+      "name": "Lists.reverse_bool",
+      "parameters": [
+        {
+          "list": "bool"
+        }
+      ],
+      "result": {
+        "list": "bool"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint8",
+      "parameters": [
+        {
+          "list": "uint8"
+        }
+      ],
+      "result": {
+        "list": "uint8"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint16",
+      "parameters": [
+        {
+          "list": "uint16"
+        }
+      ],
+      "result": {
+        "list": "uint16"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint32",
+      "parameters": [
+        {
+          "list": "uint32"
+        }
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint64",
+      "parameters": [
+        {
+          "list": "uint64"
+        }
+      ],
+      "result": {
+        "list": "uint64"
+      }
+    },
+    {
+      "name": "Lists.reverse_int8",
+      "parameters": [
+        {
+          "list": "int8"
+        }
+      ],
+      "result": {
+        "list": "int8"
+      }
+    },
+    {
+      "name": "Lists.reverse_int16",
+      "parameters": [
+        {
+          "list": "int16"
+        }
+      ],
+      "result": {
+        "list": "int16"
+      }
+    },
+    {
+      "name": "Lists.reverse_int32",
+      "parameters": [
+        {
+          "list": "int32"
+        }
+      ],
+      "result": {
+        "list": "int32"
+      }
+    },
+    {
+      "name": "Lists.reverse_int64",
+      "parameters": [
+        {
+          "list": "int64"
+        }
+      ],
+      "result": {
+        "list": "int64"
+      }
+    },
+    {
+      "name": "Lists.reverse_nat",
+      "parameters": [
+        {
+          "list": "nat"
+        }
+      ],
+      "result": {
+        "list": "nat"
+      }
+    },
+    {
+      "name": "Lists.reverse_int",
+      "parameters": [
+        {
+          "list": "int"
+        }
+      ],
+      "result": {
+        "list": "int"
+      }
+    },
+    {
+      "name": "Lists.reverse_float32",
+      "parameters": [
+        {
+          "list": "float32"
+        }
+      ],
+      "result": {
+        "list": "float32"
+      }
+    },
+    {
+      "name": "Lists.reverse_float64",
+      "parameters": [
+        {
+          "list": "float64"
+        }
+      ],
+      "result": {
+        "list": "float64"
+      }
+    },
+    {
+      "name": "Lists.reverse_string",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": {
+        "list": "string"
+      }
+    },
+    {
+      "name": "Lists.reverse_bytes",
+      "parameters": [
+        {
+          "list": "bytes"
+        }
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.reverse_char",
+      "parameters": [
+        {
+          "list": "char"
+        }
+      ],
+      "result": {
+        "list": "char"
+      }
+    },
+    {
+      "name": "Lists.reverse_usize",
+      "parameters": [
+        {
+          "list": "usize"
+        }
+      ],
+      "result": {
+        "list": "usize"
+      }
+    },
+    {
+      "name": "Lists.reverse_isize",
+      "parameters": [
+        {
+          "list": "isize"
+        }
+      ],
+      "result": {
+        "list": "isize"
+      }
+    },
+    {
+      "name": "Lists.join",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Lists.mix",
+      "parameters": [
+        {
+          "list": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "list": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Lists.transform",
+      "parameters": [
+        {
+          "record": "Lists.Packet",
+          "fields": {
+            "sequences": {
+              "list": {
+                "list": "uint32"
+              }
+            },
+            "branches": {
+              "list": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "nat",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              }
+            },
+            "buffers": {
+              "list": "bytes"
+            },
+            "arrays": {
+              "array": {
+                "list": {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "record": "Lists.Packet",
+        "fields": {
+          "sequences": {
+            "list": {
+              "list": "uint32"
+            }
+          },
+          "branches": {
+            "list": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            }
+          },
+          "buffers": {
+            "list": "bytes"
+          },
+          "arrays": {
+            "array": {
+              "list": {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.duplicate",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.nest",
+      "parameters": [
+        {
+          "option": {
+            "list": {
+              "result": [
+                {
+                  "list": "unit"
+                },
+                "string"
+              ]
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "list": {
+            "result": [
+              {
+                "list": "unit"
+              },
+              "string"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.swap",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                {
+                  "list": "nat"
+                },
+                {
+                  "list": "uint32"
+                }
+              ]
+            },
+            {
+              "list": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "list": "string"
+          },
+          {
+            "tuple": [
+              {
+                "list": "nat"
+              },
+              {
+                "list": "uint32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lists.deep",
+      "parameters": [
+        {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "list": {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "runs": [
+    {
+      "bindingIrSha256": "1d5ffbd70492af272505932481b840377969074f5e07b206ec52fe7c3e9c73a6",
+      "checks": 34130,
+      "compilerFreePath": true,
+      "consumerSha256": "e296ba9caa9ad68bb93a801780c233f6d1de0251fc754255ae4e725fcfd11de0",
+      "modelSha256": "a5fa0639129014ae2f51fd3852f494a2f78a55454191d8a6b42f528577a1972e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51447839,
+              "path": "archives/lists-api-1.0.0.crate",
+              "sha256": "019f1063a3ef9cd333f0031fb1c5114d5f3afbae466ece2d741dc6bc453d40d4"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "lists-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "78ab3973dbbddb4730de389842fabb32f5271739461f5186a74a851c80eca671",
+      "safety": {
+        "executableSha256": "1ed65364d04c89a18e75c159bdb0f59c88763414e75884d9bb9f32b5c06c17dc",
+        "faultChecks": 444,
+        "faultSourceSha256": "483fadab645c8d5f52496c885ff070fd997382080da3bfc79baf547a8e1cec2e",
+        "faultTests": 2,
+        "malformedSourceSha256": "8958a1a400c7e03b2272c8c2a41c9a858dc7d38fd837f2afa56872852f03f155",
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "element-type",
+            "sourceSha256": "fb0d7d0def4c9a571b36be4e4419db9071606bfb0476eb519a718f716d6154b9"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "unit-element",
+            "sourceSha256": "2e6ffc38140206a481cb7dc886552f46ea7043ad897e3f1c9ffcbd9b718ba52d"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "missing-borrow",
+            "sourceSha256": "6e1fde1ec189b8c75641b30f76de6e1222f587e0e720fb1761d37fe68051bede"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-arity",
+            "sourceSha256": "7e480a9f343666b2dc1759679ce28a19131d589010d8192f52cf22e8758fd78b"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-nesting",
+            "sourceSha256": "d86697bbbaebef54e0ae90417944722c9307065b1222bbf5c08175a0ce8bc684"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-presence",
+            "sourceSha256": "8db04d45e9d24062cdb5383ca1b62d0a5aa91930b7272965f56f2914ecdf7d77"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "negative-nat",
+            "sourceSha256": "ad809b199ee2764276a513fdec5fb7d4819d672ad03c1ae056d9da6da2f27ee7"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-record-field",
+            "sourceSha256": "8d7ed391b809c47adb041565e80551edb09c4a01c65bc9c75d287e110165debe"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "domain-versus-boundary",
+            "sourceSha256": "2fb9b356a6bb5b43763a7759cc4c3ea02ed9c4c177238ba667deed938f1fed3e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "a26cbd72470f0856c7ccf4974f595b547699a70352961f61d0f859f87124963d"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "fixed-overflow",
+            "sourceSha256": "ca0cb71da138cfdff51f2853ada6936578dec3c87a53cd78c98f84d948c80dea"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "platform-overflow",
+            "sourceSha256": "12a48cd3d48b89a5442ad35c068221cbee46cfd570c945baa57aa46cb00ede7f"
+          }
+        ],
+        "sourceFreeChecks": 34130
+      },
+      "signatures": [
+        {
+          "name": "Lists.deep",
+          "parameters": [
+            {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": {
+                                                          "list": {
+                                                            "list": "uint32"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "result": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": {
+                                                          "list": "uint32"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Lists.duplicate",
+          "parameters": [
+            "bytes"
+          ],
+          "result": {
+            "list": "bytes"
+          }
+        },
+        {
+          "name": "Lists.generate",
+          "parameters": [
+            "nat"
+          ],
+          "result": {
+            "list": "uint32"
+          }
+        },
+        {
+          "name": "Lists.join",
+          "parameters": [
+            {
+              "list": "string"
+            }
+          ],
+          "result": "string"
+        },
+        {
+          "name": "Lists.mix",
+          "parameters": [
+            {
+              "list": {
+                "array": "uint32"
+              }
+            }
+          ],
+          "result": {
+            "array": {
+              "list": "uint32"
+            }
+          }
+        },
+        {
+          "name": "Lists.nest",
+          "parameters": [
+            {
+              "option": {
+                "list": {
+                  "result": [
+                    {
+                      "list": "unit"
+                    },
+                    "string"
+                  ]
+                }
+              }
+            }
+          ],
+          "result": {
+            "option": {
+              "list": {
+                "result": [
+                  {
+                    "list": "unit"
+                  },
+                  "string"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Lists.reverse_bool",
+          "parameters": [
+            {
+              "list": "bool"
+            }
+          ],
+          "result": {
+            "list": "bool"
+          }
+        },
+        {
+          "name": "Lists.reverse_bytes",
+          "parameters": [
+            {
+              "list": "bytes"
+            }
+          ],
+          "result": {
+            "list": "bytes"
+          }
+        },
+        {
+          "name": "Lists.reverse_char",
+          "parameters": [
+            {
+              "list": "char"
+            }
+          ],
+          "result": {
+            "list": "char"
+          }
+        },
+        {
+          "name": "Lists.reverse_float32",
+          "parameters": [
+            {
+              "list": "float32"
+            }
+          ],
+          "result": {
+            "list": "float32"
+          }
+        },
+        {
+          "name": "Lists.reverse_float64",
+          "parameters": [
+            {
+              "list": "float64"
+            }
+          ],
+          "result": {
+            "list": "float64"
+          }
+        },
+        {
+          "name": "Lists.reverse_int",
+          "parameters": [
+            {
+              "list": "int"
+            }
+          ],
+          "result": {
+            "list": "int"
+          }
+        },
+        {
+          "name": "Lists.reverse_int16",
+          "parameters": [
+            {
+              "list": "int16"
+            }
+          ],
+          "result": {
+            "list": "int16"
+          }
+        },
+        {
+          "name": "Lists.reverse_int32",
+          "parameters": [
+            {
+              "list": "int32"
+            }
+          ],
+          "result": {
+            "list": "int32"
+          }
+        },
+        {
+          "name": "Lists.reverse_int64",
+          "parameters": [
+            {
+              "list": "int64"
+            }
+          ],
+          "result": {
+            "list": "int64"
+          }
+        },
+        {
+          "name": "Lists.reverse_int8",
+          "parameters": [
+            {
+              "list": "int8"
+            }
+          ],
+          "result": {
+            "list": "int8"
+          }
+        },
+        {
+          "name": "Lists.reverse_isize",
+          "parameters": [
+            {
+              "list": "isize"
+            }
+          ],
+          "result": {
+            "list": "isize"
+          }
+        },
+        {
+          "name": "Lists.reverse_nat",
+          "parameters": [
+            {
+              "list": "nat"
+            }
+          ],
+          "result": {
+            "list": "nat"
+          }
+        },
+        {
+          "name": "Lists.reverse_string",
+          "parameters": [
+            {
+              "list": "string"
+            }
+          ],
+          "result": {
+            "list": "string"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint16",
+          "parameters": [
+            {
+              "list": "uint16"
+            }
+          ],
+          "result": {
+            "list": "uint16"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint32",
+          "parameters": [
+            {
+              "list": "uint32"
+            }
+          ],
+          "result": {
+            "list": "uint32"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint64",
+          "parameters": [
+            {
+              "list": "uint64"
+            }
+          ],
+          "result": {
+            "list": "uint64"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint8",
+          "parameters": [
+            {
+              "list": "uint8"
+            }
+          ],
+          "result": {
+            "list": "uint8"
+          }
+        },
+        {
+          "name": "Lists.reverse_unit",
+          "parameters": [
+            {
+              "list": "unit"
+            }
+          ],
+          "result": {
+            "list": "unit"
+          }
+        },
+        {
+          "name": "Lists.reverse_usize",
+          "parameters": [
+            {
+              "list": "usize"
+            }
+          ],
+          "result": {
+            "list": "usize"
+          }
+        },
+        {
+          "name": "Lists.swap",
+          "parameters": [
+            {
+              "result": [
+                {
+                  "tuple": [
+                    {
+                      "list": "nat"
+                    },
+                    {
+                      "list": "uint32"
+                    }
+                  ]
+                },
+                {
+                  "list": "string"
+                }
+              ]
+            }
+          ],
+          "result": {
+            "result": [
+              {
+                "list": "string"
+              },
+              {
+                "tuple": [
+                  {
+                    "list": "nat"
+                  },
+                  {
+                    "list": "uint32"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Lists.transform",
+          "parameters": [
+            {
+              "fields": {
+                "arrays": {
+                  "array": {
+                    "list": {
+                      "tuple": [
+                        "bool",
+                        "char"
+                      ]
+                    }
+                  }
+                },
+                "branches": {
+                  "list": {
+                    "option": {
+                      "result": [
+                        {
+                          "tuple": [
+                            "nat",
+                            "unit"
+                          ]
+                        },
+                        "string"
+                      ]
+                    }
+                  }
+                },
+                "buffers": {
+                  "list": "bytes"
+                },
+                "sequences": {
+                  "list": {
+                    "list": "uint32"
+                  }
+                }
+              },
+              "record": "Lists.Packet"
+            }
+          ],
+          "result": {
+            "fields": {
+              "arrays": {
+                "array": {
+                  "list": {
+                    "tuple": [
+                      "bool",
+                      "char"
+                    ]
+                  }
+                }
+              },
+              "branches": {
+                "list": {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "nat",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                }
+              },
+              "buffers": {
+                "list": "bytes"
+              },
+              "sequences": {
+                "list": {
+                  "list": "uint32"
+                }
+              }
+            },
+            "record": "Lists.Packet"
+          }
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a8b5abef13cfb8492cdebf0d0869135ab3b55896a97a26737c17ce35e2db3271"
+    },
+    {
+      "bindingIrSha256": "f204835d63df18951a59a1adda9dca26f3c9dc17efa613f7e483c6186573aa7f",
+      "checks": 34130,
+      "compilerFreePath": true,
+      "consumerSha256": "e296ba9caa9ad68bb93a801780c233f6d1de0251fc754255ae4e725fcfd11de0",
+      "modelSha256": "5e11dd1838e40d6571740cc9cdfff2313461c5af4d21bcac702e000a457698e6",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51456035,
+              "path": "archives/lists-api-1.0.0.crate",
+              "sha256": "f4f1c85cbba5be56493e90b953bda5f61251f89903f4ac6e668fbb247c6218bd"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "lists-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "rust",
+      "receiptSha256": "4e6206951548b73001987cfcc42256bd3ee217c268eabafd0df5222ac869264a",
+      "safety": {
+        "executableSha256": "a8f0e16e3f1f780c00addc7125fe34a7c82c4db32645e55b369ca6bdede76c69",
+        "faultChecks": 444,
+        "faultSourceSha256": "483fadab645c8d5f52496c885ff070fd997382080da3bfc79baf547a8e1cec2e",
+        "faultTests": 2,
+        "malformedSourceSha256": "8958a1a400c7e03b2272c8c2a41c9a858dc7d38fd837f2afa56872852f03f155",
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "element-type",
+            "sourceSha256": "fb0d7d0def4c9a571b36be4e4419db9071606bfb0476eb519a718f716d6154b9"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "unit-element",
+            "sourceSha256": "2e6ffc38140206a481cb7dc886552f46ea7043ad897e3f1c9ffcbd9b718ba52d"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "missing-borrow",
+            "sourceSha256": "6e1fde1ec189b8c75641b30f76de6e1222f587e0e720fb1761d37fe68051bede"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-arity",
+            "sourceSha256": "7e480a9f343666b2dc1759679ce28a19131d589010d8192f52cf22e8758fd78b"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-nesting",
+            "sourceSha256": "d86697bbbaebef54e0ae90417944722c9307065b1222bbf5c08175a0ce8bc684"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-presence",
+            "sourceSha256": "8db04d45e9d24062cdb5383ca1b62d0a5aa91930b7272965f56f2914ecdf7d77"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "negative-nat",
+            "sourceSha256": "ad809b199ee2764276a513fdec5fb7d4819d672ad03c1ae056d9da6da2f27ee7"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-record-field",
+            "sourceSha256": "8d7ed391b809c47adb041565e80551edb09c4a01c65bc9c75d287e110165debe"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "domain-versus-boundary",
+            "sourceSha256": "2fb9b356a6bb5b43763a7759cc4c3ea02ed9c4c177238ba667deed938f1fed3e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "a26cbd72470f0856c7ccf4974f595b547699a70352961f61d0f859f87124963d"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "fixed-overflow",
+            "sourceSha256": "ca0cb71da138cfdff51f2853ada6936578dec3c87a53cd78c98f84d948c80dea"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "platform-overflow",
+            "sourceSha256": "12a48cd3d48b89a5442ad35c068221cbee46cfd570c945baa57aa46cb00ede7f"
+          }
+        ],
+        "sourceFreeChecks": 34130
+      },
+      "signatures": [
+        {
+          "name": "Lists.deep",
+          "parameters": [
+            {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": {
+                                                          "list": {
+                                                            "list": "uint32"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "result": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": {
+                                                          "list": "uint32"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Lists.duplicate",
+          "parameters": [
+            "bytes"
+          ],
+          "result": {
+            "list": "bytes"
+          }
+        },
+        {
+          "name": "Lists.generate",
+          "parameters": [
+            "nat"
+          ],
+          "result": {
+            "list": "uint32"
+          }
+        },
+        {
+          "name": "Lists.join",
+          "parameters": [
+            {
+              "list": "string"
+            }
+          ],
+          "result": "string"
+        },
+        {
+          "name": "Lists.mix",
+          "parameters": [
+            {
+              "list": {
+                "array": "uint32"
+              }
+            }
+          ],
+          "result": {
+            "array": {
+              "list": "uint32"
+            }
+          }
+        },
+        {
+          "name": "Lists.nest",
+          "parameters": [
+            {
+              "option": {
+                "list": {
+                  "result": [
+                    {
+                      "list": "unit"
+                    },
+                    "string"
+                  ]
+                }
+              }
+            }
+          ],
+          "result": {
+            "option": {
+              "list": {
+                "result": [
+                  {
+                    "list": "unit"
+                  },
+                  "string"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Lists.reverse_bool",
+          "parameters": [
+            {
+              "list": "bool"
+            }
+          ],
+          "result": {
+            "list": "bool"
+          }
+        },
+        {
+          "name": "Lists.reverse_bytes",
+          "parameters": [
+            {
+              "list": "bytes"
+            }
+          ],
+          "result": {
+            "list": "bytes"
+          }
+        },
+        {
+          "name": "Lists.reverse_char",
+          "parameters": [
+            {
+              "list": "char"
+            }
+          ],
+          "result": {
+            "list": "char"
+          }
+        },
+        {
+          "name": "Lists.reverse_float32",
+          "parameters": [
+            {
+              "list": "float32"
+            }
+          ],
+          "result": {
+            "list": "float32"
+          }
+        },
+        {
+          "name": "Lists.reverse_float64",
+          "parameters": [
+            {
+              "list": "float64"
+            }
+          ],
+          "result": {
+            "list": "float64"
+          }
+        },
+        {
+          "name": "Lists.reverse_int",
+          "parameters": [
+            {
+              "list": "int"
+            }
+          ],
+          "result": {
+            "list": "int"
+          }
+        },
+        {
+          "name": "Lists.reverse_int16",
+          "parameters": [
+            {
+              "list": "int16"
+            }
+          ],
+          "result": {
+            "list": "int16"
+          }
+        },
+        {
+          "name": "Lists.reverse_int32",
+          "parameters": [
+            {
+              "list": "int32"
+            }
+          ],
+          "result": {
+            "list": "int32"
+          }
+        },
+        {
+          "name": "Lists.reverse_int64",
+          "parameters": [
+            {
+              "list": "int64"
+            }
+          ],
+          "result": {
+            "list": "int64"
+          }
+        },
+        {
+          "name": "Lists.reverse_int8",
+          "parameters": [
+            {
+              "list": "int8"
+            }
+          ],
+          "result": {
+            "list": "int8"
+          }
+        },
+        {
+          "name": "Lists.reverse_isize",
+          "parameters": [
+            {
+              "list": "isize"
+            }
+          ],
+          "result": {
+            "list": "isize"
+          }
+        },
+        {
+          "name": "Lists.reverse_nat",
+          "parameters": [
+            {
+              "list": "nat"
+            }
+          ],
+          "result": {
+            "list": "nat"
+          }
+        },
+        {
+          "name": "Lists.reverse_string",
+          "parameters": [
+            {
+              "list": "string"
+            }
+          ],
+          "result": {
+            "list": "string"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint16",
+          "parameters": [
+            {
+              "list": "uint16"
+            }
+          ],
+          "result": {
+            "list": "uint16"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint32",
+          "parameters": [
+            {
+              "list": "uint32"
+            }
+          ],
+          "result": {
+            "list": "uint32"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint64",
+          "parameters": [
+            {
+              "list": "uint64"
+            }
+          ],
+          "result": {
+            "list": "uint64"
+          }
+        },
+        {
+          "name": "Lists.reverse_uint8",
+          "parameters": [
+            {
+              "list": "uint8"
+            }
+          ],
+          "result": {
+            "list": "uint8"
+          }
+        },
+        {
+          "name": "Lists.reverse_unit",
+          "parameters": [
+            {
+              "list": "unit"
+            }
+          ],
+          "result": {
+            "list": "unit"
+          }
+        },
+        {
+          "name": "Lists.reverse_usize",
+          "parameters": [
+            {
+              "list": "usize"
+            }
+          ],
+          "result": {
+            "list": "usize"
+          }
+        },
+        {
+          "name": "Lists.swap",
+          "parameters": [
+            {
+              "result": [
+                {
+                  "tuple": [
+                    {
+                      "list": "nat"
+                    },
+                    {
+                      "list": "uint32"
+                    }
+                  ]
+                },
+                {
+                  "list": "string"
+                }
+              ]
+            }
+          ],
+          "result": {
+            "result": [
+              {
+                "list": "string"
+              },
+              {
+                "tuple": [
+                  {
+                    "list": "nat"
+                  },
+                  {
+                    "list": "uint32"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Lists.transform",
+          "parameters": [
+            {
+              "fields": {
+                "arrays": {
+                  "array": {
+                    "list": {
+                      "tuple": [
+                        "bool",
+                        "char"
+                      ]
+                    }
+                  }
+                },
+                "branches": {
+                  "list": {
+                    "option": {
+                      "result": [
+                        {
+                          "tuple": [
+                            "nat",
+                            "unit"
+                          ]
+                        },
+                        "string"
+                      ]
+                    }
+                  }
+                },
+                "buffers": {
+                  "list": "bytes"
+                },
+                "sequences": {
+                  "list": {
+                    "list": "uint32"
+                  }
+                }
+              },
+              "record": "Lists.Packet"
+            }
+          ],
+          "result": {
+            "fields": {
+              "arrays": {
+                "array": {
+                  "list": {
+                    "tuple": [
+                      "bool",
+                      "char"
+                    ]
+                  }
+                }
+              },
+              "branches": {
+                "list": {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "nat",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                }
+              },
+              "buffers": {
+                "list": "bytes"
+              },
+              "sequences": {
+                "list": {
+                  "list": "uint32"
+                }
+              }
+            },
+            "record": "Lists.Packet"
+          }
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a3cb293a8c155fa655e591b368c7de9ce13452f7b7bd264348d2fc8415879035"
+    }
+  ]
+}
